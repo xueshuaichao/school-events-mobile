@@ -14,4 +14,7 @@
 
 <style>
 	/*每个页面公共css */
+uni-tabbar .uni-tabbar__bd {
+	height: 60px;
+}
 </style>
