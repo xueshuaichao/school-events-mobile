@@ -1,20 +1,104 @@
 <script>
-	export default {
-		onLaunch: function() {
-			console.log('App Launch')
-		},
-		onShow: function() {
-			console.log('App Show')
-		},
-		onHide: function() {
-			console.log('App Hide')
-		}
-	}
+export default {
+    onLaunch() {
+        console.log('App Launch');
+    },
+    onShow() {
+        console.log('App Show');
+    },
+    onHide() {
+        console.log('App Hide');
+    },
+};
 </script>
 
 <style>
-	/*每个页面公共css */
+@import "./common/animate.css";
+/*每个页面公共css */
 uni-tabbar .uni-tabbar__bd {
-	height: 60px;
+    height: 60px;
+}
+
+.uni-body {
+    font-size: 24upx;
+}
+
+.text-one-line {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+.text-two-line {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+}
+
+.page-rich-text {
+    color: #333;
+    font-size: 28upx;
+    line-height: 42upx;
+
+    text-indent: 2em;
+    padding: 30upx;
+}
+
+.page-rich-text.no-indent {
+    text-indent: 0;
+}
+
+.page-rich-text view {
+    margin-bottom: 32upx;
+}
+</style>
+
+<style lang="less">
+.panel {
+    text-align: left;
+    .panel-hd {
+        border-bottom: 1upx solid #ddd;
+        margin: 0 30upx;
+        padding: 20upx 0;
+
+        .panel-title {
+            color: #333;
+            font-size: 32upx;
+            display: inline-block;
+            margin-right: 24upx;
+
+            &.active {
+                color: #1166ff;
+                position: relative;
+
+                &::after {
+                    content: " ";
+                    background: #1166ff;
+                    width: 40upx;
+                    height: 6upx;
+                    display: block;
+                    position: absolute;
+                    left: 50%;
+                    margin-left: -20upx;
+                    bottom: -22upx;
+                }
+            }
+        }
+
+        .link {
+            float: right;
+            font-size: 24upx;
+            color: #666;
+        }
+    }
+    .panel-bd {
+        margin: 0 30upx;
+
+        &.has-swiper {
+            margin-right: 0;
+        }
+    }
 }
 </style>

@@ -1,78 +1,101 @@
 {
-	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
-		{
-			"path": "pages/tabBar/index/index",
-			"style": {
-				"navigationBarTitleText": "大赛首页",
-				"app-plus": {
-					"bounce": "vertical",
-					"titleNView": {
-						"buttons": [{
-							"text": "\ue534",
-							"fontSrc": "/static/uni.ttf",
-							"fontSize": "22px",
-							"color": "#999999"
-						}]
-					}
-				}
-			}
-		},
-		{
-			"path": "pages/tabBar/list/list",
-			"style": {
-				"navigationBarTitleText": "作品展示"
-			}
-		},
-		{
-			"path": "pages/tabBar/upload/upload",
-			"style": {
-				"navigationBarTitleText": "上传作品"
-			}
-		},
-		{
-			"path": "pages/tabBar/uc/uc",
-			"style": {
-				"navigationBarTitleText": "账户中心"
-			}
-		}
-	],
-	"globalStyle": {
-		"navigationBarTextStyle": "black",
-		"navigationBarTitleText": "uni-app",
-		"navigationBarBackgroundColor": "#F8F8F8",
-		"backgroundColor": "#F8F8F8"
-	},
-	"tabBar": {
-		"color": "#7A7E83",
-		"selectedColor": "#007AFF",
-		"borderStyle": "black",
-		"backgroundColor": "#F8F8F8",
-		"list": [{
-				"pagePath": "pages/tabBar/index/index",
-				"iconPath": "static/component.png",
-				"selectedIconPath": "static/componentHL.png",
-				"text": "大赛首页"
-			},
-			{
-				"pagePath": "pages/tabBar/list/list",
-				"iconPath": "static/api.png",
-				"selectedIconPath": "static/apiHL.png",
-				"text": "作品展示"
-			}, 
-			// #ifdef MP-WEIXIN
-			{
-				"pagePath": "pages/tabBar/upload/upload",
-				"iconPath": "static/extui.png",
-				"selectedIconPath": "static/extuiHL.png",
-				"text": "上传作品"
-			}, 
-			// #endif
-			{
-				"pagePath": "pages/tabBar/uc/uc",
-				"iconPath": "static/template.png",
-				"selectedIconPath": "static/templateHL.png",
-				"text": "账户中心"
-			}
-		]
-	}
+    "pages": [
+        //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
+        {
+            "path": "pages/tabBar/index/index",
+            "style": {
+                "navigationBarTitleText": "大赛首页"
+            }
+        },
+        {
+            "path": "pages/tabBar/list/list",
+            "style": {
+                "navigationBarTitleText": "作品展示"
+            }
+        },
+        {
+            "path": "pages/tabBar/upload/upload",
+            "style": {
+                "navigationBarTitleText": "上传作品"
+            }
+        },
+        {
+            "path": "pages/tabBar/uc/uc",
+            "style": {
+                "navigationBarTitleText": "账户中心"
+            }
+        },
+
+        // second page
+        {
+            "path": "pages/detail/intro/intro",
+            "style": {
+                "navigationBarTitleText": "大赛简介"
+            }
+        },
+        {
+            "path": "pages/detail/rule/rule",
+            "style": {
+                "navigationBarTitleText": "大赛须知"
+            }
+        },
+        {
+            "path": "pages/detail/flow/flow",
+            "style": {
+                "navigationBarTitleText": "大赛流程"
+            }
+        },
+        {
+            "path": "pages/news/list/list",
+            "style": {
+                "navigationBarTitleText": "资讯列表"
+            }
+        },
+        {
+            "path": "pages/news/detail/detail",
+            "style": {
+                "navigationBarTitleText": "资讯详情"
+            }
+        }
+    ],
+    "globalStyle": {
+        "navigationBarTextStyle": "black",
+        "navigationBarTitleText": "uni-app",
+        "navigationBarBackgroundColor": "#F8F8F8",
+        "backgroundColor": "#F8F8F8"
+    },
+    "tabBar": {
+        "color": "#7A7E83",
+        "selectedColor": "#007AFF",
+        "borderStyle": "black",
+        "backgroundColor": "#F8F8F8",
+        "list": [
+            {
+                "pagePath": "pages/tabBar/index/index",
+                "iconPath": "static/images/tab/index.png",
+                "selectedIconPath": "static/images/tab/index_ac.png",
+                "text": "大赛首页"
+            },
+            {
+                "pagePath": "pages/tabBar/list/list",
+                "iconPath": "static/images/tab/work.png",
+                "selectedIconPath": "static/images/tab/work_ac.png",
+                "text": "作品展示"
+            },
+            // #ifdef MP-WEIXIN
+            {
+                "pagePath": "pages/tabBar/upload/upload",
+                "iconPath": "static/images/tab/upload.png",
+                "selectedIconPath": "static/images/tab/upload_ac.png",
+                "text": "上传作品"
+            },
+            // #endif
+            {
+                "pagePath": "pages/tabBar/uc/uc",
+                "iconPath": "static/images/tab/uc.png",
+                "selectedIconPath": "static/images/tab/uc_ac.png",
+                "text": "账户中心"
+            }
+        ]
+    }
 }
