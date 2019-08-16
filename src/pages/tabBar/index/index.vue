@@ -130,15 +130,16 @@
                 </navigator>
             </view>
             <view class="panel-bd news-list">
-                <view
+                <navigator
                     v-for="item in news"
                     :key="item.id"
                     class="news-item"
+                    :url="`/pages/news/detail/detail?id=123`"
                 >
                     <text class="text-two-line">
                         · {{ item.title }}
                     </text>
-                </view>
+                </navigator>
             </view>
         </view>
 

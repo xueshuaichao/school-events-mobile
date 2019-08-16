@@ -56,6 +56,14 @@
             "style": {
                 "navigationBarTitleText": "资讯详情"
             }
+        },
+
+        // 作品详情
+        {
+            "path": "pages/work/detail/detail",
+            "style": {
+                "navigationBarTitleText": "作品详情"
+            }
         }
     ],
     "globalStyle": {
@@ -82,7 +90,7 @@
                 "selectedIconPath": "static/images/tab/work_ac.png",
                 "text": "作品展示"
             },
-            // #ifdef MP-WEIXIN
+            // #ifndef MP-WEIXIN
             {
                 "pagePath": "pages/tabBar/upload/upload",
                 "iconPath": "static/images/tab/upload.png",

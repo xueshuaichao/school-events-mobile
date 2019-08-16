@@ -59,7 +59,7 @@
     },
     "mp-weixin": {
         /* 微信小程序特有相关 */
-        "appid": "wx4a96390b09228a5d",
+        "appid": "wxf4d954b0a7e7a1ab",
         "setting": {
             "urlCheck": false
         },
@@ -76,5 +76,18 @@
     },
     "mp-qq": {
         "usingComponents": true
+    },
+    "h5": {
+        "devServer": {
+            "port": 80,
+            "disableHostCheck": true,
+            "proxy": {
+                "/api": {
+                    "target": "http://aitiaozhan.wdyclass.com:8000/",
+                    "changeOrigin": true,
+                    "secure": false
+                }
+            }
+        }
     }
 }

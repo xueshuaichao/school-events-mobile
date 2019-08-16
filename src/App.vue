@@ -5,6 +5,7 @@ export default {
     },
     onShow() {
         console.log('App Show');
+        uni.showShareMenu();
     },
     onHide() {
         console.log('App Hide');
