@@ -90,14 +90,12 @@
                 "selectedIconPath": "static/images/tab/work_ac.png",
                 "text": "作品展示"
             },
-            // #ifndef MP-WEIXIN
             {
                 "pagePath": "pages/tabBar/upload/upload",
                 "iconPath": "static/images/tab/upload.png",
                 "selectedIconPath": "static/images/tab/upload_ac.png",
                 "text": "上传作品"
             },
-            // #endif
             {
                 "pagePath": "pages/tabBar/uc/uc",
                 "iconPath": "static/images/tab/uc.png",

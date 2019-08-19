@@ -18,35 +18,40 @@
                     @change="onSelect"
                 >
                     <view
-                        v-if="!this.formData.cat_id"
-                        class="uni-input placeholder"
+                        v-if="!formData.cat_id"
+                        class="uni-input placeholder fake-input"
                     >
                         选择分类
                     </view>
                     <view
-                        v-if="this.formData.cat_id"
-                        class="uni-input"
+                        v-if="formData.cat_id"
+                        class="uni-input fake-input"
                     >
-                        {{ catData[this.index].name }}
+                        {{ catData[index].name }}
                     </view>
                 </picker>
             </view>
 
-            <view class="uni-textarea">
-                <textarea
-                    auto-height
-                    placeholder-class="placeholder"
-                    placeholder="视频介绍（不超过500字）"
-                />
-            </view>
+            <textarea
+                class="uni-textarea"
+                placeholder-class="placeholder"
+                placeholder="视频介绍（不超过500字）"
+            />
+
+            <upload :type="'video'" />
+            <upload :type="'image'" />
         </view>
     </view>
 </template>
 
 <script>
 import api from '../../../common/api';
+import upload from '../../../components/upload/upload.vue';
 
 export default {
+    components: {
+        upload,
+    },
     data() {
         return {
             formData: {
@@ -89,18 +94,31 @@ export default {
 
     .uni-input {
         height: 88upx;
-        line-height: 88upx;
+        box-sizing: border-box;
+        line-height: 38upx;
         padding-left: 24upx;
     }
 
     .uni-textarea {
         height: 190upx;
-        padding: 30upx 24upx;
+        padding: 30upx 20upx;
+        width: 100%;
+        box-sizing: border-box;
+        line-height: 42upx;
+    }
+
+    .fake-input {
+        padding-top: 26upx;
     }
 
     .uni-input,
     .uni-textarea {
         border: 1upx solid #ccc;
+        margin-bottom: 40upx;
+        font-size: 28upx;
+    }
+
+    /deep/ .comp-upload {
         margin-bottom: 40upx;
     }
 

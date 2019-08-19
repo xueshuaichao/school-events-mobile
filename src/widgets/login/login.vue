@@ -103,7 +103,8 @@ export default {
     }
 
     .uni-input {
-        line-height: 94upx;
+        // line-height: 94upx;
+        line-height: 38upx;
         height: 94upx;
         border: 1px solid #ccc;
         font-size: 36upx;

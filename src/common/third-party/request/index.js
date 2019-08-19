@@ -3,6 +3,8 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-param-reassign */
 import Request from "./request";
+import conf from "../../config";
+import utils from "../../utils";
 
 const test = new Request();
 test.setConfig(config => {
@@ -34,31 +36,20 @@ test.interceptor.request((config, cancel) => {
 const http = new Request();
 http.setConfig(config => {
     /* 设置全局配置 */
-    // #ifdef H5
-    config.baseUrl = `${location.protocol}//${location.host}`; /* 根域名不同 */
-    // #endif
 
-    // #ifndef H5
-    config.baseUrl = "http://aitiaozhan.wdyclass.com:8000";
-    // #endif
+    config.baseUrl = conf.host;
 
     config.header = {};
     return config;
 });
 http.interceptor.request((config, cancel) => {
     /* 请求之前拦截器 */
-    let userKey = null;
-    try {
-        userKey = uni.getStorageSync("medusa_key");
-    } catch (e) {
-        userKey = null;
-        // error
-    }
 
     config.header = {
         ...config.header
     };
 
+    const userKey = utils.getToken();
     if (userKey) {
         config.header.userkey = userKey;
     }
