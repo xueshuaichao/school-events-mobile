@@ -85,7 +85,7 @@ export default {
             time: '12:01',
         };
     },
-    onLoad() {},
+
     created() {
         this.getData();
     },
@@ -103,6 +103,19 @@ export default {
             }).then((res) => {
                 this.catData = res;
             });
+
+            if (this.id) {
+                api.get('/api/user/workinfo', {
+                    id: this.id,
+                }).then((res) => {
+                    this.formData.id = res.id;
+                    this.formData.cat_id = res.cat_id;
+                    this.formData.video_id = res.video_id;
+                    this.formData.video_img_url = res.video_img_url;
+                    this.formData.resource_name = res.resource_name;
+                    this.formData.introduce = res.introduce;
+                });
+            }
         },
         onSelect(e) {
             this.index = e.detail.value;
@@ -149,11 +162,11 @@ export default {
                     icon: 'none',
                     title: err.message,
                 }),
-                // uni.navigateTo({
-                //     url: '/pages/upload/result/result?type=fail',
-                // });
             );
         },
+    },
+    onLoad(params) {
+        this.id = params.id;
     },
 };
 </script>

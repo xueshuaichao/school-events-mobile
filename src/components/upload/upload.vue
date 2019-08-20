@@ -24,7 +24,6 @@
             </template>
         </view>
         <view class="desc">
-            {{ src }}
             <template v-if="type === 'video'">
                 <view>
                     视频文件大小不超过100MB
@@ -82,8 +81,36 @@ export default {
                     const resp = JSON.parse(uploadFileRes.data);
                     if (resp.status === 200) {
                         // success
-                        this.$emit('change', resp.data.path);
-                        this.src = resp.data.path;
+                        this.$emit('change', resp.data);
+                        uni.showToast({
+                            title: '已上传',
+                        });
+                    } else {
+                        // fail
+                        uni.hideToast();
+                    }
+                    console.log(resp);
+                },
+            });
+        },
+        uploadVideo(tempFilePath) {
+            uni.showToast({
+                icon: 'loading',
+                title: '上传中',
+                duration: 200000,
+            });
+            uni.uploadFile({
+                url: `${config.host}/api/file/backendvideoupload`,
+                filePath: tempFilePath,
+                name: 'file',
+                header: {
+                    userKey: utils.getToken(),
+                },
+                success: (uploadFileRes) => {
+                    const resp = JSON.parse(uploadFileRes.data);
+                    if (resp.status === 200) {
+                        // success
+                        this.$emit('change', resp.data);
                         uni.showToast({
                             title: '已上传',
                         });
@@ -109,7 +136,7 @@ export default {
                     success: (res) => {
                         const filePath = res.tempFilePath;
                         this.src = filePath;
-                        this.uploadFile(filePath);
+                        this.uploadVideo(filePath);
                     },
                 });
             }

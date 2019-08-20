@@ -1,26 +1,15 @@
 <template>
-    <view>
+    <view v-if="!isLoading">
         <view class="page-news-detail">
             <view class="title">
-                不服你来战-陕西青少年“爱挑战”嘉年华完美收官陕西青少年“爱挑战”嘉年华完美收官
+                {{ info.title }}
             </view>
             <view class="info">
-                来源： xxx 学校 2019-06-06 12:12:18
+                来源： {{ info.user_name }} {{ info.publish_at }}
             </view>
 
             <view class="content page-rich-text">
-                <image src="/static/images/index/banner.png" />
-                <view>
-                    4月8日，陕西青少年“爱挑战”嘉年华暨吉尼斯世界纪录现场挑战大会由陕西省教育厅主办，陕西省电化教育馆、
-                    北京天仕博科技有限公司承办，新华社、中央电视台、吉尼斯世界纪录、欧亚学院协办。中央电化教育馆馆长王珠珠、
-                    陕西省教育厅厅长王建利；副厅长王海波、吉尼斯世界纪录全球商务副总裁Blythe
-                    Ryan Fitzwiliam 等教育相关人士出席本次盛会。
-                </view>
-                <view>
-                    吉尼斯世界纪录亚太地区认证官程东先生和罗琼女士宣布来自西安市雁塔区航天小学的李信衡、
-                    贾轺阳和宝鸡实验小学的杨佳倩、王欣华分别创造《最快100米悬浮纸飞机接力（双人）》、
-                    《一分钟双人毽子互踢传递次数最多（双人）》两项吉尼斯世界纪录，成为青少年吉尼斯记录保持者。
-                </view>
+                <rich-text :nodes="contentNodes" />
             </view>
 
             <view class="share-wrap">
@@ -55,7 +44,7 @@
             </view>
             <view class="panel-bd news-list">
                 <navigator
-                    v-for="item in news"
+                    v-for="item in recommendData"
                     :key="item.id"
                     class="news-item"
                     :url="`/pages/news/detail/detail?id=123`"
@@ -70,35 +59,48 @@
 </template>
 
 <script>
+import api from '../../../common/api';
+import parseHtml from '../../../common/third-party/html-parser';
+
 export default {
     data() {
         return {
             id: '',
 
-            news: [
-                {
-                    title: '陕西省关于举办2019年爱挑战大赛通知',
-                },
-                {
-                    title:
-                        '陕西省爱挑战大赛复赛作品名单公示名单公示名单公示名单公示名单公示',
-                },
-                {
-                    title: '陕西省关于举办2019年爱挑战大赛通知',
-                },
-                {
-                    title: '人社部：上半年养老基金收大于支，社保时足额发放',
-                },
-                {
-                    title:
-                        '陕西省爱挑战大赛复赛作品名单公示名单公示名单公示名单公示名单公示陕西省爱挑战大赛复赛作品名单公示名单公示名单公示名单公示名单公示陕西省爱挑战大赛复赛作品名单公示名单公示名单公示名单公示名单公示',
-                },
-            ],
+            info: {},
+            contentNodes: [],
+            isLoading: true,
+
+            recommendData: [],
         };
     },
     methods: {
         getData(id) {
             this.id = id;
+
+            api.get('/api/article/info', {
+                id,
+            }).then((res) => {
+                this.isLoading = false;
+                this.info = res;
+                try {
+                    this.contentNodes = parseHtml(res.content);
+                } catch (e) {
+                    console.log(e);
+                }
+
+                // 获取推荐信息
+                this.getArticle(res.column);
+            });
+        },
+        getArticle(columnId) {
+            api.get('/api/article/list', {
+                column: columnId,
+                except_new_id: this.id,
+                page_size: 5,
+            }).then((res) => {
+                this.recommendData = res.list;
+            });
         },
         shareToFriend() {
             uni.share({
@@ -158,6 +160,8 @@ export default {
 
 <style lang="less" scoped>
 .page-news-detail {
+    margin-bottom: 48upx;
+
     image {
         width: 690upx;
         height: 280upx;
@@ -211,6 +215,11 @@ export default {
         width: 36upx;
         height: 36upx;
         top: 8upx;
+    }
+
+    /deep/ .rich-text-image {
+        width: 100% !important;
+        margin: 20upx 0;
     }
 }
 

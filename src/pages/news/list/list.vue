@@ -3,23 +3,18 @@
     <view class="panel">
         <view class="panel-hd">
             <text
+                v-for="(item, k) in newsColumn"
+                :key="item.id"
                 class="panel-title"
-                :class="{ active: newsTabActiveIndex === 0 }"
-                @click="setNewsTabActive(0)"
+                :class="{ active: newsTabActiveIndex === k }"
+                @click="setNewsTabActive(k)"
             >
-                新闻资讯
-            </text>
-            <text
-                class="panel-title"
-                :class="{ active: newsTabActiveIndex === 1 }"
-                @click="setNewsTabActive(1)"
-            >
-                最新公告
+                {{ item.column_name }}
             </text>
         </view>
         <view class="panel-bd news-list">
             <navigator
-                v-for="item in news"
+                v-for="item in newsData"
                 :key="item.id"
                 class="news-item"
                 :url="`/pages/news/detail/detail?id=123`"
@@ -33,52 +28,43 @@
 </template>
 
 <script>
+import api from '../../../common/api';
+
 export default {
     data() {
         return {
-            news: [
-                {
-                    title: '陕西省关于举办2019年爱挑战大赛通知',
-                },
-                {
-                    title:
-                        '陕西省爱挑战大赛复赛作品名单公示名单公示名单公示名单公示名单公示',
-                },
-                {
-                    title: '陕西省关于举办2019年爱挑战大赛通知',
-                },
-                {
-                    title: '人社部：上半年养老基金收大于支，社保时足额发放',
-                },
-                {
-                    title:
-                        '陕西省爱挑战大赛复赛作品名单公示名单公示名单公示名单公示名单公示陕西省爱挑战大赛复赛作品名单公示名单公示名单公示名单公示名单公示陕西省爱挑战大赛复赛作品名单公示名单公示名单公示名单公示名单公示',
-                },
-                {
-                    title: '陕西省关于举办2019年爱挑战大赛通知',
-                },
-                {
-                    title:
-                        '陕西省爱挑战大赛复赛作品名单公示名单公示名单公示名单公示名单公示',
-                },
-                {
-                    title: '陕西省关于举办2019年爱挑战大赛通知',
-                },
-                {
-                    title: '人社部：上半年养老基金收大于支，社保时足额发放',
-                },
-                {
-                    title:
-                        '陕西省爱挑战大赛复赛作品名单公示名单公示名单公示名单公示名单公示陕西省爱挑战大赛复赛作品名单公示名单公示名单公示名单公示名单公示陕西省爱挑战大赛复赛作品名单公示名单公示名单公示名单公示名单公示',
-                },
-            ],
-
             newsTabActiveIndex: 0,
+            newsColumn: [],
+            newsData: [],
         };
+    },
+    created() {
+        this.getData();
     },
     methods: {
         setNewsTabActive(index) {
             this.newsTabActiveIndex = index;
+            this.getArticle(this.newsColumn[index].id);
+        },
+        getArticle(columnId) {
+            return api
+                .get('/api/article/list', {
+                    column: columnId,
+                    page_num: 1,
+                    page_size: 20,
+                })
+                .then((res) => {
+                    console.log(res);
+                    this.newsData = res.list;
+                });
+        },
+        getData() {
+            api.get('/api/column/list').then((res) => {
+                // console.log(res);
+                this.newsColumn = res.list;
+
+                this.getArticle(res.list[0].id);
+            });
         },
     },
 };

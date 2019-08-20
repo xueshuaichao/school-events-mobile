@@ -1,11 +1,12 @@
 <template>
     <view class="page-work-list">
-        <div class="tab-bar-wrap">
+        <!-- <div class="tab-bar-wrap">
             <view class="tab-bar">
                 <view
                     class="tab-item"
                     :class="{
-                        active: showMenu === true && showMenuType === 'address'
+                        active:
+                            showMenu === true && showMenuType === 'address'
                     }"
                     @click="toggleMenu('address')"
                 >
@@ -14,7 +15,8 @@
                 <view
                     class="tab-item"
                     :class="{
-                        active: showMenu === true && showMenuType === 'grade'
+                        active:
+                            showMenu === true && showMenuType === 'grade'
                     }"
                     @click="toggleMenu('grade')"
                 >
@@ -23,7 +25,8 @@
                 <view
                     class="tab-item"
                     :class="{
-                        active: showMenu === true && showMenuType === 'category'
+                        active:
+                            showMenu === true && showMenuType === 'category'
                     }"
                     @click="toggleMenu('category')"
                 >
@@ -39,7 +42,7 @@
                     <text>排序</text>
                 </view>
             </view>
-        </div>
+        </div> -->
         <div
             v-if="showMenu"
             class="dropdown-wrap"
@@ -429,7 +432,22 @@ export default {
         },
     },
     onLoad(params) {
-        console.log(params);
+        const id = params.cat_id;
+        this.filter.cat_id.one_level_id = id;
+
+        let title = '作品列表';
+        if (id === '1') {
+            title = '优秀个人作品展';
+        } else if (id === '2') {
+            title = '优秀团体作品展';
+        } else if (id === '3') {
+            title = '优秀才艺达人作品展';
+        }
+        console.log(title);
+
+        uni.setNavigationBarTitle({
+            title,
+        });
     },
 };
 </script>
@@ -441,7 +459,7 @@ export default {
 
 .main {
     white-space: pre-wrap;
-    margin-top: 100upx;
+    // margin-top: 100upx;
     padding: 40upx 30upx;
     margin-right: -35upx;
 

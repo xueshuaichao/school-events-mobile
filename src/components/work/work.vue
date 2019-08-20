@@ -10,7 +10,7 @@
         <view class="thumbnail-wrap">
             <image
                 class="thumbnail"
-                :src="info.video_img_ur || '/static/images/index/pic.png'"
+                :src="info.video_img_url || '/static/images/index/pic.png'"
             />
             <view class="browse-num">
                 <image
@@ -34,10 +34,10 @@
                             class="icon-user"
                             src="/static/images/widgets/work/user.png"
                         />
-                        王苗王苗
+                        {{ info.create_name }}
                     </view>
                     <view class="from text-one-line">
-                        爱华小学四年纪
+                        {{ info.create_user_class }}
                     </view>
                 </view>
             </template>

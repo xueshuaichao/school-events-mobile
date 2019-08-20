@@ -4,14 +4,15 @@
             <text class="panel-title">
                 {{ title }}
             </text>
-            <text
+            <view
                 v-if="moreUrl"
                 class="link"
+                @click="openTab"
             >
-                <navigator url="/pages/detail/rule/rule">
-                    更多 >
-                </navigator>
-            </text>
+                <!-- <navigator :url="moreUrl" open-type="switchTab"> -->
+                更多 >
+                <!-- </navigator> -->
+            </view>
         </view>
         <view class="panel-bd has-swiper">
             <scroll-view
@@ -20,7 +21,7 @@
                 @scroll="scroll"
             >
                 <view
-                    v-for="item in items"
+                    v-for="item in info"
                     :key="item.id"
                     class="scroll-view-item"
                 >
@@ -45,6 +46,9 @@ export default {
         moreUrl: {
             type: String,
         },
+        info: {
+            type: Array,
+        },
     },
 
     data() {
@@ -53,32 +57,23 @@ export default {
             autoplay: false,
             interval: 2000,
             duration: 500,
-
-            items: [
-                {
-                    image: '/static/images/index/pic.png',
-                    title: '1分钟单跳绳(男子组）测试一下',
-                },
-                {
-                    image: '/static/images/index/pic.png',
-                },
-                {
-                    image: '/static/images/index/pic.png',
-                },
-                {
-                    image: '/static/images/index/pic.png',
-                },
-                {
-                    image: '/static/images/index/pic.png',
-                },
-                {
-                    image: '/static/images/index/pic.png',
-                },
-            ],
         };
     },
     methods: {
         scroll() {},
+        openTab() {
+            // console.log(this.moreUrl);
+            // utils.store.set('category', 2);
+            uni.navigateTo({
+                url: this.moreUrl,
+                success: () => {
+                    // console.log('switch success');
+                    // const page = getCurrentPages().pop();
+                    // if (page === undefined || page === null) return;
+                    // console.log(page);
+                },
+            });
+        },
     },
 };
 </script>

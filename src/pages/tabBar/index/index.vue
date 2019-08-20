@@ -36,7 +36,7 @@
         <view class="menu-list">
             <navigator
                 class="item"
-                url="/pages/detail/intro/intro"
+                :url="`/pages/news/detail/detail?id=50`"
             >
                 <view class="icon-wrap purple">
                     <!-- <view class="icon icon-intro"></view> -->
@@ -52,7 +52,7 @@
 
             <navigator
                 class="item"
-                url="/pages/detail/rule/rule"
+                :url="`/pages/news/detail/detail?id=${menuConf.notice.id}`"
             >
                 <view class="icon-wrap green">
                     <image
@@ -67,7 +67,7 @@
 
             <navigator
                 class="item"
-                url="/pages/detail/flow/flow"
+                :url="`/pages/news/detail/detail?id=${menuConf.process.id}`"
             >
                 <view class="icon-wrap yellow">
                     <image
@@ -80,7 +80,10 @@
                 </text>
             </navigator>
 
-            <navigator class="item">
+            <navigator
+                class="item"
+                :url="`/pages/news/detail/detail?id=${menuConf.time.id}`"
+            >
                 <view class="icon-wrap blue">
                     <image
                         class="icon"
@@ -92,7 +95,10 @@
                 </text>
             </navigator>
 
-            <navigator class="item">
+            <navigator
+                class="item"
+                url="/pages/news/list/list"
+            >
                 <view class="icon-wrap orange">
                     <image
                         class="icon"
@@ -109,19 +115,15 @@
         <view class="panel">
             <view class="panel-hd">
                 <text
+                    v-for="(item, k) in newsColumn"
+                    :key="item.id"
                     class="panel-title"
-                    :class="{ active: newsTabActiveIndex === 0 }"
-                    @click="setNewsTabActive(0)"
+                    :class="{ active: newsTabActiveIndex === k }"
+                    @click="setNewsTabActive(k)"
                 >
-                    新闻资讯
+                    {{ item.column_name }}
                 </text>
-                <text
-                    class="panel-title"
-                    :class="{ active: newsTabActiveIndex === 1 }"
-                    @click="setNewsTabActive(1)"
-                >
-                    最新公告
-                </text>
+
                 <navigator
                     class="link"
                     url="/pages/news/list/list"
@@ -131,7 +133,7 @@
             </view>
             <view class="panel-bd news-list">
                 <navigator
-                    v-for="item in news"
+                    v-for="item in newsData"
                     :key="item.id"
                     class="news-item"
                     :url="`/pages/news/detail/detail?id=123`"
@@ -147,27 +149,25 @@
 
         <work
             :title="'优秀个人作品展'"
-            :more-url="'/pages/tabBar/list/list'"
+            :more-url="'/pages/work/list/list?cat_id=1'"
+            :info="workData.individual"
         />
         <work
             :title="'优秀团体作品展'"
-            :more-url="'/pages/tabBar/list/list'"
+            :more-url="'/pages/work/list/list?cat_id=2'"
+            :info="workData.team"
         />
-        <work :title="'优秀才艺达人作品展'" />
-
-        <!-- <view class="link-wrap">
-            <navigator class="link" url="/pages/news/list/list">
-                <button type="default">资讯列表</button>
-            </navigator>
-            <navigator class="link" url="/pages/news/detail/detail" hover-class="other-navigator-hover">
-                <button type="default">资讯详情</button>
-            </navigator>
-        </view> -->
+        <work
+            :title="'优秀才艺达人作品展'"
+            :more-url="'/pages/work/list/list?cat_id=3'"
+            :info="workData.talent"
+        />
     </view>
 </template>
 
 <script>
 import work from '../../../widgets/work/work.vue';
+import api from '../../../common/api';
 
 export default {
     components: {
@@ -181,33 +181,90 @@ export default {
             interval: 2000,
             duration: 500,
 
-            news: [
-                {
-                    title: '陕西省关于举办2019年爱挑战大赛通知',
-                },
-                {
-                    title:
-                        '陕西省爱挑战大赛复赛作品名单公示名单公示名单公示名单公示名单公示',
-                },
-                {
-                    title: '陕西省关于举办2019年爱挑战大赛通知',
-                },
-                {
-                    title: '人社部：上半年养老基金收大于支，社保时足额发放',
-                },
-                {
-                    title:
-                        '陕西省爱挑战大赛复赛作品名单公示名单公示名单公示名单公示名单公示陕西省爱挑战大赛复赛作品名单公示名单公示名单公示名单公示名单公示陕西省爱挑战大赛复赛作品名单公示名单公示名单公示名单公示名单公示',
-                },
-            ],
-
             newsTabActiveIndex: 0,
+
+            menuConf: {
+                intro: {},
+                notice: {},
+                process: {},
+                time: {},
+            },
+            newsColumn: [
+                { id: '2', column_name: '新闻资讯', sort_ids: '1,2,3,4,5' },
+                { id: '3', column_name: '最新公告', sort_ids: '2,2,2,2,2' },
+            ],
+            newsData: [],
+            workData: {
+                individual: [],
+                team: [],
+                talent: [],
+            },
         };
     },
     onLoad() {},
+    created() {
+        this.getData();
+    },
     methods: {
         setNewsTabActive(index) {
             this.newsTabActiveIndex = index;
+            this.getArticle(this.newsColumn[index].id);
+        },
+        getArticle(columnId) {
+            return api
+                .get('/api/article/list', {
+                    column: columnId,
+                    page_num: 1,
+                    page_size: 10,
+                })
+                .then((res) => {
+                    this.newsData = res.list;
+                });
+        },
+        getMenuData() {
+            api.get('/api/index/entry').then((res) => {
+                this.menuConf = res;
+            });
+        },
+        getWorkList(type) {
+            let catId;
+            if (type === 'individual') {
+                catId = 1;
+            } else if (type === 'team') {
+                catId = 2;
+            } else if (type === 'talent') {
+                catId = 3;
+            }
+
+            api.post('/api/works/list', {
+                cat_id: {
+                    one_level_id: catId,
+                },
+                page_size: 6,
+            }).then((res) => {
+                if (type === 'individual') {
+                    this.workData.individual = res.list;
+                } else if (type === 'team') {
+                    this.workData.team = res.list;
+                } else if (type === 'talent') {
+                    this.workData.talent = res.list;
+                }
+            });
+        },
+
+        getData() {
+            // api.get('/api/column/list').then(res => {
+            //     // 首页不展示第一个大赛动态 tab
+            //     res.list.shift();
+
+            //     this.newsColumn = res.list;
+
+            this.getArticle(this.newsColumn[0].id);
+            this.getMenuData();
+            this.getWorkList('individual');
+            this.getWorkList('team');
+            this.getWorkList('talent');
+            // })
         },
     },
 };
@@ -338,6 +395,8 @@ uni-swiper {
     }
 
     .news-list {
+        margin-bottom: 40upx;
+
         .news-item {
             font-size: 28upx;
             color: #666;

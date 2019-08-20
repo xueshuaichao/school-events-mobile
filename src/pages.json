@@ -60,9 +60,29 @@
 
         // 作品详情
         {
+            "path": "pages/work/list/list",
+            "style": {
+                "navigationBarTitleText": "作品列表"
+            }
+        },
+        {
             "path": "pages/work/detail/detail",
             "style": {
                 "navigationBarTitleText": "作品详情"
+            }
+        },
+
+        // 上传详情
+        {
+            "path": "pages/upload/result/result",
+            "style": {
+                "navigationBarTitleText": "上传作品"
+            }
+        },
+        {
+            "path": "pages/upload/modify/modify",
+            "style": {
+                "navigationBarTitleText": "上传作品"
             }
         }
     ],
