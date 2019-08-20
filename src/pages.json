@@ -28,24 +28,6 @@
 
         // second page
         {
-            "path": "pages/detail/intro/intro",
-            "style": {
-                "navigationBarTitleText": "大赛简介"
-            }
-        },
-        {
-            "path": "pages/detail/rule/rule",
-            "style": {
-                "navigationBarTitleText": "大赛须知"
-            }
-        },
-        {
-            "path": "pages/detail/flow/flow",
-            "style": {
-                "navigationBarTitleText": "大赛流程"
-            }
-        },
-        {
             "path": "pages/news/list/list",
             "style": {
                 "navigationBarTitleText": "资讯列表"
