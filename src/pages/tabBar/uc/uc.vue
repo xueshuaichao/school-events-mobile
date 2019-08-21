@@ -31,18 +31,21 @@
                     </view>
                 </template>
 
-                <button
+                <!-- <button
                     type="primary"
                     @click="doLogout"
                 >
                     退出登录
-                </button>
+                </button> -->
             </view>
 
             <!-- identity 用户身份 1=>C端普通用户 ,2=> 教育局员工，3=>学校员工 4 学生 -->
             <!-- my works -->
             <view
-                v-if="userInfo.identity === 3 || userInfo.identity === 4"
+                v-if="
+                    !isH5 &&
+                        (userInfo.identity === 3 || userInfo.identity === 4)
+                "
                 class="panel"
             >
                 <view class="panel-hd">
@@ -131,6 +134,10 @@ export default {
             title: 'Hello',
             isLoading: true,
             userInfo: null,
+
+            // #ifdef H5
+            isH5: true,
+            // #endif
 
             tabActiveIndex: 0,
             workStatics: {},
