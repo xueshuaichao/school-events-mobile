@@ -9,8 +9,17 @@
                     class="icon-video"
                     src="/static/images/comp/upload/video.png"
                 />
-                <view class="icon-desc">
+                <view
+                    v-if="!url"
+                    class="icon-desc"
+                >
                     上传视频
+                </view>
+                <view
+                    v-else
+                    class="icon-desc"
+                >
+                    视频已上传
                 </view>
             </template>
             <template v-if="type === 'image'">
@@ -21,6 +30,11 @@
                 <view class="icon-desc">
                     上传封面
                 </view>
+                <image
+                    v-if="url"
+                    class="preview"
+                    :src="url"
+                />
             </template>
         </view>
         <view class="desc">
@@ -54,14 +68,26 @@ export default {
             type: String,
             default: 'video',
         },
+        source: {
+            type: String,
+            default: '',
+        },
     },
     data() {
         return {
             src: '',
+            tempFilePath: '',
+            url: this.source,
         };
+    },
+    watch: {
+        source(val) {
+            this.url = val;
+        },
     },
     methods: {
         uploadFile(tempFilePath) {
+            this.tempFilePath = tempFilePath;
             uni.showToast({
                 icon: 'loading',
                 title: '上传中',
@@ -78,9 +104,18 @@ export default {
                     userKey: utils.getToken(),
                 },
                 success: (uploadFileRes) => {
-                    const resp = JSON.parse(uploadFileRes.data);
+                    let resp;
+                    try {
+                        resp = JSON.parse(uploadFileRes.data);
+                    } catch (e) {
+                        return uni.showToast({
+                            title: '服务器开小差了~',
+                            icon: 'none',
+                        });
+                    }
                     if (resp.status === 200) {
                         // success
+                        this.url = resp.data.path;
                         this.$emit('change', resp.data);
                         uni.showToast({
                             title: '已上传',
@@ -89,7 +124,7 @@ export default {
                         // fail
                         uni.hideToast();
                     }
-                    console.log(resp);
+                    return false;
                 },
             });
         },
@@ -107,18 +142,27 @@ export default {
                     userKey: utils.getToken(),
                 },
                 success: (uploadFileRes) => {
-                    const resp = JSON.parse(uploadFileRes.data);
+                    let resp;
+                    try {
+                        resp = JSON.parse(uploadFileRes.data);
+                    } catch (e) {
+                        return uni.showToast({
+                            title: '服务器开小差了~',
+                            icon: 'none',
+                        });
+                    }
                     if (resp.status === 200) {
                         // success
                         this.$emit('change', resp.data);
                         uni.showToast({
                             title: '已上传',
                         });
+                        this.url = resp.data.video_id;
                     } else {
                         // fail
                         uni.hideToast();
                     }
-                    console.log(resp);
+                    return false;
                 },
             });
         },
@@ -164,6 +208,16 @@ export default {
         background: #f0f0f0;
         margin-right: 16upx;
         text-align: center;
+        position: relative;
+
+        .preview {
+            position: absolute;
+            z-index: 100;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
     }
 
     .desc {

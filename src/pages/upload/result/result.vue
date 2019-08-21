@@ -74,6 +74,11 @@
 
 <script>
 export default {
+    data() {
+        return {
+            type: '',
+        };
+    },
     methods: {
         reUpload() {
             uni.switchTab({

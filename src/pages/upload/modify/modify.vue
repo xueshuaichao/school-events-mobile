@@ -42,10 +42,12 @@
 
             <upload
                 :type="'video'"
+                :source="formData.video_id"
                 @change="updateVideo"
             />
             <upload
                 :type="'image'"
+                :source="formData.video_img_url"
                 @change="updateImage"
             />
 
@@ -69,6 +71,7 @@ export default {
     },
     data() {
         return {
+            id: '',
             formData: {
                 cat_id: '',
                 resource_name: '',
@@ -86,9 +89,7 @@ export default {
         };
     },
 
-    created() {
-        this.getData();
-    },
+    created() {},
     methods: {
         updateVideo(data) {
             this.formData.video_id = data.video_id;
@@ -104,6 +105,7 @@ export default {
                 this.catData = res;
             });
 
+            console.log(this.id);
             if (this.id) {
                 api.get('/api/user/workinfo', {
                     id: this.id,
@@ -167,6 +169,7 @@ export default {
     },
     onLoad(params) {
         this.id = params.id;
+        this.getData();
     },
 };
 </script>

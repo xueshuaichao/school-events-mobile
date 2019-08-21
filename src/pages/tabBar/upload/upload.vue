@@ -39,7 +39,6 @@
                 placeholder-class="placeholder"
                 placeholder="视频介绍（不超过500字）"
             />
-
             <upload
                 :type="'video'"
                 @change="updateVideo"

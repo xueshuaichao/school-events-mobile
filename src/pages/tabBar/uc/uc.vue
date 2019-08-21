@@ -265,7 +265,7 @@ export default {
     padding-bottom: 20upx;
 
     .main {
-        padding: 30upx;
+        padding: 30upx 30upx 0 30upx;
 
         .user-name {
             font-size: 32upx;
