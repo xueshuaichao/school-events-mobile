@@ -62,12 +62,15 @@
                 点赞
             </view>
             <view class="sep" />
-            <view class="sect">
+            <button
+                class="sect share-btn"
+                open-type="share"
+            >
                 <image
                     class="icon"
                     src="/static/images/work/share.png"
                 />分享
-            </view>
+            </button>
         </view>
     </view>
 </template>
@@ -221,6 +224,13 @@ export default {
 
         .sect {
             flex: 1;
+            border-radius: 0;
+            background: #fff;
+            color: #679eff;
+
+            &::after {
+                border: none;
+            }
 
             .icon {
                 width: 40upx;
@@ -229,6 +239,10 @@ export default {
                 position: relative;
                 top: 6upx;
             }
+        }
+
+        .share-btn {
+            padding-top: 10upx;
         }
     }
 }

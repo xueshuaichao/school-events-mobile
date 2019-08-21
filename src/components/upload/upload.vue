@@ -1,9 +1,9 @@
 <template>
-    <view class="comp-upload">
-        <view
-            class="cover-wrap"
-            @click="chooseResource"
-        >
+    <view
+        class="comp-upload"
+        @click="chooseResource"
+    >
+        <view class="cover-wrap">
             <template v-if="type === 'video'">
                 <image
                     class="icon-video"
@@ -233,19 +233,18 @@ export default {
         display: inline-block;
         width: 43upx;
         height: 28upx;
-        margin-top: 12upx;
+        margin-top: 16upx;
     }
 
     .icon-image {
         display: inline-block;
         width: 46upx;
         height: 36upx;
-        margin-top: 18upx;
+        margin-top: 12upx;
     }
 
     .icon-desc {
         color: #666;
-        margin-top: 6upx;
         font-size: 28upx;
     }
 }
