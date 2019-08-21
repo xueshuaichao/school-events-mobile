@@ -54,6 +54,11 @@ uni-tabbar .uni-tabbar__bd {
 .page-rich-text view {
     margin-bottom: 32upx;
 }
+
+.navigator-hover {
+    background-color: initial;
+    opacity: initial;
+}
 </style>
 
 <style lang="less">
@@ -62,13 +67,12 @@ uni-tabbar .uni-tabbar__bd {
     .panel-hd {
         border-bottom: 1upx solid #ddd;
         margin: 0 30upx;
-        padding: 20upx 0;
-
         .panel-title {
             color: #333;
             font-size: 32upx;
             display: inline-block;
             margin-right: 24upx;
+            padding: 20upx;
 
             &.active {
                 color: #1166ff;
@@ -83,7 +87,7 @@ uni-tabbar .uni-tabbar__bd {
                     position: absolute;
                     left: 50%;
                     margin-left: -20upx;
-                    bottom: -22upx;
+                    bottom: -4upx;
                 }
             }
         }
@@ -92,6 +96,7 @@ uni-tabbar .uni-tabbar__bd {
             float: right;
             font-size: 24upx;
             color: #666;
+            padding: 22upx 0;
         }
     }
     .panel-bd {

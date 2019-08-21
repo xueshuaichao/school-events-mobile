@@ -265,7 +265,7 @@ export default {
     padding-bottom: 20upx;
 
     .main {
-        padding: 30upx 30upx 0 30upx;
+        padding: 30upx 30upx 0upx 30upx;
 
         .user-name {
             font-size: 32upx;
@@ -284,9 +284,10 @@ export default {
         margin-top: 180upx;
     }
 
-    .panel-title {
-        width: 145upx;
+    .panel .panel-hd .panel-title {
         display: inline-block;
+        padding-left: 0;
+        padding-right: 0;
     }
 
     .work-list {
