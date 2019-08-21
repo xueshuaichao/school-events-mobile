@@ -81,7 +81,7 @@ export default {
             });
         },
         goToUc() {
-            uni.switchTab({
+            uni.reLaunch({
                 url: '/pages/tabBar/uc/uc',
             });
         },

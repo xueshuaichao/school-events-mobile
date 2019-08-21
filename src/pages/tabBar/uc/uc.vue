@@ -83,8 +83,18 @@
                                 :mode="'single'"
                             />
                             <view class="btns">
-                                <view class="btn">
+                                <view
+                                    v-if="item.status === 1"
+                                    class="btn"
+                                >
                                     分享
+                                </view>
+                                <view
+                                    v-if="item.status !== 1"
+                                    class="btn"
+                                    @click="editWork(item)"
+                                >
+                                    编辑
                                 </view>
                                 <view
                                     class="btn"
@@ -145,6 +155,10 @@ export default {
                 },
             );
 
+            this.getWorkStatic();
+            this.getWorkData();
+        },
+        getWorkStatic() {
             api.get('/api/user/workstatics').then(
                 (res) => {
                     // this.workStatics = res[0];
@@ -152,8 +166,27 @@ export default {
                 },
                 () => {},
             );
+        },
+        editWork(item) {
+            uni.navigateTo({
+                url: `/pages/upload/modify/modify?id=${item.id}`,
+            });
+        },
+        deleteWork(item) {
+            const index = this.tableData.indexOf(item);
 
-            this.getWorkData();
+            api.post('/api/user/delwork', {
+                id: item.id,
+            }).then((res) => {
+                uni.showToast({
+                    title: '删除成功',
+                });
+                console.log(res);
+                if (index !== -1) {
+                    this.tableData.splice(index, 1);
+                }
+                this.getWorkStatic();
+            });
         },
         getWorkData() {
             // 作品状态 status 0—待审核 1—已通过 2—未通过 -1 全部
@@ -189,7 +222,7 @@ export default {
             this.getData();
         },
 
-        onConfirmDelete() {
+        onConfirmDelete(item) {
             uni.showModal({
                 title: '删除提示',
                 content: '作品删除后将无法恢复 \n 确定删除吗？',
@@ -197,12 +230,10 @@ export default {
                 cancelText: '暂不删除',
                 cancelColor: '#1166FF',
                 confirmColor: '#999999',
-                success(res) {
+                success: (res) => {
                     if (res.confirm) {
+                        this.deleteWork(item);
                         console.log('用户点击确定');
-                        uni.showToast({
-                            title: '删除成功',
-                        });
                     } else if (res.cancel) {
                         uni.showToast({
                             title: '删除失败',
