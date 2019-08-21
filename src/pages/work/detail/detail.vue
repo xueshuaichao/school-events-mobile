@@ -45,11 +45,21 @@
         </view>
 
         <view class="fixed-bottom-bar">
-            <view class="sect">
+            <view
+                class="sect"
+                @click="toggleLike"
+            >
                 <image
+                    v-if="likeStatus === 0"
                     class="icon"
                     src="/static/images/work/like.png"
-                />点赞
+                />
+                <image
+                    v-if="likeStatus === 1"
+                    class="icon"
+                    src="/static/images/work/liked.png"
+                />
+                点赞
             </view>
             <view class="sep" />
             <view class="sect">
@@ -73,12 +83,13 @@ export default {
                 'https://dcloud-img.oss-cn-hangzhou.aliyuncs.com/guide/uniapp/%E7%AC%AC1%E8%AE%B2%EF%BC%88uni-app%E4%BA%A7%E5%93%81%E4%BB%8B%E7%BB%8D%EF%BC%89-%20DCloud%E5%AE%98%E6%96%B9%E8%A7%86%E9%A2%91%E6%95%99%E7%A8%8B@20181126.mp4',
             isLoading: true,
             pageData: {},
+            likeStatus: 0,
         };
     },
     methods: {
-        getData(id) {
+        getData() {
             api.get('/api/works/detail', {
-                id,
+                id: this.id,
             }).then(
                 (res) => {
                     this.isLoading = false;
@@ -91,10 +102,35 @@ export default {
                     console.log(err);
                 },
             );
+
+            this.getLikeStatus();
+        },
+        toggleLike() {
+            const isLiked = this.likeStatus === 1;
+            api.get('/api/common/like', {
+                object_id: this.id,
+                object_type: 1,
+                // 1-点赞 0 取消点赞
+                type: isLiked ? 0 : 1,
+            }).then((res) => {
+                console.log(res);
+                this.likeStatus = isLiked ? 0 : 1;
+                this.getData();
+            });
+        },
+        getLikeStatus() {
+            api.get('/api/common/getlikestatus', {
+                object_type: 1,
+                object_id: this.id,
+            }).then((res) => {
+                console.log(res);
+                this.likeStatus = res.status;
+            });
         },
     },
     onLoad(query) {
         const { id } = query;
+        this.id = id;
         this.getData(id);
     },
 };

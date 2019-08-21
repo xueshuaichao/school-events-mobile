@@ -5,7 +5,7 @@
             'mode-mini': mode === 'mini',
             'mode-single': mode === 'single'
         }"
-        :url="`/pages/work/detail/detail?id=16`"
+        :url="`/pages/work/detail/detail?id=${info.id}`"
     >
         <view class="thumbnail-wrap">
             <image

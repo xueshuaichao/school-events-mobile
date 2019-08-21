@@ -125,9 +125,9 @@ export default {
             if (!formData.cat_id) {
                 return this.errTip('请选择视频分类');
             }
-            if (!formData.introduce) {
-                return this.errTip('请填写视频介绍');
-            }
+            // if (!formData.introduce) {
+            //     return this.errTip('请填写视频介绍');
+            // }
 
             if (!formData.video_id) {
                 return this.errTip('请上传视频文件');

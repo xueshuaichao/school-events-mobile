@@ -1,12 +1,11 @@
 <template>
     <view class="page-work-list">
-        <!-- <div class="tab-bar-wrap">
+        <div class="tab-bar-wrap">
             <view class="tab-bar">
                 <view
                     class="tab-item"
                     :class="{
-                        active:
-                            showMenu === true && showMenuType === 'address'
+                        active: showMenu === true && showMenuType === 'address'
                     }"
                     @click="toggleMenu('address')"
                 >
@@ -15,8 +14,7 @@
                 <view
                     class="tab-item"
                     :class="{
-                        active:
-                            showMenu === true && showMenuType === 'grade'
+                        active: showMenu === true && showMenuType === 'grade'
                     }"
                     @click="toggleMenu('grade')"
                 >
@@ -25,8 +23,7 @@
                 <view
                     class="tab-item"
                     :class="{
-                        active:
-                            showMenu === true && showMenuType === 'category'
+                        active: showMenu === true && showMenuType === 'category'
                     }"
                     @click="toggleMenu('category')"
                 >
@@ -42,7 +39,7 @@
                     <text>排序</text>
                 </view>
             </view>
-        </div> -->
+        </div>
         <div
             v-if="showMenu"
             class="dropdown-wrap"
@@ -459,7 +456,7 @@ export default {
 
 .main {
     white-space: pre-wrap;
-    // margin-top: 100upx;
+    margin-top: 100upx;
     padding: 40upx 30upx;
     margin-right: -35upx;
 
