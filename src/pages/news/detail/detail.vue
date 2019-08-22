@@ -16,6 +16,7 @@
                 <button
                     class="share-btn"
                     open-type="share"
+                    @click="shareToFriend"
                 >
                     <text class="text">
                         分享好友
@@ -25,7 +26,10 @@
                         src="/static/images/news/weixin.png"
                     />
                 </button>
-                <button class="share-btn">
+                <button
+                    class="share-btn"
+                    @click="shareToTimeline"
+                >
                     分享朋友圈
                     <image
                         class="icon-btn icon-timeline"

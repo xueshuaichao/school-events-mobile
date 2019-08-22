@@ -305,7 +305,7 @@ export default {
         return {
             filter: {
                 address: {
-                    province_id: '2898',
+                    province_id: '610000',
                     city_id: 0,
                     county_id: 0,
                 },
@@ -346,7 +346,11 @@ export default {
                 case 'city':
                     this.filter.address.city_id = value;
                     this.filter.address.county_id = 0;
-                    this.getCityData(value);
+                    if (value === 0) {
+                        this.countyData = [];
+                    } else {
+                        this.getCityData(value);
+                    }
                     break;
                 // 选择区
                 case 'county':

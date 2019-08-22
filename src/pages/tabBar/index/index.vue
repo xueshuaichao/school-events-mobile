@@ -124,12 +124,12 @@
                     {{ item.column_name }}
                 </text>
 
-                <navigator
+                <view
                     class="link"
-                    url="/pages/news/list/list"
+                    @click="moreArticle"
                 >
                     更多 >
-                </navigator>
+                </view>
             </view>
             <view class="panel-bd news-list">
                 <navigator
@@ -210,12 +210,18 @@ export default {
             this.newsTabActiveIndex = index;
             this.getArticle(this.newsColumn[index].id);
         },
+        moreArticle() {
+            uni.navigateTo({
+                url:
+                    `/pages/news/list/list?tab=${this.newsTabActiveIndex + 1}`,
+            });
+        },
         getArticle(columnId) {
             return api
                 .get('/api/article/list', {
                     column: columnId,
                     page_num: 1,
-                    page_size: 10,
+                    page_size: 5,
                 })
                 .then((res) => {
                     this.newsData = res.list;

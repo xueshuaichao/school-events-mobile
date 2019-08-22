@@ -38,9 +38,9 @@ export default {
             newsData: [],
         };
     },
-    created() {
-        this.getData();
-    },
+    // created() {
+    //     this.getData();
+    // },
     methods: {
         setNewsTabActive(index) {
             this.newsTabActiveIndex = index;
@@ -63,9 +63,16 @@ export default {
                 // console.log(res);
                 this.newsColumn = res.list;
 
-                this.getArticle(res.list[0].id);
+                this.getArticle(res.list[this.newsTabActiveIndex].id);
             });
         },
+    },
+    onLoad(params) {
+        const id = params.tab;
+        if (id !== undefined) {
+            this.newsTabActiveIndex = id - 0;
+        }
+        this.getData();
     },
 };
 </script>
