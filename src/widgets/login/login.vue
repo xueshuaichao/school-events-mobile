@@ -38,8 +38,8 @@ export default {
     data() {
         return {
             formData: {
-                username: '13370123965',
-                password: '123456',
+                username: '',
+                password: '',
             },
         };
     },

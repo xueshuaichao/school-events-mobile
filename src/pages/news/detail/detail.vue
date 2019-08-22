@@ -47,7 +47,7 @@
                     v-for="item in recommendData"
                     :key="item.id"
                     class="news-item"
-                    :url="`/pages/news/detail/detail?id=123`"
+                    :url="`/pages/news/detail/detail?id=${item.id}`"
                 >
                     <text class="text-two-line">
                         · {{ item.title }}
