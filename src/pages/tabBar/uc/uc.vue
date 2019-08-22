@@ -8,35 +8,34 @@
             @login="onLogin"
         />
         <template v-else>
-            <view class="main">
-                <view class="user-name">
-                    {{ userInfo.name }}
+            <view class="user-info">
+                <image
+                    class="avatar"
+                    :src="userInfo.avatar_url || '/static/images/uc/avatar.png'"
+                />
+                <view class="main-info">
+                    <view class="user-name">
+                        {{ userInfo.name }}
+                    </view>
+
+                    <template v-if="userInfo.identity === 3">
+                        <view class="info user-from">
+                            {{ userInfo.teacher_info.school_name
+                            }}{{ userInfo.teacher_info.department_name }}
+                        </view>
+                    </template>
+
+                    <template v-if="userInfo.identity === 4">
+                        <view class="info user-from">
+                            {{ userInfo.student_info.school_name
+                            }}{{ userInfo.student_info.grade_name
+                            }}{{ userInfo.student_info.class_name }}
+                        </view>
+                        <view class="info user-id">
+                            学号：{{ userInfo.student_info.number }}
+                        </view>
+                    </template>
                 </view>
-
-                <template v-if="userInfo.identity === 3">
-                    <view class="info user-from">
-                        {{ userInfo.teacher_info.school_name
-                        }}{{ userInfo.teacher_info.department_name }}
-                    </view>
-                </template>
-
-                <template v-if="userInfo.identity === 4">
-                    <view class="info user-from">
-                        {{ userInfo.student_info.school_name
-                        }}{{ userInfo.student_info.grade_name
-                        }}{{ userInfo.student_info.class_name }}
-                    </view>
-                    <view class="info user-id">
-                        学号：{{ userInfo.student_info.number }}
-                    </view>
-                </template>
-
-                <!-- <button
-                    type="primary"
-                    @click="doLogout"
-                >
-                    退出登录
-                </button> -->
             </view>
 
             <!-- identity 用户身份 1=>C端普通用户 ,2=> 教育局员工，3=>学校员工 4 学生 -->
@@ -112,6 +111,11 @@
                         <blank />
                     </template>
                 </view>
+            </view>
+
+            <view v-else>
+                <view class="sep" />
+                <blank :type="'uc'" />
             </view>
         </template>
     </view>
@@ -264,19 +268,36 @@ export default {
 .page-uc-index {
     padding-bottom: 20upx;
 
-    .main {
-        padding: 30upx 30upx 0upx 30upx;
+    .sep {
+        border-bottom: 1upx solid #ddd;
+        margin-top: 30upx;
+    }
 
-        .user-name {
-            font-size: 32upx;
-            color: #333;
-            margin-bottom: 24upx;
+    .user-info {
+        padding: 30upx 30upx 0upx 30upx;
+        display: flex;
+
+        .avatar {
+            margin-right: 24upx;
+            width: 145upx;
+            height: 145upx;
         }
 
-        .info {
-            color: #999;
-            font-size: 22upx;
-            margin-bottom: 24upx;
+        .main-info {
+            flex: 1;
+            overflow: hidden;
+
+            .user-name {
+                font-size: 32upx;
+                color: #333;
+                margin-bottom: 24upx;
+            }
+
+            .info {
+                color: #999;
+                font-size: 22upx;
+                margin-bottom: 24upx;
+            }
         }
     }
 

@@ -4,14 +4,35 @@
             class="blank-icon"
             src="/static/images/widgets/blank/blank.png"
         />
-        <view class="text">
+        <view
+            v-if="type === 'normal'"
+            class="text"
+        >
             暂无数据
+        </view>
+        <view
+            v-if="type === 'uc'"
+            class="text multi"
+        >
+            <view>
+                这个人很懒
+            </view>
+            <view>
+                什么都没有留下
+            </view>
         </view>
     </view>
 </template>
 
 <script>
-export default {};
+export default {
+    props: {
+        type: {
+            type: String,
+            default: 'normal',
+        },
+    },
+};
 </script>
 
 <style lang="less" scoped>
@@ -28,6 +49,10 @@ export default {};
         font-size: 40upx;
         margin-top: 50upx;
         text-align: center;
+
+        &.multi {
+            line-height: 60upx;
+        }
     }
 }
 </style>
