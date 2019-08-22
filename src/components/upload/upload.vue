@@ -122,7 +122,10 @@ export default {
                         });
                     } else {
                         // fail
-                        uni.hideToast();
+                        return uni.showToast({
+                            title: resp.msg,
+                            icon: 'none',
+                        });
                     }
                     return false;
                 },
@@ -160,7 +163,10 @@ export default {
                         this.url = resp.data.video_id;
                     } else {
                         // fail
-                        uni.hideToast();
+                        return uni.showToast({
+                            title: resp.msg,
+                            icon: 'none',
+                        });
                     }
                     return false;
                 },
