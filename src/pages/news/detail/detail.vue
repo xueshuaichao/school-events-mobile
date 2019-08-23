@@ -40,7 +40,10 @@
         </view>
 
         <!-- news -->
-        <view class="panel">
+        <view
+            v-if="recommendData.length > 0"
+            class="panel"
+        >
             <view class="panel-hd">
                 <text class="panel-title">
                     相关阅读：
@@ -93,8 +96,12 @@ export default {
                     console.log(e);
                 }
 
-                // 获取推荐信息
-                this.getArticle(res.column);
+                if (this.info.is_proclamation === 0) {
+                    // 获取推荐信息
+                    this.getArticle(res.column);
+                } else if (this.info.is_proclamation === 1) {
+                    uni.setNavigationBarTitle(this.info.title);
+                }
             });
         },
         getArticle(columnId) {
