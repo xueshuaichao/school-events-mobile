@@ -209,6 +209,7 @@ export default {
             }
             api.get('/api/user/worklist', {
                 status,
+                page_size: 100,
             }).then(
                 (res) => {
                     this.isLoadingTableData = false;

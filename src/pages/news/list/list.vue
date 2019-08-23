@@ -23,19 +23,31 @@
                     · {{ item.title }}
                 </text>
             </navigator>
+            <uni-load-more :status="loadMoreStatus" />
         </view>
     </view>
 </template>
 
 <script>
 import api from '../../../common/api';
+import uniLoadMore from '../../../components/uni-load-more/uni-load-more.vue';
 
 export default {
+    components: {
+        uniLoadMore,
+    },
     data() {
         return {
             newsTabActiveIndex: 0,
             newsColumn: [],
             newsData: [],
+
+            filter: {
+                page_num: 1,
+                page_size: 20,
+                column: '',
+            },
+            loadMoreStatus: 'more',
         };
     },
     // created() {
@@ -44,26 +56,35 @@ export default {
     methods: {
         setNewsTabActive(index) {
             this.newsTabActiveIndex = index;
-            this.getArticle(this.newsColumn[index].id);
+            this.filter.column = this.newsColumn[index].id;
+
+            this.getArticle();
         },
-        getArticle(columnId) {
-            return api
-                .get('/api/article/list', {
-                    column: columnId,
-                    page_num: 1,
-                    page_size: 20,
-                })
-                .then((res) => {
-                    console.log(res);
-                    this.newsData = res.list;
-                });
+        getArticle() {
+            this.filter.page_num = 1;
+            return api.get('/api/article/list', this.filter).then((res) => {
+                this.newsData = res.list;
+                this.total = res.total;
+                if (this.total < 10) {
+                    this.loadMoreStatus = 'noMore';
+                }
+            });
+        },
+        getArticleMore() {
+            return api.get('/api/article/list', this.filter).then((res) => {
+                this.loadMoreStatus = this.total > this.filter.page_num * this.filter.page_size
+                    ? 'more'
+                    : 'noMore';
+                this.newsData = this.newsData.concat(res.list);
+            });
         },
         getData() {
             api.get('/api/column/list').then((res) => {
                 // console.log(res);
                 this.newsColumn = res.list;
+                this.filter.column = res.list[this.newsTabActiveIndex].id;
 
-                this.getArticle(res.list[this.newsTabActiveIndex].id);
+                this.getArticle();
             });
         },
     },
@@ -73,6 +94,15 @@ export default {
             this.newsTabActiveIndex = id - 0;
         }
         this.getData();
+    },
+    onReachBottom() {
+        if (this.total > this.filter.page_num * this.filter.page_size) {
+            this.filter.page_num = this.filter.page_num + 1;
+            this.loadMoreStatus = 'loading';
+            this.getArticleMore();
+        } else {
+            this.loadMoreStatus = 'noMore';
+        }
     },
 };
 </script>
