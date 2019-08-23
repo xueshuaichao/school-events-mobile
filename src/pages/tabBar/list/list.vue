@@ -313,7 +313,7 @@ export default {
                     city_id: 0,
                     county_id: 0,
                 },
-                team_id: '',
+                team_id: 0,
                 sort: 1,
 
                 cat_id: {

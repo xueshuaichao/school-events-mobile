@@ -8,13 +8,17 @@
             class="video"
             :src="pageData.video.cloud_path_sd"
             controls
+            @play="onPlay"
         />
         <view class="content">
             <view class="author">
                 <view class="author-avator">
                     <image
                         class="avatar"
-                        :src="pageData.create_user_avatar_url"
+                        :src="
+                            pageData.create_user_avatar_url ||
+                                '/static/images/uc/avatar.png'
+                        "
                     />
                 </view>
                 <view class="author-info">
@@ -87,6 +91,7 @@ export default {
             isLoading: true,
             pageData: {},
             likeStatus: 0,
+            isPlayed: false,
         };
     },
     methods: {
@@ -129,6 +134,15 @@ export default {
                 console.log(res);
                 this.likeStatus = res.status;
             });
+        },
+        onPlay() {
+            if (!this.isPlayed) {
+                api.get('/api/works/playcount', {
+                    id: this.id,
+                });
+            }
+
+            this.isPlayed = true;
         },
     },
     onLoad(query) {

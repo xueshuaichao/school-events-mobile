@@ -161,6 +161,11 @@ export default {
                             title: '已上传',
                         });
                         this.url = resp.data.video_id;
+                    } else if (resp.status === 706) {
+                        uni.hideToast();
+                        uni.navigateTo({
+                            url: '/pages/upload/result/result?type=deny',
+                        });
                     } else {
                         // fail
                         return uni.showToast({
