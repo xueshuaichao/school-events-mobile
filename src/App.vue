@@ -43,7 +43,6 @@ uni-tabbar .uni-tabbar__bd {
     font-size: 28upx;
     line-height: 42upx;
 
-    text-indent: 2em;
     padding: 30upx;
 }
 

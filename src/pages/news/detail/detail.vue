@@ -26,7 +26,9 @@
                         src="/static/images/news/weixin.png"
                     />
                 </button>
+
                 <button
+                    v-if="isH5"
                     class="share-btn"
                     @click="shareToTimeline"
                 >
@@ -73,6 +75,10 @@ export default {
     data() {
         return {
             id: '',
+
+            // #ifdef H5
+            isH5: true,
+            // #endif
 
             info: {},
             contentNodes: [],
