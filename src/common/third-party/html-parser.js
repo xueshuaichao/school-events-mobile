@@ -298,7 +298,6 @@ function parseHtml(html) {
     };
     HTMLParser(html, {
         start: function start(tag, attrs, unary) {
-            console.log(tag, attrs, unary);
             var node = {
                 name: tag
             };
@@ -341,7 +340,6 @@ function parseHtml(html) {
             }
         },
         chars: function chars(text) {
-            console.log(text);
             var node = {
                 type: "text",
                 text: text
@@ -373,7 +371,6 @@ function parseHtml(html) {
             parent.children.push(node);
         },
         img: function img(text) {
-            console.log(text);
             var node = {
                 type: "text",
                 text: text

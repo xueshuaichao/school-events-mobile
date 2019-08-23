@@ -99,8 +99,6 @@ export default {
                 if (this.info.is_proclamation === 0) {
                     // 获取推荐信息
                     this.getArticle(res.column);
-                } else if (this.info.is_proclamation === 1) {
-                    uni.setNavigationBarTitle(this.info.title);
                 }
             });
         },
@@ -151,8 +149,14 @@ export default {
         },
     },
     onLoad(query) {
-        const { id } = query;
+        const { id, title } = query;
         this.getData(id);
+
+        if (title) {
+            uni.setNavigationBarTitle({
+                title,
+            });
+        }
     },
     onShareAppMessage(res) {
         if (res.from === 'button') {
@@ -171,7 +175,7 @@ export default {
 
 <style lang="less" scoped>
 .page-news-detail {
-    margin-bottom: 48upx;
+    padding-bottom: 48upx;
 
     image {
         width: 690upx;

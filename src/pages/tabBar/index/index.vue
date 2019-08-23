@@ -36,7 +36,9 @@
         <view class="menu-list">
             <navigator
                 class="item"
-                :url="`/pages/news/detail/detail?id=50`"
+                :url="
+                    `/pages/news/detail/detail?id=${menuConf.intro.id}&title=大赛简介`
+                "
             >
                 <view class="icon-wrap purple">
                     <!-- <view class="icon icon-intro"></view> -->
@@ -52,7 +54,9 @@
 
             <navigator
                 class="item"
-                :url="`/pages/news/detail/detail?id=${menuConf.notice.id}`"
+                :url="
+                    `/pages/news/detail/detail?id=${menuConf.notice.id}&title=大赛须知`
+                "
             >
                 <view class="icon-wrap green">
                     <image
@@ -67,7 +71,9 @@
 
             <navigator
                 class="item"
-                :url="`/pages/news/detail/detail?id=${menuConf.process.id}`"
+                :url="
+                    `/pages/news/detail/detail?id=${menuConf.process.id}&title=大赛流程`
+                "
             >
                 <view class="icon-wrap yellow">
                     <image
@@ -82,7 +88,9 @@
 
             <navigator
                 class="item"
-                :url="`/pages/news/detail/detail?id=${menuConf.time.id}`"
+                :url="
+                    `/pages/news/detail/detail?id=${menuConf.time.id}&title=大赛时间`
+                "
             >
                 <view class="icon-wrap blue">
                     <image
@@ -97,7 +105,7 @@
 
             <navigator
                 class="item"
-                url="/pages/news/list/list"
+                url="/pages/news/list/list?title=大赛须知"
             >
                 <view class="icon-wrap orange">
                     <image
@@ -212,8 +220,7 @@ export default {
         },
         moreArticle() {
             uni.navigateTo({
-                url:
-                    `/pages/news/list/list?tab=${this.newsTabActiveIndex + 1}`,
+                url: `/pages/news/list/list?tab=${this.newsTabActiveIndex + 1}`,
             });
         },
         getArticle(columnId) {
