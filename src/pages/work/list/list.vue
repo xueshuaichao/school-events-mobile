@@ -284,6 +284,7 @@
                     :key="item.id"
                     :info="item"
                 />
+                <uni-load-more :status="loadMoreStatus" />
             </template>
             <blank v-else />
         </view>
@@ -291,6 +292,7 @@
 </template>
 
 <script>
+import uniLoadMore from '../../../components/uni-load-more/uni-load-more.vue';
 import api from '../../../common/api';
 import work from '../../../components/work/work.vue';
 import blank from '../../../widgets/blank/blank.vue';
@@ -299,10 +301,12 @@ export default {
     components: {
         work,
         blank,
+        uniLoadMore,
     },
 
     data() {
         return {
+            loadMoreStatus: 'more',
             filter: {
                 address: {
                     province_id: '610000',
@@ -317,7 +321,10 @@ export default {
                     two_level_id: 0,
                     three_level_id: 0,
                 },
+                page_num: 1,
+                page_size: 20,
             },
+            total: 0,
 
             isLoading: true,
             title: '作品展示',
@@ -332,7 +339,6 @@ export default {
             catThreeMenu: [],
 
             tableData: [],
-            total: 0,
         };
     },
     created() {
@@ -346,7 +352,11 @@ export default {
                 case 'city':
                     this.filter.address.city_id = value;
                     this.filter.address.county_id = 0;
-                    this.getCityData(value);
+                    if (value === 0) {
+                        this.countyData = [];
+                    } else {
+                        this.getCityData(value);
+                    }
                     break;
                 // 选择区
                 case 'county':
@@ -399,10 +409,22 @@ export default {
             });
         },
         getTableData() {
+            this.filter.page_num = 1;
             api.post('/api/works/list', this.filter).then((res) => {
                 this.tableData = res.list;
+                this.total = res.total;
                 this.isLoading = false;
                 console.log(res);
+                if (this.total < 10) {
+                    this.loadMoreStatus = 'noMore';
+                }
+            });
+        },
+        getTableDataMore() {
+            api.post('/api/works/list', this.filter).then((res) => {
+                this.tableData = this.tableData.concat(res.list);
+                this.total = res.total;
+                this.loadMoreStatus = 'more';
             });
         },
         getCityData(cityid) {
@@ -445,6 +467,15 @@ export default {
         uni.setNavigationBarTitle({
             title,
         });
+    },
+    onReachBottom() {
+        if (this.total > this.filter.page_num * this.filter.page_size) {
+            this.filter.page_num = this.filter.page_num + 1;
+            this.loadMoreStatus = 'loading';
+            this.getTableDataMore();
+        } else {
+            this.loadMoreStatus = 'noMore';
+        }
     },
 };
 </script>
