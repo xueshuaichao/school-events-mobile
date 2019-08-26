@@ -78,6 +78,9 @@
         "usingComponents": true
     },
     "h5": {
+        "router": {
+            "mode": "history"
+        },
         "devServer": {
             "port": 80,
             "disableHostCheck": true,
