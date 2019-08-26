@@ -305,11 +305,11 @@ export default {
         return {
             filter: {
                 address: {
-                    province_id: '2898',
+                    province_id: '610000',
                     city_id: 0,
                     county_id: 0,
                 },
-                team_id: '',
+                team_id: 0,
                 sort: 1,
 
                 cat_id: {
