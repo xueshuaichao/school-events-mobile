@@ -120,11 +120,19 @@ export default {
                 object_type: 1,
                 // 1-点赞 0 取消点赞
                 type: isLiked ? 0 : 1,
-            }).then((res) => {
-                console.log(res);
-                this.likeStatus = isLiked ? 0 : 1;
-                this.getData();
-            });
+            }).then(
+                (res) => {
+                    console.log(res);
+                    this.likeStatus = isLiked ? 0 : 1;
+                    this.getData();
+                },
+                (err) => {
+                    uni.showToast({
+                        icon: 'none',
+                        title: err.message,
+                    });
+                },
+            );
         },
         getLikeStatus() {
             api.get('/api/common/getlikestatus', {
