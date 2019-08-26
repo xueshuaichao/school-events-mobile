@@ -137,6 +137,7 @@ export default {
         getLikeStatus() {
             api.get('/api/common/getlikestatus', {
                 object_type: 1,
+
                 object_id: this.id,
             }).then((res) => {
                 console.log(res);
