@@ -1,12 +1,14 @@
 <template>
     <view v-if="!isLoading">
         <view class="page-news-detail">
-            <view class="title">
-                {{ info.title }}
-            </view>
-            <view class="info">
-                来源： {{ info.user_name }} {{ info.publish_at }}
-            </view>
+            <template v-if="!noticeMode">
+                <view class="title">
+                    {{ info.title }}
+                </view>
+                <view class="info">
+                    来源： {{ info.user_name }} {{ info.publish_at }}
+                </view>
+            </template>
 
             <view class="content page-rich-text">
                 <rich-text :nodes="contentNodes" />
@@ -80,6 +82,7 @@ export default {
             isH5: true,
             // #endif
 
+            noticeMode: false,
             info: {},
             contentNodes: [],
             isLoading: true,
@@ -157,6 +160,7 @@ export default {
     onLoad(query) {
         const { id, title } = query;
         this.getData(id);
+        this.noticeMode = true;
 
         if (title) {
             uni.setNavigationBarTitle({
