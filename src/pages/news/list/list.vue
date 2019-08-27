@@ -65,7 +65,7 @@ export default {
             return api.get('/api/article/list', this.filter).then((res) => {
                 this.newsData = res.list;
                 this.total = res.total;
-                if (this.total < 10) {
+                if (this.total < 19) {
                     this.loadMoreStatus = 'noMore';
                 }
             });
