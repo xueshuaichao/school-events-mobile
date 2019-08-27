@@ -11,7 +11,7 @@
                     :duration="duration"
                 >
                     <swiper-item>
-                        <view class="swiper-item uni-bg-red">
+                        <view class="swiper-item">
                             <image
                                 class="banner-image"
                                 src="/static/images/index/banner.jpg"
@@ -19,7 +19,7 @@
                         </view>
                     </swiper-item>
                     <swiper-item>
-                        <view class="swiper-item uni-bg-green">
+                        <view class="swiper-item">
                             <image
                                 class="banner-image"
                                 src="/static/images/index/banner.jpg"
@@ -27,7 +27,7 @@
                         </view>
                     </swiper-item>
                     <swiper-item>
-                        <view class="swiper-item uni-bg-blue">
+                        <view class="swiper-item">
                             <image
                                 class="banner-image"
                                 src="/static/images/index/banner.jpg"
@@ -425,12 +425,5 @@ uni-swiper {
             padding: 25upx 0;
         }
     }
-}
-
-.uni-bg-green {
-    background: green;
-}
-.uni-bg-blue {
-    background: blue;
 }
 </style>
