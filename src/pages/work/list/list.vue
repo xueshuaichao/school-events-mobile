@@ -449,16 +449,17 @@ export default {
     onLoad(params) {
         const id = params.cat_id;
         this.filter.cat_id.one_level_id = id;
+        this.filter.sort = 2;
 
-        let title = '作品列表';
-        if (id === '1') {
-            title = '优秀个人作品展';
-        } else if (id === '2') {
-            title = '优秀团体作品展';
-        } else if (id === '3') {
-            title = '优秀才艺达人作品展';
-        }
-        console.log(title);
+        const title = '作品展示';
+        // if (id === '1') {
+        //     title = '优秀个人作品展';
+        // } else if (id === '2') {
+        //     title = '优秀团体作品展';
+        // } else if (id === '3') {
+        //     title = '优秀才艺达人作品展';
+        // }
+        // console.log(title);
 
         uni.setNavigationBarTitle({
             title,

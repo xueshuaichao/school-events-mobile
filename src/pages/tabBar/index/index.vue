@@ -253,6 +253,7 @@ export default {
                 cat_id: {
                     one_level_id: catId,
                 },
+                sort: 2,
                 page_size: 6,
             }).then((res) => {
                 if (type === 'individual') {
