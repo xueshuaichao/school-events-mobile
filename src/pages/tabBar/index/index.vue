@@ -14,18 +14,24 @@
                         <view class="swiper-item uni-bg-red">
                             <image
                                 class="banner-image"
-                                src="/static/images/index/banner.png"
+                                src="/static/images/index/banner.jpg"
                             />
                         </view>
                     </swiper-item>
                     <swiper-item>
                         <view class="swiper-item uni-bg-green">
-                            B
+                            <image
+                                class="banner-image"
+                                src="/static/images/index/banner.jpg"
+                            />
                         </view>
                     </swiper-item>
                     <swiper-item>
                         <view class="swiper-item uni-bg-blue">
-                            C
+                            <image
+                                class="banner-image"
+                                src="/static/images/index/banner.jpg"
+                            />
                         </view>
                     </swiper-item>
                 </swiper>
