@@ -341,10 +341,6 @@ export default {
             tableData: [],
         };
     },
-    created() {
-        this.getData();
-        this.getTableData();
-    },
     methods: {
         onSelect(type, value) {
             switch (type) {
@@ -467,6 +463,9 @@ export default {
         uni.setNavigationBarTitle({
             title,
         });
+
+        this.getData();
+        this.getTableData();
     },
     onReachBottom() {
         if (this.total > this.filter.page_num * this.filter.page_size) {

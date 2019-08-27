@@ -160,7 +160,9 @@ export default {
     onLoad(query) {
         const { id, title } = query;
         this.getData(id);
-        this.noticeMode = true;
+        if (title) {
+            this.noticeMode = true;
+        }
 
         if (title) {
             uni.setNavigationBarTitle({
