@@ -106,4 +106,19 @@ uni-tabbar .uni-tabbar__bd {
         }
     }
 }
+
+// theme
+.uni-page-refresh-inner {
+    svg {
+        fill: #1166ff !important;
+    }
+
+    circle {
+        stroke: #1166ff !important;
+    }
+}
+
+uni-picker .uni-picker-action.uni-picker-action-confirm {
+    color: #1166ff;
+}
 </style>

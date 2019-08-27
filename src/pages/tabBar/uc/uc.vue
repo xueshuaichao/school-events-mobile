@@ -149,10 +149,6 @@ export default {
             tableData: [],
         };
     },
-    onLoad() {},
-    created() {
-        this.getData();
-    },
     methods: {
         getData() {
             api.get('/api/user/info').then(
@@ -167,7 +163,7 @@ export default {
             );
 
             this.getWorkStatic();
-            this.getWorkData();
+            return this.getWorkData();
         },
         getWorkStatic() {
             api.get('/api/user/workstatics').then(
@@ -207,18 +203,20 @@ export default {
             } else if (this.tabActiveIndex === 2) {
                 status = 2;
             }
-            api.get('/api/user/worklist', {
-                status,
-                page_size: 100,
-            }).then(
-                (res) => {
-                    this.isLoadingTableData = false;
-                    this.tableData = res.list;
-                },
-                () => {
-                    this.tableData = [];
-                },
-            );
+            return api
+                .get('/api/user/worklist', {
+                    status,
+                    page_size: 100,
+                })
+                .then(
+                    (res) => {
+                        this.isLoadingTableData = false;
+                        this.tableData = res.list;
+                    },
+                    () => {
+                        this.tableData = [];
+                    },
+                );
         },
         setTabActive(i) {
             this.tabActiveIndex = i;
@@ -261,6 +259,17 @@ export default {
         onLogin() {
             this.getData();
         },
+    },
+    onLoad() {
+        this.getData();
+    },
+    onShow() {
+        this.getData();
+    },
+    onPullDownRefresh() {
+        this.getData().then(() => {
+            uni.stopPullDownRefresh();
+        });
     },
 };
 </script>

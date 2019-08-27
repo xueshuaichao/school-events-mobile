@@ -22,7 +22,8 @@
         {
             "path": "pages/tabBar/uc/uc",
             "style": {
-                "navigationBarTitleText": "账户中心"
+                "navigationBarTitleText": "账户中心",
+                "enablePullDownRefresh": true
             }
         },
 
