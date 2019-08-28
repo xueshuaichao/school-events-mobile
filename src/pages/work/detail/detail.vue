@@ -3,12 +3,25 @@
         v-if="!isLoading"
         class="page-work-detail"
     >
+        <view
+            v-if="isFullScreen && isH5"
+            class="h5-full-screen-title text-one-line"
+        >
+            {{ pageData.resource_name }}
+        </view>
+        <cover-view
+            v-if="isFullScreen && !isH5"
+            class="mp-weixin-full-screen-title text-one-line"
+        >
+            {{ pageData.resource_name }}
+        </cover-view>
         <video
             id="myVideo"
             class="video"
             :src="pageData.video.cloud_path_sd"
             controls
             @play="onPlay"
+            @fullscreenchange="onFullScreenChange"
         />
         <view class="content">
             <view class="author">
@@ -67,6 +80,7 @@
             </view>
             <view class="sep" />
             <button
+                v-if="!isH5"
                 class="sect share-btn"
                 open-type="share"
             >
@@ -92,6 +106,12 @@ export default {
             pageData: {},
             likeStatus: 0,
             isPlayed: false,
+
+            // #ifdef H5
+            isH5: true,
+            // #endif
+
+            isFullScreen: false,
         };
     },
     methods: {
@@ -153,17 +173,60 @@ export default {
 
             this.isPlayed = true;
         },
+
+        onFullScreenChange(e) {
+            const isFullScreenMode = e.detail.fullScreen;
+            this.isFullScreen = isFullScreenMode;
+        },
+        html5VideoAutoAdjust() {
+            document.querySelector('.uni-video-type-fullscreen').style = '';
+        },
     },
     onLoad(query) {
         const { id } = query;
         this.id = id;
         this.getData(id);
+
+        // hack for html5 video size notwoking
+        // #ifdef H5
+        window.removeEventListener(
+            'orientationchange',
+            this.html5VideoAutoAdjust,
+        );
+        window.addEventListener('orientationchange', this.html5VideoAutoAdjust);
+        // #endif
     },
 };
 </script>
 
 <style lang="less">
 .page-work-detail {
+    .h5-full-screen-title {
+        position: fixed;
+        width: 100%;
+        z-index: 10000;
+        color: #fff;
+        padding-top: 20upx;
+        padding-left: 20upx;
+        box-sizing: border-box;
+        top: 0;
+    }
+
+    .mp-weixin-full-screen-title {
+        position: absolute;
+        top: 46upx;
+        width: 100%;
+        z-index: 10000;
+        color: #fff;
+        display: flex;
+        box-sizing: border-box;
+        padding: 0 100upx;
+
+        .video-title {
+            flex: 1;
+        }
+    }
+
     .video {
         width: 100%;
         height: 422upx;

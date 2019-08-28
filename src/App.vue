@@ -61,6 +61,10 @@ uni-tabbar .uni-tabbar__bd {
 </style>
 
 <style lang="less">
+.uni-video-type-fullscreen {
+    height: 100% !important;
+}
+
 .panel {
     text-align: left;
     .panel-hd {
