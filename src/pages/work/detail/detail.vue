@@ -10,7 +10,7 @@
             {{ pageData.resource_name }}
         </view>
         <cover-view
-            v-if="isFullScreen && !isH5"
+            v-if="true || (isFullScreen && !isH5)"
             class="mp-weixin-full-screen-title text-one-line"
         >
             <cover-view class="cover-title">
@@ -21,7 +21,7 @@
                     class="mini-btn"
                     open-type="share"
                 >
-                    <image
+                    <cover-image
                         class="mini-icon"
                         :src="'/static/images/work/mini-share.png'"
                     />
