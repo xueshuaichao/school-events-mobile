@@ -10,7 +10,7 @@
             {{ pageData.resource_name }}
         </view>
         <cover-view
-            v-if="true || (isFullScreen && !isH5)"
+            v-if="isFullScreen && !isH5"
             class="mp-weixin-full-screen-title text-one-line"
         >
             <cover-view class="cover-title">
