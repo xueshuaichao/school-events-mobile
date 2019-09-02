@@ -13,9 +13,7 @@
             v-if="isFullScreen && !isH5"
             class="mp-weixin-full-screen-title text-one-line"
         >
-            <cover-view class="cover-title">
-                {{ pageData.resource_name }}
-            </cover-view>
+            <cover-view class="cover-title" />
             <cover-view class="cover-action">
                 <button
                     class="mini-btn"

@@ -76,7 +76,7 @@
                 >
                     <template v-if="tableData.length">
                         <view
-                            v-for="item in tableData"
+                            v-for="(item, k) in tableData"
                             :key="item.id"
                             class="work-item"
                         >
@@ -85,12 +85,14 @@
                                 :mode="'single'"
                             />
                             <view class="btns">
-                                <view
+                                <button
                                     v-if="item.status === 1"
-                                    class="btn"
+                                    :id="k"
+                                    class="btn btn-share"
+                                    open-type="share"
                                 >
                                     分享
-                                </view>
+                                </button>
                                 <view
                                     v-if="item.status !== 1"
                                     class="btn"
@@ -254,6 +256,20 @@ export default {
                 },
             });
         },
+        onShareAppMessage(res) {
+            if (res.from === 'button') {
+                // 来自页面内分享按钮
+                const index = res.target.id;
+                const item = this.tableData[index];
+
+                return {
+                    title: item.resource_name,
+                    imageUrl: item.video_img_url,
+                    path: `/pages/work/detail/detail?id=${item.id}`,
+                };
+            }
+            return false;
+        },
 
         // fetch user info
         onLogin() {
@@ -344,6 +360,11 @@ export default {
                 text-align: center;
                 margin-left: 40upx;
                 background: #1166ff;
+            }
+
+            .btn-share {
+                border-radius: 0;
+                top: 20upx;
             }
         }
     }
