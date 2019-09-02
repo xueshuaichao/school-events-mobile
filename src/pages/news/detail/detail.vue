@@ -14,7 +14,10 @@
                 <rich-text :nodes="contentNodes" />
             </view>
 
-            <view class="share-wrap">
+            <view
+                v-if="!isH5"
+                class="share-wrap"
+            >
                 <button
                     class="share-btn"
                     open-type="share"
@@ -29,7 +32,7 @@
                     />
                 </button>
 
-                <button
+                <!-- <button
                     v-if="isH5"
                     class="share-btn"
                     @click="shareToTimeline"
@@ -39,7 +42,7 @@
                         class="icon-btn icon-timeline"
                         src="/static/images/news/timeline.png"
                     />
-                </button>
+                </button> -->
             </view>
         </view>
 

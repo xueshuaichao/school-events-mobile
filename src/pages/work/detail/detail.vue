@@ -13,7 +13,29 @@
             v-if="isFullScreen && !isH5"
             class="mp-weixin-full-screen-title text-one-line"
         >
-            {{ pageData.resource_name }}
+            <cover-view class="cover-title">
+                {{ pageData.resource_name }}
+            </cover-view>
+            <cover-view class="cover-action">
+                <button
+                    class="mini-btn"
+                    open-type="share"
+                >
+                    <image
+                        class="mini-icon"
+                        :src="'/static/images/work/mini-share.png'"
+                    />
+                </button>
+                <cover-image
+                    class="cover-like"
+                    :src="
+                        likeStatus === 1
+                            ? '/static/images/work/mini-like-ac.png'
+                            : '/static/images/work/mini-like.png'
+                    "
+                    @click="toggleLike"
+                />
+            </cover-view>
         </cover-view>
         <video
             id="myVideo"
@@ -220,11 +242,38 @@ export default {
         color: #fff;
         display: flex;
         box-sizing: border-box;
-        padding: 0 100upx;
+        padding: 0 30upx 0 100upx;
 
         .video-title {
             flex: 1;
         }
+    }
+
+    .cover-title {
+        flex: 1;
+    }
+
+    .mini-btn {
+        background: transparent;
+        padding: 0px;
+        width: 37rpx;
+        height: 37rpx;
+        line-height: 37rpx;
+        border-radius: 0;
+        display: inline-block;
+        margin-right: 48upx;
+    }
+
+    .mini-icon {
+        width: 37rpx;
+        height: 37rpx;
+        display: inline-block;
+    }
+
+    .cover-like {
+        width: 37upx;
+        height: 37upx;
+        display: inline-block;
     }
 
     .video {
