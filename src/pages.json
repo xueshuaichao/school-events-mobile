@@ -70,13 +70,13 @@
         }
     ],
     "globalStyle": {
+        // #ifdef H5
+        "navigationStyle": "custom",
+        // #endif
         "navigationBarTextStyle": "black",
         "navigationBarTitleText": "uni-app",
         "navigationBarBackgroundColor": "#F8F8F8",
-        "backgroundColor": "#F8F8F8",
-        // #ifdef H5
-        "navigationStyle": "custom"
-        // #endif
+        "backgroundColor": "#F8F8F8"
     },
     "tabBar": {
         "color": "#7A7E83",
