@@ -357,12 +357,15 @@ export default {
                 // 选择区
                 case 'county':
                     this.filter.address.county_id = value;
+                    this.toggleMenu('address');
                     break;
                 case 'grade':
                     this.filter.team_id = value;
+                    this.toggleMenu('grade');
                     break;
                 case 'sort':
                     this.filter.sort = value;
+                    this.toggleMenu('sort');
                     break;
                 case 'cat_one':
                     if (value === 0) {
@@ -392,6 +395,7 @@ export default {
                     } else {
                         this.filter.cat_id.three_level_id = value.cat_id;
                     }
+                    this.toggleMenu('category');
                     break;
                 default:
                     break;
@@ -504,8 +508,8 @@ export default {
 .dropdown-wrap {
     position: fixed;
     width: 100%;
-    top: calc(100upx + var(--window-top));
-    height: calc(100% - 100upx - var(--window-top) - var(--window-bottom));
+    top: calc(100upx);
+    height: calc(100% - 100upx - var(--window-bottom));
     z-index: 100;
 
     .dropdown {
@@ -549,7 +553,7 @@ export default {
 
 .tab-bar-wrap {
     position: fixed;
-    top: calc(var(--window-top));
+    top: 0; //calc(var(--window-top));
     width: 100%;
     z-index: 1000;
     box-shadow: 0 0 8upx 0 rgba(0, 0, 0, 0.05);
