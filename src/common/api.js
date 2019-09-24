@@ -23,7 +23,6 @@ function get(url, data) {
 function post(url, data) {
     return http.post(url, data).then(
         (res) => {
-            console.log(res);
             // http 异常
             if (res.statusCode !== 200) {
                 throw new Error('服务器开小差了~');

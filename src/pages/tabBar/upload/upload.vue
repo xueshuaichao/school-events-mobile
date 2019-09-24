@@ -1,6 +1,9 @@
 <template>
     <view class="page-upload">
-        <view class="main">
+        <view
+            v-if="!needBindMobile"
+            class="main"
+        >
             <view class="uni-form-item uni-column">
                 <input
                     v-model="formData.resource_name"
@@ -55,6 +58,64 @@
                 上传
             </view>
         </view>
+        <view
+            v-if="needBindMobile"
+            class="page-bind-mobile"
+        >
+            <div class="tip">
+                上传作品需要绑定手机号，后面也可以用该手机号登录
+            </div>
+
+            <view
+                class="form-item-wrap"
+                :class="{
+                    inValid: accountData.isValid === false
+                }"
+            >
+                <input
+                    v-model="accountData.mobile"
+                    class="form-input"
+                    placeholder-class="placeholder"
+                    maxlength="30"
+                    placeholder="请输入手机号"
+                >
+                <view class="error-tip">
+                    {{ accountData.isValid ? "" : accountData.msg }}
+                </view>
+            </view>
+
+            <view class="form-item-wrap">
+                <input
+                    v-model="accountData.verify_code"
+                    class="form-input"
+                    placeholder-class="placeholder"
+                    maxlength="30"
+                    placeholder="请输入验证码"
+                >
+                <view
+                    v-if="!captcha.isSend"
+                    class="send-captcha"
+                    @click="sendCaptcha"
+                >
+                    获取验证码
+                </view>
+                <view
+                    v-if="captcha.isSend"
+                    class="send-captcha is-send"
+                >
+                    {{ captcha.remain }}S后重新发
+                </view>
+            </view>
+
+            <view class="form-item-wrap">
+                <view
+                    class="btn"
+                    @click="bindMobile"
+                >
+                    确定
+                </view>
+            </view>
+        </view>
     </view>
 </template>
 
@@ -77,6 +138,18 @@ export default {
                 video_id: '',
                 video_img_url: '',
             },
+            accountData: {
+                mobile: '',
+                verify_code: '',
+                isValid: true,
+                msg: '',
+            },
+            captcha: {
+                create_at: '',
+                remain: '',
+                isSend: false,
+            },
+            needBindMobile: true,
             catData: [],
             title: 'picker',
             array: ['中国', '美国', '巴西', '日本'],
@@ -102,7 +175,48 @@ export default {
             }).then((res) => {
                 this.catData = res;
             });
+
+            api.get('/api/user/info').then((res) => {
+                this.needBindMobile = res.user_info && res.user_info.is_bind_mobile === 0;
+            });
         },
+
+        countDown() {
+            const sep = 30 * 1000;
+            const now = new Date() - 0;
+            const duration = this.captcha.create_at + sep - now;
+
+            if (duration > 0) {
+                this.captcha.remain = Math.round(duration / 1000);
+
+                setTimeout(() => {
+                    this.countDown();
+                }, 300);
+            } else {
+                this.captcha.isSend = false;
+            }
+        },
+
+        sendCaptcha() {
+            console.log('-000');
+            this.captcha.create_at = new Date() - 0;
+            this.captcha.remain = 30;
+            this.captcha.isSend = true;
+            try {
+                this.countDown();
+            } catch (e) {
+                console.log(e);
+            }
+
+            api.get('/api/account/sendcaptcha', {
+                phone: '18511698809',
+                type: 8,
+                is_mobile: 1,
+            }).then((res) => {
+                console.log(res);
+            });
+        },
+
         onSelect(e) {
             this.index = e.detail.value;
             const catId = this.catData[this.index].cat_id;
@@ -115,6 +229,45 @@ export default {
                 title,
                 // duration: 200000,
             });
+        },
+        bindMobile() {
+            const { mobile } = this.accountData;
+            const captcha = this.accountData.verify_code;
+
+            console.log(mobile);
+            if (mobile.length !== 11 || mobile[0] !== '1') {
+                this.accountData.isValid = false;
+                this.accountData.msg = '手机号码不正确';
+                return false;
+            }
+            this.accountData.isValid = true;
+
+            if (!captcha) {
+                return uni.showToast({
+                    icon: 'none',
+                    title: '请输入验证码',
+                });
+            }
+
+            // api bind mobile
+            return api
+                .post('/api/account/bindphone', {
+                    phone: mobile,
+                    captcha,
+                })
+                .then(
+                    () => {
+                        this.needBindMobile = false;
+                        return uni.showToast({
+                            icon: 'none',
+                            title: '绑定成功！',
+                        });
+                    },
+                    err => uni.showToast({
+                        icon: 'none',
+                        title: err.message,
+                    }),
+                );
         },
         upload() {
             const formData = Object.assign({}, this.formData);
@@ -206,6 +359,63 @@ export default {
         line-height: 98upx;
         text-align: center;
         margin-top: 168upx;
+    }
+}
+
+.page-bind-mobile {
+    .tip {
+        font-size: 26rpx;
+        color: #333;
+        text-align: center;
+        padding-top: 80rpx;
+    }
+
+    .form-item-wrap {
+        padding: 0 65rpx;
+        position: relative;
+
+        .form-input {
+            color: #333;
+            font-size: 30rpx;
+            border-bottom: 1rpx solid #d8d8d8;
+            height: 90rpx;
+            margin-top: 20rpx;
+        }
+
+        &.inValid {
+            .form-input {
+                border-bottom: 1rpx solid #fa6855;
+            }
+        }
+
+        input::placeholder {
+            color: #666;
+        }
+
+        .error-tip {
+            color: #fa6855;
+            font-size: 26rpx;
+            height: 30rpx;
+            margin-top: 10rpx;
+        }
+
+        .send-captcha {
+            position: absolute;
+            right: 65rpx;
+            color: #1166ff;
+            font-size: 30rpx;
+            bottom: 25rpx;
+            z-index: 100;
+
+            &.is-send {
+                color: #999;
+                height: 50rpx;
+                background: #eeeeee;
+                padding: 0 10rpx;
+                font-size: 28rpx;
+                line-height: 50rpx;
+            }
+        }
     }
 }
 </style>
