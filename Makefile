@@ -2,7 +2,7 @@
 
 wechat:
 	rm -rf dist
-	npm run build:mp-weixin
+	npm run build:mp-weixin:api_test
 
 commit:
 	git add .
