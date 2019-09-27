@@ -9,12 +9,13 @@
                     :autoplay="autoplay"
                     :interval="interval"
                     :duration="duration"
+                    :circular="circular"
                 >
                     <swiper-item>
                         <view class="swiper-item">
                             <image
                                 class="banner-image"
-                                src="/static/images/index/banner.jpg"
+                                src="/static/images/index/banner1.jpg"
                             />
                         </view>
                     </swiper-item>
@@ -22,7 +23,7 @@
                         <view class="swiper-item">
                             <image
                                 class="banner-image"
-                                src="/static/images/index/banner.jpg"
+                                src="/static/images/index/banner2.jpg"
                             />
                         </view>
                     </swiper-item>
@@ -30,7 +31,7 @@
                         <view class="swiper-item">
                             <image
                                 class="banner-image"
-                                src="/static/images/index/banner.jpg"
+                                src="/static/images/index/banner3.jpg"
                             />
                         </view>
                     </swiper-item>
@@ -194,6 +195,7 @@ export default {
             autoplay: false,
             interval: 2000,
             duration: 500,
+            circular: true,
 
             newsTabActiveIndex: 0,
 
