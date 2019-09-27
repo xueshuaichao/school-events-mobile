@@ -348,7 +348,7 @@ export default {
         .btns {
             position: absolute;
             right: 0;
-            bottom: 20upx;
+            bottom: 10upx;
 
             .btn {
                 display: inline-block;
@@ -364,7 +364,6 @@ export default {
 
             .btn-share {
                 border-radius: 0;
-                top: 20upx;
             }
         }
     }
