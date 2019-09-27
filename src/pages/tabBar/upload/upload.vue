@@ -202,19 +202,24 @@ export default {
             this.captcha.create_at = new Date() - 0;
             this.captcha.remain = 30;
             this.captcha.isSend = true;
-            try {
-                this.countDown();
-            } catch (e) {
-                console.log(e);
-            }
 
             api.get('/api/account/sendcaptcha', {
-                phone: '18511698809',
+                phone: this.accountData.mobile,
                 type: 8,
                 is_mobile: 1,
-            }).then((res) => {
-                console.log(res);
-            });
+            }).then(
+                () => {
+                    try {
+                        this.countDown();
+                    } catch (e) {
+                        console.log(e);
+                    }
+                },
+                err => uni.showToast({
+                    icon: 'none',
+                    title: err.message,
+                }),
+            );
         },
 
         onSelect(e) {
