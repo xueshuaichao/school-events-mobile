@@ -149,7 +149,7 @@ export default {
                 remain: '',
                 isSend: false,
             },
-            needBindMobile: true,
+            needBindMobile: false,
             catData: [],
             title: 'picker',
             array: ['中国', '美国', '巴西', '日本'],
