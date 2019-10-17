@@ -39,6 +39,67 @@
             </view>
         </view>
 
+        <view class="menu-list">
+            <navigator
+                class="item"
+                :url="`/pages/doc/detail/detail?id=rule`"
+            >
+                <view class="icon-wrap red">
+                    <image
+                        class="icon"
+                        src="/static/images/index/0001.png"
+                    />
+                </view>
+                <text class="name">
+                    参赛指南
+                </text>
+            </navigator>
+
+            <navigator
+                class="item"
+                :url="`/pages/doc/list/list?type=challenge`"
+            >
+                <view class="icon-wrap light-blue">
+                    <image
+                        class="icon"
+                        src="/static/images/index/0002.png"
+                    />
+                </view>
+                <text class="name">
+                    爱挑战项目
+                </text>
+            </navigator>
+
+            <navigator
+                class="item"
+                :url="`/pages/doc/list/list?type=talent`"
+            >
+                <view class="icon-wrap dark-blue">
+                    <image
+                        class="icon"
+                        src="/static/images/index/0003.png"
+                    />
+                </view>
+                <text class="name">
+                    才艺秀项目
+                </text>
+            </navigator>
+
+            <navigator
+                class="item"
+                :url="`/pages/doc/list/list?type=guinness`"
+            >
+                <view class="icon-wrap pink">
+                    <image
+                        class="icon"
+                        src="/static/images/index/0004.png"
+                    />
+                </view>
+                <text class="name">
+                    吉尼斯项目
+                </text>
+            </navigator>
+        </view>
         <!-- menu -->
         <view class="menu-list">
             <navigator
@@ -107,21 +168,6 @@
                 </view>
                 <text class="name">
                     大赛时间
-                </text>
-            </navigator>
-
-            <navigator
-                class="item"
-                url="/pages/news/list/list?title=大赛须知"
-            >
-                <view class="icon-wrap orange">
-                    <image
-                        class="icon"
-                        src="/static/images/index/news.png"
-                    />
-                </view>
-                <text class="name">
-                    大赛动态
                 </text>
             </navigator>
         </view>
@@ -197,7 +243,7 @@ export default {
             duration: 500,
             circular: true,
 
-            newsTabActiveIndex: 0,
+            newsTabActiveIndex: 1,
 
             menuConf: {
                 intro: {},
@@ -206,6 +252,7 @@ export default {
                 time: {},
             },
             newsColumn: [
+                { id: '1', column_name: '大赛动态', sort_ids: '1,2,3,4,5' },
                 { id: '2', column_name: '新闻资讯', sort_ids: '1,2,3,4,5' },
                 { id: '3', column_name: '最新公告', sort_ids: '2,2,2,2,2' },
             ],
@@ -281,7 +328,7 @@ export default {
 
             //     this.newsColumn = res.list;
 
-            this.getArticle(this.newsColumn[0].id);
+            this.getArticle(this.newsColumn[1].id);
             this.getMenuData();
             this.getWorkList('individual');
             this.getWorkList('team');
@@ -336,6 +383,42 @@ uni-swiper {
                 height: 70upx;
                 border-radius: 35upx;
                 margin-bottom: 15upx;
+
+                &.red {
+                    background: linear-gradient(
+                        180deg,
+                        rgba(255, 142, 148, 1) 0%,
+                        rgba(255, 82, 109, 1) 100%
+                    );
+                    box-shadow: 0rpx 2rpx 4rpx 0px rgba(255, 134, 153, 1);
+                }
+
+                &.light-blue {
+                    background: linear-gradient(
+                        180deg,
+                        rgba(131, 225, 255, 1) 0%,
+                        rgba(70, 176, 255, 1) 100%
+                    );
+                    box-shadow: 0rpx 2rpx 4rpx 0rpx rgba(70, 176, 255, 1);
+                }
+
+                &.dark-blue {
+                    background: linear-gradient(
+                        180deg,
+                        rgba(58, 138, 255, 1) 0%,
+                        rgba(35, 98, 254, 1) 100%
+                    );
+                    box-shadow: 0rpx 2rpx 4rpx 0rpx rgba(38, 103, 254, 1);
+                }
+
+                &.pink {
+                    background: linear-gradient(
+                        180deg,
+                        rgba(243, 141, 255, 1) 0%,
+                        rgba(182, 111, 255, 1) 100%
+                    );
+                    box-shadow: 0rpx 2rpx 4rpx 0rpx rgba(189, 114, 255, 1);
+                }
 
                 &.purple {
                     background: rgb(192, 170, 255);

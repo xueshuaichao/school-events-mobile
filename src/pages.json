@@ -27,6 +27,21 @@
             }
         },
 
+        //
+        {
+            "path": "pages/doc/detail/detail",
+            "style": {
+                "navigationBarTitleText": "参赛指南"
+            }
+        },
+
+        {
+            "path": "pages/doc/list/list",
+            "style": {
+                "navigationBarTitleText": "参赛说明"
+            }
+        },
+
         // second page
         {
             "path": "pages/news/list/list",
