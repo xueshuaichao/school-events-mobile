@@ -36,16 +36,31 @@
                         3、内容健康，符合爱挑战规则
                     </view>
 
-                    <navigator
-                        v-if="!isH5"
-                        url="/pages/tabBar/upload/upload"
-                        open-type="switchTab"
-                        hover-class="other-navigator-hover"
-                    >
-                        <view class="btn">
-                            我要来挑战
-                        </view>
-                    </navigator>
+                    <template v-if="!isH5">
+                        <navigator
+                            v-if="type === 'challenge'"
+                            url="/pages/doc/detail/detail?id=rule"
+                            open-type="redirect"
+                        >
+                            <view class="btn">
+                                我要来挑战 !
+                            </view>
+                        </navigator>
+                        <navigator
+                            v-if="type === 'talent'"
+                            :url="
+                                userInfo === null
+                                    ? '/pages/tabBar/uc/uc'
+                                    : '/pages/tabBar/upload/upload'
+                            "
+                            open-type="switchTab"
+                            hover-class="other-navigator-hover"
+                        >
+                            <view class="btn">
+                                我要来挑战
+                            </view>
+                        </navigator>
+                    </template>
                 </view>
             </view>
         </template>
@@ -53,6 +68,8 @@
 </template>
 
 <script>
+import api from '../../../common/api';
+
 const conf = {
     challenge: {
         menu: [
@@ -264,6 +281,8 @@ export default {
             type: '',
             activeMenuIndex: 0,
 
+            userInfo: null,
+
             // #ifdef H5
             isH5: true,
             // #endif
@@ -274,12 +293,24 @@ export default {
             console.log(index);
             this.activeMenuIndex = index;
         },
+        getData() {
+            api.get('/api/user/info').then(
+                (res) => {
+                    this.userInfo = res.user_info;
+                },
+                () => {
+                    this.userInfo = null;
+                },
+            );
+        },
     },
     onLoad(query) {
         const { type } = query;
         this.type = type;
         this.conf = conf[type];
         this.activeMenuIndex = 0;
+
+        this.getData();
     },
 };
 </script>
