@@ -40,7 +40,7 @@
         <view class="desc">
             <template v-if="type === 'video'">
                 <view>
-                    视频文件大小不超过100MB
+                    视频文件大小不超过1GB
                 </view>
                 <view>
                     支持 MP4 等格式
