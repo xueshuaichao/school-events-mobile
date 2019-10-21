@@ -33,7 +33,9 @@
                     <view class="text">
                         1、视频要求3-10分钟 <br>
                         2、要求视频画质清晰可见（不低于720P) <br>
-                        3、内容健康，符合爱挑战规则
+                        <template v-if="type === 'challenge'">
+                            3、内容健康，符合爱挑战规则
+                        </template>
                     </view>
 
                     <template v-if="!isH5">
