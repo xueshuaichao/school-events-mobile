@@ -43,7 +43,8 @@
     "vue": "^2.6.10",
     "vue-infinite-scroll": "^2.0.2",
     "vuex": "^3.0.1",
-    "webpack": "^4.39.3"
+    "webpack": "^4.39.3",
+    "weixin-js-sdk": "^1.4.0-test"
   },
   "devDependencies": {
     "@dcloudio/uni-cli-shared": "*",
