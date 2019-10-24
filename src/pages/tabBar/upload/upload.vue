@@ -159,6 +159,9 @@ export default {
     },
     onLoad() {},
     created() {
+        // this.getData();
+    },
+    onShow() {
         this.getData();
     },
     methods: {
