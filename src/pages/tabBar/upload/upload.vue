@@ -183,7 +183,7 @@ export default {
                 },
                 () => {
                     uni.switchTab({
-                        url: '/pages/uc/uc',
+                        url: 'pages/tabBar/uc/uc',
                     });
                 },
             );
