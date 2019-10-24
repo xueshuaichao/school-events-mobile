@@ -243,7 +243,7 @@ export default {
             duration: 500,
             circular: true,
 
-            newsTabActiveIndex: 1,
+            newsTabActiveIndex: 0,
 
             menuConf: {
                 intro: {},
@@ -275,7 +275,7 @@ export default {
         },
         moreArticle() {
             uni.navigateTo({
-                url: `/pages/news/list/list?tab=${this.newsTabActiveIndex + 1}`,
+                url: `/pages/news/list/list?tab=${this.newsTabActiveIndex}`,
             });
         },
         getArticle(columnId) {

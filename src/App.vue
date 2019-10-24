@@ -1,4 +1,5 @@
 <script>
+// #ifdef H5
 import wx from 'weixin-js-sdk';
 import api from './common/api';
 
@@ -147,6 +148,7 @@ function initShare() {
 }
 
 initShare();
+// #endif
 
 export default {
     onLaunch() {
@@ -154,7 +156,6 @@ export default {
     },
     onShow() {
         console.log('App Show');
-        uni.showShareMenu();
     },
     onHide() {
         console.log('App Hide');
