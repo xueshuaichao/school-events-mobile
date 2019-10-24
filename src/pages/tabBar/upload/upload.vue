@@ -176,9 +176,17 @@ export default {
                 this.catData = res;
             });
 
-            api.get('/api/user/info').then((res) => {
-                this.needBindMobile = res.user_info && res.user_info.is_bind_mobile === 0;
-            });
+            api.get('/api/user/info').then(
+                (res) => {
+                    this.needBindMobile = res.user_info && res.user_info.is_bind_mobile === 0;
+                    this.userInfo = res.user_info;
+                },
+                () => {
+                    uni.switchTab({
+                        url: '/pages/uc/uc',
+                    });
+                },
+            );
         },
 
         countDown() {
