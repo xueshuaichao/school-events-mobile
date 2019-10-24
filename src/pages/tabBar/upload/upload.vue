@@ -192,7 +192,7 @@ export default {
                     this.isLoading = false;
                 },
                 () => {
-                    this.isLoading = false;
+                    this.isLoading = true;
                     uni.switchTab({
                         url: '/pages/tabBar/uc/uc',
                     });
