@@ -1,5 +1,8 @@
 <template>
-    <view class="page-upload">
+    <view
+        v-if="!isLoading"
+        class="page-upload"
+    >
         <view
             v-if="!needBindMobile"
             class="main"
@@ -129,6 +132,8 @@ export default {
     },
     data() {
         return {
+            isLoading: true,
+
             formData: {
                 cat_id: '',
                 resource_name: '',
@@ -173,6 +178,7 @@ export default {
             this.formData.video_img_url = data.path;
         },
         getData() {
+            this.isLoading = true;
             api.get('/api/works/childcat', {
                 cat_id: 3,
             }).then((res) => {
@@ -183,8 +189,10 @@ export default {
                 (res) => {
                     this.needBindMobile = res.user_info && res.user_info.is_bind_mobile === 0;
                     this.userInfo = res.user_info;
+                    this.isLoading = false;
                 },
                 () => {
+                    this.isLoading = false;
                     uni.switchTab({
                         url: '/pages/tabBar/uc/uc',
                     });
