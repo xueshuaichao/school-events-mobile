@@ -224,6 +224,8 @@ export default {
                 desc = normalList[Math.floor(Math.random() * normalList.length)];
             }
 
+            console.log(desc);
+
             share({
                 desc,
             });

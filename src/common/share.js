@@ -149,7 +149,7 @@ function h5InitShare(customShareConfig) {
     } else {
         params = Object.assign(defaultParams, customShareConfig);
     }
-
+    console.log(params);
     // if (!h5InitShare.config) {
     api.get('/api/weixin/getshareconfig', {
         url: location.href,
