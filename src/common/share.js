@@ -28,6 +28,7 @@ function initWechatShare(config, params) {
         wx.ready(() => {
             wx.onMenuShareTimeline({
                 title: params.title,
+                desc: params.desc,
                 link: params.url,
                 imgUrl: params.thumbnail,
                 success() {
@@ -133,7 +134,6 @@ function h5InitShare(customShareConfig) {
     let params = {};
 
     const index = Math.floor(Math.random() * contentList.length);
-    console.log(`__share__${index}`);
 
     const defaultParams = {
         title: '青少年爱挑战',
@@ -149,13 +149,11 @@ function h5InitShare(customShareConfig) {
     } else {
         params = Object.assign(defaultParams, customShareConfig);
     }
-    console.log(params);
 
     if (!h5InitShare.config) {
         api.get('/api/weixin/getshareconfig', {
             url: location.href,
         }).then((data) => {
-            console.log(data);
             h5InitShare.config = data;
             initWechatShare(data, params);
         });

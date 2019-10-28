@@ -10,8 +10,12 @@
         <view class="thumbnail-wrap">
             <image
                 class="thumbnail"
-                :src="info.video_img_url || '/static/images/index/pic.png'"
+                :src="
+                    info.video_img_url ||
+                        '/static/images/index/pic.png' | optimizeImage
+                "
             />
+            <view class="img-mask" />
             <view class="browse-num">
                 <image
                     class="icon-view"
@@ -56,6 +60,24 @@
 
 <script>
 export default {
+
+    filters: {
+        optimizeImage: (val) => {
+            let newUrl = '';
+            const width = 330;
+            const height = 187;
+            if (val.indexOf('?') !== -1) {
+                newUrl = `${val
+                }&x-oss-process=image/format,webp/interlace,1/quality,Q_80/resize,m_pad,h_${height
+                        * 2},w_${width * 2}`;
+            } else {
+                newUrl = `${val
+                }?x-oss-process=image/format,webp/interlace,1/quality,Q_80/resize,m_pad,h_${height
+                        * 2},w_${width * 2}`;
+            }
+            return newUrl;
+        },
+    },
     props: {
         info: {
             type: Object,
@@ -107,6 +129,28 @@ export default {
         img {
             width: 100%;
             height: 100%;
+        }
+
+        .img-mask {
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            background: -webkit-gradient(
+                linear,
+                left top,
+                left bottom,
+                from(transparent),
+                color-stop(42%, rgba(0, 0, 0, 0.1)),
+                to(rgba(0, 0, 0, 0.4))
+            );
+            background: linear-gradient(
+                180deg,
+                transparent,
+                rgba(0, 0, 0, 0.1) 42%,
+                rgba(0, 0, 0, 0.4)
+            );
         }
     }
 

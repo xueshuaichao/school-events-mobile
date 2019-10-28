@@ -144,6 +144,7 @@ export default {
                     this.isLoading = false;
                     console.log(res);
                     this.pageData = res;
+                    this.initShare();
                     // const videoUrl = res.video.cloud_path_sd;
                     // console.log(videoUrl);
                 },
@@ -181,7 +182,6 @@ export default {
 
                 object_id: this.id,
             }).then((res) => {
-                console.log(res);
                 this.likeStatus = res.status;
             });
         },
@@ -202,6 +202,32 @@ export default {
         html5VideoAutoAdjust() {
             document.querySelector('.uni-video-type-fullscreen').style = '';
         },
+        initShare() {
+            const normalList = [
+                '我正在参加"青少年爱挑战"，快来为我点赞',
+                '勇于挑战，不服来战！',
+                '我刷新记录啦，快来看！',
+            ];
+            const artList = [
+                '我正在参加"青少年爱挑战"，快来为我点赞',
+                '炫出风采，为我点赞，你也一起来参加吧',
+            ];
+            let desc;
+
+            const scope = this.pageData.resource_scope;
+
+            if (scope === 4) {
+                desc = '教育梦想，创新起航，青少年爱挑战创新共享平台';
+            } else if (scope === 3) {
+                desc = artList[Math.floor(Math.random() * artList.length)];
+            } else if (scope === 2 || scope === 1) {
+                desc = normalList[Math.floor(Math.random() * normalList.length)];
+            }
+
+            share({
+                desc,
+            });
+        },
     },
     onLoad(query) {
         const { id } = query;
@@ -217,20 +243,7 @@ export default {
         window.addEventListener('orientationchange', this.html5VideoAutoAdjust);
         // #endif
     },
-    onShow() {
-        const videoShareList = [
-            '我正在参加"青少年爱挑战"，快来为我点赞',
-            '炫出风采，为我点赞，你也一起来参加吧',
-            '用于挑战，不服来战！',
-            '我刷新记录啦，快来看！',
-        ];
-
-        const index = Math.floor(Math.random() * videoShareList.length);
-
-        share({
-            desc: videoShareList[index],
-        });
-    },
+    onShow() {},
 };
 </script>
 
