@@ -171,6 +171,23 @@
                 </text>
             </navigator>
         </view>
+        <!-- work show -->
+
+        <work
+            :title="'优秀个人作品展'"
+            :more-url="'/pages/work/list/list?cat_id=1'"
+            :info="workData.individual"
+        />
+        <work
+            :title="'优秀团体作品展'"
+            :more-url="'/pages/work/list/list?cat_id=2'"
+            :info="workData.team"
+        />
+        <work
+            :title="'优秀才艺达人作品展'"
+            :more-url="'/pages/work/list/list?cat_id=3'"
+            :info="workData.talent"
+        />
 
         <!-- news -->
         <view class="panel">
@@ -205,24 +222,6 @@
                 </navigator>
             </view>
         </view>
-
-        <!-- work show -->
-
-        <work
-            :title="'优秀个人作品展'"
-            :more-url="'/pages/work/list/list?cat_id=1'"
-            :info="workData.individual"
-        />
-        <work
-            :title="'优秀团体作品展'"
-            :more-url="'/pages/work/list/list?cat_id=2'"
-            :info="workData.team"
-        />
-        <work
-            :title="'优秀才艺达人作品展'"
-            :more-url="'/pages/work/list/list?cat_id=3'"
-            :info="workData.talent"
-        />
     </view>
 </template>
 

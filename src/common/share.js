@@ -150,16 +150,16 @@ function h5InitShare(customShareConfig) {
         params = Object.assign(defaultParams, customShareConfig);
     }
 
-    if (!h5InitShare.config) {
-        api.get('/api/weixin/getshareconfig', {
-            url: location.href,
-        }).then((data) => {
-            h5InitShare.config = data;
-            initWechatShare(data, params);
-        });
-    } else {
-        initWechatShare(h5InitShare.config, params);
-    }
+    // if (!h5InitShare.config) {
+    api.get('/api/weixin/getshareconfig', {
+        url: location.href,
+    }).then((data) => {
+        h5InitShare.config = data;
+        initWechatShare(data, params);
+    });
+    // } else {
+    //     initWechatShare(h5InitShare.config, params);
+    // }
 }
 
 // initShare();
