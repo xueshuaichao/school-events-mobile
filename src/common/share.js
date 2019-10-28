@@ -139,8 +139,9 @@ function h5InitShare(customShareConfig) {
         title: '青少年爱挑战',
         desc: contentList[index],
         thumbnail:
-            'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/images/logo.png?x-oss-process=image/format,webp/interlace,1/quality,Q_80',
-        url: `${location.protocol}//${location.host}${location.pathname}`,
+            'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/images/logo.png?x-oss-process=image/format,png/interlace,1/quality,Q_80',
+        // url: `${location.protocol}//${location.host}${location.pathname}`,
+        url: location.href,
     };
 
     if (!customShareConfig) {
