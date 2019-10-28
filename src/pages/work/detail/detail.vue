@@ -115,6 +115,7 @@
 
 <script>
 import api from '../../../common/api';
+import share from '../../../common/share';
 
 export default {
     data() {
@@ -215,6 +216,20 @@ export default {
         );
         window.addEventListener('orientationchange', this.html5VideoAutoAdjust);
         // #endif
+    },
+    onShow() {
+        const videoShareList = [
+            '我正在参加"青少年爱挑战"，快来为我点赞',
+            '炫出风采，为我点赞，你也一起来参加吧',
+            '用于挑战，不服来战！',
+            '我刷新记录啦，快来看！',
+        ];
+
+        const index = Math.floor(Math.random() * videoShareList.length);
+
+        share({
+            desc: videoShareList[index],
+        });
     },
 };
 </script>

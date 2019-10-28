@@ -143,7 +143,7 @@ function h5InitShare(customShareConfig) {
         url: `${location.protocol}//${location.host}${location.pathname}`,
     };
 
-    if (customShareConfig) {
+    if (!customShareConfig) {
         params = defaultParams;
     } else {
         params = Object.assign(defaultParams, customShareConfig);
