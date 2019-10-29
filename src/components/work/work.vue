@@ -60,20 +60,17 @@
 
 <script>
 export default {
-
     filters: {
         optimizeImage: (val) => {
             let newUrl = '';
             const width = 330;
             const height = 187;
             if (val.indexOf('?') !== -1) {
-                newUrl = `${val
-                }&x-oss-process=image/format,webp/interlace,1/quality,Q_80/resize,m_pad,h_${height
-                        * 2},w_${width * 2}`;
+                newUrl = `${val}&x-oss-process=image/format,png/interlace,1/quality,Q_80/resize,m_pad,h_${height
+                    * 2},w_${width * 2}`;
             } else {
-                newUrl = `${val
-                }?x-oss-process=image/format,webp/interlace,1/quality,Q_80/resize,m_pad,h_${height
-                        * 2},w_${width * 2}`;
+                newUrl = `${val}?x-oss-process=image/format,png/interlace,1/quality,Q_80/resize,m_pad,h_${height
+                    * 2},w_${width * 2}`;
             }
             return newUrl;
         },
