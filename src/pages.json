@@ -42,6 +42,13 @@
             }
         },
 
+        {
+            "path": "pages/qa/detail/detail",
+            "style": {
+                "navigationBarTitleText": "QA分享"
+            }
+        },
+
         // second page
         {
             "path": "pages/news/list/list",
