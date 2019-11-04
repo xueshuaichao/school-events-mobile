@@ -15,11 +15,10 @@
             />
             <view class="col">
                 <view>{{ tplData.nickname }}</view>
-                <view class="text-one-line">
-                    {{
-                        tplData.answerer_introduce
-                    }}
-                </view>
+                <view
+                    class="text-one-line"
+                    v-html="tplData.answerer_introduce"
+                />
             </view>
         </view>
         <view class="row">
