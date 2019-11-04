@@ -25,9 +25,10 @@
             <view class="a-icon">
                 答 :
             </view>
-            <view class="answer col">
-                {{ tplData.content }}
-            </view>
+            <view
+                class="answer col"
+                v-html="tplData.content"
+            />
         </view>
     </view>
 </template>
