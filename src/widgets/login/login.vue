@@ -101,6 +101,8 @@ export default {
                 username: '',
                 password: '',
             },
+            accountData: {},
+            captcha: {},
         };
     },
     methods: {
@@ -243,10 +245,11 @@ export default {
         width: 100%;
         background: #1166ff;
         color: #fff;
-        height: 98upx;
-        line-height: 98upx;
+        height: 98rpx;
+        line-height: 98rpx;
         text-align: center;
-        margin-top: 168upx;
+        margin-top: 72rpx;
+        font-size: 36rpx;
     }
 }
 </style>
