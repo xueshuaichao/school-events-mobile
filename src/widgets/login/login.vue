@@ -1,5 +1,64 @@
 <template>
+    <view class="page-bind-mobile">
+        <div class="tip">
+            <!-- 上传作品需要绑定手机号，后面也可以用该手机号登录 -->
+            账户登录
+        </div>
+
+        <view
+            class="form-item-wrap"
+            :class="{
+                inValid: accountData.isValid === false
+            }"
+        >
+            <input
+                v-model="formData.username"
+                class="form-input"
+                placeholder-class="placeholder"
+                maxlength="30"
+                placeholder="请输入手机号"
+            >
+            <view class="error-tip">
+                {{ accountData.isValid ? "" : accountData.msg || "" }}
+            </view>
+        </view>
+
+        <view class="form-item-wrap">
+            <input
+                v-model="formData.password"
+                class="form-input"
+                placeholder-class="placeholder"
+                maxlength="30"
+                placeholder="请输入密码"
+                password
+            >
+            <!-- <view
+                    v-if="!captcha.isSend"
+                    class="send-captcha"
+                    @click="sendCaptcha"
+                >
+                    获取验证码
+                </view> -->
+            <view
+                v-if="captcha.isSend"
+                class="send-captcha is-send"
+            >
+                {{ captcha.remain }}S后重新发
+            </view>
+        </view>
+
+        <view class="form-item-wrap">
+            <view
+                class="btn login-btn"
+                @click="doLogin"
+            >
+                确定
+            </view>
+        </view>
+    </view>
+    <!--
     <view class="widget-login">
+
         <view class="main-title">
             <image
                 class="icon-user"
@@ -29,6 +88,7 @@
             登录
         </button>
     </view>
+    -->
 </template>
 
 <script>
@@ -120,6 +180,73 @@ export default {
         &.disabled {
             background: #1166ff;
         }
+    }
+}
+
+.page-bind-mobile {
+    .tip {
+        font-size: 26rpx;
+        color: #333;
+        text-align: center;
+        padding-top: 80rpx;
+    }
+
+    .form-item-wrap {
+        padding: 0 65rpx;
+        position: relative;
+
+        .form-input {
+            color: #333;
+            font-size: 30rpx;
+            border-bottom: 1rpx solid #d8d8d8;
+            height: 90rpx;
+            margin-top: 20rpx;
+        }
+
+        &.inValid {
+            .form-input {
+                border-bottom: 1rpx solid #fa6855;
+            }
+        }
+
+        input::placeholder {
+            color: #666;
+        }
+
+        .error-tip {
+            color: #fa6855;
+            font-size: 26rpx;
+            height: 30rpx;
+            margin-top: 10rpx;
+        }
+
+        .send-captcha {
+            position: absolute;
+            right: 65rpx;
+            color: #1166ff;
+            font-size: 30rpx;
+            bottom: 25rpx;
+            z-index: 100;
+
+            &.is-send {
+                color: #999;
+                height: 50rpx;
+                background: #eeeeee;
+                padding: 0 10rpx;
+                font-size: 28rpx;
+                line-height: 50rpx;
+            }
+        }
+    }
+
+    .btn {
+        width: 100%;
+        background: #1166ff;
+        color: #fff;
+        height: 98upx;
+        line-height: 98upx;
+        text-align: center;
+        margin-top: 168upx;
     }
 }
 </style>
