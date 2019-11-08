@@ -37,5 +37,8 @@
     },
     "parserOptions": {
         "parser": "babel-eslint"
+    },
+    "globals": {
+        "uni": false
     }
 }
