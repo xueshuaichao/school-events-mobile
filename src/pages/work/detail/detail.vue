@@ -9,40 +9,44 @@
         >
             {{ pageData.resource_name }}
         </view>
-        <cover-view
-            v-if="isFullScreen && !isH5"
-            class="mp-weixin-full-screen-title text-one-line"
-        >
-            <cover-view class="cover-title" />
-            <cover-view class="cover-action">
-                <button
-                    class="mini-btn"
-                    open-type="share"
+        <view class="video-wrap">
+            <template v-if="isH5 || isVerify !== true">
+                <cover-view
+                    v-if="isFullScreen && !isH5"
+                    class="mp-weixin-full-screen-title text-one-line"
                 >
-                    <cover-image
-                        class="mini-icon"
-                        :src="'/static/images/work/mini-share.png'"
-                    />
-                </button>
-                <cover-image
-                    class="cover-like"
-                    :src="
-                        likeStatus === 1
-                            ? '/static/images/work/mini-like-ac.png'
-                            : '/static/images/work/mini-like.png'
-                    "
-                    @click="toggleLike"
+                    <cover-view class="cover-title" />
+                    <cover-view class="cover-action">
+                        <button
+                            class="mini-btn"
+                            open-type="share"
+                        >
+                            <cover-image
+                                class="mini-icon"
+                                :src="'/static/images/work/mini-share.png'"
+                            />
+                        </button>
+                        <cover-image
+                            class="cover-like"
+                            :src="
+                                likeStatus === 1
+                                    ? '/static/images/work/mini-like-ac.png'
+                                    : '/static/images/work/mini-like.png'
+                            "
+                            @click="toggleLike"
+                        />
+                    </cover-view>
+                </cover-view>
+                <video
+                    id="myVideo"
+                    class="video"
+                    :src="pageData.video.cloud_path_sd"
+                    controls
+                    @play="onPlay"
+                    @fullscreenchange="onFullScreenChange"
                 />
-            </cover-view>
-        </cover-view>
-        <video
-            id="myVideo"
-            class="video"
-            :src="pageData.video.cloud_path_sd"
-            controls
-            @play="onPlay"
-            @fullscreenchange="onFullScreenChange"
-        />
+            </template>
+        </view>
         <view class="content">
             <view class="author">
                 <view class="author-avator">
@@ -133,6 +137,7 @@ export default {
             // #endif
 
             isFullScreen: false,
+            isVerify: true,
         };
     },
     methods: {
@@ -154,6 +159,7 @@ export default {
             );
 
             this.getLikeStatus();
+            this.getVerifyStatus();
         },
         toggleLike() {
             const isLiked = this.likeStatus === 1;
@@ -183,6 +189,11 @@ export default {
                 object_id: this.id,
             }).then((res) => {
                 this.likeStatus = res.status;
+            });
+        },
+        getVerifyStatus() {
+            api.get('/api/common/verifystatus').then((res) => {
+                this.isVerify = res.status !== '1';
             });
         },
         onPlay() {
@@ -302,6 +313,11 @@ export default {
         width: 37upx;
         height: 37upx;
         display: inline-block;
+    }
+
+    .video-wrap {
+        width: 100%;
+        height: 422rpx;
     }
 
     .video {
