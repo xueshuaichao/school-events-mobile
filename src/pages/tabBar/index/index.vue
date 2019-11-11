@@ -327,7 +327,7 @@ export default {
 
             //     this.newsColumn = res.list;
 
-            this.getArticle(this.newsColumn[1].id);
+            this.getArticle(this.newsColumn[0].id);
             this.getMenuData();
             this.getWorkList('individual');
             this.getWorkList('team');
