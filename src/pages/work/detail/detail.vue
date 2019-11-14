@@ -138,6 +138,8 @@ export default {
 
             isFullScreen: false,
             isVerify: true,
+
+            shareDesc: '',
         };
     },
     methods: {
@@ -236,6 +238,7 @@ export default {
             }
 
             console.log(desc);
+            this.shareDesc = desc;
 
             share({
                 desc,
@@ -257,6 +260,17 @@ export default {
         // #endif
     },
     onShow() {},
+    onShareAppMessage(res) {
+        if (res.from === 'button') {
+            // 来自页面内分享按钮
+            console.log(res.target);
+        }
+        return {
+            title: this.shareDesc,
+            // imageUrl: '/static/images/index/banner.png',
+            path: `/pages/work/detail/detail?id=${this.id}`,
+        };
+    },
 };
 </script>
 
