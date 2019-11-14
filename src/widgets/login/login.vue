@@ -31,7 +31,11 @@
                     class="form-input"
                     placeholder-class="placeholder"
                     maxlength="30"
-                    placeholder="请输入手机号"
+                    :placeholder="
+                        loginMode === 'password'
+                            ? '请输入手机号或用户名'
+                            : '请输入手机号'
+                    "
                 >
                 <view class="error-tip">
                     {{ accountData.isValid ? "" : accountData.msg || "" }}
