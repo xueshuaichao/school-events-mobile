@@ -1,5 +1,7 @@
 /* eslint-disable no-undef */
 import Vue from 'vue';
+// import RouterMount from '../router/useRouter';
+
 import App from './App.vue';
 import share from './common/share';
 import logger from './common/logger';
@@ -8,6 +10,10 @@ console.log(share);
 
 const common = {
     onShow: () => {
+        uni.showShareMenu();
+        share();
+    },
+    onReady: () => {
         // #ifdef H5
         // 404
         const pages = getCurrentPages();
@@ -18,9 +24,6 @@ const common = {
             });
         }
         // #endif
-
-        uni.showShareMenu();
-        share();
     },
     onShareAppMessage(res) {
         if (res.from === 'button') {
