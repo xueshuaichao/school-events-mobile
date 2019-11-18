@@ -26,7 +26,7 @@ else
       echo "rm  successfully, 操作成功拉"
 
    fi
-   docker run  -i -t -d -p 9002:80 --name $WEBNAME  dockerhub.wdcloud.cc/school-events-mobile-fe-${ENV}:$IMGTAG
+   docker run  -i -t -d -p 9003:80 --name $WEBNAME  dockerhub.wdcloud.cc/school-events-mobile-fe-${ENV}:$IMGTAG
 fi
 
 echo 'deploy successfully, 操作成功拉'
