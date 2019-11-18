@@ -75,6 +75,7 @@
 <script>
 import api from '../../../common/api';
 import parseHtml from '../../../common/third-party/html-parser';
+import share from '../../../common/share';
 
 export default {
     data() {
@@ -107,6 +108,9 @@ export default {
                 } catch (e) {
                     console.log(e);
                 }
+                share({
+                    title: this.info.title,
+                });
 
                 if (this.info.is_proclamation === 0) {
                     // 获取推荐信息
@@ -250,6 +254,7 @@ export default {
     /deep/ .rich-text-image {
         width: 100% !important;
         margin: 20upx 0;
+        height: auto !important;
     }
 }
 

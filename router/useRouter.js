@@ -5,11 +5,13 @@ import Router, { RouterMount } from 'uni-simple-router';
 Vue.use(Router);
 
 const whitelist = {
-    '/pages/tabBar/list/list': 'list',
-    '/pages/tabbar/tabbar-2/tabbar-2': 'tabbar-2',
-    '/pages/tabbar/tabbar-3/tabbar-3': 'tabbar-3',
-    '/pages/tabbar/tabbar-4/tabbar-4': 'tabbar-4',
-    '/pages/tabbar/tabbar-5/tabbar-5': 'tabbar-5',
+    '/pages/tabBar/index/index': 'tabbar-index',
+    '/pages/tabBar/list/list': 'tabbar-list',
+    '/pages/tabBar/upload/upload': 'tabbar-upload',
+    '/pages/tabBar/uc/uc': 'tabbar-uc',
+
+    '/pages/work/detail/detail': 'work-detail',
+    '/pages/news/detail/detail': 'news-detail',
 };
 
 const routesConfig = {
@@ -20,51 +22,89 @@ const routesConfig = {
         resetStyle: () => ({
             style: `
             #router-loadding .loadding {
-                background-color: #f00 !important;
-                box-shadow: 0 0 15px #f00 !important;
+                display: none;
+                // background-color: #f00 !important;
+                // box-shadow: 0 0 15px #f00 !important;
             }
             `,
         }),
     },
-    encodeURI: true,
+    encodeURI: false,
     debugger: true,
     routes: [
         {
             path: '/pages/tabBar/index/index',
-            name: 'index',
+            name: 'tabbar-index',
+            aliasPath: '/',
+            component: () => import('@/pages/tabBar/index/index.vue'),
+            // 对于h5端你必须在首页加上aliasPath并设置为/
         },
         {
             path: '/pages/tabBar/list/list',
-            name: 'list',
+            component: () => import('@/pages/tabBar/list/list.vue'),
+            aliasPath: '/list',
+            name: 'tabbar-list',
         },
         {
             path: '/pages/tabBar/upload/upload',
+            component: () => import('@/pages/tabBar/upload/upload.vue'),
+            aliasPath: '/upload',
+            name: 'tabbar-upload',
         },
         {
             path: '/pages/tabBar/uc/uc',
+            component: () => import('@/pages/tabBar/uc/uc.vue'),
+            aliasPath: '/uc',
+            name: 'tabbar-uc',
         },
         {
             path: '/pages/doc/detail/detail',
+            name: 'doc',
+            component: () => import('@/pages/doc/detail/detail.vue'),
         },
         {
-            path: '/pages/tabBar/upload/upload',
+            path: '/pages/doc/list/list',
         },
         {
-            path: '/pages/tabBar/upload/upload',
+            path: '/pages/qa/detail/detail',
         },
+        {
+            path: '/pages/news/list/list',
+            aliasPath: '/information/news',
+        },
+        {
+            path: '/pages/news/detail/detail',
+            aliasPath: '/information/detail',
+            name: 'news-detail',
+        },
+        {
+            path: '/pages/work/list/list',
+        },
+        {
+            path: '/pages/work/detail/detail',
+            aliasPath: '/works/list/detail',
+            name: 'work-detail',
+            component: () => import('@/pages/work/detail/detail.vue'),
+        },
+        // {
+        //     path: '/pages/test/404',
+        //     aliasPath: '/404',
+        //     name: '404',
+        //     component: () => import('@/pages/tabBar/index/index.vue'),
+        // },
         {
             path: '*',
             name: 'moddle',
             redirect: (to) => {
-                console.log(to);
                 const name = whitelist[to.path];
                 if (name) {
                     return {
                         name,
                     };
                 }
+                // 404
                 return {
-                    name: '404',
+                    name: 'tabbar-index',
                 };
             },
         },
