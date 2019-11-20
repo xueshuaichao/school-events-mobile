@@ -174,17 +174,17 @@
         <!-- work show -->
 
         <work
-            :title="'优秀个人作品展'"
+            :title="'爱挑战优秀个人'"
             :more-url="'/pages/work/list/list?cat_id=1'"
             :info="workData.individual"
         />
         <work
-            :title="'优秀团体作品展'"
+            :title="'爱挑战优秀团体'"
             :more-url="'/pages/work/list/list?cat_id=2'"
             :info="workData.team"
         />
         <work
-            :title="'优秀才艺达人作品展'"
+            :title="'才艺秀优秀作品'"
             :more-url="'/pages/work/list/list?cat_id=3'"
             :info="workData.talent"
         />
