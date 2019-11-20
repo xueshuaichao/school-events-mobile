@@ -111,6 +111,11 @@ export default {
                 share({
                     title: this.info.title,
                 });
+                if (!this.noticeMode) {
+                    uni.setNavigationBarTitle({
+                        title: this.info.title,
+                    });
+                }
 
                 if (this.info.is_proclamation === 0) {
                     // 获取推荐信息
@@ -169,9 +174,6 @@ export default {
         this.getData(id);
         if (title) {
             this.noticeMode = true;
-        }
-
-        if (title) {
             uni.setNavigationBarTitle({
                 title,
             });

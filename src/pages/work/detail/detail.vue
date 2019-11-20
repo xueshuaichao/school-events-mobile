@@ -154,6 +154,9 @@ export default {
                     this.initShare();
                     // const videoUrl = res.video.cloud_path_sd;
                     // console.log(videoUrl);
+                    uni.setNavigationBarTitle({
+                        title: res.resource_name,
+                    });
                 },
                 (err) => {
                     console.log(err);
