@@ -1,6 +1,8 @@
 <template>
     <view class="page-index">
         <!-- swiper -->
+        <!-- 一个简单的name跳转 -->
+
         <view class="swiper main-swiper">
             <view class="page-section-spacing">
                 <swiper

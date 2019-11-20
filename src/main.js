@@ -1,6 +1,12 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable no-undef */
 import Vue from 'vue';
-// import RouterMount from '../router/useRouter';
+// main.js
+
+// #ifdef H5
+import RouterMount from '../router/useRouter';
+// #endif
+import routerLink from '../node_modules/uni-simple-router/component/router-link.vue';
 
 import App from './App.vue';
 import share from './common/share';
@@ -58,4 +64,12 @@ Vue.mixin(common);
 const app = new Vue({
     ...App,
 });
-app.$mount();
+Vue.component('router-link', routerLink);
+// app.$mount();
+// #ifdef H5
+RouterMount(app, '#app');
+// #endif
+
+// #ifndef H5
+app.$mount(); // 为了兼容小程序及app端必须这样写才有效果
+// #endif
