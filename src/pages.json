@@ -20,6 +20,12 @@
             }
         },
         {
+            "path": "pages/tabBar/mall/mall",
+            "style": {
+                "navigationBarTitleText": "挑战商城"
+            }
+        },
+        {
             "path": "pages/tabBar/uc/uc",
             "style": {
                 "navigationBarTitleText": "个人中心",
@@ -126,6 +132,12 @@
                 "text": "我要秀才艺"
             },
             // #endif
+            {
+                "pagePath": "pages/tabBar/mall/mall",
+                "iconPath": "static/images/tab/mall.png",
+                "selectedIconPath": "static/images/tab/mall_ac.png",
+                "text": "挑战商城"
+            },
             {
                 "pagePath": "pages/tabBar/uc/uc",
                 "iconPath": "static/images/tab/uc.png",
