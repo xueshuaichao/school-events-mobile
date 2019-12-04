@@ -88,6 +88,12 @@
                 "navigationBarTitleText": "作品详情"
             }
         },
+        {
+            "path": "pages/uc/myWork/myWork",
+            "style": {
+                "navigationBarTitleText": "我的作品"
+            }
+        },
 
         // 上传详情
         {

@@ -15,13 +15,13 @@
                 />
                 <view class="main-info">
                     <view class="user-name">
-                        {{ userInfo.name }}
+                        {{ userInfo.name || "" }}
                     </view>
 
                     <template v-if="userInfo.identity === 3">
                         <view class="info user-from">
-                            {{ userInfo.teacher_info.school_name
-                            }}{{ userInfo.teacher_info.department_name }}
+                            {{ userInfo.teacher_info.school_name || ""
+                            }}{{ userInfo.teacher_info.department_name || "" }}
                         </view>
                     </template>
 
@@ -37,87 +37,69 @@
                     </template>
                 </view>
             </view>
-
-            <!-- identity 用户身份 1=>C端普通用户 ,2=> 教育局员工，3=>学校员工 4 学生 -->
-            <!-- my works -->
-            <view
-                v-if="
-                    !isH5 &&
-                        (userInfo.identity === 3 || userInfo.identity === 4)
-                "
-                class="panel"
-            >
-                <view class="panel-hd">
-                    <text
-                        class="panel-title"
-                        :class="{ active: tabActiveIndex === 0 }"
-                        @click="setTabActive(0)"
-                    >
-                        已通过({{ workStatics.pass_num || 0 }})
-                    </text>
-                    <text
-                        class="panel-title"
-                        :class="{ active: tabActiveIndex === 1 }"
-                        @click="setTabActive(1)"
-                    >
-                        待审核({{ workStatics.no_verify_num || 0 }})
-                    </text>
-                    <text
-                        class="panel-title"
-                        :class="{ active: tabActiveIndex === 2 }"
-                        @click="setTabActive(2)"
-                    >
-                        未通过({{ workStatics.refuse_num || 0 }})
-                    </text>
-                </view>
-                <view
-                    v-if="!isLoadingTableData"
-                    class="panel-bd work-list"
+            <view class="sep" />
+            <view class="menu-list">
+                <navigator
+                    v-if="!isH5"
+                    class="menu-item"
+                    url="/pages/uc/myWork/myWork"
                 >
-                    <template v-if="tableData.length">
-                        <view
-                            v-for="(item, k) in tableData"
-                            :key="item.id"
-                            class="work-item"
+                    <image
+                        class="icon"
+                        src="/static/images/uc/work.png"
+                    />
+                    <text class="text">
+                        我的作品
+                    </text>
+                    <text class="arrow">
                         >
-                            <work
-                                :info="item"
-                                :mode="'single'"
-                            />
-                            <view class="btns">
-                                <button
-                                    v-if="item.status === 1"
-                                    :id="k"
-                                    class="btn btn-share"
-                                    open-type="share"
-                                >
-                                    分享
-                                </button>
-                                <view
-                                    v-if="item.status !== 1"
-                                    class="btn"
-                                    @click="editWork(item)"
-                                >
-                                    编辑
-                                </view>
-                                <view
-                                    class="btn"
-                                    @click="onConfirmDelete(item)"
-                                >
-                                    删除
-                                </view>
-                            </view>
-                        </view>
-                    </template>
-                    <template v-else>
-                        <blank />
-                    </template>
-                </view>
-            </view>
+                    </text>
+                </navigator>
 
-            <view v-else>
-                <view class="sep" />
-                <blank :type="'uc'" />
+                <view class="menu-item">
+                    <image
+                        class="icon"
+                        src="/static/images/uc/coin.png"
+                    />
+                    <text class="text">
+                        我的挑战币
+                    </text>
+                    <text class="coin">
+                        {{ userInfo.challenge_coin }}
+                    </text>
+                </view>
+
+                <navigator
+                    class="menu-item"
+                    url="/pages/address/exchangeRecord"
+                >
+                    <image
+                        class="icon"
+                        src="/static/images/uc/record.png"
+                    />
+                    <text class="text">
+                        兑换记录
+                    </text>
+                    <text class="arrow">
+                        >
+                    </text>
+                </navigator>
+
+                <navigator
+                    class="menu-item"
+                    url="/pages/address/address"
+                >
+                    <image
+                        class="icon"
+                        src="/static/images/uc/address.png"
+                    />
+                    <text class="text">
+                        收货地址
+                    </text>
+                    <text class="arrow">
+                        >
+                    </text>
+                </navigator>
             </view>
         </template>
     </view>
@@ -125,15 +107,11 @@
 
 <script>
 import api from '../../../common/api';
-import work from '../../../components/work/work.vue';
 import login from '../../../widgets/login/login.vue';
-import blank from '../../../widgets/blank/blank.vue';
 
 export default {
     components: {
         login,
-        work,
-        blank,
     },
     data() {
         return {
@@ -163,66 +141,8 @@ export default {
                     this.userInfo = null;
                 },
             );
-
-            this.getWorkStatic();
-            return this.getWorkData();
-        },
-        getWorkStatic() {
-            api.get('/api/user/workstatics').then(
-                (res) => {
-                    // this.workStatics = res[0];
-                    [this.workStatics] = res;
-                },
-                () => {},
-            );
-        },
-        editWork(item) {
-            uni.navigateTo({
-                url: `/pages/upload/modify/modify?id=${item.id}`,
-            });
-        },
-        deleteWork(item) {
-            const index = this.tableData.indexOf(item);
-
-            api.post('/api/user/delwork', {
-                id: item.id,
-            }).then((res) => {
-                uni.showToast({
-                    title: '删除成功',
-                });
-                console.log(res);
-                if (index !== -1) {
-                    this.tableData.splice(index, 1);
-                }
-                this.getWorkStatic();
-            });
-        },
-        getWorkData() {
-            // 作品状态 status 0—待审核 1—已通过 2—未通过 -1 全部
-            let status = 1;
-            if (this.tabActiveIndex === 1) {
-                status = 0;
-            } else if (this.tabActiveIndex === 2) {
-                status = 2;
-            }
-            return api
-                .get('/api/user/worklist', {
-                    status,
-                    page_size: 100,
-                })
-                .then(
-                    (res) => {
-                        this.isLoadingTableData = false;
-                        this.tableData = res.list;
-                    },
-                    () => {
-                        this.tableData = [];
-                    },
-                );
-        },
-        setTabActive(i) {
-            this.tabActiveIndex = i;
-            this.getWorkData();
+            // this.getWorkStatic();
+            // return this.getWorkData();
         },
         doLogout() {
             try {
@@ -232,43 +152,6 @@ export default {
                 console.log(e);
             }
             this.getData();
-        },
-
-        onConfirmDelete(item) {
-            uni.showModal({
-                title: '删除提示',
-                content: '作品删除后将无法恢复 \n 确定删除吗？',
-                confirmText: '确定删除',
-                cancelText: '暂不删除',
-                cancelColor: '#1166FF',
-                confirmColor: '#999999',
-                success: (res) => {
-                    if (res.confirm) {
-                        this.deleteWork(item);
-                        console.log('用户点击确定');
-                    } else if (res.cancel) {
-                        uni.showToast({
-                            title: '删除失败',
-                            icon: 'none',
-                        });
-                        console.log('用户点击取消');
-                    }
-                },
-            });
-        },
-        onShareAppMessage(res) {
-            if (res.from === 'button') {
-                // 来自页面内分享按钮
-                const index = res.target.id;
-                const item = this.tableData[index];
-
-                return {
-                    title: item.resource_name,
-                    imageUrl: item.video_img_url,
-                    path: `/pages/work/detail/detail?id=${item.id}`,
-                };
-            }
-            return false;
         },
 
         // fetch user info
@@ -295,12 +178,11 @@ export default {
     padding-bottom: 20upx;
 
     .sep {
-        border-bottom: 1upx solid #ddd;
-        margin-top: 30upx;
+        border-bottom: 20rpx solid rgba(247, 247, 247, 1);
     }
 
     .user-info {
-        padding: 30upx 30upx 0upx 30upx;
+        padding: 30rpx;
         display: flex;
 
         .avatar {
@@ -327,43 +209,32 @@ export default {
         }
     }
 
-    .blank-wrap {
-        margin-top: 180upx;
-    }
+    .menu-list {
+        .menu-item {
+            padding: 40rpx 30rpx;
+            border-bottom: 1px solid #e6e6e6;
+            font-size: 32rpx;
+            color: #333;
 
-    .panel .panel-hd .panel-title {
-        display: inline-block;
-        padding-left: 0;
-        padding-right: 0;
-    }
-
-    .work-list {
-        .work-item {
-            border-bottom: 1upx solid #ddd;
-            padding: 30upx 0 50upx;
-
-            position: relative;
-        }
-
-        .btns {
-            position: absolute;
-            right: 0;
-            bottom: 10upx;
-
-            .btn {
-                display: inline-block;
-                width: 120upx;
-                height: 60upx;
-                font-size: 26upx;
-                line-height: 60upx;
-                color: #fff;
-                text-align: center;
-                margin-left: 40upx;
-                background: #1166ff;
+            .icon {
+                width: 41rpx;
+                height: 41rpx;
+                margin-right: 20rpx;
+                position: relative;
+                top: 10rpx;
             }
 
-            .btn-share {
-                border-radius: 0;
+            .arrow {
+                float: right;
+                color: #ccc;
+            }
+
+            .coin {
+                color: #ff7915;
+                font-size: 32rpx;
+                float: right;
+                position: relative;
+                top: 6rpx;
             }
         }
     }
