@@ -323,7 +323,10 @@ export default {
     onShow() {
         const pages = getCurrentPages(); // eslint-disable-line
         const currPage = pages[pages.length - 1];
-        this.exchangeDetail = currPage.data.exchangeDetail;
+        console.log(currPage.data, 'currPage');
+        if (currPage.data && currPage.data.exchangeDetail) {
+            this.exchangeDetail = currPage.data.exchangeDetail;
+        }
     },
 };
 </script>

@@ -7,7 +7,7 @@ Vue.use(Router);
 const whitelist = {
     '/pages/tabBar/index/index': 'tabbar-index',
     '/pages/tabBar/list/list': 'tabbar-list',
-    '/pages/tabBar/challenge/challenge': 'tabbar-challenge',
+    '/pages/address/index': 'address-index',
     '/pages/tabBar/upload/upload': 'tabbar-upload',
     '/pages/tabBar/uc/uc': 'tabbar-uc',
     '/pages/tabBar/mall/mall': 'tabbar-mall',
@@ -83,7 +83,9 @@ const routesConfig = {
         },
         {
             path: '/pages/address/index',
+            component: () => import('@/pages/address/index.vue'),
             aliasPath: '/mall/exchange',
+            name: 'address-index',
         },
         {
             path: '/pages/address/address',
