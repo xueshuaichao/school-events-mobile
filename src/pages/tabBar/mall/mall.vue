@@ -82,6 +82,10 @@ export default {
         return {
             isLoading: true,
             giftList: [],
+
+            userInfo: {
+                name: '',
+            },
         };
     },
     created() {

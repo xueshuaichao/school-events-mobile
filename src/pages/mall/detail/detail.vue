@@ -148,10 +148,8 @@ import parseHtml from '../../../common/third-party/html-parser';
 
 export default {
     data() {
-        const { id } = this.$route.query;
-
         return {
-            id,
+            id: '',
             data: {},
             contentNodes: [],
 
@@ -164,11 +162,12 @@ export default {
             // swiper end
 
             isLoading: true,
+            userInfo: {
+                name: '',
+            },
         };
     },
-    created() {
-        this.getData();
-    },
+    created() {},
     methods: {
         getData() {
             api.get(`/api/market/gift/${this.id}`).then((res) => {
@@ -200,11 +199,27 @@ export default {
             }
         },
         handleExchange() {
-            console.log('跳转');
-            uni.navigateTo({
+            if (!this.userInfo.name) {
+                return this.goLogin();
+            }
+            // if (this.userInfo.challenge_coin < this.data.price) {
+            //     return uni.showToast({
+            //         icon: 'none',
+            //         title: '积分不足',
+            //         duration: 2000,
+            //     });
+            // }
+
+            return uni.navigateTo({
                 url: `/pages/address/index?id=${this.id}&title=兑换确认`,
             });
         },
+    },
+    onLoad(query) {
+        const { id } = query;
+        this.id = id;
+
+        this.getData();
     },
 };
 </script>
