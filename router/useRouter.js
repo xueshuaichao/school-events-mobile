@@ -7,9 +7,9 @@ Vue.use(Router);
 const whitelist = {
     '/pages/tabBar/index/index': 'tabbar-index',
     '/pages/tabBar/list/list': 'tabbar-list',
+    '/pages/tabBar/challenge/challenge': 'tabbar-challenge',
     '/pages/tabBar/upload/upload': 'tabbar-upload',
     '/pages/tabBar/uc/uc': 'tabbar-uc',
-
     '/pages/work/detail/detail': 'work-detail',
     '/pages/news/detail/detail': 'news-detail',
 };
@@ -46,6 +46,12 @@ const routesConfig = {
             name: 'tabbar-list',
         },
         {
+            path: '/pages/tabBar/challenge/challenge',
+            component: () => import('@/pages/tabBar/challenge/challenge.vue'),
+            aliasPath: '/challenge',
+            name: 'tabbar-challenge',
+        },
+        {
             path: '/pages/tabBar/upload/upload',
             component: () => import('@/pages/tabBar/upload/upload.vue'),
             aliasPath: '/upload',
@@ -61,6 +67,19 @@ const routesConfig = {
             path: '/pages/doc/detail/detail',
             name: 'doc',
             component: () => import('@/pages/doc/detail/detail.vue'),
+        },
+        {
+            path: '/pages/address/index',
+            aliasPath: '/mall/exchange',
+        },
+        {
+            path: '/pages/address/address',
+        },
+        {
+            path: '/pages/address/edit',
+        },
+        {
+            path: '/pages/address/exchangeRecord',
         },
         {
             path: '/pages/doc/list/list',
