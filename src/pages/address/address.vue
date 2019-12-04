@@ -81,26 +81,33 @@ export default {
     },
     methods: {
         handleAddressChoose(item) {
-            console.log('点击返回');
             const pages = getCurrentPages(); // eslint-disable-line
             const prevPage = pages[pages.length - 2];
-            console.log(prevPage, 'prevPage');
             if (prevPage.route === 'pages/address/index') {
-                const { exchangeDetail } = prevPage.data;
+                let exchangeDetail;
+                // #ifdef H5
+                exchangeDetail = prevPage._data.exchangeDetail; // eslint-disable-line
+                // #endif
+                // #ifndef H5
+                exchangeDetail = prevPage.data.exchangeDetail; // eslint-disable-line
+                // #endif
                 exchangeDetail.addr_id = item.id;
                 exchangeDetail.address.name = item.name;
                 exchangeDetail.address.phone = item.phone;
                 exchangeDetail.address.address = item.address;
-                console.log(item.id, 'item.did');
+
+                // #ifdef H5
+                prevPage._data.exchangeDetail = exchangeDetail;
+                // #endif
+                // #ifndef H5
                 prevPage.setData({
                     exchangeDetail,
                 });
+                // #endif
                 uni.navigateBack();
             }
         },
-        handleTap2() {
-            console.log('点击编辑按钮');
-        },
+        handleTap2() {},
         onConfirmDelete(id) {
             uni.showModal({
                 title: '删除提示',
@@ -112,13 +119,11 @@ export default {
                 success: (res) => {
                     if (res.confirm) {
                         this.deleteWork(id);
-                        console.log('用户点击确定');
                     } else if (res.cancel) {
                         uni.showToast({
                             title: '删除失败',
                             icon: 'none',
                         });
-                        console.log('用户点击取消');
                     }
                 },
             });
@@ -154,7 +159,6 @@ export default {
             );
         },
         onReachBottom() {
-            console.log('到底部了');
             if (this.loadMoreStatus === 'more') {
                 this.filter.page_num = this.filter.page_num + 1;
                 this.loadMoreStatus = 'loading';
@@ -175,7 +179,6 @@ export default {
         const { title } = query;
         this.getData();
         this.title = title;
-        console.log(title, 'title111');
         if (title) {
             uni.setNavigationBarTitle({
                 title,

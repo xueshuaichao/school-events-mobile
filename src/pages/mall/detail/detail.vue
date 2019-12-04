@@ -211,7 +211,7 @@ export default {
             // }
 
             return uni.navigateTo({
-                url: `/pages/address/index?id=${this.id}&title=兑换确认`,
+                url: `/pages/address/index?id=${this.id}&title=兑换确认&challenge_coin=${this.userInfo.challenge_coin}`,
             });
         },
     },

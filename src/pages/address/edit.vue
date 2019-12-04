@@ -84,11 +84,6 @@ export default {
             });
         },
         formSubmit(e) {
-            console.log(
-                `form发生了submit事件，携带数据为：${JSON.stringify(
-                    e.detail.value,
-                )}`,
-            );
             const formData = e.detail.value;
             if (!formData.name) {
                 return this.errTip('请输入收货人姓名');
@@ -140,24 +135,42 @@ export default {
             } else {
                 index = 0;
             }
-            console.log(index, 'index333');
 
             if (index === 0) {
                 uni.navigateTo({
-                    url: '/pages/address/address',
+                    url: '/pages/address/address?title=收货地址',
                 });
             } else {
                 const prevPage = pages[pages.length - index];
-                const { exchangeDetail } = prevPage.data;
+                let exchangeDetail;
+                // #ifdef H5
+                exchangeDetail = prevPage._data.exchangeDetail; // eslint-disable-line
+                // #endif
+                // #ifndef H5
+                exchangeDetail = prevPage.data.exchangeDetail; // eslint-disable-line
+                // #endif
                 exchangeDetail.addr_id = res;
-                exchangeDetail.address.name = formData.name;
-                exchangeDetail.address.phone = formData.phone;
-                exchangeDetail.address.address = formData.address;
-                console.log(res, 'item.did');
+                if (exchangeDetail.address) {
+                    exchangeDetail.address.name = formData.name;
+                    exchangeDetail.address.phone = formData.phone;
+                    exchangeDetail.address.address = formData.address;
+                } else {
+                    exchangeDetail.address = {
+                        name: formData.name,
+                        phone: formData.phone,
+                        address: formData.address,
+                    };
+                }
+
+                // #ifdef H5
+                prevPage._data.exchangeDetail = exchangeDetail;
+                // #endif
+                // #ifndef H5
                 prevPage.setData({
                     exchangeDetail,
-                    // addr_id:res
                 });
+                // #endif
+
                 uni.navigateBack({
                     delta: index - 1,
                 });

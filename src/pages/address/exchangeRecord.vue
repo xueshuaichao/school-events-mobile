@@ -3,7 +3,7 @@
         v-if="!isLoading"
         class="address-edit"
     >
-        <template>
+        <template v-if="total !== 0">
             <navigator
                 v-for="item in addressList"
                 :key="item.name"
@@ -52,6 +52,20 @@
             </navigator>
             <uni-load-more :status="loadMoreStatus" />
         </template>
+        <template v-else>
+            <view class="empty">
+                <image src="/static/images/address/empty.png" />
+                <text>您还没有兑换任何礼品，快去兑换吧~</text>
+                <view
+                    class="uni-btn-v"
+                    @click="handleExchange"
+                >
+                    <button form-type="submit">
+                        去兑换
+                    </button>
+                </view>
+            </view>
+        </template>
     </view>
 </template>
 
@@ -94,6 +108,11 @@ export default {
                     }
                 },
             );
+        },
+        handleExchange() {
+            uni.switchTab({
+                url: '/pages/tabBar/mall/mall',
+            });
         },
         onReachBottom() {
             if (this.loadMoreStatus === 'more') {
@@ -167,6 +186,32 @@ export default {
             text-align: left;
             display: inline-block;
         }
+    }
+}
+
+.empty {
+    position: absolute;
+    top: 284upx;
+    width: 100%;
+    text-align: center;
+    display: flex;
+    flex-flow: column;
+    justify-content: center;
+    align-items: center;
+    color: #999999;
+    .uni-btn-v button {
+        width: 360upx;
+        height: 110upx;
+        background: #1166ff;
+        color: #fff;
+        border-radius: 0;
+        margin-top: 50upx;
+        line-height: 110upx;
+    }
+    image {
+        width: 192upx;
+        height: 184upx;
+        margin-bottom: 32upx;
     }
 }
 </style>

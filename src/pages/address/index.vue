@@ -101,7 +101,7 @@
         </template>
         <template v-else>
             <navigator
-                v-if="exchangeDetail.address.name"
+                v-if="exchangeDetail.address"
                 :url="'/pages/address/address'"
             >
                 <view class="default-address">
@@ -140,10 +140,9 @@
             </view>
 
             <view class="image-box">
-                <!-- <image class="image" :src="exchangeDetail.img[0]"></image> -->
                 <image
                     class="image"
-                    :src="'https://via.placeholder.com/150/24f355'"
+                    :src="exchangeDetail.img[0]"
                 />
 
                 <text class="image-intro">
@@ -235,7 +234,7 @@ export default {
             recommendData: [],
             exchangeDetail: {},
             totalPrice: '',
-            userPrice: 9000,
+            userPrice: '',
             title: '',
         };
     },
@@ -308,7 +307,8 @@ export default {
         },
     },
     onLoad(query) {
-        const { id, title } = query;
+        const { id, title, challenge_coin: challengeCoin } = query;
+        this.userPrice = challengeCoin;
         if (id) {
             this.getData(id, title);
         }
@@ -321,12 +321,13 @@ export default {
         }
     },
     onShow() {
+        // #ifndef H5
         const pages = getCurrentPages(); // eslint-disable-line
         const currPage = pages[pages.length - 1];
-        console.log(currPage.data, 'currPage');
         if (currPage.data && currPage.data.exchangeDetail) {
             this.exchangeDetail = currPage.data.exchangeDetail;
         }
+        // #endif
     },
 };
 </script>

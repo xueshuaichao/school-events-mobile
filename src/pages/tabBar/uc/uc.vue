@@ -87,7 +87,7 @@
 
                 <navigator
                     class="menu-item"
-                    url="/pages/address/address"
+                    url="/pages/address/address?title=收货地址"
                 >
                     <image
                         class="icon"
