@@ -13,6 +13,7 @@ const whitelist = {
 
     '/pages/work/detail/detail': 'work-detail',
     '/pages/news/detail/detail': 'news-detail',
+    '/pages/mall/detail/detail': 'mall-detail',
 };
 
 const routesConfig = {

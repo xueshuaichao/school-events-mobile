@@ -62,11 +62,14 @@ export default {
     },
     methods: {
         showDetail(item) {
-            this.$router.push({
-                name: 'mall-detail',
-                query: {
-                    id: item.id,
-                },
+            // this.$router.push({
+            //     name: 'mall-detail',
+            //     query: {
+            //         id: item.id,
+            //     },
+            // });
+            uni.navigateTo({
+                url: `/pages/mall/detail/detail?id=${item.id}`,
             });
         },
     },

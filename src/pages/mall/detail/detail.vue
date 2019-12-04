@@ -99,8 +99,7 @@
                 <view class="content">
                     <text class="em">
                         6
-                    </text>挑战币每年的5月 31 日清零，
-                    新一届活动开始重新计算挑战币
+                    </text>挑战币每年的5月 31 日清零， 新一届活动开始重新计算挑战币
                 </view>
             </view>
         </view>
@@ -121,9 +120,7 @@
                         class="coin-num"
                     >
                         <view v-if="userInfo.name">
-                            {{
-                                userInfo.challenge_coin
-                            }}
+                            {{ userInfo.challenge_coin }}
                         </view>
                         <view v-if="!userInfo.name">
                             登录查看
@@ -206,6 +203,7 @@ export default {
 <style lang="less">
 .page-gift-detail {
     background: rgba(247, 247, 247, 1);
+    padding-bottom: 120rpx;
 
     .section {
         padding: 30rpx;
