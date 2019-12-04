@@ -59,6 +59,12 @@ const routesConfig = {
             name: 'tabbar-mall',
         },
         {
+            path: '/pages/mall/detail/detail',
+            component: () => import('@/pages/mall/detail/detail.vue'),
+            aliasPath: '/mall/detail',
+            name: 'mall-detail',
+        },
+        {
             path: '/pages/tabBar/uc/uc',
             component: () => import('@/pages/tabBar/uc/uc.vue'),
             aliasPath: '/uc',

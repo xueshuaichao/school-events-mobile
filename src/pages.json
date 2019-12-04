@@ -26,6 +26,12 @@
             }
         },
         {
+            "path": "pages/mall/detail/detail",
+            "style": {
+                "navigationBarTitleText": "礼品详情"
+            }
+        },
+        {
             "path": "pages/tabBar/uc/uc",
             "style": {
                 "navigationBarTitleText": "个人中心",

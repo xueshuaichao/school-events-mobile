@@ -11,9 +11,22 @@
                         class="icon"
                         src="/static/images/mall/coin.png"
                     />
-                    <view class=" text need-login">
-                        登录查看挑战币
-                    </view>
+                    <template v-if="!isLoading">
+                        <view
+                            v-if="userInfo.name"
+                            class="text need-login"
+                        >
+                            {{
+                                userInfo.challenge_coin
+                            }}
+                        </view>
+                        <view
+                            v-if="!userInfo.name"
+                            class="text need-login"
+                        >
+                            登录查看挑战币
+                        </view>
+                    </template>
                 </view>
                 <view class="item">
                     <image
@@ -24,7 +37,10 @@
                         兑换记录
                     </view>
                 </view>
-                <view class="item">
+                <navigator
+                    class="item"
+                    :url="`/pages/doc/detail/detail?id=earn-coin`"
+                >
                     <image
                         class="icon"
                         src="/static/images/mall/doc.png"
@@ -32,7 +48,7 @@
                     <view class="text">
                         如何赚挑战币
                     </view>
-                </view>
+                </navigator>
             </view>
         </view>
 
@@ -76,7 +92,10 @@ export default {
                     console.log(this.userInfo);
                     this.isLoading = false;
                 },
-                () => {},
+                () => {
+                    this.userInfo = {};
+                    this.isLoading = false;
+                },
             );
 
             api.get('/api/market/gift').then((data) => {

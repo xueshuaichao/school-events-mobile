@@ -16,11 +16,16 @@
                 v-for="item in data.list"
                 :key="item.id"
                 class="gift"
+                @click="showDetail(item)"
             >
                 <view class="thumb-wrap">
                     <image
                         class="thumbnail"
                         :src="item.cover_img"
+                    />
+                    <image
+                        class="tag"
+                        src="/static/images/mall/prepare.png"
                     />
                 </view>
                 <view class="info">
@@ -48,11 +53,21 @@
 <script>
 export default {
     props: {
-        data1: {
+        data: {
             type: Object,
             default() {
                 return {};
             },
+        },
+    },
+    methods: {
+        showDetail(item) {
+            this.$router.push({
+                name: 'mall-detail',
+                query: {
+                    id: item.id,
+                },
+            });
         },
     },
 };
@@ -98,16 +113,27 @@ export default {
         height: 500rpx;
         background: #fff;
         margin-left: 10rpx;
+        margin-bottom: 10rpx;
         float: left;
 
         .thumb-wrap {
             border-bottom: 1rpx solid rgba(247, 247, 247, 1);
+            position: relative;
 
             .thumbnail {
-                margin: 50rpx auto;
+                padding: 50rpx 0;
                 width: 232rpx;
                 height: 246rpx;
                 display: block;
+                margin: 0 auto;
+            }
+
+            .tag {
+                position: absolute;
+                width: 103rpx;
+                height: 103rpx;
+                top: 0;
+                left: 0;
             }
         }
 

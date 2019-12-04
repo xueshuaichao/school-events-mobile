@@ -1,6 +1,47 @@
 <template>
     <view>
         <view
+            v-if="id === 'earn-coin'"
+            class="page-earn-coin"
+        >
+            <view class="hd">
+                <text class="em">
+                    1
+                </text>什么是挑战币?
+            </view>
+            <view class="content">
+                用户应遵守国家法律、行政法规、部门规章等规范性文件。
+                对任何涉嫌违反国家法律、行政法规、部门规章等规范性文件的行为，本规则已有规定的，适用本规则；
+                本规则尚无规定的，工博士有权酌情处理。但工博士对用户的处理不免除其应尽的法律责任。
+            </view>
+            <view class="sep" />
+
+            <view class="hd">
+                <text class="em">
+                    2
+                </text>什么是挑战币?
+            </view>
+            <view class="content">
+                用户应遵守国家法律、行政法规、部门规章等规范性文件。
+                对任何涉嫌违反国家法律、行政法规、部门规章等规范性文件的行为，本规则已有规定的，适用本规则；
+                本规则尚无规定的，工博士有权酌情处理。但工博士对用户的处理不免除其应尽的法律责任。
+            </view>
+            <view class="sep" />
+
+            <view class="hd">
+                <text class="em">
+                    3
+                </text>什么是挑战币?
+            </view>
+            <view class="content">
+                用户应遵守国家法律、行政法规、部门规章等规范性文件。
+                对任何涉嫌违反国家法律、行政法规、部门规章等规范性文件的行为，本规则已有规定的，适用本规则；
+                本规则尚无规定的，工博士有权酌情处理。但工博士对用户的处理不免除其应尽的法律责任。
+            </view>
+            <view class="sep" />
+        </view>
+
+        <view
             v-if="id === 'rule'"
             class="rule-doc"
         >
@@ -173,6 +214,41 @@ export default {
     .sep {
         border-bottom: 1px solid rgba(240, 240, 240, 1);
         margin: 32rpx 0 56rpx;
+    }
+}
+
+.page-earn-coin {
+    padding: 30rpx;
+
+    .hd {
+        margin-bottom: 18rpx;
+
+        .em {
+            display: inline-block;
+            width: 40rpx;
+            height: 40rpx;
+            background: #333;
+            color: #fff;
+            border-radius: 40rpx;
+            text-align: center;
+            line-height: 40rpx;
+            margin-right: 10rpx;
+        }
+
+        color: #333;
+        font-size: 32rpx;
+    }
+
+    .content {
+        color: #666;
+        font-size: 28rpx;
+        line-height: 40rpx;
+        margin-bottom: 30rpx;
+    }
+
+    .sep {
+        border-top: 1rpx solid #e6e6e6;
+        margin: 0 -30rpx 30rpx;
     }
 }
 </style>
