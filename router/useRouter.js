@@ -10,6 +10,7 @@ const whitelist = {
     '/pages/tabBar/challenge/challenge': 'tabbar-challenge',
     '/pages/tabBar/upload/upload': 'tabbar-upload',
     '/pages/tabBar/uc/uc': 'tabbar-uc',
+    '/pages/tabBar/mall/mall': 'tabbar-mall',
     '/pages/work/detail/detail': 'work-detail',
     '/pages/news/detail/detail': 'news-detail',
 };
@@ -56,6 +57,18 @@ const routesConfig = {
             component: () => import('@/pages/tabBar/upload/upload.vue'),
             aliasPath: '/upload',
             name: 'tabbar-upload',
+        },
+        {
+            path: '/pages/tabBar/mall/mall',
+            component: () => import('@/pages/tabBar/mall/mall.vue'),
+            aliasPath: '/mall',
+            name: 'tabbar-mall',
+        },
+        {
+            path: '/pages/mall/detail/detail',
+            component: () => import('@/pages/mall/detail/detail.vue'),
+            aliasPath: '/mall/detail',
+            name: 'mall-detail',
         },
         {
             path: '/pages/tabBar/uc/uc',

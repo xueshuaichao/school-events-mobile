@@ -20,9 +20,15 @@
             }
         },
         {
-            "path": "pages/tabBar/challenge/challenge",
+            "path": "pages/tabBar/mall/mall",
             "style": {
                 "navigationBarTitleText": "挑战商城"
+            }
+        },
+        {
+            "path": "pages/mall/detail/detail",
+            "style": {
+                "navigationBarTitleText": "礼品详情"
             }
         },
         {
@@ -158,9 +164,9 @@
             },
             // #endif
             {
-                "pagePath": "pages/tabBar/challenge/challenge",
-                "iconPath": "static/images/tab/uc.png",
-                "selectedIconPath": "static/images/tab/uc_ac.png",
+                "pagePath": "pages/tabBar/mall/mall",
+                "iconPath": "static/images/tab/mall.png",
+                "selectedIconPath": "static/images/tab/mall_ac.png",
                 "text": "挑战商城"
             },
             {
