@@ -16,9 +16,7 @@
                             v-if="userInfo.name"
                             class="text need-login"
                         >
-                            {{
-                                userInfo.challenge_coin
-                            }}
+                            {{ userInfo.challenge_coin }}
                         </view>
                         <view
                             v-if="!userInfo.name"
@@ -28,7 +26,11 @@
                         </view>
                     </template>
                 </view>
-                <view class="item">
+                <navigator
+                    class="item"
+                    :url="`/pages/address/exchangeRecord?title=兑换记录`"
+                >
+                    <!-- <view class="item"> -->
                     <image
                         class="icon"
                         src="/static/images/mall/record.png"
@@ -36,7 +38,8 @@
                     <view class="text">
                         兑换记录
                     </view>
-                </view>
+                    <!-- </view> -->
+                </navigator>
                 <navigator
                     class="item"
                     :url="`/pages/doc/detail/detail?id=earn-coin`"

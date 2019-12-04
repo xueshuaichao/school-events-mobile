@@ -7,10 +7,10 @@ Vue.use(Router);
 const whitelist = {
     '/pages/tabBar/index/index': 'tabbar-index',
     '/pages/tabBar/list/list': 'tabbar-list',
+    '/pages/address/index': 'address-index',
     '/pages/tabBar/upload/upload': 'tabbar-upload',
     '/pages/tabBar/uc/uc': 'tabbar-uc',
     '/pages/tabBar/mall/mall': 'tabbar-mall',
-
     '/pages/work/detail/detail': 'work-detail',
     '/pages/news/detail/detail': 'news-detail',
     '/pages/mall/detail/detail': 'mall-detail',
@@ -48,6 +48,12 @@ const routesConfig = {
             name: 'tabbar-list',
         },
         {
+            path: '/pages/tabBar/challenge/challenge',
+            component: () => import('@/pages/tabBar/challenge/challenge.vue'),
+            aliasPath: '/challenge',
+            name: 'tabbar-challenge',
+        },
+        {
             path: '/pages/tabBar/upload/upload',
             component: () => import('@/pages/tabBar/upload/upload.vue'),
             aliasPath: '/upload',
@@ -75,6 +81,21 @@ const routesConfig = {
             path: '/pages/doc/detail/detail',
             name: 'doc',
             component: () => import('@/pages/doc/detail/detail.vue'),
+        },
+        {
+            path: '/pages/address/index',
+            component: () => import('@/pages/address/index.vue'),
+            aliasPath: '/mall/exchange',
+            name: 'address-index',
+        },
+        {
+            path: '/pages/address/address',
+        },
+        {
+            path: '/pages/address/edit',
+        },
+        {
+            path: '/pages/address/exchangeRecord',
         },
         {
             path: '/pages/doc/list/list',

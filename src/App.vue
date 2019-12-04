@@ -44,7 +44,13 @@ uni-tabbar .uni-tabbar__bd {
 
     padding: 30upx;
 }
-
+.main-box {
+    color: #333;
+    font-size: 28upx;
+    line-height: 42upx;
+    background: #f7f7f7;
+    /* padding: 30upx; */
+}
 .page-rich-text.no-indent {
     text-indent: 0;
 }

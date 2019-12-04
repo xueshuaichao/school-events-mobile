@@ -128,7 +128,10 @@
                     </view>
                 </view>
             </view>
-            <view class="gift-coin">
+            <view
+                class="gift-coin"
+                @click="handleExchange"
+            >
                 <text>兑换 {{ data.price }}</text>
                 <image
                     class="sub-coin"
@@ -195,6 +198,12 @@ export default {
                     url: '/pages/tabBar/uc/uc',
                 });
             }
+        },
+        handleExchange() {
+            console.log('跳转');
+            uni.navigateTo({
+                url: `/pages/address/index?id=${this.id}&title=兑换确认`,
+            });
         },
     },
 };
