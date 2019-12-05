@@ -39,7 +39,7 @@
             <uni-load-more :status="loadMoreStatus" />
         </template>
         <navigator
-            :url="'/pages/address/edit'"
+            :url="'/pages/address/edit?title=增加收货地址'"
             hover-class="other-navigator-hover"
         >
             <view class="uni-btn-v">
@@ -130,21 +130,18 @@ export default {
         },
         deleteWork(id) {
             api.get(`/api/market/addressdel/${id}`).then(() => {
-                this.filter = {
-                    page_num: 1,
-                    page_size: 10,
-                };
-                this.getData('删除');
+                this.filter.page_num = 1;
+                this.getData();
             });
         },
         getData(title) {
             api.get('/api/market/address', this.filter).then(
                 ({ list, total }) => {
                     this.isLoading = false;
-                    if (title === '删除') {
-                        this.addressList = list;
-                    } else {
+                    if (title === 'reachBottom') {
                         this.addressList = this.addressList.concat(list);
+                    } else {
+                        this.addressList = list;
                     }
 
                     this.total = total;
@@ -154,6 +151,8 @@ export default {
                         <= this.filter.page_num * this.filter.page_size
                     ) {
                         this.loadMoreStatus = 'noMore';
+                    } else {
+                        this.loadMoreStatus = 'more';
                     }
                 },
             );
@@ -162,7 +161,7 @@ export default {
             if (this.loadMoreStatus === 'more') {
                 this.filter.page_num = this.filter.page_num + 1;
                 this.loadMoreStatus = 'loading';
-                this.getData();
+                this.getData('reachBottom');
             }
         },
         getArticle(columnId) {
@@ -174,6 +173,15 @@ export default {
                 this.recommendData = res.list;
             });
         },
+    },
+    onShow() {
+        uni.pageScrollTo({
+            scrollTop: 0,
+            duration: 0,
+        });
+        this.filter.page_num = 1;
+        this.loadMoreStatus = 'more';
+        this.getData();
     },
     onLoad(query) {
         const { title } = query;

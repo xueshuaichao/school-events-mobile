@@ -84,6 +84,10 @@ export default {
             });
         },
         formSubmit(e) {
+            uni.showToast({
+                icon: 'loading',
+                mask: true,
+            });
             const formData = e.detail.value;
             if (!formData.name) {
                 return this.errTip('请输入收货人姓名');
@@ -103,9 +107,12 @@ export default {
                         () => {
                             uni.showToast({
                                 icon: 'none',
-                                title: '编辑地址添加成功',
+                                title: '收货地址编辑成功',
+                                mask: true,
                             });
-                            this.navigate(formData, this.id);
+                            setTimeout(() => {
+                                this.navigate(formData, this.id);
+                            }, 1500);
                         },
                         err => uni.showToast({
                             icon: 'none',
@@ -115,7 +122,14 @@ export default {
             }
             return api.post('/api/market/addressadd', formData).then(
                 (res) => {
-                    this.navigate(formData, res);
+                    uni.showToast({
+                        icon: 'none',
+                        title: '收货地址添加成功',
+                        mask: true,
+                    });
+                    setTimeout(() => {
+                        this.navigate(formData, res);
+                    }, 1500);
                 },
                 err => uni.showToast({
                     icon: 'none',
@@ -137,9 +151,7 @@ export default {
             }
 
             if (index === 0) {
-                uni.navigateTo({
-                    url: '/pages/address/address?title=收货地址',
-                });
+                uni.navigateBack();
             } else {
                 const prevPage = pages[pages.length - index];
                 let exchangeDetail;
@@ -187,7 +199,11 @@ export default {
         },
     },
     onLoad(query) {
-        const { id } = query;
+        const { id, title } = query;
+        if (title) {
+            uni.setNavigationBarTitle({ title });
+        }
+
         if (id) {
             this.getData(id);
         } else {

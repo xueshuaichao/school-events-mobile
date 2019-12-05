@@ -243,7 +243,6 @@ export default {
             uni.showToast({
                 icon: 'none',
                 title,
-                // duration: 200000,
             });
         },
         handleChange(num) {
@@ -251,6 +250,10 @@ export default {
             this.totalPrice = this.exchangeDetail.price * num;
         },
         formSubmit() {
+            uni.showToast({
+                icon: 'loading',
+                mask: true,
+            });
             if (this.totalPrice > this.userPrice) {
                 uni.showToast({
                     icon: 'none',
@@ -275,10 +278,13 @@ export default {
                     uni.showToast({
                         icon: 'none',
                         title: '兑换成功',
+                        mask: true,
                     });
-                    uni.navigateTo({
-                        url: '/pages/address/exchangeRecord',
-                    });
+                    setTimeout(() => {
+                        uni.redirectTo({
+                            url: '/pages/address/exchangeRecord',
+                        });
+                    }, 1500);
                 },
                 err => uni.showToast({
                     icon: 'none',
