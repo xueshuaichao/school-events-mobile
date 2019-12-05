@@ -26,7 +26,10 @@ else
       echo "rm  successfully, 操作成功拉"
 
    fi
-   docker run  -i -t -d -p 9003:80 --name $WEBNAME  dockerhub.wdcloud.cc/school-events-mobile-fe-${ENV}:$IMGTAG
+      docker run  -i -t -d -v /var/www/html/school-events-mobile/dist -p 9003:80 --name $WEBNAME  dockerhub.wdcloud.cc/school-events-mobile-fe-${ENV}:$IMGTAG
+      docker stop school-c-web
+      docker rm school-c-web
+      docker run  -i -t -d --volumes-from school-events-pc-fe-test --volumes-from school-events-mobile-fe-test --volumes-from school-events-www-fe-test -p 9600:80 --name school-c-web  dockerhub.wdcloud.cc/school-events-rd:dev
 fi
 
 echo 'deploy successfully, 操作成功拉'
