@@ -95,7 +95,6 @@ export default {
                 exchangeDetail.address.name = item.name;
                 exchangeDetail.address.phone = item.phone;
                 exchangeDetail.address.address = item.address;
-
                 // #ifdef H5
                 prevPage._data.exchangeDetail = exchangeDetail;
                 // #endif

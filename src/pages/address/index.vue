@@ -301,13 +301,16 @@ export default {
                     this.exchangeDetail = res;
                 });
             } else {
-                api.get(`/api/market/gift/${id}`).then((res) => {
-                    this.isLoading = false;
-                    this.exchangeDetail = res;
-                    this.exchangeDetail.addr_id = (this.exchangeDetail
-                            && this.exchangeDetail.address
-                            && this.exchangeDetail.address.id)
-                        || '';
+                api.get(`/api/market/gift/${id}`).then((data) => {
+                    api.get('/api/market/addressnew').then((res) => {
+                        const param = data;
+                        if (res) {
+                            param.address = res;
+                            param.addr_id = res.id;
+                        }
+                        this.exchangeDetail = param;
+                        this.isLoading = false;
+                    });
                 });
             }
         },
