@@ -68,7 +68,9 @@
                     ? contentText.contentdown
                     : status === "loading"
                         ? contentText.contentrefresh
-                        : contentText.contentnomore
+                        : status === "noMore"
+                            ? contentText.contentnomore
+                            : ""
             }}
         </text>
     </view>

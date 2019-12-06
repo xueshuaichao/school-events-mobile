@@ -149,7 +149,7 @@ export default {
                         this.total
                         <= this.filter.page_num * this.filter.page_size
                     ) {
-                        this.loadMoreStatus = 'noMore';
+                        this.loadMoreStatus = title === 'reachBottom' ? 'noMore' : 'none';
                     } else {
                         this.loadMoreStatus = 'more';
                     }
@@ -229,7 +229,7 @@ export default {
         &::before {
             content: "";
             display: inline-block;
-            height: 40upx;
+            height: 45upx;
             width: 1upx;
             position: absolute;
             top: 8upx;
@@ -246,13 +246,13 @@ export default {
     }
     .address-delete {
         position: absolute;
-        top: 80upx;
+        top: 100upx;
         right: 64upx;
         color: #666666;
         &::before {
             content: "";
             display: inline-block;
-            height: 40upx;
+            height: 45upx;
             width: 1upx;
             position: absolute;
             top: 8upx;

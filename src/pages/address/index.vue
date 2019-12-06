@@ -18,7 +18,7 @@
                         {{ exchangeDetail.phone }}
                     </text>
                 </view>
-                <text class="address">
+                <text class="address text-two-line">
                     {{ exchangeDetail.address }}
                 </text>
             </view>
@@ -101,7 +101,7 @@
         </template>
         <template v-else>
             <navigator
-                v-if="exchangeDetail.address"
+                v-if="exchangeDetail.addr_id"
                 :url="'/pages/address/address'"
             >
                 <view class="default-address">
@@ -118,7 +118,7 @@
                         </text>
                     </view>
 
-                    <text class="address">
+                    <text class="address text-two-line">
                         {{ exchangeDetail.address.address }}
                     </text>
                     <image
@@ -268,6 +268,13 @@ export default {
                 });
                 return;
             }
+            if (!this.exchangeDetail.addr_id) {
+                uni.showToast({
+                    icon: 'none',
+                    title: '请添加收货地址',
+                });
+                return;
+            }
 
             api.post('/api/market/giftexchange', {
                 gift_id: this.id,
@@ -307,6 +314,13 @@ export default {
                         if (res) {
                             param.address = res;
                             param.addr_id = res.id;
+                        } else {
+                            param.address = {
+                                name: '',
+                                phone: '',
+                                address: '',
+                            };
+                            param.addr_id = '';
                         }
                         this.exchangeDetail = param;
                         this.isLoading = false;

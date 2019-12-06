@@ -23,7 +23,7 @@
                         已发货
                     </text>
                     <view class="address-name">
-                        <text>记录编号：</text><text>{{ item.shop_id }}</text>
+                        <text>记录编号：</text><text>{{ item.show_id }}</text>
                     </view>
                     <view class="address-tel">
                         <text>礼品名称：</text><text>{{ item.gift_name }}</text>

@@ -162,17 +162,9 @@ export default {
                 exchangeDetail = prevPage.data.exchangeDetail; // eslint-disable-line
                 // #endif
                 exchangeDetail.addr_id = res;
-                if (exchangeDetail.address) {
-                    exchangeDetail.address.name = formData.name;
-                    exchangeDetail.address.phone = formData.phone;
-                    exchangeDetail.address.address = formData.address;
-                } else {
-                    exchangeDetail.address = {
-                        name: formData.name,
-                        phone: formData.phone,
-                        address: formData.address,
-                    };
-                }
+                exchangeDetail.address.name = formData.name;
+                exchangeDetail.address.phone = formData.phone;
+                exchangeDetail.address.address = formData.address;
 
                 // #ifdef H5
                 prevPage._data.exchangeDetail = exchangeDetail;
