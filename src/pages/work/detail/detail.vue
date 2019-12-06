@@ -70,6 +70,10 @@
             <view class="work-name">
                 {{ pageData.resource_name }}
                 <image
+                    v-if="
+                        pageData.resource_scope === 1 ||
+                            pageData.resource_scope === 2
+                    "
                     class="icon-grail"
                     src="/static/images/work/grail.png"
                 />
