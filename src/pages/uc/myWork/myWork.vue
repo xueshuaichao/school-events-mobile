@@ -101,6 +101,9 @@ export default {
             // #endif
 
             tabActiveIndex: 0,
+            workStatics: {},
+            isLoadingTableData: true,
+            tableData: [],
         };
     },
     methods: {
@@ -135,6 +138,7 @@ export default {
             });
         },
         getWorkData() {
+            this.getWorkStatic();
             // 作品状态 status 0—待审核 1—已通过 2—未通过 -1 全部
             let status = 1;
             if (this.tabActiveIndex === 1) {
@@ -199,7 +203,7 @@ export default {
         },
     },
     onLoad() {
-        this.getWorkStatic();
+        this.getWorkData();
     },
 };
 </script>
