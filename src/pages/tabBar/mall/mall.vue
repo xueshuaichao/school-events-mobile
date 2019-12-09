@@ -6,7 +6,10 @@
                 src="/static/images/mall/banner.png"
             />
             <view class="menu">
-                <view class="item">
+                <view
+                    class="item"
+                    @click="goLogin"
+                >
                     <image
                         class="icon"
                         src="/static/images/mall/coin.png"
@@ -16,7 +19,9 @@
                             v-if="userInfo.name"
                             class="text need-login"
                         >
-                            {{ userInfo.challenge_coin }}
+                            <text class="label">
+                                我的挑战币
+                            </text>{{ userInfo.challenge_coin }}
                         </view>
                         <view
                             v-if="!userInfo.name"
@@ -26,9 +31,9 @@
                         </view>
                     </template>
                 </view>
-                <navigator
+                <view
                     class="item"
-                    :url="`/pages/address/exchangeRecord?title=兑换记录`"
+                    @click="viewRecord"
                 >
                     <!-- <view class="item"> -->
                     <image
@@ -39,7 +44,7 @@
                         兑换记录
                     </view>
                     <!-- </view> -->
-                </navigator>
+                </view>
                 <navigator
                     class="item"
                     :url="`/pages/doc/detail/detail?id=earn-coin`"
@@ -109,6 +114,26 @@ export default {
                 this.giftList = data;
             });
         },
+        goLogin() {
+            if (!this.isLoading && !this.userInfo.name) {
+                uni.switchTab({
+                    url: '/pages/tabBar/uc/uc',
+                });
+            }
+        },
+        viewRecord() {
+            if (!this.isLoading) {
+                if (!this.userInfo.name) {
+                    uni.switchTab({
+                        url: '/pages/tabBar/uc/uc',
+                    });
+                } else {
+                    uni.navigateTo({
+                        url: '/pages/address/exchangeRecord?title=兑换记录',
+                    });
+                }
+            }
+        },
     },
 };
 </script>
@@ -146,6 +171,9 @@ export default {
                 font-size: 24rpx;
             }
 
+            .label {
+                color: #333;
+            }
             .need-login {
                 color: #ff6e00;
             }

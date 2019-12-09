@@ -40,7 +40,6 @@
             <view class="sep" />
             <view class="menu-list">
                 <navigator
-                    v-if="!isH5"
                     class="menu-item"
                     url="/pages/uc/myWork/myWork"
                 >

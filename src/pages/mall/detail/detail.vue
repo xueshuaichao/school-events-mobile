@@ -3,11 +3,11 @@
         <view class="top-main section">
             <swiper
                 class="swiper"
-                :indicator-dots="indicatorDots"
+                :indicator-dots="data.img && data.img.length > 1 ? true : false"
                 :autoplay="autoplay"
                 :interval="interval"
                 :duration="duration"
-                :circular="circular"
+                :circular="true"
             >
                 <swiper-item
                     v-for="item in data.img"
@@ -202,16 +202,39 @@ export default {
             if (!this.userInfo.name) {
                 return this.goLogin();
             }
-            // if (this.userInfo.challenge_coin < this.data.price) {
-            //     return uni.showToast({
-            //         icon: 'none',
-            //         title: '积分不足',
-            //         duration: 2000,
-            //     });
-            // }
+            if (this.userInfo.identity !== 4) {
+                return uni.showToast({
+                    icon: 'none',
+                    title: '目前只有学生可以兑换礼品',
+                    duration: 2000,
+                });
+            }
+            return api.get(`/api/market/gift/${this.id}`).then((res) => {
+                if (res.challenge_coin < res.price) {
+                    return uni.showToast({
+                        icon: 'none',
+                        title: '挑战币不足',
+                        duration: 2000,
+                    });
+                }
+                if (res.stock < 1) {
+                    return uni.showToast({
+                        icon: 'none',
+                        title: '礼物已兑完',
+                        duration: 2000,
+                    });
+                }
+                if (res.status !== 1) {
+                    return uni.showToast({
+                        icon: 'none',
+                        title: '礼品已下架',
+                        duration: 2000,
+                    });
+                }
 
-            return uni.navigateTo({
-                url: `/pages/address/index?id=${this.id}&title=兑换确认&challenge_coin=${this.userInfo.challenge_coin}`,
+                return uni.navigateTo({
+                    url: `/pages/address/index?id=${this.id}&title=兑换确认&challenge_coin=${this.userInfo.challenge_coin}`,
+                });
             });
         },
     },

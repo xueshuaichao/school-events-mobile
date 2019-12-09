@@ -1,5 +1,8 @@
 <template>
-    <view class="comp-gift-list">
+    <view
+        v-if="data.list && data.list.length > 0"
+        class="comp-gift-list"
+    >
         <view class="title-wrap">
             <view class="line-wrap left">
                 <view class="line" />
@@ -24,6 +27,7 @@
                         :src="item.cover_img"
                     />
                     <image
+                        v-if="item.stock === 0"
                         class="tag"
                         src="/static/images/mall/prepare.png"
                     />
