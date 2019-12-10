@@ -10,7 +10,7 @@ echo $WEBNAME
 
 if [[ $ENV = 'online' ]]; then
   echo "开始部署"
-  curl https://cs.console.aliyun.com/hook/trigger?token=eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJjbHVzdGVySWQiOiJjZDhiNDkxODZmNTc2NGFmOGEzODVjMTMzNmIwOTY4MWQiLCJpZCI6IjYwMjYwIn0.M4RCfEeYcaW-atd7PEGi4PKRSC90nI7rbqOR_a0Pm9-1r2_RyO3rZwZSUrfBL919Yu5qSzo0vB1gt7oBXofpqlcS53-Dd7xO1CMasttp59NZqmbeYF1SUyTFAajrzdKO_lM8qnrpNcEeq3o8NYbxgUin1vCz9xbX8NhLpfdAyWc
+  curl "https://cs.console.aliyun.com/hook/trigger?token=eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJjbHVzdGVySWQiOiJjZDhiNDkxODZmNTc2NGFmOGEzODVjMTMzNmIwOTY4MWQiLCJpZCI6IjUwNjcyIn0.HjxpHblHTrWT2D0fRBz7RYaP8fS66avRiPdNP8jDuZOwSo_65cKFuJJB79CIUA2nmEhcwEa2IlV_qP-_hgSDhtxxBWjX2VXjHkeQeIi4H4hw8J3W3d_YkRBU7x8Qz7ftXtQgHhbCTYr-nNvZlmDK4d46DiERJxJ7ZinGNY_VnOY"
 else
    CONTAINER=`docker ps | grep ${WEBNAME} | awk -F ' ' '{if( $NF == "'"${WEBNAME}"'"    ) print $NF}'`
 

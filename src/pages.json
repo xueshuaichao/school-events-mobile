@@ -60,6 +60,12 @@
                 "navigationBarTitleText": "QA分享"
             }
         },
+        {
+            "path": "pages/doc/notice/notice",
+            "style": {
+                "navigationBarTitleText": "通知"
+            }
+        },
 
         // second page
         {
@@ -169,12 +175,12 @@
                 "text": "我要秀才艺"
             },
             // #endif
-            {
-                "pagePath": "pages/tabBar/mall/mall",
-                "iconPath": "static/images/tab/mall.png",
-                "selectedIconPath": "static/images/tab/mall_ac.png",
-                "text": "挑战商城"
-            },
+            // {
+            //     "pagePath": "pages/tabBar/mall/mall",
+            //     "iconPath": "static/images/tab/mall.png",
+            //     "selectedIconPath": "static/images/tab/mall_ac.png",
+            //     "text": "挑战商城"
+            // },
             {
                 "pagePath": "pages/tabBar/uc/uc",
                 "iconPath": "static/images/tab/uc.png",

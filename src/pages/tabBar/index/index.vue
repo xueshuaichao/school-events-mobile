@@ -14,6 +14,17 @@
                     :circular="circular"
                 >
                     <swiper-item>
+                        <navigator
+                            url="/pages/doc/notice/notice"
+                            class="swiper-item"
+                        >
+                            <image
+                                class="banner-image"
+                                src="/static/images/index/banner0.jpg"
+                            />
+                        </navigator>
+                    </swiper-item>
+                    <swiper-item>
                         <view class="swiper-item">
                             <image
                                 class="banner-image"

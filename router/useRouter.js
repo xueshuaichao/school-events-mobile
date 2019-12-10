@@ -14,6 +14,7 @@ const whitelist = {
     '/pages/work/detail/detail': 'work-detail',
     '/pages/news/detail/detail': 'news-detail',
     '/pages/mall/detail/detail': 'mall-detail',
+    '/pages/doc/notice/notice': 'notice',
 };
 
 const routesConfig = {
@@ -99,6 +100,12 @@ const routesConfig = {
         },
         {
             path: '/pages/address/exchangeRecord',
+        },
+        {
+            path: '/pages/doc/notice/notice',
+            name: 'notice',
+            aliasPath: '/notice',
+            component: () => import('@/pages/doc/notice/notice.vue'),
         },
         {
             path: '/pages/doc/list/list',

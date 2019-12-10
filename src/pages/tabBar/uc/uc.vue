@@ -55,7 +55,7 @@
                     </text>
                 </navigator>
 
-                <view class="menu-item">
+                <!-- <view class="menu-item">
                     <image
                         class="icon"
                         src="/static/images/uc/coin.png"
@@ -98,7 +98,7 @@
                     <text class="arrow">
                         >
                     </text>
-                </navigator>
+                </navigator> -->
             </view>
         </template>
     </view>
