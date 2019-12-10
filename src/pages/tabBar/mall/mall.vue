@@ -131,7 +131,7 @@ export default {
                         url: '/pages/tabBar/uc/uc',
                     });
                 }
-                if (this.userInfo.identity === 4) {
+                if (this.userInfo.identity !== 4) {
                     uni.showToast({
                         icon: 'none',
                         title: '目前只有学生可以查看兑换记录',
