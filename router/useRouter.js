@@ -63,6 +63,10 @@ const routesConfig = {
             component: () => import('@/pages/doc/detail/detail.vue'),
         },
         {
+            path: '/pages/doc/notice/notice',
+            name: 'notice',
+        },
+        {
             path: '/pages/doc/list/list',
         },
         {

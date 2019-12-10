@@ -48,6 +48,12 @@
                 "navigationBarTitleText": "QA分享"
             }
         },
+        {
+            "path": "pages/doc/notice/notice",
+            "style": {
+                "navigationBarTitleText": "通知"
+            }
+        },
 
         // second page
         {
