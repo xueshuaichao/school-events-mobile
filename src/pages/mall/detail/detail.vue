@@ -1,6 +1,11 @@
 <template>
     <view class="page-gift-detail">
         <view class="top-main section">
+            <image
+                v-if="data.stock === 0"
+                class="tag"
+                src="/static/images/mall/prepare.png"
+            />
             <swiper
                 class="swiper"
                 :indicator-dots="data.img && data.img.length > 1 ? true : false"
@@ -256,6 +261,15 @@ export default {
         padding: 30rpx;
         margin-bottom: 20rpx;
         background: #fff;
+
+        .tag {
+            position: absolute;
+            width: 103rpx;
+            height: 103rpx;
+            top: 30rpx;
+            left: 30rpx;
+            z-index: 1000;
+        }
     }
 
     .swiper {

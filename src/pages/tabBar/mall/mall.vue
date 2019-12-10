@@ -93,7 +93,10 @@ export default {
             },
         };
     },
-    created() {
+    onLoad() {
+        this.getData();
+    },
+    onShow() {
         this.getData();
     },
     methods: {
@@ -126,6 +129,13 @@ export default {
                 if (!this.userInfo.name) {
                     uni.switchTab({
                         url: '/pages/tabBar/uc/uc',
+                    });
+                }
+                if (this.userInfo.identity === 4) {
+                    uni.showToast({
+                        icon: 'none',
+                        title: '目前只有学生可以查看兑换记录',
+                        duration: 2000,
                     });
                 } else {
                     uni.navigateTo({

@@ -26,7 +26,9 @@
                         <text>记录编号：</text><text>{{ item.show_id }}</text>
                     </view>
                     <view class="address-tel">
-                        <text>礼品名称：</text><text>{{ item.gift_name }}</text>
+                        <text>礼品名称：</text><text class="text-one-line">
+                            {{ item.gift_name }}
+                        </text>
                     </view>
                     <view class="address-address">
                         <text>礼品数量：</text><text>{{ item.gift_num }}</text>
@@ -100,12 +102,11 @@ export default {
                     this.isLoading = false;
                     this.addressList = this.addressList.concat(list);
                     this.total = total;
-                    if (
-                        this.total
-                        <= this.filter.page_num * this.filter.page_size
-                    ) {
-                        this.loadMoreStatus = 'noMore';
-                    }
+
+                    this.loadMoreStatus = this.total
+                        > this.filter.page_num * this.filter.page_size
+                        ? 'more'
+                        : 'noMore';
                 },
             );
         },
@@ -119,6 +120,13 @@ export default {
                 this.filter.page_num = this.filter.page_num + 1;
                 this.loadMoreStatus = 'loading';
                 this.getData();
+            }
+            if (this.total > this.filter.page_num * this.filter.page_size) {
+                this.filter.page_num = this.filter.page_num + 1;
+                this.loadMoreStatus = 'loading';
+                this.getData();
+            } else {
+                this.loadMoreStatus = 'noMore';
             }
         },
     },
@@ -186,6 +194,10 @@ export default {
             text-align: left;
             display: inline-block;
         }
+    }
+
+    .text-one-line {
+        margin-bottom: -16rpx;
     }
 }
 
