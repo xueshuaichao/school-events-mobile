@@ -2,7 +2,7 @@
     <view class="rich-text page-notice">
         <rich-text :nodes="contentNodes" />
         <view class="download">
-            附件下载请使用电脑登录 http://atz.qsnatz.com
+            附件下载请使用电脑登录 http://atz.qsnatz.com/notice
         </view>
     </view>
 </template>
@@ -29,6 +29,8 @@ export default {
 <style lang="less">
 .page-notice {
     padding: 30rpx;
+    font-size: 28rpx;
+    line-height: 45rpx;
 
     .download {
         font-size: 28rpx;

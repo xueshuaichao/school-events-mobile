@@ -65,6 +65,8 @@ const routesConfig = {
         {
             path: '/pages/doc/notice/notice',
             name: 'notice',
+            aliasPath: '/notice',
+            component: () => import('@/pages/doc/notice/notice.vue'),
         },
         {
             path: '/pages/doc/list/list',
