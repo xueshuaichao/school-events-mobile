@@ -12,6 +12,7 @@ const whitelist = {
 
     '/pages/work/detail/detail': 'work-detail',
     '/pages/news/detail/detail': 'news-detail',
+    '/pages/doc/notice/notice': 'notice',
 };
 
 const routesConfig = {
