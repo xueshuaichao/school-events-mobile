@@ -12,6 +12,7 @@ const whitelist = {
     '/pages/tabBar/uc/uc': 'tabbar-uc',
     '/pages/tabBar/mall/mall': 'tabbar-mall',
     '/pages/work/detail/detail': 'work-detail',
+    '/pages/news/list/list': 'news-list',
     '/pages/news/detail/detail': 'news-detail',
     '/pages/mall/detail/detail': 'mall-detail',
     '/pages/doc/notice/notice': 'notice',
@@ -116,6 +117,7 @@ const routesConfig = {
         {
             path: '/pages/news/list/list',
             aliasPath: '/information/news',
+            name: 'news-list',
         },
         {
             path: '/pages/news/detail/detail',
