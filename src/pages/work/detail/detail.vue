@@ -9,7 +9,34 @@
         >
             {{ pageData.resource_name }}
         </view>
-        <view class="video-wrap">
+        <template v-if="pageData.resource_type === 2">
+            <view class="main-swiper">
+                <swiper
+                    class="swiper"
+                    :indicator-dots="true"
+                    :autoplay="true"
+                    :interval="5000"
+                    :duration="500"
+                    :circular="true"
+                >
+                    <swiper-item
+                        v-for="item in pageData.img"
+                        :key="item"
+                    >
+                        <view class="swiper-item">
+                            <image
+                                class="banner-image"
+                                :src="item"
+                            />
+                        </view>
+                    </swiper-item>
+                </swiper>
+            </view>
+        </template>
+        <view
+            v-if="pageData.resource_type === 1"
+            class="video-wrap"
+        >
             <template v-if="isH5 || isVerify !== true">
                 <cover-view
                     v-if="isFullScreen && !isH5"
@@ -40,6 +67,7 @@
                 <video
                     id="myVideo"
                     class="video"
+                    :poster="pageData.video_img_url"
                     :src="pageData.video.cloud_path_sd"
                     controls
                     @play="onPlay"
@@ -118,6 +146,13 @@
                 />分享
             </button>
         </view>
+
+        <image
+            v-if="!isH5"
+            src="/static/images/work/join.png"
+            class="join-game"
+            @click="joinGame"
+        />
     </view>
 </template>
 
@@ -249,6 +284,11 @@ export default {
 
             share({
                 desc,
+            });
+        },
+        joinGame() {
+            uni.switchTab({
+                url: '/pages/tabBar/upload/upload',
             });
         },
     },
@@ -444,6 +484,34 @@ export default {
         .share-btn {
             padding-top: 10upx;
         }
+    }
+
+    .main-swiper {
+        padding: 30upx;
+
+        uni-swiper {
+            height: 280upx;
+
+            .swiper-item {
+                img {
+                    width: 100%;
+                    height: 100%;
+                }
+            }
+        }
+
+        .banner-image {
+            width: 690upx;
+            height: 280upx;
+        }
+    }
+
+    .join-game {
+        width: 160rpx;
+        height: 151rpx;
+        position: fixed;
+        right: 30rpx;
+        bottom: 200rpx;
     }
 }
 </style>

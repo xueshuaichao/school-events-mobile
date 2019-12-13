@@ -1,0 +1,2415 @@
+[
+    {
+        "mode": "development",
+        "context": "/Users/wy/WDY/school-events-app",
+        "devtool": "sourcemap",
+        "node": {
+            "setImmediate": false,
+            "dgram": "empty",
+            "fs": "empty",
+            "net": "empty",
+            "tls": "empty",
+            "child_process": "empty"
+        },
+        "output": {
+            "path": "/Users/wy/WDY/school-events-app/dist/dev/mp-weixin",
+            "filename": "[name].js",
+            "publicPath": "/",
+            "globalObject": "global",
+            "chunkFilename": "[id].js",
+            "sourceMapFilename": "../.sourcemap/mp-weixin/[name].js.map"
+        },
+        "resolve": {
+            "alias": {
+                "@": "/Users/wy/WDY/school-events-app/src",
+                "vue$": "@dcloudio/vue-cli-plugin-uni/packages/mp-vue",
+                "uni-pages": "/Users/wy/WDY/school-events-app/src/pages.json",
+                "@dcloudio/uni-stat": "/Users/wy/WDY/school-events-app/node_modules/@dcloudio/uni-stat/dist/index.js",
+                "uni-stat-config": "/Users/wy/WDY/school-events-app/src/pages.json?{\"type\":\"stat\"}",
+                "mpvue-page-factory": "/Users/wy/WDY/school-events-app/node_modules/@dcloudio/vue-cli-plugin-uni/packages/mpvue-page-factory/index.js"
+            },
+            "extensions": [
+                ".mjs",
+                ".js",
+                ".jsx",
+                ".vue",
+                ".json",
+                ".wasm",
+                ".nvue"
+            ],
+            "modules": [
+                "/Users/wy/WDY/school-events-app/node_modules",
+                "/Users/wy/WDY/school-events-app/node_modules/@vue/cli-service/node_modules",
+                "/Users/wy/WDY/school-events-app/src",
+                "/Users/wy/WDY/school-events-app/src/node_modules"
+            ]
+        },
+        "resolveLoader": {
+            "modules": [
+                "/Users/wy/WDY/school-events-app/node_modules/@vue/cli-plugin-eslint/node_modules",
+                "/Users/wy/WDY/school-events-app/node_modules/@vue/cli-plugin-babel/node_modules",
+                "node_modules",
+                "/Users/wy/WDY/school-events-app/node_modules",
+                "/Users/wy/WDY/school-events-app/node_modules/@vue/cli-service/node_modules"
+            ]
+        },
+        "module": {
+            "noParse": {},
+            "rules": [
+                {
+                    "test": [{}, {}],
+                    "use": [
+                        {
+                            "loader": "vue-loader",
+                            "options": {
+                                "compilerOptions": {
+                                    "preserveWhitespace": false
+                                },
+                                "cacheDirectory": false,
+                                "cacheIdentifier": false,
+                                "compiler": {}
+                            }
+                        },
+                        {
+                            "loader": "/Users/wy/WDY/school-events-app/node_modules/@dcloudio/vue-cli-plugin-uni/packages/webpack-custom-block-loader/index.js",
+                            "options": {
+                                "compiler": {}
+                            }
+                        },
+                        {
+                            "loader": "/Users/wy/WDY/school-events-app/node_modules/@dcloudio/webpack-uni-mp-loader/lib/style.js"
+                        }
+                    ]
+                },
+                {
+                    "test": {},
+                    "use": [
+                        {
+                            "loader": "url-loader",
+                            "options": {
+                                "limit": 40960,
+                                "fallback": {
+                                    "loader": "file-loader",
+                                    "options": {
+                                        "name": "static/img/[name].[hash:8].[ext]"
+                                    }
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
+                    "test": {},
+                    "use": [
+                        {
+                            "loader": "file-loader",
+                            "options": {
+                                "name": "static/img/[name].[hash:8].[ext]"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "test": {},
+                    "use": [
+                        {
+                            "loader": "url-loader",
+                            "options": {
+                                "limit": 4096,
+                                "fallback": {
+                                    "loader": "file-loader",
+                                    "options": {
+                                        "name": "static/media/[name].[hash:8].[ext]"
+                                    }
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
+                    "test": {},
+                    "use": [
+                        {
+                            "loader": "url-loader",
+                            "options": {
+                                "limit": 40960,
+                                "fallback": {
+                                    "loader": "file-loader",
+                                    "options": {
+                                        "name": "static/fonts/[name].[hash:8].[ext]"
+                                    }
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
+                    "test": {},
+                    "oneOf": [
+                        {
+                            "resourceQuery": {},
+                            "use": [
+                                {
+                                    "loader": "pug-plain-loader"
+                                }
+                            ]
+                        },
+                        {
+                            "use": [
+                                {
+                                    "loader": "raw-loader"
+                                },
+                                {
+                                    "loader": "pug-plain-loader"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "test": {},
+                    "oneOf": [
+                        {
+                            "resourceQuery": {},
+                            "use": [
+                                {
+                                    "loader": "/Users/wy/WDY/school-events-app/node_modules/mini-css-extract-plugin/dist/loader.js",
+                                    "options": {
+                                        "hmr": true,
+                                        "publicPath": "../../"
+                                    }
+                                },
+                                {
+                                    "loader": "/Users/wy/WDY/school-events-app/node_modules/@dcloudio/vue-cli-plugin-uni/packages/webpack-preprocess-loader",
+                                    "options": {
+                                        "type": "css",
+                                        "context": {
+                                            "H5": false,
+                                            "APP-PLUS": false,
+                                            "MP-QQ": false,
+                                            "MP-WEIXIN": true,
+                                            "MP-BAIDU": false,
+                                            "MP-ALIPAY": false,
+                                            "MP-TOUTIAO": false,
+                                            "MP": true,
+                                            "APP": false,
+                                            "APP-PLUS-NVUE": false,
+                                            "APP_PLUS_NVUE": false,
+                                            "APP-VUE": false,
+                                            "APP_VUE": false,
+                                            "APP-NVUE": false,
+                                            "APP_NVUE": false,
+                                            "APP_PLUS": false,
+                                            "MP_QQ": false,
+                                            "MP_WEIXIN": true,
+                                            "MP_BAIDU": false,
+                                            "MP_ALIPAY": false,
+                                            "MP_TOUTIAO": false
+                                        }
+                                    }
+                                },
+                                {
+                                    "loader": "css-loader",
+                                    "options": {
+                                        "sourceMap": false,
+                                        "importLoaders": 2,
+                                        "modules": true,
+                                        "localIdentName": "[name]_[local]_[hash:base64:5]"
+                                    }
+                                },
+                                {
+                                    "loader": "postcss-loader",
+                                    "options": {
+                                        "sourceMap": false,
+                                        "config": {
+                                            "path": "/Users/wy/WDY/school-events-app/postcss.config.js"
+                                        }
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            "resourceQuery": {},
+                            "use": [
+                                {
+                                    "loader": "/Users/wy/WDY/school-events-app/node_modules/mini-css-extract-plugin/dist/loader.js",
+                                    "options": {
+                                        "hmr": true,
+                                        "publicPath": "../../"
+                                    }
+                                },
+                                {
+                                    "loader": "/Users/wy/WDY/school-events-app/node_modules/@dcloudio/vue-cli-plugin-uni/packages/webpack-preprocess-loader",
+                                    "options": {
+                                        "type": "css",
+                                        "context": {
+                                            "H5": false,
+                                            "APP-PLUS": false,
+                                            "MP-QQ": false,
+                                            "MP-WEIXIN": true,
+                                            "MP-BAIDU": false,
+                                            "MP-ALIPAY": false,
+                                            "MP-TOUTIAO": false,
+                                            "MP": true,
+                                            "APP": false,
+                                            "APP-PLUS-NVUE": false,
+                                            "APP_PLUS_NVUE": false,
+                                            "APP-VUE": false,
+                                            "APP_VUE": false,
+                                            "APP-NVUE": false,
+                                            "APP_NVUE": false,
+                                            "APP_PLUS": false,
+                                            "MP_QQ": false,
+                                            "MP_WEIXIN": true,
+                                            "MP_BAIDU": false,
+                                            "MP_ALIPAY": false,
+                                            "MP_TOUTIAO": false
+                                        }
+                                    }
+                                },
+                                {
+                                    "loader": "css-loader",
+                                    "options": {
+                                        "sourceMap": false,
+                                        "importLoaders": 2
+                                    }
+                                },
+                                {
+                                    "loader": "postcss-loader",
+                                    "options": {
+                                        "sourceMap": false,
+                                        "config": {
+                                            "path": "/Users/wy/WDY/school-events-app/postcss.config.js"
+                                        }
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            "test": {},
+                            "use": [
+                                {
+                                    "loader": "/Users/wy/WDY/school-events-app/node_modules/mini-css-extract-plugin/dist/loader.js",
+                                    "options": {
+                                        "hmr": true,
+                                        "publicPath": "../../"
+                                    }
+                                },
+                                {
+                                    "loader": "/Users/wy/WDY/school-events-app/node_modules/@dcloudio/vue-cli-plugin-uni/packages/webpack-preprocess-loader",
+                                    "options": {
+                                        "type": "css",
+                                        "context": {
+                                            "H5": false,
+                                            "APP-PLUS": false,
+                                            "MP-QQ": false,
+                                            "MP-WEIXIN": true,
+                                            "MP-BAIDU": false,
+                                            "MP-ALIPAY": false,
+                                            "MP-TOUTIAO": false,
+                                            "MP": true,
+                                            "APP": false,
+                                            "APP-PLUS-NVUE": false,
+                                            "APP_PLUS_NVUE": false,
+                                            "APP-VUE": false,
+                                            "APP_VUE": false,
+                                            "APP-NVUE": false,
+                                            "APP_NVUE": false,
+                                            "APP_PLUS": false,
+                                            "MP_QQ": false,
+                                            "MP_WEIXIN": true,
+                                            "MP_BAIDU": false,
+                                            "MP_ALIPAY": false,
+                                            "MP_TOUTIAO": false
+                                        }
+                                    }
+                                },
+                                {
+                                    "loader": "css-loader",
+                                    "options": {
+                                        "sourceMap": false,
+                                        "importLoaders": 2,
+                                        "modules": true,
+                                        "localIdentName": "[name]_[local]_[hash:base64:5]"
+                                    }
+                                },
+                                {
+                                    "loader": "postcss-loader",
+                                    "options": {
+                                        "sourceMap": false,
+                                        "config": {
+                                            "path": "/Users/wy/WDY/school-events-app/postcss.config.js"
+                                        }
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            "use": [
+                                {
+                                    "loader": "/Users/wy/WDY/school-events-app/node_modules/mini-css-extract-plugin/dist/loader.js",
+                                    "options": {
+                                        "hmr": true,
+                                        "publicPath": "../../"
+                                    }
+                                },
+                                {
+                                    "loader": "/Users/wy/WDY/school-events-app/node_modules/@dcloudio/vue-cli-plugin-uni/packages/webpack-preprocess-loader",
+                                    "options": {
+                                        "type": "css",
+                                        "context": {
+                                            "H5": false,
+                                            "APP-PLUS": false,
+                                            "MP-QQ": false,
+                                            "MP-WEIXIN": true,
+                                            "MP-BAIDU": false,
+                                            "MP-ALIPAY": false,
+                                            "MP-TOUTIAO": false,
+                                            "MP": true,
+                                            "APP": false,
+                                            "APP-PLUS-NVUE": false,
+                                            "APP_PLUS_NVUE": false,
+                                            "APP-VUE": false,
+                                            "APP_VUE": false,
+                                            "APP-NVUE": false,
+                                            "APP_NVUE": false,
+                                            "APP_PLUS": false,
+                                            "MP_QQ": false,
+                                            "MP_WEIXIN": true,
+                                            "MP_BAIDU": false,
+                                            "MP_ALIPAY": false,
+                                            "MP_TOUTIAO": false
+                                        }
+                                    }
+                                },
+                                {
+                                    "loader": "css-loader",
+                                    "options": {
+                                        "sourceMap": false,
+                                        "importLoaders": 2
+                                    }
+                                },
+                                {
+                                    "loader": "postcss-loader",
+                                    "options": {
+                                        "sourceMap": false,
+                                        "config": {
+                                            "path": "/Users/wy/WDY/school-events-app/postcss.config.js"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "test": {},
+                    "oneOf": [
+                        {
+                            "resourceQuery": {},
+                            "use": [
+                                {
+                                    "loader": "/Users/wy/WDY/school-events-app/node_modules/mini-css-extract-plugin/dist/loader.js",
+                                    "options": {
+                                        "hmr": true,
+                                        "publicPath": "../../"
+                                    }
+                                },
+                                {
+                                    "loader": "/Users/wy/WDY/school-events-app/node_modules/@dcloudio/vue-cli-plugin-uni/packages/webpack-preprocess-loader",
+                                    "options": {
+                                        "type": "css",
+                                        "context": {
+                                            "H5": false,
+                                            "APP-PLUS": false,
+                                            "MP-QQ": false,
+                                            "MP-WEIXIN": true,
+                                            "MP-BAIDU": false,
+                                            "MP-ALIPAY": false,
+                                            "MP-TOUTIAO": false,
+                                            "MP": true,
+                                            "APP": false,
+                                            "APP-PLUS-NVUE": false,
+                                            "APP_PLUS_NVUE": false,
+                                            "APP-VUE": false,
+                                            "APP_VUE": false,
+                                            "APP-NVUE": false,
+                                            "APP_NVUE": false,
+                                            "APP_PLUS": false,
+                                            "MP_QQ": false,
+                                            "MP_WEIXIN": true,
+                                            "MP_BAIDU": false,
+                                            "MP_ALIPAY": false,
+                                            "MP_TOUTIAO": false
+                                        }
+                                    }
+                                },
+                                {
+                                    "loader": "css-loader",
+                                    "options": {
+                                        "sourceMap": false,
+                                        "importLoaders": 2,
+                                        "modules": true,
+                                        "localIdentName": "[name]_[local]_[hash:base64:5]"
+                                    }
+                                },
+                                {
+                                    "loader": "postcss-loader",
+                                    "options": {
+                                        "sourceMap": false,
+                                        "config": {
+                                            "path": "/Users/wy/WDY/school-events-app/postcss.config.js"
+                                        }
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            "resourceQuery": {},
+                            "use": [
+                                {
+                                    "loader": "/Users/wy/WDY/school-events-app/node_modules/mini-css-extract-plugin/dist/loader.js",
+                                    "options": {
+                                        "hmr": true,
+                                        "publicPath": "../../"
+                                    }
+                                },
+                                {
+                                    "loader": "/Users/wy/WDY/school-events-app/node_modules/@dcloudio/vue-cli-plugin-uni/packages/webpack-preprocess-loader",
+                                    "options": {
+                                        "type": "css",
+                                        "context": {
+                                            "H5": false,
+                                            "APP-PLUS": false,
+                                            "MP-QQ": false,
+                                            "MP-WEIXIN": true,
+                                            "MP-BAIDU": false,
+                                            "MP-ALIPAY": false,
+                                            "MP-TOUTIAO": false,
+                                            "MP": true,
+                                            "APP": false,
+                                            "APP-PLUS-NVUE": false,
+                                            "APP_PLUS_NVUE": false,
+                                            "APP-VUE": false,
+                                            "APP_VUE": false,
+                                            "APP-NVUE": false,
+                                            "APP_NVUE": false,
+                                            "APP_PLUS": false,
+                                            "MP_QQ": false,
+                                            "MP_WEIXIN": true,
+                                            "MP_BAIDU": false,
+                                            "MP_ALIPAY": false,
+                                            "MP_TOUTIAO": false
+                                        }
+                                    }
+                                },
+                                {
+                                    "loader": "css-loader",
+                                    "options": {
+                                        "sourceMap": false,
+                                        "importLoaders": 2
+                                    }
+                                },
+                                {
+                                    "loader": "postcss-loader",
+                                    "options": {
+                                        "sourceMap": false,
+                                        "config": {
+                                            "path": "/Users/wy/WDY/school-events-app/postcss.config.js"
+                                        }
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            "test": {},
+                            "use": [
+                                {
+                                    "loader": "/Users/wy/WDY/school-events-app/node_modules/mini-css-extract-plugin/dist/loader.js",
+                                    "options": {
+                                        "hmr": true,
+                                        "publicPath": "../../"
+                                    }
+                                },
+                                {
+                                    "loader": "/Users/wy/WDY/school-events-app/node_modules/@dcloudio/vue-cli-plugin-uni/packages/webpack-preprocess-loader",
+                                    "options": {
+                                        "type": "css",
+                                        "context": {
+                                            "H5": false,
+                                            "APP-PLUS": false,
+                                            "MP-QQ": false,
+                                            "MP-WEIXIN": true,
+                                            "MP-BAIDU": false,
+                                            "MP-ALIPAY": false,
+                                            "MP-TOUTIAO": false,
+                                            "MP": true,
+                                            "APP": false,
+                                            "APP-PLUS-NVUE": false,
+                                            "APP_PLUS_NVUE": false,
+                                            "APP-VUE": false,
+                                            "APP_VUE": false,
+                                            "APP-NVUE": false,
+                                            "APP_NVUE": false,
+                                            "APP_PLUS": false,
+                                            "MP_QQ": false,
+                                            "MP_WEIXIN": true,
+                                            "MP_BAIDU": false,
+                                            "MP_ALIPAY": false,
+                                            "MP_TOUTIAO": false
+                                        }
+                                    }
+                                },
+                                {
+                                    "loader": "css-loader",
+                                    "options": {
+                                        "sourceMap": false,
+                                        "importLoaders": 2,
+                                        "modules": true,
+                                        "localIdentName": "[name]_[local]_[hash:base64:5]"
+                                    }
+                                },
+                                {
+                                    "loader": "postcss-loader",
+                                    "options": {
+                                        "sourceMap": false,
+                                        "config": {
+                                            "path": "/Users/wy/WDY/school-events-app/postcss.config.js"
+                                        }
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            "use": [
+                                {
+                                    "loader": "/Users/wy/WDY/school-events-app/node_modules/mini-css-extract-plugin/dist/loader.js",
+                                    "options": {
+                                        "hmr": true,
+                                        "publicPath": "../../"
+                                    }
+                                },
+                                {
+                                    "loader": "/Users/wy/WDY/school-events-app/node_modules/@dcloudio/vue-cli-plugin-uni/packages/webpack-preprocess-loader",
+                                    "options": {
+                                        "type": "css",
+                                        "context": {
+                                            "H5": false,
+                                            "APP-PLUS": false,
+                                            "MP-QQ": false,
+                                            "MP-WEIXIN": true,
+                                            "MP-BAIDU": false,
+                                            "MP-ALIPAY": false,
+                                            "MP-TOUTIAO": false,
+                                            "MP": true,
+                                            "APP": false,
+                                            "APP-PLUS-NVUE": false,
+                                            "APP_PLUS_NVUE": false,
+                                            "APP-VUE": false,
+                                            "APP_VUE": false,
+                                            "APP-NVUE": false,
+                                            "APP_NVUE": false,
+                                            "APP_PLUS": false,
+                                            "MP_QQ": false,
+                                            "MP_WEIXIN": true,
+                                            "MP_BAIDU": false,
+                                            "MP_ALIPAY": false,
+                                            "MP_TOUTIAO": false
+                                        }
+                                    }
+                                },
+                                {
+                                    "loader": "css-loader",
+                                    "options": {
+                                        "sourceMap": false,
+                                        "importLoaders": 2
+                                    }
+                                },
+                                {
+                                    "loader": "postcss-loader",
+                                    "options": {
+                                        "sourceMap": false,
+                                        "config": {
+                                            "path": "/Users/wy/WDY/school-events-app/postcss.config.js"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "test": {},
+                    "oneOf": [
+                        {
+                            "resourceQuery": {},
+                            "use": [
+                                {
+                                    "loader": "/Users/wy/WDY/school-events-app/node_modules/mini-css-extract-plugin/dist/loader.js",
+                                    "options": {
+                                        "hmr": true,
+                                        "publicPath": "../../"
+                                    }
+                                },
+                                {
+                                    "loader": "/Users/wy/WDY/school-events-app/node_modules/@dcloudio/vue-cli-plugin-uni/packages/webpack-preprocess-loader",
+                                    "options": {
+                                        "type": "css",
+                                        "context": {
+                                            "H5": false,
+                                            "APP-PLUS": false,
+                                            "MP-QQ": false,
+                                            "MP-WEIXIN": true,
+                                            "MP-BAIDU": false,
+                                            "MP-ALIPAY": false,
+                                            "MP-TOUTIAO": false,
+                                            "MP": true,
+                                            "APP": false,
+                                            "APP-PLUS-NVUE": false,
+                                            "APP_PLUS_NVUE": false,
+                                            "APP-VUE": false,
+                                            "APP_VUE": false,
+                                            "APP-NVUE": false,
+                                            "APP_NVUE": false,
+                                            "APP_PLUS": false,
+                                            "MP_QQ": false,
+                                            "MP_WEIXIN": true,
+                                            "MP_BAIDU": false,
+                                            "MP_ALIPAY": false,
+                                            "MP_TOUTIAO": false
+                                        }
+                                    }
+                                },
+                                {
+                                    "loader": "css-loader",
+                                    "options": {
+                                        "sourceMap": false,
+                                        "importLoaders": 2,
+                                        "modules": true,
+                                        "localIdentName": "[name]_[local]_[hash:base64:5]"
+                                    }
+                                },
+                                {
+                                    "loader": "postcss-loader",
+                                    "options": {
+                                        "sourceMap": false,
+                                        "config": {
+                                            "path": "/Users/wy/WDY/school-events-app/postcss.config.js"
+                                        }
+                                    }
+                                },
+                                {
+                                    "loader": "sass-loader",
+                                    "options": {
+                                        "sourceMap": false,
+                                        "prependData": "\n$uni-color-primary: #007aff;\n$uni-color-success: #4cd964;\n$uni-color-warning: #f0ad4e;\n$uni-color-error: #dd524d;\n\n$uni-text-color: #333;//基本色\n$uni-text-color-inverse: #fff;//反色\n$uni-text-color-grey: #999;//辅助灰色，如加载更多的提示信息\n$uni-text-color-placeholder: #808080;\n$uni-text-color-disable: #c0c0c0;\n\n$uni-bg-color: #ffffff;\n$uni-bg-color-grey: #f8f8f8;\n$uni-bg-color-hover: #f1f1f1;//点击状态颜色\n$uni-bg-color-mask: rgba(0, 0, 0, 0.4);//遮罩颜色\n\n$uni-border-color: #c8c7cc;\n\n\n$uni-font-size-sm: 24rpx;\n$uni-font-size-base: 28rpx;\n$uni-font-size-lg: 32rpx;\n\n$uni-img-size-sm: 40rpx;\n$uni-img-size-base: 52rpx;\n$uni-img-size-lg: 80rpx;\n\n$uni-border-radius-sm: 4rpx;\n$uni-border-radius-base: 6rpx;\n$uni-border-radius-lg: 12rpx;\n$uni-border-radius-circle: 50%;\n\n$uni-spacing-row-sm: 10px;\n$uni-spacing-row-base: 20rpx;\n$uni-spacing-row-lg: 30rpx;\n\n$uni-spacing-col-sm: 8rpx;\n$uni-spacing-col-base: 16rpx;\n$uni-spacing-col-lg: 24rpx;\n\n$uni-opacity-disabled: 0.3; // 组件禁用态的透明度\n\n$uni-color-title: #2C405A; // 文章标题颜色\n$uni-font-size-title: 40rpx;\n$uni-color-subtitle: #555555; // 二级标题颜色\n$uni-font-size-subtitle: 36rpx;\n$uni-color-paragraph: #3F536E; // 文章段落颜色\n$uni-font-size-paragraph: 30rpx;\n\n  @import \"@/uni.scss\";"
+                                    }
+                                },
+                                {
+                                    "loader": "/Users/wy/WDY/school-events-app/node_modules/@dcloudio/vue-cli-plugin-uni/packages/webpack-preprocess-loader",
+                                    "options": {
+                                        "type": "css",
+                                        "context": {
+                                            "H5": false,
+                                            "APP-PLUS": false,
+                                            "MP-QQ": false,
+                                            "MP-WEIXIN": true,
+                                            "MP-BAIDU": false,
+                                            "MP-ALIPAY": false,
+                                            "MP-TOUTIAO": false,
+                                            "MP": true,
+                                            "APP": false,
+                                            "APP-PLUS-NVUE": false,
+                                            "APP_PLUS_NVUE": false,
+                                            "APP-VUE": false,
+                                            "APP_VUE": false,
+                                            "APP-NVUE": false,
+                                            "APP_NVUE": false,
+                                            "APP_PLUS": false,
+                                            "MP_QQ": false,
+                                            "MP_WEIXIN": true,
+                                            "MP_BAIDU": false,
+                                            "MP_ALIPAY": false,
+                                            "MP_TOUTIAO": false
+                                        }
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            "resourceQuery": {},
+                            "use": [
+                                {
+                                    "loader": "/Users/wy/WDY/school-events-app/node_modules/mini-css-extract-plugin/dist/loader.js",
+                                    "options": {
+                                        "hmr": true,
+                                        "publicPath": "../../"
+                                    }
+                                },
+                                {
+                                    "loader": "/Users/wy/WDY/school-events-app/node_modules/@dcloudio/vue-cli-plugin-uni/packages/webpack-preprocess-loader",
+                                    "options": {
+                                        "type": "css",
+                                        "context": {
+                                            "H5": false,
+                                            "APP-PLUS": false,
+                                            "MP-QQ": false,
+                                            "MP-WEIXIN": true,
+                                            "MP-BAIDU": false,
+                                            "MP-ALIPAY": false,
+                                            "MP-TOUTIAO": false,
+                                            "MP": true,
+                                            "APP": false,
+                                            "APP-PLUS-NVUE": false,
+                                            "APP_PLUS_NVUE": false,
+                                            "APP-VUE": false,
+                                            "APP_VUE": false,
+                                            "APP-NVUE": false,
+                                            "APP_NVUE": false,
+                                            "APP_PLUS": false,
+                                            "MP_QQ": false,
+                                            "MP_WEIXIN": true,
+                                            "MP_BAIDU": false,
+                                            "MP_ALIPAY": false,
+                                            "MP_TOUTIAO": false
+                                        }
+                                    }
+                                },
+                                {
+                                    "loader": "css-loader",
+                                    "options": {
+                                        "sourceMap": false,
+                                        "importLoaders": 2
+                                    }
+                                },
+                                {
+                                    "loader": "postcss-loader",
+                                    "options": {
+                                        "sourceMap": false,
+                                        "config": {
+                                            "path": "/Users/wy/WDY/school-events-app/postcss.config.js"
+                                        }
+                                    }
+                                },
+                                {
+                                    "loader": "sass-loader",
+                                    "options": {
+                                        "sourceMap": false,
+                                        "prependData": "\n$uni-color-primary: #007aff;\n$uni-color-success: #4cd964;\n$uni-color-warning: #f0ad4e;\n$uni-color-error: #dd524d;\n\n$uni-text-color: #333;//基本色\n$uni-text-color-inverse: #fff;//反色\n$uni-text-color-grey: #999;//辅助灰色，如加载更多的提示信息\n$uni-text-color-placeholder: #808080;\n$uni-text-color-disable: #c0c0c0;\n\n$uni-bg-color: #ffffff;\n$uni-bg-color-grey: #f8f8f8;\n$uni-bg-color-hover: #f1f1f1;//点击状态颜色\n$uni-bg-color-mask: rgba(0, 0, 0, 0.4);//遮罩颜色\n\n$uni-border-color: #c8c7cc;\n\n\n$uni-font-size-sm: 24rpx;\n$uni-font-size-base: 28rpx;\n$uni-font-size-lg: 32rpx;\n\n$uni-img-size-sm: 40rpx;\n$uni-img-size-base: 52rpx;\n$uni-img-size-lg: 80rpx;\n\n$uni-border-radius-sm: 4rpx;\n$uni-border-radius-base: 6rpx;\n$uni-border-radius-lg: 12rpx;\n$uni-border-radius-circle: 50%;\n\n$uni-spacing-row-sm: 10px;\n$uni-spacing-row-base: 20rpx;\n$uni-spacing-row-lg: 30rpx;\n\n$uni-spacing-col-sm: 8rpx;\n$uni-spacing-col-base: 16rpx;\n$uni-spacing-col-lg: 24rpx;\n\n$uni-opacity-disabled: 0.3; // 组件禁用态的透明度\n\n$uni-color-title: #2C405A; // 文章标题颜色\n$uni-font-size-title: 40rpx;\n$uni-color-subtitle: #555555; // 二级标题颜色\n$uni-font-size-subtitle: 36rpx;\n$uni-color-paragraph: #3F536E; // 文章段落颜色\n$uni-font-size-paragraph: 30rpx;\n\n  @import \"@/uni.scss\";"
+                                    }
+                                },
+                                {
+                                    "loader": "/Users/wy/WDY/school-events-app/node_modules/@dcloudio/vue-cli-plugin-uni/packages/webpack-preprocess-loader",
+                                    "options": {
+                                        "type": "css",
+                                        "context": {
+                                            "H5": false,
+                                            "APP-PLUS": false,
+                                            "MP-QQ": false,
+                                            "MP-WEIXIN": true,
+                                            "MP-BAIDU": false,
+                                            "MP-ALIPAY": false,
+                                            "MP-TOUTIAO": false,
+                                            "MP": true,
+                                            "APP": false,
+                                            "APP-PLUS-NVUE": false,
+                                            "APP_PLUS_NVUE": false,
+                                            "APP-VUE": false,
+                                            "APP_VUE": false,
+                                            "APP-NVUE": false,
+                                            "APP_NVUE": false,
+                                            "APP_PLUS": false,
+                                            "MP_QQ": false,
+                                            "MP_WEIXIN": true,
+                                            "MP_BAIDU": false,
+                                            "MP_ALIPAY": false,
+                                            "MP_TOUTIAO": false
+                                        }
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            "test": {},
+                            "use": [
+                                {
+                                    "loader": "/Users/wy/WDY/school-events-app/node_modules/mini-css-extract-plugin/dist/loader.js",
+                                    "options": {
+                                        "hmr": true,
+                                        "publicPath": "../../"
+                                    }
+                                },
+                                {
+                                    "loader": "/Users/wy/WDY/school-events-app/node_modules/@dcloudio/vue-cli-plugin-uni/packages/webpack-preprocess-loader",
+                                    "options": {
+                                        "type": "css",
+                                        "context": {
+                                            "H5": false,
+                                            "APP-PLUS": false,
+                                            "MP-QQ": false,
+                                            "MP-WEIXIN": true,
+                                            "MP-BAIDU": false,
+                                            "MP-ALIPAY": false,
+                                            "MP-TOUTIAO": false,
+                                            "MP": true,
+                                            "APP": false,
+                                            "APP-PLUS-NVUE": false,
+                                            "APP_PLUS_NVUE": false,
+                                            "APP-VUE": false,
+                                            "APP_VUE": false,
+                                            "APP-NVUE": false,
+                                            "APP_NVUE": false,
+                                            "APP_PLUS": false,
+                                            "MP_QQ": false,
+                                            "MP_WEIXIN": true,
+                                            "MP_BAIDU": false,
+                                            "MP_ALIPAY": false,
+                                            "MP_TOUTIAO": false
+                                        }
+                                    }
+                                },
+                                {
+                                    "loader": "css-loader",
+                                    "options": {
+                                        "sourceMap": false,
+                                        "importLoaders": 2,
+                                        "modules": true,
+                                        "localIdentName": "[name]_[local]_[hash:base64:5]"
+                                    }
+                                },
+                                {
+                                    "loader": "postcss-loader",
+                                    "options": {
+                                        "sourceMap": false,
+                                        "config": {
+                                            "path": "/Users/wy/WDY/school-events-app/postcss.config.js"
+                                        }
+                                    }
+                                },
+                                {
+                                    "loader": "sass-loader",
+                                    "options": {
+                                        "sourceMap": false,
+                                        "prependData": "\n$uni-color-primary: #007aff;\n$uni-color-success: #4cd964;\n$uni-color-warning: #f0ad4e;\n$uni-color-error: #dd524d;\n\n$uni-text-color: #333;//基本色\n$uni-text-color-inverse: #fff;//反色\n$uni-text-color-grey: #999;//辅助灰色，如加载更多的提示信息\n$uni-text-color-placeholder: #808080;\n$uni-text-color-disable: #c0c0c0;\n\n$uni-bg-color: #ffffff;\n$uni-bg-color-grey: #f8f8f8;\n$uni-bg-color-hover: #f1f1f1;//点击状态颜色\n$uni-bg-color-mask: rgba(0, 0, 0, 0.4);//遮罩颜色\n\n$uni-border-color: #c8c7cc;\n\n\n$uni-font-size-sm: 24rpx;\n$uni-font-size-base: 28rpx;\n$uni-font-size-lg: 32rpx;\n\n$uni-img-size-sm: 40rpx;\n$uni-img-size-base: 52rpx;\n$uni-img-size-lg: 80rpx;\n\n$uni-border-radius-sm: 4rpx;\n$uni-border-radius-base: 6rpx;\n$uni-border-radius-lg: 12rpx;\n$uni-border-radius-circle: 50%;\n\n$uni-spacing-row-sm: 10px;\n$uni-spacing-row-base: 20rpx;\n$uni-spacing-row-lg: 30rpx;\n\n$uni-spacing-col-sm: 8rpx;\n$uni-spacing-col-base: 16rpx;\n$uni-spacing-col-lg: 24rpx;\n\n$uni-opacity-disabled: 0.3; // 组件禁用态的透明度\n\n$uni-color-title: #2C405A; // 文章标题颜色\n$uni-font-size-title: 40rpx;\n$uni-color-subtitle: #555555; // 二级标题颜色\n$uni-font-size-subtitle: 36rpx;\n$uni-color-paragraph: #3F536E; // 文章段落颜色\n$uni-font-size-paragraph: 30rpx;\n\n  @import \"@/uni.scss\";"
+                                    }
+                                },
+                                {
+                                    "loader": "/Users/wy/WDY/school-events-app/node_modules/@dcloudio/vue-cli-plugin-uni/packages/webpack-preprocess-loader",
+                                    "options": {
+                                        "type": "css",
+                                        "context": {
+                                            "H5": false,
+                                            "APP-PLUS": false,
+                                            "MP-QQ": false,
+                                            "MP-WEIXIN": true,
+                                            "MP-BAIDU": false,
+                                            "MP-ALIPAY": false,
+                                            "MP-TOUTIAO": false,
+                                            "MP": true,
+                                            "APP": false,
+                                            "APP-PLUS-NVUE": false,
+                                            "APP_PLUS_NVUE": false,
+                                            "APP-VUE": false,
+                                            "APP_VUE": false,
+                                            "APP-NVUE": false,
+                                            "APP_NVUE": false,
+                                            "APP_PLUS": false,
+                                            "MP_QQ": false,
+                                            "MP_WEIXIN": true,
+                                            "MP_BAIDU": false,
+                                            "MP_ALIPAY": false,
+                                            "MP_TOUTIAO": false
+                                        }
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            "use": [
+                                {
+                                    "loader": "/Users/wy/WDY/school-events-app/node_modules/mini-css-extract-plugin/dist/loader.js",
+                                    "options": {
+                                        "hmr": true,
+                                        "publicPath": "../../"
+                                    }
+                                },
+                                {
+                                    "loader": "/Users/wy/WDY/school-events-app/node_modules/@dcloudio/vue-cli-plugin-uni/packages/webpack-preprocess-loader",
+                                    "options": {
+                                        "type": "css",
+                                        "context": {
+                                            "H5": false,
+                                            "APP-PLUS": false,
+                                            "MP-QQ": false,
+                                            "MP-WEIXIN": true,
+                                            "MP-BAIDU": false,
+                                            "MP-ALIPAY": false,
+                                            "MP-TOUTIAO": false,
+                                            "MP": true,
+                                            "APP": false,
+                                            "APP-PLUS-NVUE": false,
+                                            "APP_PLUS_NVUE": false,
+                                            "APP-VUE": false,
+                                            "APP_VUE": false,
+                                            "APP-NVUE": false,
+                                            "APP_NVUE": false,
+                                            "APP_PLUS": false,
+                                            "MP_QQ": false,
+                                            "MP_WEIXIN": true,
+                                            "MP_BAIDU": false,
+                                            "MP_ALIPAY": false,
+                                            "MP_TOUTIAO": false
+                                        }
+                                    }
+                                },
+                                {
+                                    "loader": "css-loader",
+                                    "options": {
+                                        "sourceMap": false,
+                                        "importLoaders": 2
+                                    }
+                                },
+                                {
+                                    "loader": "postcss-loader",
+                                    "options": {
+                                        "sourceMap": false,
+                                        "config": {
+                                            "path": "/Users/wy/WDY/school-events-app/postcss.config.js"
+                                        }
+                                    }
+                                },
+                                {
+                                    "loader": "sass-loader",
+                                    "options": {
+                                        "sourceMap": false,
+                                        "prependData": "\n$uni-color-primary: #007aff;\n$uni-color-success: #4cd964;\n$uni-color-warning: #f0ad4e;\n$uni-color-error: #dd524d;\n\n$uni-text-color: #333;//基本色\n$uni-text-color-inverse: #fff;//反色\n$uni-text-color-grey: #999;//辅助灰色，如加载更多的提示信息\n$uni-text-color-placeholder: #808080;\n$uni-text-color-disable: #c0c0c0;\n\n$uni-bg-color: #ffffff;\n$uni-bg-color-grey: #f8f8f8;\n$uni-bg-color-hover: #f1f1f1;//点击状态颜色\n$uni-bg-color-mask: rgba(0, 0, 0, 0.4);//遮罩颜色\n\n$uni-border-color: #c8c7cc;\n\n\n$uni-font-size-sm: 24rpx;\n$uni-font-size-base: 28rpx;\n$uni-font-size-lg: 32rpx;\n\n$uni-img-size-sm: 40rpx;\n$uni-img-size-base: 52rpx;\n$uni-img-size-lg: 80rpx;\n\n$uni-border-radius-sm: 4rpx;\n$uni-border-radius-base: 6rpx;\n$uni-border-radius-lg: 12rpx;\n$uni-border-radius-circle: 50%;\n\n$uni-spacing-row-sm: 10px;\n$uni-spacing-row-base: 20rpx;\n$uni-spacing-row-lg: 30rpx;\n\n$uni-spacing-col-sm: 8rpx;\n$uni-spacing-col-base: 16rpx;\n$uni-spacing-col-lg: 24rpx;\n\n$uni-opacity-disabled: 0.3; // 组件禁用态的透明度\n\n$uni-color-title: #2C405A; // 文章标题颜色\n$uni-font-size-title: 40rpx;\n$uni-color-subtitle: #555555; // 二级标题颜色\n$uni-font-size-subtitle: 36rpx;\n$uni-color-paragraph: #3F536E; // 文章段落颜色\n$uni-font-size-paragraph: 30rpx;\n\n  @import \"@/uni.scss\";"
+                                    }
+                                },
+                                {
+                                    "loader": "/Users/wy/WDY/school-events-app/node_modules/@dcloudio/vue-cli-plugin-uni/packages/webpack-preprocess-loader",
+                                    "options": {
+                                        "type": "css",
+                                        "context": {
+                                            "H5": false,
+                                            "APP-PLUS": false,
+                                            "MP-QQ": false,
+                                            "MP-WEIXIN": true,
+                                            "MP-BAIDU": false,
+                                            "MP-ALIPAY": false,
+                                            "MP-TOUTIAO": false,
+                                            "MP": true,
+                                            "APP": false,
+                                            "APP-PLUS-NVUE": false,
+                                            "APP_PLUS_NVUE": false,
+                                            "APP-VUE": false,
+                                            "APP_VUE": false,
+                                            "APP-NVUE": false,
+                                            "APP_NVUE": false,
+                                            "APP_PLUS": false,
+                                            "MP_QQ": false,
+                                            "MP_WEIXIN": true,
+                                            "MP_BAIDU": false,
+                                            "MP_ALIPAY": false,
+                                            "MP_TOUTIAO": false
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "test": {},
+                    "oneOf": [
+                        {
+                            "resourceQuery": {},
+                            "use": [
+                                {
+                                    "loader": "/Users/wy/WDY/school-events-app/node_modules/mini-css-extract-plugin/dist/loader.js",
+                                    "options": {
+                                        "hmr": true,
+                                        "publicPath": "../../"
+                                    }
+                                },
+                                {
+                                    "loader": "/Users/wy/WDY/school-events-app/node_modules/@dcloudio/vue-cli-plugin-uni/packages/webpack-preprocess-loader",
+                                    "options": {
+                                        "type": "css",
+                                        "context": {
+                                            "H5": false,
+                                            "APP-PLUS": false,
+                                            "MP-QQ": false,
+                                            "MP-WEIXIN": true,
+                                            "MP-BAIDU": false,
+                                            "MP-ALIPAY": false,
+                                            "MP-TOUTIAO": false,
+                                            "MP": true,
+                                            "APP": false,
+                                            "APP-PLUS-NVUE": false,
+                                            "APP_PLUS_NVUE": false,
+                                            "APP-VUE": false,
+                                            "APP_VUE": false,
+                                            "APP-NVUE": false,
+                                            "APP_NVUE": false,
+                                            "APP_PLUS": false,
+                                            "MP_QQ": false,
+                                            "MP_WEIXIN": true,
+                                            "MP_BAIDU": false,
+                                            "MP_ALIPAY": false,
+                                            "MP_TOUTIAO": false
+                                        }
+                                    }
+                                },
+                                {
+                                    "loader": "css-loader",
+                                    "options": {
+                                        "sourceMap": false,
+                                        "importLoaders": 2,
+                                        "modules": true,
+                                        "localIdentName": "[name]_[local]_[hash:base64:5]"
+                                    }
+                                },
+                                {
+                                    "loader": "postcss-loader",
+                                    "options": {
+                                        "sourceMap": false,
+                                        "config": {
+                                            "path": "/Users/wy/WDY/school-events-app/postcss.config.js"
+                                        }
+                                    }
+                                },
+                                {
+                                    "loader": "sass-loader",
+                                    "options": {
+                                        "sourceMap": false,
+                                        "prependData": "\n$uni-color-primary: #007aff;\n$uni-color-success: #4cd964;\n$uni-color-warning: #f0ad4e;\n$uni-color-error: #dd524d;\n\n$uni-text-color: #333;//基本色\n$uni-text-color-inverse: #fff;//反色\n$uni-text-color-grey: #999;//辅助灰色，如加载更多的提示信息\n$uni-text-color-placeholder: #808080;\n$uni-text-color-disable: #c0c0c0;\n\n$uni-bg-color: #ffffff;\n$uni-bg-color-grey: #f8f8f8;\n$uni-bg-color-hover: #f1f1f1;//点击状态颜色\n$uni-bg-color-mask: rgba(0, 0, 0, 0.4);//遮罩颜色\n\n$uni-border-color: #c8c7cc;\n\n\n$uni-font-size-sm: 24rpx;\n$uni-font-size-base: 28rpx;\n$uni-font-size-lg: 32rpx;\n\n$uni-img-size-sm: 40rpx;\n$uni-img-size-base: 52rpx;\n$uni-img-size-lg: 80rpx;\n\n$uni-border-radius-sm: 4rpx;\n$uni-border-radius-base: 6rpx;\n$uni-border-radius-lg: 12rpx;\n$uni-border-radius-circle: 50%;\n\n$uni-spacing-row-sm: 10px;\n$uni-spacing-row-base: 20rpx;\n$uni-spacing-row-lg: 30rpx;\n\n$uni-spacing-col-sm: 8rpx;\n$uni-spacing-col-base: 16rpx;\n$uni-spacing-col-lg: 24rpx;\n\n$uni-opacity-disabled: 0.3; // 组件禁用态的透明度\n\n$uni-color-title: #2C405A; // 文章标题颜色\n$uni-font-size-title: 40rpx;\n$uni-color-subtitle: #555555; // 二级标题颜色\n$uni-font-size-subtitle: 36rpx;\n$uni-color-paragraph: #3F536E; // 文章段落颜色\n$uni-font-size-paragraph: 30rpx;\n\n  @import \"@/uni.scss\";",
+                                        "sassOptions": {
+                                            "indentedSyntax": true
+                                        }
+                                    }
+                                },
+                                {
+                                    "loader": "/Users/wy/WDY/school-events-app/node_modules/@dcloudio/vue-cli-plugin-uni/packages/webpack-preprocess-loader",
+                                    "options": {
+                                        "type": "css",
+                                        "context": {
+                                            "H5": false,
+                                            "APP-PLUS": false,
+                                            "MP-QQ": false,
+                                            "MP-WEIXIN": true,
+                                            "MP-BAIDU": false,
+                                            "MP-ALIPAY": false,
+                                            "MP-TOUTIAO": false,
+                                            "MP": true,
+                                            "APP": false,
+                                            "APP-PLUS-NVUE": false,
+                                            "APP_PLUS_NVUE": false,
+                                            "APP-VUE": false,
+                                            "APP_VUE": false,
+                                            "APP-NVUE": false,
+                                            "APP_NVUE": false,
+                                            "APP_PLUS": false,
+                                            "MP_QQ": false,
+                                            "MP_WEIXIN": true,
+                                            "MP_BAIDU": false,
+                                            "MP_ALIPAY": false,
+                                            "MP_TOUTIAO": false
+                                        }
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            "resourceQuery": {},
+                            "use": [
+                                {
+                                    "loader": "/Users/wy/WDY/school-events-app/node_modules/mini-css-extract-plugin/dist/loader.js",
+                                    "options": {
+                                        "hmr": true,
+                                        "publicPath": "../../"
+                                    }
+                                },
+                                {
+                                    "loader": "/Users/wy/WDY/school-events-app/node_modules/@dcloudio/vue-cli-plugin-uni/packages/webpack-preprocess-loader",
+                                    "options": {
+                                        "type": "css",
+                                        "context": {
+                                            "H5": false,
+                                            "APP-PLUS": false,
+                                            "MP-QQ": false,
+                                            "MP-WEIXIN": true,
+                                            "MP-BAIDU": false,
+                                            "MP-ALIPAY": false,
+                                            "MP-TOUTIAO": false,
+                                            "MP": true,
+                                            "APP": false,
+                                            "APP-PLUS-NVUE": false,
+                                            "APP_PLUS_NVUE": false,
+                                            "APP-VUE": false,
+                                            "APP_VUE": false,
+                                            "APP-NVUE": false,
+                                            "APP_NVUE": false,
+                                            "APP_PLUS": false,
+                                            "MP_QQ": false,
+                                            "MP_WEIXIN": true,
+                                            "MP_BAIDU": false,
+                                            "MP_ALIPAY": false,
+                                            "MP_TOUTIAO": false
+                                        }
+                                    }
+                                },
+                                {
+                                    "loader": "css-loader",
+                                    "options": {
+                                        "sourceMap": false,
+                                        "importLoaders": 2
+                                    }
+                                },
+                                {
+                                    "loader": "postcss-loader",
+                                    "options": {
+                                        "sourceMap": false,
+                                        "config": {
+                                            "path": "/Users/wy/WDY/school-events-app/postcss.config.js"
+                                        }
+                                    }
+                                },
+                                {
+                                    "loader": "sass-loader",
+                                    "options": {
+                                        "sourceMap": false,
+                                        "prependData": "\n$uni-color-primary: #007aff;\n$uni-color-success: #4cd964;\n$uni-color-warning: #f0ad4e;\n$uni-color-error: #dd524d;\n\n$uni-text-color: #333;//基本色\n$uni-text-color-inverse: #fff;//反色\n$uni-text-color-grey: #999;//辅助灰色，如加载更多的提示信息\n$uni-text-color-placeholder: #808080;\n$uni-text-color-disable: #c0c0c0;\n\n$uni-bg-color: #ffffff;\n$uni-bg-color-grey: #f8f8f8;\n$uni-bg-color-hover: #f1f1f1;//点击状态颜色\n$uni-bg-color-mask: rgba(0, 0, 0, 0.4);//遮罩颜色\n\n$uni-border-color: #c8c7cc;\n\n\n$uni-font-size-sm: 24rpx;\n$uni-font-size-base: 28rpx;\n$uni-font-size-lg: 32rpx;\n\n$uni-img-size-sm: 40rpx;\n$uni-img-size-base: 52rpx;\n$uni-img-size-lg: 80rpx;\n\n$uni-border-radius-sm: 4rpx;\n$uni-border-radius-base: 6rpx;\n$uni-border-radius-lg: 12rpx;\n$uni-border-radius-circle: 50%;\n\n$uni-spacing-row-sm: 10px;\n$uni-spacing-row-base: 20rpx;\n$uni-spacing-row-lg: 30rpx;\n\n$uni-spacing-col-sm: 8rpx;\n$uni-spacing-col-base: 16rpx;\n$uni-spacing-col-lg: 24rpx;\n\n$uni-opacity-disabled: 0.3; // 组件禁用态的透明度\n\n$uni-color-title: #2C405A; // 文章标题颜色\n$uni-font-size-title: 40rpx;\n$uni-color-subtitle: #555555; // 二级标题颜色\n$uni-font-size-subtitle: 36rpx;\n$uni-color-paragraph: #3F536E; // 文章段落颜色\n$uni-font-size-paragraph: 30rpx;\n\n  @import \"@/uni.scss\";",
+                                        "sassOptions": {
+                                            "indentedSyntax": true
+                                        }
+                                    }
+                                },
+                                {
+                                    "loader": "/Users/wy/WDY/school-events-app/node_modules/@dcloudio/vue-cli-plugin-uni/packages/webpack-preprocess-loader",
+                                    "options": {
+                                        "type": "css",
+                                        "context": {
+                                            "H5": false,
+                                            "APP-PLUS": false,
+                                            "MP-QQ": false,
+                                            "MP-WEIXIN": true,
+                                            "MP-BAIDU": false,
+                                            "MP-ALIPAY": false,
+                                            "MP-TOUTIAO": false,
+                                            "MP": true,
+                                            "APP": false,
+                                            "APP-PLUS-NVUE": false,
+                                            "APP_PLUS_NVUE": false,
+                                            "APP-VUE": false,
+                                            "APP_VUE": false,
+                                            "APP-NVUE": false,
+                                            "APP_NVUE": false,
+                                            "APP_PLUS": false,
+                                            "MP_QQ": false,
+                                            "MP_WEIXIN": true,
+                                            "MP_BAIDU": false,
+                                            "MP_ALIPAY": false,
+                                            "MP_TOUTIAO": false
+                                        }
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            "test": {},
+                            "use": [
+                                {
+                                    "loader": "/Users/wy/WDY/school-events-app/node_modules/mini-css-extract-plugin/dist/loader.js",
+                                    "options": {
+                                        "hmr": true,
+                                        "publicPath": "../../"
+                                    }
+                                },
+                                {
+                                    "loader": "/Users/wy/WDY/school-events-app/node_modules/@dcloudio/vue-cli-plugin-uni/packages/webpack-preprocess-loader",
+                                    "options": {
+                                        "type": "css",
+                                        "context": {
+                                            "H5": false,
+                                            "APP-PLUS": false,
+                                            "MP-QQ": false,
+                                            "MP-WEIXIN": true,
+                                            "MP-BAIDU": false,
+                                            "MP-ALIPAY": false,
+                                            "MP-TOUTIAO": false,
+                                            "MP": true,
+                                            "APP": false,
+                                            "APP-PLUS-NVUE": false,
+                                            "APP_PLUS_NVUE": false,
+                                            "APP-VUE": false,
+                                            "APP_VUE": false,
+                                            "APP-NVUE": false,
+                                            "APP_NVUE": false,
+                                            "APP_PLUS": false,
+                                            "MP_QQ": false,
+                                            "MP_WEIXIN": true,
+                                            "MP_BAIDU": false,
+                                            "MP_ALIPAY": false,
+                                            "MP_TOUTIAO": false
+                                        }
+                                    }
+                                },
+                                {
+                                    "loader": "css-loader",
+                                    "options": {
+                                        "sourceMap": false,
+                                        "importLoaders": 2,
+                                        "modules": true,
+                                        "localIdentName": "[name]_[local]_[hash:base64:5]"
+                                    }
+                                },
+                                {
+                                    "loader": "postcss-loader",
+                                    "options": {
+                                        "sourceMap": false,
+                                        "config": {
+                                            "path": "/Users/wy/WDY/school-events-app/postcss.config.js"
+                                        }
+                                    }
+                                },
+                                {
+                                    "loader": "sass-loader",
+                                    "options": {
+                                        "sourceMap": false,
+                                        "prependData": "\n$uni-color-primary: #007aff;\n$uni-color-success: #4cd964;\n$uni-color-warning: #f0ad4e;\n$uni-color-error: #dd524d;\n\n$uni-text-color: #333;//基本色\n$uni-text-color-inverse: #fff;//反色\n$uni-text-color-grey: #999;//辅助灰色，如加载更多的提示信息\n$uni-text-color-placeholder: #808080;\n$uni-text-color-disable: #c0c0c0;\n\n$uni-bg-color: #ffffff;\n$uni-bg-color-grey: #f8f8f8;\n$uni-bg-color-hover: #f1f1f1;//点击状态颜色\n$uni-bg-color-mask: rgba(0, 0, 0, 0.4);//遮罩颜色\n\n$uni-border-color: #c8c7cc;\n\n\n$uni-font-size-sm: 24rpx;\n$uni-font-size-base: 28rpx;\n$uni-font-size-lg: 32rpx;\n\n$uni-img-size-sm: 40rpx;\n$uni-img-size-base: 52rpx;\n$uni-img-size-lg: 80rpx;\n\n$uni-border-radius-sm: 4rpx;\n$uni-border-radius-base: 6rpx;\n$uni-border-radius-lg: 12rpx;\n$uni-border-radius-circle: 50%;\n\n$uni-spacing-row-sm: 10px;\n$uni-spacing-row-base: 20rpx;\n$uni-spacing-row-lg: 30rpx;\n\n$uni-spacing-col-sm: 8rpx;\n$uni-spacing-col-base: 16rpx;\n$uni-spacing-col-lg: 24rpx;\n\n$uni-opacity-disabled: 0.3; // 组件禁用态的透明度\n\n$uni-color-title: #2C405A; // 文章标题颜色\n$uni-font-size-title: 40rpx;\n$uni-color-subtitle: #555555; // 二级标题颜色\n$uni-font-size-subtitle: 36rpx;\n$uni-color-paragraph: #3F536E; // 文章段落颜色\n$uni-font-size-paragraph: 30rpx;\n\n  @import \"@/uni.scss\";",
+                                        "sassOptions": {
+                                            "indentedSyntax": true
+                                        }
+                                    }
+                                },
+                                {
+                                    "loader": "/Users/wy/WDY/school-events-app/node_modules/@dcloudio/vue-cli-plugin-uni/packages/webpack-preprocess-loader",
+                                    "options": {
+                                        "type": "css",
+                                        "context": {
+                                            "H5": false,
+                                            "APP-PLUS": false,
+                                            "MP-QQ": false,
+                                            "MP-WEIXIN": true,
+                                            "MP-BAIDU": false,
+                                            "MP-ALIPAY": false,
+                                            "MP-TOUTIAO": false,
+                                            "MP": true,
+                                            "APP": false,
+                                            "APP-PLUS-NVUE": false,
+                                            "APP_PLUS_NVUE": false,
+                                            "APP-VUE": false,
+                                            "APP_VUE": false,
+                                            "APP-NVUE": false,
+                                            "APP_NVUE": false,
+                                            "APP_PLUS": false,
+                                            "MP_QQ": false,
+                                            "MP_WEIXIN": true,
+                                            "MP_BAIDU": false,
+                                            "MP_ALIPAY": false,
+                                            "MP_TOUTIAO": false
+                                        }
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            "use": [
+                                {
+                                    "loader": "/Users/wy/WDY/school-events-app/node_modules/mini-css-extract-plugin/dist/loader.js",
+                                    "options": {
+                                        "hmr": true,
+                                        "publicPath": "../../"
+                                    }
+                                },
+                                {
+                                    "loader": "/Users/wy/WDY/school-events-app/node_modules/@dcloudio/vue-cli-plugin-uni/packages/webpack-preprocess-loader",
+                                    "options": {
+                                        "type": "css",
+                                        "context": {
+                                            "H5": false,
+                                            "APP-PLUS": false,
+                                            "MP-QQ": false,
+                                            "MP-WEIXIN": true,
+                                            "MP-BAIDU": false,
+                                            "MP-ALIPAY": false,
+                                            "MP-TOUTIAO": false,
+                                            "MP": true,
+                                            "APP": false,
+                                            "APP-PLUS-NVUE": false,
+                                            "APP_PLUS_NVUE": false,
+                                            "APP-VUE": false,
+                                            "APP_VUE": false,
+                                            "APP-NVUE": false,
+                                            "APP_NVUE": false,
+                                            "APP_PLUS": false,
+                                            "MP_QQ": false,
+                                            "MP_WEIXIN": true,
+                                            "MP_BAIDU": false,
+                                            "MP_ALIPAY": false,
+                                            "MP_TOUTIAO": false
+                                        }
+                                    }
+                                },
+                                {
+                                    "loader": "css-loader",
+                                    "options": {
+                                        "sourceMap": false,
+                                        "importLoaders": 2
+                                    }
+                                },
+                                {
+                                    "loader": "postcss-loader",
+                                    "options": {
+                                        "sourceMap": false,
+                                        "config": {
+                                            "path": "/Users/wy/WDY/school-events-app/postcss.config.js"
+                                        }
+                                    }
+                                },
+                                {
+                                    "loader": "sass-loader",
+                                    "options": {
+                                        "sourceMap": false,
+                                        "prependData": "\n$uni-color-primary: #007aff;\n$uni-color-success: #4cd964;\n$uni-color-warning: #f0ad4e;\n$uni-color-error: #dd524d;\n\n$uni-text-color: #333;//基本色\n$uni-text-color-inverse: #fff;//反色\n$uni-text-color-grey: #999;//辅助灰色，如加载更多的提示信息\n$uni-text-color-placeholder: #808080;\n$uni-text-color-disable: #c0c0c0;\n\n$uni-bg-color: #ffffff;\n$uni-bg-color-grey: #f8f8f8;\n$uni-bg-color-hover: #f1f1f1;//点击状态颜色\n$uni-bg-color-mask: rgba(0, 0, 0, 0.4);//遮罩颜色\n\n$uni-border-color: #c8c7cc;\n\n\n$uni-font-size-sm: 24rpx;\n$uni-font-size-base: 28rpx;\n$uni-font-size-lg: 32rpx;\n\n$uni-img-size-sm: 40rpx;\n$uni-img-size-base: 52rpx;\n$uni-img-size-lg: 80rpx;\n\n$uni-border-radius-sm: 4rpx;\n$uni-border-radius-base: 6rpx;\n$uni-border-radius-lg: 12rpx;\n$uni-border-radius-circle: 50%;\n\n$uni-spacing-row-sm: 10px;\n$uni-spacing-row-base: 20rpx;\n$uni-spacing-row-lg: 30rpx;\n\n$uni-spacing-col-sm: 8rpx;\n$uni-spacing-col-base: 16rpx;\n$uni-spacing-col-lg: 24rpx;\n\n$uni-opacity-disabled: 0.3; // 组件禁用态的透明度\n\n$uni-color-title: #2C405A; // 文章标题颜色\n$uni-font-size-title: 40rpx;\n$uni-color-subtitle: #555555; // 二级标题颜色\n$uni-font-size-subtitle: 36rpx;\n$uni-color-paragraph: #3F536E; // 文章段落颜色\n$uni-font-size-paragraph: 30rpx;\n\n  @import \"@/uni.scss\";",
+                                        "sassOptions": {
+                                            "indentedSyntax": true
+                                        }
+                                    }
+                                },
+                                {
+                                    "loader": "/Users/wy/WDY/school-events-app/node_modules/@dcloudio/vue-cli-plugin-uni/packages/webpack-preprocess-loader",
+                                    "options": {
+                                        "type": "css",
+                                        "context": {
+                                            "H5": false,
+                                            "APP-PLUS": false,
+                                            "MP-QQ": false,
+                                            "MP-WEIXIN": true,
+                                            "MP-BAIDU": false,
+                                            "MP-ALIPAY": false,
+                                            "MP-TOUTIAO": false,
+                                            "MP": true,
+                                            "APP": false,
+                                            "APP-PLUS-NVUE": false,
+                                            "APP_PLUS_NVUE": false,
+                                            "APP-VUE": false,
+                                            "APP_VUE": false,
+                                            "APP-NVUE": false,
+                                            "APP_NVUE": false,
+                                            "APP_PLUS": false,
+                                            "MP_QQ": false,
+                                            "MP_WEIXIN": true,
+                                            "MP_BAIDU": false,
+                                            "MP_ALIPAY": false,
+                                            "MP_TOUTIAO": false
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "test": {},
+                    "oneOf": [
+                        {
+                            "resourceQuery": {},
+                            "use": [
+                                {
+                                    "loader": "/Users/wy/WDY/school-events-app/node_modules/mini-css-extract-plugin/dist/loader.js",
+                                    "options": {
+                                        "hmr": true,
+                                        "publicPath": "../../"
+                                    }
+                                },
+                                {
+                                    "loader": "/Users/wy/WDY/school-events-app/node_modules/@dcloudio/vue-cli-plugin-uni/packages/webpack-preprocess-loader",
+                                    "options": {
+                                        "type": "css",
+                                        "context": {
+                                            "H5": false,
+                                            "APP-PLUS": false,
+                                            "MP-QQ": false,
+                                            "MP-WEIXIN": true,
+                                            "MP-BAIDU": false,
+                                            "MP-ALIPAY": false,
+                                            "MP-TOUTIAO": false,
+                                            "MP": true,
+                                            "APP": false,
+                                            "APP-PLUS-NVUE": false,
+                                            "APP_PLUS_NVUE": false,
+                                            "APP-VUE": false,
+                                            "APP_VUE": false,
+                                            "APP-NVUE": false,
+                                            "APP_NVUE": false,
+                                            "APP_PLUS": false,
+                                            "MP_QQ": false,
+                                            "MP_WEIXIN": true,
+                                            "MP_BAIDU": false,
+                                            "MP_ALIPAY": false,
+                                            "MP_TOUTIAO": false
+                                        }
+                                    }
+                                },
+                                {
+                                    "loader": "css-loader",
+                                    "options": {
+                                        "sourceMap": false,
+                                        "importLoaders": 2,
+                                        "modules": true,
+                                        "localIdentName": "[name]_[local]_[hash:base64:5]"
+                                    }
+                                },
+                                {
+                                    "loader": "postcss-loader",
+                                    "options": {
+                                        "sourceMap": false,
+                                        "config": {
+                                            "path": "/Users/wy/WDY/school-events-app/postcss.config.js"
+                                        }
+                                    }
+                                },
+                                {
+                                    "loader": "less-loader",
+                                    "options": {
+                                        "sourceMap": false
+                                    }
+                                },
+                                {
+                                    "loader": "/Users/wy/WDY/school-events-app/node_modules/@dcloudio/vue-cli-plugin-uni/packages/webpack-preprocess-loader",
+                                    "options": {
+                                        "type": "css",
+                                        "context": {
+                                            "H5": false,
+                                            "APP-PLUS": false,
+                                            "MP-QQ": false,
+                                            "MP-WEIXIN": true,
+                                            "MP-BAIDU": false,
+                                            "MP-ALIPAY": false,
+                                            "MP-TOUTIAO": false,
+                                            "MP": true,
+                                            "APP": false,
+                                            "APP-PLUS-NVUE": false,
+                                            "APP_PLUS_NVUE": false,
+                                            "APP-VUE": false,
+                                            "APP_VUE": false,
+                                            "APP-NVUE": false,
+                                            "APP_NVUE": false,
+                                            "APP_PLUS": false,
+                                            "MP_QQ": false,
+                                            "MP_WEIXIN": true,
+                                            "MP_BAIDU": false,
+                                            "MP_ALIPAY": false,
+                                            "MP_TOUTIAO": false
+                                        }
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            "resourceQuery": {},
+                            "use": [
+                                {
+                                    "loader": "/Users/wy/WDY/school-events-app/node_modules/mini-css-extract-plugin/dist/loader.js",
+                                    "options": {
+                                        "hmr": true,
+                                        "publicPath": "../../"
+                                    }
+                                },
+                                {
+                                    "loader": "/Users/wy/WDY/school-events-app/node_modules/@dcloudio/vue-cli-plugin-uni/packages/webpack-preprocess-loader",
+                                    "options": {
+                                        "type": "css",
+                                        "context": {
+                                            "H5": false,
+                                            "APP-PLUS": false,
+                                            "MP-QQ": false,
+                                            "MP-WEIXIN": true,
+                                            "MP-BAIDU": false,
+                                            "MP-ALIPAY": false,
+                                            "MP-TOUTIAO": false,
+                                            "MP": true,
+                                            "APP": false,
+                                            "APP-PLUS-NVUE": false,
+                                            "APP_PLUS_NVUE": false,
+                                            "APP-VUE": false,
+                                            "APP_VUE": false,
+                                            "APP-NVUE": false,
+                                            "APP_NVUE": false,
+                                            "APP_PLUS": false,
+                                            "MP_QQ": false,
+                                            "MP_WEIXIN": true,
+                                            "MP_BAIDU": false,
+                                            "MP_ALIPAY": false,
+                                            "MP_TOUTIAO": false
+                                        }
+                                    }
+                                },
+                                {
+                                    "loader": "css-loader",
+                                    "options": {
+                                        "sourceMap": false,
+                                        "importLoaders": 2
+                                    }
+                                },
+                                {
+                                    "loader": "postcss-loader",
+                                    "options": {
+                                        "sourceMap": false,
+                                        "config": {
+                                            "path": "/Users/wy/WDY/school-events-app/postcss.config.js"
+                                        }
+                                    }
+                                },
+                                {
+                                    "loader": "less-loader",
+                                    "options": {
+                                        "sourceMap": false
+                                    }
+                                },
+                                {
+                                    "loader": "/Users/wy/WDY/school-events-app/node_modules/@dcloudio/vue-cli-plugin-uni/packages/webpack-preprocess-loader",
+                                    "options": {
+                                        "type": "css",
+                                        "context": {
+                                            "H5": false,
+                                            "APP-PLUS": false,
+                                            "MP-QQ": false,
+                                            "MP-WEIXIN": true,
+                                            "MP-BAIDU": false,
+                                            "MP-ALIPAY": false,
+                                            "MP-TOUTIAO": false,
+                                            "MP": true,
+                                            "APP": false,
+                                            "APP-PLUS-NVUE": false,
+                                            "APP_PLUS_NVUE": false,
+                                            "APP-VUE": false,
+                                            "APP_VUE": false,
+                                            "APP-NVUE": false,
+                                            "APP_NVUE": false,
+                                            "APP_PLUS": false,
+                                            "MP_QQ": false,
+                                            "MP_WEIXIN": true,
+                                            "MP_BAIDU": false,
+                                            "MP_ALIPAY": false,
+                                            "MP_TOUTIAO": false
+                                        }
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            "test": {},
+                            "use": [
+                                {
+                                    "loader": "/Users/wy/WDY/school-events-app/node_modules/mini-css-extract-plugin/dist/loader.js",
+                                    "options": {
+                                        "hmr": true,
+                                        "publicPath": "../../"
+                                    }
+                                },
+                                {
+                                    "loader": "/Users/wy/WDY/school-events-app/node_modules/@dcloudio/vue-cli-plugin-uni/packages/webpack-preprocess-loader",
+                                    "options": {
+                                        "type": "css",
+                                        "context": {
+                                            "H5": false,
+                                            "APP-PLUS": false,
+                                            "MP-QQ": false,
+                                            "MP-WEIXIN": true,
+                                            "MP-BAIDU": false,
+                                            "MP-ALIPAY": false,
+                                            "MP-TOUTIAO": false,
+                                            "MP": true,
+                                            "APP": false,
+                                            "APP-PLUS-NVUE": false,
+                                            "APP_PLUS_NVUE": false,
+                                            "APP-VUE": false,
+                                            "APP_VUE": false,
+                                            "APP-NVUE": false,
+                                            "APP_NVUE": false,
+                                            "APP_PLUS": false,
+                                            "MP_QQ": false,
+                                            "MP_WEIXIN": true,
+                                            "MP_BAIDU": false,
+                                            "MP_ALIPAY": false,
+                                            "MP_TOUTIAO": false
+                                        }
+                                    }
+                                },
+                                {
+                                    "loader": "css-loader",
+                                    "options": {
+                                        "sourceMap": false,
+                                        "importLoaders": 2,
+                                        "modules": true,
+                                        "localIdentName": "[name]_[local]_[hash:base64:5]"
+                                    }
+                                },
+                                {
+                                    "loader": "postcss-loader",
+                                    "options": {
+                                        "sourceMap": false,
+                                        "config": {
+                                            "path": "/Users/wy/WDY/school-events-app/postcss.config.js"
+                                        }
+                                    }
+                                },
+                                {
+                                    "loader": "less-loader",
+                                    "options": {
+                                        "sourceMap": false
+                                    }
+                                },
+                                {
+                                    "loader": "/Users/wy/WDY/school-events-app/node_modules/@dcloudio/vue-cli-plugin-uni/packages/webpack-preprocess-loader",
+                                    "options": {
+                                        "type": "css",
+                                        "context": {
+                                            "H5": false,
+                                            "APP-PLUS": false,
+                                            "MP-QQ": false,
+                                            "MP-WEIXIN": true,
+                                            "MP-BAIDU": false,
+                                            "MP-ALIPAY": false,
+                                            "MP-TOUTIAO": false,
+                                            "MP": true,
+                                            "APP": false,
+                                            "APP-PLUS-NVUE": false,
+                                            "APP_PLUS_NVUE": false,
+                                            "APP-VUE": false,
+                                            "APP_VUE": false,
+                                            "APP-NVUE": false,
+                                            "APP_NVUE": false,
+                                            "APP_PLUS": false,
+                                            "MP_QQ": false,
+                                            "MP_WEIXIN": true,
+                                            "MP_BAIDU": false,
+                                            "MP_ALIPAY": false,
+                                            "MP_TOUTIAO": false
+                                        }
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            "use": [
+                                {
+                                    "loader": "/Users/wy/WDY/school-events-app/node_modules/mini-css-extract-plugin/dist/loader.js",
+                                    "options": {
+                                        "hmr": true,
+                                        "publicPath": "../../"
+                                    }
+                                },
+                                {
+                                    "loader": "/Users/wy/WDY/school-events-app/node_modules/@dcloudio/vue-cli-plugin-uni/packages/webpack-preprocess-loader",
+                                    "options": {
+                                        "type": "css",
+                                        "context": {
+                                            "H5": false,
+                                            "APP-PLUS": false,
+                                            "MP-QQ": false,
+                                            "MP-WEIXIN": true,
+                                            "MP-BAIDU": false,
+                                            "MP-ALIPAY": false,
+                                            "MP-TOUTIAO": false,
+                                            "MP": true,
+                                            "APP": false,
+                                            "APP-PLUS-NVUE": false,
+                                            "APP_PLUS_NVUE": false,
+                                            "APP-VUE": false,
+                                            "APP_VUE": false,
+                                            "APP-NVUE": false,
+                                            "APP_NVUE": false,
+                                            "APP_PLUS": false,
+                                            "MP_QQ": false,
+                                            "MP_WEIXIN": true,
+                                            "MP_BAIDU": false,
+                                            "MP_ALIPAY": false,
+                                            "MP_TOUTIAO": false
+                                        }
+                                    }
+                                },
+                                {
+                                    "loader": "css-loader",
+                                    "options": {
+                                        "sourceMap": false,
+                                        "importLoaders": 2
+                                    }
+                                },
+                                {
+                                    "loader": "postcss-loader",
+                                    "options": {
+                                        "sourceMap": false,
+                                        "config": {
+                                            "path": "/Users/wy/WDY/school-events-app/postcss.config.js"
+                                        }
+                                    }
+                                },
+                                {
+                                    "loader": "less-loader",
+                                    "options": {
+                                        "sourceMap": false
+                                    }
+                                },
+                                {
+                                    "loader": "/Users/wy/WDY/school-events-app/node_modules/@dcloudio/vue-cli-plugin-uni/packages/webpack-preprocess-loader",
+                                    "options": {
+                                        "type": "css",
+                                        "context": {
+                                            "H5": false,
+                                            "APP-PLUS": false,
+                                            "MP-QQ": false,
+                                            "MP-WEIXIN": true,
+                                            "MP-BAIDU": false,
+                                            "MP-ALIPAY": false,
+                                            "MP-TOUTIAO": false,
+                                            "MP": true,
+                                            "APP": false,
+                                            "APP-PLUS-NVUE": false,
+                                            "APP_PLUS_NVUE": false,
+                                            "APP-VUE": false,
+                                            "APP_VUE": false,
+                                            "APP-NVUE": false,
+                                            "APP_NVUE": false,
+                                            "APP_PLUS": false,
+                                            "MP_QQ": false,
+                                            "MP_WEIXIN": true,
+                                            "MP_BAIDU": false,
+                                            "MP_ALIPAY": false,
+                                            "MP_TOUTIAO": false
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "test": {},
+                    "oneOf": [
+                        {
+                            "resourceQuery": {},
+                            "use": [
+                                {
+                                    "loader": "/Users/wy/WDY/school-events-app/node_modules/mini-css-extract-plugin/dist/loader.js",
+                                    "options": {
+                                        "hmr": true,
+                                        "publicPath": "../../"
+                                    }
+                                },
+                                {
+                                    "loader": "/Users/wy/WDY/school-events-app/node_modules/@dcloudio/vue-cli-plugin-uni/packages/webpack-preprocess-loader",
+                                    "options": {
+                                        "type": "css",
+                                        "context": {
+                                            "H5": false,
+                                            "APP-PLUS": false,
+                                            "MP-QQ": false,
+                                            "MP-WEIXIN": true,
+                                            "MP-BAIDU": false,
+                                            "MP-ALIPAY": false,
+                                            "MP-TOUTIAO": false,
+                                            "MP": true,
+                                            "APP": false,
+                                            "APP-PLUS-NVUE": false,
+                                            "APP_PLUS_NVUE": false,
+                                            "APP-VUE": false,
+                                            "APP_VUE": false,
+                                            "APP-NVUE": false,
+                                            "APP_NVUE": false,
+                                            "APP_PLUS": false,
+                                            "MP_QQ": false,
+                                            "MP_WEIXIN": true,
+                                            "MP_BAIDU": false,
+                                            "MP_ALIPAY": false,
+                                            "MP_TOUTIAO": false
+                                        }
+                                    }
+                                },
+                                {
+                                    "loader": "css-loader",
+                                    "options": {
+                                        "sourceMap": false,
+                                        "importLoaders": 2,
+                                        "modules": true,
+                                        "localIdentName": "[name]_[local]_[hash:base64:5]"
+                                    }
+                                },
+                                {
+                                    "loader": "postcss-loader",
+                                    "options": {
+                                        "sourceMap": false,
+                                        "config": {
+                                            "path": "/Users/wy/WDY/school-events-app/postcss.config.js"
+                                        }
+                                    }
+                                },
+                                {
+                                    "loader": "stylus-loader",
+                                    "options": {
+                                        "sourceMap": false,
+                                        "preferPathResolver": "webpack"
+                                    }
+                                },
+                                {
+                                    "loader": "/Users/wy/WDY/school-events-app/node_modules/@dcloudio/vue-cli-plugin-uni/packages/webpack-preprocess-loader",
+                                    "options": {
+                                        "type": "css",
+                                        "context": {
+                                            "H5": false,
+                                            "APP-PLUS": false,
+                                            "MP-QQ": false,
+                                            "MP-WEIXIN": true,
+                                            "MP-BAIDU": false,
+                                            "MP-ALIPAY": false,
+                                            "MP-TOUTIAO": false,
+                                            "MP": true,
+                                            "APP": false,
+                                            "APP-PLUS-NVUE": false,
+                                            "APP_PLUS_NVUE": false,
+                                            "APP-VUE": false,
+                                            "APP_VUE": false,
+                                            "APP-NVUE": false,
+                                            "APP_NVUE": false,
+                                            "APP_PLUS": false,
+                                            "MP_QQ": false,
+                                            "MP_WEIXIN": true,
+                                            "MP_BAIDU": false,
+                                            "MP_ALIPAY": false,
+                                            "MP_TOUTIAO": false
+                                        }
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            "resourceQuery": {},
+                            "use": [
+                                {
+                                    "loader": "/Users/wy/WDY/school-events-app/node_modules/mini-css-extract-plugin/dist/loader.js",
+                                    "options": {
+                                        "hmr": true,
+                                        "publicPath": "../../"
+                                    }
+                                },
+                                {
+                                    "loader": "/Users/wy/WDY/school-events-app/node_modules/@dcloudio/vue-cli-plugin-uni/packages/webpack-preprocess-loader",
+                                    "options": {
+                                        "type": "css",
+                                        "context": {
+                                            "H5": false,
+                                            "APP-PLUS": false,
+                                            "MP-QQ": false,
+                                            "MP-WEIXIN": true,
+                                            "MP-BAIDU": false,
+                                            "MP-ALIPAY": false,
+                                            "MP-TOUTIAO": false,
+                                            "MP": true,
+                                            "APP": false,
+                                            "APP-PLUS-NVUE": false,
+                                            "APP_PLUS_NVUE": false,
+                                            "APP-VUE": false,
+                                            "APP_VUE": false,
+                                            "APP-NVUE": false,
+                                            "APP_NVUE": false,
+                                            "APP_PLUS": false,
+                                            "MP_QQ": false,
+                                            "MP_WEIXIN": true,
+                                            "MP_BAIDU": false,
+                                            "MP_ALIPAY": false,
+                                            "MP_TOUTIAO": false
+                                        }
+                                    }
+                                },
+                                {
+                                    "loader": "css-loader",
+                                    "options": {
+                                        "sourceMap": false,
+                                        "importLoaders": 2
+                                    }
+                                },
+                                {
+                                    "loader": "postcss-loader",
+                                    "options": {
+                                        "sourceMap": false,
+                                        "config": {
+                                            "path": "/Users/wy/WDY/school-events-app/postcss.config.js"
+                                        }
+                                    }
+                                },
+                                {
+                                    "loader": "stylus-loader",
+                                    "options": {
+                                        "sourceMap": false,
+                                        "preferPathResolver": "webpack"
+                                    }
+                                },
+                                {
+                                    "loader": "/Users/wy/WDY/school-events-app/node_modules/@dcloudio/vue-cli-plugin-uni/packages/webpack-preprocess-loader",
+                                    "options": {
+                                        "type": "css",
+                                        "context": {
+                                            "H5": false,
+                                            "APP-PLUS": false,
+                                            "MP-QQ": false,
+                                            "MP-WEIXIN": true,
+                                            "MP-BAIDU": false,
+                                            "MP-ALIPAY": false,
+                                            "MP-TOUTIAO": false,
+                                            "MP": true,
+                                            "APP": false,
+                                            "APP-PLUS-NVUE": false,
+                                            "APP_PLUS_NVUE": false,
+                                            "APP-VUE": false,
+                                            "APP_VUE": false,
+                                            "APP-NVUE": false,
+                                            "APP_NVUE": false,
+                                            "APP_PLUS": false,
+                                            "MP_QQ": false,
+                                            "MP_WEIXIN": true,
+                                            "MP_BAIDU": false,
+                                            "MP_ALIPAY": false,
+                                            "MP_TOUTIAO": false
+                                        }
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            "test": {},
+                            "use": [
+                                {
+                                    "loader": "/Users/wy/WDY/school-events-app/node_modules/mini-css-extract-plugin/dist/loader.js",
+                                    "options": {
+                                        "hmr": true,
+                                        "publicPath": "../../"
+                                    }
+                                },
+                                {
+                                    "loader": "/Users/wy/WDY/school-events-app/node_modules/@dcloudio/vue-cli-plugin-uni/packages/webpack-preprocess-loader",
+                                    "options": {
+                                        "type": "css",
+                                        "context": {
+                                            "H5": false,
+                                            "APP-PLUS": false,
+                                            "MP-QQ": false,
+                                            "MP-WEIXIN": true,
+                                            "MP-BAIDU": false,
+                                            "MP-ALIPAY": false,
+                                            "MP-TOUTIAO": false,
+                                            "MP": true,
+                                            "APP": false,
+                                            "APP-PLUS-NVUE": false,
+                                            "APP_PLUS_NVUE": false,
+                                            "APP-VUE": false,
+                                            "APP_VUE": false,
+                                            "APP-NVUE": false,
+                                            "APP_NVUE": false,
+                                            "APP_PLUS": false,
+                                            "MP_QQ": false,
+                                            "MP_WEIXIN": true,
+                                            "MP_BAIDU": false,
+                                            "MP_ALIPAY": false,
+                                            "MP_TOUTIAO": false
+                                        }
+                                    }
+                                },
+                                {
+                                    "loader": "css-loader",
+                                    "options": {
+                                        "sourceMap": false,
+                                        "importLoaders": 2,
+                                        "modules": true,
+                                        "localIdentName": "[name]_[local]_[hash:base64:5]"
+                                    }
+                                },
+                                {
+                                    "loader": "postcss-loader",
+                                    "options": {
+                                        "sourceMap": false,
+                                        "config": {
+                                            "path": "/Users/wy/WDY/school-events-app/postcss.config.js"
+                                        }
+                                    }
+                                },
+                                {
+                                    "loader": "stylus-loader",
+                                    "options": {
+                                        "sourceMap": false,
+                                        "preferPathResolver": "webpack"
+                                    }
+                                },
+                                {
+                                    "loader": "/Users/wy/WDY/school-events-app/node_modules/@dcloudio/vue-cli-plugin-uni/packages/webpack-preprocess-loader",
+                                    "options": {
+                                        "type": "css",
+                                        "context": {
+                                            "H5": false,
+                                            "APP-PLUS": false,
+                                            "MP-QQ": false,
+                                            "MP-WEIXIN": true,
+                                            "MP-BAIDU": false,
+                                            "MP-ALIPAY": false,
+                                            "MP-TOUTIAO": false,
+                                            "MP": true,
+                                            "APP": false,
+                                            "APP-PLUS-NVUE": false,
+                                            "APP_PLUS_NVUE": false,
+                                            "APP-VUE": false,
+                                            "APP_VUE": false,
+                                            "APP-NVUE": false,
+                                            "APP_NVUE": false,
+                                            "APP_PLUS": false,
+                                            "MP_QQ": false,
+                                            "MP_WEIXIN": true,
+                                            "MP_BAIDU": false,
+                                            "MP_ALIPAY": false,
+                                            "MP_TOUTIAO": false
+                                        }
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            "use": [
+                                {
+                                    "loader": "/Users/wy/WDY/school-events-app/node_modules/mini-css-extract-plugin/dist/loader.js",
+                                    "options": {
+                                        "hmr": true,
+                                        "publicPath": "../../"
+                                    }
+                                },
+                                {
+                                    "loader": "/Users/wy/WDY/school-events-app/node_modules/@dcloudio/vue-cli-plugin-uni/packages/webpack-preprocess-loader",
+                                    "options": {
+                                        "type": "css",
+                                        "context": {
+                                            "H5": false,
+                                            "APP-PLUS": false,
+                                            "MP-QQ": false,
+                                            "MP-WEIXIN": true,
+                                            "MP-BAIDU": false,
+                                            "MP-ALIPAY": false,
+                                            "MP-TOUTIAO": false,
+                                            "MP": true,
+                                            "APP": false,
+                                            "APP-PLUS-NVUE": false,
+                                            "APP_PLUS_NVUE": false,
+                                            "APP-VUE": false,
+                                            "APP_VUE": false,
+                                            "APP-NVUE": false,
+                                            "APP_NVUE": false,
+                                            "APP_PLUS": false,
+                                            "MP_QQ": false,
+                                            "MP_WEIXIN": true,
+                                            "MP_BAIDU": false,
+                                            "MP_ALIPAY": false,
+                                            "MP_TOUTIAO": false
+                                        }
+                                    }
+                                },
+                                {
+                                    "loader": "css-loader",
+                                    "options": {
+                                        "sourceMap": false,
+                                        "importLoaders": 2
+                                    }
+                                },
+                                {
+                                    "loader": "postcss-loader",
+                                    "options": {
+                                        "sourceMap": false,
+                                        "config": {
+                                            "path": "/Users/wy/WDY/school-events-app/postcss.config.js"
+                                        }
+                                    }
+                                },
+                                {
+                                    "loader": "stylus-loader",
+                                    "options": {
+                                        "sourceMap": false,
+                                        "preferPathResolver": "webpack"
+                                    }
+                                },
+                                {
+                                    "loader": "/Users/wy/WDY/school-events-app/node_modules/@dcloudio/vue-cli-plugin-uni/packages/webpack-preprocess-loader",
+                                    "options": {
+                                        "type": "css",
+                                        "context": {
+                                            "H5": false,
+                                            "APP-PLUS": false,
+                                            "MP-QQ": false,
+                                            "MP-WEIXIN": true,
+                                            "MP-BAIDU": false,
+                                            "MP-ALIPAY": false,
+                                            "MP-TOUTIAO": false,
+                                            "MP": true,
+                                            "APP": false,
+                                            "APP-PLUS-NVUE": false,
+                                            "APP_PLUS_NVUE": false,
+                                            "APP-VUE": false,
+                                            "APP_VUE": false,
+                                            "APP-NVUE": false,
+                                            "APP_NVUE": false,
+                                            "APP_PLUS": false,
+                                            "MP_QQ": false,
+                                            "MP_WEIXIN": true,
+                                            "MP_BAIDU": false,
+                                            "MP_ALIPAY": false,
+                                            "MP_TOUTIAO": false
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "test": {},
+                    "exclude": [null],
+                    "use": [
+                        {
+                            "loader": "babel-loader"
+                        },
+                        {
+                            "loader": "/Users/wy/WDY/school-events-app/node_modules/@dcloudio/vue-cli-plugin-uni/packages/webpack-preprocess-loader",
+                            "options": {
+                                "type": "js",
+                                "context": {
+                                    "H5": false,
+                                    "APP-PLUS": false,
+                                    "MP-QQ": false,
+                                    "MP-WEIXIN": true,
+                                    "MP-BAIDU": false,
+                                    "MP-ALIPAY": false,
+                                    "MP-TOUTIAO": false,
+                                    "MP": true,
+                                    "APP": false,
+                                    "APP-PLUS-NVUE": false,
+                                    "APP_PLUS_NVUE": false,
+                                    "APP-VUE": false,
+                                    "APP_VUE": false,
+                                    "APP-NVUE": false,
+                                    "APP_NVUE": false,
+                                    "APP_PLUS": false,
+                                    "MP_QQ": false,
+                                    "MP_WEIXIN": true,
+                                    "MP_BAIDU": false,
+                                    "MP_ALIPAY": false,
+                                    "MP_TOUTIAO": false
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
+                    "enforce": "pre",
+                    "test": {},
+                    "exclude": [
+                        {},
+                        "/Users/wy/WDY/school-events-app/node_modules/@vue/cli-service/lib"
+                    ],
+                    "use": [
+                        {
+                            "loader": "eslint-loader",
+                            "options": {
+                                "extensions": [".js", ".jsx", ".vue"],
+                                "cache": true,
+                                "cacheIdentifier": "58b9b4da",
+                                "emitWarning": true,
+                                "emitError": false,
+                                "eslintPath": "/Users/wy/WDY/school-events-app/node_modules/eslint"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "test": "/Users/wy/WDY/school-events-app/src/pages.json",
+                    "use": [
+                        {
+                            "loader": "babel-loader"
+                        },
+                        {
+                            "loader": "@dcloudio/webpack-uni-pages-loader"
+                        }
+                    ],
+                    "type": "javascript/auto"
+                },
+                {
+                    "test": "/Users/wy/WDY/school-events-app/src/main.js",
+                    "use": [
+                        {
+                            "loader": "wrap-loader",
+                            "options": {
+                                "before": [
+                                    "import 'uni-pages';import '@dcloudio/uni-stat';"
+                                ]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "resourceQuery": {},
+                    "use": [
+                        {
+                            "loader": "/Users/wy/WDY/school-events-app/node_modules/@dcloudio/vue-cli-plugin-uni/packages/webpack-preprocess-loader",
+                            "options": {
+                                "type": "html",
+                                "context": {
+                                    "H5": false,
+                                    "APP-PLUS": false,
+                                    "MP-QQ": false,
+                                    "MP-WEIXIN": true,
+                                    "MP-BAIDU": false,
+                                    "MP-ALIPAY": false,
+                                    "MP-TOUTIAO": false,
+                                    "MP": true,
+                                    "APP": false,
+                                    "APP-PLUS-NVUE": false,
+                                    "APP_PLUS_NVUE": false,
+                                    "APP-VUE": false,
+                                    "APP_VUE": false,
+                                    "APP-NVUE": false,
+                                    "APP_NVUE": false,
+                                    "APP_PLUS": false,
+                                    "MP_QQ": false,
+                                    "MP_WEIXIN": true,
+                                    "MP_BAIDU": false,
+                                    "MP_ALIPAY": false,
+                                    "MP_TOUTIAO": false
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
+                    "test": "/Users/wy/WDY/school-events-app/src/main.js",
+                    "use": [
+                        {
+                            "loader": "@dcloudio/webpack-uni-mp-loader/lib/main"
+                        }
+                    ]
+                },
+                {
+                    "resourceQuery": {},
+                    "use": [
+                        {
+                            "loader": "@dcloudio/webpack-uni-mp-loader/lib/script"
+                        }
+                    ]
+                },
+                {
+                    "resourceQuery": {},
+                    "use": [
+                        {
+                            "loader": "@dcloudio/webpack-uni-mp-loader/lib/template"
+                        }
+                    ]
+                },
+                {
+                    "resourceQuery": [{}, {}, {}, {}, {}, {}],
+                    "use": [
+                        {
+                            "loader": "/Users/wy/WDY/school-events-app/node_modules/@dcloudio/vue-cli-plugin-uni/packages/webpack-uni-filter-loader/index.js"
+                        }
+                    ]
+                }
+            ]
+        },
+        "plugins": [
+            {},
+            {
+                "definitions": {
+                    "process.env": {
+                        "NODE_ENV": "\"development\"",
+                        "VUE_APP_PLATFORM": "\"mp-weixin\"",
+                        "BASE_URL": "\"/\""
+                    }
+                }
+            },
+            {
+                "options": {},
+                "pathCache": {},
+                "fsOperations": 0,
+                "primed": false
+            },
+            {
+                "compilationSuccessInfo": {},
+                "shouldClearConsole": true,
+                "formatters": [null, null, null, null],
+                "transformers": [null, null, null, null],
+                "previousEndTimes": {}
+            },
+            {
+                "options": {
+                    "filename": "[name].wxss",
+                    "ignoreOrder": false,
+                    "chunkFilename": "[name].wxss"
+                }
+            },
+            {
+                "profile": false,
+                "modulesCount": 500,
+                "showEntries": false,
+                "showModules": true,
+                "showActiveModules": true
+            },
+            {
+                "definitions": {
+                    "process.env.UNI_ENV": "\"mp-weixin\""
+                }
+            },
+            {},
+            {},
+            {
+                "definitions": {
+                    "uni": [
+                        "/Users/wy/WDY/school-events-app/node_modules/@dcloudio/uni-mp-weixin/dist/index.js",
+                        "default"
+                    ],
+                    "createApp": [
+                        "/Users/wy/WDY/school-events-app/node_modules/@dcloudio/uni-mp-weixin/dist/index.js",
+                        "createApp"
+                    ],
+                    "createPage": [
+                        "/Users/wy/WDY/school-events-app/node_modules/@dcloudio/uni-mp-weixin/dist/index.js",
+                        "createPage"
+                    ],
+                    "createComponent": [
+                        "/Users/wy/WDY/school-events-app/node_modules/@dcloudio/uni-mp-weixin/dist/index.js",
+                        "createComponent"
+                    ]
+                }
+            },
+            {
+                "definitions": {
+                    "SERVER_HOST": "\"http://aitiaozhan.wdyclass.com:8000\""
+                }
+            }
+        ],
+        "optimization": {
+            "noEmitOnErrors": false,
+            "runtimeChunk": {
+                "name": "common/runtime"
+            },
+            "splitChunks": {
+                "cacheGroups": {
+                    "default": false,
+                    "vendors": false,
+                    "commons": {
+                        "minChunks": 1,
+                        "name": "common/vendor",
+                        "chunks": "all"
+                    }
+                }
+            },
+            "namedModules": false
+        },
+        "performance": {
+            "hints": false
+        },
+        "watch": true
+    }
+]

@@ -7,13 +7,30 @@
             v-if="!needBindMobile"
             class="main"
         >
+            <view class="panel">
+                <view class="panel-hd">
+                    <text
+                        v-for="(item, k) in tabs"
+                        :key="item.id"
+                        class="panel-title"
+                        :class="{ active: newsTabActiveIndex === k }"
+                        @click="setNewsTabActive(k)"
+                    >
+                        {{ item.column_name }}
+                    </text>
+                </view>
+            </view>
+
             <view class="uni-form-item uni-column">
                 <input
                     v-model="formData.resource_name"
                     class="uni-input"
                     placeholder-class="placeholder"
                     maxlength="30"
-                    placeholder="视频名称*（不超过30字）"
+                    :placeholder="
+                        (uploadMode === 'video' ? '视频' : '作品') +
+                            '名称*（不超过30字）'
+                    "
                 >
             </view>
 
@@ -43,16 +60,34 @@
                 v-model="formData.introduce"
                 class="uni-textarea"
                 placeholder-class="placeholder"
-                placeholder="视频介绍（不超过500字）"
+                :placeholder="
+                    (uploadMode === 'video' ? '视频' : '作品') +
+                        '介绍（不超过500字）'
+                "
             />
             <upload
+                v-if="uploadMode === 'video'"
                 :type="'video'"
                 @change="updateVideo"
             />
+            <view
+                v-if="uploadMode === 'image'"
+                class="upload-desc"
+            >
+                拖动图片可调整展示顺序，第一张图片会作为该作品的封面图
+            </view>
             <upload
                 :type="'image'"
+                :preview="uploadMode === 'video' ? true : false"
                 @change="updateImage"
             />
+
+            <template v-if="uploadMode === 'image'">
+                <image-drag-sort
+                    ref="preview"
+                    :list="images"
+                />
+            </template>
 
             <view
                 class="btn"
@@ -61,6 +96,7 @@
                 上传
             </view>
         </view>
+
         <view
             v-if="needBindMobile"
             class="page-bind-mobile"
@@ -125,14 +161,25 @@
 <script>
 import api from '../../../common/api';
 import upload from '../../../components/upload/upload.vue';
+import imageDragSort from '../../../wxcomponents/image-drag-sort/index.vue';
 
 export default {
     components: {
         upload,
+        imageDragSort,
     },
     data() {
         return {
             isLoading: true,
+
+            tabs: [
+                { id: '1', column_name: '上传视频作品' },
+                { id: '2', column_name: '上传图片作品' },
+            ],
+            images: [],
+
+            newsTabActiveIndex: 0,
+            uploadMode: 'video',
 
             formData: {
                 cat_id: '',
@@ -170,15 +217,26 @@ export default {
         this.getData();
     },
     methods: {
+        setNewsTabActive(index) {
+            this.newsTabActiveIndex = index;
+            if (index === 0) {
+                this.uploadMode = 'video';
+            } else {
+                this.uploadMode = 'image';
+            }
+        },
         updateVideo(data) {
             this.formData.video_id = data.video_id;
         },
 
         updateImage(data) {
             this.formData.video_img_url = data.path;
+            if (this.uploadMode === 'image') {
+                this.$refs.preview.add(data.path);
+            }
         },
         getData() {
-            this.isLoading = true;
+            // this.isLoading = true;
             api.get('/api/works/childcat', {
                 cat_id: 3,
             }).then((res) => {
@@ -295,21 +353,30 @@ export default {
         },
         upload() {
             const formData = Object.assign({}, this.formData);
-            if (!formData.resource_name) {
-                return this.errTip('请输入视频名称');
-            }
-            if (!formData.cat_id) {
-                return this.errTip('请选择视频分类');
-            }
-            // if (!formData.introduce) {
-            //     return this.errTip('请填写视频介绍');
-            // }
 
-            if (!formData.video_id) {
-                return this.errTip('请上传视频文件');
-            }
-            if (!formData.video_img_url) {
-                return this.errTip('请上传视频封面');
+            if (this.uploadMode === 'video') {
+                formData.resource_type = 1;
+                if (!formData.resource_name) {
+                    return this.errTip('请输入视频名称');
+                }
+                if (!formData.cat_id) {
+                    return this.errTip('请选择视频分类');
+                }
+                if (!formData.video_id) {
+                    return this.errTip('请上传视频文件');
+                }
+                if (!formData.video_img_url) {
+                    return this.errTip('请上传视频封面');
+                }
+            } else {
+                formData.resource_type = 2;
+                if (!formData.resource_name) {
+                    return this.errTip('请输入作品名称');
+                }
+                if (!formData.cat_id) {
+                    return this.errTip('请选择作品分类');
+                }
+                formData.img = this.$refs.preview.dump();
             }
 
             // check input
@@ -383,6 +450,17 @@ export default {
         line-height: 98upx;
         text-align: center;
         margin-top: 168upx;
+    }
+
+    .panel-hd {
+        margin: 0 0 40rpx 0;
+        text-align: center;
+    }
+
+    .upload-desc {
+        font-size: 24rpx;
+        color: #333;
+        margin-bottom: 20rpx;
     }
 }
 

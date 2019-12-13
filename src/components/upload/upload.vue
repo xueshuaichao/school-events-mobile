@@ -28,10 +28,10 @@
                     src="/static/images/comp/upload/image.png"
                 />
                 <view class="icon-desc">
-                    上传封面
+                    {{ preview ? "上传封面" : "上传图片" }}
                 </view>
                 <image
-                    v-if="url"
+                    v-if="preview && url"
                     class="preview"
                     :src="url"
                 />
@@ -72,8 +72,13 @@ export default {
             type: String,
             default: '',
         },
+        preview: {
+            type: Boolean,
+            default: true,
+        },
     },
     data() {
+        console.log(this.preview);
         return {
             src: '',
             tempFilePath: '',
