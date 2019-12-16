@@ -161,7 +161,7 @@
 <script>
 import api from '../../../common/api';
 import upload from '../../../components/upload/upload.vue';
-import imageDragSort from '../../../wxcomponents/image-drag-sort/index.vue';
+import imageDragSort from '../../../components/image-drag-sort/index.vue';
 
 export default {
     components: {
