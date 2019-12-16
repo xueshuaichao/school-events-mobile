@@ -269,7 +269,13 @@ export default {
             // 可写上传图片方法或者将本地图片路径传给父组件
         },
         add(item) {
-            this.list.push(item);
+            if (this.list.length >= 9) {
+                return uni.showToast({
+                    title: '最多上传9张图片~',
+                    icon: 'none',
+                });
+            }
+            return this.list.push(item);
         },
         dump() {
             return this.list;

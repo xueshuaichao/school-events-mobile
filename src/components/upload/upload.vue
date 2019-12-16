@@ -98,42 +98,47 @@ export default {
                 title: '上传中',
                 duration: 200000,
             });
-            uni.uploadFile({
-                url: `${config.host}/api/file/uploadfile`, // 仅为示例，非真实的接口地址
-                filePath: tempFilePath,
-                name: 'file',
-                formData: {
-                    file_type: this.type === 'image' ? 1 : 2,
-                },
-                header: {
-                    userKey: utils.getToken(),
-                },
-                success: (uploadFileRes) => {
-                    let resp;
-                    try {
-                        resp = JSON.parse(uploadFileRes.data);
-                    } catch (e) {
-                        return uni.showToast({
-                            title: '服务器开小差了~',
-                            icon: 'none',
-                        });
-                    }
-                    if (resp.status === 200) {
-                        // success
-                        this.url = resp.data.path;
-                        this.$emit('change', resp.data);
-                        uni.showToast({
-                            title: '已上传',
-                        });
-                    } else {
-                        // fail
-                        return uni.showToast({
-                            title: resp.msg,
-                            icon: 'none',
-                        });
-                    }
-                    return false;
-                },
+            return new Promise((resolve, reject) => {
+                uni.uploadFile({
+                    url: `${config.host}/api/file/uploadfile`, // 仅为示例，非真实的接口地址
+                    filePath: tempFilePath,
+                    name: 'file',
+                    formData: {
+                        file_type: this.type === 'image' ? 1 : 2,
+                    },
+                    header: {
+                        userKey: utils.getToken(),
+                    },
+                    success: (uploadFileRes) => {
+                        let resp;
+                        try {
+                            resp = JSON.parse(uploadFileRes.data);
+                        } catch (e) {
+                            uni.showToast({
+                                title: '服务器开小差了~',
+                                icon: 'none',
+                            });
+                            return reject(e);
+                        }
+                        if (resp.status === 200) {
+                            // success
+                            this.url = resp.data.path;
+                            uni.showToast({
+                                title: '已上传',
+                            });
+                            resolve(resp.data);
+                            // this.$emit('change', resp.data);
+                        } else {
+                            // fail
+                            uni.showToast({
+                                title: resp.msg,
+                                icon: 'none',
+                            });
+                            return reject(resp.msg);
+                        }
+                        return false;
+                    },
+                });
             });
         },
         uploadVideo(tempFilePath) {
@@ -186,9 +191,13 @@ export default {
             if (this.type === 'image') {
                 uni.chooseImage({
                     success: (res) => {
-                        const filePath = res.tempFilePaths[0];
-                        this.src = filePath;
-                        this.uploadFile(filePath);
+                        Promise.all(
+                            res.tempFilePaths.map(filePath => this.uploadFile(filePath)),
+                        ).then((data) => {
+                            // console.log(data);
+                            this.$emit('change', data);
+                        });
+                        [this.src] = res.tempFilePaths;
                     },
                 });
             } else if (this.type === 'video') {

@@ -1,8 +1,8 @@
 [
     {
-        "mode": "production",
+        "mode": "development",
         "context": "/Users/wy/WDY/school-events-app",
-        "devtool": false,
+        "devtool": "sourcemap",
         "node": {
             "setImmediate": false,
             "dgram": "empty",
@@ -12,11 +12,11 @@
             "child_process": "empty"
         },
         "output": {
-            "path": "/Users/wy/WDY/school-events-app/dist/build/mp-weixin",
+            "path": "/Users/wy/WDY/school-events-app/dist/dev/mp-weixin",
             "filename": "[name].js",
             "publicPath": "/",
-            "chunkFilename": "[id].js",
             "globalObject": "global",
+            "chunkFilename": "[id].js",
             "sourceMapFilename": "../.sourcemap/mp-weixin/[name].js.map"
         },
         "resolve": {
@@ -175,7 +175,7 @@
                                 {
                                     "loader": "/Users/wy/WDY/school-events-app/node_modules/mini-css-extract-plugin/dist/loader.js",
                                     "options": {
-                                        "hmr": false,
+                                        "hmr": true,
                                         "publicPath": "../../"
                                     }
                                 },
@@ -234,7 +234,7 @@
                                 {
                                     "loader": "/Users/wy/WDY/school-events-app/node_modules/mini-css-extract-plugin/dist/loader.js",
                                     "options": {
-                                        "hmr": false,
+                                        "hmr": true,
                                         "publicPath": "../../"
                                     }
                                 },
@@ -291,7 +291,7 @@
                                 {
                                     "loader": "/Users/wy/WDY/school-events-app/node_modules/mini-css-extract-plugin/dist/loader.js",
                                     "options": {
-                                        "hmr": false,
+                                        "hmr": true,
                                         "publicPath": "../../"
                                     }
                                 },
@@ -349,7 +349,7 @@
                                 {
                                     "loader": "/Users/wy/WDY/school-events-app/node_modules/mini-css-extract-plugin/dist/loader.js",
                                     "options": {
-                                        "hmr": false,
+                                        "hmr": true,
                                         "publicPath": "../../"
                                     }
                                 },
@@ -411,7 +411,7 @@
                                 {
                                     "loader": "/Users/wy/WDY/school-events-app/node_modules/mini-css-extract-plugin/dist/loader.js",
                                     "options": {
-                                        "hmr": false,
+                                        "hmr": true,
                                         "publicPath": "../../"
                                     }
                                 },
@@ -470,7 +470,7 @@
                                 {
                                     "loader": "/Users/wy/WDY/school-events-app/node_modules/mini-css-extract-plugin/dist/loader.js",
                                     "options": {
-                                        "hmr": false,
+                                        "hmr": true,
                                         "publicPath": "../../"
                                     }
                                 },
@@ -527,7 +527,7 @@
                                 {
                                     "loader": "/Users/wy/WDY/school-events-app/node_modules/mini-css-extract-plugin/dist/loader.js",
                                     "options": {
-                                        "hmr": false,
+                                        "hmr": true,
                                         "publicPath": "../../"
                                     }
                                 },
@@ -585,7 +585,7 @@
                                 {
                                     "loader": "/Users/wy/WDY/school-events-app/node_modules/mini-css-extract-plugin/dist/loader.js",
                                     "options": {
-                                        "hmr": false,
+                                        "hmr": true,
                                         "publicPath": "../../"
                                     }
                                 },
@@ -647,7 +647,7 @@
                                 {
                                     "loader": "/Users/wy/WDY/school-events-app/node_modules/mini-css-extract-plugin/dist/loader.js",
                                     "options": {
-                                        "hmr": false,
+                                        "hmr": true,
                                         "publicPath": "../../"
                                     }
                                 },
@@ -742,7 +742,7 @@
                                 {
                                     "loader": "/Users/wy/WDY/school-events-app/node_modules/mini-css-extract-plugin/dist/loader.js",
                                     "options": {
-                                        "hmr": false,
+                                        "hmr": true,
                                         "publicPath": "../../"
                                     }
                                 },
@@ -835,7 +835,7 @@
                                 {
                                     "loader": "/Users/wy/WDY/school-events-app/node_modules/mini-css-extract-plugin/dist/loader.js",
                                     "options": {
-                                        "hmr": false,
+                                        "hmr": true,
                                         "publicPath": "../../"
                                     }
                                 },
@@ -929,7 +929,7 @@
                                 {
                                     "loader": "/Users/wy/WDY/school-events-app/node_modules/mini-css-extract-plugin/dist/loader.js",
                                     "options": {
-                                        "hmr": false,
+                                        "hmr": true,
                                         "publicPath": "../../"
                                     }
                                 },
@@ -1027,7 +1027,7 @@
                                 {
                                     "loader": "/Users/wy/WDY/school-events-app/node_modules/mini-css-extract-plugin/dist/loader.js",
                                     "options": {
-                                        "hmr": false,
+                                        "hmr": true,
                                         "publicPath": "../../"
                                     }
                                 },
@@ -1125,7 +1125,7 @@
                                 {
                                     "loader": "/Users/wy/WDY/school-events-app/node_modules/mini-css-extract-plugin/dist/loader.js",
                                     "options": {
-                                        "hmr": false,
+                                        "hmr": true,
                                         "publicPath": "../../"
                                     }
                                 },
@@ -1221,7 +1221,7 @@
                                 {
                                     "loader": "/Users/wy/WDY/school-events-app/node_modules/mini-css-extract-plugin/dist/loader.js",
                                     "options": {
-                                        "hmr": false,
+                                        "hmr": true,
                                         "publicPath": "../../"
                                     }
                                 },
@@ -1318,7 +1318,7 @@
                                 {
                                     "loader": "/Users/wy/WDY/school-events-app/node_modules/mini-css-extract-plugin/dist/loader.js",
                                     "options": {
-                                        "hmr": false,
+                                        "hmr": true,
                                         "publicPath": "../../"
                                     }
                                 },
@@ -1419,7 +1419,7 @@
                                 {
                                     "loader": "/Users/wy/WDY/school-events-app/node_modules/mini-css-extract-plugin/dist/loader.js",
                                     "options": {
-                                        "hmr": false,
+                                        "hmr": true,
                                         "publicPath": "../../"
                                     }
                                 },
@@ -1513,7 +1513,7 @@
                                 {
                                     "loader": "/Users/wy/WDY/school-events-app/node_modules/mini-css-extract-plugin/dist/loader.js",
                                     "options": {
-                                        "hmr": false,
+                                        "hmr": true,
                                         "publicPath": "../../"
                                     }
                                 },
@@ -1605,7 +1605,7 @@
                                 {
                                     "loader": "/Users/wy/WDY/school-events-app/node_modules/mini-css-extract-plugin/dist/loader.js",
                                     "options": {
-                                        "hmr": false,
+                                        "hmr": true,
                                         "publicPath": "../../"
                                     }
                                 },
@@ -1698,7 +1698,7 @@
                                 {
                                     "loader": "/Users/wy/WDY/school-events-app/node_modules/mini-css-extract-plugin/dist/loader.js",
                                     "options": {
-                                        "hmr": false,
+                                        "hmr": true,
                                         "publicPath": "../../"
                                     }
                                 },
@@ -1795,7 +1795,7 @@
                                 {
                                     "loader": "/Users/wy/WDY/school-events-app/node_modules/mini-css-extract-plugin/dist/loader.js",
                                     "options": {
-                                        "hmr": false,
+                                        "hmr": true,
                                         "publicPath": "../../"
                                     }
                                 },
@@ -1890,7 +1890,7 @@
                                 {
                                     "loader": "/Users/wy/WDY/school-events-app/node_modules/mini-css-extract-plugin/dist/loader.js",
                                     "options": {
-                                        "hmr": false,
+                                        "hmr": true,
                                         "publicPath": "../../"
                                     }
                                 },
@@ -1983,7 +1983,7 @@
                                 {
                                     "loader": "/Users/wy/WDY/school-events-app/node_modules/mini-css-extract-plugin/dist/loader.js",
                                     "options": {
-                                        "hmr": false,
+                                        "hmr": true,
                                         "publicPath": "../../"
                                     }
                                 },
@@ -2077,7 +2077,7 @@
                                 {
                                     "loader": "/Users/wy/WDY/school-events-app/node_modules/mini-css-extract-plugin/dist/loader.js",
                                     "options": {
-                                        "hmr": false,
+                                        "hmr": true,
                                         "publicPath": "../../"
                                     }
                                 },
@@ -2217,7 +2217,7 @@
                             "options": {
                                 "extensions": [".js", ".jsx", ".vue"],
                                 "cache": true,
-                                "cacheIdentifier": "536e9d4a",
+                                "cacheIdentifier": "58b9b4da",
                                 "emitWarning": true,
                                 "emitError": false,
                                 "eslintPath": "/Users/wy/WDY/school-events-app/node_modules/eslint"
@@ -2318,74 +2318,12 @@
                 }
             ]
         },
-        "optimization": {
-            "minimizer": [
-                {
-                    "options": {
-                        "test": {},
-                        "extractComments": false,
-                        "sourceMap": true,
-                        "cache": true,
-                        "parallel": false,
-                        "terserOptions": {
-                            "output": {
-                                "comments": {}
-                            },
-                            "compress": {
-                                "arrows": false,
-                                "collapse_vars": false,
-                                "comparisons": false,
-                                "computed_props": false,
-                                "hoist_funs": false,
-                                "hoist_props": false,
-                                "hoist_vars": false,
-                                "inline": false,
-                                "loops": false,
-                                "negate_iife": false,
-                                "properties": false,
-                                "reduce_funcs": false,
-                                "reduce_vars": false,
-                                "switches": false,
-                                "toplevel": false,
-                                "typeofs": false,
-                                "booleans": true,
-                                "if_return": true,
-                                "sequences": true,
-                                "unused": true,
-                                "conditionals": true,
-                                "dead_code": true,
-                                "evaluate": true
-                            },
-                            "mangle": {
-                                "safari10": true
-                            }
-                        }
-                    }
-                }
-            ],
-            "splitChunks": {
-                "cacheGroups": {
-                    "default": false,
-                    "vendors": false,
-                    "commons": {
-                        "minChunks": 1,
-                        "name": "common/vendor",
-                        "chunks": "all"
-                    }
-                }
-            },
-            "noEmitOnErrors": false,
-            "runtimeChunk": {
-                "name": "common/runtime"
-            },
-            "namedModules": false
-        },
         "plugins": [
             {},
             {
                 "definitions": {
                     "process.env": {
-                        "NODE_ENV": "\"production\"",
+                        "NODE_ENV": "\"development\"",
                         "VUE_APP_PLATFORM": "\"mp-weixin\"",
                         "BASE_URL": "\"/\""
                     }
@@ -2412,33 +2350,12 @@
                 }
             },
             {
-                "options": {
-                    "sourceMap": false,
-                    "cssnanoOptions": {
-                        "preset": [
-                            "default",
-                            {
-                                "calc": false,
-                                "orderedValues": false,
-                                "mergeLonghand": false,
-                                "mergeRules": false,
-                                "cssDeclarationSorter": false,
-                                "discardComments": true,
-                                "discardDuplicates": false
-                            }
-                        ]
-                    }
-                }
+                "profile": false,
+                "modulesCount": 500,
+                "showEntries": false,
+                "showModules": true,
+                "showActiveModules": true
             },
-            {
-                "options": {
-                    "context": null,
-                    "hashFunction": "md4",
-                    "hashDigest": "hex",
-                    "hashDigestLength": 4
-                }
-            },
-            {},
             {
                 "definitions": {
                     "process.env.UNI_ENV": "\"mp-weixin\""
@@ -2468,12 +2385,31 @@
             },
             {
                 "definitions": {
-                    "SERVER_HOST": "\"http://aitiaozhan.test.wdyclass.com:8000\""
+                    "SERVER_HOST": "\"http://aitiaozhan.wdyclass.com:8000\""
                 }
             }
         ],
+        "optimization": {
+            "noEmitOnErrors": false,
+            "runtimeChunk": {
+                "name": "common/runtime"
+            },
+            "splitChunks": {
+                "cacheGroups": {
+                    "default": false,
+                    "vendors": false,
+                    "commons": {
+                        "minChunks": 1,
+                        "name": "common/vendor",
+                        "chunks": "all"
+                    }
+                }
+            },
+            "namedModules": false
+        },
         "performance": {
             "hints": false
-        }
+        },
+        "watch": true
     }
 ]

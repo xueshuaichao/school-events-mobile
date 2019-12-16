@@ -230,9 +230,11 @@ export default {
         },
 
         updateImage(data) {
-            this.formData.video_img_url = data.path;
+            this.formData.video_img_url = data[0] && data[0].path;
             if (this.uploadMode === 'image') {
-                this.$refs.preview.add(data.path);
+                data.forEach((item) => {
+                    this.$refs.preview.add(item.path);
+                });
             }
         },
         getData() {
