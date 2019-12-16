@@ -367,9 +367,9 @@ export default {
                 if (!formData.video_id) {
                     return this.errTip('请上传视频文件');
                 }
-                if (!formData.video_img_url) {
-                    return this.errTip('请上传视频封面');
-                }
+                // if (!formData.video_img_url) {
+                //     return this.errTip('请上传视频封面');
+                // }
             } else {
                 formData.resource_type = 2;
                 if (!formData.resource_name) {
