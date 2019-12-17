@@ -87,8 +87,8 @@
             "disableHostCheck": true,
             "proxy": {
                 "/api": {
-                    "target": "http://aitiaozhan.wdyclass.com:8000/",
-                    // "target": "http://atz.qsnatz.com",
+                    // "target": "http://aitiaozhan.wdyclass.com:8000/",
+                    "target": "http://atz.qsnatz.com",
                     "changeOrigin": true,
                     "secure": false
                 }

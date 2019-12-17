@@ -269,9 +269,9 @@ export default {
             // 可写上传图片方法或者将本地图片路径传给父组件
         },
         add(item) {
-            if (this.list.length >= 9) {
+            if (this.list.length >= 10) {
                 return uni.showToast({
-                    title: '最多上传9张图片~',
+                    title: '最多上传10张图片~',
                     icon: 'none',
                 });
             }
