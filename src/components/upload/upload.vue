@@ -194,59 +194,43 @@ export default {
                 title: "上传中",
                 duration: 200000
             });
-            console.log(tempFilePath);
             uni.uploadFile({
-                // url: `${config.host}/api/file/backendvideoupload`,
-                url: "https://aitiaozhan.oss-cn-beijing.aliyuncs.com",
+                url: `${config.host}/api/file/backendvideoupload`,
                 filePath: tempFilePath,
                 name: "file",
-                formData: {
-                    name: tempFilePath,
-                    key: "${filename}",
-                    policy:
-                        "eyJleHBpcmF0aW9uIjoiMjAzMC0wMS0wMVQxMjowMDowMC4wMDBaIiwiY29uZGl0aW9ucyI6W1siY29udGVudC1sZW5ndGgtcmFuZ2UiLDAsMTA0ODU3NjAwMF1dfQ==",
-                    OSSAccessKeyId: "LTAI4Fvbxx7jz1BcNAp66Wbh",
-                    success_action_status: "200",
-                    signature: "Rxh0A73WGhefUqmphQXqvF0voOE="
+                header: {
+                    userKey: utils.getToken()
                 },
-                // header: {
-                //     userKey: utils.getToken(),
-                // },
                 success: uploadFileRes => {
-                    if (uploadFileRes.statusCode === 200) {
-                        const filename = tempFilePath.split("/").pop();
-                    } else {
+                    let resp;
+                    try {
+                        resp = JSON.parse(uploadFileRes.data);
+                    } catch (e) {
+                        return uni.showToast({
+                            title: "服务器开小差了~",
+                            icon: "none"
+                        });
                     }
-                    console.log(uploadFileRes);
-                    // let resp;
-                    // try {
-                    //     resp = JSON.parse(uploadFileRes.data);
-                    // } catch (e) {
-                    //     return uni.showToast({
-                    //         title: '服务器开小差了~',
-                    //         icon: 'none',
-                    //     });
-                    // }
-                    // if (resp.status === 200) {
-                    //     // success
-                    //     this.$emit('change', resp.data);
-                    //     uni.showToast({
-                    //         title: '已上传',
-                    //     });
-                    //     this.url = resp.data.video_id;
-                    // } else if (resp.status === 706) {
-                    //     uni.hideToast();
-                    //     uni.navigateTo({
-                    //         url: '/pages/upload/result/result?type=deny',
-                    //     });
-                    // } else {
-                    //     // fail
-                    //     return uni.showToast({
-                    //         title: resp.msg,
-                    //         icon: 'none',
-                    //     });
-                    // }
-                    // return false;
+                    if (resp.status === 200) {
+                        // success
+                        this.$emit("change", resp.data);
+                        uni.showToast({
+                            title: "已上传"
+                        });
+                        this.url = resp.data.video_id;
+                    } else if (resp.status === 706) {
+                        uni.hideToast();
+                        uni.navigateTo({
+                            url: "/pages/upload/result/result?type=deny"
+                        });
+                    } else {
+                        // fail
+                        return uni.showToast({
+                            title: resp.msg,
+                            icon: "none"
+                        });
+                    }
+                    return false;
                 }
             });
         },
