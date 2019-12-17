@@ -254,8 +254,8 @@ export default {
                     success: res => {
                         const filePath = res.tempFilePath;
                         this.src = filePath;
-                        // this.uploadVideo(filePath);
-                        console.log(res);
+                        this.uploadVideo(filePath);
+                        // console.log(res);
                         // const fileList = e.target.files;
                         // this.uploader.cleanList();
                     }
