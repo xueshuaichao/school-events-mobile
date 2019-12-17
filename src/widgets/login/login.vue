@@ -8,13 +8,13 @@
             >
                 帐号登录
             </view>
-            <view
+            <!-- <view
                 class="tab col tab-register"
                 :class="{ active: activeTab === 1 }"
                 @click="activeTab = 1"
             >
                 手机号注册
-            </view>
+            </view> -->
             <view class="col" />
         </view>
 
@@ -101,12 +101,12 @@
                 >
                     密码登录
                 </view>
-                <view
+                <!-- <view
                     v-if="loginMode === 'password'"
                     @click="loginMode = 'sms'"
                 >
                     短信验证码登录
-                </view>
+                </view> -->
             </view>
 
             <view class="form-item-wrap">
@@ -198,7 +198,8 @@ export default {
                 isSend: false,
             },
             activeTab: 0,
-            loginMode: 'sms',
+            // loginMode: 'sms',
+            loginMode: 'password',
         };
     },
     methods: {
