@@ -1,11 +1,11 @@
 <template>
-    <navigator
+    <view
         class="comp-work"
         :class="{
             'mode-mini': mode === 'mini',
             'mode-single': mode === 'single'
         }"
-        :url="`/pages/work/detail/detail?id=${info.id}`"
+        @click="goDetail"
     >
         <view class="thumbnail-wrap">
             <image
@@ -55,7 +55,7 @@
                 </view>
             </template>
         </view>
-    </navigator>
+    </view>
 </template>
 
 <script>
@@ -87,6 +87,15 @@ export default {
     },
     data() {
         return {};
+    },
+    methods: {
+        goDetail() {
+            if (this.info.status === 1) {
+                uni.navigateTo({
+                    url: `/pages/work/detail/detail?id=${this.info.id}`,
+                });
+            }
+        },
     },
 };
 </script>
