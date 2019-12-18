@@ -179,8 +179,9 @@ export default {
     data() {
         return {
             formData: {
-                username: '',
-                password: '',
+                username:
+                    process.env.NODE_ENV === 'development' ? '13370123965' : '',
+                password: process.env.NODE_ENV === 'development' ? '111111' : '',
             },
             newUser: {
                 phone: '',
