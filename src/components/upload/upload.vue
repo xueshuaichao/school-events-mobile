@@ -93,6 +93,7 @@ export default {
         }
     },
     mounted() {
+        /*
         const uploader = new AliyunUpload.Vod({
             // 阿里账号ID，必须有值 ，值的来源https://help.aliyun.com/knowledge_detail/37196.html
             userId: "1923859927839944",
@@ -136,6 +137,7 @@ export default {
         });
 
         this.uploader = uploader;
+        */
     },
     methods: {
         uploadFile(tempFilePath) {
