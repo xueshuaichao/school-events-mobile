@@ -77,12 +77,17 @@
                 拖动图片可调整展示顺序，第一张图片会作为该作品的封面图
             </view>
             <upload
+                v-if="uploadMode === 'video'"
                 :type="'image'"
-                :preview="uploadMode === 'video' ? true : false"
                 @change="updateImage"
             />
 
             <template v-if="uploadMode === 'image'">
+                <upload
+                    :type="'image'"
+                    :preview="false"
+                    @change="updateImage"
+                />
                 <image-drag-sort
                     ref="preview"
                     :list="images"
@@ -221,8 +226,10 @@ export default {
             this.newsTabActiveIndex = index;
             if (index === 0) {
                 this.uploadMode = 'video';
+                this.formData.video_img_url = '';
             } else {
                 this.uploadMode = 'image';
+                this.formData.video_img_url = '';
             }
         },
         updateVideo(data) {
@@ -379,24 +386,29 @@ export default {
                     return this.errTip('请选择作品分类');
                 }
                 formData.img = this.$refs.preview.dump();
+                if (!formData.img.length) {
+                    return this.errTip('请上传作品图片');
+                }
             }
 
+            uni.showLoading();
             // check input
             console.log(this.formData);
             return api.post('/api/user/editwork', formData).then(
                 (res) => {
                     console.log(res);
+                    uni.hideLoading();
                     uni.navigateTo({
                         url: '/pages/upload/result/result?type=success',
                     });
                 },
-                err => uni.showToast({
-                    icon: 'none',
-                    title: err.message,
-                }),
-                // uni.navigateTo({
-                //     url: '/pages/upload/result/result?type=fail',
-                // });
+                (err) => {
+                    uni.hideLoading();
+                    uni.showToast({
+                        icon: 'none',
+                        title: err.message,
+                    });
+                },
             );
         },
     },
