@@ -9,6 +9,11 @@ function getToken() {
     return userKey;
 }
 
+function isLogin() {
+    const token = getToken();
+    return !!token;
+}
+
 const store = {
     get: (key) => {
         try {
@@ -35,4 +40,5 @@ const store = {
 export default {
     getToken,
     store,
+    isLogin,
 };
