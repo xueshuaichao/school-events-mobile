@@ -289,10 +289,9 @@ export default {
             this.captcha.remain = 30;
             this.captcha.isSend = true;
 
-            api.get('/api/account/sendcaptcha', {
+            // 切换绑定手机号接口
+            api.get('/api/account/sendbindmsg', {
                 phone: this.accountData.mobile,
-                type: 8,
-                is_mobile: 1,
             }).then(
                 () => {
                     try {
