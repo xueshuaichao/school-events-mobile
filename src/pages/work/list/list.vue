@@ -350,6 +350,7 @@ export default {
                     this.filter.address.county_id = 0;
                     if (value === 0) {
                         this.countyData = [];
+                        this.toggleMenu('address');
                     } else {
                         this.getCityData(value);
                     }
@@ -371,9 +372,13 @@ export default {
                     if (value === 0) {
                         this.filter.cat_id.one_level_id = 0;
                         this.catTwoMenu = [];
+                        this.toggleMenu('category');
                     } else {
                         this.filter.cat_id.one_level_id = value.cat_id;
                         this.catTwoMenu = value.children;
+                        if (!this.catTwoMenu.length) {
+                            this.toggleMenu('category');
+                        }
                     }
                     this.filter.cat_id.two_level_id = 0;
                     this.filter.cat_id.three_level_id = 0;
@@ -383,15 +388,20 @@ export default {
                     if (value === 0) {
                         this.filter.cat_id.two_level_id = 0;
                         this.catThreeMenu = [];
+                        this.toggleMenu('category');
                     } else {
                         this.filter.cat_id.two_level_id = value.cat_id;
                         this.catThreeMenu = value.children;
+                        if (!this.catThreeMenu.length) {
+                            this.toggleMenu('category');
+                        }
                     }
                     this.filter.cat_id.three_level_id = 0;
                     break;
                 case 'cat_three':
                     if (value === 0) {
                         this.filter.cat_id.three_level_id = 0;
+                        this.toggleMenu('category');
                     } else {
                         this.filter.cat_id.three_level_id = value.cat_id;
                     }

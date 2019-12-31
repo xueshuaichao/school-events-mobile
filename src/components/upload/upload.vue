@@ -204,6 +204,7 @@ export default {
                     userKey: utils.getToken()
                 },
                 success: uploadFileRes => {
+                    console.log(uploadFileRes);
                     let resp;
                     try {
                         resp = JSON.parse(uploadFileRes.data);
@@ -254,9 +255,15 @@ export default {
             } else if (this.type === "video") {
                 uni.chooseVideo({
                     success: res => {
+                        if (res.size / 1000 / 1000 > 200) {
+                            return uni.showToast({
+                                title: "最大不超过200M",
+                                icon: "none"
+                            });
+                        }
                         const filePath = res.tempFilePath;
                         this.src = filePath;
-                        this.uploadVideo(filePath);
+                        return this.uploadVideo(filePath);
                         // console.log(res);
                         // const fileList = e.target.files;
                         // this.uploader.cleanList();
