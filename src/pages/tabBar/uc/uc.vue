@@ -54,7 +54,18 @@
                         >
                     </text>
                 </navigator>
-
+                <view
+                    class="menu-item"
+                    @click="doLogout"
+                >
+                    <image
+                        class="icon"
+                        src="/static/images/uc/record.png"
+                    />
+                    <text class="text">
+                        退出登录
+                    </text>
+                </view>
                 <!-- <view class="menu-item">
                     <image
                         class="icon"
@@ -101,6 +112,14 @@
                 </navigator> -->
             </view>
         </template>
+        <!-- <view class="form-item-wrap">
+            <view
+                class="btn"
+                @click="bindMobile"
+            >
+                退出登录
+            </view>
+        </view> -->
     </view>
 </template>
 
@@ -237,5 +256,19 @@ export default {
             }
         }
     }
+
+    // .form-item-wrap {
+    //     padding: 30rpx;
+    // }
+
+    // .btn {
+    //     width: 100%;
+    //     background: #1166ff;
+    //     color: #fff;
+    //     height: 98upx;
+    //     line-height: 98upx;
+    //     text-align: center;
+    //     margin-top: 168upx;
+    // }
 }
 </style>

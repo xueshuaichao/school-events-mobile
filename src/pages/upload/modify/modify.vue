@@ -1,13 +1,39 @@
 <template>
-    <view class="page-upload">
-        <view class="main">
+    <view
+        v-if="!isLoading"
+        class="page-upload"
+    >
+        <view
+            v-if="!needBindMobile"
+            class="main"
+        >
+            <view class="panel">
+                <view class="panel-hd">
+                    <text
+                        class="panel-title"
+                        :class="{ active: uploadMode === 'video' }"
+                    >
+                        上传视频作品
+                    </text>
+                    <text
+                        class="panel-title"
+                        :class="{ active: uploadMode === 'image' }"
+                    >
+                        上传图片作品
+                    </text>
+                </view>
+            </view>
+
             <view class="uni-form-item uni-column">
                 <input
                     v-model="formData.resource_name"
                     class="uni-input"
                     placeholder-class="placeholder"
                     maxlength="30"
-                    placeholder="视频名称*（不超过30字）"
+                    :placeholder="
+                        (uploadMode === 'video' ? '视频' : '作品') +
+                            '名称*（不超过30字）'
+                    "
                 >
             </view>
 
@@ -37,19 +63,34 @@
                 v-model="formData.introduce"
                 class="uni-textarea"
                 placeholder-class="placeholder"
-                placeholder="视频介绍（不超过500字）"
+                :placeholder="
+                    (uploadMode === 'video' ? '视频' : '作品') +
+                        '介绍（不超过500字）'
+                "
             />
-
             <upload
+                v-if="uploadMode === 'video'"
                 :type="'video'"
-                :source="formData.video_id"
                 @change="updateVideo"
             />
+            <view
+                v-if="uploadMode === 'image'"
+                class="upload-desc"
+            >
+                拖动图片可调整展示顺序，第一张图片会作为该作品的封面图
+            </view>
             <upload
                 :type="'image'"
-                :source="formData.video_img_url"
+                :preview="uploadMode === 'video' ? true : false"
                 @change="updateImage"
             />
+
+            <template v-if="uploadMode === 'image'">
+                <image-drag-sort
+                    ref="preview"
+                    :list="images"
+                />
+            </template>
 
             <view
                 class="btn"
@@ -58,20 +99,92 @@
                 上传
             </view>
         </view>
+
+        <view
+            v-if="needBindMobile"
+            class="page-bind-mobile"
+        >
+            <div class="tip">
+                上传作品需要绑定手机号，后面也可以用该手机号登录
+            </div>
+
+            <view
+                class="form-item-wrap"
+                :class="{
+                    inValid: accountData.isValid === false
+                }"
+            >
+                <input
+                    v-model="accountData.mobile"
+                    class="form-input"
+                    placeholder-class="placeholder"
+                    maxlength="30"
+                    placeholder="请输入手机号"
+                >
+                <view class="error-tip">
+                    {{ accountData.isValid ? "" : accountData.msg }}
+                </view>
+            </view>
+
+            <view class="form-item-wrap">
+                <input
+                    v-model="accountData.verify_code"
+                    class="form-input"
+                    placeholder-class="placeholder"
+                    maxlength="30"
+                    placeholder="请输入验证码"
+                >
+                <view
+                    v-if="!captcha.isSend"
+                    class="send-captcha"
+                    @click="sendCaptcha"
+                >
+                    获取验证码
+                </view>
+                <view
+                    v-if="captcha.isSend"
+                    class="send-captcha is-send"
+                >
+                    {{ captcha.remain }}S后重新发
+                </view>
+            </view>
+
+            <view class="form-item-wrap">
+                <view
+                    class="btn"
+                    @click="bindMobile"
+                >
+                    确定
+                </view>
+            </view>
+        </view>
     </view>
 </template>
 
 <script>
 import api from '../../../common/api';
 import upload from '../../../components/upload/upload.vue';
+import imageDragSort from '../../../components/image-drag-sort/index.vue';
 
 export default {
     components: {
         upload,
+        imageDragSort,
     },
     data() {
         return {
+            isLoading: true,
             id: '',
+
+            tabs: [
+                { id: '1', column_name: '上传视频作品' },
+                { id: '2', column_name: '上传图片作品' },
+            ],
+            images: [],
+
+            newsTabActiveIndex: 0,
+            uploadMode: 'video',
+
             formData: {
                 cat_id: '',
                 resource_name: '',
@@ -81,6 +194,18 @@ export default {
                 video_id: '',
                 video_img_url: '',
             },
+            accountData: {
+                mobile: '',
+                verify_code: '',
+                isValid: true,
+                msg: '',
+            },
+            captcha: {
+                create_at: '',
+                remain: '',
+                isSend: false,
+            },
+            needBindMobile: false,
             catData: [],
             title: 'picker',
             array: ['中国', '美国', '巴西', '日本'],
@@ -88,34 +213,60 @@ export default {
             time: '12:01',
         };
     },
-
-    created() {},
+    created() {
+        // this.getData();
+    },
+    // onShow() {
+    //     this.getData();
+    // },
     methods: {
+        // setNewsTabActive(index) {
+        // this.newsTabActiveIndex = index;
+        // if (index === 0) {
+        //     this.uploadMode = 'video';
+        // } else {
+        //     this.uploadMode = 'image';
+        // }
+        // },
         updateVideo(data) {
             this.formData.video_id = data.video_id;
         },
 
         updateImage(data) {
-            this.formData.video_img_url = data.path;
+            this.formData.video_img_url = data[0] && data[0].path;
+            if (this.uploadMode === 'image') {
+                data.forEach((item) => {
+                    this.$refs.preview.add(item.path);
+                });
+            }
         },
         getData() {
+            // this.isLoading = true;
             api.get('/api/works/childcat', {
                 cat_id: 3,
             }).then((res) => {
                 this.catData = res;
             });
 
-            console.log(this.id);
             if (this.id) {
                 api.get('/api/user/workinfo', {
                     id: this.id,
                 }).then((res) => {
                     this.formData.id = res.id;
+                    this.isLoading = false;
+                    this.formData.resource_type = res.resource_type;
                     this.formData.cat_id = res.cat_id;
-                    this.formData.video_id = res.video_id;
-                    this.formData.video_img_url = res.video_img_url;
                     this.formData.resource_name = res.resource_name;
                     this.formData.introduce = res.introduce;
+
+                    if (res.resource_type === 2) {
+                        console.log('image');
+                        this.uploadMode = 'image';
+                        this.images = res.img;
+                    } else {
+                        this.formData.video_id = res.video_id;
+                        this.formData.video_img_url = res.video_img_url;
+                    }
                 });
             }
         },
@@ -134,21 +285,30 @@ export default {
         },
         upload() {
             const formData = Object.assign({}, this.formData);
-            if (!formData.resource_name) {
-                return this.errTip('请输入视频名称');
-            }
-            if (!formData.cat_id) {
-                return this.errTip('请选择视频分类');
-            }
-            if (!formData.introduce) {
-                return this.errTip('请填写视频介绍');
-            }
 
-            if (!formData.video_id) {
-                return this.errTip('请上传视频文件');
-            }
-            if (!formData.video_img_url) {
-                return this.errTip('请上传视频封面');
+            if (this.uploadMode === 'video') {
+                formData.resource_type = 1;
+                if (!formData.resource_name) {
+                    return this.errTip('请输入视频名称');
+                }
+                if (!formData.cat_id) {
+                    return this.errTip('请选择视频分类');
+                }
+                if (!formData.video_id) {
+                    return this.errTip('请上传视频文件');
+                }
+                // if (!formData.video_img_url) {
+                //     return this.errTip('请上传视频封面');
+                // }
+            } else {
+                formData.resource_type = 2;
+                if (!formData.resource_name) {
+                    return this.errTip('请输入作品名称');
+                }
+                if (!formData.cat_id) {
+                    return this.errTip('请选择作品分类');
+                }
+                formData.img = this.$refs.preview.dump();
             }
 
             // check input
@@ -164,6 +324,9 @@ export default {
                     icon: 'none',
                     title: err.message,
                 }),
+                // uni.navigateTo({
+                //     url: '/pages/upload/result/result?type=fail',
+                // });
             );
         },
     },
@@ -223,6 +386,74 @@ export default {
         line-height: 98upx;
         text-align: center;
         margin-top: 168upx;
+    }
+
+    .panel-hd {
+        margin: 0 0 40rpx 0;
+        text-align: center;
+    }
+
+    .upload-desc {
+        font-size: 24rpx;
+        color: #333;
+        margin-bottom: 20rpx;
+    }
+}
+
+.page-bind-mobile {
+    .tip {
+        font-size: 26rpx;
+        color: #333;
+        text-align: center;
+        padding-top: 80rpx;
+    }
+
+    .form-item-wrap {
+        padding: 0 65rpx;
+        position: relative;
+
+        .form-input {
+            color: #333;
+            font-size: 30rpx;
+            border-bottom: 1rpx solid #d8d8d8;
+            height: 90rpx;
+            margin-top: 20rpx;
+        }
+
+        &.inValid {
+            .form-input {
+                border-bottom: 1rpx solid #fa6855;
+            }
+        }
+
+        input::placeholder {
+            color: #666;
+        }
+
+        .error-tip {
+            color: #fa6855;
+            font-size: 26rpx;
+            height: 30rpx;
+            margin-top: 10rpx;
+        }
+
+        .send-captcha {
+            position: absolute;
+            right: 65rpx;
+            color: #1166ff;
+            font-size: 30rpx;
+            bottom: 25rpx;
+            z-index: 100;
+
+            &.is-send {
+                color: #999;
+                height: 50rpx;
+                background: #eeeeee;
+                padding: 0 10rpx;
+                font-size: 28rpx;
+                line-height: 50rpx;
+            }
+        }
     }
 }
 </style>

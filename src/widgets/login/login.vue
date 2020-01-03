@@ -8,13 +8,13 @@
             >
                 帐号登录
             </view>
-            <!-- <view
+            <view
                 class="tab col tab-register"
                 :class="{ active: activeTab === 1 }"
                 @click="activeTab = 1"
             >
                 手机号注册
-            </view> -->
+            </view>
             <view class="col" />
         </view>
 
@@ -54,13 +54,13 @@
                     placeholder="请输入密码"
                     password
                 >
-                <!-- <view
-                        v-if="!captcha.isSend"
-                        class="send-captcha"
-                        @click="sendCaptcha"
-                    >
-                        获取验证码
-                    </view> -->
+                <view
+                    v-if="!captcha.isSend"
+                    class="send-captcha"
+                    @click="sendCaptcha"
+                >
+                    获取验证码
+                </view>
                 <view
                     v-if="captcha.isSend"
                     class="send-captcha is-send"
@@ -101,12 +101,12 @@
                 >
                     密码登录
                 </view>
-                <!-- <view
+                <view
                     v-if="loginMode === 'password'"
                     @click="loginMode = 'sms'"
                 >
                     短信验证码登录
-                </view> -->
+                </view>
             </view>
 
             <view class="form-item-wrap">
@@ -179,8 +179,9 @@ export default {
     data() {
         return {
             formData: {
-                username: '',
-                password: '',
+                username:
+                    process.env.NODE_ENV === 'development' ? '13370123965' : '',
+                password: process.env.NODE_ENV === 'development' ? '111111' : '',
             },
             newUser: {
                 phone: '',
@@ -198,8 +199,8 @@ export default {
                 isSend: false,
             },
             activeTab: 0,
-            // loginMode: 'sms',
-            loginMode: 'password',
+            loginMode: 'sms',
+            // loginMode: 'password',
         };
     },
     methods: {

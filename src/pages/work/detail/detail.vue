@@ -132,7 +132,7 @@
                     class="icon"
                     src="/static/images/work/liked.png"
                 />
-                点赞
+                {{ likeStatus === 0 ? "点赞" : "已点赞" }}
             </view>
             <view class="sep" />
             <button
@@ -159,6 +159,7 @@
 <script>
 import api from '../../../common/api';
 import share from '../../../common/share';
+import utils from '../../../common/utils';
 
 export default {
     data() {
@@ -206,25 +207,36 @@ export default {
             this.getVerifyStatus();
         },
         toggleLike() {
+            const isLogin = utils.isLogin();
+
+            if (!isLogin) {
+                return uni.showToast({
+                    icon: 'none',
+                    title: '请先登录',
+                });
+            }
+
             const isLiked = this.likeStatus === 1;
-            api.get('/api/common/like', {
-                object_id: this.id,
-                object_type: 1,
-                // 1-点赞 0 取消点赞
-                type: isLiked ? 0 : 1,
-            }).then(
-                (res) => {
-                    console.log(res);
-                    this.likeStatus = isLiked ? 0 : 1;
-                    this.getData();
-                },
-                (err) => {
-                    uni.showToast({
-                        icon: 'none',
-                        title: err.message,
-                    });
-                },
-            );
+            return api
+                .get('/api/common/like', {
+                    object_id: this.id,
+                    object_type: 1,
+                    // 1-点赞 0 取消点赞
+                    type: isLiked ? 0 : 1,
+                })
+                .then(
+                    (res) => {
+                        console.log(res);
+                        this.likeStatus = isLiked ? 0 : 1;
+                        this.getData();
+                    },
+                    (err) => {
+                        uni.showToast({
+                            icon: 'none',
+                            title: err.message,
+                        });
+                    },
+                );
         },
         getLikeStatus() {
             api.get('/api/common/getlikestatus', {
@@ -266,6 +278,14 @@ export default {
             const artList = [
                 '我正在参加"青少年爱挑战"，快来为我点赞',
                 '炫出风采，为我点赞，你也一起来参加吧',
+                '我正在参加“爱挑战”才艺展示，快来围观我的精彩作品～',
+                '亮出才艺，秀我风采！',
+                '才艺小达人，等你来打call',
+                '嗨～动动手指，为才艺小达人点个赞吧！',
+                '天生有才，SHOW出精彩！快来看～',
+                '精彩才艺秀出来，你不来看看吗？',
+                '我怎么这么有才！快快来围观我的才艺展示～',
+                '在吗？给你看看超精彩的才艺秀，小朋友都可以参加～',
             ];
             let desc;
 
