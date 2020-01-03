@@ -5,8 +5,8 @@ console.log('API ENV ---:');
 console.log(API_ENV);
 
 const HOST = {
-    dev: 'http://aitiaozhan.wdyclass.com:8000',
-    // dev: 'http://yapi.wdcloud.cc/mock/119',
+    // dev: 'http://aitiaozhan.wdyclass.com:8000',
+    dev: 'http://yapi.wdcloud.cc/mock/119',
     test: 'http://aitiaozhan.test.wdyclass.com:8000',
     online: 'https://aitiaozhan.wdyedu.com',
 };
