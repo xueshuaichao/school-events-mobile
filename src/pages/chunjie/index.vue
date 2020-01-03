@@ -4,7 +4,7 @@
         <!-- 一个简单的name跳转 -->
         <view
             v-if="prompt"
-            class="activerule"
+            class="activerulebox"
         >
             <view
                 class="close"
@@ -160,7 +160,23 @@
                             帮TA投票
                         </view>
                     </view>
+                    <uni-load-more
+                        class="loadMore"
+                        :status="loadMoreStatus"
+                        :content-text="{
+                            contentdown: '上拉显示更多',
+                            contentrefresh: '正在加载...',
+                            contentnomore: '———— 已经到底了~ ————'
+                        }"
+                        color="#fff"
+                    />
                 </view>
+            </view>
+            <view class="upload">
+                上传作品
+            </view>
+            <view class="footer">
+                本次活动最终解释权在法律范围内属活动举办方所有
             </view>
         </view>
     </view>
@@ -168,12 +184,16 @@
 
 <script>
 import api from '../../common/api';
+import uniLoadMore from '../../components/uni-load-more/uni-load-more.vue';
 
 export default {
-    components: {},
+    components: {
+        uniLoadMore,
+    },
     data() {
         return {
             activeMenuIndex: 1,
+            loadMoreStatus: 'more',
             mediaIcon: {
                 1: '../../static/images/chunjie/video-icon.png',
                 2: '../../static/images/chunjie/img-icon.png',
@@ -182,6 +202,10 @@ export default {
             isPlayed: false,
             newsTabActiveIndex: 0,
             dataList: [],
+            filter: {
+                page_num: 1,
+                page_size: 10,
+            },
         };
     },
     onLoad() {},
@@ -195,10 +219,34 @@ export default {
                 console.log(res);
             });
         },
-        getData() {
-            api.post('/api/activity/resourcelist').then((res) => {
-                this.dataList = res.list;
-            });
+        getData(title) {
+            api.post('/api/activity/resourcelist', this.filter).then(
+                ({ list, total }) => {
+                    this.isLoading = false;
+                    if (title === 'reachBottom') {
+                        this.dataList = this.dataList.concat(list);
+                    } else {
+                        this.dataList = list;
+                    }
+
+                    this.total = total;
+                    if (
+                        this.total
+                        <= this.filter.page_num * this.filter.page_size
+                    ) {
+                        this.loadMoreStatus = 'noMore';
+                    } else {
+                        this.loadMoreStatus = 'more';
+                    }
+                },
+            );
+        },
+        onReachBottom() {
+            if (this.loadMoreStatus === 'more') {
+                this.filter.page_num = this.filter.page_num + 1;
+                this.loadMoreStatus = 'loading';
+                this.getData('reachBottom');
+            }
         },
         toggle(k) {
             this.activeMenuIndex = k;
@@ -231,6 +279,23 @@ export default {
 </script>
 
 <style lang="less">
+.loadMore {
+    width: 100%;
+}
+.footer {
+    text-align: center;
+    font-size: 22upx;
+    color: #fff;
+}
+.upload {
+    background: url("../../static/images/chunjie/upload_bg.png") no-repeat 100%;
+    background-size: 100% 100%;
+    text-align: center;
+    width: 100%;
+    line-height: 175upx;
+    height: 175upx;
+    font-size: 0;
+}
 .cansai-text {
     width: 312rpx;
     height: 44rpx;
@@ -352,7 +417,7 @@ export default {
     }
 }
 
-.activerule {
+.activerulebox {
     background: url("../../static/images/chunjie/bg.png") no-repeat;
     background-position: 25upx 57upx;
     background-color: rgba(0, 0, 0, 0.8);
@@ -436,7 +501,7 @@ export default {
 
     .menu-list {
         padding: 30upx;
-        margin-bottom: 40upx;
+        padding-bottom: 0;
         .search-box {
             overflow: hidden;
 
