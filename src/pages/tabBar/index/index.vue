@@ -14,6 +14,11 @@
         >
             我的作品
         </navigator>
+        <navigator url="/pages/chunjie/index">
+            <view class="chunjie-entry">
+                春节入口
+            </view>
+        </navigator>
         <view class="swiper main-swiper">
             <view class="page-section-spacing">
                 <swiper
@@ -371,7 +376,16 @@ uni-swiper {
 
 .page-index {
     padding-bottom: 20upx;
-
+    display: relative;
+    .chunjie-entry {
+        width: 100upx;
+        height: 100upx;
+        background: red;
+        position: fixed;
+        top: 200upx;
+        right: 0upx;
+        z-index: 999;
+    }
     .main-swiper {
         padding: 30upx;
 

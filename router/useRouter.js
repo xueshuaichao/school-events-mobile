@@ -50,12 +50,6 @@ const routesConfig = {
             name: 'tabbar-list',
         },
         {
-            path: '/pages/tabBar/challenge/challenge',
-            component: () => import('@/pages/tabBar/challenge/challenge.vue'),
-            aliasPath: '/challenge',
-            name: 'tabbar-challenge',
-        },
-        {
             path: '/pages/tabBar/upload/upload',
             component: () => import('@/pages/tabBar/upload/upload.vue'),
             aliasPath: '/upload',
@@ -133,12 +127,6 @@ const routesConfig = {
             name: 'work-detail',
             component: () => import('@/pages/work/detail/detail.vue'),
         },
-        // {
-        //     path: '/pages/test/404',
-        //     aliasPath: '/404',
-        //     name: '404',
-        //     component: () => import('@/pages/tabBar/index/index.vue'),
-        // },
         {
             path: '*',
             name: 'moddle',

@@ -19,18 +19,7 @@ const common = {
         uni.showShareMenu();
         share();
     },
-    onReady: () => {
-        // #ifdef H5
-        // 404
-        const pages = getCurrentPages();
-        if (!pages.length) {
-            console.log('__404__');
-            uni.switchTab({
-                url: '/pages/tabBar/index/index',
-            });
-        }
-        // #endif
-    },
+    onReady: () => {},
     onShareAppMessage(res) {
         if (res.from === 'button') {
             // 来自页面内分享按钮
