@@ -64,6 +64,49 @@
                 </view>
             </view>
         </view>
+        <!-- 奖项设置 -->
+        <view
+            v-if="prompt01"
+            class="activerulebox"
+        >
+            <view
+                class="close"
+                @click="handleClose"
+            />
+            <view class="title-icon">
+                奖项设置
+            </view>
+            <view class="active-content">
+                <view class="prize-box">
+                    <view
+                        v-for="item in prizeList"
+                        :key="item.name"
+                        class="prize-item"
+                    >
+                        <view>{{ item.prize_score }}</view>
+                        <view>
+                            <image
+                                src="../../static/images/chunjie/prize.png"
+                            />
+                        </view>
+                        <view>{{ item.name }}</view>
+                    </view>
+                </view>
+                <view>
+                    <view class="title">
+                        奖品兑换说明
+                    </view>
+                    <view class="text">
+                        1、每名参赛选手只有1次可兑换机会，如有同时获得了不同奖项以最高奖项为准。
+                        2、工作人员将于2月10日至2月12日期间电话联系获奖账号所绑定的手机号，电话无法联系的将视为自动放弃兑奖资格。
+                        3、礼品将于2月13-14日期间通过普通快递寄出。
+                        4、礼品属于用户奖励活动，不提供发票、收据。
+                        5、礼品不支持退换和售后，请当面核实无质量问题再签收。
+                        6、若因用户提供的收货地址等信息有误而未收到礼品，概不补发。
+                    </view>
+                </view>
+            </view>
+        </view>
         <view class="main-swiper">
             <view class="banner">
                 <view
@@ -92,7 +135,10 @@
                     <image src="../../static/images/chunjie/prize.png" />
                     <text>学习机*1个</text>
                 </view>
-                <view class="prize-more" />
+                <view
+                    class="prize-more"
+                    @click="handleMorePrize"
+                />
             </view>
             <image
                 class="cansai-text"
@@ -199,6 +245,7 @@ export default {
                 2: '../../static/images/chunjie/img-icon.png',
             },
             prompt: false,
+            prompt01: false,
             isPlayed: false,
             newsTabActiveIndex: 0,
             dataList: [],
@@ -206,6 +253,32 @@ export default {
                 page_num: 1,
                 page_size: 10,
             },
+            prizeList: [
+                {
+                    prize_score: '一等奖',
+                    name: '学习机*1个',
+                },
+                {
+                    prize_score: '一等奖',
+                    name: '学习机*1个',
+                },
+                {
+                    prize_score: '一等奖',
+                    name: '学习机*1个',
+                },
+                {
+                    prize_score: '一等奖',
+                    name: '学习机*1个',
+                },
+                {
+                    prize_score: '一等奖',
+                    name: '学习机*1个',
+                },
+                {
+                    prize_score: '一等奖',
+                    name: '学习机*1个',
+                },
+            ],
         };
     },
     onLoad() {},
@@ -214,6 +287,9 @@ export default {
         this.getTimelist();
     },
     methods: {
+        handleMorePrize() {
+            this.prompt01 = true;
+        },
         getTimelist() {
             api.post('/api/activity/timelist').then((res) => {
                 console.log(res);
@@ -256,6 +332,7 @@ export default {
         },
         handleClose() {
             this.prompt = false;
+            this.prompt01 = false;
         },
 
         onPlay() {
@@ -268,7 +345,7 @@ export default {
             this.isPlayed = true;
         },
         handleVote(id) {
-            api.get('/api/activity/vote', {
+            api.post('/api/activity/vote', {
                 id,
             }).then((res) => {
                 console.log(res);
@@ -279,6 +356,40 @@ export default {
 </script>
 
 <style lang="less">
+.prize-box {
+    // overflow: hidden;
+    display: flex;
+    justify-content: space-between;
+    flex-flow: row wrap;
+    .prize-item {
+        float: left;
+        width: 194upx;
+        text-align: center;
+        margin-bottom: 40upx;
+
+        view:first-child {
+            color: #fff4b8;
+            font-size: 34upx;
+            margin-bottom: 10upx;
+        }
+        view:nth-child(2) {
+            background: url("../../static/images/chunjie/prize-bg.png") 100%
+                100%;
+            width: 193upx;
+            height: 221upx;
+        }
+        image {
+            width: 131upx;
+            height: 120upx;
+            margin-top: 50upx;
+        }
+        view:last-child {
+            color: #fff;
+            font-size: 24upx;
+            margin-top: 10upx;
+        }
+    }
+}
 .loadMore {
     width: 100%;
 }
@@ -297,10 +408,10 @@ export default {
     font-size: 0;
 }
 .cansai-text {
-    width: 312rpx;
-    height: 44rpx;
-    margin-left: 220rpx;
-    margin-top: 20rpx;
+    width: 312upx;
+    height: 44upx;
+    margin-left: 220upx;
+    margin-top: 20upx;
 }
 .prize {
     background: url("../../static/images/chunjie/prize_bg.png") no-repeat 100%
@@ -315,7 +426,7 @@ export default {
         font-size: 24upx;
         text-align: center;
         float: left;
-        width: 154rpx;
+        width: 154upx;
 
         & text:first-child {
             color: #ff3442;
@@ -345,8 +456,8 @@ export default {
 .active-schedule {
     display: flex;
     justify-content: space-between;
-    padding: 0 30rpx;
-    margin-bottom: 15rpx;
+    padding: 0 30upx;
+    margin-bottom: 15upx;
 
     & text {
         border: 1px solid #ffcea2;
@@ -355,7 +466,7 @@ export default {
         height: 42upx;
         line-height: 42upx;
         font-size: 12px;
-        padding: 0 20rpx;
+        padding: 0 20upx;
     }
 }
 .banner {
@@ -383,15 +494,15 @@ export default {
             width: 100%;
             // left:0;
             // top:290upx;
-            font-size: 24rpx;
-            margin-bottom: 10rpx;
+            font-size: 24upx;
+            margin-bottom: 10upx;
         }
         .vote-num {
             color: #ffdf9f;
             font-size: 30upx;
             // left:0;
             // position: absolute;
-            // top: 283rpx;
+            // top: 283upx;
             float: left;
         }
         .vote {
@@ -403,7 +514,7 @@ export default {
             // position: absolute;
             // right:0;
             text-align: center;
-            line-height: 58rpx;
+            line-height: 58upx;
             font-weight: 700;
             float: right;
         }
@@ -431,14 +542,15 @@ export default {
     color: #fff;
     z-index: 999;
     .title {
-        font-size: 32rpx;
+        font-size: 32upx;
         color: #fff0a8;
         font-weight: bold;
-        margin-bottom: 24rpx;
+        margin-bottom: 24upx;
     }
 
     .text {
-        margin-bottom: 40rpx;
+        margin-bottom: 40upx;
+        font-size: 24upx;
     }
     .title-icon {
         background: url("../../static/images/chunjie/title.png") 100% 100%;
@@ -448,7 +560,7 @@ export default {
         top: 23upx;
         left: 167upx;
         text-align: center;
-        line-height: 99upx;
+        line-height: 69upx;
     }
     .close {
         background: url("../../static/images/chunjie/close.png") 100% 100%;
@@ -509,10 +621,10 @@ export default {
                 width: 140upx;
                 height: 94upx;
                 float: left;
-                line-height: 72rpx;
+                line-height: 72upx;
                 color: #ffffff;
                 background: transparent;
-                font-size: 30rpx;
+                font-size: 30upx;
                 font-weight: 700;
 
                 &.active {
@@ -549,10 +661,10 @@ export default {
                     left: 60upx;
                     font-size: 24upx;
                     color: #c9ac67;
-                    &::-webkit-input-placeholder {
-                        color: #c9ac67;
-                        font-size: 24upx;
-                    }
+                }
+                input::-webkit-input-placeholder {
+                    color: #c9ac67;
+                    font-size: 24upx;
                 }
             }
         }
