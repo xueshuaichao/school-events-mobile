@@ -14,6 +14,12 @@
         >
             我的作品
         </navigator>
+        <navigator url="/pages/work/festival/festival?id=115">
+            横着视频作品
+        </navigator>
+        <navigator url="/pages/work/festival/festival?id=131">
+            竖着视频作品
+        </navigator>
         <navigator url="/pages/chunjie/index">
             <view class="chunjie-entry">
                 春节入口

@@ -69,7 +69,7 @@
                     class="video"
                     :poster="pageData.video_img_url"
                     :src="pageData.video.cloud_path_sd"
-                    controls
+                    :controls="false"
                     @play="onPlay"
                     @fullscreenchange="onFullScreenChange"
                 />
@@ -117,6 +117,7 @@
             </view>
         </view>
 
+        <!--
         <view class="fixed-bottom-bar">
             <view
                 class="sect"
@@ -146,6 +147,7 @@
                 />分享
             </button>
         </view>
+        -->
 
         <image
             v-if="!isH5"
@@ -300,8 +302,8 @@ export default {
             });
         },
         joinGame() {
-            uni.switchTab({
-                url: '/pages/tabBar/upload/upload',
+            uni.navigateTo({
+                url: '/pages/upload/festival/festival',
             });
         },
     },
@@ -336,6 +338,9 @@ export default {
 
 <style lang="less">
 .page-work-detail {
+    background: #000;
+    height: 100vh;
+
     .h5-full-screen-title {
         position: fixed;
         width: 100%;
@@ -391,17 +396,22 @@ export default {
 
     .video-wrap {
         width: 100%;
-        height: 422rpx;
+        height: 100%;
     }
 
     .video {
+        max-width: 100%;
+        max-height: 100%;
         width: 100%;
-        height: 422upx;
+        height: 100%;
     }
 
     .content {
+        position: absolute;
+        bottom: 0;
+        width: 100%;
         padding: 30upx;
-        color: #666;
+        color: #fff;
 
         .author {
             margin-bottom: 32upx;
@@ -424,7 +434,7 @@ export default {
                 overflow: hidden;
 
                 .author-name {
-                    color: #333;
+                    color: #fff;
                     font-size: 28upx;
                     margin-bottom: 10upx;
                 }
@@ -437,7 +447,7 @@ export default {
 
         .work-name {
             font-size: 32upx;
-            color: #333;
+            color: #fff;
             margin-bottom: 24upx;
             font-weight: 500;
         }
