@@ -2,6 +2,18 @@
     <view class="page-index">
         <!-- swiper -->
         <!-- 一个简单的name跳转 -->
+        <navigator
+            class="item"
+            url="/pages/upload/festival/festival"
+        >
+            上传入口
+        </navigator>
+        <navigator
+            class="item"
+            url="/pages/upload/work/work"
+        >
+            我的作品
+        </navigator>
         <navigator url="/pages/chunjie/index">
             <view class="chunjie-entry">
                 春节入口

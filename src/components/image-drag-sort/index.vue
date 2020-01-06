@@ -6,7 +6,6 @@
                     v-for="(item, index) in lists"
                     :key="index"
                     class="item"
-                    @click="imageTap(index)"
                     @longpress="longtap"
                     @touchend="touchend"
                     @touchmove.stop="touchm"
@@ -15,7 +14,13 @@
                         class="img"
                         :src="item"
                         mode="aspectFill"
+                        @click="imageTap(index)"
                     />
+                    <img
+                        class="icon-del"
+                        src="/static/images/work/icon-del.png"
+                        @click="imageDel(index)"
+                    >
                 </view>
                 <movable-view
                     v-show="active"
@@ -292,7 +297,7 @@ export default {
 
 .image-drag-sort {
     width: 100%;
-    padding: 30upx;
+    /* padding: 30upx; */
     box-sizing: border-box;
 }
 
@@ -306,8 +311,9 @@ export default {
 .item {
     flex: 0 0 31%;
     height: calc(31vw * 0.7);
-    overflow: hidden;
+    /* overflow: hidden; */
     border-radius: 12upx;
+    position: relative;
 }
 
 .item:not(:nth-child(3n + 3)) {
@@ -358,5 +364,14 @@ export default {
     line-height: 40upx;
     color: #999;
     margin-top: 28upx;
+}
+
+.icon-del {
+    position: absolute;
+    right: -19rpx;
+    top: -19rpx;
+    display: inline-block;
+    width: 38rpx;
+    height: 38rpx;
 }
 </style>

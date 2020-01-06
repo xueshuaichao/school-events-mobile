@@ -77,22 +77,36 @@ export default {
     data() {
         return {
             type: '',
+            from: '',
         };
     },
     methods: {
         reUpload() {
-            uni.switchTab({
-                url: '/pages/tabBar/upload/upload',
-            });
+            if (this.from === 'upload') {
+                uni.switchTab({
+                    url: '/pages/tabBar/upload/upload',
+                });
+            } else if (this.from === 'festival') {
+                uni.reLaunch({
+                    url: '/pages/upload/festival/festival',
+                });
+            }
         },
         goToUc() {
-            uni.reLaunch({
-                url: '/pages/tabBar/uc/uc',
-            });
+            if (this.from === 'upload') {
+                uni.reLaunch({
+                    url: '/pages/tabBar/uc/uc',
+                });
+            } else if (this.from === 'festival') {
+                uni.reLaunch({
+                    url: '/pages/upload/work/work',
+                });
+            }
         },
     },
     onLoad(params) {
         this.type = params.type || 'success';
+        this.from = params.from || 'upload';
     },
 };
 </script>
