@@ -12,7 +12,8 @@
                 class="thumbnail"
                 :src="
                     info.video_img_url ||
-                        '/static/images/index/pic.png' | optimizeImage
+                        'http://aitiaozhan.oss-cn-beijing.aliyuncs.com/pic.png'
+                        | optimizeImage
                 "
             />
             <view class="img-mask" />

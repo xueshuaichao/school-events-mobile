@@ -2,15 +2,12 @@
     <view class="page-my-work">
         <!-- identity 用户身份 1=>C端普通用户 ,2=> 教育局员工，3=>学校员工 4 学生 -->
         <!-- my works -->
-        <view
-            v-if="true || (userInfo.identity === 3 || userInfo.identity === 4)"
-            class="panel"
-        >
+        <view class="panel">
             <view class="panel-hd">
                 <text
                     class="panel-title"
-                    :class="{ active: tabActiveIndex === 0 }"
-                    @click="setTabActive(0)"
+                    :class="{ active: tabActiveIndex === 2 }"
+                    @click="setTabActive(2)"
                 >
                     已通过({{ workStatics.pass_num || 0 }})
                 </text>
@@ -19,164 +16,100 @@
                     :class="{ active: tabActiveIndex === 1 }"
                     @click="setTabActive(1)"
                 >
-                    待审核({{ workStatics.no_verify_num || 0 }})
+                    待审核1({{ workStatics.no_verify_num || 0 }})
                 </text>
                 <text
                     class="panel-title"
-                    :class="{ active: tabActiveIndex === 2 }"
-                    @click="setTabActive(2)"
+                    :class="{ active: tabActiveIndex === 3 }"
+                    @click="setTabActive(3)"
                 >
                     未通过({{ workStatics.refuse_num || 0 }})
                 </text>
             </view>
-            <view
-                v-if="!isLoadingTableData"
-                class="panel-bd work-list"
-            >
-                <template v-if="tableData.length">
-                    <view
-                        v-for="item in tableData"
-                        :key="item.id"
-                        class="work-item"
-                    >
-                        <work
-                            :info="item"
-                            :mode="'single'"
-                        />
+            <view class="media-box">
+                <view
+                    v-for="item in dataList"
+                    :key="item.id"
+                    class="media-content"
+                >
+                    <image
+                        v-if="item.resource_type === 1"
+                        src="https://via.placeholder.com/150/771796"
+                        class="work"
+                    />
+                    <image
+                        v-else-if="item.resource_type === 2"
+                        src="https://via.placeholder.com/150/771796"
+                        class="work"
+                    />
+                    <image
+                        class="media-icon"
+                        :src="mediaIcon[item.resource_type]"
+                    />
+                    <view class="work-info">
+                        <view class="media-name">
+                            快来听听我的新年第一首作品
+                        </view>
+                        <view class="media-time">
+                            2020-01-10 11:40
+                        </view>
+                        <text class="vote-num">
+                            1200票
+                        </text>
                     </view>
-                </template>
-                <template v-else>
-                    <blank />
-                </template>
+                </view>
             </view>
-        </view>
-
-        <view v-else>
-            <view class="sep" />
-            <blank :type="'uc'" />
         </view>
     </view>
 </template>
 
 <script>
 import api from '../../../common/api';
-import work from '../../../components/work/work.vue';
-import blank from '../../../widgets/blank/blank.vue';
 
 export default {
-    components: {
-        blank,
-        work,
-    },
+    components: {},
     data() {
         return {
-            isLoading: true,
-            userInfo: null,
-
-            // #ifdef H5
-            isH5: true,
-            // #endif
-
+            dataList: [
+                {
+                    id: 1,
+                    resource_type: 1,
+                },
+                {
+                    id: 2,
+                    resource_type: 2,
+                },
+            ],
+            mediaIcon: {
+                1: '../../../static/images/chunjie/video-icon.png',
+                2: '../../../static/images/chunjie/img-icon.png',
+            },
             tabActiveIndex: 1,
             workStatics: {},
-            isLoadingTableData: true,
-            tableData: [],
+            filter: {
+                page_num: 1,
+                page_size: 10,
+                activity_id: 3,
+            },
         };
     },
     methods: {
-        getWorkStatic() {
-            api.get('/api/user/workstatics').then(
-                (res) => {
-                    // this.workStatics = res[0];
-                    [this.workStatics] = res;
-                },
-                () => {},
-            );
-        },
-        editWork(item) {
-            uni.navigateTo({
-                url: `/pages/upload/modify/modify?id=${item.id}`,
-            });
-        },
-        deleteWork(item) {
-            const index = this.tableData.indexOf(item);
-
-            api.post('/api/user/delwork', {
-                id: item.id,
-            }).then((res) => {
-                uni.showToast({
-                    title: '删除成功',
-                });
-                console.log(res);
-                if (index !== -1) {
-                    this.tableData.splice(index, 1);
-                }
-                this.getWorkStatic();
-            });
-        },
-        getWorkData() {
-            this.getWorkStatic();
-            // 作品状态 status 0—待审核 1—已通过 2—未通过 -1 全部
-            let status = 1;
-            if (this.tabActiveIndex === 1) {
-                status = 0;
-            } else if (this.tabActiveIndex === 2) {
-                status = 2;
-            }
+        getWorkData(i) {
             return api
-                .get('/api/user/worklist', {
-                    status,
-                    page_size: 100,
+                .get('/api/activity/userresource', {
+                    ...this.filter,
+                    status: i,
                 })
                 .then(
                     (res) => {
-                        this.isLoadingTableData = false;
-                        this.tableData = res.list;
+                        console.log(res);
                     },
-                    () => {
-                        this.tableData = [];
-                    },
+                    () => {},
                 );
         },
         setTabActive(i) {
             this.tabActiveIndex = i;
-            this.getWorkData();
-        },
-        onConfirmDelete(item) {
-            uni.showModal({
-                title: '删除提示',
-                content: '作品删除后将无法恢复 \n 确定删除吗？',
-                confirmText: '确定删除',
-                cancelText: '暂不删除',
-                cancelColor: '#1166FF',
-                confirmColor: '#999999',
-                success: (res) => {
-                    if (res.confirm) {
-                        this.deleteWork(item);
-                        console.log('用户点击确定');
-                    } else if (res.cancel) {
-                        uni.showToast({
-                            title: '删除失败',
-                            icon: 'none',
-                        });
-                        console.log('用户点击取消');
-                    }
-                },
-            });
-        },
-        onShareAppMessage(res) {
-            if (res.from === 'button') {
-                // 来自页面内分享按钮
-                const index = res.target.id;
-                const item = this.tableData[index];
-
-                return {
-                    title: item.resource_name,
-                    imageUrl: item.video_img_url,
-                    path: `/pages/work/detail/detail?id=${item.id}`,
-                };
-            }
-            return false;
+            this.getWorkData(i);
         },
     },
     onLoad() {
@@ -186,12 +119,66 @@ export default {
 </script>
 
 <style lang="less">
+.media-box {
+    // display: flex;
+    // justify-content: space-between;
+    // flex-flow: row wrap;
+    overflow: hidden;
+    padding-left: 30upx;
+    .media-content {
+        width: 690upx;
+        padding: 21upx;
+        box-sizing: border-box;
+        display: flex;
+        justify-content: space-between;
+        position: relative;
+        background: #fff6e1;
+        color: #ff3849;
+        margin-bottom: 20upx;
+        border-radius: 20upx;
+        .work {
+            width: 335upx;
+            height: 225upx;
+            border-radius: 20upx;
+        }
+        .media-icon {
+            width: 40upx;
+            height: 40upx;
+            position: absolute;
+            top: 175upx;
+            left: 143upx;
+        }
+        .work-info {
+            width: 270upx;
+            position: relative;
+            .media-name {
+                width: 100%;
+                font-size: 28upx;
+                margin-bottom: 10upx;
+            }
+            .media-time {
+                color: #c9ac67;
+                font-size: 24upx;
+            }
+            .vote-num {
+                font-size: 30upx;
+                left: 0;
+                position: absolute;
+                bottom: 14upx;
+            }
+        }
+    }
+}
 .page-my-work {
-    background: #ff3844;
+    width: 100%;
+    height: 100%;
+    background: url("../../../static/images/chunjie/main_bg.png") repeat-y;
 
     .panel .panel-hd {
         border-bottom: none;
         margin: 0 30rpx 20rpx;
+        display: flex;
+        justify-content: space-around;
     }
 
     .panel .panel-hd .panel-title {

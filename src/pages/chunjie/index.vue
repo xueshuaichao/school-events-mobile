@@ -139,8 +139,15 @@
                 <view
                     class="active-rule"
                     @click="handleActiverule"
-                />
-                <view class="menu-title" />
+                >
+                    活动规则
+                </view>
+                <view
+                    class="menu-title"
+                    @click="handleMywork"
+                >
+                    我的作品
+                </view>
             </view>
             <view class="active-schedule">
                 <text>活动时间：1月10日-2月6日</text>
@@ -237,9 +244,9 @@
                             class="media-icon"
                             :src="mediaIcon[item.resource_type]"
                         />
-                        <div class="media-name">
+                        <view class="media-name">
                             dfgdgdgdfgfg
-                        </div>
+                        </view>
                         <text class="vote-num">
                             1200票
                         </text>
@@ -335,16 +342,10 @@ export default {
     onLoad() {},
     created() {
         this.getData();
-        this.getTimelist();
     },
     methods: {
         handleMorePrize() {
             this.prompt01 = true;
-        },
-        getTimelist() {
-            api.post('/api/activity/timelist').then((res) => {
-                console.log(res);
-            });
         },
         getData(title) {
             api.post('/api/activity/resourcelist', this.filter).then(
@@ -391,6 +392,11 @@ export default {
         },
         handleActiverule() {
             this.prompt = true;
+        },
+        handleMywork() {
+            uni.navigateTo({
+                url: '/pages/upload/work/work',
+            });
         },
         handleClose() {
             this.prompt = false;
@@ -693,6 +699,7 @@ export default {
             left: 10upx;
             width: 128upx;
             height: 40upx;
+            font-size: 0;
         }
         .menu-title {
             position: absolute;
@@ -700,6 +707,7 @@ export default {
             right: 10upx;
             width: 128upx;
             height: 40upx;
+            font-size: 0;
         }
     }
 
