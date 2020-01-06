@@ -42,7 +42,7 @@
                         >
                             <image
                                 class="banner-image"
-                                src="/static/images/chunjie/banner.png"
+                                src="http://aitiaozhan.oss-cn-beijing.aliyuncs.com/banner4.png"
                             />
                         </navigator>
                     </swiper-item>
@@ -53,7 +53,7 @@
                         >
                             <image
                                 class="banner-image"
-                                src="/static/images/index/banner0.jpg"
+                                src="http://aitiaozhan.oss-cn-beijing.aliyuncs.com/banner0.jpg"
                             />
                         </navigator>
                     </swiper-item>
@@ -61,7 +61,7 @@
                         <view class="swiper-item">
                             <image
                                 class="banner-image"
-                                src="/static/images/index/banner1.jpg"
+                                src="http://aitiaozhan.oss-cn-beijing.aliyuncs.com/banner1.jpg"
                             />
                         </view>
                     </swiper-item>
@@ -69,7 +69,7 @@
                         <view class="swiper-item">
                             <image
                                 class="banner-image"
-                                src="/static/images/index/banner2.jpg"
+                                src="http://aitiaozhan.oss-cn-beijing.aliyuncs.com/banner2.jpg"
                             />
                         </view>
                     </swiper-item>
@@ -77,7 +77,7 @@
                         <view class="swiper-item">
                             <image
                                 class="banner-image"
-                                src="/static/images/index/banner3.jpg"
+                                src="http://aitiaozhan.oss-cn-beijing.aliyuncs.com/banner3.jpg"
                             />
                         </view>
                     </swiper-item>
