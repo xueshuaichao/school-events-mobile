@@ -114,6 +114,19 @@
                 "navigationBarTitleText": "上传作品"
             }
         },
+        {
+            "path": "pages/upload/work/work",
+            "style": {
+                "navigationBarTitleText": "我的作品"
+            }
+        },
+        // 活动详情
+        {
+            "path": "pages/upload/festival/festival",
+            "style": {
+                "navigationBarTitleText": "上传作品"
+            }
+        },
         // 地址详情
         {
             "path": "pages/address/index",
