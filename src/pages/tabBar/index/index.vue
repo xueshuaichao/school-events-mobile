@@ -19,6 +19,17 @@
                 >
                     <swiper-item>
                         <navigator
+                            url="/pages/chunjie/index"
+                            class="swiper-item"
+                        >
+                            <image
+                                class="banner-image"
+                                src="/static/images/chunjie/banner.png"
+                            />
+                        </navigator>
+                    </swiper-item>
+                    <swiper-item>
+                        <navigator
                             url="/pages/doc/notice/notice"
                             class="swiper-item"
                         >
@@ -366,11 +377,13 @@ uni-swiper {
     padding-bottom: 20upx;
     display: relative;
     .chunjie-entry {
-        width: 100upx;
-        height: 100upx;
-        background: red;
+        font-size: 0;
+        background: url("../../../static/images/chunjie/suspension.png") 100%
+            100% no-repeat;
+        width: 165upx;
+        height: 157upx;
         position: fixed;
-        top: 200upx;
+        top: 640upx;
         right: 0upx;
         z-index: 999;
     }

@@ -19,7 +19,7 @@
                         活动时间
                     </view>
                     <view class="text">
-                        2020年1月10日至2020年2月7日
+                        2020年1月10日至2020年2月6日
                     </view>
                 </view>
                 <view>
@@ -35,7 +35,7 @@
                         参赛节目
                     </view>
                     <view class="text">
-                        节目类别分为歌舞类、语言类、书画类、摄影类、创意制作类
+                        节目类别分为歌唱表演、舞蹈表演、创意制作、口才表演、乐器演奏、书法绘画、杂技、魔术、摄影
                     </view>
                 </view>
                 <view>
@@ -43,11 +43,15 @@
                         作品要求
                     </view>
                     <view class="text">
-                        *
-                        视频格式：支持MP4、MOV、3GP、MP4V、M4V、MKV、AVI、FLV等，视频时长不超过3分钟；单张图片小于10MB。
-                        *
-                        内容：如果发现有用户上传不合规内容，如涉及攻击我国政治制度、法律制度、黄赌毒、封建迷信等违背社会主义核心价值观的内容、
-                        非原创、盗窃他人或平台的内容、或恶意刷点赞量等扰乱秩序者，该账户将取消活动参与资格，不合规视频将被删除。
+                        <ul>
+                            <li>
+                                视频格式：支持MP4、MOV、3GP、MP4V、M4V、MKV、AVI、FLV等，视频时长不超过3分钟；单张图片小于10MB。
+                            </li>
+                            <li>
+                                内容：如果发现有用户上传不合规内容，如涉及攻击我国政治制度、法律制度、黄赌毒、封建迷信等违背社会主义核心价值观的内容、
+                                非原创、盗窃他人或平台的内容、或恶意刷点赞量等扰乱秩序者，该账户将取消活动参与资格，不合规视频将被删除。
+                            </li>
+                        </ul>
                     </view>
                 </view>
                 <view>
@@ -55,11 +59,24 @@
                         参赛规则
                     </view>
                     <view class="text">
-                        参赛者在爱挑战注册并通过Web或小程序端的才艺秀界面上传才艺视频，上传视频后，可邀请亲友投票。
-                        未传视频的注册用户只能为参赛选手投票，无法参与排行榜活动。
-                        每个账户每天只能为同一作品投票1次。
-                        系统将根据作品票数进行排名，排行榜将以2020年2月7日11：59分时的排名为最终结果，上榜者可获得相应礼品。
-                        获奖名单将于2月8日（元宵节）在爱挑战官网（http://atz.qsnatz.com/）及官方服务号（UP青少年爱挑战）进行公布。
+                        <ul>
+                            <li>
+                                参赛者在爱挑战注册并通过小程序活动界面上传作品，审核通过后可邀请亲友点赞
+                            </li>
+                            <li>
+                                未传视频的注册用户只能为参赛选手投票，无法参与排行榜活动。
+                            </li>
+                            <li>
+                                每个账户每天只能为同一作品投票1次。
+                            </li>
+                            <li>
+                                排行榜，将根据视频点赞量进行排名，排行榜将以2020年2月6日11：59分时的排名为最终结果，上榜者可获得相应礼品
+                            </li>
+                            <li>
+                                获奖名单将于2月8日（元宵节）在爱挑战官网(http://atz.qsnatz.com)
+                                及官方服务号（UP青少年爱挑战）进行公布
+                            </li>
+                        </ul>
                     </view>
                 </view>
             </view>
@@ -85,9 +102,7 @@
                     >
                         <view>{{ item.prize_score }}</view>
                         <view>
-                            <image
-                                src="../../static/images/chunjie/prize.png"
-                            />
+                            <image :src="item.prize" />
                         </view>
                         <view>{{ item.name }}</view>
                     </view>
@@ -97,12 +112,24 @@
                         奖品兑换说明
                     </view>
                     <view class="text">
-                        1、每名参赛选手只有1次可兑换机会，如有同时获得了不同奖项以最高奖项为准。
-                        2、工作人员将于2月10日至2月12日期间电话联系获奖账号所绑定的手机号，电话无法联系的将视为自动放弃兑奖资格。
-                        3、礼品将于2月13-14日期间通过普通快递寄出。
-                        4、礼品属于用户奖励活动，不提供发票、收据。
-                        5、礼品不支持退换和售后，请当面核实无质量问题再签收。
-                        6、若因用户提供的收货地址等信息有误而未收到礼品，概不补发。
+                        <view>
+                            1、每名参赛选手只有1次可兑换机会，如有同时获得了不同奖项以最高奖项为准。
+                        </view>
+                        <view>
+                            2、工作人员将于2月10日至2月12日期间电话联系获奖账号所绑定的手机号，电话无法联系的将视为自动放弃兑奖资格。
+                        </view>
+                        <view>
+                            3、礼品将于2月13-14日期间通过普通快递寄出。
+                        </view>
+                        <view>
+                            4、礼品属于用户奖励活动，不提供发票、收据。
+                        </view>
+                        <view>
+                            5、礼品不支持退换和售后，请当面核实无质量问题再签收。
+                        </view>
+                        <view>
+                            6、若因用户提供的收货地址等信息有误而未收到礼品，概不补发。
+                        </view>
                     </view>
                 </view>
             </view>
@@ -146,12 +173,21 @@
             />
             <!-- work show -->
             <view class="menu-list">
+                <!-- <ul>
+                            <li>
+                                视频格式：支持MP4、MOV、3GP、MP4V、M4V、MKV、AVI、FLV等，视频时长不超过3分钟；单张图片小于10MB。
+                            </li>
+                            <li>
+                            内容：如果发现有用户上传不合规内容，如涉及攻击我国政治制度、法律制度、黄赌毒、封建迷信等违背社会主义核心价值观的内容、
+                        非原创、盗窃他人或平台的内容、或恶意刷点赞量等扰乱秩序者，该账户将取消活动参与资格，不合规视频将被删除。
+                            </li>
+                        </ul> -->
                 <view class="search-box">
                     <button
                         :class="{
                             active: activeMenuIndex === 1
                         }"
-                        @click="toggle(1)"
+                        @click="toggle('hot')"
                     >
                         最热
                     </button>
@@ -159,7 +195,7 @@
                         :class="{
                             active: activeMenuIndex === 2
                         }"
-                        @click="toggle(2)"
+                        @click="toggle('new')"
                     >
                         最新
                     </button>
@@ -168,7 +204,10 @@
                             src="../../static/images/chunjie/search-icon.png"
                         />
 
-                        <input placeholder="请输入作者姓名或作品名称">
+                        <input
+                            placeholder="请输入作者姓名或作品名称"
+                            bindconfirm="bindconfirm"
+                        >
                     </view>
                 </view>
                 <view class="media-box">
@@ -177,12 +216,17 @@
                         :key="item.id"
                         class="media-content"
                     >
-                        <video
+                        <!-- <video
                             v-if="item.resource_type === 1"
                             class="video"
                             :poster="item.video_img_url"
                             controls
                             @play="onPlay"
+                        /> -->
+                        <image
+                            v-if="item.resource_type === 1"
+                            src="https://via.placeholder.com/150/771796"
+                            class="video"
                         />
                         <image
                             v-else-if="item.resource_type === 2"
@@ -250,6 +294,7 @@ export default {
             newsTabActiveIndex: 0,
             dataList: [],
             filter: {
+                activity_id: 3,
                 page_num: 1,
                 page_size: 10,
             },
@@ -257,26 +302,32 @@ export default {
                 {
                     prize_score: '一等奖',
                     name: '学习机*1个',
+                    prize: '../../static/images/chunjie/prize01.png',
                 },
                 {
-                    prize_score: '一等奖',
-                    name: '学习机*1个',
+                    prize_score: '二等奖',
+                    name: '小度*4个',
+                    prize: '../../static/images/chunjie/prize02.png',
                 },
                 {
-                    prize_score: '一等奖',
-                    name: '学习机*1个',
+                    prize_score: '三等奖',
+                    name: '无人机*6个',
+                    prize: '../../static/images/chunjie/prize03.png',
                 },
                 {
-                    prize_score: '一等奖',
-                    name: '学习机*1个',
+                    prize_score: '四等奖',
+                    name: '护眼灯*8个',
+                    prize: '../../static/images/chunjie/prize04.png',
                 },
                 {
-                    prize_score: '一等奖',
-                    name: '学习机*1个',
+                    prize_score: '五等奖',
+                    name: '液晶手写板*20个',
+                    prize: '../../static/images/chunjie/prize05.png',
                 },
                 {
-                    prize_score: '一等奖',
-                    name: '学习机*1个',
+                    prize_score: '六等奖',
+                    name: '蓝牙音箱*20个',
+                    prize: '../../static/images/chunjie/prize06.png',
                 },
             ],
         };
@@ -324,8 +375,19 @@ export default {
                 this.getData('reachBottom');
             }
         },
+        bindconfirm(e) {
+            if (!e.target.value) {
+                return;
+            }
+            this.filter.search = e.target.value.trim();
+            this.filter.page_num = 1;
+            this.getData();
+        },
         toggle(k) {
             this.activeMenuIndex = k;
+            this.filter.sort = k;
+            this.filter.page_num = 1;
+            this.getData();
         },
         handleActiverule() {
             this.prompt = true;
@@ -356,6 +418,22 @@ export default {
 </script>
 
 <style lang="less">
+._ul {
+    ._li {
+        position: relative;
+        padding-left: 23upx;
+        &::before {
+            position: absolute;
+            width: 10upx;
+            height: 10upx;
+            background: #fff;
+            border-radius: 50%;
+            content: "";
+            top: 13upx;
+            left: 1upx;
+        }
+    }
+}
 .prize-box {
     // overflow: hidden;
     display: flex;
@@ -536,11 +614,12 @@ export default {
     width: 100%;
     height: 100%;
     box-sizing: border-box;
-    // height:1229upx;
-    // width:700upx;
     position: fixed;
     color: #fff;
     z-index: 999;
+    &:first-child {
+        font-size: 28upx;
+    }
     .title {
         font-size: 32upx;
         color: #fff0a8;
@@ -571,13 +650,26 @@ export default {
         position: absolute;
     }
     .active-content {
-        overflow: scroll;
+        .size {
+            font-size: 28upx;
+        }
+        overflow-y: scroll;
         position: absolute;
         top: 116upx;
-        left: 63upx;
+        left: 29upx;
         height: 1033upx;
-        width: 621upx;
+        width: 678upx;
+        padding: 0 30upx;
+        box-sizing: border-box;
+        padding-right: 20upx;
     }
+}
+::-webkit-scrollbar {
+    width: 4upx;
+    background-color: transparent;
+}
+::-webkit-scrollbar-thumb {
+    background-color: #ffe4a2;
 }
 .page-index {
     padding-bottom: 20upx;

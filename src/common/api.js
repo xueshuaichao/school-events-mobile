@@ -29,7 +29,7 @@ function post(url, data) {
             }
 
             if (res.data.status === 200) {
-                return res.data.date;
+                return res.data.data;
             }
 
             throw new Error(res.data.msg);
