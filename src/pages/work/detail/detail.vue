@@ -91,7 +91,10 @@
                         {{ pageData.create_name }}
                     </view>
                     <view class="author-from">
-                        {{ pageData.school_name }}{{ pageData.grade_name }}
+                        {{
+                            pageData.school_name + pageData.grade_name ||
+                                "北京小学-一年级"
+                        }}
                     </view>
                 </view>
             </view>
@@ -247,6 +250,7 @@ export default {
         },
         onPlay() {
             if (!this.isPlayed) {
+                this.pageData.play_count = this.pageData.play_count + 1;
                 api.get('/api/works/playcount', {
                     id: this.id,
                 });

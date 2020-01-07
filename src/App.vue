@@ -37,6 +37,14 @@ uni-tabbar .uni-tabbar__bd {
     -webkit-box-orient: vertical;
 }
 
+.text-three-line {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+}
+
 .page-rich-text {
     color: #333;
     font-size: 28upx;

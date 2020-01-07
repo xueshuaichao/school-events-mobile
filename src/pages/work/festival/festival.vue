@@ -76,44 +76,55 @@
             </template>
         </view>
         <view class="content">
-            <view class="author">
-                <view class="author-avator">
-                    <image
-                        class="avatar"
-                        :src="
-                            pageData.create_user_avatar_url ||
-                                '/static/images/uc/avatar.png'
-                        "
-                    />
-                </view>
-                <view class="author-info">
-                    <view class="author-name text-one-line">
-                        {{ pageData.create_name }}
-                    </view>
-                    <view class="author-from">
-                        {{ pageData.school_name }}{{ pageData.grade_name }}
-                    </view>
-                </view>
-            </view>
-            <view class="work-name">
-                {{ pageData.resource_name }}
+            <view class="author-info">
                 <image
-                    v-if="
-                        pageData.resource_scope === 1 ||
-                            pageData.resource_scope === 2
-                    "
-                    class="icon-grail"
-                    src="/static/images/work/grail.png"
+                    class="avatar"
+                    src="/static/images/work/avatar.png"
                 />
+                <text class="author-name text-one-line">
+                    {{ pageData.create_name }}
+                </text>
             </view>
-            <view class="extra">
+            <view class="author-from">
+                {{
+                    pageData.school_name + pageData.grade_name ||
+                        "北京小学-一年级"
+                }}
+            </view>
+            <view class="work-name-wrap">
+                <image
+                    class="avatar"
+                    src="/static/images/work/file.png"
+                />
+                <text class="work-name text-one-line">
+                    {{ pageData.resource_name }}
+                </text>
+            </view>
+            <!-- <view class="extra">
                 {{ pageData.publish_time }}
                 {{ pageData.play_count }}次播放 点赞：{{
                     pageData.praise_count
                 }}
+            </view> -->
+            <view class="intro text-three-line">
+                {{
+                    pageData.introduce ||
+                        "这是简介信息这是简介信息这是简介信息这是简介信息这是简介信息这是简介信息这是简介信息这是简介信息这是简介信息这是简介信息这是简介信息"
+                }}
             </view>
-            <view class="intro">
-                {{ pageData.introduce || "这是简介信息" }}
+            <view class="from">
+                <text
+                    v-if="true || pageData.recommend"
+                    class="recommend text-one-line"
+                >
+                    单位：{{ pageData.recommend || "是简介信息这是简介信息这" }}
+                </text>
+                <text
+                    v-if="true || pageData.teacher"
+                    class="teacher text-one-line"
+                >
+                    指导老师：{{ pageData.teacher || "李四" }}
+                </text>
             </view>
         </view>
 
@@ -149,9 +160,27 @@
         </view>
         -->
 
+        <view class="fixed-panel">
+            <view class="result">
+                {{ pageData.praise_count }}票
+            </view>
+            <button
+                class="btn"
+                @click="toggleLike"
+            >
+                {{ likeStatus === 0 ? "投TA一票" : "已投票" }}
+            </button>
+            <button
+                class="btn"
+                open-type="share"
+            >
+                帮TA拉票
+            </button>
+        </view>
+
         <image
             v-if="!isH5"
-            src="/static/images/work/join.png"
+            src="/static/images/work/festival.png"
             class="join-game"
             @click="joinGame"
         />
@@ -409,47 +438,38 @@ export default {
     .content {
         position: absolute;
         bottom: 0;
-        width: 100%;
+        width: 480rpx;
         padding: 30upx;
         color: #fff;
 
-        .author {
-            margin-bottom: 32upx;
-            display: flex;
+        .avatar {
+            display: inline-block;
+            width: 24rpx;
+            height: 26rpx;
+            margin-right: 16upx;
+        }
 
-            .author-avator {
-                width: 72upx;
-                margin-right: 16upx;
-
-                .avatar {
-                    display: inline-block;
-                    width: 72upx;
-                    height: 72upx;
-                    border-radius: 36upx;
-                }
+        .author-info {
+            .author-name {
+                color: #fff;
+                font-size: 28upx;
+                position: relative;
+                top: -2rpx;
             }
+            margin-bottom: 15rpx;
+        }
 
-            .author-info {
-                flex: 1;
-                overflow: hidden;
-
-                .author-name {
-                    color: #fff;
-                    font-size: 28upx;
-                    margin-bottom: 10upx;
-                }
-
-                .author-from {
-                    font-size: 22upx;
-                }
-            }
+        .author-from {
+            font-size: 24rpx;
         }
 
         .work-name {
-            font-size: 32upx;
+            font-size: 28rpx;
             color: #fff;
-            margin-bottom: 24upx;
-            font-weight: 500;
+            margin-bottom: 13rpx;
+            font-weight: 600;
+            position: relative;
+            top: -2rpx;
         }
 
         .extra {
@@ -460,6 +480,7 @@ export default {
         .intro {
             font-size: 28upx;
             line-height: 44upx;
+            margin-bottom: 30rpx;
         }
 
         .icon-grail {
@@ -470,47 +491,11 @@ export default {
         }
     }
 
-    .fixed-bottom-bar {
-        line-height: 100upx;
-        text-align: center;
-        display: flex;
-        position: fixed;
-        bottom: 0;
-        width: 100%;
-        font-size: 32upx;
-        color: #679eff;
-        border-top: 1upx solid #ddd;
-
-        .sep {
-            border-right: 1px solid #ddd;
-        }
-
-        .sect {
-            flex: 1;
-            border-radius: 0;
-            background: #fff;
-            color: #679eff;
-
-            &::after {
-                border: none;
-            }
-
-            .icon {
-                width: 40upx;
-                height: 40upx;
-                margin-right: 16upx;
-                position: relative;
-                top: 6upx;
-            }
-        }
-
-        .share-btn {
-            padding-top: 10upx;
-        }
-    }
-
     .main-swiper {
-        padding: 30upx;
+        position: absolute;
+        width: 100%;
+        top: 50%;
+        margin-top: -210rpx;
 
         uni-swiper {
             height: 280upx;
@@ -524,17 +509,65 @@ export default {
         }
 
         .banner-image {
-            width: 690upx;
-            height: 280upx;
+            width: 750upx;
+            height: 422upx;
         }
     }
 
     .join-game {
-        width: 160rpx;
-        height: 151rpx;
+        width: 134rpx;
+        height: 143rpx;
         position: fixed;
         right: 30rpx;
-        bottom: 200rpx;
+        bottom: 20rpx;
+    }
+
+    .from {
+        font-size: 24rpx;
+
+        .recommend {
+            width: 280rpx;
+            display: inline-block;
+        }
+
+        .teacher {
+            display: inline-block;
+        }
+    }
+
+    .fixed-panel {
+        position: fixed;
+        width: 146rpx;
+        right: 27rpx;
+        bottom: 160rpx;
+        color: #fff0cc;
+        font-size: 24rpx;
+        text-align: center;
+        z-index: 1000;
+    }
+
+    .btn {
+        color: #fff0cc;
+        font-size: 24rpx;
+        width: 134rpx;
+        height: 56rpx;
+        background: linear-gradient(
+            0deg,
+            rgba(255, 22, 16, 1),
+            rgba(255, 189, 103, 1)
+        );
+        border-image: linear-gradient(
+                -57deg,
+                rgba(255, 231, 174, 1),
+                rgba(255, 225, 154, 1)
+            )
+            2 2;
+        border-radius: 28rpx;
+        border: 2rpx solid;
+        line-height: 56rpx;
+        text-align: center;
+        margin-bottom: 30rpx;
+        padding: 0;
     }
 }
 </style>

@@ -92,6 +92,7 @@ export default {
     methods: {
         goDetail() {
             if (this.info.status === 1) {
+                this.info.play_count = this.info.play_count + 1;
                 uni.navigateTo({
                     url: `/pages/work/detail/detail?id=${this.info.id}`,
                 });
