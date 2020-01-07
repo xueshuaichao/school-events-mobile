@@ -178,8 +178,8 @@
             </button>
         </view>
 
+        <!-- v-if="!isH5" -->
         <image
-            v-if="!isH5"
             src="/static/images/work/festival.png"
             class="join-game"
             @click="joinGame"
