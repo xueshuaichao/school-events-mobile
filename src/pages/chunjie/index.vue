@@ -1,10 +1,18 @@
 <template>
     <view class="page-index">
+        <button
+            class="abc"
+            @click="handleClick"
+        >
+            搜索
+        </button>
         <!-- swiper -->
         <!-- 一个简单的name跳转 -->
         <view
             v-if="prompt"
             class="activerulebox"
+            @touchmove="handleTouchMove"
+            @touchstart="handleTouchStart"
         >
             <view
                 class="close"
@@ -156,18 +164,18 @@
             <view class="prize">
                 <view>
                     <text>一等奖</text>
-                    <image src="../../static/images/chunjie/prize.png" />
+                    <image src="../../static/images/chunjie/prize01.png" />
                     <text>学习机*1个</text>
                 </view>
                 <view>
-                    <text>一等奖</text>
-                    <image src="../../static/images/chunjie/prize.png" />
-                    <text>学习机*1个</text>
+                    <text>二等奖</text>
+                    <image src="../../static/images/chunjie/prize02.png" />
+                    <text>小度*4个</text>
                 </view>
                 <view>
-                    <text>一等奖</text>
-                    <image src="../../static/images/chunjie/prize.png" />
-                    <text>学习机*1个</text>
+                    <text>三等奖</text>
+                    <image src="../../static/images/chunjie/prize03.png" />
+                    <text>无人机*6个</text>
                 </view>
                 <view
                     class="prize-more"
@@ -180,19 +188,10 @@
             />
             <!-- work show -->
             <view class="menu-list">
-                <!-- <ul>
-                            <li>
-                                视频格式：支持MP4、MOV、3GP、MP4V、M4V、MKV、AVI、FLV等，视频时长不超过3分钟；单张图片小于10MB。
-                            </li>
-                            <li>
-                            内容：如果发现有用户上传不合规内容，如涉及攻击我国政治制度、法律制度、黄赌毒、封建迷信等违背社会主义核心价值观的内容、
-                        非原创、盗窃他人或平台的内容、或恶意刷点赞量等扰乱秩序者，该账户将取消活动参与资格，不合规视频将被删除。
-                            </li>
-                        </ul> -->
                 <view class="search-box">
                     <button
                         :class="{
-                            active: activeMenuIndex === 1
+                            active: activeMenuIndex === 'hot'
                         }"
                         @click="toggle('hot')"
                     >
@@ -200,7 +199,7 @@
                     </button>
                     <button
                         :class="{
-                            active: activeMenuIndex === 2
+                            active: activeMenuIndex === 'new'
                         }"
                         @click="toggle('new')"
                     >
@@ -212,8 +211,10 @@
                         />
 
                         <input
+                            v-model="changeValue"
+                            type="text"
                             placeholder="请输入作者姓名或作品名称"
-                            bindconfirm="bindconfirm"
+                            @confirm="bindconfirm"
                         >
                     </view>
                 </view>
@@ -223,21 +224,14 @@
                         :key="item.id"
                         class="media-content"
                     >
-                        <!-- <video
-                            v-if="item.resource_type === 1"
-                            class="video"
-                            :poster="item.video_img_url"
-                            controls
-                            @play="onPlay"
-                        /> -->
                         <image
                             v-if="item.resource_type === 1"
-                            src="https://via.placeholder.com/150/771796"
+                            :src="item.video_img_url"
                             class="video"
                         />
                         <image
                             v-else-if="item.resource_type === 2"
-                            src="https://via.placeholder.com/150/771796"
+                            :src="item.img_url"
                             class="video"
                         />
                         <image
@@ -245,10 +239,10 @@
                             :src="mediaIcon[item.resource_type]"
                         />
                         <view class="media-name">
-                            dfgdgdgdfgfg
+                            {{ `#${item.cat_name}# ${item.resource_name}` }}
                         </view>
                         <text class="vote-num">
-                            1200票
+                            {{ item.ticket }}票
                         </text>
                         <view
                             class="vote"
@@ -269,9 +263,14 @@
                     />
                 </view>
             </view>
-            <view class="upload">
-                上传作品
-            </view>
+            <navigator
+                class="item"
+                url="/pages/upload/festival/festival"
+            >
+                <view class="upload">
+                    上传作品
+                </view>
+            </navigator>
             <view class="footer">
                 本次活动最终解释权在法律范围内属活动举办方所有
             </view>
@@ -289,7 +288,8 @@ export default {
     },
     data() {
         return {
-            activeMenuIndex: 1,
+            changeValue: 'abc',
+            activeMenuIndex: 'hot',
             loadMoreStatus: 'more',
             mediaIcon: {
                 1: '../../static/images/chunjie/video-icon.png',
@@ -344,13 +344,18 @@ export default {
         this.getData();
     },
     methods: {
+        handleTouchMove(e) {
+            e.preventDefault();
+        },
+        handleTouchStart(e) {
+            e.preventDefault();
+        },
         handleMorePrize() {
             this.prompt01 = true;
         },
         getData(title) {
             api.post('/api/activity/resourcelist', this.filter).then(
                 ({ list, total }) => {
-                    this.isLoading = false;
                     if (title === 'reachBottom') {
                         this.dataList = this.dataList.concat(list);
                     } else {
@@ -362,7 +367,7 @@ export default {
                         this.total
                         <= this.filter.page_num * this.filter.page_size
                     ) {
-                        this.loadMoreStatus = 'noMore';
+                        this.loadMoreStatus = title === 'reachBottom' ? 'noMore' : 'none';
                     } else {
                         this.loadMoreStatus = 'more';
                     }
@@ -376,13 +381,29 @@ export default {
                 this.getData('reachBottom');
             }
         },
-        bindconfirm(e) {
-            if (!e.target.value) {
+        handleClick() {
+            if (!this.changeValue) {
+                uni.showToast({
+                    title: '请输入搜索内容',
+                    icon: 'none',
+                });
                 return;
             }
-            this.filter.search = e.target.value.trim();
-            this.filter.page_num = 1;
-            this.getData();
+            uni.navigateTo({
+                url: `/pages/upload/work/work?type=search&name=${this.changeValue.trim()}`,
+            });
+        },
+        bindconfirm(e) {
+            if (!e.detail.value) {
+                uni.showToast({
+                    title: '请输入搜索内容',
+                    icon: 'none',
+                });
+                return;
+            }
+            uni.navigateTo({
+                url: `/pages/upload/work/work?type=search&name=${e.detail.value.trim()}`,
+            });
         },
         toggle(k) {
             this.activeMenuIndex = k;
@@ -395,7 +416,7 @@ export default {
         },
         handleMywork() {
             uni.navigateTo({
-                url: '/pages/upload/work/work',
+                url: '/pages/upload/work/work?type=myWork',
             });
         },
         handleClose() {
@@ -415,15 +436,33 @@ export default {
         handleVote(id) {
             api.post('/api/activity/vote', {
                 id,
-            }).then((res) => {
-                console.log(res);
-            });
+            }).then(
+                (res) => {
+                    uni.showToast({
+                        title: '投票成功',
+                        icon: 'none',
+                    });
+                    console.log(res);
+                },
+                (res) => {
+                    uni.showToast({
+                        title: res.message,
+                        icon: 'none',
+                    });
+                },
+            );
         },
     },
 };
 </script>
 
 <style lang="less">
+.abc {
+    position: fixed;
+    z-index: 999;
+    right: 0;
+    top: 100upx;
+}
 ._ul {
     ._li {
         position: relative;
@@ -457,8 +496,9 @@ export default {
             margin-bottom: 10upx;
         }
         view:nth-child(2) {
-            background: url("../../static/images/chunjie/prize-bg.png") 100%
-                100%;
+            background: url("../../static/images/chunjie/prize-bg.png")
+                no-repeat;
+            background-size: 100% 100%;
             width: 193upx;
             height: 221upx;
         }
@@ -483,7 +523,7 @@ export default {
     color: #fff;
 }
 .upload {
-    background: url("../../static/images/chunjie/upload_bg.png") no-repeat 100%;
+    background: url("../../static/images/chunjie/upload_bg.png") no-repeat;
     background-size: 100% 100%;
     text-align: center;
     width: 100%;
@@ -498,8 +538,8 @@ export default {
     margin-top: 20upx;
 }
 .prize {
-    background: url("../../static/images/chunjie/prize_bg.png") no-repeat 100%
-        100%;
+    background: url("../../static/images/chunjie/prize_bg.png") no-repeat;
+    background-size: 100% 100%;
     height: 242upx;
     // display:flex;
     // justify-content: space-between;
@@ -531,7 +571,9 @@ export default {
     .prize-more {
         width: 189upx;
         height: 224upx;
-        background: url("../../static/images/chunjie/more-prize-bg.png");
+        background: url("../../static/images/chunjie/more-prize-bg.png")
+            no-repeat;
+        background-size: 100% 100%;
         background-position: center 5upx;
         font-size: 34upx;
         color: #ffe57b;
@@ -557,6 +599,7 @@ export default {
     height: 740upx;
     background: url(http://aitiaozhan.oss-cn-beijing.aliyuncs.com/banner.png)
         no-repeat;
+    background-size: 100% 100%;
     background-size: contain;
 }
 .media-box {
@@ -590,7 +633,8 @@ export default {
             float: left;
         }
         .vote {
-            background: url("../../static/images/chunjie/vote_bg.png") 100% 100%;
+            background: url("../../static/images/chunjie/vote_bg.png");
+            background-size: 100% 100%;
             height: 78upx;
             width: 171upx;
             color: #ff481e;
@@ -638,7 +682,8 @@ export default {
         font-size: 24upx;
     }
     .title-icon {
-        background: url("../../static/images/chunjie/title.png") 100% 100%;
+        background: url("../../static/images/chunjie/title.png") no-repeat;
+        background-size: 100% 100%;
         width: 387upx;
         height: 99upx;
         position: absolute;
@@ -648,7 +693,8 @@ export default {
         line-height: 69upx;
     }
     .close {
-        background: url("../../static/images/chunjie/close.png") 100% 100%;
+        background: url("../../static/images/chunjie/close.png") no-repeat;
+        background-size: 100% 100%;
         width: 62upx;
         height: 62upx;
         top: 30upx;
@@ -681,7 +727,6 @@ export default {
     padding-bottom: 20upx;
     display: relative;
     background: url("../../static/images/chunjie/main_bg.png") repeat-y;
-    // background:pink;
     background-size: contain;
     .chunjie-entry {
         width: 100upx;
@@ -738,29 +783,28 @@ export default {
                 }
             }
             .search {
-                background: url("../../static/images/chunjie/search_bg.png")
-                    no-repeat 100% 100%;
+                background: #ffedc3;
                 width: 400upx;
                 height: 73upx;
                 position: relative;
                 float: right;
-                background-size: 100% 100%;
+                border-radius: 60upx;
 
                 image {
                     width: 28upx;
                     height: 28upx;
                     position: absolute;
-                    top: 18upx;
+                    top: 23upx;
                     left: 24upx;
                 }
                 input {
                     // margin-left:11upx;
                     width: 325upx;
                     position: absolute;
-                    top: 10upx;
+                    top: 14upx;
                     left: 60upx;
                     font-size: 24upx;
-                    color: #c9ac67;
+                    color: #ff3849;
                 }
                 input::-webkit-input-placeholder {
                     color: #c9ac67;
@@ -768,6 +812,10 @@ export default {
                 }
             }
         }
+    }
+    ::-webkit-input-placeholder {
+        color: #c9ac67;
+        font-size: 24upx;
     }
 }
 </style>

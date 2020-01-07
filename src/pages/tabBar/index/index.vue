@@ -10,9 +10,15 @@
         </navigator>
         <navigator
             class="item"
-            url="/pages/upload/work/work"
+            url="/pages/upload/work/work?type=myWork"
         >
             我的作品
+        </navigator>
+        <navigator
+            class="item"
+            url="/pages/upload/work/work?type=search"
+        >
+            搜索
         </navigator>
         <navigator url="/pages/chunjie/index">
             <view class="chunjie-entry">
@@ -390,8 +396,9 @@ uni-swiper {
     display: relative;
     .chunjie-entry {
         font-size: 0;
-        background: url("../../../static/images/chunjie/suspension.png") 100%
-            100% no-repeat;
+        background: url("../../../static/images/chunjie/suspension.png")
+            no-repeat;
+        background-size: 100% 100%;
         width: 165upx;
         height: 157upx;
         position: fixed;
