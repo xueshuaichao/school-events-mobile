@@ -1,33 +1,11 @@
 <template>
     <view class="page-index">
-        <!-- swiper -->
-        <!-- 一个简单的name跳转 -->
-        <navigator
-            class="item"
-            url="/pages/upload/festival/festival"
-        >
-            上传入口
-        </navigator>
-        <navigator
-            class="item"
-            url="/pages/upload/work/work?type=myWork"
-        >
-            我的作品
-        </navigator>
-        <navigator url="/pages/work/festival/festival?id=115">
-            横着视频作品
-        </navigator>
-        <navigator url="/pages/work/festival/festival?id=131">
-            竖着视频作品
-        </navigator>
-        <navigator url="/pages/work/festival/festival?id=120">
-            图文作品
-        </navigator>
         <navigator url="/pages/chunjie/index">
             <view class="chunjie-entry">
                 春节入口
             </view>
         </navigator>
+        <!-- swiper -->
         <view class="swiper main-swiper">
             <view class="page-section-spacing">
                 <swiper

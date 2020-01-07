@@ -328,6 +328,7 @@ export default {
         font-size: 28rpx;
         background: #ffedc3;
         border-radius: 12rpx;
+        color: #9d7c2f;
     }
 
     /deep/ .comp-upload {

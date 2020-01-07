@@ -128,38 +128,6 @@
             </view>
         </view>
 
-        <!--
-        <view class="fixed-bottom-bar">
-            <view
-                class="sect"
-                @click="toggleLike"
-            >
-                <image
-                    v-if="likeStatus === 0"
-                    class="icon"
-                    src="/static/images/work/like.png"
-                />
-                <image
-                    v-if="likeStatus === 1"
-                    class="icon"
-                    src="/static/images/work/liked.png"
-                />
-                {{ likeStatus === 0 ? "点赞" : "已点赞" }}
-            </view>
-            <view class="sep" />
-            <button
-                v-if="!isH5"
-                class="sect share-btn"
-                open-type="share"
-            >
-                <image
-                    class="icon"
-                    src="/static/images/work/share.png"
-                />分享
-            </button>
-        </view>
-        -->
-
         <view class="fixed-panel">
             <view class="result">
                 {{ pageData.praise_count }}票
@@ -520,6 +488,7 @@ export default {
         position: fixed;
         right: 30rpx;
         bottom: 20rpx;
+        z-index: 1000;
     }
 
     .from {
