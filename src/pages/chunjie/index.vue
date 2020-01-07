@@ -1,11 +1,11 @@
 <template>
     <view class="page-index">
-        <button
+        <!-- <button
             class="abc"
             @click="handleClick"
         >
             搜索
-        </button>
+        </button> -->
         <!-- swiper -->
         <!-- 一个简单的name跳转 -->
         <view
@@ -288,7 +288,7 @@ export default {
     },
     data() {
         return {
-            changeValue: 'abc',
+            changeValue: '',
             activeMenuIndex: 'hot',
             loadMoreStatus: 'more',
             mediaIcon: {
