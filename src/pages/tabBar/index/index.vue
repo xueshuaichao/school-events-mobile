@@ -14,11 +14,14 @@
         >
             我的作品
         </navigator>
-        <navigator
-            class="item"
-            url="/pages/upload/work/work?type=search"
-        >
-            搜索
+        <navigator url="/pages/work/festival/festival?id=115">
+            横着视频作品
+        </navigator>
+        <navigator url="/pages/work/festival/festival?id=131">
+            竖着视频作品
+        </navigator>
+        <navigator url="/pages/work/festival/festival?id=120">
+            图文作品
         </navigator>
         <navigator url="/pages/chunjie/index">
             <view class="chunjie-entry">

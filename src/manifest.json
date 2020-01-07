@@ -91,7 +91,9 @@
                     "target": "http://aitiaozhan.dev.wdyclass.com:8000/",
                     // "target": "http://atz.qsnatz.com",
                     "changeOrigin": true,
-                    "secure": false
+                    "secure": false,
+                    "proxyTimeout": 3000000,
+                    "timeout": 30000000
                 }
             }
         }

@@ -94,6 +94,27 @@ const routesConfig = {
             path: '/pages/address/edit',
         },
         {
+            path: '/pages/upload/festival/festival',
+        },
+        {
+            path: '/pages/work/festival/festival ',
+        },
+        {
+            path: '/pages/upload/result/result',
+        },
+        {
+            path: '/pages/upload/modify/modify',
+        },
+        {
+            path: '/pages/upload/work/work',
+        },
+        {
+            path: '/pages/chunjie/index',
+        },
+        {
+            path: '/pages/work/festival/festival',
+        },
+        {
             path: '/pages/address/exchangeRecord',
         },
         {
