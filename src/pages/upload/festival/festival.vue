@@ -103,10 +103,19 @@
                     :preview="false"
                     @change="updateImage"
                 />
-                <image-drag-sort
-                    ref="preview"
-                    :list="images"
-                />
+                <template v-if="isH5">
+                    <attachment
+                        :can-upload-file="false"
+                        :upload-file-url="uploadFileUrl"
+                        :attachment-list.sync="images"
+                    />
+                </template>
+                <template v-else>
+                    <image-drag-sort
+                        ref="preview"
+                        :list="images"
+                    />
+                </template>
             </template>
 
             <view
@@ -123,14 +132,38 @@
 import api from '../../../common/api';
 import upload from '../../../components/upload/upload.vue';
 import imageDragSort from '../../../components/image-drag-sort/index.vue';
+import Attachment from '../../../components/third-party/jin-attachment/index.vue';
+import config from '../../../common/config';
 
 export default {
     components: {
         upload,
         imageDragSort,
+        Attachment,
     },
     data() {
         return {
+            // #ifdef H5
+            isH5: true,
+            // #endif
+
+            uploadFileUrl: `${config.host}/api/file/uploadfile`,
+
+            attachmentList: [
+                {
+                    url:
+                        'https://avatar-static.segmentfault.com/151/147/1511478734-593e62d4d3076_big64',
+                    type: 'image',
+                    fileName: 'xxx.png',
+                },
+                {
+                    url:
+                        'https://avatar-static.segmentfault.com/820/689/820689728-59e9b54a71fdc_huge256',
+                    type: 'image',
+                    fileName: 'xxx.png',
+                },
+            ],
+
             isLoading: true,
 
             tabs: [
@@ -198,9 +231,19 @@ export default {
         updateImage(data) {
             this.formData.video_img_url = data[0] && data[0].path;
             if (this.uploadMode === 'image') {
-                data.forEach((item) => {
-                    this.$refs.preview.add(item.path);
-                });
+                if (!this.isH5) {
+                    data.forEach((item) => {
+                        this.$refs.preview.add(item.path);
+                    });
+                } else {
+                    data.forEach((item) => {
+                        this.images.push({
+                            url: item.path,
+                            type: 'image',
+                            fileName: 'xxx.png',
+                        });
+                    });
+                }
             }
         },
         getData() {
@@ -255,7 +298,9 @@ export default {
                 if (!formData.cat_id) {
                     return this.errTip('请选择作品分类');
                 }
-                formData.img = this.$refs.preview.dump();
+                formData.img = this.isH5
+                    ? this.images.map(elem => elem.url)
+                    : this.$refs.preview.dump();
                 if (!formData.img.length) {
                     return this.errTip('请上传作品图片');
                 }

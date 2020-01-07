@@ -99,7 +99,7 @@ export default {
                 });
             } else if (this.from === 'festival') {
                 uni.reLaunch({
-                    url: '/pages/upload/work/work',
+                    url: '/pages/upload/work/work?type=myWork',
                 });
             }
         },
