@@ -142,6 +142,7 @@
                 </view>
             </view>
         </view>
+
         <view class="main-swiper">
             <view class="banner">
                 <view
@@ -667,11 +668,12 @@ export default {
     position: fixed;
     color: #fff;
     z-index: 999;
+    font-size: 24upx;
     &:first-child {
         font-size: 28upx;
     }
     .title {
-        font-size: 32upx;
+        font-size: 28upx;
         color: #fff0a8;
         font-weight: bold;
         margin-bottom: 24upx;
@@ -679,16 +681,16 @@ export default {
 
     .text {
         margin-bottom: 40upx;
-        font-size: 24upx;
     }
     .title-icon {
         background: url("../../static/images/chunjie/title.png") no-repeat;
         background-size: 100% 100%;
+        font-size: 34upx;
         width: 387upx;
         height: 99upx;
         position: absolute;
         top: 23upx;
-        left: 167upx;
+        left: 190upx;
         text-align: center;
         line-height: 69upx;
     }
