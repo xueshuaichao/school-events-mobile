@@ -380,8 +380,8 @@ uni-swiper {
         background: url("../../../static/images/chunjie/suspension.png")
             no-repeat;
         background-size: 100% 100%;
-        width: 165upx;
-        height: 157upx;
+        width: 176upx;
+        height: 128upx;
         position: fixed;
         top: 640upx;
         right: 0upx;
