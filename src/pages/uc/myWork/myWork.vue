@@ -45,7 +45,7 @@
                         />
                         <view class="btns">
                             <button
-                                v-if="item.status === 1"
+                                v-if="!isH5 && item.status === 1"
                                 :id="k"
                                 class="btn btn-share"
                                 open-type="share"
