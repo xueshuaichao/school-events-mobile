@@ -166,7 +166,7 @@ export default {
 
             formData: {
                 activity_id: 3,
-                cat_id: '',
+                cat_id: 16,
                 resource_name: '',
                 introduce: '',
                 type: 2,
@@ -304,7 +304,7 @@ export default {
             }
         },
         onSelectCat(item) {
-            console.log(item);
+            this.needTab = false;
             this.formData.cat_id = item.cat_id;
             const resourceType = item.resource_type;
 
@@ -314,6 +314,7 @@ export default {
                 this.uploadMode = 'image';
             } else {
                 this.needTab = true;
+                this.newsTabActiveIndex = 0;
             }
 
             console.log(this.formData);
