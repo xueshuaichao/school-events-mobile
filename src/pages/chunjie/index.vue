@@ -285,6 +285,7 @@
 <script>
 import api from '../../common/api';
 import uniLoadMore from '../../components/uni-load-more/uni-load-more.vue';
+import utils from '../../common/utils';
 
 export default {
     components: {
@@ -413,9 +414,17 @@ export default {
             this.prompt = true;
         },
         handleMywork() {
-            uni.navigateTo({
-                url: '/pages/upload/work/work?type=myWork',
-            });
+            const isLogin = utils.isLogin();
+            console.log(isLogin, 'isLogin');
+            if (isLogin) {
+                uni.navigateTo({
+                    url: '/pages/upload/work/work?type=myWork',
+                });
+            } else {
+                uni.switchTab({
+                    url: '/pages/tabBar/uc/uc',
+                });
+            }
         },
         handleClose() {
             this.prompt = false;

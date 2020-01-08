@@ -1,6 +1,22 @@
 <template>
     <view class="page-index">
-        <navigator url="/pages/chunjie/index">
+        <view
+            v-if="prompt && status === 2"
+            class="cover"
+        >
+            <image src="../../../static/images/chunjie/third_entry.png" />
+            <image
+                src="../../../static/images/chunjie/third_entry_close.png"
+                @click="handleClose"
+            />
+            <view @click="handleChunjie">
+                春节入口3
+            </view>
+        </view>
+        <navigator
+            v-if="status === 2"
+            url="/pages/chunjie/index"
+        >
             <view class="chunjie-entry">
                 春节入口
             </view>
@@ -16,7 +32,7 @@
                     :duration="duration"
                     :circular="circular"
                 >
-                    <swiper-item>
+                    <swiper-item v-if="status === 2">
                         <navigator
                             url="/pages/chunjie/index"
                             class="swiper-item"
@@ -288,13 +304,52 @@ export default {
                 team: [],
                 talent: [],
             },
+            prompt: false,
+            isFirstLogin: 'isFirstLogin8',
+            status: 1,
         };
     },
     onLoad() {},
+    onShow() {
+        this.chunjieStatus();
+    },
     created() {
+        console.log('created');
+        this.chunjieStatus();
+        this.thirdEntryPrompt();
         this.getData();
     },
+    onHide() {
+        this.prompt = false;
+    },
     methods: {
+        chunjieStatus() {
+            // 1未开始，2进行中，3已结束
+            console.log('获取活动状态');
+            api.post('/api/activity/getactivitystatus', {
+                activity_id: 3,
+            }).then((res) => {
+                this.status = res.status;
+                // this.status=3;
+            });
+        },
+        thirdEntryPrompt() {
+            const isFirstLogin = uni.getStorageSync(this.isFirstLogin);
+            if (!isFirstLogin) {
+                this.prompt = true;
+                uni.setStorageSync(this.isFirstLogin, true);
+            }
+        },
+        handleChunjie() {
+            uni.setStorageSync(this.isFirstLogin, true);
+            uni.navigateTo({
+                url: '/pages/chunjie/index',
+            });
+        },
+        handleClose() {
+            this.prompt = false;
+            uni.setStorageSync(this.isFirstLogin, true);
+        },
         setNewsTabActive(index) {
             this.newsTabActiveIndex = index;
             this.getArticle(this.newsColumn[index].id);
@@ -366,6 +421,36 @@ export default {
 </script>
 
 <style lang="less">
+.cover {
+    position: fixed;
+    z-index: 9999;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    text-align: center;
+    image:first-child {
+        width: 529upx;
+        height: 584upx;
+        margin-top: 193upx;
+        display: block;
+        margin-left: 118upx;
+    }
+    image:nth-child(2) {
+        margin-top: 40upx;
+        width: 54upx;
+        height: 54upx;
+        margin-left: 357upx;
+        display: block;
+    }
+    view {
+        position: absolute;
+        top: 680upx;
+        left: 210upx;
+        font-size: 0;
+        width: 360upx;
+        height: 100upx;
+    }
+}
 uni-swiper {
     .swiper-item {
         height: 100%;
