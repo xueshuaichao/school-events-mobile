@@ -416,11 +416,12 @@ export default {
                 position: relative;
                 top: -2rpx;
             }
-            margin-bottom: 15rpx;
+            margin-bottom: 10rpx;
         }
 
         .author-from {
             font-size: 24rpx;
+            margin-bottom: 10rpx;
         }
 
         .work-name {
