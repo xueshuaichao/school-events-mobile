@@ -1,5 +1,5 @@
 <template>
-    <view :class="{ 'page-index': true, 'stop-scroll': prompt || prompt01 }">
+    <view :class="['page-index', { 'stop-scroll': prompt || prompt01 }]">
         <!-- <button
             class="abc"
             @click="handleClick"
@@ -729,16 +729,6 @@ body.dialog-open {
     display: relative;
     background: url("../../static/images/chunjie/main_bg.png") repeat-y;
     background-size: contain;
-
-    .chunjie-entry {
-        width: 100upx;
-        height: 100upx;
-        background: red;
-        position: fixed;
-        top: 200upx;
-        right: 0upx;
-        z-index: 999;
-    }
     .main-swiper {
         .active-rule {
             position: absolute;
