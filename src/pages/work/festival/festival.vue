@@ -107,20 +107,17 @@
                 }}
             </view> -->
             <view class="intro text-three-line">
-                {{
-                    pageData.introduce ||
-                        "这是简介信息这是简介信息这是简介信息这是简介信息这是简介信息这是简介信息这是简介信息这是简介信息这是简介信息这是简介信息这是简介信息"
-                }}
+                {{ pageData.introduce || "暂无简介" }}
             </view>
             <view class="from">
                 <text
-                    v-if="true || pageData.recommend"
+                    v-if="pageData.recommend"
                     class="recommend text-one-line"
                 >
                     单位：{{ pageData.recommend || "是简介信息这是简介信息这" }}
                 </text>
                 <text
-                    v-if="true || pageData.teacher"
+                    v-if="pageData.teacher"
                     class="teacher text-one-line"
                 >
                     指导老师：{{ pageData.teacher || "李四" }}
@@ -130,7 +127,7 @@
 
         <view class="fixed-panel">
             <view class="result">
-                {{ pageData.praise_count }}票
+                {{ pageData.ticket }}票
             </view>
             <button
                 class="btn"
@@ -158,7 +155,6 @@
 <script>
 import api from '../../../common/api';
 import share from '../../../common/share';
-import utils from '../../../common/utils';
 
 export default {
     data() {
@@ -204,48 +200,44 @@ export default {
             this.getLikeStatus();
         },
         toggleLike() {
-            const isLogin = utils.isLogin();
-
-            if (!isLogin) {
-                return uni.showToast({
+            api.isLogin().then(
+                () => {
+                    // const isLiked = this.likeStatus === 1;
+                    api.get('/api/activity/vote', {
+                        id: this.id,
+                        // object_type: 1,
+                        // 1-点赞 0 取消点赞
+                        // type: isLiked ? 0 : 1,
+                    }).then(
+                        () => {
+                            // console.log(res);
+                            // this.likeStatus = isLiked ? 0 : 1;
+                            this.getData();
+                        },
+                        (err) => {
+                            uni.showToast({
+                                icon: 'none',
+                                title: err.message,
+                            });
+                        },
+                    );
+                },
+                () => uni.showToast({
                     icon: 'none',
                     title: '请先登录',
-                });
-            }
-
-            const isLiked = this.likeStatus === 1;
-            return api
-                .get('/api/common/like', {
-                    object_id: this.id,
-                    object_type: 1,
-                    // 1-点赞 0 取消点赞
-                    type: isLiked ? 0 : 1,
-                })
-                .then(
-                    (res) => {
-                        console.log(res);
-                        this.likeStatus = isLiked ? 0 : 1;
-                        this.getData();
-                    },
-                    (err) => {
-                        uni.showToast({
-                            icon: 'none',
-                            title: err.message,
-                        });
-                    },
-                );
+                }),
+            );
         },
         getLikeStatus() {
-            api.get('/api/common/getlikestatus', {
-                object_type: 1,
-
-                object_id: this.id,
+            api.get('/api/activity/getuserthumb', {
+                id: this.id,
             }).then((res) => {
                 this.likeStatus = res.status;
             });
         },
         onPlay() {
             if (!this.isPlayed) {
+                this.pageData.play_count = this.pageData.play_count + 1;
                 api.get('/api/works/playcount', {
                     id: this.id,
                 });
@@ -424,11 +416,12 @@ export default {
                 position: relative;
                 top: -2rpx;
             }
-            margin-bottom: 15rpx;
+            margin-bottom: 10rpx;
         }
 
         .author-from {
             font-size: 24rpx;
+            margin-bottom: 10rpx;
         }
 
         .work-name {
@@ -466,7 +459,7 @@ export default {
         margin-top: -210rpx;
 
         uni-swiper {
-            height: 280upx;
+            height: 422upx;
 
             .swiper-item {
                 img {

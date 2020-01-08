@@ -169,7 +169,9 @@ export default {
                 // error
                 console.log(e);
             }
-            this.getData();
+            api.get('/api/account/logout').then(() => {
+                this.getData();
+            });
         },
 
         // fetch user info

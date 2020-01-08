@@ -20,7 +20,10 @@
                     </text>
                 </view>
             </view>
-            <view class="selection bb-sep">
+            <view
+                v-if="needTab"
+                class="selection bb-sep"
+            >
                 <view class="label">
                     表现形式
                 </view>
@@ -37,7 +40,7 @@
                 </view>
             </view>
 
-            <view class="uni-form-item uni-column">
+            <view class="uni-form-item uni-column bt-sep">
                 <input
                     v-model="formData.resource_name"
                     class="uni-input"
@@ -149,22 +152,7 @@ export default {
 
             uploadFileUrl: `${config.host}/api/file/uploadfile`,
 
-            attachmentList: [
-                {
-                    url:
-                        'https://avatar-static.segmentfault.com/151/147/1511478734-593e62d4d3076_big64',
-                    type: 'image',
-                    fileName: 'xxx.png',
-                },
-                {
-                    url:
-                        'https://avatar-static.segmentfault.com/820/689/820689728-59e9b54a71fdc_huge256',
-                    type: 'image',
-                    fileName: 'xxx.png',
-                },
-            ],
-
-            isLoading: true,
+            isLoading: false,
 
             tabs: [
                 { id: '1', column_name: '视频' },
@@ -173,11 +161,12 @@ export default {
             images: [],
 
             newsTabActiveIndex: 0,
+            needTab: false,
             uploadMode: 'video',
 
             formData: {
                 activity_id: 3,
-                cat_id: '',
+                cat_id: 16,
                 resource_name: '',
                 introduce: '',
                 type: 2,
@@ -199,7 +188,79 @@ export default {
                 isSend: false,
             },
             needBindMobile: false,
-            catData: [],
+            catData: [
+                {
+                    cat_id: 16,
+                    name: '歌唱',
+                    parent_id: 3,
+                    cat_level: 2,
+                    cat_tree: '3-16',
+                    resource_type: 1,
+                },
+                {
+                    cat_id: 17,
+                    name: '舞蹈',
+                    parent_id: 3,
+                    cat_level: 2,
+                    cat_tree: '3-17',
+                    resource_type: 1,
+                },
+                {
+                    cat_id: 18,
+                    name: '口才',
+                    parent_id: 3,
+                    cat_level: 2,
+                    cat_tree: '3-18',
+                    resource_type: 1,
+                },
+                {
+                    cat_id: 19,
+                    name: '乐器',
+                    parent_id: 3,
+                    cat_level: 2,
+                    cat_tree: '3-19',
+                    resource_type: 1,
+                },
+                {
+                    cat_id: 21,
+                    name: '书画',
+                    parent_id: 3,
+                    cat_level: 2,
+                    cat_tree: '3-21',
+                    resource_type: 2,
+                },
+                {
+                    cat_id: 20,
+                    name: '创意',
+                    parent_id: 3,
+                    cat_level: 2,
+                    cat_tree: '3-20',
+                },
+                {
+                    cat_id: 23,
+                    name: '杂技',
+                    parent_id: 3,
+                    cat_level: 2,
+                    cat_tree: '3-23',
+                    resource_type: 1,
+                },
+                {
+                    cat_id: 24,
+                    name: '魔术',
+                    parent_id: 3,
+                    cat_level: 2,
+                    cat_tree: '3-24',
+                    resource_type: 1,
+                },
+                {
+                    cat_id: 101,
+                    name: '摄影',
+                    parent_id: 3,
+                    cat_level: 2,
+                    cat_tree: '3-101',
+                    resource_type: 2,
+                },
+            ],
             title: 'picker',
             array: ['中国', '美国', '巴西', '日本'],
             index: 0,
@@ -207,12 +268,8 @@ export default {
         };
     },
     onLoad() {},
-    created() {
-        // this.getData();
-    },
-    onShow() {
-        this.getData();
-    },
+    created() {},
+    onShow() {},
     methods: {
         setNewsTabActive(index) {
             this.newsTabActiveIndex = index;
@@ -246,24 +303,21 @@ export default {
                 }
             }
         },
-        getData() {
-            api.get('/api/works/childcat', {
-                cat_id: 3,
-            }).then((res) => {
-                this.isLoading = false;
-                this.catData = res;
-            });
-        },
-
-        onSelect(e) {
-            this.index = e.detail.value;
-            const catId = this.catData[this.index].cat_id;
-            this.formData.cat_id = catId;
-            console.log(this.formData);
-        },
         onSelectCat(item) {
-            console.log(item);
+            this.needTab = false;
             this.formData.cat_id = item.cat_id;
+            const resourceType = item.resource_type;
+
+            if (resourceType === 1) {
+                this.uploadMode = 'video';
+            } else if (resourceType === 2) {
+                this.uploadMode = 'image';
+            } else {
+                this.needTab = true;
+                this.newsTabActiveIndex = 0;
+            }
+
+            console.log(this.formData);
         },
         errTip(title) {
             uni.showToast({
@@ -362,8 +416,8 @@ export default {
         padding-top: 26upx;
     }
 
-    .bb-sep {
-        margin-bottom: 40rpx;
+    .bt-sep {
+        margin-top: 40rpx;
     }
 
     .uni-input,
@@ -446,7 +500,7 @@ export default {
 
         .item {
             // width: 110rpx;
-            padding: 0 28rpx;
+            padding: 0 24rpx;
             height: 56rpx;
             line-height: 56rpx;
             border: 1px solid #ff3849;

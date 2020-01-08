@@ -1,4 +1,5 @@
 import { http } from './third-party/request';
+import utils from './utils';
 
 function get(url, data) {
     return http.get(url, data).then(
@@ -42,7 +43,32 @@ function post(url, data) {
     );
 }
 
+function isLogin() {
+    return new Promise((resolve, reject) => {
+        const LSUserkey = utils.getToken();
+        if (LSUserkey) {
+            return resolve(LSUserkey);
+        }
+        if (!LSUserkey) {
+            return get('/api/user/info').then(
+                (res) => {
+                    if (res && res.user_info && res.user_info.user_id) {
+                        resolve(res);
+                    } else {
+                        reject();
+                    }
+                },
+                () => {
+                    reject();
+                },
+            );
+        }
+        return false;
+    });
+}
+
 export default {
     get,
     post,
+    isLogin,
 };
