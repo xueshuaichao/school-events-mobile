@@ -54,23 +54,10 @@
                     placeholder="请输入密码"
                     password
                 >
-                <view
-                    v-if="!captcha.isSend"
-                    class="send-captcha"
-                    @click="sendCaptcha"
-                >
-                    获取验证码
-                </view>
-                <view
-                    v-if="captcha.isSend"
-                    class="send-captcha is-send"
-                >
-                    {{ captcha.remain }}S后重新发
-                </view>
             </view>
 
             <view
-                v-if="loginMode !== 'password'"
+                v-if="loginMode === 'sms'"
                 class="form-item-wrap"
             >
                 <input
