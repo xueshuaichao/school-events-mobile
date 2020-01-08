@@ -131,7 +131,7 @@
                 />
             </view>
             <view
-                v-else
+                v-show="total === 0"
                 class="empty"
             >
                 <image src="../../../static/images/chunjie/empty.png" />

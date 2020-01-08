@@ -1,5 +1,5 @@
 <template>
-    <view class="page-index">
+    <view :class="{ 'page-index': true, 'stop-scroll': prompt || prompt01 }">
         <!-- <button
             class="abc"
             @click="handleClick"
@@ -11,8 +11,6 @@
         <view
             v-if="prompt"
             class="activerulebox"
-            @touchmove="handleTouchMove"
-            @touchstart="handleTouchStart"
         >
             <view
                 class="close"
@@ -27,7 +25,7 @@
                         活动时间
                     </view>
                     <view class="text">
-                        2020年1月10日至2020年2月6日
+                        2020年1月10日至2020年2月8日
                     </view>
                 </view>
                 <view>
@@ -81,7 +79,7 @@
                                 排行榜，将根据视频点赞量进行排名，排行榜将以2020年2月6日11：59分时的排名为最终结果，上榜者可获得相应礼品
                             </li>
                             <li>
-                                获奖名单将于2月8日（元宵节）在爱挑战官网(http://atz.qsnatz.com)
+                                获奖名单将于2月11日在爱挑战官网(http://atz.qsnatz.com)
                                 及官方服务号（UP青少年爱挑战）进行公布
                             </li>
                         </ul>
@@ -159,8 +157,8 @@
                 </view>
             </view>
             <view class="active-schedule">
-                <text>活动时间：1月10日-2月6日</text>
-                <text>结果公布：2月8日</text>
+                <text>活动时间：1月10日-2月8日</text>
+                <text>结果公布：2月11日</text>
             </view>
             <view class="prize">
                 <view>
@@ -345,12 +343,6 @@ export default {
         this.getData();
     },
     methods: {
-        handleTouchMove(e) {
-            e.preventDefault();
-        },
-        handleTouchStart(e) {
-            e.preventDefault();
-        },
         handleMorePrize() {
             this.prompt01 = true;
         },
@@ -458,6 +450,10 @@ export default {
 </script>
 
 <style lang="less">
+body.dialog-open {
+    position: fixed;
+    width: 100%;
+}
 .abc {
     position: fixed;
     z-index: 999;
@@ -524,6 +520,8 @@ export default {
     color: #fff;
 }
 .upload {
+    position: fixed;
+    bottom: 40upx;
     background: url("../../static/images/chunjie/upload_bg.png") no-repeat;
     background-size: 100% 100%;
     text-align: center;
@@ -725,11 +723,13 @@ export default {
 ::-webkit-scrollbar-thumb {
     background-color: #ffe4a2;
 }
+
 .page-index {
     padding-bottom: 20upx;
     display: relative;
     background: url("../../static/images/chunjie/main_bg.png") repeat-y;
     background-size: contain;
+
     .chunjie-entry {
         width: 100upx;
         height: 100upx;
@@ -760,7 +760,7 @@ export default {
 
     .menu-list {
         padding: 30upx;
-        padding-bottom: 0;
+        padding-bottom: 160upx;
         .search-box {
             overflow: hidden;
 
@@ -819,5 +819,13 @@ export default {
         color: #c9ac67;
         font-size: 24upx;
     }
+}
+.stop-scroll {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
 }
 </style>
