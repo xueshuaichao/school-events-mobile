@@ -182,7 +182,7 @@ export default {
     },
     methods: {
         getData() {
-            api.get('/api/works/detail', {
+            api.get('/api/activity/detail', {
                 id: this.id,
             }).then(
                 (res) => {

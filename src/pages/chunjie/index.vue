@@ -223,20 +223,25 @@
                         :key="item.id"
                         class="media-content"
                     >
-                        <image
-                            v-if="item.resource_type === 1"
-                            :src="item.video_img_url"
-                            class="video"
-                        />
-                        <image
-                            v-else-if="item.resource_type === 2"
-                            :src="item.img_url"
-                            class="video"
-                        />
-                        <image
-                            class="media-icon"
-                            :src="mediaIcon[item.resource_type]"
-                        />
+                        <navigator
+                            :url="`/pages/work/festival/festival?id=${item.id}`"
+                        >
+                            <image
+                                v-if="item.resource_type === 1"
+                                :src="item.video_img_url"
+                                class="video"
+                            />
+                            <image
+                                v-else-if="item.resource_type === 2"
+                                :src="item.img_url"
+                                class="video"
+                            />
+                            <image
+                                class="media-icon"
+                                :src="mediaIcon[item.resource_type]"
+                            />
+                        </navigator>
+
                         <view class="media-name">
                             {{ `#${item.cat_name}# ${item.resource_name}` }}
                         </view>
