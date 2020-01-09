@@ -12,30 +12,24 @@
                     :class="{ active: tabActiveIndex === 2 }"
                     @click="setTabActive(2)"
                 >
-                    已通过({{ workStatics.pass_num || 0 }})
+                    已通过({{ allNum.pass || 0 }})
                 </text>
                 <text
                     class="panel-title"
                     :class="{ active: tabActiveIndex === 1 }"
                     @click="setTabActive(1)"
                 >
-                    待审核({{ workStatics.no_verify_num || 0 }})
+                    待审核({{ allNum.wait || 0 }})
                 </text>
                 <text
                     class="panel-title"
                     :class="{ active: tabActiveIndex === 3 }"
                     @click="setTabActive(3)"
                 >
-                    未通过({{ workStatics.refuse_num || 0 }})
+                    未通过({{ allNum.no_pass || 0 }})
                 </text>
             </view>
             <view v-else>
-                <!-- <button
-                    class="abc"
-                    @click="handleClick"
-                >
-                    搜索
-                </button> -->
                 <view class="search-box">
                     <view class="search">
                         <image
@@ -135,11 +129,25 @@
                 />
             </view>
             <view
-                v-show="total === 0"
+                v-if="type === 'search'"
+                v-show="searchEmpty"
                 class="empty"
             >
                 <image src="../../../static/images/chunjie/empty.png" />
                 <view>搜索不到您要的结果，换个关键词试试吧～</view>
+            </view>
+            <view
+                v-show="myWorkEmpty"
+                class="work-empty"
+            >
+                <image src="../../../static/images/chunjie/work-empty.png" />
+                <view>您还没有上传作品</view>
+                <navigator url="/pages/chunjie/index">
+                    <image
+                        class="goUpload"
+                        src="../../../static/images/chunjie/goUpload.png"
+                    />
+                </navigator>
             </view>
         </view>
     </view>
@@ -163,21 +171,24 @@ export default {
                 1: '../../../static/images/chunjie/video-icon.png',
                 2: '../../../static/images/chunjie/img-icon.png',
             },
-            tabActiveIndex: 1,
-            workStatics: {},
+            tabActiveIndex: 2,
             filter: {
                 page_num: 1,
                 page_size: 10,
                 activity_id: 3,
             },
-            param: {
-                1: 'no_verify_num',
-                2: 'pass_num',
-                3: 'refuse_num',
-            },
             total: 1,
             type: 'myWork',
+            allNum: {},
         };
+    },
+    computed: {
+        searchEmpty() {
+            return this.total === 0 && this.type === 'search';
+        },
+        myWorkEmpty() {
+            return this.allallTotal === 0 && this.type === 'myWork';
+        },
     },
     methods: {
         toggle(k) {
@@ -218,16 +229,15 @@ export default {
                     status: this.tabActiveIndex,
                 })
                 .then(
-                    ({ list, total }) => {
-                        this.workStatics[
-                            this.param[this.tabActiveIndex]
-                        ] = total;
+                    ({ list, total, all_num: allNum }) => {
                         if (title === 'reachBottom') {
                             this.dataList = this.dataList.concat(list);
                         } else {
                             this.dataList = list;
                         }
                         this.total = total;
+                        this.allNum = allNum;
+                        this.allTotal = allNum.pass + allNum.wait + allNum.no_pass;
                         if (
                             this.total
                             <= this.filter.page_num * this.filter.page_size
@@ -297,10 +307,9 @@ export default {
 </script>
 
 <style lang="less">
-.abc {
-    position: fixed;
-    z-index: 999;
-    right: 0;
+.goUpload {
+    width: 479upx;
+    height: 169upx;
 }
 .empty {
     text-align: center;
@@ -397,6 +406,7 @@ export default {
             background: #ffedc3;
             width: 100%;
             height: 80upx;
+            line-height: 80upx;
             position: relative;
             border-radius: 76upx;
             float: right;
@@ -411,17 +421,23 @@ export default {
             input {
                 // margin-left:11upx;
                 width: 525upx;
-                position: absolute;
-                top: 14upx;
-                left: 69upx;
+                // position: absolute;
+                // top: 14upx;
+                // left: 69upx;
+                height: 25upx;
+                display: inline-block;
                 font-size: 28upx;
                 color: #ff3849;
+                margin-top: 4upx;
             }
             input::-webkit-input-placeholder {
                 color: #c9ac67;
                 font-size: 24upx;
             }
         }
+    }
+    .uni-input-placeholder {
+        color: #c9ac67;
     }
     .panel .panel-hd {
         border-bottom: none;
