@@ -14,7 +14,7 @@
             </view>
         </view>
         <navigator
-            v-if="status === 2"
+            v-if="show === 1"
             url="/pages/chunjie/index"
         >
             <view class="chunjie-entry">
@@ -32,7 +32,7 @@
                     :duration="duration"
                     :circular="circular"
                 >
-                    <swiper-item v-if="status === 2">
+                    <swiper-item v-if="show === 1">
                         <navigator
                             url="/pages/chunjie/index"
                             class="swiper-item"
@@ -306,31 +306,33 @@ export default {
             },
             prompt: false,
             isFirstLogin: 'isFirstLogin8',
-            status: 1,
+            status: 3,
+            show: 1,
         };
     },
-    onLoad() {},
-    onShow() {
-        this.chunjieStatus();
-    },
-    created() {
+    onLoad() {
         console.log('created');
         this.chunjieStatus();
         this.thirdEntryPrompt();
         this.getData();
     },
+    onShow() {
+        this.chunjieStatus();
+    },
+    created() {},
     onHide() {
         this.prompt = false;
     },
     methods: {
         chunjieStatus() {
             // 1未开始，2进行中，3已结束
-            console.log('获取活动状态');
             api.post('/api/activity/getactivitystatus', {
                 activity_id: 3,
             }).then((res) => {
+                uni.setStorageSync('status', res.status);
                 this.status = res.status;
-                // this.status=3;
+                // 1显示  0不显示
+                this.show = res.show;
             });
         },
         thirdEntryPrompt() {

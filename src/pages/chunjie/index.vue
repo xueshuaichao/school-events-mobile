@@ -1,13 +1,6 @@
 <template>
     <view :class="['page-index', { 'stop-scroll': prompt || prompt01 }]">
-        <!-- <button
-            class="abc"
-            @click="handleClick"
-        >
-            搜索
-        </button> -->
-        <!-- swiper -->
-        <!-- 一个简单的name跳转 -->
+        <!-- 活动规则 -->
         <view
             v-if="prompt"
             class="activerulebox"
@@ -100,6 +93,12 @@
                 奖项设置
             </view>
             <view class="active-content">
+                <view class="renqi-prize">
+                    <image src="../../static/images/chunjie/renqi-title.png" />
+                    <view>
+                        截止到2020年2月8日23:59，按投票名次可获得如下奖品
+                    </view>
+                </view>
                 <view class="prize-box">
                     <view
                         v-for="item in prizeList"
@@ -112,6 +111,56 @@
                         </view>
                         <view>{{ item.name }}</view>
                     </view>
+                </view>
+                <view class="caiyi-box">
+                    <image src="../../static/images/chunjie/caiyi-title.png" />
+                    <view class="caiyi-text">
+                        <view>
+                            由组委会根据才艺秀作品质量和内容，综和评选出20名优秀者奖励蓝牙音箱1个
+                        </view>
+                        <image src="../../static/images/chunjie/prize06.png" />
+                    </view>
+                    <view class="prize-prompt">
+                        礼品图片仅供参考，请以实物为准
+                    </view>
+                </view>
+
+                <image
+                    class="register02"
+                    src="../../static/images/chunjie/register02.png"
+                />
+                <view class="jinguizi">
+                    <view>
+                        <image
+                            src="../../static/images/chunjie/jinguizi01.png"
+                        />
+                        <view>金龟子陪你过大年</view>
+                        <view>
+                            小朋友的拜年神器，让孩子成为最受欢迎的拜年小达人
+                        </view>
+                    </view>
+                    <view>
+                        <image
+                            src="../../static/images/chunjie/jinguizi02.png"
+                        />
+                        <view>金龟子看图写话漫游古都之西安篇 </view>
+                        <view>
+                            有趣实用的传统文化故事，帮助小朋友敢表达、会表达
+                        </view>
+                    </view>
+                </view>
+                <view class="getStyle">
+                    <view>
+                        <view class="title">
+                            领取方式：
+                        </view>
+                        <view class="text">
+                            扫描小程序码，进入“我的”开始学习
+                        </view>
+                        <!-- <text>领取方式：</text>
+                        <text>扫描小程序码，进入“我的”开始学习</text> -->
+                    </view>
+                    <image src="../../static/images/chunjie/mini-pro.png" />
                 </view>
                 <view>
                     <view class="title">
@@ -159,6 +208,9 @@
             <view class="active-schedule">
                 <text>活动时间：1月10日-2月8日</text>
                 <text>结果公布：2月11日</text>
+            </view>
+            <view class="register">
+                <image src="../../static/images/chunjie/register.png" />
             </view>
             <view class="prize">
                 <view>
@@ -250,7 +302,7 @@
                         </text>
                         <view
                             class="vote"
-                            @click="handleVote(item.id)"
+                            @click="handleVote(item)"
                         >
                             帮TA投票
                         </view>
@@ -267,14 +319,13 @@
                     />
                 </view>
             </view>
-            <navigator
-                class="item"
-                url="/pages/upload/festival/festival"
+
+            <view
+                :class="status === 2 ? 'upload' : 'upload-disable'"
+                @click="handleUpload"
             >
-                <view class="upload">
-                    上传作品
-                </view>
-            </navigator>
+                上传作品
+            </view>
             <view class="footer">
                 本次活动最终解释权在法律范围内属活动举办方所有
             </view>
@@ -335,12 +386,8 @@ export default {
                     name: '液晶手写板*20个',
                     prize: '../../static/images/chunjie/prize05.png',
                 },
-                {
-                    prize_score: '六等奖',
-                    name: '蓝牙音箱*20个',
-                    prize: '../../static/images/chunjie/prize06.png',
-                },
             ],
+            status: uni.getStorageSync('status'),
         };
     },
     onLoad() {},
@@ -348,6 +395,21 @@ export default {
         this.getData();
     },
     methods: {
+        handleUpload() {
+            if (this.status === 2) {
+                uni.navigateTo({
+                    url: '/pages/upload/festival/festival',
+                });
+            } else {
+                uni.showToast({
+                    title:
+                        this.status === 1
+                            ? '活动未开始，敬请期待'
+                            : '活动已结束',
+                    icon: 'none',
+                });
+            }
+        },
         handleMorePrize() {
             this.prompt01 = true;
         },
@@ -433,17 +495,18 @@ export default {
 
             this.isPlayed = true;
         },
-        handleVote(id) {
-            api.isLogin().then(() => {
+        handleVote(item) {
+            if (this.status === 2) {
                 api.post('/api/activity/vote', {
-                    id,
+                    id: item.id,
                 }).then(
-                    (res) => {
+                    () => {
+                        // eslint-disable-next-line no-param-reassign
+                        item.ticket += 1;
                         uni.showToast({
                             title: '投票成功',
                             icon: 'none',
                         });
-                        console.log(res);
                     },
                     (res) => {
                         uni.showToast({
@@ -452,13 +515,122 @@ export default {
                         });
                     },
                 );
-            });
+            } else {
+                uni.showToast({
+                    title:
+                        this.status === 1
+                            ? '活动未开始，敬请期待'
+                            : '活动已结束',
+                    icon: 'none',
+                });
+            }
         },
     },
 };
 </script>
 
 <style lang="less">
+.getStyle {
+    margin-top: 45upx;
+    display: flex;
+    justify-content: space-between;
+    view {
+        text:first-child {
+            color: #fff0a8;
+            font-size: 28upx;
+        }
+        text:nth-child(2) {
+            color: #fff;
+            font-size: 24upx;
+        }
+    }
+    image {
+        width: 128upx;
+        height: 128upx;
+    }
+}
+.jinguizi {
+    display: flex;
+    justify-content: space-between;
+    & > view {
+        width: 305upx;
+        padding: 20upx;
+        height: 330upx;
+        box-sizing: border-box;
+        background: #ffeac9;
+        border-radius: 12upx;
+        image {
+            width: 100%;
+            height: 150upx;
+        }
+        & view:nth-child(2) {
+            font-size: 28upx;
+            color: #ff5630;
+        }
+        & view:last-child {
+            font-size: 22upx;
+            color: #c9ac67;
+        }
+    }
+}
+.register02 {
+    width: 598upx;
+    height: 68upx;
+}
+
+.caiyi-box {
+    text-align: center;
+    .prize-prompt {
+        width: 350upx;
+        height: 30upx;
+        font-size: 22upx;
+        background: #c24124;
+        color: #ff5630;
+        border-radius: 16upx;
+        padding: 0 12px;
+        text-align: center;
+        margin-top: 28upx;
+        margin-bottom: 36upx;
+        display: inline-block;
+    }
+    image {
+        width: 248upx;
+        height: 68upx;
+    }
+    .caiyi-text {
+        display: flex;
+        justify-content: space-between;
+        view {
+            width: 530upx;
+            text-align: left;
+            font-size: 22upx;
+        }
+        image {
+            width: 69upx;
+            height: 64upx;
+        }
+    }
+}
+
+.renqi-prize {
+    text-align: center;
+    margin-bottom: 30upx;
+    image {
+        width: 248upx;
+        height: 68upx;
+    }
+    view {
+        font-size: 22upx;
+        color: #fff;
+    }
+}
+.register {
+    padding: 0 30upx;
+    image {
+        width: 100%;
+        height: 102upx;
+    }
+}
 body.dialog-open {
     position: fixed;
     width: 100%;
@@ -488,7 +660,7 @@ body.dialog-open {
 .prize-box {
     // overflow: hidden;
     display: flex;
-    justify-content: space-between;
+    justify-content: space-around;
     flex-flow: row wrap;
     .prize-item {
         float: left;
@@ -509,12 +681,12 @@ body.dialog-open {
             height: 221upx;
         }
         image {
-            width: 131upx;
-            height: 120upx;
-            margin-top: 50upx;
+            width: 150upx;
+            height: 150upx;
+            margin-top: 35upx;
         }
         view:last-child {
-            color: #fff;
+            color: #a23820;
             font-size: 24upx;
             margin-top: 10upx;
         }
@@ -532,6 +704,17 @@ body.dialog-open {
     position: fixed;
     bottom: 40upx;
     background: url("../../static/images/chunjie/upload_bg.png") no-repeat;
+    background-size: 100% 100%;
+    text-align: center;
+    width: 100%;
+    line-height: 175upx;
+    height: 175upx;
+    font-size: 0;
+}
+.upload-disable {
+    position: fixed;
+    bottom: 40upx;
+    background: url("../../static/images/chunjie/upload-disable.png") no-repeat;
     background-size: 100% 100%;
     text-align: center;
     width: 100%;
@@ -594,8 +777,8 @@ body.dialog-open {
     margin-bottom: 15upx;
 
     & text {
-        border: 1px solid #ffcea2;
-        border-radius: 20upx;
+        // border: 1px solid #ffcea2;
+        // border-radius: 20upx;
         color: #ffcea2;
         height: 42upx;
         line-height: 42upx;
@@ -683,7 +866,7 @@ body.dialog-open {
         font-size: 28upx;
         color: #fff0a8;
         font-weight: bold;
-        margin-bottom: 24upx;
+        margin-bottom: 17upx;
     }
 
     .text {
@@ -711,18 +894,18 @@ body.dialog-open {
         position: absolute;
     }
     .active-content {
-        .size {
-            font-size: 28upx;
-        }
         overflow-y: scroll;
         position: absolute;
         top: 116upx;
         left: 29upx;
-        height: 1033upx;
+        max-height: 88%;
         width: 678upx;
         padding: 0 30upx;
         box-sizing: border-box;
         padding-right: 20upx;
+        .size {
+            font-size: 28upx;
+        }
     }
 }
 ::-webkit-scrollbar {
