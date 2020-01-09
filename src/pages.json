@@ -163,6 +163,13 @@
             "style": {
                 "navigationBarTitleText": "秀才艺，赢好礼"
             }
+        },
+
+        {
+            "path": "pages/login/login",
+            "style": {
+                "navigationBarTitleText": "登录"
+            }
         }
     ],
     "globalStyle": {

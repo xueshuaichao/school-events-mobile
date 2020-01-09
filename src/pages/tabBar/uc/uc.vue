@@ -163,13 +163,7 @@ export default {
             // return this.getWorkData();
         },
         doLogout() {
-            try {
-                uni.removeStorageSync('medusa_key');
-            } catch (e) {
-                // error
-                console.log(e);
-            }
-            api.get('/api/account/logout').then(() => {
+            api.logout().then(() => {
                 this.getData();
             });
         },
@@ -184,6 +178,9 @@ export default {
     },
     onShow() {
         this.getData();
+    },
+    onHide() {
+        this.isLoading = true;
     },
     onPullDownRefresh() {
         this.getData().then(() => {

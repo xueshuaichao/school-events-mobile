@@ -4,6 +4,16 @@
         class="page-work-detail"
     >
         <view
+            v-if="showShareMask === true"
+            class="share-mask"
+            @click="showShareMask = false"
+        >
+            <image
+                class="share-pic"
+                src="/static/images/work/share-guide.png"
+            />
+        </view>
+        <view
             v-if="isFullScreen && isH5"
             class="h5-full-screen-title text-one-line"
         >
@@ -67,7 +77,6 @@
                 <video
                     id="myVideo"
                     class="video"
-                    :poster="pageData.video_img_url"
                     :src="pageData.video.cloud_path_sd"
                     :controls="false"
                     @play="onPlay"
@@ -138,6 +147,7 @@
             <button
                 class="btn"
                 open-type="share"
+                @click="showShareMask = true"
             >
                 帮TA拉票
             </button>
@@ -166,6 +176,7 @@ export default {
             pageData: {},
             likeStatus: 0,
             isPlayed: false,
+            showShareMask: false,
 
             // #ifdef H5
             isH5: true,
@@ -211,8 +222,10 @@ export default {
                     }).then(
                         () => {
                             // console.log(res);
+                            this.likeStatus = 1;
+                            this.pageData.ticket += 1;
                             // this.likeStatus = isLiked ? 0 : 1;
-                            this.getData();
+                            // this.getData();
                         },
                         (err) => {
                             uni.showToast({
@@ -232,7 +245,7 @@ export default {
             api.get('/api/activity/getuserthumb', {
                 id: this.id,
             }).then((res) => {
-                this.likeStatus = res.status;
+                this.likeStatus = res.status === true ? 1 : 0;
             });
         },
         onPlay() {
@@ -530,6 +543,23 @@ export default {
         text-align: center;
         margin-bottom: 30rpx;
         padding: 0;
+    }
+
+    .share-mask {
+        position: fixed;
+        z-index: 9999;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.7);
+        text-align: center;
+
+        .share-pic {
+            width: 438rpx;
+            height: 216rpx;
+            position: absolute;
+            right: 40rpx;
+            top: 28rpx;
+        }
     }
 }
 </style>
