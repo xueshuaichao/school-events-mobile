@@ -448,16 +448,12 @@ export default {
                 left: 29upx;
             }
             input {
-                // margin-left:11upx;
                 width: 525upx;
-                // position: absolute;
-                // top: 14upx;
-                // left: 69upx;
-                height: 25upx;
-                display: inline-block;
+                position: absolute;
+                top: 20upx;
+                left: 69upx;
                 font-size: 28upx;
                 color: #ff3849;
-                margin-top: 4upx;
             }
             input::-webkit-input-placeholder {
                 color: #c9ac67;

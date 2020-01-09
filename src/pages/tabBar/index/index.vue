@@ -328,7 +328,6 @@ export default {
             api.post('/api/activity/getactivitystatus', {
                 activity_id: 3,
             }).then((res) => {
-                uni.setStorageSync('status', res.status);
                 this.status = res.status;
                 // 1显示  0不显示
                 this.show = res.show;

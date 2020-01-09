@@ -387,14 +387,26 @@ export default {
                     prize: '../../static/images/chunjie/prize05.png',
                 },
             ],
-            status: uni.getStorageSync('status'),
+            status: 3,
         };
     },
     onLoad() {},
     created() {
         this.getData();
+        this.chunjieStatus();
+    },
+    onHide() {
+        this.changeValue = '';
     },
     methods: {
+        chunjieStatus() {
+            // 1未开始，2进行中，3已结束
+            api.post('/api/activity/getactivitystatus', {
+                activity_id: 3,
+            }).then((res) => {
+                this.status = res.status;
+            });
+        },
         handleUpload() {
             if (this.status === 2) {
                 api.isLogin().then(() => {
@@ -443,8 +455,8 @@ export default {
                 this.getData('reachBottom');
             }
         },
-        handleClick() {
-            if (!this.changeValue) {
+        bindconfirm() {
+            if (!this.changeValue.trim()) {
                 uni.showToast({
                     title: '请输入搜索内容',
                     icon: 'none',
@@ -453,18 +465,6 @@ export default {
             }
             uni.navigateTo({
                 url: `/pages/upload/work/work?type=search&name=${this.changeValue.trim()}`,
-            });
-        },
-        bindconfirm(e) {
-            if (!e.detail.value) {
-                uni.showToast({
-                    title: '请输入搜索内容',
-                    icon: 'none',
-                });
-                return;
-            }
-            uni.navigateTo({
-                url: `/pages/upload/work/work?type=search&name=${e.detail.value.trim()}`,
             });
         },
         toggle(k) {
@@ -989,7 +989,7 @@ body.dialog-open {
                     // margin-left:11upx;
                     width: 325upx;
                     position: absolute;
-                    top: 14upx;
+                    top: 20upx;
                     left: 60upx;
                     font-size: 24upx;
                     color: #ff3849;
@@ -1013,9 +1013,5 @@ body.dialog-open {
     width: 100%;
     height: 100%;
     overflow: hidden;
-}
-
-.uni-input-placeholder {
-    margin-top: 8rpx;
 }
 </style>
