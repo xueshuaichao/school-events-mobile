@@ -199,12 +199,15 @@
                 "selectedIconPath": "static/images/tab/work_ac.png",
                 "text": "作品展示"
             },
+            // #ifndef H5
             {
                 "pagePath": "pages/tabBar/upload/upload",
                 "iconPath": "static/images/tab/upload.png",
                 "selectedIconPath": "static/images/tab/upload_ac.png",
                 "text": "我要秀才艺"
             },
+            // #endif
+
             // {
             //     "pagePath": "pages/tabBar/mall/mall",
             //     "iconPath": "static/images/tab/mall.png",

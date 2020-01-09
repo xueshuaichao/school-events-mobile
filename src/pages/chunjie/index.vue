@@ -434,23 +434,25 @@ export default {
             this.isPlayed = true;
         },
         handleVote(id) {
-            api.post('/api/activity/vote', {
-                id,
-            }).then(
-                (res) => {
-                    uni.showToast({
-                        title: '投票成功',
-                        icon: 'none',
-                    });
-                    console.log(res);
-                },
-                (res) => {
-                    uni.showToast({
-                        title: res.message,
-                        icon: 'none',
-                    });
-                },
-            );
+            api.isLogin().then(() => {
+                api.post('/api/activity/vote', {
+                    id,
+                }).then(
+                    (res) => {
+                        uni.showToast({
+                            title: '投票成功',
+                            icon: 'none',
+                        });
+                        console.log(res);
+                    },
+                    (res) => {
+                        uni.showToast({
+                            title: res.message,
+                            icon: 'none',
+                        });
+                    },
+                );
+            });
         },
     },
 };

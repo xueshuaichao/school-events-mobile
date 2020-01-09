@@ -53,7 +53,7 @@
                                 分享
                             </button>
                             <view
-                                v-if="item.status !== 1"
+                                v-if="!isH5 && item.status !== 1"
                                 class="btn"
                                 @click="editWork(item)"
                             >
