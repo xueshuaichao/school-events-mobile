@@ -3,7 +3,7 @@
         <!-- identity 用户身份 1=>C端普通用户 ,2=> 教育局员工，3=>学校员工 4 学生 -->
         <!-- my works -->
         <view
-            v-if="true || (userInfo.identity === 3 || userInfo.identity === 4)"
+            v-if="true || userInfo.identity === 3 || userInfo.identity === 4"
             class="panel"
         >
             <view class="panel-hd">
@@ -53,7 +53,7 @@
                                 分享
                             </button>
                             <view
-                                v-if="item.status !== 1"
+                                v-if="!isH5 && item.status !== 1"
                                 class="btn"
                                 @click="editWork(item)"
                             >

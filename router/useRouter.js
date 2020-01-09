@@ -112,6 +112,9 @@ const routesConfig = {
             path: '/pages/chunjie/index',
         },
         {
+            path: '/pages/login/login',
+        },
+        {
             path: '/pages/work/festival/festival',
         },
         {

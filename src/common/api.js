@@ -1,5 +1,4 @@
 import { http } from './third-party/request';
-import utils from './utils';
 
 function get(url, data) {
     return http.get(url, data).then(
@@ -45,30 +44,46 @@ function post(url, data) {
 
 function isLogin() {
     return new Promise((resolve, reject) => {
-        const LSUserkey = utils.getToken();
-        if (LSUserkey) {
-            return resolve(LSUserkey);
+        if (isLogin.userInfo) {
+            return resolve(isLogin.user_info);
         }
-        if (!LSUserkey) {
-            return get('/api/user/info').then(
-                (res) => {
-                    if (res && res.user_info && res.user_info.user_id) {
-                        resolve(res);
-                    } else {
-                        reject();
-                    }
-                },
-                () => {
+
+        return get('/api/user/info').then(
+            (res) => {
+                if (res && res.user_info && res.user_info.user_id) {
+                    isLogin.userInfo = res.user_info;
+                    resolve(res.user_info);
+                } else {
+                    uni.navigateTo({
+                        url: '/pages/login/login',
+                    });
                     reject();
-                },
-            );
-        }
-        return false;
+                }
+            },
+            () => {
+                uni.navigateTo({
+                    url: '/pages/login/login',
+                });
+                reject();
+            },
+        );
     });
+}
+
+function logout() {
+    try {
+        uni.removeStorageSync('medusa_key');
+    } catch (e) {
+        // error
+        console.log(e);
+    }
+    isLogin.userInfo = null;
+    return get('/api/account/logout');
 }
 
 export default {
     get,
     post,
     isLogin,
+    logout,
 };

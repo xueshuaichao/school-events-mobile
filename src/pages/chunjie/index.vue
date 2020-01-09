@@ -336,7 +336,6 @@
 <script>
 import api from '../../common/api';
 import uniLoadMore from '../../components/uni-load-more/uni-load-more.vue';
-// import utils from '../../common/utils';
 
 export default {
     components: {
@@ -476,16 +475,11 @@ export default {
             this.prompt = true;
         },
         handleMywork() {
-            api.isLogin().then(
-                () => {
-                    uni.navigateTo({
-                        url: '/pages/upload/work/work?type=myWork',
-                    });
-                },
-                () => uni.switchTab({
-                    url: '/pages/tabBar/uc/uc',
-                }),
-            );
+            api.isLogin().then(() => {
+                uni.navigateTo({
+                    url: '/pages/upload/work/work?type=myWork',
+                });
+            });
         },
         handleClose() {
             this.prompt = false;
