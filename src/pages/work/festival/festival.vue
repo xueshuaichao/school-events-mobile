@@ -75,9 +75,10 @@
                     </cover-view>
                 </cover-view>
                 <video
-                    id="myVideo"
+                    ref="video"
                     class="video"
                     :src="pageData.video.cloud_path_sd"
+                    :autoplay="true"
                     :controls="false"
                     @play="onPlay"
                     @fullscreenchange="onFullScreenChange"
@@ -153,6 +154,18 @@
             </button>
         </view>
 
+        <view
+            v-if="isPlayed && isPaused"
+            class="pause-cover"
+        >
+            <view
+                class="uni-video-cover"
+                @click="togglePlayStatus"
+            >
+                <div class="uni-video-cover-play-button" />
+            </view>
+        </view>
+
         <!-- v-if="!isH5" -->
         <image
             src="/static/images/work/festival.png"
@@ -176,6 +189,7 @@ export default {
             pageData: {},
             likeStatus: 0,
             isPlayed: false,
+            isPaused: false,
             showShareMask: false,
 
             // #ifdef H5
@@ -308,6 +322,10 @@ export default {
                 url: '/pages/upload/festival/festival',
             });
         },
+        togglePlayStatus() {
+            this.$refs.video.play();
+            this.isPaused = false;
+        },
     },
     onLoad(query) {
         const { id } = query;
@@ -322,6 +340,9 @@ export default {
         );
         window.addEventListener('orientationchange', this.html5VideoAutoAdjust);
         // #endif
+    },
+    onHide() {
+        this.isPaused = true;
     },
     onShow() {},
     onShareAppMessage(res) {
@@ -501,12 +522,13 @@ export default {
         font-size: 24rpx;
 
         .recommend {
-            width: 280rpx;
+            width: 260rpx;
             display: inline-block;
         }
 
         .teacher {
             display: inline-block;
+            width: 220rpx;
         }
     }
 
@@ -560,6 +582,10 @@ export default {
             right: 40rpx;
             top: 28rpx;
         }
+    }
+
+    .uni-video-bar {
+        top: 50%;
     }
 }
 </style>
