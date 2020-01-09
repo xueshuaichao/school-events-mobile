@@ -140,9 +140,7 @@
             >
                 <image src="../../../static/images/chunjie/work-empty.png" />
                 <view>
-                    {{
-                        allTotal === 0 ? "您还没有上传作品" : "暂无作品"
-                    }}
+                    {{ allTotal === 0 ? "您还没有上传作品" : "暂无作品" }}
                 </view>
                 <navigator
                     v-if="allTotal === 0"
@@ -185,6 +183,7 @@ export default {
             total: 1,
             type: 'myWork',
             allNum: {},
+            allTotal: 0,
         };
     },
     computed: {

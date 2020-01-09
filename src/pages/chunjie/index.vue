@@ -69,7 +69,7 @@
                                 每个账户每天只能为同一作品投票1次。
                             </li>
                             <li>
-                                排行榜，将根据视频点赞量进行排名，排行榜将以2020年2月6日11：59分时的排名为最终结果，上榜者可获得相应礼品
+                                排行榜，将根据视频点赞量进行排名，排行榜将以2020年2月6日23：59分时的排名为最终结果，上榜者可获得相应礼品
                             </li>
                             <li>
                                 获奖名单将于2月11日在爱挑战官网(http://atz.qsnatz.com)
@@ -769,7 +769,7 @@ body.dialog-open {
         background: url("../../static/images/chunjie/more-prize-bg.png")
             no-repeat;
         background-size: 100% 100%;
-        background-position: center 5upx;
+        background-position: center 24upx;
         font-size: 34upx;
         color: #ffe57b;
     }

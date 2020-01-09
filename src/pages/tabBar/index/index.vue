@@ -311,7 +311,6 @@ export default {
         };
     },
     onLoad() {
-        console.log('created');
         this.chunjieStatus();
         this.thirdEntryPrompt();
         this.getData();
