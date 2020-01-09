@@ -287,7 +287,7 @@ export default {
             this.getWorkData();
         },
         viewDetail(item) {
-            if (this.tabActiveIndex === 0) {
+            if (this.tabActiveIndex === 2) {
                 uni.navigateTo({
                     url: `/pages/work/festival/festival?id=${item.id}`,
                 });
