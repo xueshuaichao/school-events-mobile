@@ -287,9 +287,11 @@ export default {
             this.getWorkData();
         },
         viewDetail(item) {
-            uni.navigateTo({
-                url: `/pages/work/festival/festival?id=${item.id}`,
-            });
+            if (this.tabActiveIndex === 0) {
+                uni.navigateTo({
+                    url: `/pages/work/festival/festival?id=${item.id}`,
+                });
+            }
         },
     },
     onLoad(query) {
