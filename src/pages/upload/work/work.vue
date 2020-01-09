@@ -139,8 +139,15 @@
                 class="work-empty"
             >
                 <image src="../../../static/images/chunjie/work-empty.png" />
-                <view>您还没有上传作品</view>
-                <navigator url="/pages/chunjie/index">
+                <view>
+                    {{
+                        allTotal === 0 ? "您还没有上传作品" : "暂无作品"
+                    }}
+                </view>
+                <navigator
+                    v-if="allTotal === 0"
+                    url="/pages/chunjie/index"
+                >
                     <image
                         class="goUpload"
                         src="../../../static/images/chunjie/goUpload.png"
@@ -185,7 +192,7 @@ export default {
             return this.total === 0 && this.type === 'search';
         },
         myWorkEmpty() {
-            return this.allallTotal === 0 && this.type === 'myWork';
+            return this.total === 0 && this.type === 'myWork';
         },
     },
     methods: {
@@ -322,6 +329,24 @@ export default {
         width: 300upx;
         height: 236upx;
         margin-top: 174upx;
+    }
+    view {
+        color: #ffedc3;
+        font-size: 28upx;
+        margin-top: 30upx;
+    }
+}
+.work-empty {
+    text-align: center;
+    image {
+        width: 300upx;
+        height: 236upx;
+        margin-top: 174upx;
+    }
+    .goUpload {
+        width: 479upx;
+        height: 169upx;
+        margin-top: 37upx;
     }
     view {
         color: #ffedc3;
