@@ -397,8 +397,10 @@ export default {
     methods: {
         handleUpload() {
             if (this.status === 2) {
-                uni.navigateTo({
-                    url: '/pages/upload/festival/festival',
+                api.isLogin().then(() => {
+                    uni.navigateTo({
+                        url: '/pages/upload/festival/festival',
+                    });
                 });
             } else {
                 uni.showToast({
@@ -497,24 +499,26 @@ export default {
         },
         handleVote(item) {
             if (this.status === 2) {
-                api.post('/api/activity/vote', {
-                    id: item.id,
-                }).then(
-                    () => {
-                        // eslint-disable-next-line no-param-reassign
-                        item.ticket += 1;
-                        uni.showToast({
-                            title: '投票成功',
-                            icon: 'none',
-                        });
-                    },
-                    (res) => {
-                        uni.showToast({
-                            title: res.message,
-                            icon: 'none',
-                        });
-                    },
-                );
+                api.isLogin().then(() => {
+                    api.post('/api/activity/vote', {
+                        id: item.id,
+                    }).then(
+                        () => {
+                            // eslint-disable-next-line no-param-reassign
+                            item.ticket += 1;
+                            uni.showToast({
+                                title: '投票成功',
+                                icon: 'none',
+                            });
+                        },
+                        (res) => {
+                            uni.showToast({
+                                title: res.message,
+                                icon: 'none',
+                            });
+                        },
+                    );
+                });
             } else {
                 uni.showToast({
                     title:
@@ -1009,5 +1013,9 @@ body.dialog-open {
     width: 100%;
     height: 100%;
     overflow: hidden;
+}
+
+.uni-input-placeholder {
+    margin-top: 8rpx;
 }
 </style>

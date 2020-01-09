@@ -315,6 +315,7 @@ export default {
             } else {
                 this.needTab = true;
                 this.newsTabActiveIndex = 0;
+                this.uploadMode = 'video';
             }
 
             console.log(this.formData);

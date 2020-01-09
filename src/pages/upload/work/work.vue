@@ -67,9 +67,7 @@
                     :key="item.id"
                     class="media-content"
                 >
-                    <navigator
-                        :url="`/pages/work/festival/festival?id=${item.id}`"
-                    >
+                    <view @click="viewDetail(item)">
                         <image
                             v-if="item.resource_type === 1"
                             :src="item.video_img_url"
@@ -84,7 +82,7 @@
                             class="media-icon"
                             :src="mediaIcon[item.resource_type]"
                         />
-                    </navigator>
+                    </view>
                     <view
                         v-if="type === 'myWork'"
                         class="work-info"
@@ -294,6 +292,13 @@ export default {
         setTabActive(i) {
             this.tabActiveIndex = i;
             this.getWorkData();
+        },
+        viewDetail(item) {
+            if (this.tabActiveIndex === 2) {
+                uni.navigateTo({
+                    url: `/pages/work/festival/festival?id=${item.id}`,
+                });
+            }
         },
     },
     onLoad(query) {
