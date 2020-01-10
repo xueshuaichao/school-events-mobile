@@ -94,12 +94,12 @@
             >
                 拖动图片可调整展示顺序，第一张图片会作为该作品的封面图
             </view> -->
-            <upload
+            <!-- <upload
                 v-if="uploadMode === 'video'"
                 :type="'image'"
                 :count="1"
                 @change="updateImage"
-            />
+            /> -->
 
             <template v-if="uploadMode === 'image'">
                 <upload
