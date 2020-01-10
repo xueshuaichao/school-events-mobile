@@ -177,6 +177,7 @@
         // #ifdef H5
         "navigationStyle": "custom",
         // #endif
+        "softinputNavBar": "none",
         "navigationBarTextStyle": "black",
         "navigationBarTitleText": "uni-app",
         "navigationBarBackgroundColor": "#F8F8F8",

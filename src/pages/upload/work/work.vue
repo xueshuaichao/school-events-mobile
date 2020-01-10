@@ -39,6 +39,8 @@
                         <input
                             v-model="changeValue"
                             type="text"
+                            confirm-type="search"
+                            placeholder-style="color:#C9AC67"
                             placeholder="请输入作者姓名或作品名称"
                             @confirm="bindconfirm"
                         >
@@ -455,14 +457,7 @@ export default {
                 font-size: 28upx;
                 color: #ff3849;
             }
-            input::-webkit-input-placeholder {
-                color: #c9ac67;
-                font-size: 24upx;
-            }
         }
-    }
-    .uni-input-placeholder {
-        color: #c9ac67;
     }
     .panel .panel-hd {
         border-bottom: none;
