@@ -299,8 +299,10 @@ export default {
             });
         },
         joinGame() {
-            uni.navigateTo({
-                url: '/pages/upload/festival/festival',
+            api.isLogin().then(() => {
+                uni.navigateTo({
+                    url: '/pages/upload/festival/festival',
+                });
             });
         },
         togglePlayStatus() {
