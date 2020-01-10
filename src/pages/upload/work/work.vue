@@ -154,7 +154,7 @@
                 </view>
                 <navigator
                     v-if="allTotal === 0"
-                    url="/pages/chunjie/index"
+                    url="/pages/upload/festival/festival"
                 >
                     <image
                         class="goUpload"

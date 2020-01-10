@@ -127,11 +127,11 @@
                     </view>
                 </view>
 
-                <image
+                <!-- <image
                     class="register02"
                     src="../../static/images/chunjie/register02.png"
-                />
-                <view class="jinguizi">
+                /> -->
+                <!-- <view class="jinguizi">
                     <view>
                         <image
                             src="../../static/images/chunjie/jinguizi01.png"
@@ -150,8 +150,8 @@
                             有趣实用的传统文化故事，帮助小朋友敢表达、会表达
                         </view>
                     </view>
-                </view>
-                <view class="getStyle">
+                </view> -->
+                <!-- <view class="getStyle">
                     <view>
                         <view class="title">
                             领取方式：
@@ -159,11 +159,9 @@
                         <view class="text">
                             扫描小程序码，进入“我的”开始学习
                         </view>
-                        <!-- <text>领取方式：</text>
-                        <text>扫描小程序码，进入“我的”开始学习</text> -->
                     </view>
                     <image src="../../static/images/chunjie/mini-pro.png" />
-                </view>
+                </view> -->
                 <view>
                     <view class="title">
                         奖品兑换说明
@@ -211,9 +209,9 @@
                 <text>活动时间：1月10日-2月8日</text>
                 <text>结果公布：2月11日</text>
             </view>
-            <view class="register">
+            <!-- <view class="register">
                 <image src="../../static/images/chunjie/register.png" />
-            </view>
+            </view> -->
             <view class="prize">
                 <view>
                     <text>一等奖</text>
