@@ -344,6 +344,7 @@
 <script>
 import api from '../../common/api';
 import uniLoadMore from '../../components/uni-load-more/uni-load-more.vue';
+import share from '../../common/share';
 
 export default {
     components: {
@@ -453,6 +454,8 @@ export default {
                     } else {
                         this.loadMoreStatus = 'more';
                     }
+
+                    this.initShare();
                 },
             );
         },
@@ -473,6 +476,23 @@ export default {
             }
             uni.navigateTo({
                 url: `/pages/upload/work/work?type=search&name=${this.changeValue.trim()}`,
+            });
+        },
+        initShare() {
+            const titleList = [
+                '鼠年大吉，快来看我的拜年才艺秀！',
+                '才艺拜年乐趣多，我来表演你来赞！',
+                '我来给你拜新年，表演才艺送祝福！',
+                '鼠年春节我精彩，才艺拜年望喜爱！',
+            ];
+            const title = titleList[Math.floor(Math.random() * titleList.length)];
+            const desc = '快乐过寒假，才艺拜大年！';
+
+            share({
+                title,
+                desc,
+                thumbnail:
+                    'http://aitiaozhan.oss-cn-beijing.aliyuncs.com/banner.png?x-oss-process=image/format,png/interlace,1/quality,Q_80/resize,m_pad,h_100',
             });
         },
         toggle(k) {
