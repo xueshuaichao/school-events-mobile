@@ -6,8 +6,14 @@
         <view class="cover-wrap">
             <template v-if="type === 'video'">
                 <image
+                    v-if="!url"
                     class="icon-video"
                     src="/static/images/comp/upload/video.png"
+                />
+                <image
+                    v-else
+                    class="icon-success"
+                    src="/static/images/comp/upload/success.png"
                 />
                 <view
                     v-if="!url"
@@ -176,9 +182,7 @@ export default {
                         if (resp.status === 200) {
                             // success
                             this.url = resp.data.path;
-                            uni.showToast({
-                                title: "已上传"
-                            });
+                            uni.hideToast();
                             resolve(resp.data);
                             // this.$emit('change', resp.data);
                         } else {
@@ -325,6 +329,13 @@ export default {
         width: 43upx;
         height: 28upx;
         margin-top: 16upx;
+    }
+
+    .icon-success {
+        display: inline-block;
+        width: 42rpx;
+        height: 42rpx;
+        margin-top: 12rpx;
     }
 
     .icon-image {

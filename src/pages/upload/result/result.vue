@@ -69,6 +69,14 @@
         >
             您无参赛资格，谢谢参与！
         </view>
+        <view class="sub-title mt">
+            <text
+                class="link mr-right"
+                @click="goHome"
+            >
+                返回首页
+            </text>
+        </view>
     </div>
 </template>
 
@@ -102,6 +110,11 @@ export default {
                     url: '/pages/upload/work/work?type=myWork',
                 });
             }
+        },
+        goHome() {
+            uni.reLaunch({
+                url: '/pages/tabBar/index/index',
+            });
         },
     },
     onLoad(params) {
@@ -143,6 +156,10 @@ export default {
         .mr-right {
             margin-right: 40upx;
         }
+    }
+
+    .mt {
+        margin-top: 40rpx;
     }
 }
 </style>
