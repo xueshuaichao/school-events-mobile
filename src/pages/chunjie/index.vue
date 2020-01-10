@@ -292,10 +292,9 @@
                                 :src="item.img_url"
                                 class="video"
                             />
-                            <image
-                                class="media-icon"
-                                :src="mediaIcon[item.resource_type]"
-                            />
+                            <view class="media-icon">
+                                <image :src="mediaIcon[item.resource_type]" />
+                            </view>
                         </navigator>
 
                         <view class="media-name">
@@ -391,7 +390,7 @@ export default {
                     prize: '../../static/images/chunjie/prize05.png',
                 },
             ],
-            status: 3,
+            status: 2,
         };
     },
     onLoad() {},
@@ -848,9 +847,17 @@ body.dialog-open {
         .media-icon {
             width: 40upx;
             height: 40upx;
+            background: rgba(0, 0, 0, 0.6);
+            border-radius: 20upx;
+            text-align: center;
+            line-height: 40upx;
             position: absolute;
             top: 175upx;
             right: 10upx;
+            image {
+                width: 22upx;
+                height: 22upx;
+            }
         }
     }
 }

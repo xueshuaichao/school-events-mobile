@@ -35,15 +35,17 @@
                         <image
                             src="../../../static/images/chunjie/search-icon.png"
                         />
-
-                        <input
-                            v-model="changeValue"
-                            type="text"
-                            confirm-type="search"
-                            placeholder-style="color:#C9AC67"
-                            placeholder="请输入作者姓名或作品名称"
-                            @confirm="bindconfirm"
-                        >
+                        <form action="javascript:return true">
+                            <input
+                                v-model="changeValue"
+                                type="text"
+                                confirm-type="search"
+                                confirm-hold="true"
+                                placeholder-style="color:#C9AC67"
+                                placeholder="请输入作者姓名或作品名称"
+                                @confirm="bindconfirm"
+                            >
+                        </form>
                     </view>
                     <button
                         :class="{
@@ -80,10 +82,9 @@
                             :src="item.img_url"
                             class="work"
                         />
-                        <image
-                            class="media-icon"
-                            :src="mediaIcon[item.resource_type]"
-                        />
+                        <view class="media-icon">
+                            <image :src="mediaIcon[item.resource_type]" />
+                        </view>
                     </view>
                     <view
                         v-if="type === 'myWork'"
@@ -374,9 +375,17 @@ export default {
     .media-icon {
         width: 40upx;
         height: 40upx;
+        background: rgba(0, 0, 0, 0.6);
+        border-radius: 20upx;
+        text-align: center;
+        line-height: 40upx;
         position: absolute;
         top: 175upx;
         left: 290upx;
+        image {
+            width: 22upx;
+            height: 22upx;
+        }
     }
     .work-info {
         width: 290upx;

@@ -305,8 +305,8 @@ export default {
                 talent: [],
             },
             prompt: false,
-            isFirstLogin: 'isFirstLogin9',
-            status: 3,
+            isFirstLogin: 'isFirstLogin11',
+            status: 2,
             show: 1,
         };
     },
@@ -335,9 +335,9 @@ export default {
         },
         thirdEntryPrompt() {
             const isFirstLogin = uni.getStorageSync(this.isFirstLogin);
+            console.log(isFirstLogin, 'isFirstLogin');
             if (!isFirstLogin) {
                 this.prompt = true;
-                uni.setStorageSync(this.isFirstLogin, true);
             }
         },
         handleChunjie() {
