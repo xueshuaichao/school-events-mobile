@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-globals */
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-undef */
 import Vue from 'vue';
@@ -17,7 +18,14 @@ console.log(share);
 const common = {
     onShow: () => {
         uni.showShareMenu();
-        share();
+        // 自定义分享的网址 应该忽略初始化分享，否则会覆盖掉页面级别的分享
+        if (
+            ['/pages/chunjie/index', '/pages/work/festival/festival'].indexOf(
+                location.path,
+            ) !== -1
+        ) {
+            share();
+        }
     },
     onReady: () => {},
     onShareAppMessage(res) {
