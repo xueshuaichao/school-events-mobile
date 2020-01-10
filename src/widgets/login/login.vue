@@ -239,7 +239,7 @@ export default {
         doSMSLogin() {
             console.log('sms login');
             return api
-                .post('/api/v1.2/account/userlogin', {
+                .post('/api/account/userlogin', {
                     channel: 'aitiaozhan/xian',
                     captcha: this.formData.password,
                     phone: this.formData.username,
@@ -279,7 +279,7 @@ export default {
             }
 
             return api
-                .post('/api/v1.2/account/userlogin', {
+                .post('/api/account/userlogin', {
                     channel: 'aitiaozhan/xian',
                     phone: this.newUser.phone,
                     captcha: this.newUser.captcha,
