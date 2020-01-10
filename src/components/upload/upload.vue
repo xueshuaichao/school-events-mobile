@@ -182,9 +182,6 @@ export default {
                         if (resp.status === 200) {
                             // success
                             this.url = resp.data.path;
-                            uni.showToast({
-                                title: "已上传"
-                            });
                             resolve(resp.data);
                             // this.$emit('change', resp.data);
                         } else {
