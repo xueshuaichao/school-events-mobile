@@ -363,7 +363,7 @@ export default {
         },
         goHome() {
             uni.reLaunch({
-                url: '/pages/tabBar/index/index',
+                url: '/pages/chunjie/index',
             });
         },
         togglePlayStatus() {
@@ -480,7 +480,6 @@ export default {
         padding: 30upx;
         color: #fff;
         pointer-events: none;
-
         .avatar {
             display: inline-block;
             width: 24rpx;

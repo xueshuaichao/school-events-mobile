@@ -26,7 +26,7 @@
                         活动对象
                     </view>
                     <view class="text">
-                        本次活动仅限3-18岁的青少年参与。
+                        本次活动仅限3-18岁的青少年参与
                     </view>
                 </view>
                 <view>
@@ -44,11 +44,11 @@
                     <view class="text">
                         <ul>
                             <li>
-                                视频格式：支持MP4、MOV、3GP、MP4V、M4V、MKV、AVI、FLV等，视频时长不超过3分钟；单张图片小于10MB。
+                                视频格式：支持MP4、MOV、3GP、MP4V、M4V、MKV、AVI、FLV等，视频时长不超过5分钟；单张图片小于10MB。
                             </li>
                             <li>
                                 内容：如果发现有用户上传不合规内容，如涉及攻击我国政治制度、法律制度、黄赌毒、封建迷信等违背社会主义核心价值观的内容、
-                                非原创、盗窃他人或平台的内容、或恶意刷票等扰乱秩序者，该账号将取消活动参与资格，不合规视频/图片将被删除。。
+                                非原创、盗窃他人或平台的内容、或恶意刷票等扰乱秩序者，该账号将取消活动参与资格，不合规视频/图片将被删除。
                             </li>
                         </ul>
                     </view>
@@ -290,12 +290,12 @@
                         >
                             <image
                                 v-if="item.resource_type === 1"
-                                :src="item.video_img_url"
+                                :src="item.video_img_url | optimizeImage"
                                 class="video"
                             />
                             <image
                                 v-else-if="item.resource_type === 2"
-                                :src="item.img_url"
+                                :src="item.img_url | optimizeImage"
                                 class="video"
                             />
                             <view class="media-icon">
@@ -345,6 +345,25 @@ import uniLoadMore from '../../components/uni-load-more/uni-load-more.vue';
 import share from '../../common/share';
 
 export default {
+    filters: {
+        optimizeImage: (val) => {
+            if (!val) {
+                return '';
+            }
+            console.log(val, 'valu');
+            let newUrl = '';
+            const width = 335;
+            const height = 225;
+            if (val.indexOf('?') !== -1) {
+                newUrl = `${val}&x-oss-process=image/format,png/interlace,1/quality,Q_80/resize,m_pad,h_${height
+                    * 2},w_${width * 2}`;
+            } else {
+                newUrl = `${val}?x-oss-process=image/format,png/interlace,1/quality,Q_80/resize,m_pad,h_${height
+                    * 2},w_${width * 2}`;
+            }
+            return newUrl;
+        },
+    },
     components: {
         uniLoadMore,
     },
@@ -397,7 +416,6 @@ export default {
             status: 2,
         };
     },
-    onLoad() {},
     created() {
         this.getData();
         this.chunjieStatus();
