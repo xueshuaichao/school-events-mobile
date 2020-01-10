@@ -487,7 +487,7 @@ export default {
                 title,
                 desc,
                 thumbnail:
-                    'http://aitiaozhan.oss-cn-beijing.aliyuncs.com/banner.png',
+                    'http://aitiaozhan.oss-cn-beijing.aliyuncs.com/banner.png?x-oss-process=image/format,png/interlace,1/quality,Q_80/resize,m_pad,h_100',
             });
         },
         toggle(k) {
