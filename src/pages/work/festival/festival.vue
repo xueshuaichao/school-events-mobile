@@ -215,7 +215,15 @@ export default {
                     });
                 },
                 (err) => {
-                    console.log(err);
+                    uni.showToast({
+                        icon: 'none',
+                        title: err.message,
+                    });
+                    setTimeout(() => {
+                        uni.reLaunch({
+                            url: '/pages/tabBar/index/index',
+                        });
+                    }, 1500);
                 },
             );
 
