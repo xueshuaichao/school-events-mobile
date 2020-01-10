@@ -60,7 +60,7 @@
                     <view class="text">
                         <ul>
                             <li>
-                                参赛者在爱挑战注册并通过小程序活动界面上传作品，审核通过后可邀请亲友点赞。
+                                参赛者在爱挑战注册并通过小程序活动界面上传作品，审核通过后可邀请亲友投票。
                             </li>
                             <li>
                                 未传视频的注册用户只能为参赛选手投票，无法参与排行榜活动。
@@ -69,7 +69,7 @@
                                 每个账户每天只能为同一作品投票1次。
                             </li>
                             <li>
-                                排行榜，将根据视频点赞量进行排名，排行榜将以2020年2月6日23：59分时的排名为最终结果，上榜者可获得相应礼品
+                                排行榜，将根据视频投票进行排名，排行榜将以2020年2月6日23：59分时的排名为最终结果，上榜者可获得相应礼品
                             </li>
                             <li>
                                 获奖名单将于2月11日在爱挑战官网(http://atz.qsnatz.com)
@@ -260,13 +260,17 @@
                         <image
                             src="../../static/images/chunjie/search-icon.png"
                         />
-
-                        <input
-                            v-model="changeValue"
-                            type="text"
-                            placeholder="请输入作者姓名或作品名称"
-                            @confirm="bindconfirm"
-                        >
+                        <form action="javascript:return true">
+                            <input
+                                v-model="changeValue"
+                                placeholder-style="color:#C9AC67"
+                                type="text"
+                                confirm-type="search"
+                                confirm-hold="true"
+                                placeholder="请输入作者姓名或作品名称"
+                                @confirm="bindconfirm"
+                            >
+                        </form>
                     </view>
                 </view>
                 <view class="media-box">
@@ -994,16 +998,8 @@ body.dialog-open {
                     font-size: 24upx;
                     color: #ff3849;
                 }
-                input::-webkit-input-placeholder {
-                    color: #c9ac67;
-                    font-size: 24upx;
-                }
             }
         }
-    }
-    ::-webkit-input-placeholder {
-        color: #c9ac67;
-        font-size: 24upx;
     }
 }
 .stop-scroll {

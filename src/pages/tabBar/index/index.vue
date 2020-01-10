@@ -305,7 +305,7 @@ export default {
                 talent: [],
             },
             prompt: false,
-            isFirstLogin: 'isFirstLogin8',
+            isFirstLogin: 'isFirstLogin9',
             status: 3,
             show: 1,
         };
