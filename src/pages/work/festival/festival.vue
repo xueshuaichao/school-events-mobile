@@ -77,6 +77,7 @@
                 <video
                     ref="video"
                     class="video"
+                    x5-video-player-type="h5-page"
                     :src="pageData.video.cloud_path_sd"
                     :autoplay="true"
                     :controls="false"
