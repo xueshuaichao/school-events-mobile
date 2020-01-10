@@ -398,6 +398,7 @@ export default {
     created() {
         this.getData();
         this.chunjieStatus();
+        this.initShare();
     },
     onHide() {
         this.changeValue = '';

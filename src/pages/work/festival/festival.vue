@@ -150,6 +150,12 @@
             >
                 帮TA拉票
             </button>
+            <button
+                class="btn"
+                @click="goHome"
+            >
+                返回首页
+            </button>
         </view>
 
         <view
@@ -327,6 +333,11 @@ export default {
                         });
                     }
                 });
+            });
+        },
+        goHome() {
+            uni.reLaunch({
+                url: '/pages/tabBar/index/index',
             });
         },
         togglePlayStatus() {
