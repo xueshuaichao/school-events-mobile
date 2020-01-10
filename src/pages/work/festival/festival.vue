@@ -288,9 +288,9 @@ export default {
                 '鼠年春节我精彩，才艺拜年望喜爱！',
             ];
             const title = titleList[Math.floor(Math.random() * titleList.length)];
-            const desc = `${this.pageData.resource_name}-${this.path.create_name}`;
+            const desc = `${this.pageData.resource_name}-${this.pageData.create_name}`;
 
-            this.shareDesc = desc;
+            this.shareDesc = title;
 
             share({
                 title,
