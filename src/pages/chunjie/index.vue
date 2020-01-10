@@ -343,6 +343,7 @@
 import api from '../../common/api';
 import uniLoadMore from '../../components/uni-load-more/uni-load-more.vue';
 import share from '../../common/share';
+import logger from '../../common/logger';
 
 export default {
     components: {
@@ -397,7 +398,9 @@ export default {
             status: 2,
         };
     },
-    onLoad() {},
+    onLoad: () => {
+        logger.log();
+    },
     created() {
         this.getData();
         this.chunjieStatus();
