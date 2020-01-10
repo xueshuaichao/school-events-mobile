@@ -82,6 +82,7 @@
                     :autoplay="false"
                     :controls="true"
                     :loop="true"
+                    :poster="pageData.video_img_url"
                     x5-video-player-type="h5-page"
                     @play="onPlay"
                     @waiting="onWaiting"
