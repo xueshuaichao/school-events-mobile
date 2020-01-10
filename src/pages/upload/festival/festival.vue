@@ -88,12 +88,12 @@
                 :type="'video'"
                 @change="updateVideo"
             />
-            <view
+            <!-- <view
                 v-if="uploadMode === 'image'"
                 class="upload-desc"
             >
                 拖动图片可调整展示顺序，第一张图片会作为该作品的封面图
-            </view>
+            </view> -->
             <upload
                 v-if="uploadMode === 'video'"
                 :type="'image'"
@@ -294,11 +294,15 @@ export default {
                     });
                 } else {
                     data.forEach((item) => {
-                        this.images.push({
-                            url: item.path,
-                            type: 'image',
-                            fileName: 'xxx.png',
-                        });
+                        if (this.images.length >= 10) {
+                            this.errTip('最多选择10张图片');
+                        } else {
+                            this.images.push({
+                                url: item.path,
+                                type: 'image',
+                                fileName: 'xxx.png',
+                            });
+                        }
                     });
                 }
             }
