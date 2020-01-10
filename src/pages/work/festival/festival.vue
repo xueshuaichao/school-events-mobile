@@ -80,6 +80,7 @@
                     :src="pageData.video.cloud_path_sd"
                     :autoplay="true"
                     :controls="false"
+                    :loop="true"
                     @play="onPlay"
                     @fullscreenchange="onFullScreenChange"
                 />
@@ -305,8 +306,26 @@ export default {
         },
         joinGame() {
             api.isLogin().then(() => {
-                uni.navigateTo({
-                    url: '/pages/upload/festival/festival',
+                // 1未开始，2进行中，3已结束
+                api.post('/api/activity/getactivitystatus', {
+                    activity_id: 3,
+                }).then((res) => {
+                    const { status } = res;
+                    if (status === 2) {
+                        uni.navigateTo({
+                            url: '/pages/upload/festival/festival',
+                        });
+                    } else if (status === 1) {
+                        uni.showToast({
+                            icon: 'none',
+                            title: '活动未开始',
+                        });
+                    } else if (status === 3) {
+                        uni.showToast({
+                            icon: 'none',
+                            title: '活动已结束',
+                        });
+                    }
                 });
             });
         },
