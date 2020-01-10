@@ -77,11 +77,15 @@
                 <video
                     ref="video"
                     class="video"
+                    preload
                     :src="pageData.video.cloud_path_sd"
-                    :autoplay="true"
-                    :controls="false"
+                    :autoplay="false"
+                    :controls="true"
                     :loop="true"
+                    x5-video-player-type="h5-page"
                     @play="onPlay"
+                    @waiting="onWaiting"
+                    @timeupdate="onTimeupdate"
                     @fullscreenchange="onFullScreenChange"
                 />
             </template>
@@ -169,6 +173,13 @@
                 <div class="uni-video-cover-play-button" />
             </view>
         </view>
+        <view
+            v-if="isVideoWaiting"
+            class="uni-video-cover"
+            style="pointer-events: none;color: #fff"
+        >
+            加载中
+        </view>
 
         <!-- v-if="!isH5" -->
         <image
@@ -194,6 +205,7 @@ export default {
             likeStatus: 0,
             isPlayed: false,
             isPaused: false,
+            isVideoWaiting: false,
             showShareMask: false,
 
             // #ifdef H5
@@ -281,10 +293,20 @@ export default {
                     id: this.id,
                 });
             }
-
+            this.isVideoWaiting = false;
             this.isPlayed = true;
         },
-
+        onWaiting() {
+            this.isVideoWaiting = true;
+            this.timeupdateCounter = 0;
+        },
+        onTimeupdate() {
+            if (this.timeupdateCounter > 1) {
+                this.isVideoWaiting = false;
+            } else {
+                this.timeupdateCounter += 1;
+            }
+        },
         onFullScreenChange(e) {
             const isFullScreenMode = e.detail.fullScreen;
             this.isFullScreen = isFullScreenMode;
@@ -457,6 +479,7 @@ export default {
         width: 480rpx;
         padding: 30upx;
         color: #fff;
+        pointer-events: none;
 
         .avatar {
             display: inline-block;
