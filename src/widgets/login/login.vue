@@ -186,8 +186,8 @@ export default {
                 isSend: false,
             },
             activeTab: 0,
-            loginMode: 'sms',
-            // loginMode: 'password',
+            // loginMode: 'sms',
+            loginMode: 'password',
         };
     },
     methods: {

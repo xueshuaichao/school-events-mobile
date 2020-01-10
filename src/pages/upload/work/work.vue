@@ -162,6 +162,12 @@
                     />
                 </navigator>
             </view>
+            <button
+                class="btn goHome"
+                @click="goHome"
+            >
+                返回首页
+            </button>
         </view>
     </view>
 </template>
@@ -205,6 +211,11 @@ export default {
         },
     },
     methods: {
+        goHome() {
+            uni.reLaunch({
+                url: '/pages/chunjie/index',
+            });
+        },
         toggle(k) {
             this.activeMenuIndex = k;
             this.filter.sort = k;
@@ -328,6 +339,25 @@ export default {
 </script>
 
 <style lang="less">
+.goHome {
+    display: fixed;
+    bottom: 18upx;
+    right: -250upx;
+    color: #fff0cc;
+    font-size: 12px;
+    width: 67px;
+    height: 28px;
+    background: -webkit-linear-gradient(bottom, #ff1610, #ffbd67);
+    background: linear-gradient(0deg, #ff1610, #ffbd67);
+    -webkit-border-image: -webkit-linear-gradient(147deg, #ffe7ae, #ffe19a) 2 2;
+    border-image: linear-gradient(-57deg, #ffe7ae, #ffe19a) 2 2;
+    border-radius: 14px;
+    border: 1px solid;
+    line-height: 28px;
+    text-align: center;
+    margin-bottom: 15px;
+    padding: 0;
+}
 .goUpload {
     width: 479upx;
     height: 169upx;

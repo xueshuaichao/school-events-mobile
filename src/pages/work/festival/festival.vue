@@ -79,8 +79,8 @@
                     class="video"
                     x5-video-player-type="h5-page"
                     :src="pageData.video.cloud_path_sd"
-                    :autoplay="true"
-                    :controls="false"
+                    :autoplay="false"
+                    :controls="true"
                     :loop="true"
                     @play="onPlay"
                     @fullscreenchange="onFullScreenChange"
@@ -342,7 +342,7 @@ export default {
         },
         goHome() {
             uni.reLaunch({
-                url: '/pages/tabBar/index/index',
+                url: '/pages/chunjie/index',
             });
         },
         togglePlayStatus() {
@@ -458,7 +458,7 @@ export default {
         width: 480rpx;
         padding: 30upx;
         color: #fff;
-
+        pointer-events: none;
         .avatar {
             display: inline-block;
             width: 24rpx;
