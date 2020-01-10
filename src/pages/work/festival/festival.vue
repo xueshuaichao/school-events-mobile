@@ -281,40 +281,21 @@ export default {
             document.querySelector('.uni-video-type-fullscreen').style = '';
         },
         initShare() {
-            const normalList = [
-                '我正在参加"青少年爱挑战"，快来为我点赞',
-                '勇于挑战，不服来战！',
-                '我刷新记录啦，快来看！',
+            const titleList = [
+                '鼠年大吉，快来看我的拜年才艺秀！',
+                '才艺拜年乐趣多，我来表演你来赞！',
+                '我来给你拜新年，表演才艺送祝福！',
+                '鼠年春节我精彩，才艺拜年望喜爱！',
             ];
-            const artList = [
-                '我正在参加"青少年爱挑战"，快来为我点赞',
-                '炫出风采，为我点赞，你也一起来参加吧',
-                '我正在参加“爱挑战”才艺展示，快来围观我的精彩作品～',
-                '亮出才艺，秀我风采！',
-                '才艺小达人，等你来打call',
-                '嗨～动动手指，为才艺小达人点个赞吧！',
-                '天生有才，SHOW出精彩！快来看～',
-                '精彩才艺秀出来，你不来看看吗？',
-                '我怎么这么有才！快快来围观我的才艺展示～',
-                '在吗？给你看看超精彩的才艺秀，小朋友都可以参加～',
-            ];
-            let desc;
+            const title = titleList[Math.floor(Math.random() * titleList.length)];
+            const desc = `${this.pageData.resource_name}-${this.path.create_name}`;
 
-            const scope = this.pageData.resource_scope;
-
-            if (scope === 4) {
-                desc = '教育梦想，创新起航，青少年爱挑战创新共享平台';
-            } else if (scope === 3) {
-                desc = artList[Math.floor(Math.random() * artList.length)];
-            } else if (scope === 2 || scope === 1) {
-                desc = normalList[Math.floor(Math.random() * normalList.length)];
-            }
-
-            console.log(desc);
             this.shareDesc = desc;
 
             share({
+                title,
                 desc,
+                thumbnail: this.pageData.video_img_url,
             });
         },
         joinGame() {

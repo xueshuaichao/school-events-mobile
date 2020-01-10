@@ -76,6 +76,10 @@ export default {
         preview: {
             type: Boolean,
             default: true
+        },
+        count: {
+            type: Number,
+            default: 9
         }
     },
     data() {
@@ -240,6 +244,7 @@ export default {
         chooseResource() {
             if (this.type === "image") {
                 uni.chooseImage({
+                    count: this.count,
                     success: res => {
                         Promise.all(
                             res.tempFilePaths.map(filePath =>

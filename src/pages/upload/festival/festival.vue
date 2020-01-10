@@ -97,6 +97,7 @@
             <upload
                 v-if="uploadMode === 'video'"
                 :type="'image'"
+                :count="1"
                 @change="updateImage"
             />
 
@@ -297,11 +298,22 @@ export default {
                         if (this.images.length >= 10) {
                             this.errTip('最多选择10张图片');
                         } else {
-                            this.images.push({
-                                url: item.path,
-                                type: 'image',
-                                fileName: 'xxx.png',
-                            });
+                            let suffix;
+                            try {
+                                suffix = item.path.split('.').pop();
+                                // eslint-disable-next-line no-empty
+                            } catch {}
+                            if (
+                                ['jpg', 'jpeg', 'png', 'gif'].indexOf(
+                                    suffix,
+                                ) !== -1
+                            ) {
+                                this.images.push({
+                                    url: item.path,
+                                    type: 'image',
+                                    fileName: 'xxx.png',
+                                });
+                            }
                         }
                     });
                 }
