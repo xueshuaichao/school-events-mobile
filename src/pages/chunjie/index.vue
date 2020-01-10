@@ -394,11 +394,12 @@ export default {
             status: 2,
         };
     },
-    onLoad() {},
+    onLoad() {
+        this.initShare();
+    },
     created() {
         this.getData();
         this.chunjieStatus();
-        this.initShare();
     },
     onHide() {
         this.changeValue = '';
