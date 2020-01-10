@@ -483,6 +483,7 @@ export default {
                 position: absolute;
                 margin: 0;
                 right: -160upx;
+                font-size: 0;
             }
         }
     }
