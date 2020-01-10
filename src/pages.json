@@ -161,7 +161,8 @@
         {
             "path": "pages/chunjie/index",
             "style": {
-                "navigationBarTitleText": "秀才艺，赢好礼"
+                "navigationBarTitleText": "秀才艺，赢好礼",
+                "softinputNavBar": "none"
             }
         },
 
