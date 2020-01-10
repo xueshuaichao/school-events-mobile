@@ -60,7 +60,7 @@
                     <view class="text">
                         <ul>
                             <li>
-                                参赛者在爱挑战注册并通过小程序活动界面上传作品，审核通过后可邀请亲友投票
+                                参赛者在爱挑战注册并通过小程序活动界面上传作品，审核通过后可邀请亲友投票。
                             </li>
                             <li>
                                 未传视频的注册用户只能为参赛选手投票，无法参与排行榜活动。
@@ -260,16 +260,17 @@
                         <image
                             src="../../static/images/chunjie/search-icon.png"
                         />
-
-                        <input
-                            v-model="changeValue"
-                            placeholder-style="color:#C9AC67"
-                            type="text"
-                            confirm-type="search"
-                            confirm-hold="true"
-                            placeholder="请输入作者姓名或作品名称"
-                            @confirm="bindconfirm"
-                        >
+                        <form action="javascript:return true">
+                            <input
+                                v-model="changeValue"
+                                placeholder-style="color:#C9AC67"
+                                type="text"
+                                confirm-type="search"
+                                confirm-hold="true"
+                                placeholder="请输入作者姓名或作品名称"
+                                @confirm="bindconfirm"
+                            >
+                        </form>
                     </view>
                 </view>
                 <view class="media-box">
