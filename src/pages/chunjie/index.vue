@@ -394,9 +394,7 @@ export default {
             status: 2,
         };
     },
-    onLoad() {
-        this.initShare();
-    },
+    onLoad() {},
     created() {
         this.getData();
         this.chunjieStatus();
@@ -451,6 +449,8 @@ export default {
                     } else {
                         this.loadMoreStatus = 'more';
                     }
+
+                    this.initShare();
                 },
             );
         },
