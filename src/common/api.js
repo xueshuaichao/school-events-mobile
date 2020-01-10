@@ -20,6 +20,22 @@ function get(url, data) {
     );
 }
 
+function pureGet(url, data) {
+    return http.get(url, data).then(
+        (res) => {
+            // http 异常
+            if (res.statusCode !== 200) {
+                throw new Error('服务器开小差了~');
+            }
+
+            return res.data;
+        },
+        (err) => {
+            console.log(err);
+        },
+    );
+}
+
 function post(url, data) {
     return http.post(url, data).then(
         (res) => {
@@ -48,23 +64,29 @@ function isLogin() {
             return resolve(isLogin.user_info);
         }
 
-        return get('/api/user/info').then(
+        return pureGet('/api/user/info').then(
             (res) => {
-                if (res && res.user_info && res.user_info.user_id) {
-                    isLogin.userInfo = res.user_info;
-                    resolve(res.user_info);
-                } else {
+                const { data, status, msg } = res;
+
+                if (status === 200) {
+                    isLogin.userInfo = data.user_info;
+                    resolve(data.user_info);
+                } else if (status === 602) {
                     uni.navigateTo({
                         url: '/pages/login/login',
                     });
                     reject();
+                } else {
+                    uni.showToast({
+                        title: msg,
+                        icon: 'none',
+                    });
+                    reject();
                 }
             },
-            () => {
-                uni.navigateTo({
-                    url: '/pages/login/login',
-                });
-                reject();
+            (err) => {
+                // net work error
+                console.log(err);
             },
         );
     });
