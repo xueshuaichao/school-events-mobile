@@ -27,7 +27,7 @@ function initWechatShare(config, params) {
 
         wx.ready(() => {
             wx.onMenuShareTimeline({
-                title: '我正在参加"青少年爱挑战"，快来为我点赞' || params.title,
+                title: params.title,
                 desc: params.desc,
                 link: params.url,
                 imgUrl: params.thumbnail,
