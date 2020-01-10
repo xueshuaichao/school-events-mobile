@@ -293,11 +293,15 @@ export default {
             document.querySelector('.uni-video-type-fullscreen').style = '';
         },
         initShare() {
+            // const titleList = [
+            //     '鼠年大吉，快来看我的拜年才艺秀！',
+            //     '才艺拜年乐趣多，我来表演你来赞！',
+            //     '我来给你拜新年，表演才艺送祝福！',
+            //     '鼠年春节我精彩，才艺拜年望喜爱！',
+            // ];
             const titleList = [
-                '鼠年大吉，快来看我的拜年才艺秀！',
-                '才艺拜年乐趣多，我来表演你来赞！',
-                '我来给你拜新年，表演才艺送祝福！',
-                '鼠年春节我精彩，才艺拜年望喜爱！',
+                '我正在参加“才艺拜大年”有奖征集活动，快来帮我投票吧～',
+                '才艺拜大年，好礼送不停，我需要你宝贵的一票！',
             ];
             const title = titleList[Math.floor(Math.random() * titleList.length)];
             const desc = `${this.pageData.resource_name}-${this.pageData.create_name}`;

@@ -477,12 +477,13 @@ export default {
             });
         },
         initShare() {
-            const titleList = [
-                '鼠年大吉，快来看我的拜年才艺秀！',
-                '才艺拜年乐趣多，我来表演你来赞！',
-                '我来给你拜新年，表演才艺送祝福！',
-                '鼠年春节我精彩，才艺拜年望喜爱！',
-            ];
+            // const titleList = [
+            //     '鼠年大吉，快来看我的拜年才艺秀！',
+            //     '才艺拜年乐趣多，我来表演你来赞！',
+            //     '我来给你拜新年，表演才艺送祝福！',
+            //     '鼠年春节我精彩，才艺拜年望喜爱！',
+            // ];
+            const titleList = ['我来给你拜新年，表演才艺送祝福'];
             const title = titleList[Math.floor(Math.random() * titleList.length)];
             const desc = '快乐过寒假，才艺拜大年！';
 
