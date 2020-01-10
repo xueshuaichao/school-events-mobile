@@ -46,7 +46,14 @@
                                 @confirm="bindconfirm"
                             >
                         </form>
+                        <button
+                            class="search-button"
+                            @click="bindconfirm"
+                        >
+                            搜索
+                        </button>
                     </view>
+
                     <button
                         :class="{
                             active: activeMenuIndex === 'hot'
@@ -378,7 +385,7 @@ export default {
         background: rgba(0, 0, 0, 0.6);
         border-radius: 20upx;
         text-align: center;
-        line-height: 40upx;
+        line-height: 48upx;
         position: absolute;
         top: 175upx;
         left: 290upx;
@@ -418,7 +425,6 @@ export default {
     background-size: contain;
     .search-box {
         overflow: hidden;
-
         button {
             width: 140upx;
             height: 94upx;
@@ -444,12 +450,13 @@ export default {
         }
         .search {
             background: #ffedc3;
-            width: 100%;
+            width: 528upx;
             height: 80upx;
             line-height: 80upx;
             position: relative;
             border-radius: 76upx;
-            float: right;
+            float: left;
+            flex: 1;
 
             image {
                 width: 28upx;
@@ -465,6 +472,17 @@ export default {
                 left: 69upx;
                 font-size: 28upx;
                 color: #ff3849;
+            }
+            .search-button {
+                width: 142upx;
+                height: 80upx;
+                background: url("../../../static/images/chunjie/search-button.png")
+                    no-repeat;
+                background-size: 100% 100%;
+                border: none;
+                position: absolute;
+                margin: 0;
+                right: -160upx;
             }
         }
     }

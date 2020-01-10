@@ -31,10 +31,10 @@
                 </view>
                 <view>
                     <view class="title">
-                        参赛节目
+                        参赛作品
                     </view>
                     <view class="text">
-                        节目类别分为歌唱表演、舞蹈表演、创意制作、口才表演、乐器演奏、书法绘画、杂技、魔术、摄影
+                        作品类别分为歌唱表演、舞蹈表演、创意制作、口才表演、乐器演奏、书法绘画、杂技、魔术、摄影
                     </view>
                 </view>
                 <view>
@@ -48,7 +48,7 @@
                             </li>
                             <li>
                                 内容：如果发现有用户上传不合规内容，如涉及攻击我国政治制度、法律制度、黄赌毒、封建迷信等违背社会主义核心价值观的内容、
-                                非原创、盗窃他人或平台的内容、或恶意刷点赞量等扰乱秩序者，该账户将取消活动参与资格，不合规视频将被删除。
+                                非原创、盗窃他人或平台的内容、或恶意刷票等扰乱秩序者，该账号将取消活动参与资格，不合规视频/图片将被删除。。
                             </li>
                         </ul>
                     </view>
@@ -60,20 +60,22 @@
                     <view class="text">
                         <ul>
                             <li>
-                                参赛者在爱挑战注册并通过小程序活动界面上传作品，审核通过后可邀请亲友投票。
-                            </li>
-                            <li>
-                                未传视频的注册用户只能为参赛选手投票，无法参与排行榜活动。
+                                参赛者在“青少年爱挑战”平台注册并通过活动页面上传作品，审核通过后可邀请亲友投票。
                             </li>
                             <li>
                                 每个账户每天只能为同一作品投票1次。
                             </li>
                             <li>
-                                排行榜，将根据视频投票进行排名，排行榜将以2020年2月6日23：59分时的排名为最终结果，上榜者可获得相应礼品
+                                根据参赛作品获得的投票数进行排名，排行榜将以2020年2月8日23:59时的排名为最终结果，上榜者（排名前39名）可获得相应奖品。
                             </li>
                             <li>
-                                获奖名单将于2月11日在爱挑战官网(http://atz.qsnatz.com)
-                                及官方服务号（UP青少年爱挑战）进行公布
+                                活动组委会根据才艺秀作品质量和内容，综合评选出20名优秀参赛者，送出奖品。
+                            </li>
+                            <li>
+                                获奖名单将于2020年2月11日在爱挑战官网（http://atz.qsnatz.com/）及官方微信公众号（UP青少年爱挑战）进行公布。
+                            </li>
+                            <li>
+                                本活动最终解释权在法律允许范围内归活动举办方所有。
                             </li>
                         </ul>
                     </view>
@@ -116,12 +118,12 @@
                     <image src="../../static/images/chunjie/caiyi-title.png" />
                     <view class="caiyi-text">
                         <view>
-                            由组委会根据才艺秀作品质量和内容，综和评选出20名优秀者奖励蓝牙音箱1个
+                            由活动组委会根据才艺秀作品质量和内容，综合评选出20名优秀参赛者，奖励蓝牙音箱1个
                         </view>
                         <image src="../../static/images/chunjie/prize06.png" />
                     </view>
                     <view class="prize-prompt">
-                        礼品图片仅供参考，请以实物为准
+                        图片仅供参考，奖品以实物为准
                     </view>
                 </view>
 
@@ -271,6 +273,12 @@
                                 @confirm="bindconfirm"
                             >
                         </form>
+                        <text
+                            class="search-button"
+                            @click="bindconfirm"
+                        >
+                            搜索
+                        </text>
                     </view>
                 </view>
                 <view class="media-box">
@@ -328,9 +336,6 @@
                 @click="handleUpload"
             >
                 上传作品
-            </view>
-            <view class="footer">
-                本次活动最终解释权在法律范围内属活动举办方所有
             </view>
         </view>
     </view>
@@ -702,20 +707,14 @@ body.dialog-open {
 .loadMore {
     width: 100%;
 }
-.footer {
-    text-align: center;
-    font-size: 22upx;
-    color: #fff;
-}
 .upload {
     position: fixed;
-    bottom: 40upx;
+    bottom: 0upx;
     background: url("../../static/images/chunjie/upload_bg.png") no-repeat;
     background-size: 100% 100%;
     text-align: center;
     width: 100%;
-    line-height: 175upx;
-    height: 175upx;
+    height: 116upx;
     font-size: 0;
 }
 .upload-disable {
@@ -725,8 +724,7 @@ body.dialog-open {
     background-size: 100% 100%;
     text-align: center;
     width: 100%;
-    line-height: 175upx;
-    height: 175upx;
+    height: 116upx;
     font-size: 0;
 }
 .cansai-text {
@@ -850,7 +848,7 @@ body.dialog-open {
             background: rgba(0, 0, 0, 0.6);
             border-radius: 20upx;
             text-align: center;
-            line-height: 40upx;
+            line-height: 42upx;
             position: absolute;
             top: 175upx;
             right: 10upx;
@@ -957,12 +955,12 @@ body.dialog-open {
 
     .menu-list {
         padding: 30upx;
-        padding-bottom: 160upx;
+        padding-bottom: 120upx;
         .search-box {
             overflow: hidden;
 
             button {
-                width: 140upx;
+                width: 120upx;
                 height: 94upx;
                 float: left;
                 line-height: 72upx;
@@ -983,7 +981,7 @@ body.dialog-open {
             }
             .search {
                 background: #ffedc3;
-                width: 400upx;
+                width: 440upx;
                 height: 73upx;
                 position: relative;
                 float: right;
@@ -1004,6 +1002,13 @@ body.dialog-open {
                     left: 60upx;
                     font-size: 24upx;
                     color: #ff3849;
+                }
+                .search-button {
+                    font-size: 24upx;
+                    color: #ff5831;
+                    position: absolute;
+                    top: 20upx;
+                    right: 22upx;
                 }
             }
         }
