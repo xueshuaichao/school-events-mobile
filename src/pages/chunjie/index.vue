@@ -350,7 +350,6 @@ export default {
             if (!val) {
                 return '';
             }
-            console.log(val, 'valu');
             let newUrl = '';
             const width = 335;
             const height = 225;

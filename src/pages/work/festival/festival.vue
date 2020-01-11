@@ -36,7 +36,7 @@
                         <view class="swiper-item">
                             <image
                                 class="banner-image"
-                                :src="item"
+                                :src="item | optimizeImage"
                             />
                         </view>
                     </swiper-item>
@@ -196,6 +196,24 @@ import api from '../../../common/api';
 import share from '../../../common/share';
 
 export default {
+    filters: {
+        optimizeImage: (val) => {
+            if (!val) {
+                return '';
+            }
+            let newUrl = '';
+            const width = 375;
+            const height = 211;
+            if (val.indexOf('?') !== -1) {
+                newUrl = `${val}&x-oss-process=image/format,png/interlace,1/quality,Q_80/resize,m_pad,h_${height
+                    * 2},w_${width * 2}`;
+            } else {
+                newUrl = `${val}?x-oss-process=image/format,png/interlace,1/quality,Q_80/resize,m_pad,h_${height
+                    * 2},w_${width * 2}`;
+            }
+            return newUrl;
+        },
+    },
     data() {
         return {
             // video: 'https://node.imgio.in/demo/birds.m3u8',

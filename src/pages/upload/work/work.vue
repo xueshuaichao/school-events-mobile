@@ -81,12 +81,12 @@
                     <view @click="viewDetail(item)">
                         <image
                             v-if="item.resource_type === 1"
-                            :src="item.video_img_url"
+                            :src="item.video_img_url | optimizeImage"
                             class="work"
                         />
                         <image
                             v-else-if="item.resource_type === 2"
-                            :src="item.img_url"
+                            :src="item.img_url | optimizeImage"
                             class="work"
                         />
                         <view class="media-icon">
@@ -179,6 +179,24 @@ import uniLoadMore from '../../../components/uni-load-more/uni-load-more.vue';
 export default {
     components: {
         uniLoadMore,
+    },
+    filters: {
+        optimizeImage: (val) => {
+            if (!val) {
+                return '';
+            }
+            let newUrl = '';
+            const width = 335;
+            const height = 225;
+            if (val.indexOf('?') !== -1) {
+                newUrl = `${val}&x-oss-process=image/format,png/interlace,1/quality,Q_80/resize,m_pad,h_${height
+                    * 2},w_${width * 2}`;
+            } else {
+                newUrl = `${val}?x-oss-process=image/format,png/interlace,1/quality,Q_80/resize,m_pad,h_${height
+                    * 2},w_${width * 2}`;
+            }
+            return newUrl;
+        },
     },
     data() {
         return {
