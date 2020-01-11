@@ -154,13 +154,13 @@ export default {
                     this.userInfo = res.user_info;
                     this.isLoading = false;
                 },
-                (err) => {
-                    this.isLoading = false;
-                    this.userInfo = null;
-                    uni.showToast({
-                        title: err.message,
-                        icon: 'none',
-                    });
+                () => {
+                    // this.isLoading = false;
+                    // this.userInfo = null;
+                    // uni.showToast({
+                    //     title: err.message,
+                    //     icon: 'none',
+                    // });
                 },
             );
             // this.getWorkStatic();

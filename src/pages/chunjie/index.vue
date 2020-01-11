@@ -303,7 +303,7 @@
                             </view>
                         </navigator>
 
-                        <view class="media-name">
+                        <view class="media-name text-one-line">
                             {{ `#${item.cat_name}# ${item.resource_name}` }}
                         </view>
                         <text class="vote-num">
@@ -471,6 +471,7 @@ export default {
                     }
 
                     this.initShare();
+                    uni.hideLoading();
                 },
             );
         },
@@ -512,6 +513,7 @@ export default {
             });
         },
         toggle(k) {
+            uni.showLoading();
             this.activeMenuIndex = k;
             this.filter.sort = k;
             this.filter.page_num = 1;

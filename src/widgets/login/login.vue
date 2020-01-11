@@ -78,7 +78,7 @@
                     v-if="captcha.isSend"
                     class="send-captcha is-send"
                 >
-                    {{ captcha.remain }}S后重新发
+                    {{ captcha.remain }}s 后重新发
                 </view>
             </view>
             <view class="login-mode">

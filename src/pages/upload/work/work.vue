@@ -358,9 +358,9 @@ export default {
 
 <style lang="less">
 .goHome {
-    display: fixed;
+    position: fixed;
     bottom: 18upx;
-    right: -250upx;
+    right: 30upx;
     color: #fff0cc;
     font-size: 12px;
     width: 67px;

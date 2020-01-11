@@ -203,13 +203,13 @@ export default {
             }
             let newUrl = '';
             const width = 375;
-            const height = 211;
+            const height = 667;
             if (val.indexOf('?') !== -1) {
                 newUrl = `${val}&x-oss-process=image/format,png/interlace,1/quality,Q_80/resize,m_pad,h_${height
-                    * 2},w_${width * 2}`;
+                    * 2},w_${width * 2},color_000000`;
             } else {
                 newUrl = `${val}?x-oss-process=image/format,png/interlace,1/quality,Q_80/resize,m_pad,h_${height
-                    * 2},w_${width * 2}`;
+                    * 2},w_${width * 2},color_000000`;
             }
             return newUrl;
         },
@@ -552,11 +552,11 @@ export default {
     .main-swiper {
         position: absolute;
         width: 100%;
-        top: 50%;
-        margin-top: -210rpx;
+        top: 0;
 
         uni-swiper {
-            height: 422upx;
+            // height: 422upx;
+            height: 1334rpx;
 
             .swiper-item {
                 img {
@@ -568,7 +568,7 @@ export default {
 
         .banner-image {
             width: 750upx;
-            height: 422upx;
+            height: 1334rpx;
         }
     }
 
