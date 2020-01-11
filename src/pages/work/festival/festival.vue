@@ -618,6 +618,7 @@ export default {
         width: 100%;
         height: 100%;
         background: rgba(0, 0, 0, 0.7);
+        background: red;
         text-align: center;
 
         .share-pic {
@@ -629,8 +630,10 @@ export default {
         }
     }
 
-    .uni-video-bar {
-        top: 50%;
+    /deep/ .uni-video-container {
+        .uni-video-cover-duration {
+            display: none;
+        }
     }
 }
 </style>
