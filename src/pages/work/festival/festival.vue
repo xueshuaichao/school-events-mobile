@@ -405,7 +405,7 @@ export default {
         // #endif
     },
     onHide() {
-        this.isPaused = true;
+        // this.isPaused = true;
     },
     onShow() {},
     onShareAppMessage(res) {
