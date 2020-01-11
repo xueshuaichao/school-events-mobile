@@ -195,6 +195,15 @@
                             6、若因用户提供的收货地址等信息有误而未收到礼品，概不补发。
                         </view>
                     </view>
+                    <view class="qr-wrap">
+                        <image
+                            class="qr-code"
+                            src="/static/images/chunjie/qrcode.jpg"
+                        />
+                        <view class="text">
+                            关注“UP青少年爱挑战”公众号，了解更多活动信息
+                        </view>
+                    </view>
                 </view>
             </view>
         </view>
