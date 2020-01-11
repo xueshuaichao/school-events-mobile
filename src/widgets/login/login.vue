@@ -1,5 +1,9 @@
 <template>
     <view class="page-bind-mobile">
+        <image
+            class="logo"
+            src="/static/images/widgets/login/logo.png"
+        />
         <view class="tabs row">
             <view
                 class="tab tab-login"
@@ -9,13 +13,12 @@
                 帐号登录
             </view>
             <view
-                class="tab col tab-register"
+                class="tab tab-register"
                 :class="{ active: activeTab === 1 }"
                 @click="activeTab = 1"
             >
                 手机号注册
             </view>
-            <view class="col" />
         </view>
 
         <!-- 帐号登录 -->
@@ -26,6 +29,17 @@
                     inValid: accountData.isValid === false
                 }"
             >
+                <image
+                    v-if="loginMode === 'password'"
+                    class="icon"
+                    src="/static/images/widgets/login/phone.png"
+                />
+                <image
+                    v-if="loginMode === 'sms'"
+                    class="icon"
+                    src="/static/images/widgets/login/user.png"
+                />
+
                 <input
                     v-model="formData.username"
                     class="form-input"
@@ -46,6 +60,10 @@
                 v-if="loginMode === 'password'"
                 class="form-item-wrap"
             >
+                <image
+                    class="icon"
+                    src="/static/images/widgets/login/lock.png"
+                />
                 <input
                     v-model="formData.password"
                     class="form-input"
@@ -60,11 +78,15 @@
                 v-if="loginMode === 'sms'"
                 class="form-item-wrap"
             >
+                <image
+                    class="icon"
+                    src="/static/images/widgets/login/lock.png"
+                />
                 <input
                     v-model="formData.password"
                     class="form-input"
                     placeholder-class="placeholder"
-                    maxlength="30"
+                    maxlength="6"
                     placeholder="请输入验证码"
                 >
                 <view
@@ -109,24 +131,31 @@
         <!-- 手机号注册 -->
         <template v-if="activeTab === 1">
             <view class="form-item-wrap">
-                <view class="form-item-wrap">
-                    <input
-                        v-model="newUser.phone"
-                        class="form-input"
-                        placeholder-class="placeholder"
-                        maxlength="30"
-                        placeholder="请输入手机号"
-                    >
-                    <view class="error-tip">
-                        {{ accountData.isValid ? "" : accountData.msg || "" }}
-                    </view>
+                <image
+                    class="icon"
+                    src="/static/images/widgets/login/phone.png"
+                />
+                <input
+                    v-model="newUser.phone"
+                    class="form-input"
+                    placeholder-class="placeholder"
+                    maxlength="30"
+                    placeholder="请输入手机号"
+                >
+                <view class="error-tip">
+                    {{ accountData.isValid ? "" : accountData.msg || "" }}
                 </view>
-
+            </view>
+            <view class="form-item-wrap">
+                <image
+                    class="icon"
+                    src="/static/images/widgets/login/lock.png"
+                />
                 <input
                     v-model="newUser.captcha"
                     class="form-input"
                     placeholder-class="placeholder"
-                    maxlength="30"
+                    maxlength="6"
                     placeholder="请输入验证码"
                 >
                 <view
@@ -457,7 +486,7 @@ export default {
 }
 
 .page-bind-mobile {
-    padding: 96rpx 65rpx;
+    padding: 30rpx 60rpx 0;
 
     .tip {
         font-size: 26rpx;
@@ -469,8 +498,8 @@ export default {
     .login-mode {
         color: #1166ff;
         font-size: 30rpx;
-        margin-top: 24rpx;
-        text-align: right;
+        margin-top: 160rpx;
+        text-align: center;
     }
 
     .tabs {
@@ -491,10 +520,11 @@ export default {
             text-align: center;
             width: 160rpx;
             margin-right: 80rpx;
+            margin-left: 80rpx;
         }
         .tab-register {
-            width: 200rpx;
             text-align: center;
+            width: 190rpx;
         }
     }
 
@@ -515,6 +545,15 @@ export default {
             border-bottom: 1rpx solid #d8d8d8;
             height: 90rpx;
             margin-top: 20rpx;
+            padding-left: 72rpx;
+        }
+
+        .icon {
+            position: absolute;
+            width: 34rpx;
+            height: 32rpx;
+            left: 20rpx;
+            top: 30rpx;
         }
 
         &.inValid {
@@ -562,6 +601,13 @@ export default {
         text-align: center;
         margin-top: 72rpx;
         font-size: 36rpx;
+    }
+
+    .logo {
+        width: 438rpx;
+        height: 264rpx;
+        display: block;
+        margin: 30rpx auto 60rpx;
     }
 }
 </style>
