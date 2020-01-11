@@ -79,6 +79,15 @@
                             </li>
                         </ul>
                     </view>
+                    <view class="qr-wrap">
+                        <image
+                            class="qr-code"
+                            src="/static/images/chunjie/qrcode.jpg"
+                        />
+                        <view class="text">
+                            关注“UP青少年爱挑战”公众号，了解更多活动信息
+                        </view>
+                    </view>
                 </view>
             </view>
         </view>
@@ -1049,6 +1058,21 @@ body.dialog-open {
                     right: 22upx;
                 }
             }
+        }
+    }
+
+    .qr-wrap {
+        .qr-code {
+            width: 190rpx;
+            height: 190rpx;
+            display: block;
+            margin: 35rpx auto 15rpx;
+            border-radius: 15rpx;
+        }
+
+        .text {
+            font-size: 24rpx;
+            text-align: center;
         }
     }
 }
