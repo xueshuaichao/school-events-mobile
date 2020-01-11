@@ -155,8 +155,8 @@ export default {
                     this.isLoading = false;
                 },
                 () => {
-                    // this.isLoading = false;
-                    // this.userInfo = null;
+                    this.isLoading = false;
+                    this.userInfo = null;
                     // uni.showToast({
                     //     title: err.message,
                     //     icon: 'none',
