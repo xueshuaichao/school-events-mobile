@@ -136,11 +136,11 @@
                     </view>
                 </view>
 
-                <image
+                <!-- <image
                     class="register02"
                     src="../../static/images/chunjie/register02.png"
-                />
-                <view class="jinguizi">
+                /> -->
+                <!-- <view class="jinguizi">
                     <view>
                         <image
                             src="../../static/images/chunjie/jinguizi01.png"
@@ -159,8 +159,8 @@
                             有趣实用的传统文化故事，帮助小朋友敢表达、会表达
                         </view>
                     </view>
-                </view>
-                <view class="getStyle">
+                </view> -->
+                <!-- <view class="getStyle">
                     <view>
                         <view class="title">
                             领取方式：
@@ -170,7 +170,7 @@
                         </view>
                     </view>
                     <image src="../../static/images/chunjie/mini-pro.png" />
-                </view>
+                </view> -->
                 <view>
                     <view class="title">
                         奖品兑换说明
@@ -227,9 +227,9 @@
                 <text>活动时间：1月10日-2月8日</text>
                 <text>结果公布：2月11日</text>
             </view>
-            <view class="register">
+            <!-- <view class="register">
                 <image src="../../static/images/chunjie/register.png" />
-            </view>
+            </view> -->
             <view class="prize">
                 <view>
                     <text>一等奖</text>
@@ -847,7 +847,7 @@ body.dialog-open {
 }
 .banner {
     height: 740upx;
-    background: url(http://aitiaozhan.oss-cn-beijing.aliyuncs.com/banner.png?t=1)
+    background: url(http://aitiaozhan.oss-cn-beijing.aliyuncs.com/banner.png?t=2)
         no-repeat;
     background-size: 100% 100%;
     background-size: contain;
