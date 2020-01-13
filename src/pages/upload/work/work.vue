@@ -173,6 +173,7 @@
 </template>
 
 <script>
+// work.vue
 import api from '../../../common/api';
 import uniLoadMore from '../../../components/uni-load-more/uni-load-more.vue';
 
@@ -433,7 +434,10 @@ export default {
         background: rgba(0, 0, 0, 0.6);
         border-radius: 20upx;
         text-align: center;
-        line-height: 48upx;
+        line-height: 39upx;
+        // #ifdef H5
+        line-height: 42upx;
+        // #endif
         position: absolute;
         top: 175upx;
         left: 290upx;

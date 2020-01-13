@@ -462,8 +462,8 @@ uni-swiper {
     display: relative;
     .chunjie-entry {
         font-size: 0;
-        background: url("../../../static/images/chunjie/suspension.png")
-            no-repeat;
+        // background: url("../../../static/images/chunjie/suspension.png")
+        // no-repeat;
         background-size: 100% 100%;
         width: 176upx;
         height: 128upx;

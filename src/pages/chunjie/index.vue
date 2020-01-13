@@ -136,11 +136,11 @@
                     </view>
                 </view>
 
-                <!-- <image
+                <image
                     class="register02"
                     src="../../static/images/chunjie/register02.png"
-                /> -->
-                <!-- <view class="jinguizi">
+                />
+                <view class="jinguizi">
                     <view>
                         <image
                             src="../../static/images/chunjie/jinguizi01.png"
@@ -159,8 +159,8 @@
                             有趣实用的传统文化故事，帮助小朋友敢表达、会表达
                         </view>
                     </view>
-                </view> -->
-                <!-- <view class="getStyle">
+                </view>
+                <view class="getStyle">
                     <view>
                         <view class="title">
                             领取方式：
@@ -170,7 +170,7 @@
                         </view>
                     </view>
                     <image src="../../static/images/chunjie/mini-pro.png" />
-                </view> -->
+                </view>
                 <view>
                     <view class="title">
                         奖品兑换说明
@@ -227,9 +227,9 @@
                 <text>活动时间：1月10日-2月8日</text>
                 <text>结果公布：2月11日</text>
             </view>
-            <!-- <view class="register">
+            <view class="register">
                 <image src="../../static/images/chunjie/register.png" />
-            </view> -->
+            </view>
             <view class="prize">
                 <view>
                     <text>一等奖</text>
@@ -278,17 +278,15 @@
                         <image
                             src="../../static/images/chunjie/search-icon.png"
                         />
-                        <form action="javascript:return true">
-                            <input
-                                v-model="changeValue"
-                                placeholder-style="color:#C9AC67"
-                                type="text"
-                                confirm-type="search"
-                                confirm-hold="true"
-                                placeholder="请输入作者姓名或作品名称"
-                                @confirm="bindconfirm"
-                            >
-                        </form>
+                        <input
+                            v-model="changeValue"
+                            placeholder-style="color:#C9AC67"
+                            type="text"
+                            confirm-type="search"
+                            confirm-hold="true"
+                            placeholder="请输入作者姓名或作品名称"
+                            @confirm="bindconfirm"
+                        >
                         <text
                             class="search-button"
                             @click="bindconfirm"
@@ -1038,7 +1036,7 @@ body.dialog-open {
             .search {
                 background: #ffedc3;
                 width: 440upx;
-                height: 73upx;
+                height: 72upx;
                 position: relative;
                 float: right;
                 border-radius: 60upx;
@@ -1055,6 +1053,9 @@ body.dialog-open {
                     width: 325upx;
                     position: absolute;
                     top: 20upx;
+                    // #ifndef H5
+                    top: 15upx;
+                    // #endif
                     left: 60upx;
                     font-size: 24upx;
                     color: #ff3849;
