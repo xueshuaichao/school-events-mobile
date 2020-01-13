@@ -384,6 +384,7 @@ export default {
     },
     data() {
         return {
+            fr: '',
             changeValue: '',
             activeMenuIndex: 'hot',
             loadMoreStatus: 'more',
@@ -435,6 +436,10 @@ export default {
         this.getData();
         this.chunjieStatus();
     },
+    onLoad(params) {
+        const { fr } = params;
+        this.fr = fr;
+    },
     onHide() {
         this.changeValue = '';
     },
@@ -449,7 +454,9 @@ export default {
         },
         handleUpload() {
             if (this.status === 2) {
-                api.isLogin().then(() => {
+                api.isLogin({
+                    fr: this.fr,
+                }).then(() => {
                     uni.navigateTo({
                         url: '/pages/upload/festival/festival',
                     });
@@ -539,7 +546,9 @@ export default {
             this.prompt = true;
         },
         handleMywork() {
-            api.isLogin().then(() => {
+            api.isLogin({
+                fr: this.fr,
+            }).then(() => {
                 uni.navigateTo({
                     url: '/pages/upload/work/work?type=myWork',
                 });
@@ -561,7 +570,9 @@ export default {
         },
         handleVote(item) {
             if (this.status === 2) {
-                api.isLogin().then(() => {
+                api.isLogin({
+                    fr: this.fr,
+                }).then(() => {
                     api.post('/api/activity/vote', {
                         id: item.id,
                     }).then(

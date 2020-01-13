@@ -58,7 +58,12 @@ function post(url, data) {
     );
 }
 
-function isLogin() {
+function isLogin(params) {
+    const { fr } = params;
+    let query = '';
+    if (fr) {
+        query = `?fr=${fr}`;
+    }
     return new Promise((resolve, reject) => {
         if (isLogin.userInfo) {
             return resolve(isLogin.user_info);
@@ -73,7 +78,7 @@ function isLogin() {
                     resolve(data.user_info);
                 } else if (status === 602) {
                     uni.navigateTo({
-                        url: '/pages/login/login',
+                        url: `/pages/login/login${query}`,
                     });
                     reject();
                 } else {

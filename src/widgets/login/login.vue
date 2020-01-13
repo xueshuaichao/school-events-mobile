@@ -192,6 +192,12 @@
 import api from '../../common/api';
 
 export default {
+    props: {
+        fr: {
+            type: String,
+            default: '',
+        },
+    },
     data() {
         return {
             formData: {
@@ -312,6 +318,7 @@ export default {
                     channel: 'aitiaozhan/xian',
                     phone: this.newUser.phone,
                     captcha: this.newUser.captcha,
+                    fr: this.fr,
                 })
                 .then(
                     (res) => {

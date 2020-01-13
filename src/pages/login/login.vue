@@ -1,6 +1,9 @@
 <template>
     <view>
-        <login @login="onLogin" />
+        <login
+            :fr="fr"
+            @login="onLogin"
+        />
     </view>
 </template>
 
@@ -12,7 +15,13 @@ export default {
         login,
     },
     data() {
-        return {};
+        return {
+            fr: '',
+        };
+    },
+    onLoad(params) {
+        const { fr } = params;
+        this.fr = fr;
     },
     methods: {
         onLogin() {
