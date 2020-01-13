@@ -847,7 +847,7 @@ body.dialog-open {
 }
 .banner {
     height: 740upx;
-    background: url(http://aitiaozhan.oss-cn-beijing.aliyuncs.com/banner.png)
+    background: url(http://aitiaozhan.oss-cn-beijing.aliyuncs.com/banner.png?t=1)
         no-repeat;
     background-size: 100% 100%;
     background-size: contain;
