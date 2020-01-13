@@ -850,7 +850,6 @@ body.dialog-open {
     background: url(http://aitiaozhan.oss-cn-beijing.aliyuncs.com/banner.png?t=2)
         no-repeat;
     background-size: 100% 100%;
-    background-size: contain;
 }
 .media-box {
     display: flex;
@@ -991,18 +990,18 @@ body.dialog-open {
     .main-swiper {
         .active-rule {
             position: absolute;
-            top: 16upx;
-            left: 10upx;
-            width: 128upx;
-            height: 40upx;
+            top: 22upx;
+            left: 6upx;
+            width: 142upx;
+            height: 74upx;
             font-size: 0;
         }
         .menu-title {
             position: absolute;
-            top: 16upx;
-            right: 10upx;
-            width: 128upx;
-            height: 40upx;
+            top: 22upx;
+            right: 6upx;
+            width: 142upx;
+            height: 74upx;
             font-size: 0;
         }
     }
