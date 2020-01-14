@@ -302,7 +302,9 @@
                         class="media-content"
                     >
                         <navigator
-                            :url="`/pages/work/festival/festival?id=${item.id}`"
+                            :url="
+                                `/pages/work/festival/festival?id=${item.id}&fr=${fr}`
+                            "
                         >
                             <image
                                 v-if="item.resource_type === 1"
@@ -438,7 +440,7 @@ export default {
     },
     onLoad(params) {
         const { fr } = params;
-        this.fr = fr;
+        this.fr = fr || '';
     },
     onHide() {
         this.changeValue = '';

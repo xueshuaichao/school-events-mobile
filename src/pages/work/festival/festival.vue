@@ -234,6 +234,7 @@ export default {
             isFullScreen: false,
 
             shareDesc: '',
+            fr: '',
         };
     },
     methods: {
@@ -268,7 +269,9 @@ export default {
             this.getLikeStatus();
         },
         toggleLike() {
-            api.isLogin().then(
+            api.isLogin({
+                fr: this.fr,
+            }).then(
                 () => {
                     // const isLiked = this.likeStatus === 1;
                     api.get('/api/activity/vote', {
@@ -356,7 +359,9 @@ export default {
             });
         },
         joinGame() {
-            api.isLogin().then(() => {
+            api.isLogin({
+                fr: this.fr,
+            }).then(() => {
                 // 1未开始，2进行中，3已结束
                 api.post('/api/activity/getactivitystatus', {
                     activity_id: 3,
@@ -391,10 +396,11 @@ export default {
         },
     },
     onLoad(query) {
-        const { id } = query;
-        this.id = id;
-        this.getData(id);
+        const { id, fr } = query;
+        this.id = id || '';
+        this.fr = fr || '';
 
+        this.getData(id);
         // hack for html5 video size notwoking
         // #ifdef H5
         window.removeEventListener(
@@ -549,6 +555,11 @@ export default {
         }
     }
 
+    swiper {
+        width: 750rpx;
+        height: 1334rpx;
+    }
+
     .main-swiper {
         position: absolute;
         width: 100%;
@@ -567,7 +578,7 @@ export default {
         }
 
         .banner-image {
-            width: 750upx;
+            width: 750rpx;
             height: 1334rpx;
         }
     }

@@ -58,7 +58,7 @@ function post(url, data) {
     );
 }
 
-function isLogin(params) {
+function isLogin(params = {}) {
     const { fr } = params;
     let query = '';
     if (fr) {
