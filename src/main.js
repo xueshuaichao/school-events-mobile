@@ -24,7 +24,7 @@ const common = {
         if (
             ['/pages/chunjie/index', '/pages/work/festival/festival'].indexOf(
                 location.pathname,
-            ) !== -1
+            ) === -1
         ) {
             share();
         }
