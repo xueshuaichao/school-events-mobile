@@ -3,6 +3,14 @@
         v-if="!isLoading"
         class="page-work-detail"
     >
+        <poster
+            id="poster"
+            :config="posterConfig"
+            @success="onPosterSuccess"
+            @fail="onPosterFail"
+        >
+            <button>点击生成海报</button>
+        </poster>
         <view
             v-if="showShareMask === true"
             class="share-mask"
@@ -194,6 +202,7 @@
 <script>
 import api from '../../../common/api';
 import share from '../../../common/share';
+import posterConfig from './posterConfig';
 
 export default {
     filters: {
@@ -235,9 +244,23 @@ export default {
 
             shareDesc: '',
             fr: '',
+
+            posterConfig,
         };
     },
     methods: {
+        onPosterSuccess(e) {
+            const { detail } = e;
+            console.log(detail);
+            // eslint-disable-next-line no-undef
+            wx.previewImage({
+                current: detail,
+                urls: [detail],
+            });
+        },
+        onPosterFail(e) {
+            console.log(e, 'fail');
+        },
         getData() {
             api.get('/api/activity/detail', {
                 id: this.id,
