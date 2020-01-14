@@ -3,14 +3,14 @@
         v-if="!isLoading"
         class="page-work-detail"
     >
-        <poster
+        <!-- <poster
             id="poster"
             :config="posterConfig"
             @success="onPosterSuccess"
             @fail="onPosterFail"
         >
             <button>点击生成海报</button>
-        </poster>
+        </poster> -->
         <view
             v-if="showShareMask === true"
             class="share-mask"
@@ -159,7 +159,7 @@
             <button
                 class="btn"
                 open-type="share"
-                @click="showShareMask = true"
+                @click="canvass"
             >
                 帮TA拉票
             </button>
@@ -355,6 +355,11 @@ export default {
         onFullScreenChange(e) {
             const isFullScreenMode = e.detail.fullScreen;
             this.isFullScreen = isFullScreenMode;
+        },
+        canvass() {
+            // #ifdef H5
+            this.showShareMask = true;
+            // #endif
         },
         html5VideoAutoAdjust() {
             document.querySelector('.uni-video-type-fullscreen').style = '';
