@@ -22,4 +22,21 @@ export default {
         }
         // #endif
     },
+    // prepare fr
+    getFr(type, params) {
+        const { from } = params;
+        const defaultFr = [type];
+        let isH5 = false;
+        // #ifdef H5
+        isH5 = true;
+        // #endif
+
+        const platform = isH5 ? 'h5' : 'mini';
+        defaultFr.push(platform);
+
+        if (from) {
+            defaultFr.push(from);
+        }
+        return defaultFr.join('_');
+    },
 };

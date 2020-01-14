@@ -361,6 +361,7 @@
 import api from '../../common/api';
 import uniLoadMore from '../../components/uni-load-more/uni-load-more.vue';
 import share from '../../common/share';
+import logger from '../../common/logger';
 
 export default {
     filters: {
@@ -439,8 +440,7 @@ export default {
         this.chunjieStatus();
     },
     onLoad(params) {
-        const { fr } = params;
-        this.fr = fr || '';
+        this.fr = logger.getFr('xchd', params);
     },
     onHide() {
         this.changeValue = '';
@@ -783,6 +783,7 @@ body.dialog-open {
     width: 100%;
     height: 116upx;
     font-size: 0;
+    z-index: 10;
 }
 .upload-disable {
     position: fixed;
