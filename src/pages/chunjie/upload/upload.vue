@@ -313,14 +313,14 @@ export default {
                         if (this.images.length >= 10) {
                             this.errTip('最多选择10张图片');
                         } else {
-                            let suffix;
+                            let suffix = '';
                             try {
                                 suffix = item.path.split('.').pop();
                                 // eslint-disable-next-line no-empty
                             } catch {}
                             if (
                                 ['jpg', 'jpeg', 'png', 'gif'].indexOf(
-                                    suffix,
+                                    suffix.toLowerCase(),
                                 ) !== -1
                             ) {
                                 this.images.push({
@@ -364,6 +364,11 @@ export default {
                 return false;
             }
             const formData = Object.assign({}, this.formData);
+            // 移除首尾空格
+            formData.resource_name = formData.resource_name.replace(
+                /(^\s*)|(\s*$)/g,
+                '',
+            );
 
             if (this.uploadMode === 'video') {
                 formData.resource_type = 1;
