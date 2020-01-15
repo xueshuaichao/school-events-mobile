@@ -51,8 +51,10 @@ const common = {
             path: '/pages/tabBar/index/index',
         };
     },
+
     onLoad: () => {
-        logger.log();
+        console.log('on<<<<<');
+        logger.onPageView();
     },
 };
 

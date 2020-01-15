@@ -59,7 +59,7 @@
                 placeholder-class="placeholder"
                 :placeholder="
                     (uploadMode === 'video' ? '视频' : '作品') +
-                        '介绍（不超过500字）'
+                        '介绍（不超过80字）'
                 "
             />
 

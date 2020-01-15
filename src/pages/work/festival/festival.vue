@@ -201,6 +201,7 @@
 
 <script>
 import api from '../../../common/api';
+import utils from '../../../common/utils';
 import share from '../../../common/share';
 import posterConfig from './posterConfig';
 
@@ -225,6 +226,7 @@ export default {
     },
     data() {
         return {
+            id: '',
             // video: 'https://node.imgio.in/demo/birds.m3u8',
             video:
                 'https://dcloud-img.oss-cn-hangzhou.aliyuncs.com/guide/uniapp/%E7%AC%AC1%E8%AE%B2%EF%BC%88uni-app%E4%BA%A7%E5%93%81%E4%BB%8B%E7%BB%8D%EF%BC%89-%20DCloud%E5%AE%98%E6%96%B9%E8%A7%86%E9%A2%91%E6%95%99%E7%A8%8B@20181126.mp4',
@@ -424,11 +426,11 @@ export default {
         },
     },
     onLoad(query) {
-        const { id, fr } = query;
-        this.id = id || '';
+        const { fr } = query;
+        this.id = utils.getParam(query, 'id');
         this.fr = fr || '';
 
-        this.getData(id);
+        this.getData();
         // hack for html5 video size notwoking
         // #ifdef H5
         window.removeEventListener(

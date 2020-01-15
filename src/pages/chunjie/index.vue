@@ -260,19 +260,19 @@
                 <view class="search-box">
                     <button
                         :class="{
-                            active: activeMenuIndex === 'hot'
-                        }"
-                        @click="toggle('hot')"
-                    >
-                        最热
-                    </button>
-                    <button
-                        :class="{
                             active: activeMenuIndex === 'new'
                         }"
                         @click="toggle('new')"
                     >
                         最新
+                    </button>
+                    <button
+                        :class="{
+                            active: activeMenuIndex === 'hot'
+                        }"
+                        @click="toggle('hot')"
+                    >
+                        最热
                     </button>
                     <view class="search">
                         <image

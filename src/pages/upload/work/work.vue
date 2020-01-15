@@ -97,15 +97,25 @@
                         v-if="type === 'myWork'"
                         class="work-info"
                     >
-                        <view class="media-name">
+                        <view class="media-name text-one-line">
                             {{ `#${item.cat_name}# ${item.resource_name}` }}
                         </view>
                         <view class="media-time">
                             {{ item.created_at }}
                         </view>
-                        <text class="vote-num">
+                        <!-- 未通过的显示未通过审核的原因 -->
+                        <text
+                            v-if="tabActiveIndex !== 3"
+                            class="vote-num"
+                        >
                             {{ item.ticket }}票
                         </text>
+                        <view
+                            v-if="tabActiveIndex === 3"
+                            class="reject-reason text-three-line"
+                        >
+                            {{ item.reason }}
+                        </view>
                     </view>
                     <view
                         v-else
@@ -592,6 +602,12 @@ export default {
 
     .blank-wrap {
         margin-top: 180upx;
+    }
+
+    .reject-reason {
+        color: #b69755;
+        font-size: 24rpx;
+        margin-top: 10rpx;
     }
 }
 </style>
