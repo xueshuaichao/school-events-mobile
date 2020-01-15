@@ -8,15 +8,6 @@
             }
         },
         {
-            "path": "pages/work/festival/festival",
-            "style": {
-                "navigationBarTitleText": "作品详情",
-                "usingComponents": {
-                    "poster": "/wxcomponents/third-party/poster/poster/index"
-                }
-            }
-        },
-        {
             "path": "pages/tabBar/list/list",
             "style": {
                 "navigationBarTitleText": "作品展示"
@@ -107,7 +98,15 @@
                 "navigationBarTitleText": "我的作品"
             }
         },
-
+        {
+            "path": "pages/work/festival/festival",
+            "style": {
+                "navigationBarTitleText": "作品详情",
+                "usingComponents": {
+                    "poster": "/wxcomponents/third-party/poster/poster/index"
+                }
+            }
+        },
         // 上传详情
         {
             "path": "pages/upload/result/result",

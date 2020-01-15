@@ -198,7 +198,7 @@
             <button
                 class="btn"
                 open-type="share"
-                @click="showShareMask = true"
+                @click="canvass"
             >
                 帮TA拉票
             </button>
@@ -537,6 +537,11 @@ export default {
         onFullScreenChange(e) {
             const isFullScreenMode = e.detail.fullScreen;
             this.isFullScreen = isFullScreenMode;
+        },
+        canvass() {
+            // #ifdef H5
+            this.showShareMask = true;
+            // #endif
         },
         html5VideoAutoAdjust() {
             document.querySelector('.uni-video-type-fullscreen').style = '';
