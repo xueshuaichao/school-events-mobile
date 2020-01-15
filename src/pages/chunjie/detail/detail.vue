@@ -17,6 +17,14 @@
                 src="/static/images/chunjie/save.png"
                 @click="handleSave"
             />
+            <button
+                type="primary"
+                class="openSetting"
+                open-type="openSetting"
+                bindopensetting="handleSetting"
+            >
+                去授权
+            </button>
             <image
                 class="close"
                 src="/static/images/chunjie/third_entry_close.png"
@@ -311,6 +319,8 @@ export default {
                                 marginRight: 10,
                                 lineHeight: 40,
                                 lineNum: 1,
+                                width: 1210,
+                                textOverflow: 'ellipsis',
                             },
                         ],
                         baseLine: 'middle',

@@ -530,6 +530,8 @@ export default {
             const titleList = ['我来给你拜新年，表演才艺送祝福'];
             const title = titleList[Math.floor(Math.random() * titleList.length)];
             const desc = '快乐过寒假，才艺拜大年！';
+            // eslint-disable-next-line prefer-destructuring
+            this.shareDesc = titleList[0];
 
             share({
                 title,
@@ -605,6 +607,17 @@ export default {
                 });
             }
         },
+    },
+    onShareAppMessage(res) {
+        if (res.from === 'button') {
+            // 来自页面内分享按钮
+            console.log(res.target);
+        }
+        return {
+            title: this.shareDesc,
+            // imageUrl: '/static/images/index/banner.png',
+            path: '/pages/chunjie/index',
+        };
     },
 };
 </script>
