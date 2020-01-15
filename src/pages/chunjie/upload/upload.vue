@@ -147,6 +147,7 @@ export default {
     },
     data() {
         return {
+            disabled: false,
             // #ifdef H5
             isH5: true,
             // #endif
@@ -272,6 +273,20 @@ export default {
     created() {},
     onShow() {},
     methods: {
+        resetForm() {
+            this.formData = {
+                activity_id: 3,
+                cat_id: 16,
+                resource_name: '',
+                introduce: '',
+                type: 2,
+
+                video_id: '',
+                video_img_url: '',
+                teacher: '',
+                recommend: '',
+            };
+        },
         setNewsTabActive(index) {
             this.newsTabActiveIndex = index;
             if (index === 0) {
@@ -345,6 +360,9 @@ export default {
         },
 
         upload() {
+            if (this.disabled) {
+                return false;
+            }
             const formData = Object.assign({}, this.formData);
 
             if (this.uploadMode === 'video') {
@@ -378,10 +396,13 @@ export default {
             }
 
             uni.showLoading();
+            this.disabled = true;
             // check input
             console.log(this.formData);
             return api.post('/api/activity/add', formData).then(
                 (res) => {
+                    this.resetForm();
+                    this.disabled = false;
                     console.log(res);
                     uni.hideLoading();
                     uni.navigateTo({
@@ -390,6 +411,7 @@ export default {
                     });
                 },
                 (err) => {
+                    this.disabled = false;
                     uni.hideLoading();
                     uni.showToast({
                         icon: 'none',
