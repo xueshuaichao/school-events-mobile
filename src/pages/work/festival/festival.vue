@@ -3,14 +3,52 @@
         v-if="!isLoading"
         class="page-work-detail"
     >
-        <poster
-            id="poster"
-            :config="posterConfig"
-            @success="onPosterSuccess"
-            @fail="onPosterFail"
+        <view
+            v-if="prompt"
+            class="activerulebox"
         >
-            <button>点击生成海报</button>
-        </poster>
+            <image
+                class="saveImg"
+                :src="canvasImg"
+            />
+            <image
+                class="saveBtn"
+                src="/static/images/chunjie/save.png"
+                @click="handleSave"
+            />
+            <image
+                class="close"
+                src="/static/images/chunjie/third_entry_close.png"
+                @click="handleClose"
+            />
+        </view>
+
+        <view
+            v-if="showTicketMask"
+            class="ticket-mask"
+        >
+            <image
+                class="ticket-friend"
+                src="/static/images/work/sendToFriend.png"
+            />
+            <poster
+                id="poster"
+                :config="posterConfig"
+                @success="onPosterSuccess"
+                @fail="onPosterFail"
+            >
+                <image
+                    class="ticket-poster"
+                    src="/static/images/work/poster.png"
+                />
+            </poster>
+
+            <image
+                class="ticket-close"
+                src="/static/images/work/icon-del.png"
+                @click="showTicketMask = false"
+            />
+        </view>
         <view
             v-if="showShareMask === true"
             class="share-mask"
@@ -156,6 +194,7 @@
             >
                 {{ likeStatus === 0 ? "投TA一票" : "已投票" }}
             </button>
+            <!-- # ifdef H5 -->
             <button
                 class="btn"
                 open-type="share"
@@ -163,6 +202,15 @@
             >
                 帮TA拉票
             </button>
+            <!-- # endif -->
+            <!-- # ifndef H5 -->
+            <button
+                class="btn"
+                @click="handleTicketMask"
+            >
+                帮TA拉票
+            </button>
+            <!-- # endif -->
             <button
                 class="btn"
                 @click="goHome"
@@ -202,7 +250,7 @@
 <script>
 import api from '../../../common/api';
 import share from '../../../common/share';
-import posterConfig from './posterConfig';
+// import posterConfig from './posterConfig';
 
 export default {
     filters: {
@@ -229,7 +277,9 @@ export default {
             video:
                 'https://dcloud-img.oss-cn-hangzhou.aliyuncs.com/guide/uniapp/%E7%AC%AC1%E8%AE%B2%EF%BC%88uni-app%E4%BA%A7%E5%93%81%E4%BB%8B%E7%BB%8D%EF%BC%89-%20DCloud%E5%AE%98%E6%96%B9%E8%A7%86%E9%A2%91%E6%95%99%E7%A8%8B@20181126.mp4',
             isLoading: true,
-            pageData: {},
+            pageData: {
+                video_img_url: '',
+            },
             likeStatus: 0,
             isPlayed: false,
             isPaused: false,
@@ -244,19 +294,147 @@ export default {
 
             shareDesc: '',
             fr: '',
+            posterConfig: {
+                width: 520,
+                height: 500,
+                debug: false,
+                texts: [
+                    {
+                        x: 50,
+                        y: 505,
+                        text: [
+                            {
+                                text: '#唱歌#',
+                                fontSize: 29,
+                                color: '#FFE49C',
+                                opacity: 1,
+                                marginRight: 10,
+                                lineHeight: 40,
+                                lineNum: 1,
+                            },
+                            {
+                                text: '',
+                                fontSize: 29,
+                                color: '#FFE49C',
+                                opacity: 1,
+                            },
+                        ],
+                        baseLine: 'middle',
+                    },
+                ],
+                images: [
+                    {
+                        url:
+                            'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/share.png',
+                        width: 520,
+                        height: 730,
+                        y: 0,
+                        x: 0,
+                    },
+                    {
+                        url: '',
+                        width: 420,
+                        height: 282,
+                        y: 185,
+                        x: 50,
+                    },
+                    {
+                        url: '',
+                        width: 142,
+                        height: 142,
+                        y: 573,
+                        x: 348,
+                    },
+                ],
+            },
 
-            posterConfig,
+            prompt: false,
+            canvasImg: '',
+            showTicketMask: false,
         };
     },
     methods: {
+        handleTicketMask() {
+            this.showTicketMask = true;
+            // eslint-disable-next-line no-undef
+            const pages = getCurrentPages(); // 获取加载的页面
+            const currentPage = pages[pages.length - 1]; // 获取当前页面的对象
+            const url = 'pages/work/detail/detail' || currentPage.route;
+            const scene = 'id=325' || `id=${this.id}`;
+            console.log(url, 'urlsdfs');
+
+            console.log(this.posterConfig, 'posterConfig111');
+            api.post('/api/weixin/getminiqrcode', {
+                path: url,
+                scene,
+            }).then(
+                ({ url }) => {
+                    this.base64src(url, (res) => {
+                        console.log(res);
+                        this.posterConfig.images[2].url = res;
+                    });
+                },
+                () => {},
+            );
+        },
+        base64src(base64data, cb) {
+            // eslint-disable-next-line no-undef
+            const fsm = wx.getFileSystemManager();
+            const FILE_BASE_NAME = 'tmp_base64src'; // 自定义文件名
+            const [, format, bodyData] = /data:image\/(\w+);base64,(.*)/.exec(base64data) || [];
+            if (!format) {
+                return new Error('ERROR_BASE64SRC_PARSE');
+            }
+            // eslint-disable-next-line no-undef
+            const filePath = `${wx.env.USER_DATA_PATH}/${FILE_BASE_NAME}.${format}`;
+            // eslint-disable-next-line no-undef
+            const buffer = wx.base64ToArrayBuffer(bodyData);
+            fsm.writeFile({
+                filePath,
+                data: buffer,
+                encoding: 'binary',
+                success() {
+                    cb(filePath);
+                },
+                fail() {
+                    return new Error('ERROR_BASE64SRC_WRITE');
+                },
+            });
+            return '';
+        },
+
         onPosterSuccess(e) {
             const { detail } = e;
             console.log(detail);
+            this.canvasImg = detail;
+            this.showTicketMask = false;
+            this.prompt = true;
+        },
+        handleSave() {
             // eslint-disable-next-line no-undef
-            wx.previewImage({
-                current: detail,
-                urls: [detail],
+            wx.downloadFile({
+                url: this.canvasImg,
+                success(res) {
+                    console.log(res);
+                    // 图片保存到本地
+                    // eslint-disable-next-line no-undef
+                    wx.saveImageToPhotosAlbum({
+                        filePath: res.tempFilePath,
+                        success() {
+                            this.prompt = false;
+                            this.showTicketMask = true;
+                            uni.showToast({
+                                title: '保存成功',
+                                icon: 'success',
+                                duration: 2000,
+                            });
+                        },
+                    });
+                },
             });
+        },
+        handleClose() {
+            this.prompt = false;
         },
         onPosterFail(e) {
             console.log(e, 'fail');
@@ -269,6 +447,10 @@ export default {
                     this.isLoading = false;
                     console.log(res);
                     this.pageData = res;
+                    this.posterConfig.images[1].url = res.video_img_url;
+                    this.posterConfig.texts[0].text[0].text = `#${res.cat_name
+                        || 'abc'}#`;
+                    this.posterConfig.texts[0].text[1].text = `${res.resource_name}`;
                     this.initShare();
                     // const videoUrl = res.video.cloud_path_sd;
                     // console.log(videoUrl);
@@ -455,6 +637,38 @@ export default {
 .page-work-detail {
     background: #000;
     height: 100vh;
+    #poster {
+        // position: absolute;
+        // left:-999upx;
+    }
+    .activerulebox {
+        position: fixed;
+        background-color: rgba(0, 0, 0, 0.8);
+        width: 100%;
+        height: 100%;
+        z-index: 999;
+        .saveImg {
+            position: absolute;
+            width: 520upx;
+            height: 730upx;
+            left: 115upx;
+            top: 168upx;
+        }
+        .saveBtn {
+            position: absolute;
+            width: 520upx;
+            height: 96upx;
+            left: 115upx;
+            top: 938upx;
+        }
+        .close {
+            position: absolute;
+            width: 54upx;
+            height: 54upx;
+            left: 348upx;
+            top: 1074upx;
+        }
+    }
 
     .h5-full-screen-title {
         position: fixed;
@@ -612,7 +826,7 @@ export default {
         position: fixed;
         right: 30rpx;
         bottom: 20rpx;
-        z-index: 1000;
+        z-index: 100;
     }
 
     .from {
@@ -637,7 +851,7 @@ export default {
         color: #fff0cc;
         font-size: 24rpx;
         text-align: center;
-        z-index: 1000;
+        z-index: 100;
     }
 
     .btn {
@@ -678,6 +892,37 @@ export default {
             position: absolute;
             right: 40rpx;
             top: 28rpx;
+        }
+    }
+    .ticket-mask {
+        position: fixed;
+        z-index: 9999;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.7);
+        text-align: center;
+
+        .ticket-friend {
+            width: 192rpx;
+            height: 230rpx;
+            position: absolute;
+            left: 160rpx;
+            top: 784rpx;
+        }
+
+        .ticket-poster {
+            width: 192rpx;
+            height: 230rpx;
+            position: absolute;
+            left: 400rpx;
+            top: 784rpx;
+        }
+        .ticket-close {
+            position: absolute;
+            width: 56upx;
+            height: 56upx;
+            left: 347upx;
+            top: 1037upx;
         }
     }
 
