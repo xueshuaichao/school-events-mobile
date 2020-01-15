@@ -364,6 +364,11 @@ export default {
                 return false;
             }
             const formData = Object.assign({}, this.formData);
+            // 移除首尾空格
+            formData.resource_name = formData.resource_name.replace(
+                /(^\s*)|(\s*$)/g,
+                '',
+            );
 
             if (this.uploadMode === 'video') {
                 formData.resource_type = 1;

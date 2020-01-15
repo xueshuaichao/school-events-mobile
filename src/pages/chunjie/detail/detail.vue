@@ -158,7 +158,7 @@
             <view class="author-from">
                 {{ pageData.school_name + pageData.grade_name }}
             </view>
-            <view class="work-name-wrap">
+            <view class="work-name-wrap text-one-line">
                 <image
                     class="avatar"
                     src="/static/images/work/file.png"
