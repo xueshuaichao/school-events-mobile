@@ -447,10 +447,16 @@ export default {
                     if (
                         err.errMsg
                             === 'saveImageToPhotosAlbum:fail:auth denied'
-                        || err.errMsg === 'saveImageToPhotosAlbum:fail auth deny'
+                        || err.errMsg
+                            === 'saveImageToPhotosAlbum:fail auth deny'
+                        || err.errMsg === 'saveImageToPhotosAlbum:fail system deny'
                     ) {
                         // 这边微信做过调整，必须要在按钮中触发，因此需要在弹框回调中进行调用
                         console.log('开始授权');
+                        uni.authorize({
+                            scope: 'scope.writePhotosAlbum',
+                            success() {},
+                        });
                         // eslint-disable-next-line no-undef
                         wx.openSetting({
                             success(settingdata) {
