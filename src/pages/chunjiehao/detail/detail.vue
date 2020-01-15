@@ -306,12 +306,10 @@ export default {
                             {
                                 text: '#唱歌#',
                                 fontSize: 29,
-                                width: 1210,
                                 color: '#FFE49C',
                                 opacity: 1,
                                 marginRight: 10,
                                 lineHeight: 40,
-                                textOverflow: 'ellipsis',
                                 lineNum: 1,
                             },
                         ],
@@ -449,9 +447,7 @@ export default {
                     if (
                         err.errMsg
                             === 'saveImageToPhotosAlbum:fail:auth denied'
-                        || err.errMsg
-                            === 'saveImageToPhotosAlbum:fail auth deny'
-                        || err.errMsg === 'saveImageToPhotosAlbum:fail system deny'
+                        || err.errMsg === 'saveImageToPhotosAlbum:fail auth deny'
                     ) {
                         // 这边微信做过调整，必须要在按钮中触发，因此需要在弹框回调中进行调用
                         console.log('开始授权');

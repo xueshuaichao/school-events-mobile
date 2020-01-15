@@ -4,7 +4,9 @@
             v-if="prompt && status === 2"
             class="cover"
         >
-            <image src="../../../static/images/chunjie/third_entry.png" />
+            <image
+                src="http://aitiaozhan.oss-cn-beijing.aliyuncs.com/third_entry.png"
+            />
             <image
                 src="../../../static/images/chunjie/third_entry_close.png"
                 @click="handleClose"
@@ -40,6 +42,18 @@
                             <image
                                 class="banner-image"
                                 src="http://aitiaozhan.oss-cn-beijing.aliyuncs.com/banner4.png"
+                            />
+                        </navigator>
+                    </swiper-item>
+                    <!-- 春节好入口 -->
+                    <swiper-item>
+                        <navigator
+                            url="/pages/chunjiehao/index"
+                            class="swiper-item"
+                        >
+                            <image
+                                class="banner-image"
+                                src="http://aitiaozhan.oss-cn-beijing.aliyuncs.com/chunjiehao.png"
                             />
                         </navigator>
                     </swiper-item>
