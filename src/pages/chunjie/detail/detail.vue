@@ -249,7 +249,6 @@
 import api from '../../../common/api';
 import utils from '../../../common/utils';
 import share from '../../../common/share';
-// import posterConfig from './posterConfig';
 
 export default {
     filters: {
@@ -313,12 +312,6 @@ export default {
                                 lineHeight: 40,
                                 lineNum: 1,
                             },
-                            {
-                                text: '',
-                                fontSize: 29,
-                                color: '#FFE49C',
-                                opacity: 1,
-                            },
                         ],
                         baseLine: 'middle',
                     },
@@ -374,22 +367,25 @@ export default {
             const currentPage = pages[pages.length - 1]; // 获取当前页面的对象
             const url = 'pages/work/detail/detail' || currentPage.route;
             const scene = 'id=325' || `id=${this.id}`;
-            console.log(url, 'urlsdfs');
-
-            console.log(this.posterConfig, 'posterConfig111');
             api.post('/api/weixin/getminiqrcode', {
                 path: url,
                 scene,
             }).then(
                 ({ url }) => {
                     uni.hideLoading();
-                    this.base64src(url, (res) => {
-                        console.log(res);
-                        this.posterConfig.images[2].url = res;
+                    if (url) {
+                        this.base64src(url, (res) => {
+                            this.posterConfig.images[2].url = res;
+                            this.showTicketMask = true;
+                        });
+                    } else {
+                        this.posterConfig.images[2].url = 'http://aitiaozhan.oss-cn-beijing.aliyuncs.com/main-erweima.png';
                         this.showTicketMask = true;
-                    });
+                    }
                 },
                 () => {
+                    this.posterConfig.images[2].url = 'http://aitiaozhan.oss-cn-beijing.aliyuncs.com/main-erweima.png';
+                    this.showTicketMask = true;
                     uni.hideLoading();
                 },
             );
@@ -507,12 +503,8 @@ export default {
                     console.log(res);
                     this.pageData = res;
                     this.posterConfig.images[1].url = res.video_img_url;
-                    this.posterConfig.texts[0].text[0].text = `#${res.cat_name
-                        || 'abc'}#`;
-                    this.posterConfig.texts[0].text[1].text = `${res.resource_name}`;
+                    this.posterConfig.texts[0].text[0].text = `#${res.cat_name}#  ${res.resource_name}`;
                     this.initShare();
-                    // const videoUrl = res.video.cloud_path_sd;
-                    // console.log(videoUrl);
                     uni.setNavigationBarTitle({
                         title: res.resource_name,
                     });

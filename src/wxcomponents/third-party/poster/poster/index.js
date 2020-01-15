@@ -1,3 +1,6 @@
+// import api from '../../../../common/api';
+
+// '../../../../common/api.js'
 Component({
     properties: {
         config: {
