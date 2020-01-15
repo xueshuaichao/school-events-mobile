@@ -22,7 +22,7 @@ const common = {
 
         // #ifdef H5
         if (
-            ['/pages/chunjie/index', '/pages/work/festival/festival'].indexOf(
+            ['/pages/chunjie/index', '/pages/chunjie/detail/detail'].indexOf(
                 location.pathname,
             ) === -1
         ) {
@@ -51,8 +51,10 @@ const common = {
             path: '/pages/tabBar/index/index',
         };
     },
+
     onLoad: () => {
-        logger.log();
+        console.log('on<<<<<');
+        logger.onPageView();
     },
 };
 

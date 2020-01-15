@@ -96,7 +96,7 @@ export default {
                 });
             } else if (this.from === 'festival') {
                 uni.reLaunch({
-                    url: '/pages/upload/festival/festival',
+                    url: '/pages/chunjie/upload/upload',
                 });
             }
         },
@@ -107,7 +107,7 @@ export default {
                 });
             } else if (this.from === 'festival') {
                 uni.reLaunch({
-                    url: '/pages/upload/work/work?type=myWork',
+                    url: '/pages/chunjie/myWork/myWork?type=myWork',
                 });
             }
         },

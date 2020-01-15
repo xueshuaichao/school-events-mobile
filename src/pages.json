@@ -44,14 +44,12 @@
                 "navigationBarTitleText": "参赛指南"
             }
         },
-
         {
             "path": "pages/doc/list/list",
             "style": {
                 "navigationBarTitleText": "参赛说明"
             }
         },
-
         {
             "path": "pages/qa/detail/detail",
             "style": {
@@ -64,7 +62,6 @@
                 "navigationBarTitleText": "通知"
             }
         },
-
         // second page
         {
             "path": "pages/news/list/list",
@@ -78,7 +75,6 @@
                 "navigationBarTitleText": "资讯详情"
             }
         },
-
         // 作品详情
         {
             "path": "pages/work/list/list",
@@ -98,15 +94,6 @@
                 "navigationBarTitleText": "我的作品"
             }
         },
-        {
-            "path": "pages/work/festival/festival",
-            "style": {
-                "navigationBarTitleText": "作品详情",
-                "usingComponents": {
-                    "poster": "/wxcomponents/third-party/poster/poster/index"
-                }
-            }
-        },
         // 上传详情
         {
             "path": "pages/upload/result/result",
@@ -116,19 +103,6 @@
         },
         {
             "path": "pages/upload/modify/modify",
-            "style": {
-                "navigationBarTitleText": "上传作品"
-            }
-        },
-        {
-            "path": "pages/upload/work/work",
-            "style": {
-                "navigationBarTitleText": "我的作品"
-            }
-        },
-        // 活动详情
-        {
-            "path": "pages/upload/festival/festival",
             "style": {
                 "navigationBarTitleText": "上传作品"
             }
@@ -158,6 +132,7 @@
                 "navigationBarTitleText": "编辑收货地址"
             }
         },
+        // ============== 春节 活动 =================
         {
             "path": "pages/chunjie/index",
             "style": {
@@ -165,7 +140,28 @@
                 "softinputNavBar": "none"
             }
         },
-
+        {
+            "path": "pages/chunjie/detail/detail",
+            "style": {
+                "navigationBarTitleText": "作品详情",
+                "usingComponents": {
+                    "poster": "/wxcomponents/third-party/poster/poster/index"
+                }
+            }
+        },
+        {
+            "path": "pages/chunjie/upload/upload",
+            "style": {
+                "navigationBarTitleText": "上传作品"
+            }
+        },
+        {
+            "path": "pages/chunjie/myWork/myWork",
+            "style": {
+                "navigationBarTitleText": "我的作品"
+            }
+        },
+        // ============== 春节 end ======================
         {
             "path": "pages/login/login",
             "style": {

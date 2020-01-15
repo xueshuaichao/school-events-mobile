@@ -24,43 +24,49 @@
             />
         </view>
 
-        <view
-            v-if="showTicketMask"
-            class="ticket-mask"
-        >
-            <image
-                class="ticket-friend"
-                src="/static/images/work/sendToFriend.png"
-            />
-            <poster
-                id="poster"
-                :config="posterConfig"
-                @success="onPosterSuccess"
-                @fail="onPosterFail"
+        <!-- 小程序分享 -->
+        <template v-if="!isH5">
+            <view
+                v-if="showTicketMask"
+                class="ticket-mask"
             >
-                <!-- 生成图片 -->
-                <image
-                    class="ticket-poster"
-                    src="/static/images/work/poster.png"
+                <poster
+                    id="poster"
+                    :config="posterConfig"
+                    @success="onPosterSuccess"
+                    @fail="onPosterFail"
+                >
+                    <image
+                        class="ticket-poster"
+                        src="/static/images/work/poster.png"
+                    />
+                </poster>
+                <button
+                    open-type="share"
+                    class="ticket-friend"
                 />
-            </poster>
+                <image
+                    class="ticket-close"
+                    src="/static/images/work/icon-del.png"
+                    @click="showTicketMask = false"
+                />
+            </view>
+        </template>
 
-            <image
-                class="ticket-close"
-                src="/static/images/work/icon-del.png"
-                @click="showTicketMask = false"
-            />
-        </view>
-        <view
-            v-if="showShareMask === true"
-            class="share-mask"
-            @click="showShareMask = false"
-        >
-            <image
-                class="share-pic"
-                src="/static/images/work/share-guide.png"
-            />
-        </view>
+        <!-- h5 分享 -->
+        <template v-if="isH5">
+            <view
+                v-if="showShareMask === true"
+                class="share-mask"
+                @click="showShareMask = false"
+            >
+                <image
+                    class="share-pic"
+                    src="/static/images/work/share-guide.png"
+                />
+            </view>
+        </template>
+
         <view
             v-if="isFullScreen && isH5"
             class="h5-full-screen-title text-one-line"
@@ -196,23 +202,13 @@
             >
                 {{ likeStatus === 0 ? "投TA一票" : "已投票" }}
             </button>
-            <!-- # ifdef H5 -->
+
             <button
                 class="btn"
-                open-type="share"
-                @click="canvass"
+                @click="handleCanvass"
             >
                 帮TA拉票
             </button>
-            <!-- # endif -->
-            <!-- # ifndef H5 -->
-            <button
-                class="btn"
-                @click="handleTicketMask"
-            >
-                帮TA拉票
-            </button>
-            <!-- # endif -->
             <button
                 class="btn"
                 @click="goHome"
@@ -251,6 +247,7 @@
 
 <script>
 import api from '../../../common/api';
+import utils from '../../../common/utils';
 import share from '../../../common/share';
 // import posterConfig from './posterConfig';
 
@@ -275,6 +272,7 @@ export default {
     },
     data() {
         return {
+            id: '',
             // video: 'https://node.imgio.in/demo/birds.m3u8',
             video:
                 'https://dcloud-img.oss-cn-hangzhou.aliyuncs.com/guide/uniapp/%E7%AC%AC1%E8%AE%B2%EF%BC%88uni-app%E4%BA%A7%E5%93%81%E4%BB%8B%E7%BB%8D%EF%BC%89-%20DCloud%E5%AE%98%E6%96%B9%E8%A7%86%E9%A2%91%E6%95%99%E7%A8%8B@20181126.mp4',
@@ -297,6 +295,7 @@ export default {
             shareDesc: '',
             fr: '',
             posterConfig: {
+                pixelRatio: 3,
                 width: 520,
                 height: 500,
                 debug: false,
@@ -356,6 +355,15 @@ export default {
         };
     },
     methods: {
+        handleCanvass() {
+            // #ifdef H5
+            this.showShareMask = true;
+            // #endif
+
+            // #ifndef H5
+            this.handleTicketMask();
+            // #endif
+        },
         // 生成二维码，并弹出mask
         handleTicketMask() {
             uni.showLoading({
@@ -589,11 +597,6 @@ export default {
             const isFullScreenMode = e.detail.fullScreen;
             this.isFullScreen = isFullScreenMode;
         },
-        canvass() {
-            // #ifdef H5
-            this.showShareMask = true;
-            // #endif
-        },
         html5VideoAutoAdjust() {
             document.querySelector('.uni-video-type-fullscreen').style = '';
         },
@@ -630,7 +633,7 @@ export default {
                     const { status } = res;
                     if (status === 2) {
                         uni.navigateTo({
-                            url: '/pages/upload/festival/festival',
+                            url: '/pages/chunjie/upload/upload',
                         });
                     } else if (status === 1) {
                         uni.showToast({
@@ -657,11 +660,11 @@ export default {
         },
     },
     onLoad(query) {
-        const { id, fr } = query;
-        this.id = id || '';
+        const { fr } = query;
+        this.id = utils.getParam(query, 'id');
         this.fr = fr || '';
 
-        this.getData(id);
+        this.getData();
         // hack for html5 video size notwoking
         // #ifdef H5
         window.removeEventListener(
@@ -683,7 +686,7 @@ export default {
         return {
             title: this.shareDesc,
             // imageUrl: '/static/images/index/banner.png',
-            path: `/pages/work/detail/detail?id=${this.id}`,
+            path: `/pages/chunjie/detail/detail?id=${this.id}`,
         };
     },
 };
@@ -960,15 +963,17 @@ export default {
 
         .ticket-friend {
             width: 192rpx;
-            height: 230rpx;
+            height: 215rpx;
             position: absolute;
             left: 160rpx;
             top: 784rpx;
+            background: url("http://aitiaozhan.oss-cn-beijing.aliyuncs.com/sendToFriend.png");
+            background-size: 100% 100%;
         }
 
         .ticket-poster {
             width: 192rpx;
-            height: 230rpx;
+            height: 215rpx;
             position: absolute;
             left: 400rpx;
             top: 784rpx;

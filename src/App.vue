@@ -19,6 +19,10 @@ uni-tabbar .uni-tabbar__bd {
     height: 60px;
 }
 
+uni-toast .uni-simple-toast__text {
+    padding: 10px;
+}
+
 .uni-body {
     font-size: 24upx;
 }
