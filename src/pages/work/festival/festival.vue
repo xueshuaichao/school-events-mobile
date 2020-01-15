@@ -11,6 +11,7 @@
                 class="saveImg"
                 :src="canvasImg"
             />
+            <!-- 保存图片 -->
             <image
                 class="saveBtn"
                 src="/static/images/chunjie/save.png"
@@ -37,6 +38,7 @@
                 @success="onPosterSuccess"
                 @fail="onPosterFail"
             >
+                <!-- 生成图片 -->
                 <image
                     class="ticket-poster"
                     src="/static/images/work/poster.png"
@@ -354,8 +356,11 @@ export default {
         };
     },
     methods: {
+        // 生成二维码，并弹出mask
         handleTicketMask() {
-            this.showTicketMask = true;
+            uni.showLoading({
+                mask: true,
+            });
             // eslint-disable-next-line no-undef
             const pages = getCurrentPages(); // 获取加载的页面
             const currentPage = pages[pages.length - 1]; // 获取当前页面的对象
@@ -369,14 +374,19 @@ export default {
                 scene,
             }).then(
                 ({ url }) => {
+                    uni.hideLoading();
                     this.base64src(url, (res) => {
                         console.log(res);
                         this.posterConfig.images[2].url = res;
+                        this.showTicketMask = true;
                     });
                 },
-                () => {},
+                () => {
+                    uni.hideLoading();
+                },
             );
         },
+        // base64转url
         base64src(base64data, cb) {
             // eslint-disable-next-line no-undef
             const fsm = wx.getFileSystemManager();
@@ -411,25 +421,66 @@ export default {
             this.prompt = true;
         },
         handleSave() {
+            console.log(this.canvasImg, '触发图片保存');
+            const that = this;
+            // 图片保存到本地
             // eslint-disable-next-line no-undef
-            wx.downloadFile({
-                url: this.canvasImg,
-                success(res) {
-                    console.log(res);
-                    // 图片保存到本地
-                    // eslint-disable-next-line no-undef
-                    wx.saveImageToPhotosAlbum({
-                        filePath: res.tempFilePath,
-                        success() {
-                            this.prompt = false;
-                            this.showTicketMask = true;
-                            uni.showToast({
-                                title: '保存成功',
-                                icon: 'success',
-                                duration: 2000,
-                            });
-                        },
+            wx.saveImageToPhotosAlbum({
+                filePath: this.canvasImg,
+                success() {
+                    console.log('保存成功');
+                    that.prompt = false;
+                    that.showTicketMask = true;
+                    uni.showToast({
+                        title: '保存成功',
+                        icon: 'success',
+                        duration: 2000,
                     });
+                },
+                fail(err) {
+                    console.log('保存图片失败');
+                    console.log(err.errMsg);
+                    if (
+                        err.errMsg
+                            === 'saveImageToPhotosAlbum:fail:auth denied'
+                        || err.errMsg === 'saveImageToPhotosAlbum:fail auth deny'
+                    ) {
+                        // 这边微信做过调整，必须要在按钮中触发，因此需要在弹框回调中进行调用
+                        console.log('开始授权');
+                        // eslint-disable-next-line no-undef
+                        wx.openSetting({
+                            success(settingdata) {
+                                console.log('settingdata', settingdata);
+                                if (
+                                    settingdata.authSetting[
+                                        'scope.writePhotosAlbum'
+                                    ]
+                                ) {
+                                    // eslint-disable-next-line no-undef
+                                    wx.showModal({
+                                        title: '提示',
+                                        content:
+                                            '获取权限成功,再次点击图片即可保存',
+                                        showCancel: false,
+                                    });
+                                } else {
+                                    // eslint-disable-next-line no-undef
+                                    wx.showModal({
+                                        title: '提示',
+                                        content:
+                                            '获取权限失败，将无法保存到相册哦~',
+                                        showCancel: false,
+                                    });
+                                }
+                            },
+                            fail(failData) {
+                                console.log('failData', failData);
+                            },
+                            complete(finishData) {
+                                console.log('finishData', finishData);
+                            },
+                        });
+                    }
                 },
             });
         },
