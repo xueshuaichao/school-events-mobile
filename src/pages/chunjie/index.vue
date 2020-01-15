@@ -303,7 +303,7 @@
                     >
                         <navigator
                             :url="
-                                `/pages/work/festival/festival?id=${item.id}&fr=${fr}`
+                                `/pages/chunjie/detail/detail?id=${item.id}&fr=${fr}`
                             "
                         >
                             <image
@@ -461,7 +461,7 @@ export default {
                     fr: this.fr,
                 }).then(() => {
                     uni.navigateTo({
-                        url: '/pages/upload/festival/festival',
+                        url: '/pages/chunjie/upload/upload',
                     });
                 });
             } else {
@@ -517,7 +517,7 @@ export default {
                 return;
             }
             uni.navigateTo({
-                url: `/pages/upload/work/work?type=search&name=${this.changeValue.trim()}`,
+                url: `/pages/chunjie/myWork/myWork?type=search&name=${this.changeValue.trim()}`,
             });
         },
         initShare() {
@@ -553,7 +553,7 @@ export default {
                 fr: this.fr,
             }).then(() => {
                 uni.navigateTo({
-                    url: '/pages/upload/work/work?type=myWork',
+                    url: '/pages/chunjie/myWork/myWork?type=myWork',
                 });
             });
         },

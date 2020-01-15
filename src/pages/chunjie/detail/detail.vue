@@ -23,42 +23,49 @@
             />
         </view>
 
-        <view
-            v-if="showTicketMask"
-            class="ticket-mask"
-        >
-            <image
-                class="ticket-friend"
-                src="/static/images/work/sendToFriend.png"
-            />
-            <poster
-                id="poster"
-                :config="posterConfig"
-                @success="onPosterSuccess"
-                @fail="onPosterFail"
+        <!-- 小程序分享 -->
+        <template v-if="!isH5">
+            <view
+                v-if="showTicketMask"
+                class="ticket-mask"
+            >
+                <poster
+                    id="poster"
+                    :config="posterConfig"
+                    @success="onPosterSuccess"
+                    @fail="onPosterFail"
+                >
+                    <image
+                        class="ticket-poster"
+                        src="/static/images/work/poster.png"
+                    />
+                </poster>
+                <button
+                    open-type="share"
+                    class="ticket-friend"
+                />
+                <image
+                    class="ticket-close"
+                    src="/static/images/work/icon-del.png"
+                    @click="showTicketMask = false"
+                />
+            </view>
+        </template>
+
+        <!-- h5 分享 -->
+        <template v-if="isH5">
+            <view
+                v-if="showShareMask === true"
+                class="share-mask"
+                @click="showShareMask = false"
             >
                 <image
-                    class="ticket-poster"
-                    src="/static/images/work/poster.png"
+                    class="share-pic"
+                    src="/static/images/work/share-guide.png"
                 />
-            </poster>
+            </view>
+        </template>
 
-            <image
-                class="ticket-close"
-                src="/static/images/work/icon-del.png"
-                @click="showTicketMask = false"
-            />
-        </view>
-        <view
-            v-if="showShareMask === true"
-            class="share-mask"
-            @click="showShareMask = false"
-        >
-            <image
-                class="share-pic"
-                src="/static/images/work/share-guide.png"
-            />
-        </view>
         <view
             v-if="isFullScreen && isH5"
             class="h5-full-screen-title text-one-line"
@@ -194,23 +201,13 @@
             >
                 {{ likeStatus === 0 ? "投TA一票" : "已投票" }}
             </button>
-            <!-- # ifdef H5 -->
+
             <button
                 class="btn"
-                open-type="share"
-                @click="canvass"
+                @click="handleCanvass"
             >
                 帮TA拉票
             </button>
-            <!-- # endif -->
-            <!-- # ifndef H5 -->
-            <button
-                class="btn"
-                @click="handleTicketMask"
-            >
-                帮TA拉票
-            </button>
-            <!-- # endif -->
             <button
                 class="btn"
                 @click="goHome"
@@ -297,6 +294,7 @@ export default {
             shareDesc: '',
             fr: '',
             posterConfig: {
+                pixelRatio: 3,
                 width: 520,
                 height: 500,
                 debug: false,
@@ -356,6 +354,15 @@ export default {
         };
     },
     methods: {
+        handleCanvass() {
+            // #ifdef H5
+            this.showShareMask = true;
+            // #endif
+
+            // #ifndef H5
+            this.handleTicketMask();
+            // #endif
+        },
         handleTicketMask() {
             this.showTicketMask = true;
             // eslint-disable-next-line no-undef
@@ -540,11 +547,6 @@ export default {
             const isFullScreenMode = e.detail.fullScreen;
             this.isFullScreen = isFullScreenMode;
         },
-        canvass() {
-            // #ifdef H5
-            this.showShareMask = true;
-            // #endif
-        },
         html5VideoAutoAdjust() {
             document.querySelector('.uni-video-type-fullscreen').style = '';
         },
@@ -581,7 +583,7 @@ export default {
                     const { status } = res;
                     if (status === 2) {
                         uni.navigateTo({
-                            url: '/pages/upload/festival/festival',
+                            url: '/pages/chunjie/upload/upload',
                         });
                     } else if (status === 1) {
                         uni.showToast({
@@ -634,7 +636,7 @@ export default {
         return {
             title: this.shareDesc,
             // imageUrl: '/static/images/index/banner.png',
-            path: `/pages/work/detail/detail?id=${this.id}`,
+            path: `/pages/chunjie/detail/detail?id=${this.id}`,
         };
     },
 };
@@ -911,15 +913,17 @@ export default {
 
         .ticket-friend {
             width: 192rpx;
-            height: 230rpx;
+            height: 215rpx;
             position: absolute;
             left: 160rpx;
             top: 784rpx;
+            background: url("http://aitiaozhan.oss-cn-beijing.aliyuncs.com/sendToFriend.png");
+            background-size: 100% 100%;
         }
 
         .ticket-poster {
             width: 192rpx;
-            height: 230rpx;
+            height: 215rpx;
             position: absolute;
             left: 400rpx;
             top: 784rpx;

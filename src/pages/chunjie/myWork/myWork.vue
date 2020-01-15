@@ -164,7 +164,7 @@
                 </view>
                 <navigator
                     v-if="allTotal === 0"
-                    url="/pages/upload/festival/festival"
+                    url="/pages/chunjie/upload/upload"
                 >
                     <image
                         class="goUpload"
@@ -345,7 +345,7 @@ export default {
         viewDetail(item) {
             if (this.tabActiveIndex === 2) {
                 uni.navigateTo({
-                    url: `/pages/work/festival/festival?id=${item.id}`,
+                    url: `/pages/chunjie/detail/detail?id=${item.id}`,
                 });
             }
         },

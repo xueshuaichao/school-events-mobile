@@ -52,19 +52,19 @@
                             >
                                 分享
                             </button>
-                            <view
+                            <button
                                 v-if="!isH5 && item.status !== 1"
                                 class="btn"
                                 @click="editWork(item)"
                             >
                                 编辑
-                            </view>
-                            <view
+                            </button>
+                            <button
                                 class="btn"
                                 @click="onConfirmDelete(item)"
                             >
                                 删除
-                            </view>
+                            </button>
                         </view>
                     </view>
                 </template>
@@ -239,9 +239,6 @@ export default {
                 text-align: center;
                 margin-left: 40upx;
                 background: #1166ff;
-            }
-
-            .btn-share {
                 border-radius: 0;
             }
         }

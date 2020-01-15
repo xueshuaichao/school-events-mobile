@@ -94,10 +94,10 @@ const routesConfig = {
             path: '/pages/address/edit',
         },
         {
-            path: '/pages/upload/festival/festival',
+            path: '/pages/chunjie/upload/upload',
         },
         {
-            path: '/pages/work/festival/festival ',
+            path: '/pages/chunjie/detail/detail ',
         },
         {
             path: '/pages/upload/result/result',
@@ -106,7 +106,7 @@ const routesConfig = {
             path: '/pages/upload/modify/modify',
         },
         {
-            path: '/pages/upload/work/work',
+            path: '/pages/chunjie/myWork/myWork',
         },
         {
             path: '/pages/chunjie/index',
@@ -115,7 +115,7 @@ const routesConfig = {
             path: '/pages/login/login',
         },
         {
-            path: '/pages/work/festival/festival',
+            path: '/pages/chunjie/detail/detail',
         },
         {
             path: '/pages/address/exchangeRecord',
