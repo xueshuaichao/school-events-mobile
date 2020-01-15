@@ -365,8 +365,8 @@ export default {
             // eslint-disable-next-line no-undef
             const pages = getCurrentPages(); // 获取加载的页面
             const currentPage = pages[pages.length - 1]; // 获取当前页面的对象
-            const url = 'pages/work/detail/detail' || currentPage.route;
-            const scene = 'id=325' || `id=${this.id}`;
+            const url = currentPage.route || 'pages/chunjie/detail/detail';
+            const scene = `id=${this.id}` || 'id=325';
             api.post('/api/weixin/getminiqrcode', {
                 path: url,
                 scene,
