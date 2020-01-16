@@ -46,7 +46,7 @@
                         </navigator>
                     </swiper-item>
                     <!-- 春节好入口 -->
-                    <swiper-item>
+                    <swiper-item v-if="!isH5">
                         <navigator
                             url="/pages/chunjiehao/index"
                             class="swiper-item"
@@ -322,6 +322,9 @@ export default {
             isFirstLogin: 'isFirstLogin11',
             status: 2,
             show: 1,
+            // #ifdef H5
+            isH5: true,
+            // #endif
         };
     },
     onLoad() {

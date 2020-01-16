@@ -15,17 +15,7 @@
             <view
                 class="saveBtn"
                 @click="handleSave"
-            >
-                保存到本地
-            </view>
-            <button
-                type="primary"
-                class="openSetting"
-                open-type="openSetting"
-                bindopensetting="handleSetting"
-            >
-                去授权
-            </button>
+            />
             <image
                 class="close"
                 src="/static/images/chunjie/third_entry_close.png"
@@ -71,7 +61,7 @@
             >
                 <image
                     class="share-pic"
-                    src="/static/images/work/share-guide.png"
+                    src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/chunjiehao/share-guide.png"
                 />
             </view>
         </template>
@@ -167,7 +157,7 @@
             <view class="author-from">
                 {{ pageData.school_name + pageData.grade_name }}
             </view>
-            <view class="work-name-wrap text-one-line">
+            <view class="work-name-wrap">
                 <image
                     class="avatar"
                     src="/static/images/work/file.png"
@@ -247,7 +237,7 @@
 
         <!-- v-if="!isH5" -->
         <image
-            src="/static/images/work/festival.png"
+            src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/chunjiehao/festival.png"
             class="join-game"
             @click="joinGame"
         />
@@ -315,12 +305,10 @@ export default {
                             {
                                 text: '#唱歌#',
                                 fontSize: 29,
-                                width: 1210,
                                 color: '#FFE49C',
                                 opacity: 1,
                                 marginRight: 10,
                                 lineHeight: 40,
-                                textOverflow: 'ellipsis',
                                 lineNum: 1,
                             },
                         ],
@@ -458,16 +446,10 @@ export default {
                     if (
                         err.errMsg
                             === 'saveImageToPhotosAlbum:fail:auth denied'
-                        || err.errMsg
-                            === 'saveImageToPhotosAlbum:fail auth deny'
-                        || err.errMsg === 'saveImageToPhotosAlbum:fail system deny'
+                        || err.errMsg === 'saveImageToPhotosAlbum:fail auth deny'
                     ) {
                         // 这边微信做过调整，必须要在按钮中触发，因此需要在弹框回调中进行调用
                         console.log('开始授权');
-                        uni.authorize({
-                            scope: 'scope.writePhotosAlbum',
-                            success() {},
-                        });
                         // eslint-disable-next-line no-undef
                         wx.openSetting({
                             success(settingdata) {
@@ -807,6 +789,7 @@ export default {
     .video-wrap {
         width: 100%;
         height: 100%;
+        overflow: hidden;
     }
 
     .video {

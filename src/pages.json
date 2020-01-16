@@ -1,5 +1,18 @@
 {
     "pages": [
+        {
+            "path": "pages/chunjiehao/index",
+            "style": {
+                "navigationBarTitleText": "秀才艺，赢好礼",
+                "softinputNavBar": "none"
+            }
+        },
+        {
+            "path": "pages/chunjiehao/upload/upload",
+            "style": {
+                "navigationBarTitleText": "上传作品"
+            }
+        },
         //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
         {
             "path": "pages/tabBar/index/index",
@@ -141,13 +154,6 @@
             }
         },
         {
-            "path": "pages/chunjiehao/index",
-            "style": {
-                "navigationBarTitleText": "秀才艺，赢好礼",
-                "softinputNavBar": "none"
-            }
-        },
-        {
             "path": "pages/chunjie/detail/detail",
             "style": {
                 "navigationBarTitleText": "作品详情",
@@ -184,6 +190,25 @@
             }
         },
         // ============== 春节 end ======================
+
+        // ============== 春节好 ========================
+        {
+            "path": "pages/chunjiehao/detail/detail",
+            "style": {
+                "navigationBarTitleText": "作品详情",
+                "usingComponents": {
+                    "poster": "/wxcomponents/third-party/poster/poster/index"
+                }
+            }
+        },
+
+        {
+            "path": "pages/chunjiehao/myWork/myWork",
+            "style": {
+                "navigationBarTitleText": "我的作品"
+            }
+        },
+        // ============== 春节好 end =====================
         {
             "path": "pages/login/login",
             "style": {

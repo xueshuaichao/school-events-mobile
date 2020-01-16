@@ -68,7 +68,9 @@
         "setting": {
             "urlCheck": false
         },
-        "usingComponents": true
+        "usingComponents": true,
+        /* 跳转到云学堂小程序 */
+        "navigateToMiniProgramAppIdList": ["wxe8f8e50ab33cbce8"]
     },
     "mp-alipay": {
         "usingComponents": true
@@ -102,7 +104,8 @@
                 }
             }
         },
-        "async": { //页面js异步加载配置
+        "async": {
+            //页面js异步加载配置
             "loading": "AsyncLoading", //页面js加载时使用的组件（需注册为全局组件）
             "error": "AsyncError", //页面js加载失败时使用的组件（需注册为全局组件）
             "delay": 200, //展示 loading 加载组件的延时时间（页面 js 若在 delay 时间内加载完成，则不会显示 loading 组件）
