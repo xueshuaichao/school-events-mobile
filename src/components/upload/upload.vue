@@ -316,7 +316,7 @@ export default {
 
     .cover-wrap {
         width: 192upx;
-        height: 108upx;
+        height: 128upx;
         background: #f0f0f0;
         margin-right: 16upx;
         text-align: center;
@@ -345,9 +345,10 @@ export default {
         display: inline-block;
         width: 43upx;
         height: 28upx;
-        margin-top: 16upx;
+        margin-top: 26rpx;
 
         &.red {
+            margin-top: 16upx;
             width: 70rpx;
             height: 52rpx;
         }
@@ -364,7 +365,13 @@ export default {
         display: inline-block;
         width: 46upx;
         height: 36upx;
-        margin-top: 12upx;
+        margin-top: 20rpx;
+
+        &.red {
+            margin-top: 12upx;
+            width: 70rpx;
+            height: 52rpx;
+        }
     }
 
     .icon-desc {

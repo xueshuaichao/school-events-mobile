@@ -1,368 +1,375 @@
 <template>
-    <view :class="['page-index', { 'stop-scroll': prompt || prompt01 }]">
-        <!-- 活动规则 -->
-        <view
-            v-if="prompt"
-            class="activerulebox"
-        >
+    <view>
+        <official-account />
+        <view :class="['page-index', { 'stop-scroll': prompt || prompt01 }]">
+            <!-- 活动规则 -->
             <view
-                class="close"
-                @click="handleClose"
-            />
-            <view class="title-icon">
-                活动规则
-            </view>
-            <view class="active-content">
-                <view>
-                    <view class="title">
-                        活动时间
-                    </view>
-                    <view class="text">
-                        2020年1月10日至2020年2月8日
-                    </view>
-                </view>
-                <view>
-                    <view class="title">
-                        活动对象
-                    </view>
-                    <view class="text">
-                        本次活动仅限3-18岁的青少年参与
-                    </view>
-                </view>
-                <view>
-                    <view class="title">
-                        参赛作品
-                    </view>
-                    <view class="text">
-                        作品类别分为歌唱表演、舞蹈表演、创意制作、口才表演、乐器演奏、书法绘画、杂技、魔术、摄影
-                    </view>
-                </view>
-                <view>
-                    <view class="title">
-                        作品要求
-                    </view>
-                    <view class="text">
-                        <ul>
-                            <li>
-                                视频格式：支持MP4、MOV、3GP、MP4V、M4V、MKV、AVI、FLV等，视频时长不超过5分钟；单张图片小于10MB。
-                            </li>
-                            <li>
-                                内容：如果发现有用户上传不合规内容，如涉及攻击我国政治制度、法律制度、黄赌毒、封建迷信等违背社会主义核心价值观的内容、
-                                非原创、盗窃他人或平台的内容、或恶意刷票等扰乱秩序者，该账号将取消活动参与资格，不合规视频/图片将被删除。
-                            </li>
-                        </ul>
-                    </view>
-                </view>
-                <view>
-                    <view class="title">
-                        参赛规则
-                    </view>
-                    <view class="text">
-                        <ul>
-                            <li>
-                                参赛者在“青少年爱挑战”平台注册并通过活动页面上传作品，审核通过后可邀请亲友投票。
-                            </li>
-                            <li>
-                                每个账户每天只能为同一作品投票1次。
-                            </li>
-                            <li>
-                                根据参赛作品获得的投票数进行排名，排行榜将以2020年2月8日23:59时的排名为最终结果，上榜者（排名前39名）可获得相应奖品。
-                            </li>
-                            <li>
-                                活动组委会根据才艺秀作品质量和内容，综合评选出20名优秀参赛者，送出奖品。
-                            </li>
-                            <li>
-                                获奖名单将于2020年2月11日在爱挑战官网（http://atz.qsnatz.com/）及官方微信公众号（UP青少年爱挑战）进行公布。
-                            </li>
-                            <li>
-                                本活动最终解释权在法律允许范围内归活动举办方所有。
-                            </li>
-                        </ul>
-                    </view>
-                    <view class="qr-wrap">
-                        <image
-                            class="qr-code"
-                            src="/static/images/chunjie/qrcode.jpg"
-                            data-src="http://aitiaozhan.oss-cn-beijing.aliyuncs.com/qrcode.jpg"
-                            @click="previewImage"
-                        />
-                        <view class="text">
-                            关注“UP青少年爱挑战”公众号，了解更多活动信息
-                        </view>
-                    </view>
-                </view>
-            </view>
-        </view>
-        <!-- 奖项设置 -->
-        <view
-            v-if="prompt01"
-            class="activerulebox"
-        >
-            <view
-                class="close"
-                @click="handleClose"
-            />
-            <view class="title-icon">
-                奖项设置
-            </view>
-            <view class="active-content">
-                <view class="renqi-prize">
-                    <view class="renqi-title">
-                        人气奖
-                    </view>
-                    <view>
-                        截止到2020年2月8日23:59，按投票名次可获得如下奖品
-                    </view>
-                </view>
-                <view class="prize-box">
-                    <view
-                        v-for="item in prizeList"
-                        :key="item.name"
-                        class="prize-item"
-                    >
-                        <view>{{ item.prize_score }}</view>
-                        <view>
-                            <image :src="item.prize" />
-                        </view>
-                        <view>{{ item.name }}</view>
-                    </view>
-                </view>
-                <view class="caiyi-box">
-                    <view class="caiyi-title">
-                        才艺达人奖
-                    </view>
-                    <view class="caiyi-text">
-                        <view>
-                            由活动组委会根据才艺秀作品质量和内容，综合评选出20名优秀参赛者，奖励蓝牙音箱1个
-                        </view>
-                        <image src="../../static/images/chunjie/prize06.png" />
-                    </view>
-                    <view class="prize-prompt">
-                        图片仅供参考，奖品以实物为准
-                    </view>
-                </view>
-
-                <image
-                    class="register02"
-                    src="../../static/images/chunjie/register02.png"
-                />
-                <view class="jinguizi">
-                    <view>
-                        <image
-                            src="http://aitiaozhan.oss-cn-beijing.aliyuncs.com/jinguizi01.png"
-                        />
-                        <view>金龟子陪你过大年</view>
-                        <view>
-                            小朋友的拜年神器，让孩子成为最受欢迎的拜年小达人
-                        </view>
-                    </view>
-                    <view>
-                        <image
-                            src="http://aitiaozhan.oss-cn-beijing.aliyuncs.com/jinguizi02.png"
-                        />
-                        <view>金龟子看图写话漫游古都之西安篇 </view>
-                        <view>
-                            有趣实用的传统文化故事，帮助小朋友敢表达、会表达
-                        </view>
-                    </view>
-                </view>
-                <view class="getStyle">
-                    <view>
-                        <view class="title">
-                            领取方式：
-                        </view>
-                        <view class="text">
-                            {{
-                                isH5 ? "扫描" : "点击"
-                            }}小程序码，进入“我的”开始学习
-                        </view>
-                    </view>
-                    <image
-                        src="../../static/images/chunjie/mini-pro.png"
-                        @click="openMiniProgram"
-                    />
-                </view>
-                <view>
-                    <view class="title">
-                        奖品兑换说明
-                    </view>
-                    <view class="text">
-                        <view>
-                            1、每名参赛选手只有1次可兑换机会，如有同时获得了不同奖项以最高奖项为准。
-                        </view>
-                        <view>
-                            2、工作人员将于2月10日至2月12日期间电话联系获奖账号所绑定的手机号，电话无法联系的将视为自动放弃兑奖资格。
-                        </view>
-                        <view>
-                            3、礼品将于2月13-14日期间通过普通快递寄出。
-                        </view>
-                        <view>
-                            4、礼品属于用户奖励活动，不提供发票、收据。
-                        </view>
-                        <view>
-                            5、礼品不支持退换和售后，请当面核实无质量问题再签收。
-                        </view>
-                        <view>
-                            6、若因用户提供的收货地址等信息有误而未收到礼品，概不补发。
-                        </view>
-                    </view>
-                    <view class="qr-wrap">
-                        <image
-                            class="qr-code"
-                            src="/static/images/chunjie/qrcode.jpg"
-                        />
-                        <view class="text">
-                            关注“UP青少年爱挑战”公众号，了解更多活动信息
-                        </view>
-                    </view>
-                </view>
-            </view>
-        </view>
-
-        <view class="main-swiper">
-            <view class="banner">
+                v-if="prompt"
+                class="activerulebox"
+            >
                 <view
-                    class="active-rule"
-                    @click="handleActiverule"
-                >
+                    class="close"
+                    @click="handleClose"
+                />
+                <view class="title-icon">
                     活动规则
                 </view>
-                <view
-                    class="menu-title"
-                    @click="handleMywork"
-                >
-                    我的作品
-                </view>
-            </view>
-            <view class="active-schedule">
-                <text>活动时间：1月10日-2月8日</text>
-                <text>结果公布：2月11日</text>
-            </view>
-            <view class="register">
-                <image src="../../static/images/chunjie/register.png" />
-            </view>
-            <view class="prize">
-                <view>
-                    <text>一等奖</text>
-                    <image src="../../static/images/chunjie/prize01.png" />
-                    <text>学习机*1个</text>
-                </view>
-                <view>
-                    <text>二等奖</text>
-                    <image src="../../static/images/chunjie/prize02.png" />
-                    <text>小度*4个</text>
-                </view>
-                <view>
-                    <text>三等奖</text>
-                    <image src="../../static/images/chunjie/prize03.png" />
-                    <text>无人机*6个</text>
-                </view>
-                <view
-                    class="prize-more"
-                    @click="handleMorePrize"
-                />
-            </view>
-            <image
-                class="cansai-text"
-                src="../../static/images/chunjie/cansai_text.png"
-            />
-            <!-- work show -->
-            <view class="menu-list">
-                <view class="search-box">
-                    <button
-                        :class="{
-                            active: activeMenuIndex === 'new'
-                        }"
-                        @click="toggle('new')"
-                    >
-                        最新
-                    </button>
-                    <button
-                        :class="{
-                            active: activeMenuIndex === 'hot'
-                        }"
-                        @click="toggle('hot')"
-                    >
-                        最热
-                    </button>
-                    <view class="search">
-                        <image
-                            src="../../static/images/chunjie/search-icon.png"
-                        />
-                        <input
-                            v-model="changeValue"
-                            placeholder-style="color:#C9AC67"
-                            type="text"
-                            confirm-type="search"
-                            confirm-hold="true"
-                            placeholder="请输入作者姓名或作品名称"
-                            @confirm="bindconfirm"
-                        >
-                        <text
-                            class="search-button"
-                            @click="bindconfirm"
-                        >
-                            搜索
-                        </text>
+                <view class="active-content">
+                    <view>
+                        <view class="title">
+                            活动时间
+                        </view>
+                        <view class="text">
+                            2020年1月10日至2020年2月8日
+                        </view>
                     </view>
-                </view>
-                <view class="media-box">
-                    <view
-                        v-for="item in dataList"
-                        :key="item.id"
-                        class="media-content"
-                    >
-                        <navigator
-                            :url="
-                                `/pages/chunjie/detail/detail?id=${item.id}&fr=${fr}`
-                            "
-                        >
+                    <view>
+                        <view class="title">
+                            活动对象
+                        </view>
+                        <view class="text">
+                            本次活动仅限3-18岁的青少年参与
+                        </view>
+                    </view>
+                    <view>
+                        <view class="title">
+                            参赛作品
+                        </view>
+                        <view class="text">
+                            作品类别分为歌唱表演、舞蹈表演、创意制作、口才表演、乐器演奏、书法绘画、杂技、魔术、摄影
+                        </view>
+                    </view>
+                    <view>
+                        <view class="title">
+                            作品要求
+                        </view>
+                        <view class="text">
+                            <ul>
+                                <li>
+                                    视频格式：支持MP4、MOV、3GP、MP4V、M4V、MKV、AVI、FLV等，视频时长不超过5分钟；单张图片小于10MB。
+                                </li>
+                                <li>
+                                    内容：如果发现有用户上传不合规内容，如涉及攻击我国政治制度、法律制度、黄赌毒、封建迷信等违背社会主义核心价值观的内容、
+                                    非原创、盗窃他人或平台的内容、或恶意刷票等扰乱秩序者，该账号将取消活动参与资格，不合规视频/图片将被删除。
+                                </li>
+                            </ul>
+                        </view>
+                    </view>
+                    <view>
+                        <view class="title">
+                            参赛规则
+                        </view>
+                        <view class="text">
+                            <ul>
+                                <li>
+                                    参赛者在“青少年爱挑战”平台注册并通过活动页面上传作品，审核通过后可邀请亲友投票。
+                                </li>
+                                <li>
+                                    每个账户每天只能为同一作品投票1次。
+                                </li>
+                                <li>
+                                    根据参赛作品获得的投票数进行排名，排行榜将以2020年2月8日23:59时的排名为最终结果，上榜者（排名前39名）可获得相应奖品。
+                                </li>
+                                <li>
+                                    活动组委会根据才艺秀作品质量和内容，综合评选出20名优秀参赛者，送出奖品。
+                                </li>
+                                <li>
+                                    获奖名单将于2020年2月11日在爱挑战官网（http://atz.qsnatz.com/）及官方微信公众号（UP青少年爱挑战）进行公布。
+                                </li>
+                                <li>
+                                    本活动最终解释权在法律允许范围内归活动举办方所有。
+                                </li>
+                            </ul>
+                        </view>
+                        <view class="qr-wrap">
                             <image
-                                v-if="item.resource_type === 1"
-                                :src="item.video_img_url | optimizeImage"
-                                class="video"
+                                class="qr-code"
+                                src="/static/images/chunjie/qrcode.jpg"
+                                data-src="http://aitiaozhan.oss-cn-beijing.aliyuncs.com/qrcode.jpg"
+                                @click="previewImage"
                             />
-                            <image
-                                v-else-if="item.resource_type === 2"
-                                :src="item.img_url | optimizeImage"
-                                class="video"
-                            />
-                            <view class="media-icon">
-                                <image :src="mediaIcon[item.resource_type]" />
+                            <view class="text">
+                                关注“UP青少年爱挑战”公众号，了解更多活动信息
                             </view>
-                        </navigator>
-
-                        <view class="media-name text-one-line">
-                            {{ `#${item.cat_name}# ${item.resource_name}` }}
-                        </view>
-                        <text class="vote-num">
-                            {{ item.ticket }}票
-                        </text>
-                        <view
-                            class="vote"
-                            @click="handleVote(item)"
-                        >
-                            帮TA投票
                         </view>
                     </view>
-                    <uni-load-more
-                        class="loadMore"
-                        :status="loadMoreStatus"
-                        :content-text="{
-                            contentdown: '上拉显示更多',
-                            contentrefresh: '正在加载...',
-                            contentnomore: '———— 已经到底了~ ————'
-                        }"
-                        color="#fff"
+                </view>
+            </view>
+            <!-- 奖项设置 -->
+            <view
+                v-if="prompt01"
+                class="activerulebox"
+            >
+                <view
+                    class="close"
+                    @click="handleClose"
+                />
+                <view class="title-icon">
+                    奖项设置
+                </view>
+                <view class="active-content">
+                    <view class="renqi-prize">
+                        <view class="renqi-title">
+                            人气奖
+                        </view>
+                        <view>
+                            截止到2020年2月8日23:59，按投票名次可获得如下奖品
+                        </view>
+                    </view>
+                    <view class="prize-box">
+                        <view
+                            v-for="item in prizeList"
+                            :key="item.name"
+                            class="prize-item"
+                        >
+                            <view>{{ item.prize_score }}</view>
+                            <view>
+                                <image :src="item.prize" />
+                            </view>
+                            <view>{{ item.name }}</view>
+                        </view>
+                    </view>
+                    <view class="caiyi-box">
+                        <view class="caiyi-title">
+                            才艺达人奖
+                        </view>
+                        <view class="caiyi-text">
+                            <view>
+                                由活动组委会根据才艺秀作品质量和内容，综合评选出20名优秀参赛者，奖励蓝牙音箱1个
+                            </view>
+                            <image
+                                src="../../static/images/chunjie/prize06.png"
+                            />
+                        </view>
+                        <view class="prize-prompt">
+                            图片仅供参考，奖品以实物为准
+                        </view>
+                    </view>
+
+                    <image
+                        class="register02"
+                        src="../../static/images/chunjie/register02.png"
+                    />
+                    <view class="jinguizi">
+                        <view>
+                            <image
+                                src="http://aitiaozhan.oss-cn-beijing.aliyuncs.com/jinguizi01.png"
+                            />
+                            <view>金龟子陪你过大年</view>
+                            <view>
+                                小朋友的拜年神器，让孩子成为最受欢迎的拜年小达人
+                            </view>
+                        </view>
+                        <view>
+                            <image
+                                src="http://aitiaozhan.oss-cn-beijing.aliyuncs.com/jinguizi02.png"
+                            />
+                            <view>金龟子看图写话漫游古都之西安篇 </view>
+                            <view>
+                                有趣实用的传统文化故事，帮助小朋友敢表达、会表达
+                            </view>
+                        </view>
+                    </view>
+                    <view class="getStyle">
+                        <view>
+                            <view class="title">
+                                领取方式：
+                            </view>
+                            <view class="text">
+                                {{
+                                    isH5 ? "扫描" : "点击"
+                                }}小程序码，进入“我的”开始学习
+                            </view>
+                        </view>
+                        <image
+                            src="../../static/images/chunjie/mini-pro.png"
+                            @click="openMiniProgram"
+                        />
+                    </view>
+                    <view>
+                        <view class="title">
+                            奖品兑换说明
+                        </view>
+                        <view class="text">
+                            <view>
+                                1、每名参赛选手只有1次可兑换机会，如有同时获得了不同奖项以最高奖项为准。
+                            </view>
+                            <view>
+                                2、工作人员将于2月10日至2月12日期间电话联系获奖账号所绑定的手机号，电话无法联系的将视为自动放弃兑奖资格。
+                            </view>
+                            <view>
+                                3、礼品将于2月13-14日期间通过普通快递寄出。
+                            </view>
+                            <view>
+                                4、礼品属于用户奖励活动，不提供发票、收据。
+                            </view>
+                            <view>
+                                5、礼品不支持退换和售后，请当面核实无质量问题再签收。
+                            </view>
+                            <view>
+                                6、若因用户提供的收货地址等信息有误而未收到礼品，概不补发。
+                            </view>
+                        </view>
+                        <view class="qr-wrap">
+                            <image
+                                class="qr-code"
+                                src="/static/images/chunjie/qrcode.jpg"
+                            />
+                            <view class="text">
+                                关注“UP青少年爱挑战”公众号，了解更多活动信息
+                            </view>
+                        </view>
+                    </view>
+                </view>
+            </view>
+
+            <view class="main-swiper">
+                <view class="banner">
+                    <view
+                        class="active-rule"
+                        @click="handleActiverule"
+                    >
+                        活动规则
+                    </view>
+                    <view
+                        class="menu-title"
+                        @click="handleMywork"
+                    >
+                        我的作品
+                    </view>
+                </view>
+                <view class="active-schedule">
+                    <text>活动时间：1月10日-2月8日</text>
+                    <text>结果公布：2月11日</text>
+                </view>
+                <view class="register">
+                    <image src="../../static/images/chunjie/register.png" />
+                </view>
+                <view class="prize">
+                    <view>
+                        <text>一等奖</text>
+                        <image src="../../static/images/chunjie/prize01.png" />
+                        <text>学习机*1个</text>
+                    </view>
+                    <view>
+                        <text>二等奖</text>
+                        <image src="../../static/images/chunjie/prize02.png" />
+                        <text>小度*4个</text>
+                    </view>
+                    <view>
+                        <text>三等奖</text>
+                        <image src="../../static/images/chunjie/prize03.png" />
+                        <text>无人机*6个</text>
+                    </view>
+                    <view
+                        class="prize-more"
+                        @click="handleMorePrize"
                     />
                 </view>
-            </view>
+                <image
+                    class="cansai-text"
+                    src="../../static/images/chunjie/cansai_text.png"
+                />
+                <!-- work show -->
+                <view class="menu-list">
+                    <view class="search-box">
+                        <button
+                            :class="{
+                                active: activeMenuIndex === 'new'
+                            }"
+                            @click="toggle('new')"
+                        >
+                            最新
+                        </button>
+                        <button
+                            :class="{
+                                active: activeMenuIndex === 'hot'
+                            }"
+                            @click="toggle('hot')"
+                        >
+                            最热
+                        </button>
+                        <view class="search">
+                            <image
+                                src="../../static/images/chunjie/search-icon.png"
+                            />
+                            <input
+                                v-model="changeValue"
+                                placeholder-style="color:#C9AC67"
+                                type="text"
+                                confirm-type="search"
+                                confirm-hold="true"
+                                placeholder="请输入作者姓名或作品名称"
+                                @confirm="bindconfirm"
+                            >
+                            <text
+                                class="search-button"
+                                @click="bindconfirm"
+                            >
+                                搜索
+                            </text>
+                        </view>
+                    </view>
+                    <view class="media-box">
+                        <view
+                            v-for="item in dataList"
+                            :key="item.id"
+                            class="media-content"
+                        >
+                            <navigator
+                                :url="
+                                    `/pages/chunjie/detail/detail?id=${item.id}&fr=${fr}`
+                                "
+                            >
+                                <image
+                                    v-if="item.resource_type === 1"
+                                    :src="item.video_img_url | optimizeImage"
+                                    class="video"
+                                />
+                                <image
+                                    v-else-if="item.resource_type === 2"
+                                    :src="item.img_url | optimizeImage"
+                                    class="video"
+                                />
+                                <view class="media-icon">
+                                    <image
+                                        :src="mediaIcon[item.resource_type]"
+                                    />
+                                </view>
+                            </navigator>
 
-            <view
-                :class="status === 2 ? 'upload' : 'upload-disable'"
-                @click="handleUpload"
-            >
-                上传作品
+                            <view class="media-name text-one-line">
+                                {{ `#${item.cat_name}# ${item.resource_name}` }}
+                            </view>
+                            <text class="vote-num">
+                                {{ item.ticket }}票
+                            </text>
+                            <view
+                                class="vote"
+                                @click="handleVote(item)"
+                            >
+                                帮TA投票
+                            </view>
+                        </view>
+                        <uni-load-more
+                            class="loadMore"
+                            :status="loadMoreStatus"
+                            :content-text="{
+                                contentdown: '上拉显示更多',
+                                contentrefresh: '正在加载...',
+                                contentnomore: '———— 已经到底了~ ————'
+                            }"
+                            color="#fff"
+                        />
+                    </view>
+                </view>
+
+                <view
+                    :class="status === 2 ? 'upload' : 'upload-disable'"
+                    @click="handleUpload"
+                >
+                    上传作品
+                </view>
             </view>
         </view>
     </view>

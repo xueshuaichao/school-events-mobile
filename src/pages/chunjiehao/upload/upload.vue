@@ -370,14 +370,13 @@ export default {
             console.log(this.formData);
             return api.post('/api/activity/add', formData).then(
                 (res) => {
-                    this.resetForm();
                     this.disabled = false;
                     console.log(res);
                     uni.hideLoading();
                     uni.navigateTo({
-                        url:
-                            '/pages/upload/result/result?type=success&from=festival',
+                        url: '/pages/chunjiehao/upload/result',
                     });
+                    this.resetForm();
                 },
                 (err) => {
                     this.disabled = false;
