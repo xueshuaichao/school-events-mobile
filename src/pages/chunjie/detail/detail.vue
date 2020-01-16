@@ -17,14 +17,14 @@
                 src="/static/images/chunjie/save.png"
                 @click="handleSave"
             />
-            <button
+            <!-- <button
                 type="primary"
                 class="openSetting"
                 open-type="openSetting"
                 bindopensetting="handleSetting"
             >
                 去授权
-            </button>
+            </button> -->
             <image
                 class="close"
                 src="/static/images/chunjie/third_entry_close.png"
@@ -687,7 +687,7 @@ export default {
         }
         return {
             title: this.shareDesc,
-            // imageUrl: '/static/images/index/banner.png',
+            imageUrl: this.pageData.video_img_url,
             path: `/pages/chunjie/detail/detail?id=${this.id}`,
         };
     },
