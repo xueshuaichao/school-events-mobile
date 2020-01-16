@@ -163,15 +163,6 @@
             }
         },
         {
-            "path": "pages/chunjiehao/detail/detail",
-            "style": {
-                "navigationBarTitleText": "作品详情",
-                "usingComponents": {
-                    "poster": "/wxcomponents/third-party/poster/poster/index"
-                }
-            }
-        },
-        {
             "path": "pages/chunjie/upload/upload",
             "style": {
                 "navigationBarTitleText": "上传作品"
@@ -179,12 +170,6 @@
         },
         {
             "path": "pages/chunjie/myWork/myWork",
-            "style": {
-                "navigationBarTitleText": "我的作品"
-            }
-        },
-        {
-            "path": "pages/chunjiehao/myWork/myWork",
             "style": {
                 "navigationBarTitleText": "我的作品"
             }
