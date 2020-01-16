@@ -48,6 +48,7 @@
             />
             <upload
                 v-if="uploadMode === 'video'"
+                :theme="'red'"
                 :type="'video'"
                 @change="updateVideo"
             />
@@ -67,6 +68,7 @@
             <template v-if="uploadMode === 'image'">
                 <upload
                     :type="'image'"
+                    :theme="'red'"
                     :preview="false"
                     @change="updateImage"
                 />

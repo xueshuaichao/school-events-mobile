@@ -445,7 +445,7 @@ export default {
                     fr: this.fr,
                 }).then(() => {
                     uni.navigateTo({
-                        url: '/pages/chunjie/upload/upload',
+                        url: '/pages/chunjiehao/upload/upload',
                     });
                 });
             } else {
