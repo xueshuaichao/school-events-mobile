@@ -166,10 +166,9 @@
                     v-if="allTotal === 0"
                     url="/pages/chunjie/upload/upload"
                 >
-                    <image
-                        class="goUpload"
-                        src="../../../static/images/chunjie/goUpload.png"
-                    />
+                    <view class="goUpload">
+                        去上传
+                    </view>
                 </navigator>
             </view>
             <button
@@ -388,10 +387,7 @@ export default {
     margin-bottom: 15px;
     padding: 0;
 }
-.goUpload {
-    width: 479upx;
-    height: 169upx;
-}
+
 .empty {
     text-align: center;
     image {
@@ -413,9 +409,25 @@ export default {
         margin-top: 174upx;
     }
     .goUpload {
-        width: 479upx;
-        height: 169upx;
         margin-top: 37upx;
+        width: 420upx;
+        height: 110upx;
+        background: linear-gradient(
+            0deg,
+            rgba(255, 22, 16, 1),
+            rgba(255, 189, 103, 1)
+        );
+        border: 2rpx solid #ffe19a;
+        // border-image:linear-gradient(-57deg, rgba(255,231,174,1), rgba(255,225,154,1)) 2 2;
+        box-shadow: 0upx 16upx 30upx 0upx rgba(203, 20, 34, 0.36);
+        border-radius: 55px;
+        font-size: 36upx;
+        font-weight: 600;
+        color: #ffe57b;
+        line-height: 110upx;
+        text-align: center;
+        text-shadow: 0upx 4upx 6upx rgba(241, 0, 0, 0.65);
+        display: inline-block;
     }
     view {
         color: #ffedc3;
@@ -539,14 +551,19 @@ export default {
             .search-button {
                 width: 142upx;
                 height: 80upx;
-                background: url("../../../static/images/chunjie/search-button.png")
-                    no-repeat;
-                background-size: 100% 100%;
-                border: none;
                 position: absolute;
                 margin: 0;
                 right: -160upx;
-                font-size: 0;
+                font-size: 32upx;
+                background: linear-gradient(
+                    0deg,
+                    rgba(255, 22, 16, 1),
+                    rgba(255, 189, 103, 1)
+                );
+                border: 2upx solid #ffe19a;
+                border-radius: 40upx;
+                line-height: 80upx;
+                text-align: center;
             }
         }
     }

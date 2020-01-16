@@ -12,11 +12,12 @@
                 :src="canvasImg"
             />
             <!-- 保存图片 -->
-            <image
+            <view
                 class="saveBtn"
-                src="/static/images/chunjie/save.png"
                 @click="handleSave"
-            />
+            >
+                保存到本地
+            </view>
             <button
                 type="primary"
                 class="openSetting"
@@ -727,6 +728,19 @@ export default {
             height: 96upx;
             left: 115upx;
             top: 938upx;
+            background: linear-gradient(
+                0deg,
+                rgba(255, 22, 16, 1),
+                rgba(255, 189, 103, 1)
+            );
+            border: 2upx solid #ffe19a;
+            border-radius: 48upx;
+            line-height: 96upx;
+            text-align: center;
+            color: #ffe57b;
+            font-size: 36upx;
+            font-weight: 600;
+            text-shadow: 0px 4px 6px rgba(241, 0, 0, 0.65);
         }
         .close {
             position: absolute;

@@ -12,11 +12,12 @@
                 :src="canvasImg"
             />
             <!-- 保存图片 -->
-            <image
+            <view
                 class="saveBtn"
-                src="/static/images/chunjie/save.png"
                 @click="handleSave"
-            />
+            >
+                保存到本地
+            </view>
             <image
                 class="close"
                 src="/static/images/chunjie/third_entry_close.png"
@@ -304,9 +305,9 @@ export default {
                         y: 505,
                         text: [
                             {
-                                text: '#唱歌#',
+                                text: '',
                                 fontSize: 29,
-                                color: '#FFE49C',
+                                color: '#FF2E3F',
                                 opacity: 1,
                                 marginRight: 10,
                                 lineHeight: 40,
@@ -319,7 +320,7 @@ export default {
                 images: [
                     {
                         url:
-                            'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/share.png',
+                            'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/poster01.png',
                         width: 520,
                         height: 730,
                         y: 0,
@@ -329,7 +330,7 @@ export default {
                         url: '',
                         width: 420,
                         height: 282,
-                        y: 185,
+                        y: 210,
                         x: 50,
                     },
                     {
@@ -711,6 +712,20 @@ export default {
             height: 96upx;
             left: 115upx;
             top: 938upx;
+
+            // width:570px;
+            // height:110px;
+            background: linear-gradient(
+                0deg,
+                rgba(255, 149, 71, 1),
+                rgba(255, 222, 152, 1)
+            );
+            border-radius: 55upx;
+            color: #ff2e3f;
+            font-weight: 600;
+            font-size: 36upx;
+            line-height: 96upx;
+            text-align: center;
         }
         .close {
             position: absolute;
