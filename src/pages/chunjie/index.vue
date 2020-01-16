@@ -83,8 +83,8 @@
                         <image
                             class="qr-code"
                             src="/static/images/chunjie/qrcode.jpg"
-                            data-src="/static/images/chunjie/qrcode.jpg"
-                            bindtap="previewImage"
+                            data-src="http://aitiaozhan.oss-cn-beijing.aliyuncs.com/qrcode.jpg"
+                            @click="previewImage"
                         />
                         <view class="text">
                             关注“UP青少年爱挑战”公众号，了解更多活动信息
@@ -107,7 +107,9 @@
             </view>
             <view class="active-content">
                 <view class="renqi-prize">
-                    <image src="../../static/images/chunjie/renqi-title.png" />
+                    <view class="renqi-title">
+                        人气奖
+                    </view>
                     <view>
                         截止到2020年2月8日23:59，按投票名次可获得如下奖品
                     </view>
@@ -126,7 +128,9 @@
                     </view>
                 </view>
                 <view class="caiyi-box">
-                    <image src="../../static/images/chunjie/caiyi-title.png" />
+                    <view class="caiyi-title">
+                        才艺达人奖
+                    </view>
                     <view class="caiyi-text">
                         <view>
                             由活动组委会根据才艺秀作品质量和内容，综合评选出20名优秀参赛者，奖励蓝牙音箱1个
@@ -460,11 +464,29 @@ export default {
     methods: {
         previewImage(e) {
             console.log(1);
+            console.log(e);
             const current = e.target.dataset.src; // 这里获取到的是一张本地的图片
             // eslint-disable-next-line no-undef
             wx.previewImage({
                 current, // 需要预览的图片链接列表
                 urls: [current], // 当前显示图片的链接
+                longPressActions: {
+                    itemList: [
+                        '发送给朋友',
+                        '保存图片',
+                        '收藏',
+                        '识别图片中二维码',
+                    ],
+                    success(data) {
+                        console.log(
+                            `选中了第${data.tapIndex + 1}个按钮,第${data.index
+                                + 1}张图片`,
+                        );
+                    },
+                    fail(err) {
+                        console.log(err.errMsg);
+                    },
+                },
             });
         },
         chunjieStatus() {
@@ -719,9 +741,21 @@ export default {
         margin-bottom: 36upx;
         display: inline-block;
     }
-    image {
-        width: 248upx;
-        height: 68upx;
+    .caiyi-title {
+        width: 240upx;
+        height: 60upx;
+        background: linear-gradient(
+            0deg,
+            rgba(255, 22, 16, 1),
+            rgba(255, 189, 103, 1)
+        );
+        border: 2upx solid #ffe19a;
+        border-radius: 30upx;
+        display: inline-block;
+        line-height: 60rpx;
+        margin-bottom: 11rpx;
+        font-size: 34upx;
+        color: rgba(255, 255, 255, 1);
     }
     .caiyi-text {
         display: flex;
@@ -737,13 +771,24 @@ export default {
         }
     }
 }
-
 .renqi-prize {
     text-align: center;
     margin-bottom: 30upx;
-    image {
-        width: 248upx;
-        height: 68upx;
+    .renqi-title {
+        width: 240upx;
+        height: 60upx;
+        background: linear-gradient(
+            0deg,
+            rgba(255, 22, 16, 1),
+            rgba(255, 189, 103, 1)
+        );
+        border: 2upx solid #ffe19a;
+        border-radius: 30upx;
+        display: inline-block;
+        line-height: 60rpx;
+        margin-bottom: 11rpx;
+        font-size: 34upx;
+        color: rgba(255, 255, 255, 1);
     }
     view {
         font-size: 22upx;
@@ -824,23 +869,42 @@ body.dialog-open {
 .upload {
     position: fixed;
     bottom: 0upx;
-    background: url("../../static/images/chunjie/upload_bg.png") no-repeat;
-    background-size: 100% 100%;
     text-align: center;
     width: 100%;
-    height: 116upx;
-    font-size: 0;
+    height: 113upx;
+    font-size: 36upx;
     z-index: 10;
+    color: #ffe57b;
+    text-shadow: 0px 4px 6px rgba(241, 0, 0, 0.65);
+    line-height: 113upx;
+    background: linear-gradient(
+        0deg,
+        rgba(255, 22, 16, 1),
+        rgba(255, 189, 103, 1)
+    );
+    border-image: linear-gradient(
+            -57deg,
+            rgba(255, 231, 174, 1),
+            rgba(255, 225, 154, 1)
+        )
+        2 2;
+    box-shadow: 0px 16px 30px 0px rgba(203, 20, 34, 0.69);
 }
 .upload-disable {
     position: fixed;
-    bottom: 40upx;
-    background: url("../../static/images/chunjie/upload-disable.png") no-repeat;
-    background-size: 100% 100%;
+    bottom: 0upx;
     text-align: center;
     width: 100%;
-    height: 116upx;
-    font-size: 0;
+    height: 113upx;
+    font-size: 36upx;
+    background: linear-gradient(
+        0deg,
+        rgba(167, 140, 139, 1),
+        rgba(212, 207, 200, 1)
+    );
+    box-shadow: 0px 16px 30px 0px rgba(203, 20, 34, 0.11);
+    color: #ffffff;
+    line-height: 113upx;
 }
 .cansai-text {
     width: 312upx;

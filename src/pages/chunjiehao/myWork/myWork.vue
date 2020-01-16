@@ -31,6 +31,22 @@
             </view>
             <view v-else>
                 <view class="search-box">
+                    <button
+                        :class="{
+                            active: activeMenuIndex === 'new'
+                        }"
+                        @click="toggle('new')"
+                    >
+                        最新
+                    </button>
+                    <button
+                        :class="{
+                            active: activeMenuIndex === 'hot'
+                        }"
+                        @click="toggle('hot')"
+                    >
+                        最热
+                    </button>
                     <view class="search">
                         <image
                             src="../../../static/images/chunjie/search-icon.png"
@@ -41,7 +57,7 @@
                                 type="text"
                                 confirm-type="search"
                                 confirm-hold="true"
-                                placeholder-style="color:#C9AC67"
+                                placeholder-style="color:#FF2E3F"
                                 placeholder="请输入作者姓名或作品名称"
                                 @confirm="bindconfirm"
                             >
@@ -53,23 +69,6 @@
                             搜索
                         </button>
                     </view>
-
-                    <button
-                        :class="{
-                            active: activeMenuIndex === 'hot'
-                        }"
-                        @click="toggle('hot')"
-                    >
-                        最热
-                    </button>
-                    <button
-                        :class="{
-                            active: activeMenuIndex === 'new'
-                        }"
-                        @click="toggle('new')"
-                    >
-                        最新
-                    </button>
                 </view>
             </view>
             <view v-if="total > 0">
@@ -151,14 +150,14 @@
                 v-show="searchEmpty"
                 class="empty"
             >
-                <image src="../../../static/images/chunjie/empty.png" />
+                <image src="../../../static/images/chunjie/empty01.png" />
                 <view>搜索不到您要的结果，换个关键词试试吧～</view>
             </view>
             <view
                 v-show="myWorkEmpty"
                 class="work-empty"
             >
-                <image src="../../../static/images/chunjie/work-empty.png" />
+                <image src="../../../static/images/chunjie/work-empty01.png" />
                 <view>
                     {{ allTotal === 0 ? "您还没有上传作品" : "暂无作品" }}
                 </view>
@@ -387,15 +386,11 @@ export default {
     margin-bottom: 15px;
     padding: 0;
 }
-.goUpload {
-    width: 479upx;
-    height: 169upx;
-}
 .empty {
     text-align: center;
     image {
-        width: 300upx;
-        height: 236upx;
+        width: 303upx;
+        height: 301upx;
         margin-top: 174upx;
     }
     view {
@@ -429,7 +424,7 @@ export default {
     display: flex;
     justify-content: space-between;
     position: relative;
-    background: #fff6e1;
+    background: #ffde98;
     color: #ff3849;
     margin-bottom: 20upx;
     border-radius: 20upx;
@@ -487,23 +482,19 @@ export default {
     // background-size: contain;
     .search-box {
         overflow: hidden;
+        margin-bottom: 30rpx;
         button {
-            width: 140upx;
-            height: 94upx;
+            width: 120upx;
+            height: 68upx;
             float: left;
-            line-height: 72upx;
+            line-height: 68upx;
             color: #ffffff;
             background: transparent;
             font-size: 30upx;
             font-weight: 700;
-            margin-top: 40upx;
-            &:nth-child(2) {
-                margin-left: 200upx;
-            }
+            border-radius: 34upx;
             &.active {
-                background: url("../../../static/images/chunjie/neworhot.png")
-                    no-repeat;
-                background-size: 100% 100%;
+                background: #ffde98;
                 color: #ff3849;
             }
             &::after {
@@ -511,41 +502,37 @@ export default {
             }
         }
         .search {
-            background: #ffedc3;
-            width: 528upx;
-            height: 80upx;
-            line-height: 80upx;
+            background: #b11a27;
+            width: 440upx;
+            height: 72upx;
             position: relative;
-            border-radius: 76upx;
-            float: left;
-            flex: 1;
+            float: right;
+            border-radius: 60upx;
 
             image {
                 width: 28upx;
                 height: 28upx;
                 position: absolute;
-                top: 24upx;
-                left: 29upx;
+                top: 23upx;
+                left: 24upx;
             }
             input {
-                width: 525upx;
+                width: 325upx;
                 position: absolute;
                 top: 20upx;
-                left: 69upx;
-                font-size: 28upx;
-                color: #ff3849;
+                // #ifndef H5
+                top: 15upx;
+                // #endif
+                left: 60upx;
+                font-size: 24upx;
+                color: #ffbec4;
             }
             .search-button {
-                width: 142upx;
-                height: 80upx;
-                background: url("../../../static/images/chunjie/search-button.png")
-                    no-repeat;
-                background-size: 100% 100%;
-                border: none;
+                font-size: 24upx;
+                color: #ffde98;
                 position: absolute;
-                margin: 0;
-                right: -160upx;
-                font-size: 0;
+                top: 4upx;
+                right: 4upx;
             }
         }
     }
