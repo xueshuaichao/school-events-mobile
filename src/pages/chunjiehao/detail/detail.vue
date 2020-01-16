@@ -17,14 +17,6 @@
                 src="/static/images/chunjie/save.png"
                 @click="handleSave"
             />
-            <!-- <button
-                type="primary"
-                class="openSetting"
-                open-type="openSetting"
-                bindopensetting="handleSetting"
-            >
-                去授权
-            </button> -->
             <image
                 class="close"
                 src="/static/images/chunjie/third_entry_close.png"
@@ -166,7 +158,7 @@
             <view class="author-from">
                 {{ pageData.school_name + pageData.grade_name }}
             </view>
-            <view class="work-name-wrap text-one-line">
+            <view class="work-name-wrap">
                 <image
                     class="avatar"
                     src="/static/images/work/file.png"
@@ -314,12 +306,10 @@ export default {
                             {
                                 text: '#唱歌#',
                                 fontSize: 29,
-                                width: 1210,
                                 color: '#FFE49C',
                                 opacity: 1,
                                 marginRight: 10,
                                 lineHeight: 40,
-                                textOverflow: 'ellipsis',
                                 lineNum: 1,
                             },
                         ],
@@ -457,16 +447,10 @@ export default {
                     if (
                         err.errMsg
                             === 'saveImageToPhotosAlbum:fail:auth denied'
-                        || err.errMsg
-                            === 'saveImageToPhotosAlbum:fail auth deny'
-                        || err.errMsg === 'saveImageToPhotosAlbum:fail system deny'
+                        || err.errMsg === 'saveImageToPhotosAlbum:fail auth deny'
                     ) {
                         // 这边微信做过调整，必须要在按钮中触发，因此需要在弹框回调中进行调用
                         console.log('开始授权');
-                        uni.authorize({
-                            scope: 'scope.writePhotosAlbum',
-                            success() {},
-                        });
                         // eslint-disable-next-line no-undef
                         wx.openSetting({
                             success(settingdata) {
@@ -693,7 +677,7 @@ export default {
         }
         return {
             title: this.shareDesc,
-            imageUrl: this.pageData.video_img_url,
+            // imageUrl: '/static/images/index/banner.png',
             path: `/pages/chunjie/detail/detail?id=${this.id}`,
         };
     },
