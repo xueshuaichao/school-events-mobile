@@ -7,11 +7,16 @@
             <template v-if="type === 'video'">
                 <template v-if="!url">
                     <image
+                        v-if="theme === 'normal'"
                         class="icon-video"
                         src="/static/images/comp/upload/video.png"
                     />
+                    <image
+                        v-if="theme === 'red'"
+                        class="icon-video red"
+                        src="/static/images/comp/upload/video_red.png"
+                    />
                 </template>
-
                 <image
                     v-else
                     class="icon-success"
@@ -32,8 +37,14 @@
             </template>
             <template v-if="type === 'image'">
                 <image
+                    v-if="theme === 'normal'"
                     class="icon-image"
                     src="/static/images/comp/upload/image.png"
+                />
+                <image
+                    v-if="theme === 'red'"
+                    class="icon-image red"
+                    src="/static/images/comp/upload/image_red.png"
                 />
                 <view class="icon-desc">
                     {{ preview ? "上传封面" : "上传图片" }}
@@ -84,6 +95,10 @@ export default {
         preview: {
             type: Boolean,
             default: true
+        },
+        theme: {
+            type: String,
+            default: "normal"
         },
         count: {
             type: Number,
@@ -301,7 +316,7 @@ export default {
 
     .cover-wrap {
         width: 192upx;
-        height: 108upx;
+        height: 128upx;
         background: #f0f0f0;
         margin-right: 16upx;
         text-align: center;
@@ -330,7 +345,13 @@ export default {
         display: inline-block;
         width: 43upx;
         height: 28upx;
-        margin-top: 16upx;
+        margin-top: 26rpx;
+
+        &.red {
+            margin-top: 16upx;
+            width: 70rpx;
+            height: 52rpx;
+        }
     }
 
     .icon-success {
@@ -344,7 +365,13 @@ export default {
         display: inline-block;
         width: 46upx;
         height: 36upx;
-        margin-top: 12upx;
+        margin-top: 20rpx;
+
+        &.red {
+            margin-top: 12upx;
+            width: 70rpx;
+            height: 52rpx;
+        }
     }
 
     .icon-desc {

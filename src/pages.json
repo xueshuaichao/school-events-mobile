@@ -8,12 +8,6 @@
             }
         },
         {
-            "path": "pages/chunjiehao/upload/upload",
-            "style": {
-                "navigationBarTitleText": "上传作品"
-            }
-        },
-        {
             "path": "pages/tabBar/list/list",
             "style": {
                 "navigationBarTitleText": "作品展示"
@@ -186,7 +180,18 @@
                 }
             }
         },
-
+        {
+            "path": "pages/chunjiehao/upload/upload",
+            "style": {
+                "navigationBarTitleText": "上传作品"
+            }
+        },
+        {
+            "path": "pages/chunjiehao/upload/result",
+            "style": {
+                "navigationBarTitleText": "上传结果"
+            }
+        },
         {
             "path": "pages/chunjiehao/myWork/myWork",
             "style": {

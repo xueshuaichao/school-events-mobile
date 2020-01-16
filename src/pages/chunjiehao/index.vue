@@ -1,330 +1,337 @@
 <template>
-    <view :class="['page-index', { 'stop-scroll': prompt }]">
-        <!-- 活动规则 -->
-        <view
-            v-show="prompt"
-            class="activerulebox"
-        >
-            <view class="active-content">
-                <view
-                    class="close"
-                    @click="handleClose"
-                />
-                <view class="title-icon">
-                    活动规则
-                </view>
-                <view class="active-rule-box">
-                    <view>
-                        <view class="title">
-                            活动时间
-                        </view>
-                        <view class="text">
-                            2020年1月20日——2月15日（2月18日公布结果）
-                        </view>
-                    </view>
-                    <view>
-                        <view class="title">
-                            活动对象
-                        </view>
-                        <view class="text">
-                            全员可参与
-                        </view>
-                    </view>
-                    <view>
-                        <view class="title">
-                            参赛作品
-                        </view>
-                        <view class="text">
-                            围绕春节主题，创作以春节、年为元素的视频或图片作品，记录你的美好春节。
-                        </view>
-                    </view>
-                    <view>
-                        <view class="title">
-                            作品要求
-                        </view>
-                        <view class="text">
-                            <ul>
-                                <li>
-                                    视频格式：支持MP4、MOV、3GP、MP4V、M4V、MKV、AVI、FLV等，视频时长不超过5分钟；视频清晰、画面精美。
-                                </li>
-                                <li>
-                                    图片格式：单张图片小于10MB，图片清晰、完整。
-                                </li>
-                                <li>
-                                    内容：如果发现有用户上传不合规内容、黄赌毒、封建迷信等违背社会主义核心价值观的内容、非原创、
-                                    盗窃他人或平台的内容、或恶意刷投票量等扰乱秩序者，该账户将取消活动参与资格，不合规视频将被删除。
-                                </li>
-                            </ul>
-                        </view>
-                    </view>
-                    <view>
-                        <view class="title">
-                            参赛规则
-                        </view>
-                        <view class="text">
-                            <ul>
-                                <li>
-                                    参赛者需注册并通过活动界面上传作品，审核通过后可邀请亲友投票。
-                                </li>
-                                <li>
-                                    未传视频的注册用户只能为参赛选手投票，无法参与排行榜活动。
-                                </li>
-                                <li>
-                                    每个账户每天只能为同一作品投票1次。
-                                </li>
-                                <li>
-                                    排行榜将根据视频投票数进行排名，排行榜将以2020年2月15日23:59:59时的排名为最终结果，上榜者可获得相应礼品。
-                                </li>
-                                <li>
-                                    获奖名单将于2月18日在爱挑战官网(http://atz.qsnatz.com/)
-                                    及官方服务号（UP青少年爱挑战）进行公布。
-                                </li>
-                            </ul>
-                        </view>
-                    </view>
-                    <view>
-                        <view class="title">
-                            奖品兑换说明
-                        </view>
-                        <view class="text">
-                            <view>
-                                1、每名参赛选手只有1次可兑奖机会，如同时获得了不同奖项，以最高奖项为准。
-                            </view>
-                            <view>
-                                2、工作人员将于2月19日期间电话联系获奖账号所绑定的手机号，电话无法联系的将视为自动放弃兑奖资格。
-                            </view>
-                            <view>
-                                3、礼品将于2月20-21日期间通过普通快递寄出。
-                            </view>
-                            <view>
-                                4、奖品属于用户奖励活动，不提供发票、收据。
-                            </view>
-                            <view>
-                                5、奖品不支持退换和售后，请当面核实无质量问题再签收。
-                            </view>
-                            <view>
-                                6、因用户提供的收货地址等信息有误而导致奖品未收到的，不予补发。
-                            </view>
-                        </view>
-                    </view>
-                    <view>
-                        <view class="title">
-                            活动奖品
-                        </view>
-                        <view class="text">
-                            <view>
-                                截止到2020年2月15日23:59:59整，按投票名次可获得如下奖品：
-                            </view>
-                        </view>
-                    </view>
-                    <view class="prize-prompt">
-                        <view class="prize-item-prompt">
-                            <view>
-                                <text>一等奖</text>
-                                <image
-                                    src="../../static/images/chunjie/chunjiehao-prize01.png"
-                                />
-                                <text>空气炸锅*1</text>
-                            </view>
-                            <view>
-                                <text>二等奖</text>
-                                <image
-                                    src="../../static/images/chunjie/chunjiehao-prize02.png"
-                                />
-                                <text>美的养生壶*2</text>
-                            </view>
-                            <view>
-                                <text>三等奖</text>
-                                <image
-                                    src="../../static/images/chunjie/chunjiehao-prize03.png"
-                                />
-                                <text>欧普护眼台灯*3</text>
-                            </view>
-                            <view>
-                                <text>四等奖</text>
-                                <image
-                                    src="../../static/images/chunjie/chunjiehao-prize04.png"
-                                />
-                                <text>小熊加湿器*4</text>
-                            </view>
-                        </view>
-                        <view class="prize-slogan-prompt">
-                            礼品图片仅供参考，请以实物为准
-                        </view>
-                    </view>
-                    <view class="qr-wrap">
-                        <image
-                            class="qr-code"
-                            src="/static/images/chunjie/qrcode.jpg"
-                        />
-                        <view class="text">
-                            关注“UP青少年爱挑战”公众号，了解更多活动信息
-                        </view>
-                    </view>
-                </view>
-            </view>
-        </view>
-
-        <view class="main-swiper">
-            <view class="banner">
-                <view
-                    class="active-rule"
-                    @click="handleActiverule"
-                >
-                    活动规则
-                </view>
-                <view
-                    class="menu-title"
-                    @click="handleMywork"
-                >
-                    我的作品
-                </view>
-            </view>
-            <view class="register">
-                <image src="../../static/images/chunjie/chunjiehao-title.png" />
-            </view>
-            <view class="active-schedule">
-                <text>活动时间：1月10日-2月15日</text>
-                <text>结果公布：2月18日</text>
-            </view>
-
-            <view class="prize">
-                <view class="prize-item">
-                    <view>
-                        <text>一等奖</text>
-                        <image
-                            src="../../static/images/chunjie/chunjiehao-prize01.png"
-                        />
-                        <text>空气炸锅*1</text>
-                    </view>
-                    <view>
-                        <text>二等奖</text>
-                        <image
-                            src="../../static/images/chunjie/chunjiehao-prize02.png"
-                        />
-                        <text>美的养生壶*2</text>
-                    </view>
-                    <view>
-                        <text>三等奖</text>
-                        <image
-                            src="../../static/images/chunjie/chunjiehao-prize03.png"
-                        />
-                        <text>欧普护眼台灯*3</text>
-                    </view>
-                    <view>
-                        <text>四等奖</text>
-                        <image
-                            src="../../static/images/chunjie/chunjiehao-prize04.png"
-                        />
-                        <text>小熊加湿器*4</text>
-                    </view>
-                </view>
-                <view class="prize-slogan01">
-                    截止到2020年2月15日23:59:59整，按投票名次可获得以上奖品
-                </view>
-            </view>
-            <image
-                class="cansai-text"
-                src="../../static/images/chunjie/cansai_text.png"
-            />
-
-            <!-- work show -->
-            <view class="menu-list">
-                <view class="search-box">
-                    <button
-                        :class="{
-                            active: activeMenuIndex === 'new'
-                        }"
-                        @click="toggle('new')"
-                    >
-                        最新
-                    </button>
-                    <button
-                        :class="{
-                            active: activeMenuIndex === 'hot'
-                        }"
-                        @click="toggle('hot')"
-                    >
-                        最热
-                    </button>
-                    <view class="search">
-                        <image
-                            src="../../static/images/chunjie/search-icon01.png"
-                        />
-                        <input
-                            v-model="changeValue"
-                            placeholder-style="color:#FF2E3F"
-                            type="text"
-                            confirm-type="search"
-                            confirm-hold="true"
-                            placeholder="请输入作者姓名或作品名称"
-                            @confirm="bindconfirm"
-                        >
-                        <text
-                            class="search-button"
-                            @click="bindconfirm"
-                        >
-                            搜索
-                        </text>
-                    </view>
-                </view>
-                <view class="media-box">
+    <view>
+        <official-account />
+        <view :class="['page-index', { 'stop-scroll': prompt }]">
+            <!-- 活动规则 -->
+            <view
+                v-show="prompt"
+                class="activerulebox"
+            >
+                <view class="active-content">
                     <view
-                        v-for="item in dataList"
-                        :key="item.id"
-                        class="media-content"
-                    >
-                        <navigator
-                            :url="
-                                `/pages/chunjiehao/detail/detail?id=${item.id}&fr=${fr}`
-                            "
-                        >
-                            <image
-                                v-if="item.resource_type === 1"
-                                :src="item.video_img_url | optimizeImage"
-                                class="video"
-                            />
-                            <image
-                                v-else-if="item.resource_type === 2"
-                                :src="item.img_url | optimizeImage"
-                                class="video"
-                            />
-                            <view class="media-icon">
-                                <image :src="mediaIcon[item.resource_type]" />
+                        class="close"
+                        @click="handleClose"
+                    />
+                    <view class="title-icon">
+                        活动规则
+                    </view>
+                    <view class="active-rule-box">
+                        <view>
+                            <view class="title">
+                                活动时间
                             </view>
-                        </navigator>
-
-                        <view class="media-name text-one-line">
-                            {{ `#${item.cat_name}# ${item.resource_name}` }}
+                            <view class="text">
+                                2020年1月20日——2月15日（2月18日公布结果）
+                            </view>
                         </view>
-                        <text class="vote-num">
-                            {{ item.ticket }}票
-                        </text>
-                        <view
-                            class="vote"
-                            @click="handleVote(item)"
-                        >
-                            帮TA投票
+                        <view>
+                            <view class="title">
+                                活动对象
+                            </view>
+                            <view class="text">
+                                全员可参与
+                            </view>
+                        </view>
+                        <view>
+                            <view class="title">
+                                参赛作品
+                            </view>
+                            <view class="text">
+                                围绕春节主题，创作以春节、年为元素的视频或图片作品，记录你的美好春节。
+                            </view>
+                        </view>
+                        <view>
+                            <view class="title">
+                                作品要求
+                            </view>
+                            <view class="text">
+                                <ul>
+                                    <li>
+                                        视频格式：支持MP4、MOV、3GP、MP4V、M4V、MKV、AVI、FLV等，视频时长不超过5分钟；视频清晰、画面精美。
+                                    </li>
+                                    <li>
+                                        图片格式：单张图片小于10MB，图片清晰、完整。
+                                    </li>
+                                    <li>
+                                        内容：如果发现有用户上传不合规内容、黄赌毒、封建迷信等违背社会主义核心价值观的内容、非原创、
+                                        盗窃他人或平台的内容、或恶意刷投票量等扰乱秩序者，该账户将取消活动参与资格，不合规视频将被删除。
+                                    </li>
+                                </ul>
+                            </view>
+                        </view>
+                        <view>
+                            <view class="title">
+                                参赛规则
+                            </view>
+                            <view class="text">
+                                <ul>
+                                    <li>
+                                        参赛者需注册并通过活动界面上传作品，审核通过后可邀请亲友投票。
+                                    </li>
+                                    <li>
+                                        未传视频的注册用户只能为参赛选手投票，无法参与排行榜活动。
+                                    </li>
+                                    <li>
+                                        每个账户每天只能为同一作品投票1次。
+                                    </li>
+                                    <li>
+                                        排行榜将根据视频投票数进行排名，排行榜将以2020年2月15日23:59:59时的排名为最终结果，上榜者可获得相应礼品。
+                                    </li>
+                                    <li>
+                                        获奖名单将于2月18日在爱挑战官网(http://atz.qsnatz.com/)
+                                        及官方服务号（UP青少年爱挑战）进行公布。
+                                    </li>
+                                </ul>
+                            </view>
+                        </view>
+                        <view>
+                            <view class="title">
+                                奖品兑换说明
+                            </view>
+                            <view class="text">
+                                <view>
+                                    1、每名参赛选手只有1次可兑奖机会，如同时获得了不同奖项，以最高奖项为准。
+                                </view>
+                                <view>
+                                    2、工作人员将于2月19日期间电话联系获奖账号所绑定的手机号，电话无法联系的将视为自动放弃兑奖资格。
+                                </view>
+                                <view>
+                                    3、礼品将于2月20-21日期间通过普通快递寄出。
+                                </view>
+                                <view>
+                                    4、奖品属于用户奖励活动，不提供发票、收据。
+                                </view>
+                                <view>
+                                    5、奖品不支持退换和售后，请当面核实无质量问题再签收。
+                                </view>
+                                <view>
+                                    6、因用户提供的收货地址等信息有误而导致奖品未收到的，不予补发。
+                                </view>
+                            </view>
+                        </view>
+                        <view>
+                            <view class="title">
+                                活动奖品
+                            </view>
+                            <view class="text">
+                                <view>
+                                    截止到2020年2月15日23:59:59整，按投票名次可获得如下奖品：
+                                </view>
+                            </view>
+                        </view>
+                        <view class="prize-prompt">
+                            <view class="prize-item-prompt">
+                                <view>
+                                    <text>一等奖</text>
+                                    <image
+                                        src="../../static/images/chunjie/chunjiehao-prize01.png"
+                                    />
+                                    <text>空气炸锅*1</text>
+                                </view>
+                                <view>
+                                    <text>二等奖</text>
+                                    <image
+                                        src="../../static/images/chunjie/chunjiehao-prize02.png"
+                                    />
+                                    <text>美的养生壶*2</text>
+                                </view>
+                                <view>
+                                    <text>三等奖</text>
+                                    <image
+                                        src="../../static/images/chunjie/chunjiehao-prize03.png"
+                                    />
+                                    <text>欧普护眼台灯*3</text>
+                                </view>
+                                <view>
+                                    <text>四等奖</text>
+                                    <image
+                                        src="../../static/images/chunjie/chunjiehao-prize04.png"
+                                    />
+                                    <text>小熊加湿器*4</text>
+                                </view>
+                            </view>
+                            <view class="prize-slogan-prompt">
+                                礼品图片仅供参考，请以实物为准
+                            </view>
+                        </view>
+                        <view class="qr-wrap">
+                            <image
+                                class="qr-code"
+                                src="/static/images/chunjie/qrcode.jpg"
+                            />
+                            <view class="text">
+                                关注“UP青少年爱挑战”公众号，了解更多活动信息
+                            </view>
                         </view>
                     </view>
-                    <uni-load-more
-                        class="loadMore"
-                        :status="loadMoreStatus"
-                        :content-text="{
-                            contentdown: '上拉显示更多',
-                            contentrefresh: '正在加载...',
-                            contentnomore: '———— 已经到底了~ ————'
-                        }"
-                        color="#fff"
+                </view>
+            </view>
+
+            <view class="main-swiper">
+                <view class="banner">
+                    <view
+                        class="active-rule"
+                        @click="handleActiverule"
+                    >
+                        活动规则
+                    </view>
+                    <view
+                        class="menu-title"
+                        @click="handleMywork"
+                    >
+                        我的作品
+                    </view>
+                </view>
+                <view class="register">
+                    <image
+                        src="../../static/images/chunjie/chunjiehao-title.png"
                     />
                 </view>
-            </view>
+                <view class="active-schedule">
+                    <text>活动时间：1月10日-2月15日</text>
+                    <text>结果公布：2月18日</text>
+                </view>
 
-            <view
-                :class="status === 2 ? 'upload' : 'upload-disable'"
-                @click="handleUpload"
-            >
-                上传作品
+                <view class="prize">
+                    <view class="prize-item">
+                        <view>
+                            <text>一等奖</text>
+                            <image
+                                src="../../static/images/chunjie/chunjiehao-prize01.png"
+                            />
+                            <text>空气炸锅*1</text>
+                        </view>
+                        <view>
+                            <text>二等奖</text>
+                            <image
+                                src="../../static/images/chunjie/chunjiehao-prize02.png"
+                            />
+                            <text>美的养生壶*2</text>
+                        </view>
+                        <view>
+                            <text>三等奖</text>
+                            <image
+                                src="../../static/images/chunjie/chunjiehao-prize03.png"
+                            />
+                            <text>欧普护眼台灯*3</text>
+                        </view>
+                        <view>
+                            <text>四等奖</text>
+                            <image
+                                src="../../static/images/chunjie/chunjiehao-prize04.png"
+                            />
+                            <text>小熊加湿器*4</text>
+                        </view>
+                    </view>
+                    <view class="prize-slogan01">
+                        截止到2020年2月15日23:59:59整，按投票名次可获得以上奖品
+                    </view>
+                </view>
+                <image
+                    class="cansai-text"
+                    src="../../static/images/chunjie/cansai_text.png"
+                />
+
+                <!-- work show -->
+                <view class="menu-list">
+                    <view class="search-box">
+                        <button
+                            :class="{
+                                active: activeMenuIndex === 'new'
+                            }"
+                            @click="toggle('new')"
+                        >
+                            最新
+                        </button>
+                        <button
+                            :class="{
+                                active: activeMenuIndex === 'hot'
+                            }"
+                            @click="toggle('hot')"
+                        >
+                            最热
+                        </button>
+                        <view class="search">
+                            <image
+                                src="../../static/images/chunjie/search-icon01.png"
+                            />
+                            <input
+                                v-model="changeValue"
+                                placeholder-style="color:#FF2E3F"
+                                type="text"
+                                confirm-type="search"
+                                confirm-hold="true"
+                                placeholder="请输入作者姓名或作品名称"
+                                @confirm="bindconfirm"
+                            >
+                            <text
+                                class="search-button"
+                                @click="bindconfirm"
+                            >
+                                搜索
+                            </text>
+                        </view>
+                    </view>
+                    <view class="media-box">
+                        <view
+                            v-for="item in dataList"
+                            :key="item.id"
+                            class="media-content"
+                        >
+                            <navigator
+                                :url="
+                                    `/pages/chunjiehao/detail/detail?id=${item.id}&fr=${fr}`
+                                "
+                            >
+                                <image
+                                    v-if="item.resource_type === 1"
+                                    :src="item.video_img_url | optimizeImage"
+                                    class="video"
+                                />
+                                <image
+                                    v-else-if="item.resource_type === 2"
+                                    :src="item.img_url | optimizeImage"
+                                    class="video"
+                                />
+                                <view class="media-icon">
+                                    <image
+                                        :src="mediaIcon[item.resource_type]"
+                                    />
+                                </view>
+                            </navigator>
+
+                            <view class="media-name text-one-line">
+                                {{ `#${item.cat_name}# ${item.resource_name}` }}
+                            </view>
+                            <text class="vote-num">
+                                {{ item.ticket }}票
+                            </text>
+                            <view
+                                class="vote"
+                                @click="handleVote(item)"
+                            >
+                                帮TA投票
+                            </view>
+                        </view>
+                        <uni-load-more
+                            class="loadMore"
+                            :status="loadMoreStatus"
+                            :content-text="{
+                                contentdown: '上拉显示更多',
+                                contentrefresh: '正在加载...',
+                                contentnomore: '———— 已经到底了~ ————'
+                            }"
+                            color="#fff"
+                        />
+                    </view>
+                </view>
+
+                <view
+                    :class="status === 2 ? 'upload' : 'upload-disable'"
+                    @click="handleUpload"
+                >
+                    上传作品
+                </view>
             </view>
         </view>
     </view>
