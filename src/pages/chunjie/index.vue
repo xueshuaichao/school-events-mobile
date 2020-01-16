@@ -83,6 +83,8 @@
                         <image
                             class="qr-code"
                             src="/static/images/chunjie/qrcode.jpg"
+                            data-src="/static/images/chunjie/qrcode.jpg"
+                            bindtap="previewImage"
                         />
                         <view class="text">
                             关注“UP青少年爱挑战”公众号，了解更多活动信息
@@ -447,6 +449,15 @@ export default {
         this.changeValue = '';
     },
     methods: {
+        previewImage(e) {
+            console.log(1);
+            const current = e.target.dataset.src; // 这里获取到的是一张本地的图片
+            // eslint-disable-next-line no-undef
+            wx.previewImage({
+                current, // 需要预览的图片链接列表
+                urls: [current], // 当前显示图片的链接
+            });
+        },
         chunjieStatus() {
             // 1未开始，2进行中，3已结束
             api.post('/api/activity/getactivitystatus', {
