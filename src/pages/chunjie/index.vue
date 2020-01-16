@@ -168,10 +168,15 @@
                             领取方式：
                         </view>
                         <view class="text">
-                            扫描小程序码，进入“我的”开始学习
+                            {{
+                                isH5 ? "扫描" : "点击"
+                            }}小程序码，进入“我的”开始学习
                         </view>
                     </view>
-                    <image src="../../static/images/chunjie/mini-pro.png" />
+                    <image
+                        src="../../static/images/chunjie/mini-pro.png"
+                        @click="openMiniProgram"
+                    />
                 </view>
                 <view>
                     <view class="title">
@@ -389,6 +394,10 @@ export default {
     },
     data() {
         return {
+            // #ifdef H5
+            isH5: true,
+            // #endif
+
             fr: '',
             changeValue: '',
             activeMenuIndex: 'new',
@@ -583,6 +592,19 @@ export default {
             }
 
             this.isPlayed = true;
+        },
+        openMiniProgram() {
+            // #ifndef H5
+            // eslint-disable-next-line no-undef
+            wx.navigateToMiniProgram({
+                appId: 'wxe8f8e50ab33cbce8',
+                path: 'pages/account/index',
+                success(res) {
+                    console.log(res);
+                    // 打开成功
+                },
+            });
+            // #endif
         },
         handleVote(item) {
             if (this.status === 2) {

@@ -62,7 +62,7 @@
             >
                 <image
                     class="share-pic"
-                    src="/static/images/work/share-guide.png"
+                    src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/chunjiehao/share-guide.png"
                 />
             </view>
         </template>
@@ -238,7 +238,7 @@
 
         <!-- v-if="!isH5" -->
         <image
-            src="/static/images/work/festival.png"
+            src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/chunjiehao/join.png"
             class="join-game"
             @click="joinGame"
         />
@@ -365,7 +365,7 @@ export default {
             // eslint-disable-next-line no-undef
             const pages = getCurrentPages(); // 获取加载的页面
             const currentPage = pages[pages.length - 1]; // 获取当前页面的对象
-            const url = currentPage.route || 'pages/chunjie/detail/detail';
+            const url = currentPage.route || 'pages/chunjiehao/detail/detail';
             const scene = `id=${this.id}` || 'id=325';
             api.post('/api/weixin/getminiqrcode', {
                 path: url,
@@ -625,7 +625,7 @@ export default {
                     const { status } = res;
                     if (status === 2) {
                         uni.navigateTo({
-                            url: '/pages/chunjie/upload/upload',
+                            url: '/pages/chunjiehao/upload/upload',
                         });
                     } else if (status === 1) {
                         uni.showToast({
@@ -643,7 +643,7 @@ export default {
         },
         goHome() {
             uni.reLaunch({
-                url: '/pages/chunjie/index',
+                url: '/pages/chunjiehao/index',
             });
         },
         togglePlayStatus() {
@@ -678,7 +678,7 @@ export default {
         return {
             title: this.shareDesc,
             // imageUrl: '/static/images/index/banner.png',
-            path: `/pages/chunjie/detail/detail?id=${this.id}`,
+            path: `/pages/chunjiehao/detail/detail?id=${this.id}`,
         };
     },
 };
@@ -777,6 +777,7 @@ export default {
     .video-wrap {
         width: 100%;
         height: 100%;
+        overflow: hidden;
     }
 
     .video {
@@ -845,7 +846,8 @@ export default {
 
     swiper {
         width: 750rpx;
-        height: 1334rpx;
+        // height: 1334rpx;
+        height: 100vh;
     }
 
     .main-swiper {
@@ -855,7 +857,8 @@ export default {
 
         uni-swiper {
             // height: 422upx;
-            height: 1334rpx;
+            // height: 1334rpx;
+            height: 100vh;
 
             .swiper-item {
                 img {
@@ -867,13 +870,14 @@ export default {
 
         .banner-image {
             width: 750rpx;
-            height: 1334rpx;
+            // height: 1334rpx;
+            height: 100vh;
         }
     }
 
     .join-game {
         width: 134rpx;
-        height: 143rpx;
+        height: 140rpx;
         position: fixed;
         right: 30rpx;
         bottom: 20rpx;
@@ -899,30 +903,23 @@ export default {
         width: 146rpx;
         right: 27rpx;
         bottom: 160rpx;
-        color: #fff0cc;
+        color: #ffde98;
         font-size: 24rpx;
         text-align: center;
         z-index: 100;
     }
 
     .btn {
-        color: #fff0cc;
+        color: #ffde98;
         font-size: 24rpx;
         width: 134rpx;
         height: 56rpx;
         background: linear-gradient(
-            0deg,
-            rgba(255, 22, 16, 1),
-            rgba(255, 189, 103, 1)
+            90deg,
+            rgba(255, 124, 53, 1),
+            rgba(255, 31, 73, 1)
         );
-        border-image: linear-gradient(
-                -57deg,
-                rgba(255, 231, 174, 1),
-                rgba(255, 225, 154, 1)
-            )
-            2 2;
         border-radius: 28rpx;
-        border: 2rpx solid;
         line-height: 56rpx;
         text-align: center;
         margin-bottom: 30rpx;

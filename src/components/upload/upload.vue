@@ -5,11 +5,13 @@
     >
         <view class="cover-wrap">
             <template v-if="type === 'video'">
-                <image
-                    v-if="!url"
-                    class="icon-video"
-                    src="/static/images/comp/upload/video.png"
-                />
+                <template v-if="!url">
+                    <image
+                        class="icon-video"
+                        src="/static/images/comp/upload/video.png"
+                    />
+                </template>
+
                 <image
                     v-else
                     class="icon-success"

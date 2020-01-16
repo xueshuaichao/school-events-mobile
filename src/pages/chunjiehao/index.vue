@@ -239,6 +239,7 @@
                 class="cansai-text"
                 src="../../static/images/chunjie/cansai_text.png"
             />
+
             <!-- work show -->
             <view class="menu-list">
                 <view class="search-box">
@@ -287,7 +288,7 @@
                     >
                         <navigator
                             :url="
-                                `/pages/chunjie/detail/detail?id=${item.id}&fr=${fr}`
+                                `/pages/chunjiehao/detail/detail?id=${item.id}&fr=${fr}`
                             "
                         >
                             <image

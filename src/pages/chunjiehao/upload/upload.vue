@@ -4,22 +4,6 @@
         class="page-upload"
     >
         <view class="main">
-            <view class="selection">
-                <view class="label">
-                    选择类别
-                </view>
-                <view class="items">
-                    <text
-                        v-for="item in catData"
-                        :key="item.cat_id"
-                        class="item"
-                        :class="{ active: formData.cat_id === item.cat_id }"
-                        @click="onSelectCat(item)"
-                    >
-                        {{ item.name }}
-                    </text>
-                </view>
-            </view>
             <view
                 v-if="needTab"
                 class="selection bb-sep"
@@ -62,27 +46,6 @@
                         '介绍（不超过80字）'
                 "
             />
-
-            <view class="uni-form-item uni-column">
-                <input
-                    v-model="formData.recommend"
-                    class="uni-input"
-                    placeholder-class="placeholder"
-                    maxlength="30"
-                    placeholder="推荐机构名称(选填)"
-                >
-            </view>
-
-            <view class="uni-form-item uni-column">
-                <input
-                    v-model="formData.teacher"
-                    class="uni-input"
-                    placeholder-class="placeholder"
-                    maxlength="30"
-                    placeholder="指导老师姓名(选填)"
-                >
-            </view>
-
             <upload
                 v-if="uploadMode === 'video'"
                 :type="'video'"
@@ -126,7 +89,7 @@
                 class="btn"
                 @click="upload"
             >
-                上传
+                确认上传
             </view>
         </view>
     </view>
@@ -136,14 +99,18 @@
 import api from '../../../common/api';
 import upload from '../../../components/upload/upload.vue';
 import imageDragSort from '../../../components/image-drag-sort/index.vue';
+// #ifdef H5
 import Attachment from '../../../components/third-party/jin-attachment/index.vue';
+// #endif
 import config from '../../../common/config';
 
 export default {
     components: {
         upload,
         imageDragSort,
+        // #ifdef H5
         Attachment,
+        // #endif
     },
     data() {
         return {
@@ -163,12 +130,12 @@ export default {
             images: [],
 
             newsTabActiveIndex: 0,
-            needTab: false,
+            needTab: true,
             uploadMode: 'video',
 
             formData: {
-                activity_id: 3,
-                cat_id: 16,
+                activity_id: 4,
+                cat_id: 25,
                 resource_name: '',
                 introduce: '',
                 type: 2,
@@ -426,14 +393,12 @@ export default {
 
 <style lang="less" scoped>
 .page-upload {
-    background: #ff3844;
-    padding: 30rpx;
-
     .main {
-        border-radius: 20rpx;
-        padding: 40upx 30upx;
-        background: #ffd583;
-        color: #c9ac67;
+        min-height: 100vh;
+        box-sizing: border-box;
+        padding: 30rpx;
+        background: #ff3849;
+        color: #fff;
     }
 
     .uni-input {
@@ -464,54 +429,46 @@ export default {
         // border: 1upx solid #ccc;
         margin-bottom: 40rpx;
         font-size: 28rpx;
-        background: #ffedc3;
+        background: #b11a27;
         border-radius: 12rpx;
-        color: #9d7c2f;
+        color: #ffbec4;
     }
 
     /deep/ .comp-upload {
         margin-bottom: 40upx;
-        color: #c9ac67;
+        color: #fff;
 
         .cover-wrap {
-            background: #ffedc3;
+            background: #ffde98;
 
             .icon-desc {
-                color: #c9ac67;
+                color: #ff2e3f;
             }
         }
 
         .desc {
-            color: #c9ac67;
+            color: #fff;
         }
     }
 
     /deep/ .placeholder {
-        color: #c9ac67;
+        color: #ff3849;
         font-size: 28upx;
     }
 
     .btn {
         width: 100%;
-        color: #fff;
-        height: 98rpx;
-        border-radius: 49rpx;
-        line-height: 98rpx;
+        color: #ff2e3f;
+        height: 110rpx;
+        line-height: 110rpx;
         text-align: center;
         margin-top: 168rpx;
-        background: rgb(255, 152, 84);
         background: linear-gradient(
-            180deg,
-            rgba(255, 152, 84, 1) 0%,
-            rgba(255, 31, 21, 1) 100%
+            0deg,
+            rgba(255, 149, 71, 1),
+            rgba(255, 222, 152, 1)
         );
-        box-shadow: 0 2.8rpx 2.2rpx rgba(255, 31, 21, 0.034),
-            0 6.7rpx 5.3rpx rgba(255, 31, 21, 0.048),
-            0 12.5rpx 10rpx rgba(255, 31, 21, 0.06),
-            0 22.3rpx 17.9rpx rgba(255, 31, 21, 0.072),
-            0 41.8rpx 33.4rpx rgba(255, 31, 21, 0.086),
-            0 100rpx 80rpx rgba(255, 31, 21, 0.12);
-        margin-bottom: 70rpx;
+        border-radius: 55px;
     }
 
     .panel-hd {
@@ -529,7 +486,7 @@ export default {
         font-size: 28rpx;
 
         .label {
-            color: #ff3849;
+            color: #ffde98;
             margin-bottom: 15rpx;
         }
 
@@ -542,17 +499,17 @@ export default {
             padding: 0 24rpx;
             height: 56rpx;
             line-height: 56rpx;
-            border: 1px solid #ff3849;
+            border: 1px solid #ffde98;
             border-radius: 28rpx;
             display: inline-block;
             margin-right: 20rpx;
             text-align: center;
-            color: #ff3849;
+            color: #ffde98;
             margin-bottom: 20rpx;
 
             &.active {
-                background: #ff3849;
-                color: #fff;
+                background: #ffde98;
+                color: #ff2e3f;
             }
         }
     }
