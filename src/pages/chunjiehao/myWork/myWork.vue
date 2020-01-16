@@ -163,12 +163,11 @@
                 </view>
                 <navigator
                     v-if="allTotal === 0"
-                    url="/pages/chunjie/upload/upload"
+                    url="/pages/chunjiehao/upload/upload"
                 >
-                    <image
-                        class="goUpload"
-                        src="../../../static/images/chunjie/goUpload.png"
-                    />
+                    <view class="goUpload">
+                        去上传
+                    </view>
                 </navigator>
             </view>
             <button
@@ -222,7 +221,7 @@ export default {
             filter: {
                 page_num: 1,
                 page_size: 10,
-                activity_id: 3,
+                activity_id: 4,
             },
             total: 1,
             type: 'myWork',
@@ -241,7 +240,7 @@ export default {
     methods: {
         goHome() {
             uni.reLaunch({
-                url: '/pages/chunjie/index',
+                url: '/pages/chunjiehao/index',
             });
         },
         toggle(k) {
@@ -344,7 +343,7 @@ export default {
         viewDetail(item) {
             if (this.tabActiveIndex === 2) {
                 uni.navigateTo({
-                    url: `/pages/chunjie/detail/detail?id=${item.id}`,
+                    url: `/pages/chunjiehao/detail/detail?id=${item.id}`,
                 });
             }
         },
@@ -407,9 +406,21 @@ export default {
         margin-top: 174upx;
     }
     .goUpload {
-        width: 479upx;
-        height: 169upx;
         margin-top: 37upx;
+        width: 450upx;
+        height: 110upx;
+        background: linear-gradient(
+            0deg,
+            rgba(255, 149, 71, 1),
+            rgba(255, 222, 152, 1)
+        );
+        border-radius: 55px;
+        font-size: 36upx;
+        font-weight: 600;
+        color: #ff2e3f;
+        line-height: 110upx;
+        text-align: center;
+        display: inline-block;
     }
     view {
         color: #ffedc3;

@@ -20,7 +20,7 @@
             </view>
             <image
                 class="close"
-                src="/static/images/chunjie/third_entry_close.png"
+                src="/static/images/chunjie/poster-close.png"
                 @click="handleClose"
             />
         </view>
@@ -296,13 +296,13 @@ export default {
             fr: '',
             posterConfig: {
                 pixelRatio: 3,
-                width: 520,
-                height: 500,
+                width: 633,
+                height: 845,
                 debug: false,
                 texts: [
                     {
-                        x: 50,
-                        y: 505,
+                        x: 90,
+                        y: 605,
                         text: [
                             {
                                 text: '',
@@ -312,6 +312,8 @@ export default {
                                 marginRight: 10,
                                 lineHeight: 40,
                                 lineNum: 1,
+                                width: 1210,
+                                textOverflow: 'ellipsis',
                             },
                         ],
                         baseLine: 'middle',
@@ -321,24 +323,24 @@ export default {
                     {
                         url:
                             'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/poster01.png',
-                        width: 520,
-                        height: 730,
+                        width: 633,
+                        height: 845,
                         y: 0,
                         x: 0,
                     },
                     {
                         url: '',
-                        width: 420,
-                        height: 282,
-                        y: 210,
-                        x: 50,
+                        width: 469,
+                        height: 315,
+                        y: 258,
+                        x: 82,
                     },
                     {
                         url: '',
                         width: 142,
                         height: 142,
-                        y: 573,
-                        x: 348,
+                        y: 670,
+                        x: 430,
                     },
                 ],
             },
@@ -621,7 +623,7 @@ export default {
             }).then(() => {
                 // 1未开始，2进行中，3已结束
                 api.post('/api/activity/getactivitystatus', {
-                    activity_id: 3,
+                    activity_id: 4,
                 }).then((res) => {
                     const { status } = res;
                     if (status === 2) {

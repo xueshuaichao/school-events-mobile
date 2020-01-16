@@ -310,6 +310,8 @@ export default {
                                 marginRight: 10,
                                 lineHeight: 40,
                                 lineNum: 1,
+                                width: 1210,
+                                textOverflow: 'ellipsis',
                             },
                         ],
                         baseLine: 'middle',

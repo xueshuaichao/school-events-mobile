@@ -373,7 +373,7 @@ export default {
             newsTabActiveIndex: 0,
             dataList: [],
             filter: {
-                activity_id: 3,
+                activity_id: 4,
                 page_num: 1,
                 page_size: 10,
                 sort: 'new',
@@ -422,7 +422,7 @@ export default {
         chunjieStatus() {
             // 1未开始，2进行中，3已结束
             api.post('/api/activity/getactivitystatus', {
-                activity_id: 3,
+                activity_id: 4,
             }).then((res) => {
                 this.status = res.status;
             });

@@ -242,7 +242,7 @@ export default {
     methods: {
         resetForm() {
             this.formData = {
-                activity_id: 3,
+                activity_id: 4,
                 cat_id: 16,
                 resource_name: '',
                 introduce: '',
