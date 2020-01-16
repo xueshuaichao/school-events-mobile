@@ -321,8 +321,6 @@ export default {
                                 lineHeight: 40,
                                 textOverflow: 'ellipsis',
                                 lineNum: 1,
-                                width: 1210,
-                                textOverflow: 'ellipsis',
                             },
                         ],
                         baseLine: 'middle',
