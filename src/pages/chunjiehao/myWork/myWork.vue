@@ -87,7 +87,7 @@
                         class="work-info"
                     >
                         <view class="media-name text-one-line">
-                            {{ `#${item.cat_name}# ${item.resource_name}` }}
+                            {{ ` ${item.resource_name}` }}
                         </view>
                         <view class="media-time">
                             {{ item.created_at }}
@@ -111,13 +111,10 @@
                         class="work-info"
                     >
                         <view class="media-name">
-                            {{ `#${item.cat_name}# ${item.user_name}` }}
+                            {{ item.user_name }}
                         </view>
                         <view>
                             {{ item.resource_name }}
-                        </view>
-                        <view class="media-time">
-                            作品介绍
                         </view>
                         <text class="vote-num">
                             {{ item.ticket }}票

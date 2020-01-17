@@ -318,7 +318,7 @@
                             />
 
                             <view class="media-name text-one-line">
-                                {{ `#${item.cat_name}# ${item.resource_name}` }}
+                                {{ `${item.resource_name}` }}
                             </view>
                             <text class="vote-num">
                                 {{ item.ticket }}票
@@ -661,7 +661,7 @@ export default {
                 width: 37upx;
                 height: 26upx;
                 margin-right: 9upx;
-                margin-bottom: 4px;
+                vertical-align: middle;
             }
             .swiper-info {
                 width: 560upx;

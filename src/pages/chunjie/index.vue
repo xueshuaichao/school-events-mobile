@@ -707,8 +707,8 @@ export default {
             image {
                 width: 37upx;
                 height: 26upx;
-                margin-bottom: 4px;
-
+                // margin-bottom: 4upx;
+                vertical-align: middle;
                 margin-right: 9upx;
             }
             .swiper-info {
@@ -944,12 +944,12 @@ body.dialog-open {
         rgba(255, 22, 16, 1),
         rgba(255, 189, 103, 1)
     );
-    border-image: linear-gradient(
-            -57deg,
-            rgba(255, 231, 174, 1),
-            rgba(255, 225, 154, 1)
-        )
-        2 2;
+    // border-image: linear-gradient(
+    //         -57deg,
+    //         rgba(255, 231, 174, 1),
+    //         rgba(255, 225, 154, 1)
+    //     )
+    //     2 2;
     box-shadow: 0px 16px 30px 0px rgba(203, 20, 34, 0.69);
 }
 .upload-disable {
