@@ -314,27 +314,11 @@
                             :key="item.id"
                             class="media-content"
                         >
-                            <navigator
-                                :url="
-                                    `/pages/chunjie/detail/detail?id=${item.id}&fr=${fr}`
-                                "
-                            >
-                                <image
-                                    v-if="item.resource_type === 1"
-                                    :src="item.video_img_url | optimizeImage"
-                                    class="video"
-                                />
-                                <image
-                                    v-else-if="item.resource_type === 2"
-                                    :src="item.img_url | optimizeImage"
-                                    class="video"
-                                />
-                                <view class="media-icon">
-                                    <image
-                                        :src="mediaIcon[item.resource_type]"
-                                    />
-                                </view>
-                            </navigator>
+                            <event-craft-cover
+                                :info="item"
+                                :bg-color="'B11A27'"
+                                @click="viewDetail(item)"
+                            />
 
                             <view class="media-name text-one-line">
                                 {{ `#${item.cat_name}# ${item.resource_name}` }}
@@ -378,28 +362,12 @@ import api from '../../common/api';
 import uniLoadMore from '../../components/uni-load-more/uni-load-more.vue';
 import share from '../../common/share';
 import logger from '../../common/logger';
+import EventCraftCover from '../../components/event-craft-cover/index.vue';
 
 export default {
-    filters: {
-        optimizeImage: (val) => {
-            if (!val) {
-                return '';
-            }
-            let newUrl = '';
-            const width = 335;
-            const height = 225;
-            if (val.indexOf('?') !== -1) {
-                newUrl = `${val}&x-oss-process=image/format,png/interlace,1/quality,Q_80/resize,m_pad,h_${height
-                    * 2},w_${width * 2}`;
-            } else {
-                newUrl = `${val}?x-oss-process=image/format,png/interlace,1/quality,Q_80/resize,m_pad,h_${height
-                    * 2},w_${width * 2}`;
-            }
-            return newUrl;
-        },
-    },
     components: {
         uniLoadMore,
+        EventCraftCover,
     },
     data() {
         return {
@@ -411,10 +379,6 @@ export default {
             changeValue: '',
             activeMenuIndex: 'new',
             loadMoreStatus: 'more',
-            mediaIcon: {
-                1: '../../static/images/chunjie/video-icon.png',
-                2: '../../static/images/chunjie/img-icon.png',
-            },
             prompt: false,
             prompt01: false,
             isPlayed: false,
@@ -558,6 +522,11 @@ export default {
                 desc,
                 thumbnail:
                     'http://aitiaozhan.oss-cn-beijing.aliyuncs.com/banner.png?x-oss-process=image/format,png/interlace,1/quality,Q_80/resize,m_pad,h_100',
+            });
+        },
+        viewDetail(item) {
+            uni.navigateTo({
+                url: `/pages/chunjie/detail/detail?id=${item.id}&fr=${this.fr}`,
             });
         },
         toggle(k) {
@@ -964,10 +933,6 @@ body.dialog-open {
         justify-items: space-betwen;
         position: relative;
 
-        .video {
-            width: 335upx;
-            height: 225upx;
-        }
         .media-name {
             color: #fff;
             width: 100%;
@@ -997,21 +962,6 @@ body.dialog-open {
             line-height: 58upx;
             font-weight: 700;
             float: right;
-        }
-        .media-icon {
-            width: 40upx;
-            height: 40upx;
-            background: rgba(0, 0, 0, 0.6);
-            border-radius: 20upx;
-            text-align: center;
-            line-height: 42upx;
-            position: absolute;
-            top: 175upx;
-            right: 10upx;
-            image {
-                width: 22upx;
-                height: 22upx;
-            }
         }
     }
 }

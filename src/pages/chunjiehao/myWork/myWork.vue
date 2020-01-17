@@ -77,21 +77,11 @@
                     :key="item.id"
                     class="media-content"
                 >
-                    <view @click="viewDetail(item)">
-                        <image
-                            v-if="item.resource_type === 1"
-                            :src="item.video_img_url | optimizeImage"
-                            class="work"
-                        />
-                        <image
-                            v-else-if="item.resource_type === 2"
-                            :src="item.img_url | optimizeImage"
-                            class="work"
-                        />
-                        <view class="media-icon">
-                            <image :src="mediaIcon[item.resource_type]" />
-                        </view>
-                    </view>
+                    <event-craft-cover
+                        :info="item"
+                        :bg-color="'f5dca3'"
+                        @click="viewDetail(item)"
+                    />
                     <view
                         v-if="type === 'myWork'"
                         class="work-info"
@@ -184,10 +174,12 @@
 // work.vue
 import api from '../../../common/api';
 import uniLoadMore from '../../../components/uni-load-more/uni-load-more.vue';
+import EventCraftCover from '../../../components/event-craft-cover/index.vue';
 
 export default {
     components: {
         uniLoadMore,
+        EventCraftCover,
     },
     filters: {
         optimizeImage: (val) => {

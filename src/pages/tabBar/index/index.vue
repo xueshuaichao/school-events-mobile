@@ -57,7 +57,7 @@
                             />
                         </navigator>
                     </swiper-item>
-                    <swiper-item>
+                    <!-- <swiper-item>
                         <navigator
                             url="/pages/doc/notice/notice"
                             class="swiper-item"
@@ -91,7 +91,7 @@
                                 src="http://aitiaozhan.oss-cn-beijing.aliyuncs.com/banner3.jpg"
                             />
                         </view>
-                    </swiper-item>
+                    </swiper-item> -->
                 </swiper>
             </view>
         </view>
@@ -297,7 +297,7 @@ export default {
             autoplay: false,
             interval: 2000,
             duration: 500,
-            circular: true,
+            circular: false,
 
             newsTabActiveIndex: 0,
 
