@@ -297,7 +297,7 @@ export default {
             posterConfig: {
                 pixelRatio: 3,
                 width: 520,
-                height: 500,
+                height: 730,
                 debug: false,
                 texts: [
                     {
