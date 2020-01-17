@@ -274,7 +274,6 @@ export default {
             this.formData.video_img_url = data[0] && data[0].path;
             if (this.uploadMode === 'image') {
                 if (!this.isH5) {
-                    console.log(data);
                     data.forEach((item) => {
                         this.$refs.preview.add(item.path);
                     });

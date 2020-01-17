@@ -308,6 +308,9 @@ export default {
                     data.forEach((item) => {
                         this.$refs.preview.add(item.path);
                     });
+                    setTimeout(() => {
+                        this.$refs.preview.init();
+                    }, 100);
                 } else {
                     data.forEach((item) => {
                         if (this.images.length >= 10) {
