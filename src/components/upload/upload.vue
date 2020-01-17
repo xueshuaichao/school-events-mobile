@@ -70,7 +70,7 @@
                     图片尺寸建议950*550
                 </view>
                 <view>
-                    支持.jpg, png格式
+                    支持 jpg, png 格式
                 </view>
             </template>
         </view>

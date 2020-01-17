@@ -242,6 +242,9 @@ export default {
                 data.forEach((item) => {
                     this.$refs.preview.add(item.path);
                 });
+                setTimeout(() => {
+                    this.$refs.preview.init();
+                }, 100);
             }
         },
         getData() {

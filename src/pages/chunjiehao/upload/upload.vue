@@ -277,6 +277,9 @@ export default {
                     data.forEach((item) => {
                         this.$refs.preview.add(item.path);
                     });
+                    setTimeout(() => {
+                        this.$refs.preview.init();
+                    }, 100);
                 } else {
                     data.forEach((item) => {
                         if (this.images.length >= 10) {
@@ -333,7 +336,11 @@ export default {
                 return false;
             }
             const formData = Object.assign({}, this.formData);
-
+            // 移除首尾空格
+            formData.resource_name = formData.resource_name.replace(
+                /(^\s*)|(\s*$)/g,
+                '',
+            );
             if (this.uploadMode === 'video') {
                 formData.resource_type = 1;
                 if (!formData.resource_name) {
@@ -362,6 +369,10 @@ export default {
                 if (!formData.img.length) {
                     return this.errTip('请上传作品图片');
                 }
+            }
+
+            if (formData.introduce.length >= 80) {
+                return this.errTip('作品介绍不得超过80字');
             }
 
             uni.showLoading();

@@ -345,7 +345,7 @@ export default {
         if (type === 'myWork') {
             this.getWorkData();
         } else if (type === 'search') {
-            uni.setNavigationBarTitle({ title: '秀才艺，赢好礼' });
+            uni.setNavigationBarTitle({ title: 'dou说新年好' });
             this.filter.search = name;
             this.changeValue = name;
             this.searchWorkData();
