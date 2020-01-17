@@ -384,6 +384,7 @@ export default {
     data() {
         return {
             fr: '',
+            shareDesc: '',
             changeValue: '',
             activeMenuIndex: 'new',
             loadMoreStatus: 'more',
@@ -548,6 +549,7 @@ export default {
             ];
             const title = titleList[Math.floor(Math.random() * titleList.length)];
             const desc = '快乐过寒假，才艺拜大年！';
+            this.shareDesc = title;
 
             share({
                 title,
@@ -627,6 +629,17 @@ export default {
                 });
             }
         },
+    },
+    onShareAppMessage(res) {
+        if (res.from === 'button') {
+            // 来自页面内分享按钮
+            console.log(res.target);
+        }
+        return {
+            title: this.shareDesc,
+            // imageUrl: '/static/images/index/banner.png',
+            path: '/pages/chunjiehao/index',
+        };
     },
 };
 </script>
