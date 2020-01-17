@@ -264,6 +264,34 @@
                         @click="handleMorePrize"
                     />
                 </view>
+                <!-- 跑马灯 -->
+                <view class="page-section-spacing">
+                    <swiper
+                        class="swiper"
+                        :indicator-dots="false"
+                        :autoplay="true"
+                        :interval="3000"
+                        :duration="500"
+                        vertical="true"
+                        circular="true"
+                        :disable-touch="true"
+                        easing-function="easeInOutCubic"
+                    >
+                        <swiper-item
+                            v-for="item in crouselList"
+                            :key="item.id"
+                        >
+                            <view class="swiper-item">
+                                <image src="/static/images/chunjie/horn.png" />
+                                <text>用户{{ item.user_name | plusXing }}</text>
+                                <text>发布了</text>
+                                <text>#{{ item.cat_name }}#</text>
+                                <text>{{ item.resource_name }}</text>
+                                <text>刚刚</text>
+                            </view>
+                        </swiper-item>
+                    </swiper>
+                </view>
                 <image
                     class="cansai-text"
                     src="../../static/images/chunjie/cansai_text.png"
@@ -397,6 +425,12 @@ export default {
             }
             return newUrl;
         },
+        plusXing: (val) => {
+            if (val.length === 11) {
+                return `${val.substr(0, 3)}****${val.substr(7)}`;
+            }
+            return val;
+        },
     },
     components: {
         uniLoadMore,
@@ -454,11 +488,14 @@ export default {
                 },
             ],
             status: 2,
+            crouselList: [],
+            setId: '',
         };
     },
     created() {
         this.getData();
         this.chunjieStatus();
+        this.getCrouselList();
     },
     onLoad(params) {
         this.fr = logger.getFr('xchd', params);
@@ -466,7 +503,49 @@ export default {
     onHide() {
         this.changeValue = '';
     },
+    onUnload() {
+        clearInterval(this.setId);
+    },
+
     methods: {
+        getCrouselList() {
+            this.setId = setInterval(() => {
+                console.log('再次请求crousel');
+                api.post('/api/activity/resourcelist', {
+                    activity_id: 3,
+                    page_num: 1,
+                    page_size: 10,
+                    sort: 'new',
+                }).then(({ list }) => {
+                    this.crouselList = list;
+                });
+            }, 1000 * 60 * 5);
+        },
+        getData(title) {
+            api.post('/api/activity/resourcelist', this.filter).then(
+                ({ list, total }) => {
+                    if (title === 'reachBottom') {
+                        this.dataList = this.dataList.concat(list);
+                    } else {
+                        this.dataList = list;
+                        this.crouselList = list;
+                    }
+
+                    this.total = total;
+                    if (
+                        this.total
+                        <= this.filter.page_num * this.filter.page_size
+                    ) {
+                        this.loadMoreStatus = title === 'reachBottom' ? 'noMore' : 'none';
+                    } else {
+                        this.loadMoreStatus = 'more';
+                    }
+
+                    this.initShare();
+                    uni.hideLoading();
+                },
+            );
+        },
         chunjieStatus() {
             // 1未开始，2进行中，3已结束
             api.post('/api/activity/getactivitystatus', {
@@ -497,30 +576,7 @@ export default {
         handleMorePrize() {
             this.prompt01 = true;
         },
-        getData(title) {
-            api.post('/api/activity/resourcelist', this.filter).then(
-                ({ list, total }) => {
-                    if (title === 'reachBottom') {
-                        this.dataList = this.dataList.concat(list);
-                    } else {
-                        this.dataList = list;
-                    }
 
-                    this.total = total;
-                    if (
-                        this.total
-                        <= this.filter.page_num * this.filter.page_size
-                    ) {
-                        this.loadMoreStatus = title === 'reachBottom' ? 'noMore' : 'none';
-                    } else {
-                        this.loadMoreStatus = 'more';
-                    }
-
-                    this.initShare();
-                    uni.hideLoading();
-                },
-            );
-        },
         onReachBottom() {
             if (this.loadMoreStatus === 'more') {
                 this.filter.page_num = this.filter.page_num + 1;
@@ -656,6 +712,48 @@ export default {
 </script>
 
 <style lang="less">
+// 跑马灯
+.page-section-spacing {
+    width: 710upx;
+    height: 46upx;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 23upx;
+    padding: 0 20upx;
+    font-size: 24rpx;
+    box-sizing: border-box;
+    margin-left: 20rpx;
+    line-height: 46rpx;
+
+    .swiper {
+        width: 100%;
+        height: 100%;
+        .swiper-item {
+            image {
+                width: 37upx;
+                height: 26upx;
+                vertical-align: middle;
+                margin-right: 9upx;
+            }
+            & > text:nth-child(2) {
+                color: #fccda2;
+            }
+            & > text:nth-child(3) {
+                color: #ff3849;
+                margin: 0 5upx;
+            }
+            & > text:nth-child(4) {
+                color: #f5c59c;
+            }
+            & > text:nth-child(5) {
+                color: #ff3849;
+            }
+            & > text:nth-child(6) {
+                color: #ff3849;
+                float: right;
+            }
+        }
+    }
+}
 .getStyle {
     margin-top: 45upx;
     display: flex;
