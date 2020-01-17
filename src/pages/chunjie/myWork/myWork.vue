@@ -356,6 +356,20 @@ export default {
             this.searchWorkData();
         }
     },
+    onShareAppMessage(res) {
+        if (res.from === 'button') {
+            // 来自页面内分享按钮
+            console.log(res.target);
+        }
+        const titleList = ['我来给你拜新年，表演才艺送祝福'];
+        const title = titleList[Math.floor(Math.random() * titleList.length)];
+        return {
+            title,
+            imageUrl:
+                'http://aitiaozhan.oss-cn-beijing.aliyuncs.com/banner.png',
+            path: '/pages/chunjie/index',
+        };
+    },
 };
 </script>
 
