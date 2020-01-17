@@ -81,7 +81,7 @@
                     <event-craft-cover
                         :info="item"
                         :bg-color="'f5dca3'"
-                        @click="viewDetail(item)"
+                        @click.native="viewDetail(item)"
                     />
                     <view
                         v-if="type === 'myWork'"

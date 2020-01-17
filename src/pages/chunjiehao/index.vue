@@ -311,7 +311,7 @@
                             <event-craft-cover
                                 :info="item"
                                 :bg-color="'B11A27'"
-                                @click="viewDetail(item)"
+                                @click.native="viewDetail(item)"
                             />
 
                             <view class="media-name text-one-line">
@@ -539,7 +539,13 @@ export default {
             //     '我来给你拜新年，表演才艺送祝福！',
             //     '鼠年春节我精彩，才艺拜年望喜爱！',
             // ];
-            const titleList = ['我来给你拜新年，表演才艺送祝福'];
+            const titleList = [
+                '发现身边年俗文化，记录“鼠”于你的美好新年！记录新年，赢大奖～',
+                '拿起手机，一起来记录“鼠年”春节的快乐瞬间！记录新年，赢大奖～',
+                '细“鼠”身边的年味！分享美好瞬间，赢取新春大奖～',
+                '记录“鼠”于我们的幸福中国年！分享美好瞬间，赢大奖！',
+                '春节到～“鼠”不尽的幸福瞬间值得记录！晒年味，赢好礼～',
+            ];
             const title = titleList[Math.floor(Math.random() * titleList.length)];
             const desc = '快乐过寒假，才艺拜大年！';
 
@@ -552,7 +558,7 @@ export default {
         },
         viewDetail(item) {
             uni.navigateTo({
-                url: `/pages/chunjie/detail/detail?id=${item.id}&fr=${this.fr}`,
+                url: `/pages/chunjiehao/detail/detail?id=${item.id}&fr=${this.fr}`,
             });
         },
         toggle(k) {

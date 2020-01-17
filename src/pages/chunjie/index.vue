@@ -345,7 +345,7 @@
                             <event-craft-cover
                                 :info="item"
                                 :bg-color="'B11A27'"
-                                @click="viewDetail(item)"
+                                @click.native="viewDetail(item)"
                             />
 
                             <view class="media-name text-one-line">
