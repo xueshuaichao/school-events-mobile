@@ -296,13 +296,13 @@ export default {
             fr: '',
             posterConfig: {
                 pixelRatio: 3,
-                width: 633,
-                height: 845,
+                width: 570,
+                height: 820,
                 debug: false,
                 texts: [
                     {
-                        x: 90,
-                        y: 605,
+                        x: 60,
+                        y: 583,
                         text: [
                             {
                                 text: '',
@@ -323,8 +323,8 @@ export default {
                     {
                         url:
                             'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/poster01.png',
-                        width: 633,
-                        height: 845,
+                        width: 570,
+                        height: 820,
                         y: 0,
                         x: 0,
                     },
@@ -332,15 +332,15 @@ export default {
                         url: '',
                         width: 469,
                         height: 315,
-                        y: 258,
-                        x: 82,
+                        y: 233,
+                        x: 50,
                     },
                     {
                         url: '',
                         width: 142,
                         height: 142,
-                        y: 670,
-                        x: 430,
+                        y: 645,
+                        x: 348,
                     },
                 ],
             },

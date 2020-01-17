@@ -671,12 +671,15 @@ export default {
         height: 100%;
         .swiper-item {
             image {
+                float: left;
                 width: 37upx;
                 height: 26upx;
                 margin-right: 9upx;
-                vertical-align: middle;
+                // vertical-align: middle;
+                margin-top: 11rpx;
             }
             .swiper-info {
+                float: left;
                 width: 560upx;
                 white-space: nowrap;
                 text-overflow: ellipsis;
@@ -890,7 +893,7 @@ body.dialog-open {
             font-size: 20upx;
             text-align: center;
             // float: left;
-            width: 154upx;
+            // width: 154upx;
             & text:first-child {
                 color: #ff3442;
                 width: 100%;

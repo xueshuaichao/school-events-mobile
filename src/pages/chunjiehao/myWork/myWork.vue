@@ -113,7 +113,7 @@
                         <view class="media-name">
                             {{ item.user_name }}
                         </view>
-                        <view>
+                        <view class="text-two-line">
                             {{ item.resource_name }}
                         </view>
                         <text class="vote-num">

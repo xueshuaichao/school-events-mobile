@@ -708,10 +708,13 @@ export default {
                 width: 37upx;
                 height: 26upx;
                 // margin-bottom: 4upx;
-                vertical-align: middle;
+                // vertical-align: middle;
                 margin-right: 9upx;
+                margin-top: 11upx;
+                float: left;
             }
             .swiper-info {
+                float: left;
                 width: 560upx;
                 white-space: nowrap;
                 text-overflow: ellipsis;
