@@ -188,7 +188,7 @@
                     />
                 </view>
                 <view class="active-schedule">
-                    <text>活动时间：1月10日-2月15日</text>
+                    <text>活动时间：1月20日-2月15日</text>
                     <text>结果公布：2月18日</text>
                 </view>
 
@@ -850,7 +850,7 @@ body.dialog-open {
             font-size: 22upx;
             text-align: center;
             color: #ffde98;
-            width: 154upx;
+            // width: 154upx;
             & text:first-child {
                 width: 100%;
                 float: left;

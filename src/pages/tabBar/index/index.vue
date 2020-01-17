@@ -53,7 +53,7 @@
                         >
                             <image
                                 class="banner-image"
-                                src="http://aitiaozhan.oss-cn-beijing.aliyuncs.com/chunjiehao.png"
+                                src="http://aitiaozhan.oss-cn-beijing.aliyuncs.com/chunjiehao.png?t=1"
                             />
                         </navigator>
                     </swiper-item>
