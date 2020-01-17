@@ -7,22 +7,22 @@
         <view class="tabs row">
             <view
                 class="tab tab-login"
-                :class="{ active: activeTab === 0 }"
-                @click="activeTab = 0"
+                :class="{ active: loginMode === 'sms' }"
+                @click="loginMode = 'sms'"
             >
-                帐号登录
+                手机号登录
             </view>
             <view
                 class="tab tab-register"
-                :class="{ active: activeTab === 1 }"
-                @click="activeTab = 1"
+                :class="{ active: loginMode === 'password' }"
+                @click="loginMode = 'password'"
             >
-                手机号注册
+                帐号密码登录
             </view>
         </view>
 
         <!-- 帐号登录 -->
-        <template v-if="activeTab === 0">
+        <template v-if="true">
             <view
                 class="form-item-wrap"
                 :class="{
@@ -106,15 +106,9 @@
             <view class="login-mode">
                 <view
                     v-if="loginMode === 'sms'"
-                    @click="loginMode = 'password'"
+                    class="desc"
                 >
-                    密码登录
-                </view>
-                <view
-                    v-if="loginMode === 'password'"
-                    @click="loginMode = 'sms'"
-                >
-                    短信验证码登录
+                    未注册手机号验证后即完成注册
                 </view>
             </view>
 
@@ -122,61 +116,6 @@
                 <view
                     class="btn login-btn"
                     @click="login()"
-                >
-                    确定
-                </view>
-            </view>
-        </template>
-
-        <!-- 手机号注册 -->
-        <template v-if="activeTab === 1">
-            <view class="form-item-wrap">
-                <image
-                    class="icon"
-                    src="/static/images/widgets/login/phone.png"
-                />
-                <input
-                    v-model="newUser.phone"
-                    class="form-input"
-                    placeholder-class="placeholder"
-                    maxlength="30"
-                    placeholder="请输入手机号"
-                >
-                <view class="error-tip">
-                    {{ accountData.isValid ? "" : accountData.msg || "" }}
-                </view>
-            </view>
-            <view class="form-item-wrap">
-                <image
-                    class="icon"
-                    src="/static/images/widgets/login/lock.png"
-                />
-                <input
-                    v-model="newUser.captcha"
-                    class="form-input"
-                    placeholder-class="placeholder"
-                    maxlength="6"
-                    placeholder="请输入验证码"
-                >
-                <view
-                    v-if="!captchaNewUser.isSend"
-                    class="send-captcha"
-                    @click="sendRegisterCaptcha()"
-                >
-                    获取验证码
-                </view>
-                <view
-                    v-if="captchaNewUser.isSend"
-                    class="send-captcha is-send"
-                >
-                    {{ captchaNewUser.remain }}S后重新发
-                </view>
-            </view>
-
-            <view class="form-item-wrap">
-                <view
-                    class="btn login-btn"
-                    @click="doRegister()"
                 >
                     确定
                 </view>
@@ -220,9 +159,8 @@ export default {
                 remain: '',
                 isSend: false,
             },
-            activeTab: 0,
             // loginMode: 'sms',
-            loginMode: 'password',
+            loginMode: 'sms',
         };
     },
     methods: {
@@ -426,17 +364,10 @@ export default {
                 .then(
                     () => {
                         try {
-                            if (this.activeTab === 0) {
-                                this.captcha.create_at = new Date() - 0;
-                                this.captcha.remain = 30;
-                                this.captcha.isSend = true;
-                                this.countDown();
-                            } else {
-                                this.captchaNewUser.create_at = new Date() - 0;
-                                this.captchaNewUser.remain = 30;
-                                this.captchaNewUser.isSend = true;
-                                this.newUserCountDown();
-                            }
+                            this.captcha.create_at = new Date() - 0;
+                            this.captcha.remain = 30;
+                            this.captcha.isSend = true;
+                            this.countDown();
                         } catch (e) {
                             console.log(e);
                         }
@@ -505,7 +436,8 @@ export default {
     .login-mode {
         color: #1166ff;
         font-size: 30rpx;
-        margin-top: 160rpx;
+        margin-top: 50rpx;
+        height: 30rpx;
         text-align: center;
     }
 
@@ -525,13 +457,13 @@ export default {
 
         .tab-login {
             text-align: center;
-            width: 160rpx;
-            margin-right: 80rpx;
-            margin-left: 80rpx;
+            width: 200rpx;
+            margin-left: 60rpx;
+            margin-right: 60rpx;
         }
         .tab-register {
             text-align: center;
-            width: 190rpx;
+            width: 240rpx;
         }
     }
 
@@ -606,7 +538,7 @@ export default {
         height: 98rpx;
         line-height: 98rpx;
         text-align: center;
-        margin-top: 72rpx;
+        margin-top: 100rpx;
         font-size: 36rpx;
     }
 
@@ -615,6 +547,11 @@ export default {
         height: 264rpx;
         display: block;
         margin: 30rpx auto 60rpx;
+    }
+
+    .desc {
+        color: #aaa;
+        font-size: 32rpx;
     }
 }
 </style>

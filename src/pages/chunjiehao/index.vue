@@ -308,27 +308,11 @@
                             :key="item.id"
                             class="media-content"
                         >
-                            <navigator
-                                :url="
-                                    `/pages/chunjiehao/detail/detail?id=${item.id}&fr=${fr}`
-                                "
-                            >
-                                <image
-                                    v-if="item.resource_type === 1"
-                                    :src="item.video_img_url | optimizeImage"
-                                    class="video"
-                                />
-                                <image
-                                    v-else-if="item.resource_type === 2"
-                                    :src="item.img_url | optimizeImage"
-                                    class="video"
-                                />
-                                <view class="media-icon">
-                                    <image
-                                        :src="mediaIcon[item.resource_type]"
-                                    />
-                                </view>
-                            </navigator>
+                            <event-craft-cover
+                                :info="item"
+                                :bg-color="'B11A27'"
+                                @click="viewDetail(item)"
+                            />
 
                             <view class="media-name text-one-line">
                                 {{ `#${item.cat_name}# ${item.resource_name}` }}
@@ -372,6 +356,7 @@ import api from '../../common/api';
 import uniLoadMore from '../../components/uni-load-more/uni-load-more.vue';
 import share from '../../common/share';
 import logger from '../../common/logger';
+import EventCraftCover from '../../components/event-craft-cover/index.vue';
 
 export default {
     filters: {
@@ -394,6 +379,7 @@ export default {
     },
     components: {
         uniLoadMore,
+        EventCraftCover,
     },
     data() {
         return {
@@ -453,7 +439,7 @@ export default {
         this.getCrouselList();
     },
     onLoad(params) {
-        this.fr = logger.getFr('xchd', params);
+        this.fr = logger.getFr('dsxnh', params);
     },
     onHide() {
         this.changeValue = '';
@@ -562,6 +548,11 @@ export default {
                 desc,
                 thumbnail:
                     'http://aitiaozhan.oss-cn-beijing.aliyuncs.com/chunjiehao-banner.png?x-oss-process=image/format,png/interlace,1/quality,Q_80/resize,m_pad,h_100',
+            });
+        },
+        viewDetail(item) {
+            uni.navigateTo({
+                url: `/pages/chunjie/detail/detail?id=${item.id}&fr=${this.fr}`,
             });
         },
         toggle(k) {
@@ -925,6 +916,7 @@ body.dialog-open {
     }
 }
 .banner {
+    position: relative;
     height: 740upx;
     background: url(http://aitiaozhan.oss-cn-beijing.aliyuncs.com/chunjiehao-banner.png?t=2)
         no-repeat;
