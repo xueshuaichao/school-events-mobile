@@ -97,7 +97,10 @@ const routesConfig = {
             path: '/pages/chunjie/upload/upload',
         },
         {
-            path: '/pages/chunjie/detail/detail ',
+            path: '/pages/chunjiehao/upload/upload',
+        },
+        {
+            path: '/pages/chunjie/detail/detail',
         },
         {
             path: '/pages/upload/result/result',
@@ -109,13 +112,22 @@ const routesConfig = {
             path: '/pages/chunjie/myWork/myWork',
         },
         {
+            path: '/pages/chunjiehao/myWork/myWork',
+        },
+        {
+            path: '/pages/chunjiehao/upload/result',
+        },
+        {
             path: '/pages/chunjie/index',
+        },
+        {
+            path: '/pages/chunjiehao/index',
         },
         {
             path: '/pages/login/login',
         },
         {
-            path: '/pages/chunjie/detail/detail',
+            path: '/pages/chunjiehao/detail/detail',
         },
         {
             path: '/pages/address/exchangeRecord',

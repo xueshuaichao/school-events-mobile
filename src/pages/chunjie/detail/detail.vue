@@ -155,9 +155,9 @@
                 </text>
             </view>
             <view class="author-from">
-                {{ pageData.school_name + pageData.grade_name }}
+                {{ pageData.school_name }}
             </view>
-            <view class="work-name-wrap">
+            <view class="work-name-wrap text-one-line">
                 <image
                     class="avatar"
                     src="/static/images/work/file.png"
@@ -678,7 +678,7 @@ export default {
         }
         return {
             title: this.shareDesc,
-            // imageUrl: '/static/images/index/banner.png',
+            imageUrl: this.pageData.video_img_url,
             path: `/pages/chunjie/detail/detail?id=${this.id}`,
         };
     },
