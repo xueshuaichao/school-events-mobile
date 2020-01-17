@@ -15,7 +15,9 @@
             <view
                 class="saveBtn"
                 @click="handleSave"
-            />
+            >
+                保存到本地
+            </view>
             <image
                 class="close"
                 src="/static/images/chunjie/third_entry_close.png"
@@ -725,6 +727,7 @@ export default {
             font-size: 36upx;
             font-weight: 600;
             text-shadow: 0px 4px 6px rgba(241, 0, 0, 0.65);
+            letter-spacing: 2rpx;
         }
         .close {
             position: absolute;

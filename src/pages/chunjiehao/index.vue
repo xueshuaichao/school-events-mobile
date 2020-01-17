@@ -232,7 +232,7 @@
                     <swiper
                         class="swiper"
                         :indicator-dots="false"
-                        autoplay="true"
+                        :autoplay="true"
                         :interval="3000"
                         :duration="500"
                         vertical="true"
@@ -248,10 +248,13 @@
                                 <image
                                     src="/static/images/chunjie/horn01.png"
                                 />
-                                <text>用户{{ item.user_name | plusXing }}</text>
-                                <text>发布了</text>
-                                <text>#{{ item.cat_name }}#</text>
-                                <text>{{ item.resource_name }}</text>
+                                <view class="swiper-info">
+                                    <text>
+                                        用户{{ item.user_name | plusXing }}
+                                    </text>
+                                    <text>发布了</text>
+                                    <text>{{ item.resource_name }}</text>
+                                </view>
                                 <text>刚刚</text>
                             </view>
                         </swiper-item>
@@ -375,6 +378,12 @@ export default {
                     * 2},w_${width * 2}`;
             }
             return newUrl;
+        },
+        plusXing: (val) => {
+            if (val.length === 11) {
+                return `${val.substr(0, 3)}****${val.substr(7)}`;
+            }
+            return val;
         },
     },
     components: {
@@ -664,23 +673,32 @@ export default {
             image {
                 width: 37upx;
                 height: 26upx;
-                vertical-align: middle;
                 margin-right: 9upx;
+                margin-bottom: 4px;
             }
-            & text:nth-child(2) {
-                color: #fccda2;
-            }
-            & text:nth-child(3) {
+            .swiper-info {
+                width: 560upx;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+                overflow: hidden;
+                display: inline-block;
                 color: #ff3849;
-                margin: 0 5upx;
+                & > text:nth-child(1) {
+                    color: #fccda2;
+                }
+                & > text:nth-child(2) {
+                    color: #ff3849;
+                    margin: 0 5upx;
+                }
+                & > text:nth-child(3) {
+                    color: #f5c59c;
+                }
+                & > text:nth-child(4) {
+                    color: #ff3849;
+                }
             }
-            & text:nth-child(4) {
-                color: #f5c59c;
-            }
-            & text:nth-child(5) {
-                color: #ff3849;
-            }
-            & text:nth-child(6) {
+
+            & > text:last-child {
                 color: #ff3849;
                 float: right;
             }
@@ -1138,7 +1156,7 @@ body.dialog-open {
                     left: 24upx;
                 }
                 input {
-                    width: 325upx;
+                    width: 293upx;
                     position: absolute;
                     top: 20upx;
                     // #ifndef H5

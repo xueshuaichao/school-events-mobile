@@ -506,7 +506,7 @@ export default {
                     console.log(res);
                     this.pageData = res;
                     this.posterConfig.images[1].url = res.video_img_url;
-                    this.posterConfig.texts[0].text[0].text = `#${res.cat_name}#  ${res.resource_name}`;
+                    this.posterConfig.texts[0].text[0].text = `${res.resource_name}`;
                     this.initShare();
                     uni.setNavigationBarTitle({
                         title: res.resource_name,
@@ -732,6 +732,7 @@ export default {
             font-size: 36upx;
             line-height: 96upx;
             text-align: center;
+            letter-spacing: 2rpx;
         }
         .close {
             position: absolute;
