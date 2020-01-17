@@ -294,7 +294,7 @@ export default {
         return {
             background: ['color1', 'color2', 'color3'],
             indicatorDots: true,
-            autoplay: false,
+            autoplay: true,
             interval: 2000,
             duration: 500,
             circular: false,
