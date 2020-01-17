@@ -520,7 +520,7 @@ export default {
                 left: 24upx;
             }
             input {
-                width: 325upx;
+                width: 280upx;
                 position: absolute;
                 top: 20upx;
                 // #ifndef H5

@@ -250,9 +250,7 @@
                                 />
                                 <view class="swiper-info">
                                     <text>
-                                        用户{{
-                                            item.user_name | plusXing
-                                        }}
+                                        用户{{ item.user_name | plusXing }}
                                     </text>
                                     <text>发布了</text>
                                     <text>{{ item.resource_name }}</text>
@@ -1145,7 +1143,7 @@ body.dialog-open {
                     left: 24upx;
                 }
                 input {
-                    width: 325upx;
+                    width: 293upx;
                     position: absolute;
                     top: 20upx;
                     // #ifndef H5

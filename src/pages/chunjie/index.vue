@@ -286,9 +286,7 @@
                                 <image src="/static/images/chunjie/horn.png" />
                                 <view class="swiper-info">
                                     <text>
-                                        用户{{
-                                            item.user_name | plusXing
-                                        }}
+                                        用户{{ item.user_name | plusXing }}
                                     </text>
                                     <text>发布了</text>
                                     <text>#{{ item.cat_name }}#</text>
@@ -1219,7 +1217,7 @@ body.dialog-open {
                 }
                 input {
                     // margin-left:11upx;
-                    width: 325upx;
+                    width: 293upx;
                     position: absolute;
                     top: 20upx;
                     // #ifndef H5

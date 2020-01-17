@@ -533,7 +533,7 @@ export default {
                 left: 29upx;
             }
             input {
-                width: 525upx;
+                width: 425upx;
                 position: absolute;
                 top: 20upx;
                 left: 69upx;
