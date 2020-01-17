@@ -110,7 +110,7 @@
                         v-else
                         class="work-info"
                     >
-                        <view class="media-name">
+                        <view class="media-name text-one-line">
                             {{ `#${item.cat_name}# ${item.user_name}` }}
                         </view>
                         <view>
