@@ -133,8 +133,8 @@
                     ref="video"
                     class="video"
                     preload
+                    autoplay
                     :src="pageData.video.cloud_path_sd"
-                    :autoplay="false"
                     :controls="true"
                     :loop="true"
                     :poster="pageData.video_img_url"
