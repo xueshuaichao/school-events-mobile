@@ -262,10 +262,10 @@ export default {
                     this.isLoading = false;
                 },
                 () => {
-                    this.isLoading = true;
-                    uni.switchTab({
-                        url: '/pages/tabBar/uc/uc',
-                    });
+                    this.isLoading = false;
+                    // uni.switchTab({
+                    //     url: '/pages/tabBar/uc/uc',
+                    // });
                 },
             );
         },
@@ -396,22 +396,24 @@ export default {
             uni.showLoading();
             // check input
             console.log(this.formData);
-            return api.post('/api/user/editwork', formData).then(
-                (res) => {
-                    console.log(res);
-                    uni.hideLoading();
-                    uni.navigateTo({
-                        url: '/pages/upload/result/result?type=success',
-                    });
-                },
-                (err) => {
-                    uni.hideLoading();
-                    uni.showToast({
-                        icon: 'none',
-                        title: err.message,
-                    });
-                },
-            );
+            return api.isLogin().then(() => {
+                api.post('/api/user/editwork', formData).then(
+                    (res) => {
+                        console.log(res);
+                        uni.hideLoading();
+                        uni.navigateTo({
+                            url: '/pages/upload/result/result?type=success',
+                        });
+                    },
+                    (err) => {
+                        uni.hideLoading();
+                        uni.showToast({
+                            icon: 'none',
+                            title: err.message,
+                        });
+                    },
+                );
+            });
         },
     },
 };
