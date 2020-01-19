@@ -46,7 +46,7 @@
                         </navigator>
                     </swiper-item>
                     <!-- 春节好入口 -->
-                    <swiper-item v-if="!isH5">
+                    <swiper-item v-if="!isH5 && chunjiehaoshow === 1">
                         <navigator
                             url="/pages/chunjiehao/index"
                             class="swiper-item"
@@ -322,6 +322,7 @@ export default {
             isFirstLogin: 'isFirstLogin11',
             status: 2,
             show: 1,
+            chunjiehaoshow: 1,
             // #ifdef H5
             isH5: true,
             // #endif
@@ -329,6 +330,7 @@ export default {
     },
     onLoad() {
         this.chunjieStatus();
+        this.chunjiehaoStatus();
         this.thirdEntryPrompt();
         this.getData();
     },
@@ -348,6 +350,15 @@ export default {
                 this.status = res.status;
                 // 1显示  0不显示
                 this.show = res.show;
+            });
+        },
+        chunjiehaoStatus() {
+            // 1未开始，2进行中，3已结束
+            api.post('/api/activity/getactivitystatus', {
+                activity_id: 4,
+            }).then((res) => {
+                // 1显示  0不显示
+                this.chunjiehaoshow = res.show;
             });
         },
         thirdEntryPrompt() {
