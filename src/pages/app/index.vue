@@ -36,9 +36,8 @@ export default {
             const ua = navigator.userAgent;
             const isAndroid = ua.indexOf('Android') > -1 || ua.indexOf('Adr') > -1;
             const isIos = !!ua.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/);
-            const isWechat = !!ua
-                .toLowerCase()
-                .match(ua.match(/MicroMessenger/i) === 'micromessenger');
+            const isWechat = /MicroMessenger/.test(navigator.userAgent);
+            console.log(11111, isWechat);
             if (isAndroid) {
                 if (isWechat) {
                     this.isWechat = true;
