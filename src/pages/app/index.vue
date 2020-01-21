@@ -1,10 +1,10 @@
 <template>
     <view class="page-download-app">
         <view
-            v-if="showText"
+            v-if="type !== 'android'"
             class="text"
         >
-            <view>爱挑战iOS版</view>
+            <view>爱挑战{{ type === "ios" ? "IOS版" : "相关版本" }}</view>
             <view>近期上线，敬请期待!</view>
         </view>
     </view>
@@ -14,7 +14,7 @@
 export default {
     data() {
         return {
-            showText: false,
+            type: 'android',
         };
     },
     created() {
@@ -24,10 +24,13 @@ export default {
         downLoadApp() {
             const ua = navigator.userAgent.toLowerCase();
             const isAndroid = ua.indexOf('Android') > -1 || ua.indexOf('Adr') > -1;
+            const isIos = !!ua.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/);
             if (isAndroid) {
                 window.location = 'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/apk/app-andriod.apk';
+            } else if (isIos) {
+                this.type = 'ios';
             } else {
-                this.showText = true;
+                this.type = 'other';
             }
         },
     },
