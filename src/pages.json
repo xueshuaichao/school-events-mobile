@@ -209,7 +209,7 @@
         {
             "path": "pages/app/index",
             "style": {
-                "navigationBarTitleText": "app下载"
+                "navigationBarTitleText": "爱挑战"
             }
         }
         // #endif
