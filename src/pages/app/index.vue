@@ -22,7 +22,7 @@ export default {
     },
     methods: {
         downLoadApp() {
-            const ua = navigator.userAgent.toLowerCase();
+            const ua = navigator.userAgent;
             const isAndroid = ua.indexOf('Android') > -1 || ua.indexOf('Adr') > -1;
             const isIos = !!ua.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/);
             if (isAndroid) {
