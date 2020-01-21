@@ -204,7 +204,15 @@
             "style": {
                 "navigationBarTitleText": "登录"
             }
+        },
+        // #ifdef H5
+        {
+            "path": "pages/app/index",
+            "style": {
+                "navigationBarTitleText": "app下载"
+            }
         }
+        // #endif
     ],
     "globalStyle": {
         // #ifdef H5

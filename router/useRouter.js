@@ -37,6 +37,9 @@ const routesConfig = {
     debugger: true,
     routes: [
         {
+            path: '/pages/app/index',
+        },
+        {
             path: '/pages/tabBar/index/index',
             name: 'tabbar-index',
             aliasPath: '/',
