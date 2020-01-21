@@ -133,7 +133,7 @@
                     ref="video"
                     class="video"
                     preload
-                    autoplay
+                    :autoplay="isH5 ? false : true"
                     :src="pageData.video.cloud_path_sd"
                     :controls="true"
                     :loop="true"
