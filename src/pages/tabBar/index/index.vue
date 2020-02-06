@@ -36,7 +36,7 @@
                 >
                     <swiper-item v-if="show === 1">
                         <navigator
-                            url="/pages/chunjie/index"
+                            url="/pages/yiqing/index"
                             class="swiper-item"
                         >
                             <image
