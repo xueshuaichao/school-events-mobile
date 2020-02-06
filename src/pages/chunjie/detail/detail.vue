@@ -134,7 +134,7 @@
                     class="video"
                     preload
                     :src="pageData.video.cloud_path_sd"
-                    :autoplay="false"
+                    :autoplay="!isH5"
                     :controls="true"
                     :loop="true"
                     :poster="pageData.video_img_url"
@@ -602,13 +602,15 @@ export default {
             //     '我来给你拜新年，表演才艺送祝福！',
             //     '鼠年春节我精彩，才艺拜年望喜爱！',
             // ];
-            const titleList = [
-                '我正在参加“才艺拜大年”有奖征集活动，快来帮我投票吧～',
-                '才艺拜大年，好礼送不停，我需要你宝贵的一票！',
-            ];
-            const title = titleList[Math.floor(Math.random() * titleList.length)];
+            // const titleList = [
+            //     '我正在参加“才艺拜大年”有奖征集活动，快来帮我投票吧～',
+            //     '才艺拜大年，好礼送不停，我需要你宝贵的一票！',
+            // ];
+            // const title = titleList[Math.floor(Math.random() * titleList.length)];
+            const title = `我的${this.pageData.cat_name}《${this.pageData.resource_name}》，快来为我投票吧～`;
             const desc = `${this.pageData.resource_name}-${this.pageData.create_name}`;
 
+            // this.shareDesc = title;
             this.shareDesc = title;
 
             share({
