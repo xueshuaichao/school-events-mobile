@@ -20,7 +20,7 @@
             </view>
             <image
                 class="close"
-                src="/static/images/chunjie/poster-close.png"
+                src="/static/images/yiqing/close-icon.png"
                 @click="handleClose"
             />
         </view>
@@ -37,18 +37,19 @@
                     @success="onPosterSuccess"
                     @fail="onPosterFail"
                 >
-                    <image
-                        class="ticket-poster"
-                        src="/static/images/work/poster.png"
-                    />
+                    <view class="ticket-poster">
+                        <image src="/static/images/yiqing/poster.png?t=1" />
+                        <view>生成海报</view>
+                    </view>
                 </poster>
-                <button
-                    open-type="share"
-                    class="ticket-friend"
-                />
+                <view class="ticket-friend">
+                    <button open-type="share" />
+                    <view>发送给好友</view>
+                </view>
+
                 <image
                     class="ticket-close"
-                    src="/static/images/work/icon-del.png"
+                    src="/static/images/yiqing/close-icon.png"
                     @click="showTicketMask = false"
                 />
             </view>
@@ -307,7 +308,7 @@ export default {
                             {
                                 text: '',
                                 fontSize: 29,
-                                color: '#FF2E3F',
+                                color: '#fff',
                                 opacity: 1,
                                 marginRight: 10,
                                 lineHeight: 40,
@@ -322,7 +323,7 @@ export default {
                 images: [
                     {
                         url:
-                            'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/poster01.png',
+                            'http://aitiaozhan.oss-cn-beijing.aliyuncs.com/chunjiehao/yiqing-poster.png',
                         width: 570,
                         height: 820,
                         y: 0,
@@ -435,11 +436,10 @@ export default {
             wx.saveImageToPhotosAlbum({
                 filePath: this.canvasImg,
                 success() {
-                    console.log('保存成功');
                     that.prompt = false;
                     that.showTicketMask = true;
                     uni.showToast({
-                        title: '保存成功',
+                        title: '已成功保存至相册，快去转发朋友圈吧！',
                         icon: 'success',
                         duration: 2000,
                     });
@@ -506,7 +506,7 @@ export default {
                     console.log(res);
                     this.pageData = res;
                     this.posterConfig.images[1].url = res.video_img_url;
-                    this.posterConfig.texts[0].text[0].text = `${res.resource_name}`;
+                    this.posterConfig.texts[0].text[0].text = `#${res.cat_name}# ${res.resource_name}`;
                     this.initShare();
                     uni.setNavigationBarTitle({
                         title: res.resource_name,
@@ -627,7 +627,7 @@ export default {
             }).then(() => {
                 // 1未开始，2进行中，3已结束
                 api.post('/api/activity/getactivitystatus', {
-                    activity_id: 4,
+                    activity_id: 5,
                 }).then((res) => {
                     const { status } = res;
                     if (status === 2) {
@@ -722,12 +722,12 @@ export default {
             // width:570px;
             // height:110px;
             background: linear-gradient(
-                0deg,
-                rgba(255, 149, 71, 1),
-                rgba(255, 222, 152, 1)
+                180deg,
+                rgba(0, 132, 255, 1),
+                rgba(44, 233, 255, 1)
             );
             border-radius: 55upx;
-            color: #ff2e3f;
+            color: #fff;
             font-weight: 600;
             font-size: 36upx;
             line-height: 96upx;
@@ -971,23 +971,36 @@ export default {
         height: 100%;
         background: rgba(0, 0, 0, 0.7);
         text-align: center;
-
+        color: #fff;
+        font-size: 28upx;
         .ticket-friend {
-            width: 192rpx;
-            height: 215rpx;
             position: absolute;
             left: 160rpx;
             top: 784rpx;
-            background: url("http://aitiaozhan.oss-cn-beijing.aliyuncs.com/sendToFriend.png");
-            background-size: 100% 100%;
+            text-align: center;
+            button {
+                width: 160rpx;
+                height: 160rpx;
+                background: url("/static/images/yiqing/sendToFriend.png?t=1");
+                background-size: 100% 100%;
+            }
+            view {
+                margin-top: 14upx;
+            }
         }
 
         .ticket-poster {
-            width: 192rpx;
-            height: 215rpx;
             position: absolute;
             left: 400rpx;
             top: 784rpx;
+            text-align: center;
+            image {
+                width: 160rpx;
+                height: 160rpx;
+            }
+            view {
+                margin-top: 14upx;
+            }
         }
         .ticket-close {
             position: absolute;

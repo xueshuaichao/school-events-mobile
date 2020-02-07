@@ -37,7 +37,7 @@
                         }"
                         @click="toggle('new')"
                     >
-                        最新
+                        青少年组
                     </button>
                     <button
                         :class="{
@@ -45,19 +45,17 @@
                         }"
                         @click="toggle('hot')"
                     >
-                        最热
+                        成年组
                     </button>
                     <view class="search">
-                        <image
-                            src="../../../static/images/chunjie/search-icon.png"
-                        />
+                        <image src="../../../static/images/yiqing/search.png" />
                         <form action="javascript:return true">
                             <input
                                 v-model="changeValue"
                                 type="text"
                                 confirm-type="search"
                                 confirm-hold="true"
-                                placeholder-style="color:#FF2E3F"
+                                placeholder-style="color:#6691FF"
                                 placeholder="请输入作者姓名或作品名称"
                                 @confirm="bindconfirm"
                             >
@@ -97,7 +95,7 @@
                             v-if="tabActiveIndex !== 3"
                             class="vote-num"
                         >
-                            {{ item.ticket }}票
+                            {{ item.ticket }}赞
                         </text>
                         <view
                             v-if="tabActiveIndex === 3"
@@ -137,32 +135,32 @@
                 v-show="searchEmpty"
                 class="empty"
             >
-                <image src="../../../static/images/chunjie/empty01.png" />
+                <image src="../../../static/images/yiqing/empty.png" />
                 <view>搜索不到您要的结果，换个关键词试试吧～</view>
             </view>
             <view
                 v-show="myWorkEmpty"
                 class="work-empty"
             >
-                <image src="../../../static/images/chunjie/work-empty01.png" />
+                <image src="../../../static/images/yiqing/work-empty.png" />
                 <view>
                     {{ allTotal === 0 ? "您还没有上传作品" : "暂无作品" }}
                 </view>
                 <navigator
                     v-if="allTotal === 0"
-                    url="/pages/chunjiehao/upload/upload"
+                    url="/pages/yiqing/upload/upload"
                 >
                     <view class="goUpload">
                         去上传
                     </view>
                 </navigator>
             </view>
-            <button
+            <!-- <button
                 class="btn goHome"
                 @click="goHome"
             >
                 返回首页
-            </button>
+            </button> -->
         </view>
     </view>
 </template>
@@ -210,7 +208,7 @@ export default {
             filter: {
                 page_num: 1,
                 page_size: 10,
-                activity_id: 4,
+                activity_id: 5,
             },
             total: 1,
             type: 'myWork',
@@ -227,11 +225,11 @@ export default {
         },
     },
     methods: {
-        goHome() {
-            uni.reLaunch({
-                url: '/pages/chunjiehao/index',
-            });
-        },
+        // goHome() {
+        //     uni.reLaunch({
+        //         url: '/pages/yiqing/index',
+        //     });
+        // },
         toggle(k) {
             this.activeMenuIndex = k;
             this.filter.sort = k;
@@ -332,7 +330,7 @@ export default {
         viewDetail(item) {
             if (this.tabActiveIndex === 2) {
                 uni.navigateTo({
-                    url: `/pages/chunjiehao/detail/detail?id=${item.id}`,
+                    url: `/pages/yiqing/detail/detail?id=${item.id}`,
                 });
             }
         },
@@ -419,15 +417,11 @@ export default {
         margin-top: 37upx;
         width: 450upx;
         height: 110upx;
-        background: linear-gradient(
-            0deg,
-            rgba(255, 149, 71, 1),
-            rgba(255, 222, 152, 1)
-        );
+        background: rgba(0, 132, 255, 1);
         border-radius: 55px;
         font-size: 36upx;
         font-weight: 600;
-        color: #ff2e3f;
+        color: #fff;
         line-height: 110upx;
         text-align: center;
         display: inline-block;
@@ -445,8 +439,8 @@ export default {
     display: flex;
     justify-content: space-between;
     position: relative;
-    background: #ffde98;
-    color: #ff3849;
+    background: #0096ff;
+    color: #ffde6d;
     margin-bottom: 20upx;
     border-radius: 20upx;
     .work {
@@ -499,13 +493,13 @@ export default {
     box-sizing: border-box;
     width: 100%;
     min-height: 100vh;
-    background: #ff2e3f;
+    background: #1154ff;
     // background-size: contain;
     .search-box {
         overflow: hidden;
         margin-bottom: 30rpx;
         button {
-            width: 120upx;
+            width: 144upx;
             height: 68upx;
             float: left;
             line-height: 68upx;
@@ -514,17 +508,18 @@ export default {
             font-size: 30upx;
             font-weight: 700;
             border-radius: 34upx;
+            padding: 0;
             &.active {
-                background: #ffde98;
-                color: #ff3849;
+                background: #0084ff;
+                color: #fff;
             }
             &::after {
                 border: none;
             }
         }
         .search {
-            background: #b11a27;
-            width: 440upx;
+            background: #003dd7;
+            width: 390upx;
             height: 72upx;
             position: relative;
             float: right;
@@ -550,7 +545,7 @@ export default {
             }
             .search-button {
                 font-size: 24upx;
-                color: #ffde98;
+                color: #fff;
                 position: absolute;
                 top: 4upx;
                 right: 4upx;

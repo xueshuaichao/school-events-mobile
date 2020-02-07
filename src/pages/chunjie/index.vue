@@ -84,7 +84,7 @@
                         <view class="qr-wrap">
                             <image
                                 class="qr-code"
-                                src="/static/images/chunjie/qrcode.jpg"
+                                src="http://aitiaozhan.oss-cn-beijing.aliyuncs.com/chunjiehao/qrcode.jpg"
                             />
                             <view class="text">
                                 关注“UP青少年爱挑战”公众号，了解更多活动信息
@@ -146,7 +146,7 @@
 
                     <image
                         class="register02"
-                        src="../../static/images/chunjie/register02.png"
+                        src="http://aitiaozhan.oss-cn-beijing.aliyuncs.com/chunjiehao/register02.png"
                     />
                     <view class="jinguizi">
                         <view>
@@ -211,7 +211,7 @@
                         <view class="qr-wrap">
                             <image
                                 class="qr-code"
-                                src="/static/images/chunjie/qrcode.jpg"
+                                src="http://aitiaozhan.oss-cn-beijing.aliyuncs.com/chunjiehao/qrcode.jpg"
                             />
                             <view class="text">
                                 关注“UP青少年爱挑战”公众号，了解更多活动信息
@@ -241,17 +241,23 @@
                     <text>结果公布：2月11日</text>
                 </view>
                 <view class="register">
-                    <image src="../../static/images/chunjie/register.png" />
+                    <image
+                        src="http://aitiaozhan.oss-cn-beijing.aliyuncs.com/chunjiehao/register.png"
+                    />
                 </view>
                 <view class="prize">
                     <view>
                         <text>一等奖</text>
-                        <image src="../../static/images/chunjie/prize01.png" />
+                        <image
+                            src="http://aitiaozhan.oss-cn-beijing.aliyuncs.com/chunjiehao/prize01.png"
+                        />
                         <text>学习机*1个</text>
                     </view>
                     <view>
                         <text>二等奖</text>
-                        <image src="../../static/images/chunjie/prize02.png" />
+                        <image
+                            src="http://aitiaozhan.oss-cn-beijing.aliyuncs.com/chunjiehao/prize02.png"
+                        />
                         <text>小度*4个</text>
                     </view>
                     <view>
@@ -435,12 +441,14 @@ export default {
                 {
                     prize_score: '一等奖',
                     name: '学习机*1个',
-                    prize: '../../static/images/chunjie/prize01.png',
+                    prize:
+                        'http://aitiaozhan.oss-cn-beijing.aliyuncs.com/chunjiehao/prize01.png',
                 },
                 {
                     prize_score: '二等奖',
                     name: '小度*4个',
-                    prize: '../../static/images/chunjie/prize02.png',
+                    prize:
+                        'http://aitiaozhan.oss-cn-beijing.aliyuncs.com/chunjiehao/prize02.png',
                 },
                 {
                     prize_score: '三等奖',

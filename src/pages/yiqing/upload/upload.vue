@@ -136,7 +136,7 @@ export default {
             uploadMode: 'video',
 
             formData: {
-                activity_id: 4,
+                activity_id: 5,
                 cat_id: 25,
                 resource_name: '',
                 introduce: '',
@@ -244,7 +244,7 @@ export default {
     methods: {
         resetForm() {
             this.formData = {
-                activity_id: 4,
+                activity_id: 5,
                 cat_id: 16,
                 resource_name: '',
                 introduce: '',

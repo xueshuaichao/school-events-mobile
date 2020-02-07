@@ -18,146 +18,92 @@
                     <view class="active-rule-box">
                         <view>
                             <view class="title">
-                                活动时间
+                                一、活动主题
                             </view>
                             <view class="text">
-                                2020年1月20日——2月15日（2月18日公布结果）
+                                《抗击疫情，“艺”起来》主题绘画、书法、摄影、朗诵、设计创作作品征集！
+                                假如我们上不了一线，就让我们拿起画笔、相机、携手同心，以笔作枪，打赢疫情防控阻击战！用特别的方式向一线工作者致敬。用自己独特的方式为武汉加油！为中国加油！
                             </view>
                         </view>
                         <view>
                             <view class="title">
-                                活动对象
+                                二、活动时间
                             </view>
                             <view class="text">
-                                全员可参与
+                                即日起-2020年3月5日
                             </view>
                         </view>
                         <view>
                             <view class="title">
-                                参赛作品
-                            </view>
-                            <view class="text">
-                                围绕春节主题，创作以春节、年为元素的视频或图片作品，记录你的美好春节。
-                            </view>
-                        </view>
-                        <view>
-                            <view class="title">
-                                作品要求
+                                三、参与对象
                             </view>
                             <view class="text">
                                 <ul>
                                     <li>
-                                        视频格式：支持MP4、MOV、3GP、MP4V、M4V、MKV、AVI、FLV等，视频时长不超过5分钟；视频清晰、画面精美。
+                                        青少年组：3-18岁青少年
                                     </li>
                                     <li>
-                                        图片格式：单张图片小于10MB，图片清晰、完整。
-                                    </li>
-                                    <li>
-                                        内容：如果发现有用户上传不合规内容、黄赌毒、封建迷信等违背社会主义核心价值观的内容、非原创、
-                                        盗窃他人或平台的内容、或恶意刷投票量等扰乱秩序者，该账户将取消活动参与资格，不合规视频将被删除。
+                                        成年组：18岁以上的成年
                                     </li>
                                 </ul>
                             </view>
                         </view>
                         <view>
                             <view class="title">
-                                参赛规则
-                            </view>
-                            <view class="text">
-                                <ul>
-                                    <li>
-                                        参赛者需注册并通过活动界面上传作品，审核通过后可邀请亲友投票。
-                                    </li>
-                                    <li>
-                                        未传视频的注册用户只能为参赛选手投票，无法参与排行榜活动。
-                                    </li>
-                                    <li>
-                                        每个账户每天只能为同一作品投票1次。
-                                    </li>
-                                    <li>
-                                        排行榜将根据视频投票数进行排名，排行榜将以2020年2月15日23:59:59时的排名为最终结果，上榜者可获得相应礼品。
-                                    </li>
-                                    <li>
-                                        获奖名单将于2月18日在爱挑战官网(http://atz.qsnatz.com/)
-                                        及官方服务号（UP青少年爱挑战）进行公布。
-                                    </li>
-                                </ul>
-                            </view>
-                        </view>
-                        <view>
-                            <view class="title">
-                                奖品兑换说明
+                                四、作品类型
                             </view>
                             <view class="text">
                                 <view>
-                                    1、每名参赛选手只有1次可兑奖机会，如同时获得了不同奖项，以最高奖项为准。
+                                    1、书法、绘画、摄影、朗诵、歌唱、创意设计等（类型不限）；
                                 </view>
                                 <view>
-                                    2、工作人员将于2月19日期间电话联系获奖账号所绑定的手机号，电话无法联系的将视为自动放弃兑奖资格。
-                                </view>
-                                <view>
-                                    3、礼品将于2月20-21日期间通过普通快递寄出。
-                                </view>
-                                <view>
-                                    4、奖品属于用户奖励活动，不提供发票、收据。
-                                </view>
-                                <view>
-                                    5、奖品不支持退换和售后，请当面核实无质量问题再签收。
-                                </view>
-                                <view>
-                                    6、因用户提供的收货地址等信息有误而导致奖品未收到的，不予补发。
+                                    2、照片、视频格式均可；
                                 </view>
                             </view>
                         </view>
                         <view>
                             <view class="title">
-                                活动奖品
+                                五、作品要求
                             </view>
                             <view class="text">
                                 <view>
-                                    截止到2020年2月15日23:59:59整，按投票名次可获得如下奖品：
+                                    1、作品需符合“抗击疫情”、“加油武汉”等相关主题；
+                                </view>
+                                <view>
+                                    2、作品要求积极向上，充满正能量，必须原创。如发现用户上传不合规内容，如涉及攻击我国政治制度、法律制度、黄赌毒等违背社会主义核心价值观的内容，该账号将取消活动参与资格；
+                                </view>
+                                <view>
+                                    3、视频格式：支持MP4、MOV、3GP、MP4V、M4V、MKV、AVI、FLV等，视频时长不超过10分钟；单张图片小于10MB；
                                 </view>
                             </view>
                         </view>
-                        <view class="prize-prompt">
-                            <view class="prize-item-prompt">
-                                <view>
-                                    <text>一等奖</text>
-                                    <image
-                                        src="../../static/images/chunjie/chunjiehao-prize01.png"
-                                    />
-                                    <text>空气炸锅*1</text>
-                                </view>
-                                <view>
-                                    <text>二等奖</text>
-                                    <image
-                                        src="../../static/images/chunjie/chunjiehao-prize02.png"
-                                    />
-                                    <text>美的养生壶*2</text>
-                                </view>
-                                <view>
-                                    <text>三等奖</text>
-                                    <image
-                                        src="../../static/images/chunjie/chunjiehao-prize03.png"
-                                    />
-                                    <text>欧普护眼台灯*3</text>
-                                </view>
-                                <view>
-                                    <text>四等奖</text>
-                                    <image
-                                        src="../../static/images/chunjie/chunjiehao-prize04.png"
-                                    />
-                                    <text>小熊加湿器*4</text>
-                                </view>
+                        <view>
+                            <view class="title">
+                                六、活动规则
                             </view>
-                            <view class="prize-slogan-prompt">
-                                礼品图片仅供参考，请以实物为准
+                            <view class="text">
+                                <view>
+                                    1、参与活动用户在“青少年爱挑战”平台注册并通过活动页面上传作品，审核通过后可进行点赞分享等；
+                                </view>
+                                <view>
+                                    2、每个账户每天只能为同一个作品点赞1次；
+                                </view>
+                                <view>
+                                    3、活动组委会将根据作品质量、内容以及获赞数量进行综合评选，每个组别选出20件优秀作品，将获得组委会颁发的荣誉证书，
+                                    并对获奖作品进行报道宣传；
+                                </view>
+                                <view>
+                                    4、优秀作品获奖名单将于2020年3月10日在爱挑战官网（http://atz.qsnatz.com/)及官方微信公众号进行公布；
+                                </view>
+                                <view>
+                                    5、本活动最终解释权在法律允许范围内归活动举办方所有；
+                                </view>
                             </view>
                         </view>
                         <view class="qr-wrap">
                             <image
                                 class="qr-code"
-                                src="/static/images/chunjie/qrcode.jpg"
+                                src="http://aitiaozhan.oss-cn-beijing.aliyuncs.com/chunjiehao/qrcode.jpg"
                             />
                             <view class="text">
                                 关注“UP青少年爱挑战”公众号，了解更多活动信息
@@ -200,14 +146,13 @@
                             :key="item.id"
                         >
                             <view class="swiper-item">
-                                <image
-                                    src="/static/images/chunjie/horn01.png"
-                                />
+                                <image src="/static/images/yiqing/horn.png" />
                                 <view class="swiper-info">
                                     <text>
                                         用户{{ item.user_name | plusXing }}
                                     </text>
                                     <text>发布了</text>
+                                    <text>#{{ item.cat_name }}#</text>
                                     <text>{{ item.resource_name }}</text>
                                 </view>
                                 <text>刚刚</text>
@@ -215,10 +160,6 @@
                         </swiper-item>
                     </swiper>
                 </view>
-                <!-- <image
-                    class="cansai-text"
-                    src="../../static/images/chunjie/cansai_text.png"
-                /> -->
                 <view class="cansai-text">
                     —— 活动作品 ——
                 </view>
@@ -278,13 +219,13 @@
                                 {{ `${item.resource_name}` }}
                             </view>
                             <text class="vote-num">
-                                {{ item.ticket }}票
+                                {{ item.ticket }}赞
                             </text>
                             <view
-                                class="isVote ?vote:unVote"
+                                class="vote"
                                 @click="handleVote(item)"
                             >
-                                帮TA投票
+                                帮TA投
                             </view>
                         </view>
                         <uni-load-more
@@ -363,7 +304,7 @@ export default {
             newsTabActiveIndex: 0,
             dataList: [],
             filter: {
-                activity_id: 4,
+                activity_id: 5,
                 page_num: 1,
                 page_size: 10,
                 sort: 'new',
@@ -372,12 +313,14 @@ export default {
                 {
                     prize_score: '一等奖',
                     name: '学习机*1个',
-                    prize: '../../static/images/chunjie/prize01.png',
+                    prize:
+                        'http://aitiaozhan.oss-cn-beijing.aliyuncs.com/chunjiehao/prize01.png',
                 },
                 {
                     prize_score: '二等奖',
                     name: '小度*4个',
-                    prize: '../../static/images/chunjie/prize02.png',
+                    prize:
+                        'http://aitiaozhan.oss-cn-beijing.aliyuncs.com/chunjiehao/prize02.png',
                 },
                 {
                     prize_score: '三等奖',
@@ -398,7 +341,6 @@ export default {
             status: 2,
             crouselList: [],
             setId: '',
-            isVote: false,
         };
     },
     created() {
@@ -419,7 +361,7 @@ export default {
         getCrouselList() {
             this.setId = setInterval(() => {
                 api.post('/api/activity/resourcelist', {
-                    activity_id: 4,
+                    activity_id: 5,
                     page_num: 1,
                     page_size: 10,
                     sort: 'new',
@@ -456,7 +398,7 @@ export default {
         chunjieStatus() {
             // 1未开始，2进行中，3已结束
             api.post('/api/activity/getactivitystatus', {
-                activity_id: 4,
+                activity_id: 5,
             }).then((res) => {
                 this.status = res.status;
             });
@@ -467,7 +409,7 @@ export default {
                     fr: this.fr,
                 }).then(() => {
                     uni.navigateTo({
-                        url: '/pages/chunjiehao/upload/upload',
+                        url: '/pages/yiqing/upload/upload',
                     });
                 });
             } else {
@@ -497,7 +439,7 @@ export default {
                 return;
             }
             uni.navigateTo({
-                url: `/pages/chunjiehao/myWork/myWork?type=search&name=${this.changeValue.trim()}`,
+                url: `/pages/yiqing/myWork/myWork?type=search&name=${this.changeValue.trim()}`,
             });
         },
         initShare() {
@@ -527,7 +469,7 @@ export default {
         },
         viewDetail(item) {
             uni.navigateTo({
-                url: `/pages/chunjiehao/detail/detail?id=${item.id}&fr=${this.fr}`,
+                url: `/pages/yiqing/detail/detail?id=${item.id}&fr=${this.fr}`,
             });
         },
         toggle(k) {
@@ -545,7 +487,7 @@ export default {
                 fr: this.fr,
             }).then(() => {
                 uni.navigateTo({
-                    url: '/pages/chunjiehao/myWork/myWork?type=myWork',
+                    url: '/pages/yiqing/myWork/myWork?type=myWork',
                 });
             });
         },
@@ -573,9 +515,8 @@ export default {
                         () => {
                             // eslint-disable-next-line no-param-reassign
                             item.ticket += 1;
-                            this.isVote = true;
                             uni.showToast({
-                                title: '投票成功',
+                                title: '已点赞',
                                 icon: 'none',
                             });
                         },
@@ -605,8 +546,7 @@ export default {
         }
         return {
             title: this.shareDesc,
-            // imageUrl: '/static/images/index/banner.png',
-            path: '/pages/chunjiehao/index',
+            path: '/pages/yiqing/index',
         };
     },
 };
@@ -646,17 +586,17 @@ export default {
                 display: inline-block;
                 color: #fff;
                 & > text:nth-child(1) {
-                    color: #fccda2;
+                    color: #ffde6d;
                 }
                 & > text:nth-child(2) {
                     color: #fff;
                     margin: 0 5upx;
                 }
                 & > text:nth-child(3) {
-                    color: #f5c59c;
+                    color: #ffde6d;
                 }
                 & > text:nth-child(4) {
-                    color: #fff;
+                    color: #ffde6d;
                 }
             }
 
@@ -798,6 +738,7 @@ body.dialog-open {
     height: 44upx;
     margin-left: 220upx;
     margin-top: 20upx;
+    color: #ffde98;
 }
 .prize-prompt {
     text-align: center;
@@ -943,23 +884,8 @@ body.dialog-open {
         }
         .vote {
             background: #ffde98;
-            height: 52upx;
-            width: 140upx;
-            color: #ff2e3f;
-            font-size: 0upx;
-            background: url("../../static/images/yiqing/like.png") no-repeat;
-            // position: absolute;
-            // right:0;
-            text-align: center;
-            line-height: 52upx;
-            font-weight: 700;
-            float: right;
-            border-radius: 26rpx;
-        }
-        .unVote {
-            background: #ffde98;
-            height: 52upx;
-            width: 140upx;
+            height: 42upx;
+            width: 48upx;
             color: #ff2e3f;
             font-size: 0upx;
             background: url("../../static/images/yiqing/liked.png") no-repeat;
@@ -1015,8 +941,7 @@ body.dialog-open {
         margin-bottom: 40upx;
     }
     .title-icon {
-        background: url("../../static/images/chunjie/chunjiehao-rule.png")
-            no-repeat;
+        background: url("../../static/images/yiqing/title.png") no-repeat;
         background-size: 100% 100%;
         font-size: 0upx;
         width: 303upx;
@@ -1029,8 +954,7 @@ body.dialog-open {
         z-index: 222;
     }
     .close {
-        background: url("../../static/images/chunjie/prompt-close.png")
-            no-repeat;
+        background: url("../../static/images/yiqing/close-icon.png") no-repeat;
         background-size: 100% 100%;
         width: 62upx;
         height: 62upx;
@@ -1039,7 +963,7 @@ body.dialog-open {
         position: absolute;
     }
     .active-content {
-        background: #ff2e3f;
+        background: #1154ff;
         position: absolute;
         top: 62upx;
         left: 29upx;
@@ -1069,7 +993,7 @@ body.dialog-open {
         .banner {
             position: relative;
             height: 740upx;
-            background: url(http://aitiaozhan.oss-cn-beijing.aliyuncs.com/chunjiehao/banner.png)
+            background: url(http://aitiaozhan.oss-cn-beijing.aliyuncs.com/chunjiehao/yiqing-poster01.png)
                 no-repeat;
             background-size: 100% 100%;
             text-align: center;
@@ -1107,7 +1031,7 @@ body.dialog-open {
             overflow: hidden;
             margin-bottom: 30rpx;
             button {
-                width: 120upx;
+                width: 144upx;
                 height: 68upx;
                 float: left;
                 line-height: 68upx;
@@ -1116,9 +1040,9 @@ body.dialog-open {
                 font-size: 30upx;
                 font-weight: 700;
                 border-radius: 34upx;
+                padding: 0;
                 &.active {
-                    background: #ffde98;
-                    color: #ff3849;
+                    background: #0096ff;
                 }
                 &::after {
                     border: none;
@@ -1126,7 +1050,7 @@ body.dialog-open {
             }
             .search {
                 background: #003dd7;
-                width: 440upx;
+                width: 400upx;
                 height: 72upx;
                 position: relative;
                 float: right;
@@ -1137,7 +1061,7 @@ body.dialog-open {
                     height: 28upx;
                     position: absolute;
                     top: 23upx;
-                    left: 24upx;
+                    left: 12upx;
                 }
                 input {
                     width: 293upx;
@@ -1146,13 +1070,13 @@ body.dialog-open {
                     // #ifndef H5
                     top: 15upx;
                     // #endif
-                    left: 60upx;
-                    font-size: 24upx;
+                    left: 50upx;
+                    font-size: 22upx;
                     color: #ffbec4;
                 }
                 .search-button {
                     font-size: 24upx;
-                    color: #ffde98;
+                    color: #fff;
                     position: absolute;
                     top: 20upx;
                     right: 22upx;

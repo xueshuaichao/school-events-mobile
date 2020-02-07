@@ -1,6 +1,6 @@
 <template>
     <view class="page-index">
-        <view
+        <!-- <view
             v-if="prompt && status === 2"
             class="cover"
         >
@@ -14,12 +14,31 @@
             <view @click="handleChunjie">
                 春节入口3
             </view>
+        </view> -->
+        <view
+            v-if="prompt && status === 2"
+            class="cover"
+        >
+            <image
+                src="http://aitiaozhan.oss-cn-beijing.aliyuncs.com/chunjiehao/suspension01.png"
+                @click="handleChunjie"
+            />
+            <image
+                src="../../../static/images/chunjie/third_entry_close.png"
+                @click="handleClose"
+            />
+            疫情入口
         </view>
         <navigator
-            v-if="show === 1"
-            url="/pages/chunjie/index"
+            v-if="yiqingshow === 1 && isShow"
+            url="/pages/yiqing/index"
         >
             <view class="chunjie-entry">
+                <image
+                    src="/static/images/yiqing/close.png"
+                    class="close-icon"
+                    @click.stop="handleCloseSuspension"
+                />
                 春节入口
             </view>
         </navigator>
@@ -34,9 +53,21 @@
                     :duration="duration"
                     :circular="circular"
                 >
-                    <swiper-item v-if="show === 1">
+                    <!-- 疫情入口 -->
+                    <swiper-item v-if="!isH5 && yiqingshow === 1">
                         <navigator
                             url="/pages/yiqing/index"
+                            class="swiper-item"
+                        >
+                            <image
+                                class="banner-image"
+                                src="http://aitiaozhan.oss-cn-beijing.aliyuncs.com/chunjiehao/yiqing-banner.png?t=1"
+                            />
+                        </navigator>
+                    </swiper-item>
+                    <swiper-item v-if="show === 1">
+                        <navigator
+                            url="/pages/chunjie/index"
                             class="swiper-item"
                         >
                             <image
@@ -295,10 +326,10 @@ export default {
             background: ['color1', 'color2', 'color3'],
             indicatorDots: true,
             autoplay: true,
-            interval: 2000,
+            interval: 5000,
             duration: 500,
             circular: false,
-
+            isShow: true,
             newsTabActiveIndex: 0,
 
             menuConf: {
@@ -323,6 +354,7 @@ export default {
             status: 2,
             show: 1,
             chunjiehaoshow: 1,
+            yiqingshow: 1,
             // #ifdef H5
             isH5: true,
             // #endif
@@ -331,6 +363,7 @@ export default {
     onLoad() {
         this.chunjieStatus();
         this.chunjiehaoStatus();
+        this.yiqingStatus();
         this.thirdEntryPrompt();
         this.getData();
     },
@@ -342,12 +375,15 @@ export default {
         this.prompt = false;
     },
     methods: {
+        handleCloseSuspension() {
+            this.isShow = false;
+        },
         chunjieStatus() {
             // 1未开始，2进行中，3已结束
             api.post('/api/activity/getactivitystatus', {
                 activity_id: 3,
             }).then((res) => {
-                this.status = res.status;
+                // this.status = res.status;
                 // 1显示  0不显示
                 this.show = res.show;
             });
@@ -361,6 +397,16 @@ export default {
                 this.chunjiehaoshow = res.show;
             });
         },
+        yiqingStatus() {
+            // 1未开始，2进行中，3已结束
+            api.post('/api/activity/getactivitystatus', {
+                activity_id: 5,
+            }).then((res) => {
+                this.status = res.status;
+                // 1显示  0不显示
+                this.yiqingshow = res.show;
+            });
+        },
         thirdEntryPrompt() {
             const isFirstLogin = uni.getStorageSync(this.isFirstLogin);
             console.log(isFirstLogin, 'isFirstLogin');
@@ -371,7 +417,7 @@ export default {
         handleChunjie() {
             uni.setStorageSync(this.isFirstLogin, true);
             uni.navigateTo({
-                url: '/pages/chunjie/index',
+                url: '/pages/yiqing/index',
             });
         },
         handleClose() {
@@ -456,12 +502,13 @@ export default {
     height: 100%;
     background: rgba(0, 0, 0, 0.7);
     text-align: center;
+    font-size: 0;
     image:first-child {
-        width: 529upx;
-        height: 584upx;
+        width: 591upx;
+        height: 518upx;
         margin-top: 193upx;
         display: block;
-        margin-left: 118upx;
+        margin-left: 90upx;
     }
     image:nth-child(2) {
         margin-top: 40upx;
@@ -489,12 +536,19 @@ uni-swiper {
     padding-bottom: 20upx;
     display: relative;
     .chunjie-entry {
+        .close-icon {
+            width: 20upx;
+            height: 20upx;
+            position: absolute;
+            top: 0;
+            right: 0;
+        }
         font-size: 0;
-        background: url("http://aitiaozhan.oss-cn-beijing.aliyuncs.com/suspension.png")
+        background: url("http://aitiaozhan.oss-cn-beijing.aliyuncs.com/chunjiehao/suspension.png")
             no-repeat;
         background-size: 100% 100%;
-        width: 176upx;
-        height: 128upx;
+        width: 144upx;
+        height: 156upx;
         position: fixed;
         top: 640upx;
         right: 0upx;
