@@ -16,6 +16,11 @@
                         class="icon-video red"
                         src="/static/images/comp/upload/video_red.png"
                     />
+                    <image
+                        v-if="theme === 'blue'"
+                        class="icon-video red"
+                        src="/static/images/comp/upload/video_blue.png"
+                    />
                 </template>
                 <image
                     v-else
@@ -26,7 +31,7 @@
                     v-if="!url"
                     class="icon-desc"
                 >
-                    上传视频
+                    上传视频1
                 </view>
                 <view
                     v-else
@@ -45,6 +50,11 @@
                     v-if="theme === 'red'"
                     class="icon-image red"
                     src="/static/images/comp/upload/image_red.png"
+                />
+                <image
+                    v-if="theme === 'blue'"
+                    class="icon-image red"
+                    src="/static/images/comp/upload/image_blue.png"
                 />
                 <view class="icon-desc">
                     {{ preview ? "上传封面" : "上传图片" }}

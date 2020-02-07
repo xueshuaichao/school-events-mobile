@@ -2,11 +2,11 @@
     <view class="page-upload-result">
         <image
             class="icon"
-            src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/chunjiehao/upload_success.png"
+            src="/static/images/yiqing/success.png"
         />
         <view>上传成功，请等待审核</view>
         <navigator
-            url="/pages/chunjiehao/myWork/myWork?type=myWork"
+            url="/pages/yiqing/myWork/myWork?type=myWork"
             class="btn"
         >
             我的作品
@@ -42,7 +42,7 @@ export default {
 
 <style lang="less">
 .page-upload-result {
-    background: #ff2e3f;
+    background: #1154ff;
     height: 100vh;
     box-sizing: border-box;
     padding-top: 425rpx;
@@ -62,13 +62,9 @@ export default {
         margin: 80rpx auto;
         width: 450rpx;
         height: 110rpx;
-        background: linear-gradient(
-            0deg,
-            rgba(255, 149, 71, 1),
-            rgba(255, 222, 152, 1)
-        );
+        background: #0084ff;
         border-radius: 55rpx;
-        color: #ff2e3f;
+        color: #fff;
         font-size: 36rpx;
         line-height: 110rpx;
     }

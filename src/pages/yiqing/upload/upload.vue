@@ -4,6 +4,38 @@
         class="page-upload"
     >
         <view class="main">
+            <view class="selection">
+                <view class="label">
+                    选择组别
+                </view>
+                <view class="items">
+                    <text
+                        v-for="item in grpData"
+                        :key="item.cat_id"
+                        class="item"
+                        :class="{ active: formData.grp_id === item.cat_id }"
+                        @click="onSelectGrp(item)"
+                    >
+                        {{ item.name }}
+                    </text>
+                </view>
+            </view>
+            <view class="selection">
+                <view class="label">
+                    选择类别
+                </view>
+                <view class="items">
+                    <text
+                        v-for="item in catData"
+                        :key="item.cat_id"
+                        class="item"
+                        :class="{ active: formData.cat_id === item.cat_id }"
+                        @click="onSelectCat(item)"
+                    >
+                        {{ item.name }}
+                    </text>
+                </view>
+            </view>
             <view
                 v-if="needTab"
                 class="selection bb-sep"
@@ -48,7 +80,7 @@
             />
             <upload
                 v-if="uploadMode === 'video'"
-                :theme="'red'"
+                :theme="'blue'"
                 :type="'video'"
                 @change="updateVideo"
             />
@@ -68,7 +100,7 @@
             <template v-if="uploadMode === 'image'">
                 <upload
                     :type="'image'"
-                    :theme="'red'"
+                    :theme="'blue'"
                     :preview="false"
                     @change="updateImage"
                 />
@@ -132,12 +164,13 @@ export default {
             images: [],
 
             newsTabActiveIndex: 0,
-            needTab: true,
+            needTab: false,
             uploadMode: 'video',
 
             formData: {
-                activity_id: 5,
-                cat_id: 25,
+                activity_id: 4,
+                grp_id: 1001,
+                cat_id: 21,
                 resource_name: '',
                 introduce: '',
                 type: 2,
@@ -159,68 +192,23 @@ export default {
                 isSend: false,
             },
             needBindMobile: false,
+            grpData: [
+                {
+                    cat_id: 1001,
+                    name: '青少年组',
+                },
+                {
+                    cat_id: 1002,
+                    name: '成年组',
+                },
+            ],
             catData: [
-                {
-                    cat_id: 16,
-                    name: '歌唱',
-                    parent_id: 3,
-                    cat_level: 2,
-                    cat_tree: '3-16',
-                    resource_type: 1,
-                },
-                {
-                    cat_id: 17,
-                    name: '舞蹈',
-                    parent_id: 3,
-                    cat_level: 2,
-                    cat_tree: '3-17',
-                    resource_type: 1,
-                },
-                {
-                    cat_id: 18,
-                    name: '口才',
-                    parent_id: 3,
-                    cat_level: 2,
-                    cat_tree: '3-18',
-                    resource_type: 1,
-                },
-                {
-                    cat_id: 19,
-                    name: '乐器',
-                    parent_id: 3,
-                    cat_level: 2,
-                    cat_tree: '3-19',
-                    resource_type: 1,
-                },
                 {
                     cat_id: 21,
                     name: '书画',
                     parent_id: 3,
                     cat_level: 2,
-                    cat_tree: '3-21',
-                    resource_type: 2,
-                },
-                {
-                    cat_id: 20,
-                    name: '创意',
-                    parent_id: 3,
-                    cat_level: 2,
-                    cat_tree: '3-20',
-                },
-                {
-                    cat_id: 23,
-                    name: '杂技',
-                    parent_id: 3,
-                    cat_level: 2,
-                    cat_tree: '3-23',
-                    resource_type: 1,
-                },
-                {
-                    cat_id: 24,
-                    name: '魔术',
-                    parent_id: 3,
-                    cat_level: 2,
-                    cat_tree: '3-24',
+                    cat_tree: '3-17',
                     resource_type: 1,
                 },
                 {
@@ -228,8 +216,48 @@ export default {
                     name: '摄影',
                     parent_id: 3,
                     cat_level: 2,
-                    cat_tree: '3-101',
+                    cat_tree: '3-18',
+                    resource_type: 1,
+                },
+                {
+                    cat_id: 18,
+                    name: '朗诵',
+                    parent_id: 3,
+                    cat_level: 2,
+                    cat_tree: '3-19',
+                    resource_type: 1,
+                },
+                {
+                    cat_id: 16,
+                    name: '歌唱',
+                    parent_id: 3,
+                    cat_level: 2,
+                    cat_tree: '3-21',
                     resource_type: 2,
+                },
+                {
+                    cat_id: 17,
+                    name: '舞蹈',
+                    parent_id: 3,
+                    cat_level: 2,
+                    cat_tree: '3-20',
+                    resource_type: 1,
+                },
+                {
+                    cat_id: 102,
+                    name: '创意设计',
+                    parent_id: 3,
+                    cat_level: 2,
+                    cat_tree: '3-23',
+                    resource_type: 3,
+                },
+                {
+                    cat_id: 25,
+                    name: '其他',
+                    parent_id: 3,
+                    cat_level: 2,
+                    cat_tree: '3-24',
+                    resource_type: 1,
                 },
             ],
             title: 'picker',
@@ -305,6 +333,9 @@ export default {
                     });
                 }
             }
+        },
+        onSelectGrp(item) {
+            this.formData.grp_id = item.cat_id;
         },
         onSelectCat(item) {
             this.needTab = false;
@@ -385,7 +416,7 @@ export default {
                     console.log(res);
                     uni.hideLoading();
                     uni.navigateTo({
-                        url: '/pages/chunjiehao/upload/result',
+                        url: '/pages/yiqing/upload/result',
                     });
                     this.resetForm();
                 },
@@ -430,7 +461,7 @@ export default {
         min-height: 100vh;
         box-sizing: border-box;
         padding: 30rpx;
-        background: #ff3849;
+        background: #1154ff;
         color: #fff;
     }
 
@@ -462,9 +493,9 @@ export default {
         // border: 1upx solid #ccc;
         margin-bottom: 40rpx;
         font-size: 28rpx;
-        background: #b11a27;
+        background: #003dd7;
         border-radius: 12rpx;
-        color: #ffbec4;
+        color: #6691ff;
     }
 
     /deep/ .comp-upload {
@@ -472,10 +503,10 @@ export default {
         color: #fff;
 
         .cover-wrap {
-            background: #ffde98;
+            background: #0084ff;
 
             .icon-desc {
-                color: #ff2e3f;
+                color: #fff;
             }
         }
 
@@ -485,22 +516,18 @@ export default {
     }
 
     /deep/ .placeholder {
-        color: #ff3849;
+        color: #6691ff;
         font-size: 28upx;
     }
 
     .btn {
         width: 100%;
-        color: #ff2e3f;
+        color: #fff;
         height: 110rpx;
         line-height: 110rpx;
         text-align: center;
         margin-top: 168rpx;
-        background: linear-gradient(
-            0deg,
-            rgba(255, 149, 71, 1),
-            rgba(255, 222, 152, 1)
-        );
+        background: #0084ff;
         border-radius: 55px;
     }
 
@@ -519,7 +546,7 @@ export default {
         font-size: 28rpx;
 
         .label {
-            color: #ffde98;
+            color: #ffde6d;
             margin-bottom: 15rpx;
         }
 
@@ -532,17 +559,17 @@ export default {
             padding: 0 24rpx;
             height: 56rpx;
             line-height: 56rpx;
-            border: 1px solid #ffde98;
+            border: 1px solid rgba(0, 132, 255, 1);
             border-radius: 28rpx;
             display: inline-block;
             margin-right: 20rpx;
             text-align: center;
-            color: #ffde98;
+            color: #fff;
             margin-bottom: 20rpx;
 
             &.active {
-                background: #ffde98;
-                color: #ff2e3f;
+                background: #0084ff;
+                color: #fff;
             }
         }
     }
