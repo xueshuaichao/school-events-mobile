@@ -182,51 +182,6 @@
                         我的作品
                     </view>
                 </view>
-                <view class="register">
-                    <image
-                        src="../../static/images/chunjie/chunjiehao-title.png"
-                    />
-                </view>
-                <view class="active-schedule">
-                    <text>活动时间：1月20日-2月15日</text>
-                    <text>结果公布：2月18日</text>
-                </view>
-
-                <view class="prize">
-                    <view class="prize-item">
-                        <view>
-                            <text>一等奖</text>
-                            <image
-                                src="../../static/images/chunjie/chunjiehao-prize01.png"
-                            />
-                            <text>空气炸锅*1</text>
-                        </view>
-                        <view>
-                            <text>二等奖</text>
-                            <image
-                                src="../../static/images/chunjie/chunjiehao-prize02.png"
-                            />
-                            <text>美的养生壶*2</text>
-                        </view>
-                        <view>
-                            <text>三等奖</text>
-                            <image
-                                src="../../static/images/chunjie/chunjiehao-prize03.png"
-                            />
-                            <text>欧普护眼台灯*3</text>
-                        </view>
-                        <view>
-                            <text>四等奖</text>
-                            <image
-                                src="../../static/images/chunjie/chunjiehao-prize04.png"
-                            />
-                            <text>小熊加湿器*4</text>
-                        </view>
-                    </view>
-                    <view class="prize-slogan01">
-                        截止到2020年2月15日23:59:59整，按投票名次可获得以上奖品
-                    </view>
-                </view>
                 <!-- 跑马灯 -->
                 <view class="page-section-spacing">
                     <swiper
@@ -260,11 +215,13 @@
                         </swiper-item>
                     </swiper>
                 </view>
-                <image
+                <!-- <image
                     class="cansai-text"
                     src="../../static/images/chunjie/cansai_text.png"
-                />
-
+                /> -->
+                <view class="cansai-text">
+                    —— 活动作品 ——
+                </view>
                 <!-- work show -->
                 <view class="menu-list">
                     <view class="search-box">
@@ -274,7 +231,7 @@
                             }"
                             @click="toggle('new')"
                         >
-                            最新
+                            青少年组
                         </button>
                         <button
                             :class="{
@@ -282,15 +239,15 @@
                             }"
                             @click="toggle('hot')"
                         >
-                            最热
+                            成年组
                         </button>
                         <view class="search">
                             <image
-                                src="../../static/images/chunjie/search-icon01.png"
+                                src="../../static/images/yiqing/search.png"
                             />
                             <input
                                 v-model="changeValue"
-                                placeholder-style="color:#FF2E3F"
+                                placeholder-style="color:#6691FF"
                                 type="text"
                                 confirm-type="search"
                                 confirm-hold="true"
@@ -324,7 +281,7 @@
                                 {{ item.ticket }}票
                             </text>
                             <view
-                                class="vote"
+                                class="isVote ?vote:unVote"
                                 @click="handleVote(item)"
                             >
                                 帮TA投票
@@ -441,6 +398,7 @@ export default {
             status: 2,
             crouselList: [],
             setId: '',
+            isVote: false,
         };
     },
     created() {
@@ -615,6 +573,7 @@ export default {
                         () => {
                             // eslint-disable-next-line no-param-reassign
                             item.ticket += 1;
+                            this.isVote = true;
                             uni.showToast({
                                 title: '投票成功',
                                 icon: 'none',
@@ -685,24 +644,24 @@ export default {
                 text-overflow: ellipsis;
                 overflow: hidden;
                 display: inline-block;
-                color: #ff3849;
+                color: #fff;
                 & > text:nth-child(1) {
                     color: #fccda2;
                 }
                 & > text:nth-child(2) {
-                    color: #ff3849;
+                    color: #fff;
                     margin: 0 5upx;
                 }
                 & > text:nth-child(3) {
                     color: #f5c59c;
                 }
                 & > text:nth-child(4) {
-                    color: #ff3849;
+                    color: #fff;
                 }
             }
 
             & > text:last-child {
-                color: #ff3849;
+                color: #fff;
                 float: right;
             }
         }
@@ -808,14 +767,10 @@ body.dialog-open {
 .upload {
     position: fixed;
     bottom: 0upx;
-    background: linear-gradient(
-        0deg,
-        rgba(255, 149, 71, 1),
-        rgba(255, 222, 152, 1)
-    );
+    background: #0096ff;
     text-align: center;
     width: 100%;
-    color: #ff2e3f;
+    color: #fff;
     height: 116upx;
     font-size: 36upx;
     line-height: 116upx;
@@ -955,13 +910,7 @@ body.dialog-open {
         padding: 0 20upx;
     }
 }
-.banner {
-    position: relative;
-    height: 740upx;
-    background: url(http://aitiaozhan.oss-cn-beijing.aliyuncs.com/chunjiehao-banner.png?t=2)
-        no-repeat;
-    background-size: 100% 100%;
-}
+
 .media-box {
     display: flex;
     justify-content: space-between;
@@ -997,7 +946,23 @@ body.dialog-open {
             height: 52upx;
             width: 140upx;
             color: #ff2e3f;
-            font-size: 24upx;
+            font-size: 0upx;
+            background: url("../../static/images/yiqing/like.png") no-repeat;
+            // position: absolute;
+            // right:0;
+            text-align: center;
+            line-height: 52upx;
+            font-weight: 700;
+            float: right;
+            border-radius: 26rpx;
+        }
+        .unVote {
+            background: #ffde98;
+            height: 52upx;
+            width: 140upx;
+            color: #ff2e3f;
+            font-size: 0upx;
+            background: url("../../static/images/yiqing/liked.png") no-repeat;
             // position: absolute;
             // right:0;
             text-align: center;
@@ -1099,23 +1064,39 @@ body.dialog-open {
 .page-index {
     padding-bottom: 20upx;
     display: relative;
-    background: #ff2e3f;
+    background: #1154ff;
     .main-swiper {
-        .active-rule {
-            position: absolute;
-            top: 22upx;
-            left: 6upx;
-            width: 142upx;
-            height: 74upx;
-            font-size: 0;
-        }
-        .menu-title {
-            position: absolute;
-            top: 22upx;
-            right: 6upx;
-            width: 142upx;
-            height: 74upx;
-            font-size: 0;
+        .banner {
+            position: relative;
+            height: 740upx;
+            background: url(http://aitiaozhan.oss-cn-beijing.aliyuncs.com/chunjiehao/banner.png)
+                no-repeat;
+            background-size: 100% 100%;
+            text-align: center;
+            .active-rule {
+                position: absolute;
+                top: 19upx;
+                left: 15upx;
+                width: 120upx;
+                height: 48upx;
+                line-height: 48upx;
+                font-size: 22upx;
+                background: #fff;
+                color: #1154ff;
+                border-radius: 24upx;
+            }
+            .menu-title {
+                position: absolute;
+                top: 19upx;
+                right: 15upx;
+                width: 120upx;
+                height: 48upx;
+                line-height: 48upx;
+                font-size: 22upx;
+                background: #fff;
+                color: #1154ff;
+                border-radius: 24upx;
+            }
         }
     }
 
@@ -1144,7 +1125,7 @@ body.dialog-open {
                 }
             }
             .search {
-                background: #b11a27;
+                background: #003dd7;
                 width: 440upx;
                 height: 72upx;
                 position: relative;

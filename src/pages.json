@@ -2,6 +2,12 @@
     "pages": [
         //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
         {
+            "path": "pages/yiqing/index",
+            "style": {
+                "navigationBarTitleText": "抗击疫情“艺”起来"
+            }
+        },
+        {
             "path": "pages/tabBar/index/index",
             "style": {
                 "navigationBarTitleText": "大赛首页"
@@ -199,20 +205,20 @@
             }
         },
         // ============== 春节好 end =====================
-        {
-            "path": "pages/login/login",
-            "style": {
-                "navigationBarTitleText": "登录"
-            }
-        },
         // #ifdef H5
         {
             "path": "pages/app/index",
             "style": {
                 "navigationBarTitleText": "爱挑战"
             }
-        }
+        },
         // #endif
+        {
+            "path": "pages/login/login",
+            "style": {
+                "navigationBarTitleText": "登录"
+            }
+        }
     ],
     "globalStyle": {
         // #ifdef H5
