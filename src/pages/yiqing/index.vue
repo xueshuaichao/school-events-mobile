@@ -527,7 +527,7 @@ export default {
         },
         viewDetail(item) {
             uni.navigateTo({
-                url: `/pages/chunjiehao/detail/detail?id=${item.id}&fr=${this.fr}`,
+                url: `/pages/yiqing/detail/detail?id=${item.id}&fr=${this.fr}`,
             });
         },
         toggle(k) {

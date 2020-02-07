@@ -194,28 +194,55 @@
         </view>
 
         <view class="fixed-panel">
-            <view class="result">
-                {{ pageData.ticket }}票
-            </view>
-            <button
-                class="btn"
-                @click="toggleLike"
-            >
-                {{ likeStatus === 0 ? "投TA一票" : "已投票" }}
-            </button>
+            <view class="icon-wrap">
+                <view
+                    class="item"
+                    @click="toggleLike"
+                >
+                    <image
+                        class="icon"
+                        :src="
+                            likeStatus === 0
+                                ? '/static/images/yiqing/detail/like.png'
+                                : '/static/images/yiqing/detail/like-ac.png'
+                        "
+                    />
+                    <view> {{ pageData.ticket }} </view>
+                </view>
 
-            <button
-                class="btn"
-                @click="handleCanvass"
+                <view class="item">
+                    <button
+                        class="btn-icon"
+                        @click="handleCanvass"
+                    >
+                        <image
+                            class="icon"
+                            src="/static/images/yiqing/detail/share.png"
+                        />
+                    </button>
+                </view>
+
+                <view class="item">
+                    <image
+                        class="icon"
+                        src="/static/images/yiqing/detail/view.png"
+                    />
+                    <view> {{ pageData.play_count }} </view>
+                </view>
+            </view>
+
+            <view
+                class="btn primary"
+                @click="joinGame"
             >
-                帮TA拉票
-            </button>
-            <button
+                我要参与
+            </view>
+            <view
                 class="btn"
                 @click="goHome"
             >
                 返回首页
-            </button>
+            </view>
         </view>
 
         <view
@@ -236,13 +263,6 @@
         >
             加载中
         </view>
-
-        <!-- v-if="!isH5" -->
-        <image
-            src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/chunjiehao/join.png"
-            class="join-game"
-            @click="joinGame"
-        />
     </view>
 </template>
 
@@ -368,7 +388,7 @@ export default {
             // eslint-disable-next-line no-undef
             const pages = getCurrentPages(); // 获取加载的页面
             const currentPage = pages[pages.length - 1]; // 获取当前页面的对象
-            const url = currentPage.route || 'pages/chunjiehao/detail/detail';
+            const url = currentPage.route || 'pages/yiqing/detail/detail';
             const scene = `id=${this.id}` || 'id=325';
             api.post('/api/weixin/getminiqrcode', {
                 path: url,
@@ -632,7 +652,7 @@ export default {
                     const { status } = res;
                     if (status === 2) {
                         uni.navigateTo({
-                            url: '/pages/chunjiehao/upload/upload',
+                            url: '/pages/yiqing/upload/upload',
                         });
                     } else if (status === 1) {
                         uni.showToast({
@@ -650,7 +670,7 @@ export default {
         },
         goHome() {
             uni.reLaunch({
-                url: '/pages/chunjiehao/index',
+                url: '/pages/yiqing/index',
             });
         },
         togglePlayStatus() {
@@ -685,7 +705,7 @@ export default {
         return {
             title: this.shareDesc,
             imageUrl: this.pageData.video_img_url,
-            path: `/pages/chunjiehao/detail/detail?id=${this.id}`,
+            path: `/pages/yiqing/detail/detail?id=${this.id}`,
         };
     },
 };
@@ -923,29 +943,58 @@ export default {
     .fixed-panel {
         position: fixed;
         width: 146rpx;
-        right: 27rpx;
-        bottom: 160rpx;
+        right: 30rpx;
+        bottom: 20rpx;
         color: #ffde98;
         font-size: 24rpx;
         text-align: center;
         z-index: 100;
+
+        .icon-wrap {
+            //margin-right: 36rpx;
+            text-align: center;
+            position: relative;
+            right: -30rpx;
+            margin-bottom: 20rpx;
+            color: #fff;
+
+            .item {
+                margin-bottom: 10rpx;
+            }
+        }
+
+        .icon {
+            width: 56rpx;
+            height: 56rpx;
+        }
+
+        .btn-icon {
+            width: 56rpx;
+            height: 56rpx;
+            background: transparent;
+            display: inline-block;
+            padding: 0;
+            font-size: 0;
+        }
     }
 
     .btn {
-        color: #ffde98;
+        width: 174rpx;
+        height: 54rpx;
+        background: rgba(222, 39, 30, 1);
+        border-radius: 27rpx 0px 0px 27rpx;
+        color: #0096ff;
         font-size: 24rpx;
-        width: 134rpx;
-        height: 56rpx;
-        background: linear-gradient(
-            90deg,
-            rgba(255, 124, 53, 1),
-            rgba(255, 31, 73, 1)
-        );
-        border-radius: 28rpx;
-        line-height: 56rpx;
+        background: #fff;
+        line-height: 54rpx;
         text-align: center;
         margin-bottom: 30rpx;
         padding: 0;
+
+        &.primary {
+            background: #0096ff;
+            color: #fff;
+        }
     }
 
     .share-mask {

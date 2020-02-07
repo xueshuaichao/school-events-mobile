@@ -205,6 +205,37 @@
             }
         },
         // ============== 春节好 end =====================
+
+        // ============== 疫情 ========================
+        {
+            "path": "pages/yiqing/detail/detail",
+            "style": {
+                "navigationBarTitleText": "作品详情",
+                "usingComponents": {
+                    "poster": "/wxcomponents/third-party/poster/poster/index"
+                }
+            }
+        },
+        {
+            "path": "pages/yiqing/upload/upload",
+            "style": {
+                "navigationBarTitleText": "上传作品"
+            }
+        },
+        {
+            "path": "pages/yiqing/upload/result",
+            "style": {
+                "navigationBarTitleText": "上传结果"
+            }
+        },
+        {
+            "path": "pages/yiqing/myWork/myWork",
+            "style": {
+                "navigationBarTitleText": "我的作品"
+            }
+        },
+        // ============== 疫情 end =====================
+
         // #ifdef H5
         {
             "path": "pages/app/index",
