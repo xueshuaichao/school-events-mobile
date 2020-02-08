@@ -170,7 +170,7 @@
                             :class="{
                                 active: activeMenuIndex === 'new'
                             }"
-                            @click="toggle('new')"
+                            @click="toggle('1')"
                         >
                             青少年组
                         </button>
@@ -178,7 +178,7 @@
                             :class="{
                                 active: activeMenuIndex === 'hot'
                             }"
-                            @click="toggle('hot')"
+                            @click="toggle('2')"
                         >
                             成年组
                         </button>
@@ -307,7 +307,7 @@ export default {
                 activity_id: 5,
                 page_num: 1,
                 page_size: 10,
-                sort: 'new',
+                activity_cat: '1',
             },
             prizeList: [
                 {
@@ -364,7 +364,7 @@ export default {
                     activity_id: 5,
                     page_num: 1,
                     page_size: 10,
-                    sort: 'new',
+                    activity_cat: 'new',
                 }).then(({ list }) => {
                     this.crouselList = list;
                 });
@@ -475,7 +475,7 @@ export default {
         toggle(k) {
             uni.showLoading();
             this.activeMenuIndex = k;
-            this.filter.sort = k;
+            this.filter.activity_cat = k;
             this.filter.page_num = 1;
             this.getData();
         },

@@ -459,7 +459,7 @@ export default {
                     that.prompt = false;
                     that.showTicketMask = true;
                     uni.showToast({
-                        title: '已成功保存至相册，快去转发朋友圈吧！',
+                        title: '保存成功',
                         icon: 'success',
                         duration: 2000,
                     });
