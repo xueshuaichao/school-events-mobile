@@ -168,7 +168,7 @@
                     <view class="search-box">
                         <button
                             :class="{
-                                active: activeMenuIndex === 'new'
+                                active: activeMenuIndex === '1'
                             }"
                             @click="toggle('1')"
                         >
@@ -176,7 +176,7 @@
                         </button>
                         <button
                             :class="{
-                                active: activeMenuIndex === 'hot'
+                                active: activeMenuIndex === '2'
                             }"
                             @click="toggle('2')"
                         >
@@ -211,7 +211,7 @@
                         >
                             <event-craft-cover
                                 :info="item"
-                                :bg-color="'B11A27'"
+                                :bg-color="'006EDE'"
                                 @click.native="viewDetail(item)"
                             />
 
@@ -293,7 +293,7 @@ export default {
             fr: '',
             shareDesc: '',
             changeValue: '',
-            activeMenuIndex: 'new',
+            activeMenuIndex: '1',
             loadMoreStatus: 'more',
             mediaIcon: {
                 1: '../../static/images/chunjie/video-icon.png',

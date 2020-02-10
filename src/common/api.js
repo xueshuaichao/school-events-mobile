@@ -47,7 +47,9 @@ function post(url, data) {
             if (res.data.status === 200) {
                 return res.data.data;
             }
-
+            if (res.data.status === 1402 && url === '/api/activity/vote') {
+                throw new Error('今日点赞成功！明日再来');
+            }
             throw new Error(res.data.msg);
         },
         (res) => {

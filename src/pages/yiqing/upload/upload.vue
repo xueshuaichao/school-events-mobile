@@ -13,7 +13,9 @@
                         v-for="item in grpData"
                         :key="item.cat_id"
                         class="item"
-                        :class="{ active: formData.grp_id === item.cat_id }"
+                        :class="{
+                            active: formData.activity_cat === item.cat_id
+                        }"
                         @click="onSelectGrp(item)"
                     >
                         {{ item.name }}
@@ -168,8 +170,8 @@ export default {
             uploadMode: 'video',
 
             formData: {
-                activity_id: 4,
-                grp_id: 1001,
+                activity_id: 5,
+                activity_cat: 1,
                 cat_id: 21,
                 resource_name: '',
                 introduce: '',
@@ -194,11 +196,11 @@ export default {
             needBindMobile: false,
             grpData: [
                 {
-                    cat_id: 1001,
+                    cat_id: 1,
                     name: '青少年组',
                 },
                 {
-                    cat_id: 1002,
+                    cat_id: 2,
                     name: '成年组',
                 },
             ],
@@ -335,7 +337,7 @@ export default {
             }
         },
         onSelectGrp(item) {
-            this.formData.grp_id = item.cat_id;
+            this.formData.activity_cat = item.cat_id;
         },
         onSelectCat(item) {
             this.needTab = false;

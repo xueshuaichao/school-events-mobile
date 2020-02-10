@@ -553,7 +553,7 @@ export default {
             }).then(
                 () => {
                     // const isLiked = this.likeStatus === 1;
-                    api.get('/api/activity/vote', {
+                    api.post('/api/activity/vote', {
                         id: this.id,
                         // object_type: 1,
                         // 1-点赞 0 取消点赞

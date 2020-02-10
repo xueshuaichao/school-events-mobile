@@ -33,7 +33,7 @@
                 <view class="search-box">
                     <button
                         :class="{
-                            active: activeMenuIndex === 'new'
+                            active: activeMenuIndex === '1'
                         }"
                         @click="toggle('1')"
                     >
@@ -41,7 +41,7 @@
                     </button>
                     <button
                         :class="{
-                            active: activeMenuIndex === 'hot'
+                            active: activeMenuIndex === '2'
                         }"
                         @click="toggle('2')"
                     >
@@ -77,7 +77,7 @@
                 >
                     <event-craft-cover
                         :info="item"
-                        :bg-color="'f5dca3'"
+                        :bg-color="'006EDE'"
                         @click.native="viewDetail(item)"
                     />
                     <view
@@ -197,7 +197,7 @@ export default {
     data() {
         return {
             dataList: [],
-            activeMenuIndex: 'hot',
+            activeMenuIndex: '1',
             changeValue: '',
             loadMoreStatus: 'none',
             mediaIcon: {
