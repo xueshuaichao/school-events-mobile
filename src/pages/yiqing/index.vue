@@ -450,11 +450,7 @@ export default {
             //     '鼠年春节我精彩，才艺拜年望喜爱！',
             // ];
             const titleList = [
-                '发现身边年俗文化，记录“鼠”于你的美好新年！记录新年，赢大奖～',
-                '拿起手机，一起来记录“鼠年”春节的快乐瞬间！记录新年，赢大奖～',
-                '细“鼠”身边的年味！分享美好瞬间，赢取新春大奖～',
-                '记录“鼠”于我们的幸福中国年！分享美好瞬间，赢大奖！',
-                '春节到～“鼠”不尽的幸福瞬间值得记录！晒年味，赢好礼～',
+                '抗击疫情“艺”起来，参与活动为武汉加油！向英雄致敬！',
             ];
             const title = titleList[Math.floor(Math.random() * titleList.length)];
             const desc = '快乐过寒假，才艺拜大年！';
@@ -464,7 +460,7 @@ export default {
                 title,
                 desc,
                 thumbnail:
-                    'http://aitiaozhan.oss-cn-beijing.aliyuncs.com/chunjiehao-banner.png?x-oss-process=image/format,png/interlace,1/quality,Q_80/resize,m_pad,h_100',
+                    'http: //aitiaozhan.oss-cn-beijing.aliyuncs.com/chunjiehao/yiqing-poster01.png?x-oss-process=image/format,png/interlace,1/quality,Q_80/resize,m_pad,h_100',
             });
         },
         viewDetail(item) {

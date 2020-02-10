@@ -623,12 +623,9 @@ export default {
             //     '鼠年春节我精彩，才艺拜年望喜爱！',
             // ];
             const titleList = [
-                '一幅幅春节影像作品，是最想留下的幸福瞬间！我的春节作品，正在等你来投票哦！',
-                '记录新年，赢大奖！小伙伴们快来帮我投票吧～～',
-                '快来看我记录的春节快乐瞬间！请为我投票，晒年味，赢好礼！',
-                '快来看我家的新年有什么不一样！快来为我投票吧！晒年俗，赢大奖！',
-                '家家“年味”各不同，快来围观我家的欢乐新年吧～别忘了投票哦！',
-                '嗨～我在参加“记录新年赢大奖”活动，动动手指为我投票吧！',
+                `我的抗击疫情作品《${this.pageData.resource_name}》，为我点赞一起为武汉加油！`,
+                `为爱出发，为武汉加油，我的作品《${this.pageData.resource_name}》向抗疫英雄致敬！`,
+                `我的抗击疫情作品《${this.pageData.resource_name}》，大家“艺”起来，为武汉加油！'`,
             ];
             const title = titleList[Math.floor(Math.random() * titleList.length)];
             const desc = `${this.pageData.resource_name}-${this.pageData.create_name}`;
