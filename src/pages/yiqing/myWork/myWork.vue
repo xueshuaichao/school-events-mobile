@@ -155,12 +155,12 @@
                     </view>
                 </navigator>
             </view>
-            <!-- <button
+            <button
                 class="btn goHome"
                 @click="goHome"
             >
-                返回首页
-            </button> -->
+                {{ text }}
+            </button>
         </view>
     </view>
 </template>
@@ -196,6 +196,7 @@ export default {
     },
     data() {
         return {
+            text: '< 返回首页',
             dataList: [],
             activeMenuIndex: '1',
             changeValue: '',
@@ -209,6 +210,7 @@ export default {
                 page_num: 1,
                 page_size: 10,
                 activity_id: 5,
+                activity_cat: 1,
             },
             total: 1,
             type: 'myWork',
@@ -225,11 +227,11 @@ export default {
         },
     },
     methods: {
-        // goHome() {
-        //     uni.reLaunch({
-        //         url: '/pages/yiqing/index',
-        //     });
-        // },
+        goHome() {
+            uni.reLaunch({
+                url: '/pages/yiqing/index',
+            });
+        },
         toggle(k) {
             this.activeMenuIndex = k;
             this.filter.activity_cat = k;
@@ -371,28 +373,23 @@ export default {
 <style lang="less">
 .goHome {
     position: fixed;
-    bottom: 18upx;
-    right: 30upx;
-    color: #fff0cc;
-    font-size: 12px;
-    width: 67px;
-    height: 28px;
-    background: -webkit-linear-gradient(bottom, #ff1610, #ffbd67);
-    background: linear-gradient(0deg, #ff1610, #ffbd67);
-    -webkit-border-image: -webkit-linear-gradient(147deg, #ffe7ae, #ffe19a) 2 2;
-    border-image: linear-gradient(-57deg, #ffe7ae, #ffe19a) 2 2;
-    border-radius: 14px;
-    border: 1px solid;
-    line-height: 28px;
+    bottom: 40upx;
+    right: 0upx;
+    color: #1154ff;
+    font-size: 24upx;
+    width: 166upx;
+    height: 54upx;
+    background: #fff;
+    border-radius: 27upx 0 0 27upx;
+    line-height: 54upx;
     text-align: center;
-    margin-bottom: 15px;
     padding: 0;
 }
 .empty {
     text-align: center;
     image {
-        width: 303upx;
-        height: 301upx;
+        width: 300upx;
+        height: 236upx;
         margin-top: 174upx;
     }
     view {

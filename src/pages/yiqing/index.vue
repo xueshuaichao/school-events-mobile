@@ -222,7 +222,9 @@
                                 {{ item.ticket }}赞
                             </text>
                             <view
-                                class="vote"
+                                :class="
+                                    item.vote_status === 1 ? 'vote' : 'unVote'
+                                "
                                 @click="handleVote(item)"
                             >
                                 帮TA投
@@ -307,7 +309,7 @@ export default {
                 activity_id: 5,
                 page_num: 1,
                 page_size: 10,
-                activity_cat: '1',
+                activity_cat: 1,
             },
             prizeList: [
                 {
@@ -351,6 +353,9 @@ export default {
     onLoad(params) {
         this.fr = logger.getFr('dsxnh', params);
     },
+    onShow() {
+        this.getData();
+    },
     onHide() {
         this.changeValue = '';
     },
@@ -364,7 +369,7 @@ export default {
                     activity_id: 5,
                     page_num: 1,
                     page_size: 10,
-                    activity_cat: 'new',
+                    activity_cat: 1,
                 }).then(({ list }) => {
                     this.crouselList = list;
                 });
@@ -378,6 +383,7 @@ export default {
                     } else {
                         this.dataList = list;
                         this.crouselList = list;
+                        console.log(this.crouselList, 'crouselList');
                     }
 
                     this.total = total;
@@ -511,6 +517,8 @@ export default {
                         () => {
                             // eslint-disable-next-line no-param-reassign
                             item.ticket += 1;
+                            // eslint-disable-next-line no-param-reassign
+                            item.vote_status = 1;
                             uni.showToast({
                                 title: '已点赞',
                                 icon: 'none',
@@ -879,19 +887,18 @@ body.dialog-open {
             float: left;
         }
         .vote {
-            background: #ffde98;
             height: 42upx;
             width: 48upx;
-            color: #ff2e3f;
             font-size: 0upx;
             background: url("../../static/images/yiqing/liked.png") no-repeat;
-            // position: absolute;
-            // right:0;
-            text-align: center;
-            line-height: 52upx;
-            font-weight: 700;
             float: right;
-            border-radius: 26rpx;
+        }
+        .unVote {
+            height: 42upx;
+            width: 48upx;
+            font-size: 0upx;
+            background: url("../../static/images/yiqing/like.png") no-repeat;
+            float: right;
         }
         .media-icon {
             width: 40upx;
@@ -989,7 +996,7 @@ body.dialog-open {
         .banner {
             position: relative;
             height: 740upx;
-            background: url(http://aitiaozhan.oss-cn-beijing.aliyuncs.com/chunjiehao/yiqing-poster01.png)
+            background: url(http://aitiaozhan.oss-cn-beijing.aliyuncs.com/chunjiehao/yiqing-poster01.png?t=1)
                 no-repeat;
             background-size: 100% 100%;
             text-align: center;

@@ -31,7 +31,7 @@
                     v-if="!url"
                     class="icon-desc"
                 >
-                    上传视频1
+                    上传视频
                 </view>
                 <view
                     v-else

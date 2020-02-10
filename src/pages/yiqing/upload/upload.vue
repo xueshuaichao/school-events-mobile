@@ -167,7 +167,7 @@ export default {
 
             newsTabActiveIndex: 0,
             needTab: false,
-            uploadMode: 'video',
+            uploadMode: 'image',
 
             formData: {
                 activity_id: 5,
@@ -211,7 +211,7 @@ export default {
                     parent_id: 3,
                     cat_level: 2,
                     cat_tree: '3-17',
-                    resource_type: 1,
+                    resource_type: 2,
                 },
                 {
                     cat_id: 101,
@@ -219,7 +219,7 @@ export default {
                     parent_id: 3,
                     cat_level: 2,
                     cat_tree: '3-18',
-                    resource_type: 1,
+                    resource_type: 2,
                 },
                 {
                     cat_id: 18,
@@ -227,7 +227,7 @@ export default {
                     parent_id: 3,
                     cat_level: 2,
                     cat_tree: '3-19',
-                    resource_type: 2,
+                    resource_type: 1,
                 },
                 {
                     cat_id: 16,
@@ -235,7 +235,7 @@ export default {
                     parent_id: 3,
                     cat_level: 2,
                     cat_tree: '3-21',
-                    resource_type: 2,
+                    resource_type: 1,
                 },
                 {
                     cat_id: 17,
@@ -243,7 +243,7 @@ export default {
                     parent_id: 3,
                     cat_level: 2,
                     cat_tree: '3-20',
-                    resource_type: 2,
+                    resource_type: 1,
                 },
                 {
                     cat_id: 102,
@@ -412,6 +412,9 @@ export default {
             this.disabled = true;
             // check input
             console.log(this.formData);
+            if (this.formData.activity_cat === 2) {
+                this.formData.cat_id = 25;
+            }
             return api.post('/api/activity/add', formData).then(
                 (res) => {
                     this.disabled = false;
