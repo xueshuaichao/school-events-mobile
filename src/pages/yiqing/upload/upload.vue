@@ -275,15 +275,19 @@ export default {
         resetForm() {
             this.formData = {
                 activity_id: 5,
-                cat_id: 16,
+                activity_cat: 1,
+                cat_id: 21,
                 resource_name: '',
                 introduce: '',
                 type: 2,
+
                 video_id: '',
                 video_img_url: '',
                 teacher: '',
                 recommend: '',
             };
+            this.images = [];
+            this.$refs.preview.reset();
         },
         setNewsTabActive(index) {
             this.newsTabActiveIndex = index;

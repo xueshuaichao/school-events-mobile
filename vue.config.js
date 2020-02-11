@@ -1,7 +1,8 @@
 const webpack = require('webpack');
 
-// const API_ENV = process.env.API_ENV || 'dev';
-const API_ENV = 'test';
+const API_ENV = process.env.API_ENV || 'dev';
+// const API_ENV = 'dev';
+
 console.log('API ENV ---:');
 console.log(API_ENV);
 
