@@ -323,7 +323,7 @@ export default {
         this.fr = logger.getFr('dsxnh', params);
     },
     onShow() {
-        this.getData();
+        // this.getData();
     },
     onHide() {
         this.changeValue = '';
