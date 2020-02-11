@@ -233,6 +233,7 @@ export default {
             });
         },
         toggle(k) {
+            uni.showLoading();
             this.activeMenuIndex = k;
             this.filter.activity_cat = k;
             this.filter.page_num = 1;
@@ -310,6 +311,7 @@ export default {
                     } else {
                         this.loadMoreStatus = 'more';
                     }
+                    uni.hideLoading();
                 },
             );
         },

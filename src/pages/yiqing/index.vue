@@ -222,12 +222,10 @@
                                 {{ item.ticket }}赞
                             </text>
                             <view
-                                :class="
-                                    item.vote_status === 1 ? 'vote' : 'unVote'
-                                "
+                                class="vote"
                                 @click="handleVote(item)"
                             >
-                                帮TA投
+                                点赞加油
                             </view>
                         </view>
                         <uni-load-more
@@ -695,7 +693,7 @@ body.dialog-open {
 }
 .upload-disable {
     position: fixed;
-    bottom: 40upx;
+    bottom: 0upx;
     background: linear-gradient(
         0deg,
         rgba(133, 115, 102, 1),
@@ -708,6 +706,7 @@ body.dialog-open {
     color: #e4ded4;
     font-size: 36upx;
     line-height: 116upx;
+    z-index: 10;
 }
 .cansai-text {
     width: 312upx;
@@ -859,18 +858,15 @@ body.dialog-open {
             float: left;
         }
         .vote {
-            height: 42upx;
-            width: 48upx;
-            font-size: 0upx;
-            background: url("../../static/images/yiqing/liked.png") no-repeat;
             float: right;
-        }
-        .unVote {
-            height: 42upx;
-            width: 48upx;
-            font-size: 0upx;
-            background: url("../../static/images/yiqing/like.png") no-repeat;
-            float: right;
+            width: 170upx;
+            height: 60upx;
+            background: rgba(255, 88, 75, 1);
+            border-radius: 30upx;
+            color: rgba(255, 255, 255, 1);
+            font-size: 28upx;
+            text-align: center;
+            line-height: 60upx;
         }
         .media-icon {
             width: 40upx;
