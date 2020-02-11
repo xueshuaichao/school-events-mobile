@@ -279,7 +279,6 @@ export default {
                 resource_name: '',
                 introduce: '',
                 type: 2,
-
                 video_id: '',
                 video_img_url: '',
                 teacher: '',
@@ -411,10 +410,6 @@ export default {
             uni.showLoading();
             this.disabled = true;
             // check input
-            console.log(this.formData);
-            if (this.formData.activity_cat === 2) {
-                this.formData.cat_id = 25;
-            }
             return api.post('/api/activity/add', formData).then(
                 (res) => {
                     this.disabled = false;

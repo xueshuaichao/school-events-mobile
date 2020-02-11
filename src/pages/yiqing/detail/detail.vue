@@ -234,13 +234,19 @@
                 class="btn primary"
                 @click="joinGame"
             >
-                我要参与
+                <image
+                    class="join"
+                    src="../../../static/images/yiqing/like.png"
+                />我要参与
             </view>
             <view
                 class="btn"
                 @click="goHome"
             >
-                返回首页
+                <image
+                    class="arrow"
+                    src="../../../static/images/yiqing/arrow.png"
+                />返回首页
             </view>
         </view>
 
@@ -639,7 +645,6 @@ export default {
             const desc = `${this.pageData.resource_name}-${this.pageData.create_name}`;
 
             this.shareDesc = title;
-
             share({
                 title,
                 desc,
@@ -708,7 +713,7 @@ export default {
         }
         return {
             title: this.shareDesc,
-            imageUrl: this.pageData.video_img_url,
+            imageUrl: `${this.pageData.video_img_url}?x-oss-process=image/resize,m_fill,w_250,h_150`,
             path: `/pages/yiqing/detail/detail?id=${this.id}`,
         };
     },
@@ -998,6 +1003,18 @@ export default {
         &.primary {
             background: #0096ff;
             color: #fff;
+        }
+        .join {
+            width: 34upx;
+            height: 31upx;
+            vertical-align: middle;
+            margin-right: 8upx;
+        }
+        .arrow {
+            width: 12upx;
+            height: 21upx;
+            vertical-align: middle;
+            margin-right: 8upx;
         }
     }
 

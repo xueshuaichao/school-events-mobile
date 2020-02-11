@@ -297,10 +297,6 @@ export default {
             changeValue: '',
             activeMenuIndex: '1',
             loadMoreStatus: 'more',
-            mediaIcon: {
-                1: '../../static/images/chunjie/video-icon.png',
-                2: '../../static/images/chunjie/img-icon.png',
-            },
             prompt: false,
             isPlayed: false,
             newsTabActiveIndex: 0,
@@ -311,41 +307,14 @@ export default {
                 page_size: 10,
                 activity_cat: 1,
             },
-            prizeList: [
-                {
-                    prize_score: '一等奖',
-                    name: '学习机*1个',
-                    prize:
-                        'http://aitiaozhan.oss-cn-beijing.aliyuncs.com/chunjiehao/prize01.png',
-                },
-                {
-                    prize_score: '二等奖',
-                    name: '小度*4个',
-                    prize:
-                        'http://aitiaozhan.oss-cn-beijing.aliyuncs.com/chunjiehao/prize02.png',
-                },
-                {
-                    prize_score: '三等奖',
-                    name: '无人机*6个',
-                    prize: '../../static/images/chunjie/prize03.png',
-                },
-                {
-                    prize_score: '四等奖',
-                    name: '护眼灯*8个',
-                    prize: '../../static/images/chunjie/prize04.png',
-                },
-                {
-                    prize_score: '五等奖',
-                    name: '液晶手写板*20个',
-                    prize: '../../static/images/chunjie/prize05.png',
-                },
-            ],
             status: 2,
             crouselList: [],
             setId: '',
         };
     },
     created() {
+        console.log('process.env.API_ENV=>');
+        console.log(process.env.API_ENV);
         this.getData();
         this.chunjieStatus();
         this.getCrouselList();
@@ -364,16 +333,19 @@ export default {
     },
     methods: {
         getCrouselList() {
+            this._crouselList();
             this.setId = setInterval(() => {
-                api.post('/api/activity/resourcelist', {
-                    activity_id: 5,
-                    page_num: 1,
-                    page_size: 10,
-                    activity_cat: 1,
-                }).then(({ list }) => {
-                    this.crouselList = list;
-                });
+                this._crouselList();
             }, 1000 * 60 * 5);
+        },
+        _crouselList() {
+            api.post('/api/activity/resourcelist', {
+                activity_id: 5,
+                page_num: 1,
+                page_size: 10,
+            }).then(({ list }) => {
+                this.crouselList = list;
+            });
         },
         getData(title) {
             api.post('/api/activity/resourcelist', this.filter).then(
@@ -382,8 +354,8 @@ export default {
                         this.dataList = this.dataList.concat(list);
                     } else {
                         this.dataList = list;
-                        this.crouselList = list;
-                        console.log(this.crouselList, 'crouselList');
+                        // this.crouselList = list;
+                        // console.log(this.crouselList, 'crouselList');
                     }
 
                     this.total = total;

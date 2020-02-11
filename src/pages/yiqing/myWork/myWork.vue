@@ -60,12 +60,12 @@
                                 @confirm="bindconfirm"
                             >
                         </form>
-                        <button
+                        <text
                             class="search-button"
                             @click="bindconfirm"
                         >
                             搜索
-                        </button>
+                        </text>
                     </view>
                 </view>
             </view>
@@ -345,7 +345,7 @@ export default {
         if (type === 'myWork') {
             this.getWorkData();
         } else if (type === 'search') {
-            uni.setNavigationBarTitle({ title: 'dou说新年好' });
+            uni.setNavigationBarTitle({ title: '抗击疫情“艺”起来' });
             this.filter.search = name;
             this.changeValue = name;
             this.searchWorkData();
@@ -511,7 +511,7 @@ export default {
         }
         .search {
             background: #003dd7;
-            width: 390upx;
+            width: 395upx;
             height: 72upx;
             position: relative;
             float: right;
@@ -522,25 +522,25 @@ export default {
                 height: 28upx;
                 position: absolute;
                 top: 23upx;
-                left: 24upx;
+                left: 17upx;
             }
             input {
-                width: 280upx;
+                width: 270upx;
                 position: absolute;
                 top: 20upx;
                 // #ifndef H5
                 top: 15upx;
                 // #endif
-                left: 60upx;
-                font-size: 24upx;
+                left: 53upx;
+                font-size: 22upx;
                 color: #ffbec4;
             }
             .search-button {
                 font-size: 24upx;
                 color: #fff;
                 position: absolute;
-                top: 4upx;
-                right: 4upx;
+                top: 20upx;
+                right: 14upx;
             }
         }
     }
