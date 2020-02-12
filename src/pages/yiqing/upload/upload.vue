@@ -3,7 +3,10 @@
         v-if="!isLoading"
         class="page-upload"
     >
-        <view class="main">
+        <view
+            v-if="!needBindMobile"
+            class="main"
+        >
             <view class="selection">
                 <view class="label">
                     选择组别
@@ -126,6 +129,64 @@
                 @click="upload"
             >
                 确认上传
+            </view>
+        </view>
+        <view
+            v-if="needBindMobile"
+            class="page-bind-mobile"
+        >
+            <div class="tip">
+                上传作品需要绑定手机号，后面也可以用该手机号登录
+            </div>
+
+            <view
+                class="form-item-wrap"
+                :class="{
+                    inValid: accountData.isValid === false
+                }"
+            >
+                <input
+                    v-model="accountData.mobile"
+                    class="form-input"
+                    placeholder-class="placeholder"
+                    maxlength="30"
+                    placeholder="请输入手机号"
+                >
+                <view class="error-tip">
+                    {{ accountData.isValid ? "" : accountData.msg }}
+                </view>
+            </view>
+
+            <view class="form-item-wrap">
+                <input
+                    v-model="accountData.verify_code"
+                    class="form-input"
+                    placeholder-class="placeholder"
+                    maxlength="30"
+                    placeholder="请输入验证码"
+                >
+                <view
+                    v-if="!captcha.isSend"
+                    class="send-captcha"
+                    @click="sendCaptcha"
+                >
+                    获取验证码
+                </view>
+                <view
+                    v-if="captcha.isSend"
+                    class="send-captcha is-send"
+                >
+                    {{ captcha.remain }}S后重新发
+                </view>
+            </view>
+
+            <view class="form-item-wrap">
+                <view
+                    class="btn"
+                    @click="bindMobile"
+                >
+                    确定
+                </view>
             </view>
         </view>
     </view>
@@ -270,8 +331,99 @@ export default {
     },
     onLoad() {},
     created() {},
-    onShow() {},
+    onShow() {
+        this.getData();
+    },
     methods: {
+        getData() {
+            api.get('/api/user/info').then(
+                (res) => {
+                    this.needBindMobile = res.user_info && res.user_info.is_bind_mobile === 0;
+                    this.userInfo = res.user_info;
+                    this.isLoading = false;
+                },
+                () => {
+                    this.isLoading = false;
+                },
+            );
+        },
+        countDown() {
+            const sep = 30 * 1000;
+            const now = new Date() - 0;
+            const duration = this.captcha.create_at + sep - now;
+
+            if (duration > 0) {
+                this.captcha.remain = Math.round(duration / 1000);
+
+                setTimeout(() => {
+                    this.countDown();
+                }, 300);
+            } else {
+                this.captcha.isSend = false;
+            }
+        },
+        sendCaptcha() {
+            console.log('-000');
+            this.captcha.create_at = new Date() - 0;
+            this.captcha.remain = 30;
+            this.captcha.isSend = true;
+
+            // 切换绑定手机号接口
+            api.get('/api/account/sendbindmsg', {
+                phone: this.accountData.mobile,
+            }).then(
+                () => {
+                    try {
+                        this.countDown();
+                    } catch (e) {
+                        console.log(e);
+                    }
+                },
+                err => uni.showToast({
+                    icon: 'none',
+                    title: err.message,
+                }),
+            );
+        },
+        bindMobile() {
+            const { mobile } = this.accountData;
+            const captcha = this.accountData.verify_code;
+
+            console.log(mobile);
+            if (mobile.length !== 11 || mobile[0] !== '1') {
+                this.accountData.isValid = false;
+                this.accountData.msg = '手机号码不正确';
+                return false;
+            }
+            this.accountData.isValid = true;
+
+            if (!captcha) {
+                return uni.showToast({
+                    icon: 'none',
+                    title: '请输入验证码',
+                });
+            }
+
+            // api bind mobile
+            return api
+                .post('/api/account/bindphone', {
+                    phone: mobile,
+                    captcha,
+                })
+                .then(
+                    () => {
+                        this.needBindMobile = false;
+                        return uni.showToast({
+                            icon: 'none',
+                            title: '绑定成功！',
+                        });
+                    },
+                    err => uni.showToast({
+                        icon: 'none',
+                        title: err.message,
+                    }),
+                );
+        },
         resetForm() {
             this.formData = {
                 activity_id: 5,
@@ -569,6 +721,62 @@ export default {
             &.active {
                 background: #0084ff;
                 color: #fff;
+            }
+        }
+    }
+}
+.page-bind-mobile {
+    .tip {
+        font-size: 26rpx;
+        color: #333;
+        text-align: center;
+        padding-top: 80rpx;
+    }
+
+    .form-item-wrap {
+        padding: 0 65rpx;
+        position: relative;
+
+        .form-input {
+            color: #333;
+            font-size: 30rpx;
+            border-bottom: 1rpx solid #d8d8d8;
+            height: 90rpx;
+            margin-top: 20rpx;
+        }
+
+        &.inValid {
+            .form-input {
+                border-bottom: 1rpx solid #fa6855;
+            }
+        }
+
+        input::placeholder {
+            color: #666;
+        }
+
+        .error-tip {
+            color: #fa6855;
+            font-size: 26rpx;
+            height: 30rpx;
+            margin-top: 10rpx;
+        }
+
+        .send-captcha {
+            position: absolute;
+            right: 65rpx;
+            color: #1166ff;
+            font-size: 30rpx;
+            bottom: 25rpx;
+            z-index: 100;
+
+            &.is-send {
+                color: #999;
+                height: 50rpx;
+                background: #eeeeee;
+                padding: 0 10rpx;
+                font-size: 28rpx;
+                line-height: 50rpx;
             }
         }
     }
