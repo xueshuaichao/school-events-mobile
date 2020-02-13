@@ -21,8 +21,9 @@
                                 一、活动主题
                             </view>
                             <view class="text">
-                                《抗击疫情，“艺”起来》主题绘画、书法、摄影、朗诵、设计创作作品征集！
-                                假如我们上不了一线，就让我们拿起画笔、相机、携手同心，以笔作枪，打赢疫情防控阻击战！用特别的方式向一线工作者致敬。用自己独特的方式为武汉加油！为中国加油！
+                                《抗击疫情，“艺”起来》主题绘画、书法、摄影、朗诵、舞蹈、音乐、设计...作品征集！
+                                假如我们上不了一线，就让我们拿起画笔、相机、手机...携手同心，以“艺”作枪，打赢疫情防控阻击战！用特别的方式向一线工作者致敬。
+                                用自己独特的方式为武汉加油！为中国加油！
                             </view>
                         </view>
                         <view>
@@ -30,7 +31,7 @@
                                 二、活动时间
                             </view>
                             <view class="text">
-                                即日起-2020年3月5日
+                                即日起-2020年3月31日
                             </view>
                         </view>
                         <view>
@@ -89,11 +90,11 @@
                                     2、每个账户每天只能为同一个作品点赞1次；
                                 </view>
                                 <view>
-                                    3、活动组委会将根据作品质量、内容以及获赞数量进行综合评选，每个组别选出20件优秀作品，将获得组委会颁发的荣誉证书，
-                                    并对获奖作品进行报道宣传；
+                                    3、活动组委会将根据作品质量、内容以及获赞数量进行综合评选，每个组别选出20件优秀作品，
+                                    将获得组委会颁发的荣誉证书；对于参与积极的学校、机构或单位组委会也将综合评选给予荣誉奖励；并对获奖作品、优秀组织单位进行报道宣传；
                                 </view>
                                 <view>
-                                    4、优秀作品获奖名单将于2020年3月10日在爱挑战官网（http://atz.qsnatz.com/)及官方微信公众号进行公布；
+                                    4、优秀作品及优秀组织单位获奖名单将于2020年4月10日在爱挑战官网（http://atz.qsnatz.com/)及官方微信公众号进行公布；荣誉证书将在5月下旬的爱挑战吉尼斯嘉年华现场进行统一颁发（不方便到现场的个人或单位将快递邮寄）；
                                 </view>
                                 <view>
                                     5、本活动最终解释权在法律允许范围内归活动举办方所有；
@@ -127,6 +128,9 @@
                     >
                         我的作品
                     </view>
+                    <i class="active-time">
+                        活动时间：即日起——3月31号
+                    </i>
                 </view>
                 <!-- 跑马灯 -->
                 <view class="page-section-spacing">
@@ -964,7 +968,7 @@ body.dialog-open {
         .banner {
             position: relative;
             height: 740upx;
-            background: url(http://aitiaozhan.oss-cn-beijing.aliyuncs.com/chunjiehao/yiqing-poster01.png?t=1)
+            background: url(http://aitiaozhan.oss-cn-beijing.aliyuncs.com/chunjiehao/yiqing-poster01.png?t=2)
                 no-repeat;
             background-size: 100% 100%;
             text-align: center;
@@ -991,6 +995,14 @@ body.dialog-open {
                 background: #fff;
                 color: #1154ff;
                 border-radius: 24upx;
+            }
+            .active-time {
+                position: absolute;
+                top: 310upx;
+                left: 218upx;
+                color: #fff;
+                font-size: 22upx;
+                font-style: italic;
             }
         }
     }

@@ -61,7 +61,7 @@
                         >
                             <image
                                 class="banner-image"
-                                src="http://aitiaozhan.oss-cn-beijing.aliyuncs.com/chunjiehao/yiqing-banner.png?t=1"
+                                src="http://aitiaozhan.oss-cn-beijing.aliyuncs.com/chunjiehao/yiqing-banner.png?t=2"
                             />
                         </navigator>
                     </swiper-item>
