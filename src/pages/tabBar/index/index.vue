@@ -350,7 +350,7 @@ export default {
                 talent: [],
             },
             prompt: false,
-            isFirstLogin: 'isFirstLogin22',
+            isFirstLogin: 'isFirstLogin3',
             status: 2,
             show: 1,
             chunjiehaoshow: 1,
