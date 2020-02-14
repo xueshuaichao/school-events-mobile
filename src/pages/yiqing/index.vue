@@ -232,6 +232,10 @@
                                 点赞加油
                             </view>
                         </view>
+                        <view
+                            v-if="dataList.length === 0"
+                            class="media-fill"
+                        />
                         <uni-load-more
                             class="loadMore"
                             :status="loadMoreStatus"
@@ -315,8 +319,6 @@ export default {
         };
     },
     created() {
-        console.log('process.env.API_ENV=>');
-        console.log(process.env.API_ENV);
         this.getData();
         this.chunjieStatus();
         this.getCrouselList();
@@ -324,9 +326,7 @@ export default {
     onLoad(params) {
         this.fr = logger.getFr('dsxnh', params);
     },
-    onShow() {
-        // this.getData();
-    },
+    onShow() {},
     onHide() {
         this.changeValue = '';
     },
@@ -356,8 +356,6 @@ export default {
                         this.dataList = this.dataList.concat(list);
                     } else {
                         this.dataList = list;
-                        // this.crouselList = list;
-                        // console.log(this.crouselList, 'crouselList');
                     }
 
                     this.total = total;
@@ -713,11 +711,12 @@ body.dialog-open {
     z-index: 10;
 }
 .cansai-text {
-    width: 312upx;
+    // width: 312upx;
     height: 44upx;
-    margin-left: 220upx;
+    // margin-left: 220upx;
     margin-top: 20upx;
     color: #ffde98;
+    text-align: center;
 }
 .prize-prompt {
     text-align: center;
@@ -888,6 +887,9 @@ body.dialog-open {
             }
         }
     }
+    .media-fill {
+        height: 253upx;
+    }
 }
 
 .activerulebox {
@@ -941,7 +943,7 @@ body.dialog-open {
         background: #1154ff;
         position: absolute;
         top: 62upx;
-        left: 29upx;
+        left: 35upx;
         height: 92%;
         width: 678upx;
         padding: 76upx 30upx 38upx;
