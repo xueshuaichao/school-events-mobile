@@ -366,7 +366,7 @@ export default {
             title,
             imageUrl:
                 'http: //aitiaozhan.oss-cn-beijing.aliyuncs.com/chunjiehao/yiqing-poster01.png',
-            path: '/pages/chunjiehao/index',
+            path: '/pages/yiqing/index',
         };
     },
 };
@@ -469,7 +469,7 @@ export default {
             margin-bottom: 10upx;
         }
         .media-time {
-            color: #c9ac67;
+            color: #fff;
             font-size: 24upx;
         }
         .vote-num {
@@ -602,7 +602,7 @@ export default {
     }
 
     .reject-reason {
-        color: #b69755;
+        color: #fff;
         font-size: 24rpx;
         margin-top: 10rpx;
     }

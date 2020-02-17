@@ -424,7 +424,8 @@ export default {
         base64src(base64data, cb) {
             // eslint-disable-next-line no-undef
             const fsm = wx.getFileSystemManager();
-            const FILE_BASE_NAME = 'tmp_base64src'; // 自定义文件名
+            // const FILE_BASE_NAME = 'tmp_base64src'; // 自定义文件名
+            const FILE_BASE_NAME = `tmp_base64src_${new Date() - 0}`; // 自定义文件名
             const [, format, bodyData] = /data:image\/(\w+);base64,(.*)/.exec(base64data) || [];
             if (!format) {
                 return new Error('ERROR_BASE64SRC_PARSE');
@@ -449,13 +450,11 @@ export default {
 
         onPosterSuccess(e) {
             const { detail } = e;
-            console.log(detail);
             this.canvasImg = detail;
             this.showTicketMask = false;
             this.prompt = true;
         },
         handleSave() {
-            console.log(this.canvasImg, '触发图片保存');
             const that = this;
             // 图片保存到本地
             // eslint-disable-next-line no-undef
@@ -471,8 +470,6 @@ export default {
                     });
                 },
                 fail(err) {
-                    console.log('保存图片失败');
-                    console.log(err.errMsg);
                     if (
                         err.errMsg
                             === 'saveImageToPhotosAlbum:fail:auth denied'
@@ -530,7 +527,6 @@ export default {
                 (res) => {
                     this.isLoading = false;
                     this.detailId = res.id;
-                    console.log(res);
                     this.pageData = res;
                     this.posterConfig.images[1].url = res.video_img_url;
                     this.posterConfig.texts[0].text[0].text = `#${res.cat_name}# ${res.resource_name}`;
