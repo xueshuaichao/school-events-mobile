@@ -1,6 +1,10 @@
 <template>
-    <view class="page-index">
-        <!-- <view
+    <view>
+        <view
+            v-if="!needBindMobile"
+            class="page-index"
+        >
+            <!-- <view
             v-if="prompt && status === 2"
             class="cover"
         >
@@ -15,80 +19,80 @@
                 春节入口3
             </view>
         </view> -->
-        <view
-            v-if="prompt && status === 2"
-            class="cover"
-        >
-            <image
-                src="http://aitiaozhan.oss-cn-beijing.aliyuncs.com/chunjiehao/suspension01.png"
-                @click="handleChunjie"
-            />
-            <image
-                src="../../../static/images/chunjie/third_entry_close.png"
-                @click="handleClose"
-            />
-            疫情入口
-        </view>
-        <navigator
-            v-if="yiqingshow === 1 && isShow"
-            url="/pages/yiqing/index"
-        >
-            <view class="chunjie-entry">
+            <view
+                v-if="prompt && status === 2"
+                class="cover"
+            >
                 <image
-                    src="/static/images/yiqing/close.png"
-                    class="close-icon"
-                    @click.stop="handleCloseSuspension"
+                    src="http://aitiaozhan.oss-cn-beijing.aliyuncs.com/chunjiehao/suspension01.png"
+                    @click="handleChunjie"
                 />
-                春节入口
+                <image
+                    src="../../../static/images/chunjie/third_entry_close.png"
+                    @click="handleClose"
+                />
+                疫情入口
             </view>
-        </navigator>
-        <!-- swiper -->
-        <view class="swiper main-swiper">
-            <view class="page-section-spacing">
-                <swiper
-                    class="swiper"
-                    :indicator-dots="indicatorDots"
-                    :autoplay="autoplay"
-                    :interval="interval"
-                    :duration="duration"
-                    :circular="circular"
-                >
-                    <!-- 疫情入口 -->
-                    <swiper-item v-if="!isH5 && yiqingshow === 1">
-                        <navigator
-                            url="/pages/yiqing/index"
-                            class="swiper-item"
-                        >
-                            <image
-                                class="banner-image"
-                                src="http://aitiaozhan.oss-cn-beijing.aliyuncs.com/chunjiehao/yiqing-banner.png?t=2"
-                            />
-                        </navigator>
-                    </swiper-item>
-                    <swiper-item v-if="show === 1">
-                        <navigator
-                            url="/pages/chunjie/index"
-                            class="swiper-item"
-                        >
-                            <image
-                                class="banner-image"
-                                src="http://aitiaozhan.oss-cn-beijing.aliyuncs.com/banner4.png"
-                            />
-                        </navigator>
-                    </swiper-item>
-                    <!-- 春节好入口 -->
-                    <swiper-item v-if="!isH5 && chunjiehaoshow === 1">
-                        <navigator
-                            url="/pages/chunjiehao/index"
-                            class="swiper-item"
-                        >
-                            <image
-                                class="banner-image"
-                                src="http://aitiaozhan.oss-cn-beijing.aliyuncs.com/chunjiehao.png?t=1"
-                            />
-                        </navigator>
-                    </swiper-item>
-                    <!-- <swiper-item>
+            <navigator
+                v-if="yiqingshow === 1 && isShow"
+                url="/pages/yiqing/index"
+            >
+                <view class="chunjie-entry">
+                    <image
+                        src="/static/images/yiqing/close.png"
+                        class="close-icon"
+                        @click.stop="handleCloseSuspension"
+                    />
+                    春节入口
+                </view>
+            </navigator>
+            <!-- swiper -->
+            <view class="swiper main-swiper">
+                <view class="page-section-spacing">
+                    <swiper
+                        class="swiper"
+                        :indicator-dots="indicatorDots"
+                        :autoplay="autoplay"
+                        :interval="interval"
+                        :duration="duration"
+                        :circular="circular"
+                    >
+                        <!-- 疫情入口 -->
+                        <swiper-item v-if="!isH5 && yiqingshow === 1">
+                            <navigator
+                                url="/pages/yiqing/index"
+                                class="swiper-item"
+                            >
+                                <image
+                                    class="banner-image"
+                                    src="http://aitiaozhan.oss-cn-beijing.aliyuncs.com/chunjiehao/yiqing-banner.png?t=2"
+                                />
+                            </navigator>
+                        </swiper-item>
+                        <swiper-item v-if="show === 1">
+                            <navigator
+                                url="/pages/chunjie/index"
+                                class="swiper-item"
+                            >
+                                <image
+                                    class="banner-image"
+                                    src="http://aitiaozhan.oss-cn-beijing.aliyuncs.com/banner4.png"
+                                />
+                            </navigator>
+                        </swiper-item>
+                        <!-- 春节好入口 -->
+                        <swiper-item v-if="!isH5 && chunjiehaoshow === 1">
+                            <navigator
+                                url="/pages/chunjiehao/index"
+                                class="swiper-item"
+                            >
+                                <image
+                                    class="banner-image"
+                                    src="http://aitiaozhan.oss-cn-beijing.aliyuncs.com/chunjiehao.png?t=1"
+                                />
+                            </navigator>
+                        </swiper-item>
+                        <!-- <swiper-item>
                         <navigator
                             url="/pages/doc/notice/notice"
                             class="swiper-item"
@@ -123,203 +127,210 @@
                             />
                         </view>
                     </swiper-item> -->
-                </swiper>
-            </view>
-        </view>
-
-        <view class="menu-list">
-            <navigator
-                class="item"
-                :url="`/pages/doc/detail/detail?id=rule`"
-            >
-                <view class="icon-wrap red">
-                    <image
-                        class="icon"
-                        src="/static/images/index/0001.png"
-                    />
-                </view>
-                <text class="name">
-                    参赛指南
-                </text>
-            </navigator>
-
-            <navigator
-                class="item"
-                :url="`/pages/doc/list/list?type=challenge`"
-            >
-                <view class="icon-wrap light-blue">
-                    <image
-                        class="icon"
-                        src="/static/images/index/0002.png"
-                    />
-                </view>
-                <text class="name">
-                    爱挑战项目
-                </text>
-            </navigator>
-
-            <navigator
-                class="item"
-                :url="`/pages/doc/list/list?type=talent`"
-            >
-                <view class="icon-wrap dark-blue">
-                    <image
-                        class="icon"
-                        src="/static/images/index/0003.png"
-                    />
-                </view>
-                <text class="name">
-                    才艺秀项目
-                </text>
-            </navigator>
-
-            <navigator
-                class="item"
-                :url="`/pages/doc/list/list?type=guinness`"
-            >
-                <view class="icon-wrap pink">
-                    <image
-                        class="icon"
-                        src="/static/images/index/0004.png"
-                    />
-                </view>
-                <text class="name">
-                    吉尼斯项目
-                </text>
-            </navigator>
-        </view>
-        <!-- menu -->
-        <view class="menu-list">
-            <navigator
-                class="item"
-                :url="
-                    `/pages/news/detail/detail?id=${menuConf.intro.id}&title=大赛简介`
-                "
-            >
-                <view class="icon-wrap purple">
-                    <!-- <view class="icon icon-intro"></view> -->
-                    <image
-                        class="icon"
-                        src="/static/images/index/intro.png"
-                    />
-                </view>
-                <text class="name">
-                    大赛简介
-                </text>
-            </navigator>
-
-            <navigator
-                class="item"
-                :url="
-                    `/pages/news/detail/detail?id=${menuConf.notice.id}&title=大赛须知`
-                "
-            >
-                <view class="icon-wrap green">
-                    <image
-                        class="icon"
-                        src="/static/images/index/rule.png"
-                    />
-                </view>
-                <text class="name">
-                    大赛须知
-                </text>
-            </navigator>
-
-            <navigator
-                class="item"
-                :url="
-                    `/pages/news/detail/detail?id=${menuConf.process.id}&title=大赛流程`
-                "
-            >
-                <view class="icon-wrap yellow">
-                    <image
-                        class="icon"
-                        src="/static/images/index/flow.png"
-                    />
-                </view>
-                <text class="name">
-                    大赛流程
-                </text>
-            </navigator>
-
-            <navigator
-                class="item"
-                :url="
-                    `/pages/news/detail/detail?id=${menuConf.time.id}&title=大赛时间`
-                "
-            >
-                <view class="icon-wrap blue">
-                    <image
-                        class="icon"
-                        src="/static/images/index/time.png"
-                    />
-                </view>
-                <text class="name">
-                    大赛时间
-                </text>
-            </navigator>
-        </view>
-        <!-- work show -->
-
-        <work
-            :title="'爱挑战优秀个人'"
-            :more-url="'/pages/work/list/list?cat_id=1'"
-            :info="workData.individual"
-        />
-        <work
-            :title="'爱挑战优秀团体'"
-            :more-url="'/pages/work/list/list?cat_id=2'"
-            :info="workData.team"
-        />
-        <work
-            :title="'才艺秀优秀作品'"
-            :more-url="'/pages/work/list/list?cat_id=3'"
-            :info="workData.talent"
-        />
-
-        <!-- news -->
-        <view class="panel">
-            <view class="panel-hd">
-                <text
-                    v-for="(item, k) in newsColumn"
-                    :key="item.id"
-                    class="panel-title"
-                    :class="{ active: newsTabActiveIndex === k }"
-                    @click="setNewsTabActive(k)"
-                >
-                    {{ item.column_name }}
-                </text>
-
-                <view
-                    class="link"
-                    @click="moreArticle"
-                >
-                    更多 >
+                    </swiper>
                 </view>
             </view>
-            <view class="panel-bd news-list">
+
+            <view class="menu-list">
                 <navigator
-                    v-for="item in newsData"
-                    :key="item.id"
-                    class="news-item"
-                    :url="`/pages/news/detail/detail?id=${item.id}`"
+                    class="item"
+                    :url="`/pages/doc/detail/detail?id=rule`"
                 >
-                    <text class="text-two-line">
-                        · {{ item.title }}
+                    <view class="icon-wrap red">
+                        <image
+                            class="icon"
+                            src="/static/images/index/0001.png"
+                        />
+                    </view>
+                    <text class="name">
+                        参赛指南
+                    </text>
+                </navigator>
+
+                <navigator
+                    class="item"
+                    :url="`/pages/doc/list/list?type=challenge`"
+                >
+                    <view class="icon-wrap light-blue">
+                        <image
+                            class="icon"
+                            src="/static/images/index/0002.png"
+                        />
+                    </view>
+                    <text class="name">
+                        爱挑战项目
+                    </text>
+                </navigator>
+
+                <navigator
+                    class="item"
+                    :url="`/pages/doc/list/list?type=talent`"
+                >
+                    <view class="icon-wrap dark-blue">
+                        <image
+                            class="icon"
+                            src="/static/images/index/0003.png"
+                        />
+                    </view>
+                    <text class="name">
+                        才艺秀项目
+                    </text>
+                </navigator>
+
+                <navigator
+                    class="item"
+                    :url="`/pages/doc/list/list?type=guinness`"
+                >
+                    <view class="icon-wrap pink">
+                        <image
+                            class="icon"
+                            src="/static/images/index/0004.png"
+                        />
+                    </view>
+                    <text class="name">
+                        吉尼斯项目
                     </text>
                 </navigator>
             </view>
+            <!-- menu -->
+            <view class="menu-list">
+                <navigator
+                    class="item"
+                    :url="
+                        `/pages/news/detail/detail?id=${menuConf.intro.id}&title=大赛简介`
+                    "
+                >
+                    <view class="icon-wrap purple">
+                        <!-- <view class="icon icon-intro"></view> -->
+                        <image
+                            class="icon"
+                            src="/static/images/index/intro.png"
+                        />
+                    </view>
+                    <text class="name">
+                        大赛简介
+                    </text>
+                </navigator>
+
+                <navigator
+                    class="item"
+                    :url="
+                        `/pages/news/detail/detail?id=${menuConf.notice.id}&title=大赛须知`
+                    "
+                >
+                    <view class="icon-wrap green">
+                        <image
+                            class="icon"
+                            src="/static/images/index/rule.png"
+                        />
+                    </view>
+                    <text class="name">
+                        大赛须知
+                    </text>
+                </navigator>
+
+                <navigator
+                    class="item"
+                    :url="
+                        `/pages/news/detail/detail?id=${menuConf.process.id}&title=大赛流程`
+                    "
+                >
+                    <view class="icon-wrap yellow">
+                        <image
+                            class="icon"
+                            src="/static/images/index/flow.png"
+                        />
+                    </view>
+                    <text class="name">
+                        大赛流程
+                    </text>
+                </navigator>
+
+                <navigator
+                    class="item"
+                    :url="
+                        `/pages/news/detail/detail?id=${menuConf.time.id}&title=大赛时间`
+                    "
+                >
+                    <view class="icon-wrap blue">
+                        <image
+                            class="icon"
+                            src="/static/images/index/time.png"
+                        />
+                    </view>
+                    <text class="name">
+                        大赛时间
+                    </text>
+                </navigator>
+            </view>
+            <!-- work show -->
+
+            <work
+                :title="'爱挑战优秀个人'"
+                :more-url="'/pages/work/list/list?cat_id=1'"
+                :info="workData.individual"
+            />
+            <work
+                :title="'爱挑战优秀团体'"
+                :more-url="'/pages/work/list/list?cat_id=2'"
+                :info="workData.team"
+            />
+            <work
+                :title="'才艺秀优秀作品'"
+                :more-url="'/pages/work/list/list?cat_id=3'"
+                :info="workData.talent"
+            />
+
+            <!-- news -->
+            <view class="panel">
+                <view class="panel-hd">
+                    <text
+                        v-for="(item, k) in newsColumn"
+                        :key="item.id"
+                        class="panel-title"
+                        :class="{ active: newsTabActiveIndex === k }"
+                        @click="setNewsTabActive(k)"
+                    >
+                        {{ item.column_name }}
+                    </text>
+
+                    <view
+                        class="link"
+                        @click="moreArticle"
+                    >
+                        更多 >
+                    </view>
+                </view>
+                <view class="panel-bd news-list">
+                    <navigator
+                        v-for="item in newsData"
+                        :key="item.id"
+                        class="news-item"
+                        :url="`/pages/news/detail/detail?id=${item.id}`"
+                    >
+                        <text class="text-two-line">
+                            · {{ item.title }}
+                        </text>
+                    </navigator>
+                </view>
+            </view>
         </view>
+        <bindMobile
+            v-if="needBindMobile"
+            @bindMobile="onBindMobile"
+        />
     </view>
 </template>
 
 <script>
 import work from '../../../widgets/work/work.vue';
 import api from '../../../common/api';
+import bindMobile from '../../../components/bind-mobile/index.vue';
 
 export default {
     components: {
         work,
+        bindMobile,
     },
     data() {
         return {
@@ -358,6 +369,7 @@ export default {
             // #ifdef H5
             isH5: true,
             // #endif
+            needBindMobile: false,
         };
     },
     onLoad() {
@@ -366,6 +378,7 @@ export default {
         this.yiqingStatus();
         this.thirdEntryPrompt();
         this.getData();
+        this.getUserInfo();
     },
     onShow() {
         this.chunjieStatus();
@@ -375,6 +388,16 @@ export default {
         this.prompt = false;
     },
     methods: {
+        getUserInfo() {
+            api.get('/api/user/info').then(
+                (res) => {
+                    this.needBindMobile = res.user_info
+                        && res.user_info.is_bind_mobile === 0
+                        && res.user_info.shop_id === 1;
+                },
+                () => {},
+            );
+        },
         handleCloseSuspension() {
             this.isShow = false;
         },

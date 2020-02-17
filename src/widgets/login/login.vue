@@ -1,136 +1,148 @@
 <template>
     <view class="page-bind-mobile">
-        <image
-            class="logo"
-            src="/static/images/widgets/login/logo.png"
-        />
-        <view class="tabs row">
-            <view
-                class="tab tab-login"
-                :class="{ active: loginMode === 'sms' }"
-                @click="loginMode = 'sms'"
-            >
-                手机号登录
+        <view v-if="!needBindMobile">
+            <image
+                class="logo"
+                src="/static/images/widgets/login/logo.png"
+            />
+            <view class="tabs row">
+                <view
+                    class="tab tab-login"
+                    :class="{ active: loginMode === 'sms' }"
+                    @click="loginMode = 'sms'"
+                >
+                    手机号登录
+                </view>
+                <view
+                    class="tab tab-register"
+                    :class="{ active: loginMode === 'password' }"
+                    @click="loginMode = 'password'"
+                >
+                    帐号密码登录
+                </view>
             </view>
-            <view
-                class="tab tab-register"
-                :class="{ active: loginMode === 'password' }"
-                @click="loginMode = 'password'"
-            >
-                帐号密码登录
-            </view>
-        </view>
 
-        <!-- 帐号登录 -->
-        <template v-if="true">
-            <view
-                class="form-item-wrap"
-                :class="{
-                    inValid: accountData.isValid === false
-                }"
-            >
-                <image
+            <!-- 帐号登录 -->
+            <template v-if="true">
+                <view
+                    class="form-item-wrap"
+                    :class="{
+                        inValid: accountData.isValid === false
+                    }"
+                >
+                    <image
+                        v-if="loginMode === 'password'"
+                        class="icon"
+                        src="/static/images/widgets/login/phone.png"
+                    />
+                    <image
+                        v-if="loginMode === 'sms'"
+                        class="icon"
+                        src="/static/images/widgets/login/user.png"
+                    />
+
+                    <input
+                        v-model="formData.username"
+                        class="form-input"
+                        placeholder-class="placeholder"
+                        maxlength="30"
+                        :placeholder="
+                            loginMode === 'password'
+                                ? '请输入手机号或用户名'
+                                : '请输入手机号'
+                        "
+                    >
+                    <view class="error-tip">
+                        {{ accountData.isValid ? "" : accountData.msg || "" }}
+                    </view>
+                </view>
+
+                <view
                     v-if="loginMode === 'password'"
-                    class="icon"
-                    src="/static/images/widgets/login/phone.png"
-                />
-                <image
-                    v-if="loginMode === 'sms'"
-                    class="icon"
-                    src="/static/images/widgets/login/user.png"
-                />
-
-                <input
-                    v-model="formData.username"
-                    class="form-input"
-                    placeholder-class="placeholder"
-                    maxlength="30"
-                    :placeholder="
-                        loginMode === 'password'
-                            ? '请输入手机号或用户名'
-                            : '请输入手机号'
-                    "
+                    class="form-item-wrap"
                 >
-                <view class="error-tip">
-                    {{ accountData.isValid ? "" : accountData.msg || "" }}
+                    <image
+                        class="icon"
+                        src="/static/images/widgets/login/lock.png"
+                    />
+                    <input
+                        v-model="formData.password"
+                        class="form-input"
+                        placeholder-class="placeholder"
+                        maxlength="30"
+                        placeholder="请输入密码"
+                        password
+                    >
                 </view>
-            </view>
 
-            <view
-                v-if="loginMode === 'password'"
-                class="form-item-wrap"
-            >
-                <image
-                    class="icon"
-                    src="/static/images/widgets/login/lock.png"
-                />
-                <input
-                    v-model="formData.password"
-                    class="form-input"
-                    placeholder-class="placeholder"
-                    maxlength="30"
-                    placeholder="请输入密码"
-                    password
-                >
-            </view>
-
-            <view
-                v-if="loginMode === 'sms'"
-                class="form-item-wrap"
-            >
-                <image
-                    class="icon"
-                    src="/static/images/widgets/login/lock.png"
-                />
-                <input
-                    v-model="formData.password"
-                    class="form-input"
-                    placeholder-class="placeholder"
-                    maxlength="6"
-                    placeholder="请输入验证码"
-                >
-                <view
-                    v-if="!captcha.isSend"
-                    class="send-captcha"
-                    @click="sendCaptcha(2)"
-                >
-                    获取验证码
-                </view>
-                <view
-                    v-if="captcha.isSend"
-                    class="send-captcha is-send"
-                >
-                    {{ captcha.remain }}s 后重新发
-                </view>
-            </view>
-            <view class="login-mode">
                 <view
                     v-if="loginMode === 'sms'"
-                    class="desc"
+                    class="form-item-wrap"
                 >
-                    未注册手机号验证后即完成注册
+                    <image
+                        class="icon"
+                        src="/static/images/widgets/login/lock.png"
+                    />
+                    <input
+                        v-model="formData.password"
+                        class="form-input"
+                        placeholder-class="placeholder"
+                        maxlength="6"
+                        placeholder="请输入验证码"
+                    >
+                    <view
+                        v-if="!captcha.isSend"
+                        class="send-captcha"
+                        @click="sendCaptcha(2)"
+                    >
+                        获取验证码
+                    </view>
+                    <view
+                        v-if="captcha.isSend"
+                        class="send-captcha is-send"
+                    >
+                        {{ captcha.remain }}s 后重新发
+                    </view>
                 </view>
-            </view>
+                <view class="login-mode">
+                    <view
+                        v-if="loginMode === 'sms'"
+                        class="desc"
+                    >
+                        未注册手机号验证后即完成注册
+                    </view>
+                </view>
 
-            <view class="form-item-wrap">
-                <view
-                    class="btn login-btn"
-                    @click="login()"
-                >
-                    确定
+                <view class="form-item-wrap">
+                    <view
+                        class="btn login-btn"
+                        @click="login()"
+                    >
+                        确定
+                    </view>
                 </view>
-            </view>
-        </template>
+            </template>
+        </view>
+        <!-- <view
+            v-if="needBindMobile"
+            class="page-bind-mobile"
+        >
+        </view> -->
+        <bindMobile
+            v-if="needBindMobile"
+            @bindMobile="onBindMobile"
+        />
     </view>
-
-    <!--
-    -->
 </template>
 
 <script>
 import api from '../../common/api';
+import bindMobile from '../../components/bind-mobile/index.vue';
 
 export default {
+    components: {
+        bindMobile,
+    },
     props: {
         fr: {
             type: String,
@@ -161,6 +173,7 @@ export default {
             },
             // loginMode: 'sms',
             loginMode: 'sms',
+            needBindMobile: false,
         };
     },
     methods: {
@@ -198,7 +211,8 @@ export default {
                     } catch (e) {
                         // error
                     }
-
+                    // 看是否是陕西用户
+                    this.getUserInfo();
                     this.$emit('login', res);
                 },
                 (err) => {
@@ -208,6 +222,23 @@ export default {
                     });
                 },
             );
+        },
+        getUserInfo() {
+            api.get('/api/user/info').then(
+                (res) => {
+                    this.needBindMobile = res.user_info
+                        && res.user_info.is_bind_mobile === 0
+                        && res.user_info.shop_id === 1;
+                    this.userInfo = res.user_info;
+                    this.isLoading = false;
+                },
+                () => {
+                    this.isLoading = false;
+                },
+            );
+        },
+        onBindMobile(res) {
+            this.needBindMobile = res;
         },
         doSMSLogin() {
             console.log('sms login');
@@ -420,138 +451,6 @@ export default {
         &.disabled {
             background: #1166ff;
         }
-    }
-}
-
-.page-bind-mobile {
-    padding: 30rpx 60rpx 0;
-
-    .tip {
-        font-size: 26rpx;
-        color: #333;
-        text-align: center;
-        padding-top: 80rpx;
-    }
-
-    .login-mode {
-        color: #1166ff;
-        font-size: 30rpx;
-        margin-top: 50rpx;
-        height: 30rpx;
-        text-align: center;
-    }
-
-    .tabs {
-        margin-bottom: 80rpx;
-
-        .tab {
-            color: #999;
-            font-size: 36rpx;
-            padding-bottom: 24rpx;
-
-            &.active {
-                color: #1166ff;
-                border-bottom: 4rpx solid #1166ff;
-            }
-        }
-
-        .tab-login {
-            text-align: center;
-            width: 200rpx;
-            margin-left: 60rpx;
-            margin-right: 60rpx;
-        }
-        .tab-register {
-            text-align: center;
-            width: 240rpx;
-        }
-    }
-
-    .row {
-        display: flex;
-
-        .col {
-            flex: 1;
-        }
-    }
-
-    .form-item-wrap {
-        position: relative;
-
-        .form-input {
-            color: #333;
-            font-size: 30rpx;
-            border-bottom: 1rpx solid #d8d8d8;
-            height: 90rpx;
-            margin-top: 20rpx;
-            padding-left: 72rpx;
-        }
-
-        .icon {
-            position: absolute;
-            width: 34rpx;
-            height: 32rpx;
-            left: 20rpx;
-            top: 30rpx;
-        }
-
-        &.inValid {
-            .form-input {
-                border-bottom: 1rpx solid #fa6855;
-            }
-        }
-
-        input::placeholder {
-            color: #666;
-        }
-
-        .error-tip {
-            color: #fa6855;
-            font-size: 26rpx;
-            height: 30rpx;
-            margin-top: 10rpx;
-        }
-
-        .send-captcha {
-            position: absolute;
-            right: 0rpx;
-            color: #1166ff;
-            font-size: 30rpx;
-            bottom: 25rpx;
-            z-index: 100;
-
-            &.is-send {
-                color: #999;
-                height: 50rpx;
-                background: #eeeeee;
-                padding: 0 10rpx;
-                font-size: 28rpx;
-                line-height: 50rpx;
-            }
-        }
-    }
-
-    .btn {
-        width: 100%;
-        background: #1166ff;
-        color: #fff;
-        height: 98rpx;
-        line-height: 98rpx;
-        text-align: center;
-        margin-top: 100rpx;
-        font-size: 36rpx;
-    }
-
-    .logo {
-        width: 438rpx;
-        height: 264rpx;
-        display: block;
-        margin: 30rpx auto 60rpx;
-    }
-
-    .desc {
-        color: #aaa;
-        font-size: 32rpx;
     }
 }
 </style>
