@@ -68,6 +68,11 @@ export default {
                 isValid: true,
                 msg: '',
             },
+            captcha: {
+                create_at: '',
+                remain: '',
+                isSend: false,
+            },
         };
     },
     methods: {
@@ -89,7 +94,7 @@ export default {
                     title: '请输入验证码',
                 });
             }
-
+            const that = this;
             // api bind mobile
             return api
                 .post('/api/account/bindphone', {
@@ -101,9 +106,10 @@ export default {
                         uni.showToast({
                             icon: 'none',
                             title: '绑定成功！',
-                            duration: '1000',
                             complete() {
-                                this.$emit('bindMobile', false);
+                                setTimeout(() => {
+                                    that.$emit('bindMobile');
+                                }, 1500);
                             },
                         });
                     },
@@ -113,21 +119,57 @@ export default {
                     }),
                 );
         },
+        countDown() {
+            const sep = 30 * 1000;
+            const now = new Date() - 0;
+            const duration = this.captcha.create_at + sep - now;
+
+            if (duration > 0) {
+                this.captcha.remain = Math.round(duration / 1000);
+
+                setTimeout(() => {
+                    this.countDown();
+                }, 300);
+            } else {
+                this.captcha.isSend = false;
+            }
+        },
+        sendCaptcha() {
+            console.log('-000');
+            this.captcha.create_at = new Date() - 0;
+            this.captcha.remain = 30;
+            this.captcha.isSend = true;
+
+            // 切换绑定手机号接口
+            api.get('/api/account/sendbindmsg', {
+                phone: this.accountData.mobile,
+            }).then(
+                () => {
+                    try {
+                        this.countDown();
+                    } catch (e) {
+                        console.log(e);
+                    }
+                },
+                err => uni.showToast({
+                    icon: 'none',
+                    title: err.message,
+                }),
+            );
+        },
     },
 };
 </script>
 
-<style>
+<style lang="less">
 .page-bind-mobile {
     padding: 30rpx 60rpx 0;
-
     .tip {
         font-size: 26rpx;
         color: #333;
         text-align: center;
         padding-top: 80rpx;
     }
-
     .login-mode {
         color: #1166ff;
         font-size: 30rpx;

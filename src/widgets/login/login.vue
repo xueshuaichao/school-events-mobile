@@ -1,6 +1,9 @@
 <template>
-    <view class="page-bind-mobile">
-        <view v-if="!needBindMobile">
+    <view>
+        <view
+            v-if="!needBindMobile"
+            class="page-bind-mobile"
+        >
             <image
                 class="logo"
                 src="/static/images/widgets/login/logo.png"
@@ -123,11 +126,6 @@
                 </view>
             </template>
         </view>
-        <!-- <view
-            v-if="needBindMobile"
-            class="page-bind-mobile"
-        >
-        </view> -->
         <bindMobile
             v-if="needBindMobile"
             @bindMobile="onBindMobile"
@@ -174,6 +172,7 @@ export default {
             // loginMode: 'sms',
             loginMode: 'sms',
             needBindMobile: false,
+            userInfo: {},
         };
     },
     methods: {
@@ -213,7 +212,6 @@ export default {
                     }
                     // 看是否是陕西用户
                     this.getUserInfo();
-                    this.$emit('login', res);
                 },
                 (err) => {
                     uni.showToast({
@@ -229,16 +227,17 @@ export default {
                     this.needBindMobile = res.user_info
                         && res.user_info.is_bind_mobile === 0
                         && res.user_info.shop_id === 1;
-                    this.userInfo = res.user_info;
-                    this.isLoading = false;
+                    if (!this.needBindMobile) {
+                        this.userInfo = res;
+                        this.$emit('login', res);
+                    }
                 },
-                () => {
-                    this.isLoading = false;
-                },
+                () => {},
             );
         },
-        onBindMobile(res) {
-            this.needBindMobile = res;
+        onBindMobile() {
+            this.$emit('login', this.userInfo);
+            this.needBindMobile = false;
         },
         doSMSLogin() {
             console.log('sms login');
@@ -258,7 +257,9 @@ export default {
                             // error
                         }
 
-                        this.$emit('login', res);
+                        // this.$emit('login', res);
+                        // 看是否是陕西用户
+                        this.getUserInfo();
                     },
                     (err) => {
                         uni.showToast({
@@ -451,6 +452,137 @@ export default {
         &.disabled {
             background: #1166ff;
         }
+    }
+}
+.page-bind-mobile {
+    padding: 30rpx 60rpx 0;
+
+    .tip {
+        font-size: 26rpx;
+        color: #333;
+        text-align: center;
+        padding-top: 80rpx;
+    }
+
+    .login-mode {
+        color: #1166ff;
+        font-size: 30rpx;
+        margin-top: 50rpx;
+        height: 30rpx;
+        text-align: center;
+    }
+
+    .tabs {
+        margin-bottom: 80rpx;
+
+        .tab {
+            color: #999;
+            font-size: 36rpx;
+            padding-bottom: 24rpx;
+
+            &.active {
+                color: #1166ff;
+                border-bottom: 4rpx solid #1166ff;
+            }
+        }
+
+        .tab-login {
+            text-align: center;
+            width: 200rpx;
+            margin-left: 60rpx;
+            margin-right: 60rpx;
+        }
+        .tab-register {
+            text-align: center;
+            width: 240rpx;
+        }
+    }
+
+    .row {
+        display: flex;
+
+        .col {
+            flex: 1;
+        }
+    }
+
+    .form-item-wrap {
+        position: relative;
+
+        .form-input {
+            color: #333;
+            font-size: 30rpx;
+            border-bottom: 1rpx solid #d8d8d8;
+            height: 90rpx;
+            margin-top: 20rpx;
+            padding-left: 72rpx;
+        }
+
+        .icon {
+            position: absolute;
+            width: 34rpx;
+            height: 32rpx;
+            left: 20rpx;
+            top: 30rpx;
+        }
+
+        &.inValid {
+            .form-input {
+                border-bottom: 1rpx solid #fa6855;
+            }
+        }
+
+        input::placeholder {
+            color: #666;
+        }
+
+        .error-tip {
+            color: #fa6855;
+            font-size: 26rpx;
+            height: 30rpx;
+            margin-top: 10rpx;
+        }
+
+        .send-captcha {
+            position: absolute;
+            right: 0rpx;
+            color: #1166ff;
+            font-size: 30rpx;
+            bottom: 25rpx;
+            z-index: 100;
+
+            &.is-send {
+                color: #999;
+                height: 50rpx;
+                background: #eeeeee;
+                padding: 0 10rpx;
+                font-size: 28rpx;
+                line-height: 50rpx;
+            }
+        }
+    }
+
+    .btn {
+        width: 100%;
+        background: #1166ff;
+        color: #fff;
+        height: 98rpx;
+        line-height: 98rpx;
+        text-align: center;
+        margin-top: 100rpx;
+        font-size: 36rpx;
+    }
+
+    .logo {
+        width: 438rpx;
+        height: 264rpx;
+        display: block;
+        margin: 30rpx auto 60rpx;
+    }
+
+    .desc {
+        color: #aaa;
+        font-size: 32rpx;
     }
 }
 </style>

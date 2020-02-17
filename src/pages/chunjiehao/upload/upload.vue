@@ -302,7 +302,7 @@ export default {
     onLoad() {},
     created() {},
     onShow() {
-        this.getData();
+        // this.getData();
     },
     methods: {
         getData() {

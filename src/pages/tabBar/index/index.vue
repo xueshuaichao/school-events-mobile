@@ -389,6 +389,7 @@ export default {
     },
     methods: {
         getUserInfo() {
+            console.log('首页请求个人信息');
             api.get('/api/user/info').then(
                 (res) => {
                     this.needBindMobile = res.user_info
@@ -397,6 +398,9 @@ export default {
                 },
                 () => {},
             );
+        },
+        onBindMobile() {
+            this.needBindMobile = false;
         },
         handleCloseSuspension() {
             this.isShow = false;
