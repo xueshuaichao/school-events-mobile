@@ -1,9 +1,6 @@
 <template>
     <view>
-        <view
-            v-if="!needBindMobile"
-            class="page-bind-mobile"
-        >
+        <view class="page-bind-mobile">
             <image
                 class="logo"
                 src="/static/images/widgets/login/logo.png"
@@ -126,21 +123,18 @@
                 </view>
             </template>
         </view>
-        <bindMobile
-            v-if="needBindMobile"
-            @bindMobile="onBindMobile"
-        />
+        <!-- <bindMobile v-if="needBindMobile" @bindMobile="onBindMobile"/> -->
     </view>
 </template>
 
 <script>
 import api from '../../common/api';
-import bindMobile from '../../components/bind-mobile/index.vue';
+// import bindMobile from '../../components/bind-mobile/index.vue';
 
 export default {
-    components: {
-        bindMobile,
-    },
+    // components: {
+    //     bindMobile,
+    // },
     props: {
         fr: {
             type: String,
@@ -171,9 +165,33 @@ export default {
             },
             // loginMode: 'sms',
             loginMode: 'sms',
-            needBindMobile: false,
+            // needBindMobile: false,
             userInfo: {},
+            binding: false,
+            userkey: '',
         };
+    },
+    created() {
+        // console.log('loginCreated');
+        // let pages = getCurrentPages();//当前页面栈
+        // console.log(pages,'pages111');
+        // let prevPage = pages[pages.length - 2];//上一页面
+        // console.log(prevPage, 'prevPage');
+    },
+    mounted() {
+        console.log('loginCreated');
+        const pages = getCurrentPages(); // eslint-disable-line
+        console.log(pages, 'pages111');
+        const prevPage = pages[pages.length - 2]; // 上一页面
+        console.log(prevPage, 'prevPage');
+        console.log(this.binding, 'mounted111');
+        if (this.binding) {
+            this.binding = false;
+            uni.showToast({
+                title: '登录失败，请绑定手机号激活账号',
+                icon: 'none',
+            });
+        }
     },
     methods: {
         login() {
@@ -211,7 +229,7 @@ export default {
                         // error
                     }
                     // 看是否是陕西用户
-                    this.getUserInfo();
+                    this.getUserInfo(userkey);
                 },
                 (err) => {
                     uni.showToast({
@@ -221,13 +239,21 @@ export default {
                 },
             );
         },
-        getUserInfo() {
+        getUserInfo(userkey) {
             api.get('/api/user/info').then(
                 (res) => {
                     this.needBindMobile = res.user_info
                         && res.user_info.is_bind_mobile === 0
                         && res.user_info.shop_id === 1;
-                    if (!this.needBindMobile) {
+                    this.userkey = userkey;
+                    if (this.needBindMobile) {
+                        uni.removeStorageSync('medusa_key');
+                        this.$emit('binding');
+                        this.binding = true;
+                        uni.navigateTo({
+                            url: `/pages/yiqing/bind-mobile/index?userkey=${this.userkey}`,
+                        });
+                    } else {
                         this.userInfo = res;
                         this.$emit('login', res);
                     }
@@ -235,10 +261,15 @@ export default {
                 () => {},
             );
         },
-        onBindMobile() {
-            this.$emit('login', this.userInfo);
-            this.needBindMobile = false;
-        },
+        // onBindMobile() {
+        //     try {
+        //         uni.setStorageSync('medusa_key', this.userkey);
+        //     } catch (e) {
+        //         // error
+        //     }
+        //     this.$emit('login', this.userInfo);
+        //     // this.needBindMobile = false;
+        // },
         doSMSLogin() {
             console.log('sms login');
             return api
@@ -257,9 +288,7 @@ export default {
                             // error
                         }
 
-                        // this.$emit('login', res);
-                        // 看是否是陕西用户
-                        this.getUserInfo();
+                        this.$emit('login', res);
                     },
                     (err) => {
                         uni.showToast({
@@ -410,6 +439,13 @@ export default {
                     }),
                 );
         },
+    },
+    onShow() {
+        console.log('loginOnshow触发');
+        const pages = getCurrentPages(); // eslint-disable-line
+        console.log(pages, 'pages222');
+        const prevPage = pages[pages.length - 2]; // 上一页面
+        console.log(prevPage, 'prevPage');
     },
 };
 </script>

@@ -5,6 +5,7 @@
     >
         <login
             v-if="userInfo === null"
+            @binding="binding = true"
             @login="onLogin"
         />
         <template v-else>
@@ -145,6 +146,7 @@ export default {
             workStatics: {},
             isLoadingTableData: true,
             tableData: [],
+            binding: false,
         };
     },
     methods: {
@@ -178,10 +180,20 @@ export default {
         },
     },
     onLoad() {
+        uni.setStorageSync('path', '/pages/tabBar/uc/uc');
         this.getData();
     },
     onShow() {
         this.getData();
+
+        console.log('loginOnshow触发11');
+        if (this.binding) {
+            this.binding = false;
+            uni.showToast({
+                title: '登录失败，请绑定手机号激活账号',
+                icon: 'none',
+            });
+        }
     },
     onHide() {
         this.isLoading = true;

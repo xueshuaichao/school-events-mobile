@@ -233,6 +233,12 @@
                 "navigationBarTitleText": "我的作品"
             }
         },
+        {
+            "path": "pages/yiqing/bind-mobile/index",
+            "style": {
+                "navigationBarTitleText": "绑定手机号"
+            }
+        },
         // ============== 疫情end ========================
         // #ifdef H5
         {

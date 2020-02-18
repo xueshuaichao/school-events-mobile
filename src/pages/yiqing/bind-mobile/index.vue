@@ -49,17 +49,21 @@
                 class="btn"
                 @click="bindMobile"
             >
-                确定
+                确定1
             </view>
         </view>
     </view>
 </template>
 
 <script>
-import api from '../../common/api';
+import api from '../../../common/api';
 
 export default {
     components: {},
+    onLoad(params) {
+        const { userkey } = params;
+        this.userkey = userkey;
+    },
     data() {
         return {
             accountData: {
@@ -73,10 +77,26 @@ export default {
                 remain: '',
                 isSend: false,
             },
+            userkey: '',
         };
     },
+    // onHide(){
+    //     console.log('onHidechufa')
+    // },
+    // onUnload () {
+    //     console.log('onUnloadchufa')
+    //     uni.reLaunch({
+    //         url: '/pages/login/login'
+    //         });
+    // },
     methods: {
         bindMobile() {
+            console.log('触发绑定事件');
+            const pages = getCurrentPages(); // eslint-disable-line
+            console.log(pages, 'pages22211');
+            const prevPage = pages[pages.length - 1]; // 上一页面
+            console.log(prevPage.route, 'prevPage11');
+
             const { mobile } = this.accountData;
             const captcha = this.accountData.verify_code;
 
@@ -94,30 +114,63 @@ export default {
                     title: '请输入验证码',
                 });
             }
-            const that = this;
+            // const that = this;
             // api bind mobile
-            return api
-                .post('/api/account/bindphone', {
-                    phone: mobile,
-                    captcha,
-                })
-                .then(
-                    () => {
-                        uni.showToast({
-                            icon: 'none',
-                            title: '绑定成功！',
-                            complete() {
-                                setTimeout(() => {
-                                    that.$emit('bindMobile');
-                                }, 1500);
-                            },
+            return uni.showToast({
+                icon: 'none',
+                title: '绑定成功！',
+                complete() {
+                    setTimeout(() => {
+                        // that.$emit('bindMobile');
+                        try {
+                            uni.setStorageSync('medusa_key', this.userkey);
+                        } catch (e) {
+                            // error
+                        }
+                        // this.$emit('login', this.userInfo);
+                        const path = uni.getStorageSync('path');
+                        console.log(path, 'path111');
+                        if (path === '/pages/tabBar/uc/uc') {
+                            uni.navigateBack();
+                        } else if (path === '/tabBar/index/index') {
+                            uni.navigateBack({
+                                delta: 2,
+                            });
+                        } else if (path === '/pages/yiqing/index') {
+                            console.log('从这里返回11');
+                            uni.navigateBack({
+                                delta: 2,
+                            });
+                        } else {
+                            uni.navigateTo({
+                                url: '/tabBar/index/index',
+                            });
+                        }
+                        uni.navigateBack();
+                        uni.navigateTo({
+                            url: uni.getStorageSync('path'),
                         });
-                    },
-                    err => uni.showToast({
-                        icon: 'none',
-                        title: err.message,
-                    }),
-                );
+
+                        // uni.navigateBack({
+                        //     delta: 2,
+                        // });
+                    }, 1500);
+                },
+            });
+            // return api
+            //     .post('/api/account/bindphone', {
+            //         phone: mobile,
+            //         captcha,
+            //     })
+            //     .then(
+            //         () => {
+
+            //         },
+            //         err => uni.showToast({
+            //             icon: 'none',
+            //             title: err.message,
+            //         }),
+            //     );
         },
         countDown() {
             const sep = 30 * 1000;
