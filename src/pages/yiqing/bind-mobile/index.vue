@@ -107,6 +107,7 @@ export default {
                 });
             }
             // api bind mobile
+
             return api
                 .post('/api/account/bindphone', {
                     phone: mobile,
@@ -120,9 +121,9 @@ export default {
                             title: '绑定成功！',
                             complete() {
                                 setTimeout(() => {
-                                    const path = uni.getStorageSync('path');
-                                    console.log(path, 'path111');
-                                    if (path === '/pages/tabBar/uc/uc') {
+                                    const pages = getCurrentPages(); // eslint-disable-line
+                                    const path = pages[pages.length - 2].route;
+                                    if (path === 'pages/tabBar/uc/uc') {
                                         uni.navigateBack();
                                     } else {
                                         uni.navigateBack({

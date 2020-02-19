@@ -178,7 +178,6 @@ export default {
         },
     },
     onLoad() {
-        uni.setStorageSync('path', '/pages/tabBar/uc/uc');
         this.getData();
     },
     onShow() {
