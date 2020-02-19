@@ -248,6 +248,7 @@ export default {
             }
         },
         getData() {
+            console.log(this.needBindMobile, '我要秀才艺');
             // this.isLoading = true;
             api.get('/api/works/childcat', {
                 cat_id: 3,
@@ -263,6 +264,7 @@ export default {
                 },
                 () => {
                     this.isLoading = false;
+                    this.needBindMobile = false;
                     // uni.switchTab({
                     //     url: '/pages/tabBar/uc/uc',
                     // });

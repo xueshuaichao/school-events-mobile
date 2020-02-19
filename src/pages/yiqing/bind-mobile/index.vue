@@ -49,7 +49,7 @@
                 class="btn"
                 @click="bindMobile"
             >
-                确定1
+                确定
             </view>
         </view>
     </view>
@@ -59,11 +59,6 @@
 import api from '../../../common/api';
 
 export default {
-    components: {},
-    onLoad(params) {
-        const { userkey } = params;
-        this.userkey = userkey;
-    },
     data() {
         return {
             accountData: {
@@ -77,25 +72,22 @@ export default {
                 remain: '',
                 isSend: false,
             },
-            userkey: '',
+            isBindSuccess: false,
         };
     },
-    // onHide(){
-    //     console.log('onHidechufa')
-    // },
-    // onUnload () {
-    //     console.log('onUnloadchufa')
-    //     uni.reLaunch({
-    //         url: '/pages/login/login'
-    //         });
-    // },
+    onUnload() {
+        console.log(this.isBindSuccess, 'onUnloadchufa');
+        if (!this.isBindSuccess) {
+            uni.removeStorageSync('medusa_key');
+            uni.showToast({
+                title: '登录失败，请绑定手机号激活账号',
+                icon: 'none',
+            });
+        }
+    },
     methods: {
         bindMobile() {
             console.log('触发绑定事件');
-            const pages = getCurrentPages(); // eslint-disable-line
-            console.log(pages, 'pages22211');
-            const prevPage = pages[pages.length - 1]; // 上一页面
-            console.log(prevPage.route, 'prevPage11');
 
             const { mobile } = this.accountData;
             const captcha = this.accountData.verify_code;
@@ -114,63 +106,40 @@ export default {
                     title: '请输入验证码',
                 });
             }
-            // const that = this;
             // api bind mobile
-            return uni.showToast({
-                icon: 'none',
-                title: '绑定成功！',
-                complete() {
-                    setTimeout(() => {
-                        // that.$emit('bindMobile');
-                        try {
-                            uni.setStorageSync('medusa_key', this.userkey);
-                        } catch (e) {
-                            // error
-                        }
-                        // this.$emit('login', this.userInfo);
-                        const path = uni.getStorageSync('path');
-                        console.log(path, 'path111');
-                        if (path === '/pages/tabBar/uc/uc') {
-                            uni.navigateBack();
-                        } else if (path === '/tabBar/index/index') {
-                            uni.navigateBack({
-                                delta: 2,
-                            });
-                        } else if (path === '/pages/yiqing/index') {
-                            console.log('从这里返回11');
-                            uni.navigateBack({
-                                delta: 2,
-                            });
-                        } else {
-                            uni.navigateTo({
-                                url: '/tabBar/index/index',
-                            });
-                        }
-                        uni.navigateBack();
-                        uni.navigateTo({
-                            url: uni.getStorageSync('path'),
+            return api
+                .post('/api/account/bindphone', {
+                    phone: mobile,
+                    captcha,
+                })
+                .then(
+                    () => {
+                        this.isBindSuccess = true;
+                        return uni.showToast({
+                            icon: 'none',
+                            title: '绑定成功！',
+                            complete() {
+                                setTimeout(() => {
+                                    const path = uni.getStorageSync('path');
+                                    console.log(path, 'path111');
+                                    if (path === '/pages/tabBar/uc/uc') {
+                                        uni.navigateBack();
+                                    } else {
+                                        uni.navigateBack({
+                                            delta: 2,
+                                        });
+                                    }
+                                }, 1000);
+                            },
                         });
-
-                        // uni.navigateBack({
-                        //     delta: 2,
-                        // });
-                    }, 1500);
-                },
-            });
-            // return api
-            //     .post('/api/account/bindphone', {
-            //         phone: mobile,
-            //         captcha,
-            //     })
-            //     .then(
-            //         () => {
-
-            //         },
-            //         err => uni.showToast({
-            //             icon: 'none',
-            //             title: err.message,
-            //         }),
-            //     );
+                    },
+                    (err) => {
+                        uni.showToast({
+                            icon: 'none',
+                            title: err.message,
+                        });
+                    },
+                );
         },
         countDown() {
             const sep = 30 * 1000;

@@ -123,18 +123,13 @@
                 </view>
             </template>
         </view>
-        <!-- <bindMobile v-if="needBindMobile" @bindMobile="onBindMobile"/> -->
     </view>
 </template>
 
 <script>
 import api from '../../common/api';
-// import bindMobile from '../../components/bind-mobile/index.vue';
 
 export default {
-    // components: {
-    //     bindMobile,
-    // },
     props: {
         fr: {
             type: String,
@@ -167,31 +162,8 @@ export default {
             loginMode: 'sms',
             // needBindMobile: false,
             userInfo: {},
-            binding: false,
             userkey: '',
         };
-    },
-    created() {
-        // console.log('loginCreated');
-        // let pages = getCurrentPages();//当前页面栈
-        // console.log(pages,'pages111');
-        // let prevPage = pages[pages.length - 2];//上一页面
-        // console.log(prevPage, 'prevPage');
-    },
-    mounted() {
-        console.log('loginCreated');
-        const pages = getCurrentPages(); // eslint-disable-line
-        console.log(pages, 'pages111');
-        const prevPage = pages[pages.length - 2]; // 上一页面
-        console.log(prevPage, 'prevPage');
-        console.log(this.binding, 'mounted111');
-        if (this.binding) {
-            this.binding = false;
-            uni.showToast({
-                title: '登录失败，请绑定手机号激活账号',
-                icon: 'none',
-            });
-        }
     },
     methods: {
         login() {
@@ -219,8 +191,12 @@ export default {
             return true;
         },
         doLogin() {
+            uni.showLoading({
+                mask: true,
+            });
             return api.post('/api/account/login', this.formData).then(
                 (res) => {
+                    uni.hideLoading();
                     console.log(res);
                     const { userkey } = res;
                     try {
@@ -229,9 +205,10 @@ export default {
                         // error
                     }
                     // 看是否是陕西用户
-                    this.getUserInfo(userkey);
+                    this.getUserInfo();
                 },
                 (err) => {
+                    uni.hideLoading();
                     uni.showToast({
                         title: err.message,
                         icon: 'none',
@@ -239,19 +216,15 @@ export default {
                 },
             );
         },
-        getUserInfo(userkey) {
+        getUserInfo() {
             api.get('/api/user/info').then(
                 (res) => {
                     this.needBindMobile = res.user_info
                         && res.user_info.is_bind_mobile === 0
                         && res.user_info.shop_id === 1;
-                    this.userkey = userkey;
                     if (this.needBindMobile) {
-                        uni.removeStorageSync('medusa_key');
-                        this.$emit('binding');
-                        this.binding = true;
                         uni.navigateTo({
-                            url: `/pages/yiqing/bind-mobile/index?userkey=${this.userkey}`,
+                            url: '/pages/yiqing/bind-mobile/index',
                         });
                     } else {
                         this.userInfo = res;
@@ -261,17 +234,11 @@ export default {
                 () => {},
             );
         },
-        // onBindMobile() {
-        //     try {
-        //         uni.setStorageSync('medusa_key', this.userkey);
-        //     } catch (e) {
-        //         // error
-        //     }
-        //     this.$emit('login', this.userInfo);
-        //     // this.needBindMobile = false;
-        // },
         doSMSLogin() {
             console.log('sms login');
+            uni.showLoading({
+                mask: true,
+            });
             return api
                 .post('/api/account/userlogin', {
                     channel: 'aitiaozhan/xian',
@@ -280,6 +247,7 @@ export default {
                 })
                 .then(
                     (res) => {
+                        uni.hideLoading();
                         console.log(res);
                         const { userkey } = res;
                         try {
@@ -291,6 +259,7 @@ export default {
                         this.$emit('login', res);
                     },
                     (err) => {
+                        uni.hideLoading();
                         uni.showToast({
                             title: err.message,
                             icon: 'none',
@@ -439,13 +408,6 @@ export default {
                     }),
                 );
         },
-    },
-    onShow() {
-        console.log('loginOnshow触发');
-        const pages = getCurrentPages(); // eslint-disable-line
-        console.log(pages, 'pages222');
-        const prevPage = pages[pages.length - 2]; // 上一页面
-        console.log(prevPage, 'prevPage');
     },
 };
 </script>

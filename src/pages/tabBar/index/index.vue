@@ -386,10 +386,9 @@ export default {
                     this.needBindMobile = res.user_info
                         && res.user_info.is_bind_mobile === 0
                         && res.user_info.shop_id === 1;
-                    this.needBindMobile = true;
+                    // this.needBindMobile = true;
                     if (this.needBindMobile) {
                         uni.removeStorageSync('medusa_key');
-                        uni.setStorageSync('path', '/tobBar/index/index');
                         uni.navigateTo({
                             url: '/pages/login/login',
                         });

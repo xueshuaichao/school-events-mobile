@@ -319,7 +319,6 @@ export default {
         };
     },
     created() {
-        uni.setStorageSync('path', '/pages/yiqing/index');
         this.getData();
         this.chunjieStatus();
         this.getCrouselList();
