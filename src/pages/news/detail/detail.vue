@@ -31,18 +31,6 @@
                         src="/static/images/news/weixin.png"
                     />
                 </button>
-
-                <!-- <button
-                    v-if="isH5"
-                    class="share-btn"
-                    @click="shareToTimeline"
-                >
-                    分享朋友圈
-                    <image
-                        class="icon-btn icon-timeline"
-                        src="/static/images/news/timeline.png"
-                    />
-                </button> -->
             </view>
         </view>
 

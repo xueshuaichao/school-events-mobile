@@ -85,6 +85,11 @@ const routesConfig = {
             component: () => import('@/pages/doc/detail/detail.vue'),
         },
         {
+            path: '/pages/doc/intro/intro',
+            name: 'doc',
+            component: () => import('@/pages/doc/intro/intro.vue'),
+        },
+        {
             path: '/pages/address/index',
             component: () => import('@/pages/address/index.vue'),
             aliasPath: '/mall/exchange',

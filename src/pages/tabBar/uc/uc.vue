@@ -54,6 +54,36 @@
                         >
                     </text>
                 </navigator>
+                <navigator
+                    class="menu-item"
+                    url="/pages/uc/myWork/myWork"
+                >
+                    <image
+                        class="icon"
+                        src="/static/images/uc/work.png"
+                    />
+                    <text class="text">
+                        消息
+                    </text>
+                    <text class="arrow">
+                        >
+                    </text>
+                </navigator>
+                <navigator
+                    class="menu-item"
+                    url="/pages/uc/myWork/myWork"
+                >
+                    <image
+                        class="icon"
+                        src="/static/images/uc/work.png"
+                    />
+                    <text class="text">
+                        设置
+                    </text>
+                    <text class="arrow">
+                        >
+                    </text>
+                </navigator>
                 <view
                     class="menu-item"
                     @click="doLogout"

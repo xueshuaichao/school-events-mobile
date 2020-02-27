@@ -1,20 +1,5 @@
 <template>
     <view class="page-index">
-        <!-- <view
-            v-if="prompt && status === 2"
-            class="cover"
-        >
-            <image
-                src="http://aitiaozhan.oss-cn-beijing.aliyuncs.com/third_entry.png"
-            />
-            <image
-                src="../../../static/images/chunjie/third_entry_close.png"
-                @click="handleClose"
-            />
-            <view @click="handleChunjie">
-                春节入口3
-            </view>
-        </view> -->
         <view
             v-if="prompt && status === 2"
             class="cover"
@@ -42,6 +27,21 @@
                 春节入口
             </view>
         </navigator>
+        <!-- search -->
+        <view class="search">
+            <input
+                v-model="changeValue"
+                placeholder-class="placeholderStyle"
+                placeholder="请输入作品名称/作者姓名"
+                @confirm="bindconfirm"
+            >
+            <text
+                class="button"
+                @click="bindconfirm"
+            >
+                搜索
+            </text>
+        </view>
         <!-- swiper -->
         <view class="swiper main-swiper">
             <view class="page-section-spacing">
@@ -130,6 +130,20 @@
         <view class="menu-list">
             <navigator
                 class="item"
+                :url="`/pages/doc/intro/intro?id=rule`"
+            >
+                <view class="icon-wrap">
+                    <image
+                        class="icon"
+                        src="/static/images/index/0001.png"
+                    />
+                </view>
+                <text class="name">
+                    大赛介绍
+                </text>
+            </navigator>
+            <!-- <navigator
+                class="item"
                 :url="`/pages/doc/detail/detail?id=rule`"
             >
                 <view class="icon-wrap red">
@@ -141,20 +155,20 @@
                 <text class="name">
                     参赛指南
                 </text>
-            </navigator>
+            </navigator> -->
 
             <navigator
                 class="item"
                 :url="`/pages/doc/list/list?type=challenge`"
             >
-                <view class="icon-wrap light-blue">
+                <view class="icon-wrap">
                     <image
                         class="icon"
                         src="/static/images/index/0002.png"
                     />
                 </view>
                 <text class="name">
-                    爱挑战项目
+                    爱挑战
                 </text>
             </navigator>
 
@@ -162,14 +176,14 @@
                 class="item"
                 :url="`/pages/doc/list/list?type=talent`"
             >
-                <view class="icon-wrap dark-blue">
+                <view class="icon-wrap">
                     <image
                         class="icon"
                         src="/static/images/index/0003.png"
                     />
                 </view>
                 <text class="name">
-                    才艺秀项目
+                    才艺秀
                 </text>
             </navigator>
 
@@ -177,14 +191,28 @@
                 class="item"
                 :url="`/pages/doc/list/list?type=guinness`"
             >
-                <view class="icon-wrap pink">
+                <view class="icon-wrap">
                     <image
                         class="icon"
                         src="/static/images/index/0004.png"
                     />
                 </view>
                 <text class="name">
-                    吉尼斯项目
+                    吉尼斯
+                </text>
+            </navigator>
+            <navigator
+                class="item"
+                :url="`/pages/doc/list/list?type=guinness`"
+            >
+                <view class="icon-wrap">
+                    <image
+                        class="icon"
+                        src="/static/images/index/0005.png"
+                    />
+                </view>
+                <text class="name">
+                    精彩活动
                 </text>
             </navigator>
         </view>
@@ -278,7 +306,7 @@
         />
 
         <!-- news -->
-        <view class="panel">
+        <!-- <view class="panel">
             <view class="panel-hd">
                 <text
                     v-for="(item, k) in newsColumn"
@@ -309,7 +337,7 @@
                     </text>
                 </navigator>
             </view>
-        </view>
+        </view> -->
     </view>
 </template>
 
@@ -361,7 +389,12 @@ export default {
             isH5: true,
             // #endif
             needBindMobile: false,
+            changeValue: '',
         };
+    },
+    onHide() {
+        this.changeValue = '';
+        this.prompt = false;
     },
     onLoad() {
         this.chunjieStatus();
@@ -375,10 +408,19 @@ export default {
         this.chunjieStatus();
     },
     created() {},
-    onHide() {
-        this.prompt = false;
-    },
     methods: {
+        bindconfirm() {
+            if (!this.changeValue.trim()) {
+                uni.showToast({
+                    title: '请输入搜索内容',
+                    icon: 'none',
+                });
+                return;
+            }
+            uni.navigateTo({
+                url: `/pages/search/index?name=${this.changeValue.trim()}`,
+            });
+        },
         getUserInfo() {
             console.log('首页请求个人信息');
             api.get('/api/user/info').then(
@@ -446,26 +488,26 @@ export default {
             this.prompt = false;
             uni.setStorageSync(this.isFirstLogin, true);
         },
-        setNewsTabActive(index) {
-            this.newsTabActiveIndex = index;
-            this.getArticle(this.newsColumn[index].id);
-        },
+        // setNewsTabActive(index) {
+        //     this.newsTabActiveIndex = index;
+        //     this.getArticle(this.newsColumn[index].id);
+        // },
         moreArticle() {
             uni.navigateTo({
                 url: `/pages/news/list/list?tab=${this.newsTabActiveIndex}`,
             });
         },
-        getArticle(columnId) {
-            return api
-                .get('/api/article/list', {
-                    column: columnId,
-                    page_num: 1,
-                    page_size: 5,
-                })
-                .then((res) => {
-                    this.newsData = res.list;
-                });
-        },
+        // getArticle(columnId) {
+        //     return api
+        //         .get('/api/article/list', {
+        //             column: columnId,
+        //             page_num: 1,
+        //             page_size: 5,
+        //         })
+        //         .then((res) => {
+        //             this.newsData = res.list;
+        //         });
+        // },
         getMenuData() {
             api.get('/api/index/entry').then((res) => {
                 this.menuConf = res;
@@ -486,7 +528,7 @@ export default {
                     one_level_id: catId,
                 },
                 sort: 2,
-                page_size: 6,
+                page_size: 4,
             }).then((res) => {
                 if (type === 'individual') {
                     this.workData.individual = res.list;
@@ -505,7 +547,7 @@ export default {
 
             //     this.newsColumn = res.list;
 
-            this.getArticle(this.newsColumn[0].id);
+            // this.getArticle(this.newsColumn[0].id);
             this.getMenuData();
             this.getWorkList('individual');
             this.getWorkList('team');
@@ -557,6 +599,32 @@ uni-swiper {
 .page-index {
     padding-bottom: 20upx;
     display: relative;
+    .search {
+        width: 100%;
+        font-size: 24upx;
+        overflow: hidden;
+        input {
+            background: #f3f3f3;
+            border: none;
+            border-radius: 30upx;
+            width: 606upx;
+            height: 60upx;
+            margin-left: 20upx;
+            float: left;
+        }
+        .placeholderStyle {
+            color: #999999;
+            text-align: center;
+        }
+        .button {
+            float: left;
+            height: 60upx;
+            line-height: 60upx;
+            color: #666666;
+            font-size: 32upx;
+            margin-left: 28upx;
+        }
+    }
     .chunjie-entry {
         .close-icon {
             width: 20upx;
@@ -610,7 +678,6 @@ uni-swiper {
                 height: 70upx;
                 border-radius: 35upx;
                 margin-bottom: 15upx;
-
                 &.red {
                     background: linear-gradient(
                         180deg,
@@ -692,13 +759,12 @@ uni-swiper {
                     );
                     box-shadow: 0 2upx 4upx 0 #fe6033;
                 }
-
                 .icon {
                     top: 15upx;
                     position: relative;
                     margin: auto;
-                    width: 40upx;
-                    height: 40upx;
+                    width: 78upx;
+                    height: 70upx;
                     background-size: 40upx 40upx;
 
                     // &.icon-intro {

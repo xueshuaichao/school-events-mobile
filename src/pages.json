@@ -39,6 +39,12 @@
             }
         },
         {
+            "path": "pages/doc/intro/intro",
+            "style": {
+                "navigationBarTitleText": "大赛介绍"
+            }
+        },
+        {
             "path": "pages/doc/detail/detail",
             "style": {
                 "navigationBarTitleText": "参赛指南"
@@ -248,6 +254,12 @@
             }
         },
         // #endif
+        {
+            "path": "pages/search/index",
+            "style": {
+                "navigationBarTitleText": "作品展示"
+            }
+        },
         {
             "path": "pages/login/login",
             "style": {
