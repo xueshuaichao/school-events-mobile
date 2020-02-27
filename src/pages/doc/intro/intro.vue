@@ -147,7 +147,6 @@ export default {
                 } catch (e) {
                     console.log(e);
                 }
-                console.log(this.contentNodes[code], 'this.contentNodes[code]');
                 share({
                     title: this.info.title,
                 });
