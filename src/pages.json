@@ -198,21 +198,21 @@
                 "navigationBarTitleText": "我的作品"
             }
         },
-        // ============== 春节好 end =====================
-        {
-            "path": "pages/login/login",
-            "style": {
-                "navigationBarTitleText": "登录"
-            }
-        },
         // #ifdef H5
         {
             "path": "pages/app/index",
             "style": {
                 "navigationBarTitleText": "爱挑战"
             }
-        }
+        },
         // #endif
+        // ============== 春节好 end =====================
+        {
+            "path": "pages/login/login",
+            "style": {
+                "navigationBarTitleText": "登录"
+            }
+        }
     ],
     "globalStyle": {
         // #ifdef H5
