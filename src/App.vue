@@ -74,7 +74,6 @@ uni-toast .uni-simple-toast__text {
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
 }
-
 .page-rich-text {
     color: #333;
     font-size: 28upx;

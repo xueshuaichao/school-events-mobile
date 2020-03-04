@@ -15,7 +15,14 @@
             </view>
         </view>
         <view class="panel-bd has-swiper">
-            <scroll-view
+            <view
+                v-for="item in info"
+                :key="item.id"
+                class="scroll-view-item"
+            >
+                <work :info="item" />
+            </view>
+            <!-- <scroll-view
                 class="scroll-view"
                 scroll-x="true"
                 @scroll="scroll"
@@ -27,7 +34,7 @@
                 >
                     <work :info="item" />
                 </view>
-            </scroll-view>
+            </scroll-view> -->
         </view>
     </view>
 </template>
@@ -81,18 +88,29 @@ export default {
 <style lang="less">
 .widget-work {
     .panel-bd {
-        padding: 30upx 0;
+        margin: 30upx;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+
+        .scroll-view-item {
+            justify-content: space-between;
+            width: 330upx;
+            height: 300upx;
+            margin-right: 24upx;
+            margin-bottom: 30upx;
+        }
     }
 }
 
-.scroll-view {
-    white-space: nowrap;
+// .scroll-view {
+//     white-space: nowrap;
 
-    .scroll-view-item {
-        display: inline-block;
-        width: 330upx;
-        height: 300upx;
-        margin-right: 24upx;
-    }
-}
+//     .scroll-view-item {
+//         display: inline-block;
+//         width: 330upx;
+//         height: 300upx;
+//         margin-right: 24upx;
+//     }
+// }
 </style>

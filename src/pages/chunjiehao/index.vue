@@ -157,7 +157,7 @@
                         <view class="qr-wrap">
                             <image
                                 class="qr-code"
-                                src="/static/images/chunjie/qrcode.jpg"
+                                src="http://aitiaozhan.oss-cn-beijing.aliyuncs.com/chunjiehao/qrcode.jpg"
                             />
                             <view class="text">
                                 关注“UP青少年爱挑战”公众号，了解更多活动信息
@@ -415,12 +415,14 @@ export default {
                 {
                     prize_score: '一等奖',
                     name: '学习机*1个',
-                    prize: '../../static/images/chunjie/prize01.png',
+                    prize:
+                        'http://aitiaozhan.oss-cn-beijing.aliyuncs.com/chunjiehao/prize01.png',
                 },
                 {
                     prize_score: '二等奖',
                     name: '小度*4个',
-                    prize: '../../static/images/chunjie/prize02.png',
+                    prize:
+                        'http://aitiaozhan.oss-cn-beijing.aliyuncs.com/chunjiehao/prize02.png',
                 },
                 {
                     prize_score: '三等奖',

@@ -1,130 +1,129 @@
 <template>
-    <view class="page-bind-mobile">
-        <image
-            class="logo"
-            src="/static/images/widgets/login/logo.png"
-        />
-        <view class="tabs row">
-            <view
-                class="tab tab-login"
-                :class="{ active: loginMode === 'sms' }"
-                @click="loginMode = 'sms'"
-            >
-                手机号登录
+    <view>
+        <view class="page-bind-mobile">
+            <image
+                class="logo"
+                src="/static/images/widgets/login/logo.png"
+            />
+            <view class="tabs row">
+                <view
+                    class="tab tab-login"
+                    :class="{ active: loginMode === 'sms' }"
+                    @click="loginMode = 'sms'"
+                >
+                    手机号登录
+                </view>
+                <view
+                    class="tab tab-register"
+                    :class="{ active: loginMode === 'password' }"
+                    @click="loginMode = 'password'"
+                >
+                    帐号密码登录
+                </view>
             </view>
-            <view
-                class="tab tab-register"
-                :class="{ active: loginMode === 'password' }"
-                @click="loginMode = 'password'"
-            >
-                帐号密码登录
-            </view>
-        </view>
 
-        <!-- 帐号登录 -->
-        <template v-if="true">
-            <view
-                class="form-item-wrap"
-                :class="{
-                    inValid: accountData.isValid === false
-                }"
-            >
-                <image
+            <!-- 帐号登录 -->
+            <template v-if="true">
+                <view
+                    class="form-item-wrap"
+                    :class="{
+                        inValid: accountData.isValid === false
+                    }"
+                >
+                    <image
+                        v-if="loginMode === 'password'"
+                        class="icon"
+                        src="/static/images/widgets/login/phone.png"
+                    />
+                    <image
+                        v-if="loginMode === 'sms'"
+                        class="icon"
+                        src="/static/images/widgets/login/user.png"
+                    />
+
+                    <input
+                        v-model="formData.username"
+                        class="form-input"
+                        placeholder-class="placeholder"
+                        maxlength="30"
+                        :placeholder="
+                            loginMode === 'password'
+                                ? '请输入手机号或用户名'
+                                : '请输入手机号'
+                        "
+                    >
+                    <view class="error-tip">
+                        {{ accountData.isValid ? "" : accountData.msg || "" }}
+                    </view>
+                </view>
+
+                <view
                     v-if="loginMode === 'password'"
-                    class="icon"
-                    src="/static/images/widgets/login/phone.png"
-                />
-                <image
-                    v-if="loginMode === 'sms'"
-                    class="icon"
-                    src="/static/images/widgets/login/user.png"
-                />
-
-                <input
-                    v-model="formData.username"
-                    class="form-input"
-                    placeholder-class="placeholder"
-                    maxlength="30"
-                    :placeholder="
-                        loginMode === 'password'
-                            ? '请输入手机号或用户名'
-                            : '请输入手机号'
-                    "
+                    class="form-item-wrap"
                 >
-                <view class="error-tip">
-                    {{ accountData.isValid ? "" : accountData.msg || "" }}
+                    <image
+                        class="icon"
+                        src="/static/images/widgets/login/lock.png"
+                    />
+                    <input
+                        v-model="formData.password"
+                        class="form-input"
+                        placeholder-class="placeholder"
+                        maxlength="30"
+                        placeholder="请输入密码"
+                        password
+                    >
                 </view>
-            </view>
 
-            <view
-                v-if="loginMode === 'password'"
-                class="form-item-wrap"
-            >
-                <image
-                    class="icon"
-                    src="/static/images/widgets/login/lock.png"
-                />
-                <input
-                    v-model="formData.password"
-                    class="form-input"
-                    placeholder-class="placeholder"
-                    maxlength="30"
-                    placeholder="请输入密码"
-                    password
-                >
-            </view>
-
-            <view
-                v-if="loginMode === 'sms'"
-                class="form-item-wrap"
-            >
-                <image
-                    class="icon"
-                    src="/static/images/widgets/login/lock.png"
-                />
-                <input
-                    v-model="formData.password"
-                    class="form-input"
-                    placeholder-class="placeholder"
-                    maxlength="6"
-                    placeholder="请输入验证码"
-                >
-                <view
-                    v-if="!captcha.isSend"
-                    class="send-captcha"
-                    @click="sendCaptcha(2)"
-                >
-                    获取验证码
-                </view>
-                <view
-                    v-if="captcha.isSend"
-                    class="send-captcha is-send"
-                >
-                    {{ captcha.remain }}s 后重新发
-                </view>
-            </view>
-            <view class="login-mode">
                 <view
                     v-if="loginMode === 'sms'"
-                    class="desc"
+                    class="form-item-wrap"
                 >
-                    未注册手机号验证后即完成注册
+                    <image
+                        class="icon"
+                        src="/static/images/widgets/login/lock.png"
+                    />
+                    <input
+                        v-model="formData.password"
+                        class="form-input"
+                        placeholder-class="placeholder"
+                        maxlength="6"
+                        placeholder="请输入验证码"
+                    >
+                    <view
+                        v-if="!captcha.isSend"
+                        class="send-captcha"
+                        @click="sendCaptcha(2)"
+                    >
+                        获取验证码
+                    </view>
+                    <view
+                        v-if="captcha.isSend"
+                        class="send-captcha is-send"
+                    >
+                        {{ captcha.remain }}s 后重新发
+                    </view>
                 </view>
-            </view>
+                <view class="login-mode">
+                    <view
+                        v-if="loginMode === 'sms'"
+                        class="desc"
+                    >
+                        未注册手机号验证后即完成注册
+                    </view>
+                </view>
 
-            <view class="form-item-wrap">
-                <view
-                    class="btn login-btn"
-                    @click="login()"
-                >
-                    确定
+                <view class="form-item-wrap">
+                    <view
+                        class="btn login-btn"
+                        @click="login()"
+                    >
+                        确定
+                    </view>
                 </view>
-            </view>
-        </template>
+            </template>
+        </view>
     </view>
-
-    <!--
-    -->
 </template>
 
 <script>
@@ -161,6 +160,9 @@ export default {
             },
             // loginMode: 'sms',
             loginMode: 'sms',
+            // needBindMobile: false,
+            userInfo: {},
+            userkey: '',
         };
     },
     methods: {
@@ -189,8 +191,12 @@ export default {
             return true;
         },
         doLogin() {
+            uni.showLoading({
+                mask: true,
+            });
             return api.post('/api/account/login', this.formData).then(
                 (res) => {
+                    uni.hideLoading();
                     console.log(res);
                     const { userkey } = res;
                     try {
@@ -198,10 +204,11 @@ export default {
                     } catch (e) {
                         // error
                     }
-
-                    this.$emit('login', res);
+                    // 看是否是陕西用户
+                    this.getUserInfo();
                 },
                 (err) => {
+                    uni.hideLoading();
                     uni.showToast({
                         title: err.message,
                         icon: 'none',
@@ -209,8 +216,29 @@ export default {
                 },
             );
         },
+        getUserInfo() {
+            api.get('/api/user/info').then(
+                (res) => {
+                    this.needBindMobile = res.user_info
+                        && res.user_info.is_bind_mobile === 0
+                        && res.user_info.shop_id === 1;
+                    if (this.needBindMobile) {
+                        uni.navigateTo({
+                            url: '/pages/yiqing/bind-mobile/index',
+                        });
+                    } else {
+                        this.userInfo = res;
+                        this.$emit('login', res);
+                    }
+                },
+                () => {},
+            );
+        },
         doSMSLogin() {
             console.log('sms login');
+            uni.showLoading({
+                mask: true,
+            });
             return api
                 .post('/api/account/userlogin', {
                     channel: 'aitiaozhan/xian',
@@ -219,6 +247,7 @@ export default {
                 })
                 .then(
                     (res) => {
+                        uni.hideLoading();
                         console.log(res);
                         const { userkey } = res;
                         try {
@@ -230,6 +259,7 @@ export default {
                         this.$emit('login', res);
                     },
                     (err) => {
+                        uni.hideLoading();
                         uni.showToast({
                             title: err.message,
                             icon: 'none',
@@ -422,7 +452,6 @@ export default {
         }
     }
 }
-
 .page-bind-mobile {
     padding: 30rpx 60rpx 0;
 

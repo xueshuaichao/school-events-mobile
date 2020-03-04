@@ -85,13 +85,9 @@ export default {
         };
     },
     watch: {
-        lists() {
+        list(oVal, nVal) {
             // 监听数组变化
-            const l = this.lists.length;
-            if (l) {
-                // 有图片或图片数量改变时重新初始化
-                this.init();
-            }
+            console.log(oVal, nVal);
         },
     },
     mounted() {
@@ -117,6 +113,9 @@ export default {
                 wrapLeft = data.left; // 设置拖拽范围的左边界坐标
                 this.setNodeWH();
             }).exec();
+        },
+        reset() {
+            this.lists.splice(0, this.lists.length);
         },
         setNodeWH() {
             // 设置拖拽元素的宽高

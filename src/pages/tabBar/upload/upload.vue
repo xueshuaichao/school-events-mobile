@@ -7,33 +7,6 @@
             v-if="!needBindMobile"
             class="main"
         >
-            <view class="panel">
-                <view class="panel-hd">
-                    <text
-                        v-for="(item, k) in tabs"
-                        :key="item.id"
-                        class="panel-title"
-                        :class="{ active: newsTabActiveIndex === k }"
-                        @click="setNewsTabActive(k)"
-                    >
-                        {{ item.column_name }}
-                    </text>
-                </view>
-            </view>
-
-            <view class="uni-form-item uni-column">
-                <input
-                    v-model="formData.resource_name"
-                    class="uni-input"
-                    placeholder-class="placeholder"
-                    maxlength="30"
-                    :placeholder="
-                        (uploadMode === 'video' ? '视频' : '作品') +
-                            '名称*（不超过30字）'
-                    "
-                >
-            </view>
-
             <view class="uni-list-cell-db">
                 <picker
                     :value="index"
@@ -54,6 +27,38 @@
                         {{ catData[index].name }}
                     </view>
                 </picker>
+            </view>
+
+            <view class="show-type">
+                <view class="show-type-hd">
+                    <text class="show-type-text">
+                        表现形式
+                    </text>
+                    <view class="show-type-list">
+                        <text
+                            v-for="(item, k) in tabs"
+                            :key="k"
+                            class="show-type-title"
+                            :class="{ active: newsTabActiveIndex === k }"
+                            @click="setNewsTabActive(k)"
+                        >
+                            {{ item.column_name }}
+                        </text>
+                    </view>
+                </view>
+            </view>
+
+            <view class="uni-form-item uni-column">
+                <input
+                    v-model="formData.resource_name"
+                    class="uni-input"
+                    placeholder-class="placeholder"
+                    maxlength="30"
+                    :placeholder="
+                        (uploadMode === 'video' ? '视频' : '作品') +
+                            '名称*（不超过30字）'
+                    "
+                >
             </view>
 
             <textarea
@@ -178,8 +183,8 @@ export default {
             isLoading: true,
 
             tabs: [
-                { id: '1', column_name: '上传视频作品' },
-                { id: '2', column_name: '上传图片作品' },
+                { id: '1', column_name: '视频' },
+                { id: '2', column_name: '图片' },
             ],
             images: [],
 
@@ -208,10 +213,7 @@ export default {
             },
             needBindMobile: false,
             catData: [],
-            title: 'picker',
-            array: ['中国', '美国', '巴西', '日本'],
             index: 0,
-            time: '12:01',
         };
     },
     onLoad() {},
@@ -248,6 +250,7 @@ export default {
             }
         },
         getData() {
+            console.log(this.needBindMobile, '我要秀才艺');
             // this.isLoading = true;
             api.get('/api/works/childcat', {
                 cat_id: 3,
@@ -263,6 +266,7 @@ export default {
                 },
                 () => {
                     this.isLoading = false;
+                    this.needBindMobile = false;
                     // uni.switchTab({
                     //     url: '/pages/tabBar/uc/uc',
                     // });
@@ -470,9 +474,28 @@ export default {
         margin-top: 168upx;
     }
 
-    .panel-hd {
+    .show-type-hd {
         margin: 0 0 40rpx 0;
-        text-align: center;
+        display: flex;
+        align-items: center;
+        .show-type-text {
+            margin-right: 40upx;
+            color: #999;
+            font-size: 28upx;
+        }
+    }
+    .show-type-title {
+        margin-right: 30rpx;
+        padding: 0 40rpx;
+        height: 64rpx;
+        line-height: 64rpx;
+        color: #1166ff;
+        border: 1rpx solid #1166ff;
+        display: inline-block;
+        &.active {
+            background-color: #1166ff;
+            color: #fff;
+        }
     }
 
     .upload-desc {

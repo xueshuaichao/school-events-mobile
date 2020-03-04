@@ -39,6 +39,12 @@
             }
         },
         {
+            "path": "pages/doc/intro/intro",
+            "style": {
+                "navigationBarTitleText": "大赛介绍"
+            }
+        },
+        {
             "path": "pages/doc/detail/detail",
             "style": {
                 "navigationBarTitleText": "参赛指南"
@@ -198,19 +204,90 @@
                 "navigationBarTitleText": "我的作品"
             }
         },
-        // #ifdef H5
+        // ============== 春节好 end =====================
+        // ============== 疫情 ========================
         {
-            "path": "pages/app/index",
+            "path": "pages/yiqing/index",
             "style": {
-                "navigationBarTitleText": "爱挑战"
+                "navigationBarTitleText": "抗击疫情“艺”起来"
             }
         },
-        // #endif
-        // ============== 春节好 end =====================
+        {
+            "path": "pages/yiqing/detail/detail",
+            "style": {
+                "navigationBarTitleText": "作品详情",
+                "usingComponents": {
+                    "poster": "/wxcomponents/third-party/poster/poster/index"
+                }
+            }
+        },
+        {
+            "path": "pages/yiqing/upload/upload",
+            "style": {
+                "navigationBarTitleText": "上传作品"
+            }
+        },
+        {
+            "path": "pages/yiqing/upload/result",
+            "style": {
+                "navigationBarTitleText": "上传结果"
+            }
+        },
+        {
+            "path": "pages/yiqing/myWork/myWork",
+            "style": {
+                "navigationBarTitleText": "我的作品"
+            }
+        },
+        {
+            "path": "pages/yiqing/bind-mobile/index",
+            "style": {
+                "navigationBarTitleText": "绑定手机号"
+            }
+        },
+        // ============== 疫情end ========================
+        // #ifdef H5
         {
             "path": "pages/login/login",
             "style": {
                 "navigationBarTitleText": "登录"
+            }
+        },
+        // #endif
+        {
+            "path": "pages/search/index",
+            "style": {
+                "navigationBarTitleText": "作品展示"
+            }
+        },
+        {
+            "path": "pages/login/login",
+            "style": {
+                "navigationBarTitleText": "登录"
+            }
+        },
+        {
+            "path": "pages/uc/setting/setting",
+            "style": {
+                "navigationBarTitleText": "设置"
+            }
+        },
+        {
+            "path": "pages/uc/record/record",
+            "style": {
+                "navigationBarTitleText": "我的记录"
+            }
+        },
+        {
+            "path": "pages/uc/message/message",
+            "style": {
+                "navigationBarTitleText": "消息"
+            }
+        },
+        {
+            "path": "pages/uc/reported/reported",
+            "style": {
+                "navigationBarTitleText": "上报成绩"
             }
         }
     ],

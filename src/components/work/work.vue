@@ -24,6 +24,7 @@
                 />
                 {{ info.play_count || 0 }}
             </view>
+            <slot name="tag" />
         </view>
         <view class="work-info">
             <view class="work-name text-one-line">
@@ -48,7 +49,10 @@
             </template>
 
             <template v-if="mode === 'single'">
-                <view class="text-info">
+                <view
+                    v-if="showClass"
+                    class="text-info"
+                >
                     {{ info.cat_name }}
                 </view>
                 <view class="text-info">
@@ -84,6 +88,10 @@ export default {
             type: String,
             // mini, single
             default: 'mini',
+        },
+        showClass: {
+            type: Boolean,
+            default: true,
         },
     },
     data() {
@@ -165,7 +173,7 @@ export default {
     .work-name {
         font-size: 28upx;
         color: #333;
-        margin-bottom: 24upx;
+        margin-bottom: 16upx;
     }
 
     .work-author {

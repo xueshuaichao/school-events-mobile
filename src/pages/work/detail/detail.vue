@@ -91,10 +91,7 @@
                         {{ pageData.create_name }}
                     </view>
                     <view class="author-from">
-                        {{
-                            pageData.school_name + pageData.grade_name ||
-                                "北京小学-一年级"
-                        }}
+                        {{ pageData.school_name + pageData.grade_name || "" }}
                     </view>
                 </view>
             </view>
