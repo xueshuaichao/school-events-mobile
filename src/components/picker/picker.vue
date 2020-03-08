@@ -43,7 +43,66 @@
                         @touchstart="touchstart"
                         @touchmove="touchmove"
                     >
-                        <div class="scroll-wrapper">
+                        <div
+                            v-if="multiple"
+                            class="scroll-wrapper"
+                        >
+                            <view
+                                class="scroll-list"
+                                :class="{ 'no-padding': multiple }"
+                                :animation="column.animationData"
+                            >
+                                <checkbox-group
+                                    v-if="multiple"
+                                    @change="changeCheckbox"
+                                >
+                                    <view
+                                        v-for="(data,
+                                                itemIndex) in column.pickerList"
+                                        :key="itemIndex"
+                                        class="picker-item"
+                                    >
+                                        <view class="checkbox-view">
+                                            <checkbox
+                                                style="transform:scale(0.7)"
+                                                :value="
+                                                    String(
+                                                        data[pickerKey.value]
+                                                    )
+                                                "
+                                                :checked="
+                                                    checkedArray.includes(
+                                                        String(
+                                                            data[
+                                                                pickerKey.value
+                                                            ]
+                                                        )
+                                                    )
+                                                "
+                                                class="checkbox"
+                                                color="#1166FF"
+                                                :class="{
+                                                    checked: checkedArr.includes(
+                                                        String(
+                                                            data[
+                                                                pickerKey.value
+                                                            ]
+                                                        )
+                                                    )
+                                                }"
+                                            />
+                                            <text class="detail-text">
+                                                {{ data[pickerKey.label] }}
+                                            </text>
+                                        </view>
+                                    </view>
+                                </checkbox-group>
+                            </view>
+                        </div>
+                        <div
+                            v-else
+                            class="scroll-wrapper"
+                        >
                             <div class="top-cover" />
                             <div class="bottom-cover" />
                             <view
@@ -71,15 +130,25 @@
 <script>
 export default {
     props: {
+        multiple: {
+            type: Boolean,
+            default: false,
+        },
+        checkedArray: {
+            type: Array,
+            default() {
+                return [];
+            },
+        },
         pickerList: {
-            value: Array,
+            type: Array,
             require: true,
             default() {
                 return [];
             },
         },
         pickerKey: {
-            value: Object,
+            type: Object,
             default() {
                 return {
                     value: 'value',
@@ -89,7 +158,7 @@ export default {
             },
         },
         pickerStyle: {
-            value: Object,
+            type: Object,
             default() {
                 return {
                     cancel: {},
@@ -99,21 +168,21 @@ export default {
             },
         },
         defaultValue: {
-            value: Array,
+            type: Array,
             default() {
                 return [];
             },
         },
         columnNum: {
-            value: Number,
+            type: Number,
             default: 0,
         },
         itemRotateDeg: {
-            value: Number,
+            type: Number,
             default: 15,
         },
         beforeSetColumn: {
-            value: Function,
+            type: Function,
             default: null,
         },
     },
@@ -122,6 +191,7 @@ export default {
             show: false,
             reactModel: true,
             columns: [],
+            checkedArr: [],
             pickerItemHeight: Math.floor(
                 (68 * uni.getSystemInfoSync().windowWidth) / 750,
             ),
@@ -164,6 +234,10 @@ export default {
                 this.setColumn(0, this.pickerList);
             }
         },
+        // 多选复选框改变事件
+        changeCheckbox(e) {
+            this.checkedArr = e.detail.value;
+        },
         showPicker() {
             this.init();
             if (this.inited) {
@@ -188,21 +262,25 @@ export default {
                 values: [],
                 labels: [],
             };
-            // eslint-disable-next-line no-restricted-syntax
-            for (const column of this.columns) {
-                const columnPicked = this.columnPickedInfo(column);
-                if (columnPicked) {
-                    picked.index = columnPicked.index;
-                    picked.value = columnPicked.value;
-                    picked.label = columnPicked.label;
+            if (this.multiple) {
+                picked.values = this.checkedArr;
+            } else {
+                // eslint-disable-next-line no-restricted-syntax
+                for (const column of this.columns) {
+                    const columnPicked = this.columnPickedInfo(column);
+                    if (columnPicked) {
+                        picked.index = columnPicked.index;
+                        picked.value = columnPicked.value;
+                        picked.label = columnPicked.label;
 
-                    picked.indexes.push(columnPicked.index);
-                    picked.values.push(columnPicked.value);
-                    picked.labels.push(columnPicked.label);
-                } else {
-                    picked.indexes.push(null);
-                    picked.values.push(null);
-                    picked.labels.push(null);
+                        picked.indexes.push(columnPicked.index);
+                        picked.values.push(columnPicked.value);
+                        picked.labels.push(columnPicked.label);
+                    } else {
+                        picked.indexes.push(null);
+                        picked.values.push(null);
+                        picked.labels.push(null);
+                    }
                 }
             }
             this.$emit('confirm', picked);
@@ -339,6 +417,40 @@ export default {
 </script>
 
 <style lang="less" scoped>
+/* #ifdef H5 */
+uni-checkbox .uni-checkbox-input {
+    border-radius: 50% !important;
+    color: #ffffff !important;
+}
+uni-checkbox .uni-checkbox-input.uni-checkbox-input-checked {
+    background: #1166ff !important;
+    border-color: #1166ff !important;
+}
+uni-checkbox .uni-checkbox-input.uni-checkbox-input-checked::before {
+    text-align: center;
+    color: #fff;
+    background: transparent;
+    transform: translate(-70%, -50%) scale(1);
+    -webkit-transform: translate(-70%, -50%) scale(1);
+}
+/* #endif */
+/* 微信样式 */
+/* #ifdef APP-PLUS ||MP-WEIXIN */
+checkbox .wx-checkbox-input {
+    order-radius: 50% !important;
+    color: #ffffff !important;
+}
+
+checkbox .wx-checkbox-input.wx-checkbox-input-checked {
+    color: #fff;
+    background: #1166ff;
+}
+
+.wx-checkbox-input.wx-checkbox-input-checked {
+    background: #1166ff;
+    border-color: #1166ff;
+}
+/* #endif */
 .picker-pop {
     .picker-mask {
         position: fixed;
@@ -446,6 +558,9 @@ export default {
                 }
                 .scroll-list {
                     padding-top: calc(68rpx * 3);
+                    &.no-padding {
+                        padding-top: 0;
+                    }
 
                     .picker-item {
                         text-align: center;

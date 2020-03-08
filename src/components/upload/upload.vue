@@ -222,7 +222,7 @@ export default {
                 });
             });
         },
-        uploadVideo(tempFilePath) {
+        uploadVideo(tempFilePath, file = {}) {
             uni.showToast({
                 icon: "loading",
                 title: "上传中",
@@ -236,7 +236,7 @@ export default {
                     userKey: utils.getToken()
                 },
                 success: uploadFileRes => {
-                    console.log(uploadFileRes);
+                    console.log(1111, file);
                     let resp;
                     try {
                         resp = JSON.parse(uploadFileRes.data);
@@ -248,7 +248,11 @@ export default {
                     }
                     if (resp.status === 200) {
                         // success
-                        this.$emit("change", resp.data);
+                        const data = {
+                            ...resp.data,
+                            ...file
+                        };
+                        this.$emit("change", data);
                         uni.showToast({
                             title: "已上传"
                         });
@@ -279,7 +283,7 @@ export default {
                                 this.uploadFile(filePath)
                             )
                         ).then(data => {
-                            // console.log(data);
+                            console.log(res);
                             this.$emit("change", data);
                         });
                         [this.src] = res.tempFilePaths;
@@ -296,7 +300,7 @@ export default {
                         }
                         const filePath = res.tempFilePath;
                         this.src = filePath;
-                        return this.uploadVideo(filePath);
+                        return this.uploadVideo(filePath, res);
                         // console.log(res);
                         // const fileList = e.target.files;
                         // this.uploader.cleanList();

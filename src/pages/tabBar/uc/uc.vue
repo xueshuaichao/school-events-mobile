@@ -13,7 +13,10 @@
                     class="avatar-bg"
                     :src="userInfo.bg_img || '/static/images/uc/avatar-bg.png'"
                 />
-                <view class="set-bg">
+                <view
+                    class="set-bg"
+                    @click.stop="setBg"
+                >
                     <image
                         class="set-bg-icon"
                         src="/static/images/uc/update.png"
@@ -24,6 +27,7 @@
                 <image
                     class="avatar"
                     :src="userInfo.avatar_url || '/static/images/uc/avatar.png'"
+                    @click="setAvatar"
                 />
                 <view class="main-info">
                     <view class="user-name">
@@ -162,13 +166,6 @@
                         />
                     </view>
                 </navigator>
-                <!-- <view
-                    v-if="userInfo.is_admin === 1"
-                    class="button"
-                    @click="submitResult"
-                >
-                    上报成绩
-                </view> -->
                 <!-- <view class="menu-item">
                     <image
                         class="icon"
@@ -258,9 +255,35 @@ export default {
         };
     },
     methods: {
-        submitResult() {
-            uni.navigateTo({
-                url: '',
+        setBg() {
+            this.updateUser(1);
+        },
+        setAvatar() {
+            this.updateUser(2);
+        },
+        updateUser(type = 1) {
+            uni.chooseImage({
+                count: 1, // 默认9
+                success(res) {
+                    api.get('/api/user/updateuser', {
+                        url: res.tempFilePaths,
+                        type,
+                    }).then(
+                        (res) => {
+                            this.userInfo = res.user_info;
+                            this.isLoading = false;
+                        },
+                        () => {
+                            uni.showToast({
+                                title:
+                                    type === 1
+                                        ? '背景更新失败'
+                                        : '头像更新失败',
+                                icon: 'none',
+                            });
+                        },
+                    );
+                },
             });
         },
         getData() {
@@ -299,7 +322,10 @@ export default {
         this.getData();
     },
     onHide() {
-        this.isLoading = true;
+        // this.isSetImg--是否修为改图片 为true时页面不隐藏
+        if (!this.isSetImg) {
+            this.isLoading = true;
+        }
     },
     onPullDownRefresh() {
         this.getData().then(() => {

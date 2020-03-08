@@ -273,7 +273,28 @@
             }
         },
         {
+            "path": "pages/uc/setting/resetPassword",
+            "style": {
+                "navigationBarTitleText": "重置密码"
+            }
+        },
+        {
+            "path": "pages/uc/setting/forgetPassword",
+            "style": {
+                "navigationBarTitleText": "重置密码"
+            }
+        },
+        {
             "path": "pages/uc/record/record",
+            "style": {
+                "navigationBarTitleText": "我的记录",
+                "usingComponents": {
+                    "poster": "/wxcomponents/third-party/poster/poster/index"
+                }
+            }
+        },
+        {
+            "path": "pages/uc/record/result",
             "style": {
                 "navigationBarTitleText": "我的记录"
             }
@@ -288,6 +309,12 @@
             "path": "pages/uc/reported/reported",
             "style": {
                 "navigationBarTitleText": "上报成绩"
+            }
+        },
+        {
+            "path": "pages/uc/reported/result",
+            "style": {
+                "navigationBarTitleText": "上报成功"
             }
         }
     ],

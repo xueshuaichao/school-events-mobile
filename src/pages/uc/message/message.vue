@@ -235,7 +235,6 @@ checkbox .wx-checkbox-input.wx-checkbox-input-checked {
     background: #1166ff;
     border-color: #1166ff;
 }
-
 /* #endif */
 .page-message {
     padding: 20upx 30upx 0;

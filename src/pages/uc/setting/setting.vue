@@ -1,109 +1,143 @@
 <template>
-    <view class="page-setting">
-        <view
-            class="item"
-            @click="settingImg"
-        >
-            <text class="text">
-                头像
-            </text>
-            <img
-                class="img"
-                :src="imgSrc"
-                alt=""
+    <view
+        v-if="!isLoading"
+        class="page-setting"
+    >
+        <login
+            v-if="userInfo === null"
+            @login="onLogin"
+        />
+        <template v-else>
+            <view
+                class="item"
+                @click="settingImg"
             >
-        </view>
-        <view class="item">
-            <text class="text">
-                姓名
-            </text>
-            <text v-if="userData.identity !== 1">
-                {{ userData.name }}
-            </text>
-            <input
-                v-else
-                type="text"
-                :value="userData.name"
+                <text class="text">
+                    头像
+                </text>
+                <img
+                    class="img"
+                    :src="avatar_url"
+                >
+            </view>
+            <view
+                class="item"
+                @click="setName"
             >
-        </view>
-        <template v-if="userData.identity === 1">
-            <!-- 普通用户 -->
-            <view class="item">
                 <text class="text">
-                    用户名
+                    姓名
                 </text>
-                <text>吴红月</text>
+                <view class="arrow">
+                    <template v-if="userInfo.identity === 3">
+                        <text v-if="userInfo.name">
+                            {{ userInfo.name }}
+                        </text>
+                        <text
+                            v-else
+                            class="placeholder"
+                        >
+                            去设置
+                        </text>
+                        <image
+                            class="arrow-r"
+                            src="/static/images/uc/r-arrow.png"
+                        />
+                    </template>
+                    <template v-else>
+                        {{ userInfo.name }}
+                    </template>
+                </view>
             </view>
-        </template>
-        <template v-if="userData.identity === 2">
-            <!-- 教育局员工 -->
-            <view class="item">
-                <text class="text">
-                    部门
-                </text>
-                <text>前端研发部</text>
-            </view>
-        </template>
-        <template v-if="userData.identity === 3">
-            <!-- 老师 -->
-            <view class="item">
-                <text class="text">
-                    权限
-                </text>
-                <text>老师</text>
-            </view>
-        </template>
-        <template v-if="userData.identity === 4">
-            <view class="item">
-                <text class="text">
-                    学校
-                </text>
-                <text>{{ userData.school }}</text>
-            </view>
-            <view class="item">
-                <text class="text">
-                    班级
-                </text>
-                <text>{{ userData.class }}</text>
-            </view>
-        </template>
-        <view class="item">
-            <text class="text">
-                用户名
-            </text>
-            <text>{{ userData.nickName }}</text>
-            <input
-                type="text"
-                :value="userData.nickName"
+            <template v-if="userInfo.identity === 1">
+                <!-- 普通用户 -->
+                <view class="item">
+                    <text class="text">
+                        用户名
+                    </text>
+                    <text>{{ userInfo.name }}</text>
+                </view>
+            </template>
+            <template v-if="userInfo.identity === 2">
+                <!-- 教育局员工 -->
+                <view class="item">
+                    <text class="text">
+                        部门
+                    </text>
+                    <text>{{ userInfo.teacher_info.department_name }}</text>
+                </view>
+            </template>
+            <template v-if="userInfo.identity === 3">
+                <!-- 老师 -->
+                <view class="item">
+                    <text class="text">
+                        权限
+                    </text>
+                    <text>老师</text>
+                </view>
+            </template>
+            <template v-if="userInfo.identity === 4">
+                <!-- 学生 -->
+                <view class="item">
+                    <text class="text">
+                        学校
+                    </text>
+                    <text>{{ userInfo.school }}</text>
+                </view>
+                <view class="item">
+                    <text class="text">
+                        班级
+                    </text>
+                    <text>{{ userInfo.class }}</text>
+                </view>
+                <view class="item">
+                    <text class="text">
+                        用户名
+                    </text>
+                    <text>{{ userInfo.nickName }}</text>
+                </view>
+            </template>
+            <navigator
+                class="item"
+                url="/pages/uc/setting/setting"
             >
-        </view>
-        <view class="item">
-            <text class="text">
-                重置密码
-            </text>
-            <view class="arrow">
-                <image
-                    class="arrow-r"
-                    src="/static/images/uc/r-arrow.png"
-                />
+                <text class="text">
+                    重置密码
+                </text>
+                <view class="arrow">
+                    <image
+                        class="arrow-r"
+                        src="/static/images/uc/r-arrow.png"
+                    />
+                </view>
+            </navigator>
+            <view class="item">
+                <text>绑定手机号</text>
+                <text>{{ userInfo.mobile }}</text>
             </view>
-        </view>
-        <view class="item">
-            <text>绑定手机号</text>
-            <text>{{ userData.phone }}</text>
-        </view>
+            <view
+                class="btn"
+                @click="doLogout"
+            >
+                退出登录
+            </view>
+        </template>
     </view>
 </template>
 <script>
 import config from '../../../common/config';
 import utils from '../../../common/utils';
 import api from '../../../common/api';
+import login from '../../../widgets/login/login.vue';
 
 export default {
+    components: {
+        login,
+    },
     data() {
         return {
-            userData: {
-                imgSrc: '',
+            isLoading: true,
+            userInfo: {
+                avatar_url: '',
                 name: '',
                 school: '',
                 class: '',
@@ -114,10 +148,21 @@ export default {
         };
     },
     methods: {
-        getUcData() {
-            api.get('/api/weixin/getshareconfig').then((data) => {
-                this.userData = data;
-            });
+        getData() {
+            api.get('/api/user/info').then(
+                (res) => {
+                    this.userInfo = res.user_info;
+                    this.isLoading = false;
+                },
+                () => {
+                    this.isLoading = false;
+                    this.userInfo = null;
+                    // uni.showToast({
+                    //     title: err.message,
+                    //     icon: 'none',
+                    // });
+                },
+            );
         },
         settingImg() {
             uni.chooseImage({
@@ -180,6 +225,29 @@ export default {
                 });
             });
         },
+        setName() {
+            const { identity } = this.userInfo;
+            if (identity === 1) {
+                uni.navigateTo({
+                    url: '/pages/uc/setting/userName',
+                });
+            }
+        },
+        doLogout() {
+            api.logout().then(() => {
+                this.getData();
+            });
+        },
+        // fetch user info
+        onLogin() {
+            this.getData();
+        },
+    },
+    onLoad() {
+        this.getData();
+    },
+    onShow() {
+        this.getData();
     },
 };
 </script>
@@ -205,6 +273,7 @@ export default {
     .arrow-r {
         width: 12upx;
         height: 22upx;
+        margin-left: 5upx;
     }
 }
 </style>

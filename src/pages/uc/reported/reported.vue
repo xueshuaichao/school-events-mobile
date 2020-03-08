@@ -1,11 +1,42 @@
 <template>
     <view class="page-reported">
-        <view class="title">
-            青少年爱挑战
-        </view>
         <view class="form-info">
             <view class="uni-list-cell-db">
+                <text class="form-item-text">
+                    项目范围
+                </text>
+                <view class="title form-item-cont">
+                    青少年爱挑战
+                </view>
+            </view>
+            <view class="uni-list-cell-db range-cont">
+                <text class="form-item-text">
+                    项目范围
+                </text>
+                <radio-group @change="radioChange">
+                    <label
+                        class="radio"
+                    ><radio
+                        value="1"
+                        checked="true"
+                        style="transform: scale(0.6);"
+                        color="#1166FF"
+                    />爱挑战-个人</label>
+                    <label
+                        class="radio"
+                    ><radio
+                        value="2"
+                        style="transform: scale(0.6);"
+                        color="#1166FF"
+                    />爱挑战-团队</label>
+                </radio-group>
+            </view>
+            <view class="uni-list-cell-db">
+                <text class="form-item-text">
+                    参赛项目
+                </text>
                 <my-picker
+                    class="form-item-cont"
                     :picker-list="catData"
                     :picker-key="{
                         value: 'cat_id',
@@ -16,7 +47,7 @@
                 >
                     <view>
                         <view
-                            v-if="!catText"
+                            v-if="!formData.cat_id"
                             class="uni-input placeholder fake-input"
                         >
                             参赛项目
@@ -31,15 +62,22 @@
                 </my-picker>
             </view>
             <view class="uni-list-cell-db">
-                <view class="uni-input fake-input">
+                <text class="form-item-text">
+                    学&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;段
+                </text>
+                <view class="form-item-cont uni-input fake-input">
                     {{ stageData }}
                 </view>
             </view>
             <view class="uni-list-cell-db">
+                <text class="form-item-text">
+                    年&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;级
+                </text>
                 <picker
                     :value="index"
                     :range="gradeData"
                     range-key="grade_name"
+                    class="form-item-cont"
                     @change="selectGrade"
                 >
                     <view
@@ -57,10 +95,14 @@
                 </picker>
             </view>
             <view class="uni-list-cell-db">
+                <text class="form-item-text">
+                    班&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;级
+                </text>
                 <picker
                     :value="classDataIndex"
                     :range="classData"
                     range-key="class_name"
+                    class="form-item-cont"
                     @change="selectClass"
                 >
                     <view
@@ -77,15 +119,22 @@
                     </view>
                 </picker>
             </view>
-            <view class="uni-list-cell-db">
+            <view
+                v-if="rangeIndex === 0"
+                class="uni-list-cell-db"
+            >
+                <text class="form-item-text">
+                    参赛姓名
+                </text>
                 <picker
                     :value="studentDataIndex"
                     :range="studentData"
-                    range-key="name"
-                    @change="onSelect"
+                    range-key="student_name"
+                    class="form-item-cont"
+                    @change="selectStudents"
                 >
                     <view
-                        v-if="!formData.student_id"
+                        v-if="!formData.create_info_array.length"
                         class="uni-input placeholder fake-input"
                     >
                         请选择参赛者姓名
@@ -94,26 +143,120 @@
                         v-else
                         class="uni-input fake-input"
                     >
-                        {{ studentData[studentDataIndex].name }}
+                        {{ studentData[studentDataIndex].student_name }}
                     </view>
                 </picker>
             </view>
-            <view class="uni-form-item uni-column">
-                <input
-                    v-model="formData.teacher"
-                    class="uni-input"
-                    type="text"
-                    placeholder="成绩"
+
+            <view
+                v-else
+                class="uni-list-cell-db"
+            >
+                <text class="form-item-text">
+                    参赛姓名
+                </text>
+                <my-picker
+                    :picker-list="studentData"
+                    :multiple="true"
+                    :picker-key="{
+                        value: 'user_id',
+                        label: 'student_name'
+                    }"
+                    class="form-item-cont"
+                    :checked-array="checkedStudents"
+                    @confirm="selectAllStudent($event)"
                 >
+                    <view>
+                        <view
+                            v-if="!formData.create_info_array.length"
+                            class="uni-input placeholder fake-input "
+                        >
+                            请选择参赛者姓名
+                        </view>
+                        <view
+                            v-else
+                            class="uni-input fake-input student-list"
+                        >
+                            <view
+                                v-for="item in formData.create_info_array"
+                                :key="item.user_id"
+                                class="student-item"
+                            >
+                                {{ item.student_name }}
+                                <text
+                                    class="delete-btn"
+                                    @click.stop="deleteStudent(item.user_id)"
+                                >
+                                    x
+                                </text>
+                                <!-- <image @click="deleteStudent" src="" /> -->
+                            </view>
+                        </view>
+                    </view>
+                </my-picker>
+            </view>
+            <view class="uni-list-cell-db">
+                <text class="form-item-text">
+                    成&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;绩
+                </text>
+                <view
+                    v-if="date"
+                    class="achievement-dete form-item-cont"
+                >
+                    <input
+                        v-model="formData.achievement"
+                        class="uni-input"
+                        type="number"
+                        placeholder="分"
+                    >
+                    <text>分</text>
+                    <input
+                        v-model="formData.seconds"
+                        :maxlength="2"
+                        type="number"
+                        class="uni-input"
+                        placeholder="秒"
+                    >
+                    <text>秒</text>
+                    <input
+                        v-model="formData.millisecond"
+                        :maxlength="3"
+                        type="number"
+                        class="uni-input"
+                        placeholder="毫秒"
+                    >毫秒
+                </view>
+                <view
+                    v-else
+                    class="form-item-cont achievement-nor"
+                >
+                    <input
+                        v-model="formData.achievement"
+                        class="uni-input"
+                        type="text"
+                        placeholder="请输入成绩"
+                    >
+                    <text>{{ formData.achievement_unit }}</text>
+                </view>
+            </view>
+            <view class="uni-list-cell-db">
+                <text class="form-item-text">
+                    指导老师
+                </text>
                 <input
                     v-model="formData.teacher"
-                    class="uni-input"
+                    class="uni-input form-item-cont"
                     type="text"
                     placeholder="指导老师"
                 >
+            </view>
+            <view class="uni-list-cell-db">
+                <text class="form-item-text">
+                    认&nbsp;&nbsp;证&nbsp;&nbsp;人
+                </text>
                 <input
-                    v-model="formData.name"
-                    class="uni-input"
+                    v-model="formData.attestation_name"
+                    class="uni-input form-item-cont"
                     type="text"
                     placeholder="认证官姓名"
                 >
@@ -126,13 +269,16 @@
                 :type="'image'"
                 @change="updateImage"
             />
-
-            <!-- <view
-                class="btn"
-                @click="upload"
-            >
-                上传
-            </view> -->
+            <view class="button-cont">
+                <view
+                    class="btn"
+                    @click="submitReporte"
+                >
+                    保存
+                </view>
+                <view class="btn" />
+            </view>
+            <view />
         </view>
     </view>
 </template>
@@ -151,20 +297,30 @@ export default {
         return {
             navActiveIndex: 0,
             formData: {
-                cat_id: [],
+                resource_name: '青少年爱挑战',
+                resource_scope: '1',
+                cat_id: '',
+                cat_name: '',
+                education_level: '', // 学段
+                create_info_array: [],
                 grade_id: '',
                 class_id: '',
-                student_id: '',
-                resource_name: '',
-                introduce: '',
+                teacher: '', // 指导教师
+                attestation_name: '', // 认证官姓名
+                achievement_unit: '', // 单位
                 type: 2,
                 video_id: '',
+                file_name: '',
+                file_size: '',
+                file_suffix: '',
                 video_img_url: '',
+                school_id: '',
             },
+            checkedStudents: [],
             catText: '',
             rangeIndex: 0,
-            schoolId: '',
             stageData: '',
+            catDataArray: [],
             catData: [],
             gradeDataIndex: 0,
             gradeData: [],
@@ -172,6 +328,7 @@ export default {
             classData: [],
             studentData: [],
             studentDataIndex: 0,
+            date: false,
             range: [
                 {
                     name: '爱挑战-个人',
@@ -185,9 +342,16 @@ export default {
         };
     },
     methods: {
+        radioChange(e) {
+            this.formData.cat_id = '';
+            this.rangeIndex = e.detail.value - 1;
+            this.catData = this.catDataArray[this.rangeIndex].child;
+            this.formData.resource_scope = e.detail.value;
+        },
         getCatData() {
             api.get('/api/works/gradecategory').then((res) => {
-                this.catData = res[this.rangeIndex].child;
+                this.catDataArray = res;
+                this.catData = this.catDataArray[this.rangeIndex].child;
             });
         },
         getUserInfo() {
@@ -202,20 +366,22 @@ export default {
             ];
             api.get('/api/user/info').then(({ user_info: userInfo }) => {
                 const { stage, school_id: schoolId } = userInfo;
-                this.schoolId = schoolId;
+                this.formData.school_id = schoolId;
                 this.stageData = stageList[stage - 1];
+                this.formData.education_level = stage;
                 this.getGrade();
             });
         },
         getGrade() {
             // 获取年级  传 school_id 学校id
             api.get('/api/school/grade', {
-                school_id: this.schoolId,
+                school_id: this.formData.school_id,
             }).then((res) => {
                 this.gradeData = res;
             });
         },
-        selectGrade() {
+        selectGrade(e) {
+            this.gradeDataIndex = e.detail.value;
             this.formData.grade_id = this.gradeData[
                 this.gradeDataIndex
             ].grade_id;
@@ -224,33 +390,88 @@ export default {
         getClass() {
             // 获取班级 传 school_id 学校id  grade_id 年级id
             api.get('/api/school/class', {
-                school_id: this.schoolId,
+                school_id: this.formData.school_id,
                 grade_id: this.formData.grade_id,
             }).then((res) => {
                 console.log(res);
                 this.classData = res;
             });
         },
-        selectClass() {
+        selectClass(e) {
+            this.classDataIndex = e.detail.value;
             this.formData.class_id = this.classData[this.classDataIndex].id;
             this.getStudents();
         },
         getStudents() {
             // 获取学生 传 school_id 学校id  grade_id 年级id class_id 班级 id
             api.get('/api/school/listgrade', {
-                school_id: this.schoolId,
+                school_id: this.formData.school_id,
                 grade_id: this.formData.grade_id,
                 class_id: this.formData.class_id,
             }).then((res) => {
                 this.studentData = res;
             });
         },
+        selectStudents(e) {
+            this.studentDataIndex = e.detail.value;
+            this.formData.create_info_array.push({
+                user_id: this.studentData[this.studentDataIndex].user_id,
+                student_name: this.studentData[this.studentDataIndex]
+                    .student_name,
+            });
+        },
+        selectAllStudent(picked) {
+            this.checkedStudents = picked.values;
+            this.formData.create_info_array = [];
+            this.studentData.forEach((item) => {
+                picked.values.forEach((id) => {
+                    if (item.user_id === Number(id)) {
+                        this.formData.create_info_array.push({
+                            user_id: id,
+                            student_name: item.student_name,
+                        });
+                    }
+                });
+            });
+        },
+        deleteStudent(id) {
+            const index = this.checkedStudents.findIndex(item => item === id);
+            const studentIndex = this.formData.create_info_array.findIndex(
+                item => item.user_id === id,
+            );
+            this.formData.create_info_array.splice(studentIndex, 1);
+            this.checkedStudents.splice(index, 1);
+        },
         confirm(picked) {
-            this.formData.cat_id = picked.values;
-            this.catText = picked.labels.join(',');
+            console.log(picked);
+            this.formData.cat_id = picked.value;
+            this.formData.cat_name = picked.label;
+            this.catText = picked.label;
+            this.result = this.catData;
+            // 取出最后一级数据
+            picked.values.forEach((item, index) => {
+                if (index < picked.values.length - 1) {
+                    this.getLastCat(this.result, item);
+                }
+            });
+            this.handleAchievement(
+                this.result.find(v => v.cat_id === picked.value),
+            );
+        },
+        getLastCat(arr, id) {
+            this.result = arr.find(v => v.cat_id === id).child;
+        },
+        handleAchievement({ unit }) {
+            this.date = !unit;
+            this.formData.achievement_unit = unit || '秒';
         },
         updateVideo(data) {
-            this.formData.video_id = data.video_id;
+            this.formData = {
+                ...this.formData,
+                video_id: data.video_id,
+                file_name: data.tempFilePath,
+                file_size: data.size,
+            };
         },
         updateImage(data) {
             this.formData.video_img_url = data[0] && data[0].path;
@@ -266,6 +487,25 @@ export default {
         onSelectCat(e) {
             this.catIndex = e.detail.cat_id;
             this.formData.range_id = this.range[this.catIndex].id;
+        },
+        submitReporte() {
+            uni.showLoading();
+            api.post('/api/works/uploadgrade', this.formData).then(
+                (res) => {
+                    console.log(res);
+                    uni.hideLoading();
+                    uni.navigateTo({
+                        url: '/pages/uc/reported/result',
+                    });
+                },
+                (err) => {
+                    uni.hideLoading();
+                    uni.showToast({
+                        icon: 'none',
+                        title: err.message,
+                    });
+                },
+            );
         },
     },
     onload() {
@@ -287,7 +527,49 @@ export default {
         padding: 0 24upx;
         font-size: 28upx;
         background-color: #f2f2f2;
-        margin-bottom: 21upx;
+    }
+    .range-cont {
+        display: flex;
+        justify-content: space-between;
+        font-size: 28upx;
+        align-items: center;
+        .rage-text {
+            color: #333;
+        }
+        .radio {
+            margin-right: 56upx;
+            font-size: 28upx;
+            color: #999;
+        }
+    }
+    .uni-list-cell-db {
+        display: flex;
+        align-items: center;
+        margin-bottom: 40upx;
+        .form-item-text {
+            width: 112upx;
+            margin-right: 16upx;
+            font-size: 28upx;
+            color: #333;
+        }
+        .form-item-cont {
+            flex: 1;
+        }
+    }
+    .achievement-dete {
+        display: flex;
+        align-items: center;
+        input {
+            width: 139upx;
+        }
+    }
+    .achievement-nor {
+        display: flex;
+        align-items: center;
+        input {
+            flex: 1;
+            margin-right: 5upx;
+        }
     }
     .uni-input {
         height: 88upx;
@@ -321,8 +603,30 @@ export default {
     .uni-input,
     .uni-textarea {
         border: 1upx solid #ccc;
-        margin-bottom: 40upx;
         font-size: 28upx;
+    }
+    .student-list {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        height: auto;
+        padding: 14upx 8upx 9upx 24upx;
+        .student-item {
+            padding: 14upx 42upx;
+            background-color: #ecf3ff;
+            color: #1166ff;
+            margin-right: 16upx;
+            margin-bottom: 5upx;
+            position: relative;
+            .delete-btn {
+                position: absolute;
+                bottom: 0;
+                right: 0;
+                width: 35upx;
+                height: 27upx;
+                border-radius: 50%;
+            }
+        }
     }
 }
 </style>
