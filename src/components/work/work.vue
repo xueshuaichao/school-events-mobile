@@ -20,9 +20,15 @@
             <view class="browse-num">
                 <image
                     class="icon-view"
-                    src="/static/images/widgets/work/view.png"
+                    src="/static/images/widgets/work/like-outline.png"
                 />
-                {{ info.play_count || 0 }}
+                {{ info.praise_count || 0 }}
+            </view>
+            <view
+                v-if="info.grade"
+                class="is-excellect"
+            >
+                优秀
             </view>
         </view>
         <view class="work-info">
@@ -107,6 +113,7 @@ export default {
     display: inline-block;
     width: 330upx;
     height: 300upx;
+    margin-right: 20upx;
 
     .thumbnail-wrap {
         width: 330upx;
@@ -118,14 +125,15 @@ export default {
             position: absolute;
             right: 16upx;
             bottom: 16upx;
-            color: #fff;
+            color: rgba(255, 255, 255, 0.8);
             font-size: 22upx;
-
+            line-height: 20upx;
             .icon-view {
                 display: inline-block;
-                width: 28upx;
-                height: 18upx;
+                width: 20upx;
+                height: 20upx;
                 margin-right: 8upx;
+                vertical-align: top;
             }
         }
 
@@ -159,6 +167,19 @@ export default {
                 rgba(0, 0, 0, 0.1) 42%,
                 rgba(0, 0, 0, 0.4)
             );
+        }
+        .is-excellect {
+            position: absolute;
+            width: 66upx;
+            height: 30upx;
+            background: rgba(17, 102, 255, 1);
+            border-radius: 0px 15upx 15upx 0px;
+            border: 1px solid rgba(255, 255, 255, 0.75);
+            left: 0;
+            top: 8upx;
+            font-size: 20upx;
+            text-align: center;
+            color: #fff;
         }
     }
 

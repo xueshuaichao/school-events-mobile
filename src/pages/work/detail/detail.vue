@@ -4,6 +4,72 @@
         class="page-work-detail"
     >
         <view
+            v-if="prompt"
+            class="activerulebox"
+        >
+            <image
+                class="saveImg"
+                :src="canvasImg"
+            />
+            <!-- 保存图片 -->
+            <view
+                class="saveBtn"
+                @click="handleSave"
+            >
+                保存到本地
+            </view>
+            <image
+                class="close"
+                src="/static/images/yiqing/close-icon.png"
+                @click="handleClose"
+            />
+        </view>
+
+        <!-- 小程序分享 -->
+        <template v-if="!isH5">
+            <view
+                v-if="showTicketMask"
+                class="ticket-mask"
+            >
+                <poster
+                    id="poster"
+                    :config="posterConfig"
+                    @success="onPosterSuccess"
+                    @fail="onPosterFail"
+                >
+                    <view class="ticket-poster">
+                        <image src="/static/images/yiqing/poster.png" />
+                        <view>生成海报</view>
+                    </view>
+                </poster>
+                <view class="ticket-friend">
+                    <button open-type="share" />
+                    <view>发送给好友</view>
+                </view>
+
+                <image
+                    class="ticket-close"
+                    src="/static/images/yiqing/close-icon.png"
+                    @click="showTicketMask = false"
+                />
+            </view>
+        </template>
+
+        <!-- h5 分享 -->
+        <template v-if="isH5">
+            <view
+                v-if="showShareMask === true"
+                class="share-mask"
+                @click="showShareMask = false"
+            >
+                <image
+                    class="share-pic"
+                    src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/chunjiehao/share-guide.png"
+                />
+            </view>
+        </template>
+
+        <view
             v-if="isFullScreen && isH5"
             class="h5-full-screen-title text-one-line"
         >
@@ -26,7 +92,7 @@
                         <view class="swiper-item">
                             <image
                                 class="banner-image"
-                                :src="item"
+                                :src="item | optimizeImage"
                             />
                         </view>
                     </swiper-item>
@@ -65,113 +131,177 @@
                     </cover-view>
                 </cover-view>
                 <video
-                    id="myVideo"
+                    ref="video"
                     class="video"
-                    :poster="pageData.video_img_url"
+                    preload
                     :src="pageData.video.cloud_path_sd"
-                    controls
+                    :autoplay="true"
+                    :controls="true"
+                    :loop="true"
+                    :poster="pageData.video_img_url"
+                    x5-video-player-type="h5-page"
                     @play="onPlay"
+                    @waiting="onWaiting"
+                    @timeupdate="onTimeupdate"
                     @fullscreenchange="onFullScreenChange"
                 />
             </template>
         </view>
         <view class="content">
-            <view class="author">
-                <view class="author-avator">
-                    <image
-                        class="avatar"
-                        :src="
-                            pageData.create_user_avatar_url ||
-                                '/static/images/uc/avatar.png'
-                        "
-                    />
-                </view>
-                <view class="author-info">
-                    <view class="author-name text-one-line">
-                        {{ pageData.create_name }}
-                    </view>
-                    <view class="author-from">
-                        {{ pageData.school_name + pageData.grade_name || "" }}
-                    </view>
-                </view>
-            </view>
-            <view class="work-name">
-                {{ pageData.resource_name }}
+            <view class="author-info">
                 <image
-                    v-if="
-                        pageData.resource_scope === 1 ||
-                            pageData.resource_scope === 2
-                    "
-                    class="icon-grail"
-                    src="/static/images/work/grail.png"
+                    class="avatar"
+                    src="/static/images/work/avatar.png"
                 />
+                <text class="author-name text-one-line">
+                    {{ pageData.create_name }}
+                </text>
             </view>
-            <view class="extra">
+            <view class="author-from">
+                {{ pageData.school_name }}
+            </view>
+            <view class="work-name-wrap text-one-line">
+                <image
+                    class="avatar"
+                    src="/static/images/work/file.png"
+                />
+                <text class="work-name text-one-line">
+                    {{ pageData.resource_name }}
+                </text>
+            </view>
+            <!-- <view class="extra">
                 {{ pageData.publish_time }}
                 {{ pageData.play_count }}次播放 点赞：{{
                     pageData.praise_count
                 }}
+            </view> -->
+            <view class="intro text-three-line">
+                {{ pageData.introduce || "暂无简介" }}
             </view>
-            <view class="intro">
-                {{ pageData.introduce || "这是简介信息" }}
+            <view class="from">
+                <text
+                    v-if="pageData.recommend"
+                    class="recommend text-one-line"
+                >
+                    单位：{{ pageData.recommend || "是简介信息这是简介信息这" }}
+                </text>
+                <text
+                    v-if="pageData.teacher"
+                    class="teacher text-one-line"
+                >
+                    指导老师：{{ pageData.teacher || "李四" }}
+                </text>
             </view>
         </view>
 
-        <view class="fixed-bottom-bar">
+        <view class="fixed-panel">
+            <view class="icon-wrap">
+                <view
+                    class="item"
+                    @click="toggleLike"
+                >
+                    <image
+                        class="icon"
+                        :src="
+                            likeStatus === 0
+                                ? '/static/images/yiqing/detail/like.png'
+                                : '/static/images/yiqing/detail/like-ac.png'
+                        "
+                    />
+                    <view> {{ pageData.praise_count }} </view>
+                </view>
+
+                <view
+                    class="item"
+                    @click="handleCanvass"
+                >
+                    <image
+                        class="icon"
+                        src="/static/images/yiqing/detail/share.png"
+                    />
+                </view>
+
+                <view class="item">
+                    <image
+                        class="icon"
+                        src="/static/images/yiqing/detail/view.png"
+                    />
+                    <view> {{ pageData.play_count }} </view>
+                </view>
+            </view>
+
             <view
-                class="sect"
-                @click="toggleLike"
+                class="btn primary"
+                @click="joinGame"
             >
                 <image
-                    v-if="likeStatus === 0"
-                    class="icon"
-                    src="/static/images/work/like.png"
-                />
-                <image
-                    v-if="likeStatus === 1"
-                    class="icon"
-                    src="/static/images/work/liked.png"
-                />
-                {{ likeStatus === 0 ? "点赞" : "已点赞" }}
+                    class="join"
+                    src="../../../static/images/yiqing/like.png"
+                />我要参与
             </view>
-            <view class="sep" />
-            <button
-                v-if="!isH5"
-                class="sect share-btn"
-                open-type="share"
-            >
-                <image
-                    class="icon"
-                    src="/static/images/work/share.png"
-                />分享
-            </button>
         </view>
 
-        <image
-            v-if="!isH5"
-            src="/static/images/work/join.png"
-            class="join-game"
-            @click="joinGame"
-        />
+        <view
+            v-if="isPlayed && isPaused"
+            class="pause-cover"
+        >
+            <view
+                class="uni-video-cover"
+                @click="togglePlayStatus"
+            >
+                <div class="uni-video-cover-play-button" />
+            </view>
+        </view>
+        <view
+            v-if="isVideoWaiting"
+            class="uni-video-cover"
+            style="pointer-events: none;color: #fff"
+        >
+            加载中
+        </view>
     </view>
 </template>
 
 <script>
 import api from '../../../common/api';
-import share from '../../../common/share';
 import utils from '../../../common/utils';
+import share from '../../../common/share';
 
 export default {
+    filters: {
+        optimizeImage: (val) => {
+            if (!val) {
+                return '';
+            }
+            let newUrl = '';
+            const width = 375;
+            const height = 667;
+            if (val.indexOf('?') !== -1) {
+                newUrl = `${val}&x-oss-process=image/format,png/interlace,1/quality,Q_80/resize,m_pad,h_${height
+                    * 2},w_${width * 2},color_000000`;
+            } else {
+                newUrl = `${val}?x-oss-process=image/format,png/interlace,1/quality,Q_80/resize,m_pad,h_${height
+                    * 2},w_${width * 2},color_000000`;
+            }
+            return newUrl;
+        },
+    },
     data() {
         return {
             id: '',
+            detailId: '',
             // video: 'https://node.imgio.in/demo/birds.m3u8',
             video:
                 'https://dcloud-img.oss-cn-hangzhou.aliyuncs.com/guide/uniapp/%E7%AC%AC1%E8%AE%B2%EF%BC%88uni-app%E4%BA%A7%E5%93%81%E4%BB%8B%E7%BB%8D%EF%BC%89-%20DCloud%E5%AE%98%E6%96%B9%E8%A7%86%E9%A2%91%E6%95%99%E7%A8%8B@20181126.mp4',
             isLoading: true,
-            pageData: {},
+            pageData: {
+                video_img_url: '',
+            },
             likeStatus: 0,
             isPlayed: false,
+            isPaused: false,
+            isVideoWaiting: false,
+            showShareMask: false,
 
             // #ifdef H5
             isH5: true,
@@ -180,26 +310,240 @@ export default {
             isFullScreen: false,
 
             shareDesc: '',
+            fr: '',
+            posterConfig: {
+                pixelRatio: 3,
+                width: 570,
+                height: 826,
+                debug: false,
+                texts: [
+                    {
+                        x: 60,
+                        y: 590,
+                        text: [
+                            {
+                                text: '',
+                                fontSize: 30,
+                                color: '#333',
+                                opacity: 1,
+                                marginRight: 10,
+                                lineHeight: 40,
+                                lineNum: 1,
+                                width: 1210,
+                                textOverflow: 'ellipsis',
+                            },
+                        ],
+                        baseLine: 'middle',
+                    },
+                ],
+                images: [
+                    {
+                        url:
+                            'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/aitiaozhan-poster.png',
+                        width: 570,
+                        height: 826,
+                        y: 0,
+                        x: 0,
+                    },
+                    {
+                        url: '',
+                        width: 469,
+                        height: 315,
+                        y: 233,
+                        x: 50,
+                    },
+                    {
+                        url: '',
+                        width: 142,
+                        height: 142,
+                        y: 666,
+                        x: 380,
+                        borderRadius: 140,
+                    },
+                ],
+            },
+
+            prompt: false,
+            canvasImg: '',
+            showTicketMask: false,
         };
     },
+    created() {},
     methods: {
+        handleCanvass() {
+            // #ifdef H5
+            this.showShareMask = true;
+            // #endif
+
+            // #ifndef H5
+            this.handleTicketMask();
+            // #endif
+        },
+        // 生成二维码，并弹出mask
+        handleTicketMask() {
+            uni.showLoading({
+                mask: true,
+            });
+            // eslint-disable-next-line no-undef
+            const pages = getCurrentPages(); // 获取加载的页面
+            const currentPage = pages[pages.length - 1]; // 获取当前页面的对象
+            const url = currentPage.route || 'pages/yiqing/detail/detail';
+            const scene = `id=${this.id}` || 'id=325';
+            api.post('/api/weixin/getminiqrcode', {
+                path: url,
+                scene,
+            }).then(
+                ({ url }) => {
+                    uni.hideLoading();
+                    if (url) {
+                        this.base64src(url, (res) => {
+                            this.posterConfig.images[2].url = res;
+                            this.showTicketMask = true;
+                        });
+                    } else {
+                        this.posterConfig.images[2].url = 'http://aitiaozhan.oss-cn-beijing.aliyuncs.com/main-erweima.png';
+                        this.showTicketMask = true;
+                    }
+                },
+                () => {
+                    this.posterConfig.images[2].url = 'http://aitiaozhan.oss-cn-beijing.aliyuncs.com/main-erweima.png';
+                    this.showTicketMask = true;
+                    uni.hideLoading();
+                },
+            );
+        },
+        // base64转url
+        base64src(base64data, cb) {
+            // eslint-disable-next-line no-undef
+            const fsm = wx.getFileSystemManager();
+            // const FILE_BASE_NAME = 'tmp_base64src'; // 自定义文件名
+            const FILE_BASE_NAME = `tmp_base64src_${new Date() - 0}`; // 自定义文件名
+            const [, format, bodyData] = /data:image\/(\w+);base64,(.*)/.exec(base64data) || [];
+            if (!format) {
+                return new Error('ERROR_BASE64SRC_PARSE');
+            }
+            // eslint-disable-next-line no-undef
+            const filePath = `${wx.env.USER_DATA_PATH}/${FILE_BASE_NAME}.${format}`;
+            // eslint-disable-next-line no-undef
+            const buffer = wx.base64ToArrayBuffer(bodyData);
+            fsm.writeFile({
+                filePath,
+                data: buffer,
+                encoding: 'binary',
+                success() {
+                    cb(filePath);
+                },
+                fail() {
+                    return new Error('ERROR_BASE64SRC_WRITE');
+                },
+            });
+            return '';
+        },
+
+        onPosterSuccess(e) {
+            const { detail } = e;
+            this.canvasImg = detail;
+            this.showTicketMask = false;
+            this.prompt = true;
+        },
+        handleSave() {
+            const that = this;
+            // 图片保存到本地
+            // eslint-disable-next-line no-undef
+            wx.saveImageToPhotosAlbum({
+                filePath: this.canvasImg,
+                success() {
+                    that.prompt = false;
+                    that.showTicketMask = true;
+                    uni.showToast({
+                        title: '保存成功',
+                        icon: 'success',
+                        duration: 2000,
+                    });
+                },
+                fail(err) {
+                    if (
+                        err.errMsg
+                            === 'saveImageToPhotosAlbum:fail:auth denied'
+                        || err.errMsg === 'saveImageToPhotosAlbum:fail auth deny'
+                    ) {
+                        // 这边微信做过调整，必须要在按钮中触发，因此需要在弹框回调中进行调用
+                        console.log('开始授权');
+                        // eslint-disable-next-line no-undef
+                        wx.openSetting({
+                            success(settingdata) {
+                                console.log('settingdata', settingdata);
+                                if (
+                                    settingdata.authSetting[
+                                        'scope.writePhotosAlbum'
+                                    ]
+                                ) {
+                                    // eslint-disable-next-line no-undef
+                                    wx.showModal({
+                                        title: '提示',
+                                        content:
+                                            '获取权限成功,再次点击图片即可保存',
+                                        showCancel: false,
+                                    });
+                                } else {
+                                    // eslint-disable-next-line no-undef
+                                    wx.showModal({
+                                        title: '提示',
+                                        content:
+                                            '获取权限失败，将无法保存到相册哦~',
+                                        showCancel: false,
+                                    });
+                                }
+                            },
+                            fail(failData) {
+                                console.log('failData', failData);
+                            },
+                            complete(finishData) {
+                                console.log('finishData', finishData);
+                            },
+                        });
+                    }
+                },
+            });
+        },
+        handleClose() {
+            this.prompt = false;
+        },
+        onPosterFail(e) {
+            console.log(e, 'fail-------------------');
+        },
         getData() {
             api.get('/api/works/detail', {
                 id: this.id,
             }).then(
                 (res) => {
                     this.isLoading = false;
-                    console.log(res);
+                    this.detailId = res.id;
                     this.pageData = res;
+                    this.posterConfig.images[1].url = res.video_img_url;
+                    this.posterConfig.texts[0].text[0].text = res.resource_name;
                     this.initShare();
-                    // const videoUrl = res.video.cloud_path_sd;
-                    // console.log(videoUrl);
                     uni.setNavigationBarTitle({
                         title: res.resource_name,
                     });
+                    if (res.resource_type === 2) {
+                        // 说明是图片，计算播放量
+                        this.pageData.play_count = this.pageData.play_count + 1;
+                        api.get('/api/works/playcount', {
+                            id: res.id,
+                        });
+                    }
                 },
                 (err) => {
-                    console.log(err);
+                    uni.showToast({
+                        icon: 'none',
+                        title: err.message,
+                    });
+                    setTimeout(() => {
+                        uni.reLaunch({
+                            url: '/pages/tabBar/index/index',
+                        });
+                    }, 1500);
                 },
             );
 
@@ -249,13 +593,23 @@ export default {
             if (!this.isPlayed) {
                 this.pageData.play_count = this.pageData.play_count + 1;
                 api.get('/api/works/playcount', {
-                    id: this.id,
+                    id: this.detailId,
                 });
             }
-
+            this.isVideoWaiting = false;
             this.isPlayed = true;
         },
-
+        onWaiting() {
+            this.isVideoWaiting = true;
+            this.timeupdateCounter = 0;
+        },
+        onTimeupdate() {
+            if (this.timeupdateCounter > 1) {
+                this.isVideoWaiting = false;
+            } else {
+                this.timeupdateCounter += 1;
+            }
+        },
         onFullScreenChange(e) {
             const isFullScreenMode = e.detail.fullScreen;
             this.isFullScreen = isFullScreenMode;
@@ -264,52 +618,61 @@ export default {
             document.querySelector('.uni-video-type-fullscreen').style = '';
         },
         initShare() {
-            const normalList = [
-                '我正在参加"青少年爱挑战"，快来为我点赞',
-                '勇于挑战，不服来战！',
-                '我刷新记录啦，快来看！',
+            const titleList = [
+                `我的作品《${this.pageData.resource_name}》，快来帮我助力吧！`,
+                `为爱出发，为武汉加油，我的作品《${this.pageData.resource_name}》向抗疫英雄致敬！`,
+                `我的抗击疫情作品《${this.pageData.resource_name}》，大家“艺”起来，为武汉加油！'`,
             ];
-            const artList = [
-                '我正在参加"青少年爱挑战"，快来为我点赞',
-                '炫出风采，为我点赞，你也一起来参加吧',
-                '我正在参加“爱挑战”才艺展示，快来围观我的精彩作品～',
-                '亮出才艺，秀我风采！',
-                '才艺小达人，等你来打call',
-                '嗨～动动手指，为才艺小达人点个赞吧！',
-                '天生有才，SHOW出精彩！快来看～',
-                '精彩才艺秀出来，你不来看看吗？',
-                '我怎么这么有才！快快来围观我的才艺展示～',
-                '在吗？给你看看超精彩的才艺秀，小朋友都可以参加～',
-            ];
-            let desc;
+            const title = titleList[Math.floor(Math.random() * titleList.length)];
+            const desc = `${this.pageData.resource_name}-${this.pageData.create_name}`;
 
-            const scope = this.pageData.resource_scope;
-
-            if (scope === 4) {
-                desc = '教育梦想，创新起航，青少年爱挑战创新共享平台';
-            } else if (scope === 3) {
-                desc = artList[Math.floor(Math.random() * artList.length)];
-            } else if (scope === 2 || scope === 1) {
-                desc = normalList[Math.floor(Math.random() * normalList.length)];
-            }
-
-            console.log(desc);
-            this.shareDesc = desc;
-
+            this.shareDesc = title;
             share({
+                title,
                 desc,
+                thumbnail: this.pageData.video_img_url,
             });
         },
         joinGame() {
-            uni.switchTab({
-                url: '/pages/tabBar/upload/upload',
+            if (this.isH5) {
+                uni.showToast({
+                    icon: 'none',
+                    title: '请在UP青少年爱挑战小程序或爱挑战PC官网上传作品',
+                });
+                return;
+            }
+            api.isLogin().then(() => {
+                // 1未开始，2进行中，3已结束
+                api.post('/api/activity/getactivitystatus', {
+                    activity_id: 5,
+                }).then((res) => {
+                    const { status } = res;
+                    if (status === 2) {
+                        uni.navigateTo({
+                            url: '/pages/yiqing/upload/upload',
+                        });
+                    } else if (status === 1) {
+                        uni.showToast({
+                            icon: 'none',
+                            title: '活动未开始',
+                        });
+                    } else if (status === 3) {
+                        uni.showToast({
+                            icon: 'none',
+                            title: '活动已结束',
+                        });
+                    }
+                });
             });
+        },
+        togglePlayStatus() {
+            this.$refs.video.play();
+            this.isPaused = false;
         },
     },
     onLoad(query) {
         this.id = utils.getParam(query, 'id');
         this.getData();
-
         // hack for html5 video size notwoking
         // #ifdef H5
         window.removeEventListener(
@@ -319,6 +682,9 @@ export default {
         window.addEventListener('orientationchange', this.html5VideoAutoAdjust);
         // #endif
     },
+    onHide() {
+        // this.isPaused = true;
+    },
     onShow() {},
     onShareAppMessage(res) {
         if (res.from === 'button') {
@@ -327,7 +693,7 @@ export default {
         }
         return {
             title: this.shareDesc,
-            // imageUrl: '/static/images/index/banner.png',
+            imageUrl: `${this.pageData.video_img_url}?x-oss-process=image/resize,m_fill,w_250,h_150`,
             path: `/pages/work/detail/detail?id=${this.id}`,
         };
     },
@@ -336,6 +702,56 @@ export default {
 
 <style lang="less">
 .page-work-detail {
+    background: #000;
+    height: 100vh;
+    #poster {
+        // position: absolute;
+        // left:-999upx;
+    }
+    .activerulebox {
+        position: fixed;
+        background-color: rgba(0, 0, 0, 0.8);
+        width: 100%;
+        height: 100%;
+        z-index: 999;
+        .saveImg {
+            position: absolute;
+            width: 520upx;
+            height: 730upx;
+            left: 115upx;
+            top: 168upx;
+        }
+        .saveBtn {
+            position: absolute;
+            width: 520upx;
+            height: 96upx;
+            left: 115upx;
+            top: 938upx;
+
+            // width:570px;
+            // height:110px;
+            background: linear-gradient(
+                180deg,
+                rgba(0, 132, 255, 1),
+                rgba(44, 233, 255, 1)
+            );
+            border-radius: 55upx;
+            color: #fff;
+            font-weight: 600;
+            font-size: 36upx;
+            line-height: 96upx;
+            text-align: center;
+            letter-spacing: 2rpx;
+        }
+        .close {
+            position: absolute;
+            width: 54upx;
+            height: 54upx;
+            left: 348upx;
+            top: 1074upx;
+        }
+    }
+
     .h5-full-screen-title {
         position: fixed;
         width: 100%;
@@ -391,55 +807,53 @@ export default {
 
     .video-wrap {
         width: 100%;
-        height: 422rpx;
+        height: 100%;
+        overflow: hidden;
     }
 
     .video {
+        max-width: 100%;
+        max-height: 100%;
         width: 100%;
-        height: 422upx;
+        height: 100%;
     }
 
     .content {
+        position: absolute;
+        bottom: 0;
+        width: 480rpx;
         padding: 30upx;
-        color: #666;
+        color: #fff;
+        pointer-events: none;
+        .avatar {
+            display: inline-block;
+            width: 24rpx;
+            height: 26rpx;
+            margin-right: 16upx;
+        }
 
-        .author {
-            margin-bottom: 32upx;
-            display: flex;
-
-            .author-avator {
-                width: 72upx;
-                margin-right: 16upx;
-
-                .avatar {
-                    display: inline-block;
-                    width: 72upx;
-                    height: 72upx;
-                    border-radius: 36upx;
-                }
+        .author-info {
+            .author-name {
+                color: #fff;
+                font-size: 28upx;
+                position: relative;
+                top: -2rpx;
             }
+            margin-bottom: 10rpx;
+        }
 
-            .author-info {
-                flex: 1;
-                overflow: hidden;
-
-                .author-name {
-                    color: #333;
-                    font-size: 28upx;
-                    margin-bottom: 10upx;
-                }
-
-                .author-from {
-                    font-size: 22upx;
-                }
-            }
+        .author-from {
+            font-size: 24rpx;
+            margin-bottom: 10rpx;
         }
 
         .work-name {
-            font-size: 32upx;
-            color: #333;
-            margin-bottom: 24upx;
-            font-weight: 500;
+            font-size: 28rpx;
+            color: #fff;
+            margin-bottom: 13rpx;
+            font-weight: 600;
+            position: relative;
+            top: -2rpx;
         }
 
         .extra {
@@ -450,6 +864,7 @@ export default {
         .intro {
             font-size: 28upx;
             line-height: 44upx;
+            margin-bottom: 30rpx;
         }
 
         .icon-grail {
@@ -460,50 +875,21 @@ export default {
         }
     }
 
-    .fixed-bottom-bar {
-        line-height: 100upx;
-        text-align: center;
-        display: flex;
-        position: fixed;
-        bottom: 0;
-        width: 100%;
-        font-size: 32upx;
-        color: #679eff;
-        border-top: 1upx solid #ddd;
-
-        .sep {
-            border-right: 1px solid #ddd;
-        }
-
-        .sect {
-            flex: 1;
-            border-radius: 0;
-            background: #fff;
-            color: #679eff;
-
-            &::after {
-                border: none;
-            }
-
-            .icon {
-                width: 40upx;
-                height: 40upx;
-                margin-right: 16upx;
-                position: relative;
-                top: 6upx;
-            }
-        }
-
-        .share-btn {
-            padding-top: 10upx;
-        }
+    swiper {
+        width: 750rpx;
+        // height: 1334rpx;
+        height: 100vh;
     }
 
     .main-swiper {
-        padding: 30upx;
+        position: absolute;
+        width: 100%;
+        top: 0;
 
         uni-swiper {
-            height: 280upx;
+            // height: 422upx;
+            // height: 1334rpx;
+            height: 100vh;
 
             .swiper-item {
                 img {
@@ -514,17 +900,171 @@ export default {
         }
 
         .banner-image {
-            width: 690upx;
-            height: 280upx;
+            width: 750rpx;
+            // height: 1334rpx;
+            height: 100vh;
         }
     }
 
     .join-game {
-        width: 160rpx;
-        height: 151rpx;
+        width: 134rpx;
+        height: 140rpx;
         position: fixed;
         right: 30rpx;
-        bottom: 200rpx;
+        bottom: 20rpx;
+        z-index: 100;
+    }
+
+    .from {
+        font-size: 24rpx;
+
+        .recommend {
+            width: 260rpx;
+            display: inline-block;
+        }
+
+        .teacher {
+            display: inline-block;
+            width: 220rpx;
+        }
+    }
+
+    .fixed-panel {
+        position: fixed;
+        width: 146rpx;
+        right: 30rpx;
+        bottom: 20rpx;
+        color: #ffde98;
+        font-size: 24rpx;
+        text-align: center;
+        z-index: 100;
+
+        .icon-wrap {
+            //margin-right: 36rpx;
+            text-align: center;
+            position: relative;
+            right: -30rpx;
+            margin-bottom: 20rpx;
+            color: #fff;
+
+            .item {
+                margin-bottom: 10rpx;
+            }
+        }
+
+        .icon {
+            width: 56rpx;
+            height: 56rpx;
+        }
+
+        .btn-icon {
+            width: 56rpx;
+            height: 56rpx;
+            background: transparent;
+            display: inline-block;
+            padding: 0;
+            font-size: 0;
+        }
+    }
+
+    .btn {
+        width: 174rpx;
+        height: 54rpx;
+        background: rgba(222, 39, 30, 1);
+        border-radius: 27rpx 0px 0px 27rpx;
+        color: #0096ff;
+        font-size: 24rpx;
+        background: #fff;
+        line-height: 54rpx;
+        text-align: center;
+        margin-bottom: 30rpx;
+        padding: 0;
+
+        &.primary {
+            background: #0096ff;
+            color: #fff;
+        }
+        .join {
+            width: 34upx;
+            height: 31upx;
+            vertical-align: middle;
+            margin-right: 8upx;
+        }
+        .arrow {
+            width: 12upx;
+            height: 21upx;
+            vertical-align: middle;
+            margin-right: 8upx;
+        }
+    }
+
+    .share-mask {
+        position: fixed;
+        z-index: 9999;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.7);
+        text-align: center;
+
+        .share-pic {
+            width: 438rpx;
+            height: 216rpx;
+            position: absolute;
+            right: 40rpx;
+            top: 28rpx;
+        }
+    }
+    .ticket-mask {
+        position: fixed;
+        z-index: 9999;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.7);
+        text-align: center;
+        color: #fff;
+        font-size: 28upx;
+        .ticket-friend {
+            position: absolute;
+            left: 160rpx;
+            top: 784rpx;
+            text-align: center;
+            button {
+                width: 160rpx;
+                height: 160rpx;
+                background: url("../../../static/images/yiqing/sendToFriend.png");
+                background-size: 100% 100%;
+            }
+            view {
+                margin-top: 14upx;
+            }
+        }
+
+        .ticket-poster {
+            position: absolute;
+            left: 400rpx;
+            top: 784rpx;
+            text-align: center;
+            image {
+                width: 160rpx;
+                height: 160rpx;
+            }
+            view {
+                margin-top: 14upx;
+            }
+        }
+        .ticket-close {
+            position: absolute;
+            width: 56upx;
+            height: 56upx;
+            left: 347upx;
+            top: 1037upx;
+        }
+    }
+
+    /deep/ .uni-video-container {
+        .uni-video-cover-duration {
+            display: none;
+        }
     }
 }
 </style>
