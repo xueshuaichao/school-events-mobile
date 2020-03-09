@@ -8,94 +8,164 @@
             @login="onLogin"
         />
         <template v-else>
+            <view class="user-bg">
+                <image
+                    class="avatar-bg"
+                    :src="userInfo.bg_img || '/static/images/uc/avatar-bg.png'"
+                />
+                <view
+                    class="set-bg"
+                    @click.stop="setBg"
+                >
+                    <image
+                        class="set-bg-icon"
+                        src="/static/images/uc/update.png"
+                    />更换背景
+                </view>
+            </view>
             <view class="user-info">
                 <image
                     class="avatar"
                     :src="userInfo.avatar_url || '/static/images/uc/avatar.png'"
+                    @click="setAvatar"
                 />
                 <view class="main-info">
                     <view class="user-name">
                         {{ userInfo.name || "" }}
                     </view>
-
-                    <template v-if="userInfo.identity === 3">
+                    <template v-if="userInfo.identity === 1">
+                        <!-- 普通用户 -->
+                        <view
+                            v-if="
+                                userInfo.is_set_name === 1 ||
+                                    userInfo.avatar_url ||
+                                    userInfo.is_set_password
+                            "
+                            class="info user-from"
+                        >
+                            <template v-if="userInfo.is_set_name === 1">
+                                {{ userInfo.mobile || "" }}
+                            </template>
+                        </view>
+                        <view
+                            v-else
+                            class="info user-from"
+                        >
+                            请尽快完善用户信息！<navigator
+                                url="/pages/uc/setting/setting"
+                            >
+                                点击去完善
+                            </navigator>
+                        </view>
+                    </template>
+                    <template v-if="userInfo.identity === 2">
+                        <!-- 教育局员工 -->
                         <view class="info user-from">
-                            {{ userInfo.teacher_info.school_name || ""
-                            }}{{ userInfo.teacher_info.department_name || "" }}
+                            部门：{{
+                                userInfo.teacher_info.department_name || ""
+                            }}
+                        </view>
+                    </template>
+                    <template v-if="userInfo.identity === 3">
+                        <!-- 老师 -->
+                        <view class="info user-from">
+                            老师
                         </view>
                     </template>
 
                     <template v-if="userInfo.identity === 4">
+                        <!-- 学生 -->
                         <view class="info user-from">
                             {{ userInfo.student_info.school_name
                             }}{{ userInfo.student_info.grade_name
                             }}{{ userInfo.student_info.class_name }}
                         </view>
                         <view class="info user-id">
-                            学号：{{ userInfo.student_info.number }}
+                            用户名：{{ userInfo.student_info.number }}
                         </view>
                     </template>
                 </view>
             </view>
-            <view class="sep" />
             <view class="menu-list">
                 <navigator
                     class="menu-item"
                     url="/pages/uc/myWork/myWork"
                 >
-                    <image
-                        class="icon"
-                        src="/static/images/uc/work.png"
-                    />
-                    <text class="text">
+                    <view class="text">
+                        <image
+                            class="icon"
+                            src="/static/images/uc/work.png"
+                        />
                         我的作品
-                    </text>
-                    <text class="arrow">
-                        >
-                    </text>
+                    </view>
+                    <view class="arrow">
+                        <text class="text-blue">
+                            已上传{{ userInfo.works_count }}个作品
+                        </text>
+                        <image
+                            class="arrow-r"
+                            src="/static/images/uc/r-arrow.png"
+                        />
+                    </view>
                 </navigator>
                 <navigator
                     class="menu-item"
-                    url="/pages/uc/myWork/myWork"
+                    url="/pages/uc/message/message"
                 >
-                    <image
-                        class="icon"
-                        src="/static/images/uc/work.png"
-                    />
-                    <text class="text">
+                    <view class="text">
+                        <image
+                            class="icon"
+                            src="/static/images/uc/message.png"
+                        />
                         消息
-                    </text>
-                    <text class="arrow">
-                        >
-                    </text>
+                    </view>
+                    <view class="arrow">
+                        <text class="text-red">
+                            {{ userInfo.msg_count }}
+                        </text>
+                        <image
+                            class="arrow-r"
+                            src="/static/images/uc/r-arrow.png"
+                        />
+                    </view>
                 </navigator>
                 <navigator
                     class="menu-item"
-                    url="/pages/uc/myWork/myWork"
+                    url="/pages/uc/setting/setting"
                 >
-                    <image
-                        class="icon"
-                        src="/static/images/uc/work.png"
-                    />
-                    <text class="text">
+                    <view class="text">
+                        <image
+                            class="icon"
+                            src="/static/images/uc/setting.png"
+                        />
                         设置
-                    </text>
-                    <text class="arrow">
-                        >
-                    </text>
+                    </view>
+                    <view class="arrow">
+                        <image
+                            class="arrow-r"
+                            src="/static/images/uc/r-arrow.png"
+                        />
+                    </view>
                 </navigator>
-                <view
+                <navigator
+                    v-if="userInfo.identity === 4"
                     class="menu-item"
-                    @click="doLogout"
+                    url="/pages/uc/record/record"
                 >
-                    <image
-                        class="icon"
-                        src="/static/images/uc/record.png"
-                    />
-                    <text class="text">
-                        退出登录
-                    </text>
-                </view>
+                    <view class="text">
+                        <image
+                            class="icon"
+                            src="/static/images/uc/record.png"
+                        />
+                        我的记录
+                    </view>
+                    <view class="arrow">
+                        <image
+                            class="arrow-r"
+                            src="/static/images/uc/r-arrow.png"
+                        />
+                    </view>
+                </navigator>
                 <!-- <view class="menu-item">
                     <image
                         class="icon"
@@ -141,6 +211,13 @@
                     </text>
                 </navigator> -->
             </view>
+            <navigator
+                v-if="userInfo.is_admin === 1"
+                class="submit-button"
+                url="/pages/uc/reported/reported"
+            >
+                上报成绩
+            </navigator>
         </template>
         <!-- <view class="form-item-wrap">
             <view
@@ -178,6 +255,37 @@ export default {
         };
     },
     methods: {
+        setBg() {
+            this.updateUser(1);
+        },
+        setAvatar() {
+            this.updateUser(2);
+        },
+        updateUser(type = 1) {
+            uni.chooseImage({
+                count: 1, // 默认9
+                success(res) {
+                    api.get('/api/user/updateuser', {
+                        url: res.tempFilePaths,
+                        type,
+                    }).then(
+                        (res) => {
+                            this.userInfo = res.user_info;
+                            this.isLoading = false;
+                        },
+                        () => {
+                            uni.showToast({
+                                title:
+                                    type === 1
+                                        ? '背景更新失败'
+                                        : '头像更新失败',
+                                icon: 'none',
+                            });
+                        },
+                    );
+                },
+            });
+        },
         getData() {
             api.get('/api/user/info').then(
                 (res) => {
@@ -214,7 +322,10 @@ export default {
         this.getData();
     },
     onHide() {
-        this.isLoading = true;
+        // this.isSetImg--是否修为改图片 为true时页面不隐藏
+        if (!this.isSetImg) {
+            this.isLoading = true;
+        }
     },
     onPullDownRefresh() {
         this.getData().then(() => {
@@ -227,19 +338,55 @@ export default {
 <style lang="less">
 .page-uc-index {
     padding-bottom: 20upx;
+    position: relative;
 
     .sep {
         border-bottom: 20rpx solid rgba(247, 247, 247, 1);
     }
-
+    .user-bg {
+        height: 290rpx;
+        margin-bottom: 60rpx;
+        position: relative;
+        .avatar-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        .set-bg {
+            float: right;
+            margin: 67rpx 24rpx 0 0;
+            font-size: 24rpx;
+            color: #fff;
+            position: relative;
+            z-index: 1;
+        }
+        .set-bg-icon {
+            width: 23rpx;
+            height: 23rpx;
+            margin-right: 5rpx;
+        }
+    }
     .user-info {
-        padding: 30rpx;
+        position: absolute;
+        left: 24rpx;
+        right: 24rpx;
+        top: 115rpx;
+        padding: 50rpx 46rpx;
+        background: linear-gradient(
+            180deg,
+            rgba(255, 255, 255, 0.8) 0%,
+            rgba(255, 255, 255, 1) 100%
+        );
+        box-shadow: 0px 3px 10px 0px rgba(0, 0, 0, 0.09);
+        border-radius: 2px;
         display: flex;
 
         .avatar {
             margin-right: 24upx;
-            width: 145upx;
-            height: 145upx;
+            width: 131upx;
+            height: 131upx;
         }
 
         .main-info {
@@ -249,23 +396,38 @@ export default {
             .user-name {
                 font-size: 32upx;
                 color: #333;
-                margin-bottom: 24upx;
+                margin-bottom: 16upx;
             }
 
             .info {
                 color: #999;
                 font-size: 22upx;
-                margin-bottom: 24upx;
+                margin-bottom: 16upx;
             }
         }
     }
 
     .menu-list {
+        padding: 4upx 32upx 48upx;
+        .arrow-r {
+            width: 12upx;
+            height: 22upx;
+        }
+        .text-blue {
+            color: #1166ff;
+            padding-right: 16upx;
+        }
+        .text-red {
+            color: #ff6555;
+            padding-right: 16upx;
+        }
         .menu-item {
-            padding: 40rpx 30rpx;
-            border-bottom: 1px solid #e6e6e6;
+            height: 62px;
             font-size: 32rpx;
             color: #333;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
 
             .icon {
                 width: 41rpx;
@@ -288,6 +450,15 @@ export default {
                 top: 6rpx;
             }
         }
+    }
+    .submit-button {
+        background-color: #1166ff;
+        color: #fff;
+        line-height: 98rpx;
+        width: 690rpx;
+        margin: 0 auto;
+        font-size: 32rpx;
+        text-align: center;
     }
 
     // .form-item-wrap {

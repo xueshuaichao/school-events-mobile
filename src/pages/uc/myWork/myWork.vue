@@ -35,22 +35,29 @@
             >
                 <template v-if="tableData.length">
                     <view
-                        v-for="(item, k) in tableData"
+                        v-for="item in tableData"
                         :key="item.id"
                         class="work-item"
                     >
                         <work
                             :info="item"
                             :mode="'single'"
+                            :show-class="false"
                         />
                         <view class="btns">
                             <button
-                                v-if="!isH5 && item.status === 1"
-                                :id="k"
-                                class="btn btn-share"
-                                open-type="share"
+                                v-if="item.status === 1"
+                                class="btn"
+                                @click="toDetail(item)"
                             >
-                                分享
+                                查看
+                            </button>
+                            <button
+                                v-if="item.status === 0"
+                                class="btn"
+                                @click="showCause(item)"
+                            >
+                                驳回原因
                             </button>
                             <button
                                 v-if="!isH5 && item.status !== 1"
@@ -115,6 +122,18 @@ export default {
                 },
                 () => {},
             );
+        },
+        toDetail(item) {
+            uni.navigateTo({
+                url: `/pages/work/detail/detail?id=${item.id}`,
+            });
+        },
+        showCause() {
+            uni.showModal({
+                title: '驳回原因',
+                content: '4234234234324',
+                showCancel: false,
+            });
         },
         editWork(item) {
             uni.navigateTo({
@@ -202,7 +221,9 @@ export default {
             return false;
         },
     },
-    onLoad() {
+    onLoad(query) {
+        const { type } = query;
+        this.tabActiveIndex = Number(type) || 0;
         this.getWorkData();
     },
 };
@@ -214,30 +235,49 @@ export default {
         display: inline-block;
         padding-left: 0;
         padding-right: 0;
+        color: #666;
+        &.active {
+            color: #1166ff;
+        }
     }
 
     .work-list {
         .work-item {
-            border-bottom: 1upx solid #ddd;
-            padding: 30upx 0 50upx;
+            padding: 30upx 0 0upx;
+            margin-bottom: 40upx;
 
             position: relative;
+            .thumbnail-wrap,
+            .thumbnail {
+                width: 266upx;
+                height: 155upx;
+            }
+        }
+        .work-name {
+            line-height: 1;
+        }
+        .text-info {
+            margin-bottom: 24upx;
+            margin-top: 0;
+            font-size: 22upx;
         }
 
         .btns {
             position: absolute;
             right: 0;
-            bottom: 10upx;
+            bottom: 0upx;
+            height: 60upx;
 
             .btn {
                 display: inline-block;
-                width: 120upx;
+                padding: 0;
+                min-width: 120upx;
                 height: 60upx;
                 font-size: 26upx;
                 line-height: 60upx;
                 color: #fff;
                 text-align: center;
-                margin-left: 40upx;
+                margin-left: 16upx;
                 background: #1166ff;
                 border-radius: 0;
             }

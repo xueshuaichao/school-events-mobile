@@ -9,7 +9,7 @@
                     <image
                         v-if="theme === 'normal'"
                         class="icon-video"
-                        src="/static/images/comp/upload/video.png"
+                        src="/static/images/comp/upload/upload-video.png"
                     />
                     <image
                         v-if="theme === 'red'"
@@ -28,23 +28,17 @@
                     src="/static/images/comp/upload/success.png"
                 />
                 <view
-                    v-if="!url"
+                    v-if="url"
                     class="icon-desc"
                 >
-                    上传视频
-                </view>
-                <view
-                    v-else
-                    class="icon-desc"
-                >
-                    视频已上传
+                    更换视频
                 </view>
             </template>
             <template v-if="type === 'image'">
                 <image
                     v-if="theme === 'normal'"
                     class="icon-image"
-                    src="/static/images/comp/upload/image.png"
+                    src="/static/images/comp/upload/upload-img.png"
                 />
                 <image
                     v-if="theme === 'red'"
@@ -56,9 +50,6 @@
                     class="icon-image red"
                     src="/static/images/comp/upload/image_blue.png"
                 />
-                <view class="icon-desc">
-                    {{ preview ? "上传封面" : "上传图片" }}
-                </view>
                 <image
                     v-if="preview && url"
                     class="preview"
@@ -66,10 +57,13 @@
                 />
             </template>
         </view>
-        <view class="desc">
+        <view
+            class="desc"
+            :class="{ image: type === 'image' }"
+        >
             <template v-if="type === 'video'">
                 <view>
-                    视频文件大小不超过200MB
+                    不支持大于1G的视频
                 </view>
                 <view>
                     支持 MP4 等格式
@@ -77,10 +71,13 @@
             </template>
             <template v-if="type === 'image'">
                 <view>
-                    图片尺寸建议950*550
+                    支持.jpg, png格式
                 </view>
                 <view>
-                    支持 jpg, png 格式
+                    图片尺寸建议950*550
+                </view>
+                <view class="tips">
+                    若不上传，我们将截取视频画面作为封面
                 </view>
             </template>
         </view>
@@ -225,7 +222,7 @@ export default {
                 });
             });
         },
-        uploadVideo(tempFilePath) {
+        uploadVideo(tempFilePath, file = {}) {
             uni.showToast({
                 icon: "loading",
                 title: "上传中",
@@ -239,7 +236,7 @@ export default {
                     userKey: utils.getToken()
                 },
                 success: uploadFileRes => {
-                    console.log(uploadFileRes);
+                    console.log(1111, file);
                     let resp;
                     try {
                         resp = JSON.parse(uploadFileRes.data);
@@ -251,7 +248,11 @@ export default {
                     }
                     if (resp.status === 200) {
                         // success
-                        this.$emit("change", resp.data);
+                        const data = {
+                            ...resp.data,
+                            ...file
+                        };
+                        this.$emit("change", data);
                         uni.showToast({
                             title: "已上传"
                         });
@@ -282,7 +283,7 @@ export default {
                                 this.uploadFile(filePath)
                             )
                         ).then(data => {
-                            // console.log(data);
+                            console.log(res);
                             this.$emit("change", data);
                         });
                         [this.src] = res.tempFilePaths;
@@ -299,7 +300,7 @@ export default {
                         }
                         const filePath = res.tempFilePath;
                         this.src = filePath;
-                        return this.uploadVideo(filePath);
+                        return this.uploadVideo(filePath, res);
                         // console.log(res);
                         // const fileList = e.target.files;
                         // this.uploader.cleanList();
@@ -326,11 +327,12 @@ export default {
 
     .cover-wrap {
         width: 192upx;
-        height: 128upx;
+        height: 108upx;
         background: #f0f0f0;
         margin-right: 16upx;
         text-align: center;
         position: relative;
+        background-color: #ecf3ff;
 
         .preview {
             position: absolute;
@@ -349,19 +351,18 @@ export default {
         color: #666;
         line-height: 40upx;
         padding-top: 14upx;
+        &.image {
+            padding-top: 0;
+            line-height: 38upx;
+        }
     }
 
-    .icon-video {
+    .icon-video,
+    .icon-image {
         display: inline-block;
-        width: 43upx;
-        height: 28upx;
+        width: 78upx;
+        height: 56upx;
         margin-top: 26rpx;
-
-        &.red {
-            margin-top: 16upx;
-            width: 70rpx;
-            height: 52rpx;
-        }
     }
 
     .icon-success {
@@ -371,22 +372,21 @@ export default {
         margin-top: 12rpx;
     }
 
-    .icon-image {
-        display: inline-block;
-        width: 46upx;
-        height: 36upx;
-        margin-top: 20rpx;
-
-        &.red {
-            margin-top: 12upx;
-            width: 70rpx;
-            height: 52rpx;
-        }
-    }
-
     .icon-desc {
-        color: #666;
-        font-size: 28upx;
+        position: absolute;
+        bottom: 0;
+        background-color: rgba(0, 0, 0, 0.6);
+        width: 100%;
+        height: 44upx;
+        line-height: 44upx;
+        color: #fff;
+        font-size: 24upx;
+    }
+    .tips {
+        font-size: 22upx;
+        color: #bfbfbf;
+        line-height: 24upx;
+        padding-top: 10upx;
     }
 }
 </style>
