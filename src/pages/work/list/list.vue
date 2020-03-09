@@ -4,6 +4,7 @@
             :is-reach-btm="isReachBtm"
             :params-filter="filter"
             :has-page-params="hasPageParams"
+            :is-show="isShow"
             :is-from-tabbar="false"
             @changeBottom="changeBottom"
         />
@@ -29,6 +30,7 @@ export default {
                     one_level_id: 0,
                 },
             },
+            isShow: false,
         };
     },
     created() {},

@@ -2,6 +2,8 @@
     <view
         v-if="!isLoading"
         class="page-work-detail"
+        @touchstart="touchstart"
+        @touchend="touchend"
     >
         <view
             v-if="prompt"
@@ -366,6 +368,7 @@ export default {
             prompt: false,
             canvasImg: '',
             showTicketMask: false,
+            startY: 0,
         };
     },
     created() {},
@@ -520,19 +523,20 @@ export default {
                     this.isLoading = false;
                     this.detailId = res.id;
                     this.pageData = res;
-                    this.posterConfig.images[1].url = res.video_img_url;
-                    this.posterConfig.texts[0].text[0].text = res.resource_name;
-                    this.initShare();
-                    uni.setNavigationBarTitle({
-                        title: res.resource_name,
-                    });
-                    if (res.resource_type === 2) {
-                        // 说明是图片，计算播放量
-                        this.pageData.play_count = this.pageData.play_count + 1;
-                        api.get('/api/works/playcount', {
-                            id: res.id,
-                        });
-                    }
+                    this.setGetDetail(res);
+                    // this.posterConfig.images[1].url = res.video_img_url;
+                    // this.posterConfig.texts[0].text[0].text = res.resource_name;
+                    // this.initShare();
+                    // uni.setNavigationBarTitle({
+                    //     title: res.resource_name,
+                    // });
+                    // if (res.resource_type === 2) {
+                    //     // 说明是图片，计算播放量
+                    //     this.pageData.play_count = this.pageData.play_count + 1;
+                    //     api.get('/api/works/playcount', {
+                    //         id: res.id,
+                    //     });
+                    // }
                 },
                 (err) => {
                     uni.showToast({
@@ -548,6 +552,21 @@ export default {
             );
 
             this.getLikeStatus();
+        },
+        setGetDetail(res) {
+            this.posterConfig.images[1].url = res.video_img_url;
+            this.posterConfig.texts[0].text[0].text = res.resource_name;
+            this.initShare();
+            uni.setNavigationBarTitle({
+                title: res.resource_name,
+            });
+            if (res.resource_type === 2) {
+                // 说明是图片，计算播放量
+                this.pageData.play_count = this.pageData.play_count + 1;
+                api.get('/api/works/playcount', {
+                    id: res.id,
+                });
+            }
         },
         toggleLike() {
             api.isLogin().then(
@@ -620,8 +639,7 @@ export default {
         initShare() {
             const titleList = [
                 `我的作品《${this.pageData.resource_name}》，快来帮我助力吧！`,
-                `为爱出发，为武汉加油，我的作品《${this.pageData.resource_name}》向抗疫英雄致敬！`,
-                `我的抗击疫情作品《${this.pageData.resource_name}》，大家“艺”起来，为武汉加油！'`,
+                `我的作品《${this.pageData.resource_name}》，大家“艺”起来，为武汉加油！'`,
             ];
             const title = titleList[Math.floor(Math.random() * titleList.length)];
             const desc = `${this.pageData.resource_name}-${this.pageData.create_name}`;
@@ -668,6 +686,31 @@ export default {
         togglePlayStatus() {
             this.$refs.video.play();
             this.isPaused = false;
+        },
+        touchstart(e) {
+            this.startY = e.changedTouches[0].clientY;
+        },
+        touchend(e) {
+            const moveY = this.startY - e.changedTouches[0].clientY;
+            if (Math.abs(moveY) > 20) {
+                const paramData = {
+                    resource_id: this.id,
+                    type: 2,
+                };
+                if (moveY > 0) {
+                    // next
+                    paramData.type = 3;
+                }
+                api.get('/api/works/list', paramData).then((res) => {
+                    console.log(res, this.id);
+                    if (res.id) {
+                        this.id = res.id;
+                        this.pageData = res;
+                        this.setGetDetail(res);
+                        this.getLikeStatus();
+                    }
+                });
+            }
         },
     },
     onLoad(query) {

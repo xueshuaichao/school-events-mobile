@@ -53,25 +53,27 @@
                 />
 
                 <view class="media-name text-one-line">
-                    {{ `${item.resource_name}` }}
+                    {{ item.resource_name }}
                 </view>
                 <text class="media-user">
                     {{ item.user_name }}
                 </text>
                 <view class="vote-num">
-                    {{ item.ticket }}赞
+                    {{ item.ticket }}票
                 </view>
             </view>
-            <uni-load-more
-                class="loadMore"
-                :status="loadMoreStatus"
-                :content-text="{
-                    contentdown: '上拉显示更多',
-                    contentrefresh: '正在加载...',
-                    contentnomore: '———— 已经到底了~ ————'
-                }"
-                color="#fff"
-            />
+            <view class="load-box">
+                <uni-load-more
+                    class="loadMore"
+                    :status="loadMoreStatus"
+                    :content-text="{
+                        contentdown: '上拉显示更多',
+                        contentrefresh: '正在加载...',
+                        contentnomore: '———— 已经到底了~ ————'
+                    }"
+                    color="#fff"
+                />
+            </view>
         </view>
     </view>
 </template>
@@ -254,8 +256,11 @@ export default {
         flex-flow: row wrap;
         overflow: hidden;
         padding: 20upx 30upx;
+        .load-box {
+            width: 100%;
+        }
         .uni-load-more {
-            margin: 0 auto;
+            margin: 0 auto !important;
         }
         .media-content {
             width: 335upx;

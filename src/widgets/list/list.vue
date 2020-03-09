@@ -41,7 +41,7 @@
                     }"
                     @click="toggleMenu('category')"
                 >
-                    <text>全部</text>
+                    <text>{{ curCategory }}</text>
                 </view>
                 <view
                     class="tab-item"
@@ -378,6 +378,8 @@ export default {
 
             tableData: [],
             changeValue: '',
+            curCategory: '全部',
+            curSort: '最热',
         };
     },
     watch: {
@@ -388,7 +390,8 @@ export default {
         },
         paramsFilter(val) {
             if (val) {
-                this.filter.cat_id.one_level_id = val.cat_id.one_level_id;
+                // // h5 与 小程序监听 paramsFilter的值，获取的时间不一样。1.这里为了兼容小程序和h5
+                this.filter.cat_id.one_level_id = Number(val.cat_id.one_level_id) || 0;
                 this.filter.keyword = val.keyword;
                 this.filter.sort = val.sort;
 
@@ -401,7 +404,7 @@ export default {
         },
     },
     created() {
-        // h5 与 小程序监听 paramsFilter的值，获取的时间不一样。
+        // tabbar不需要设置参数，直接从接口得到
         if (this.isFromTabbar) {
             this.getData();
             this.getTableData();
@@ -409,9 +412,10 @@ export default {
             this.paramsFilter.cat_id.one_level_id > 0
             || this.paramsFilterkeyword
         ) {
-            this.filter.cat_id.one_level_id = this.paramsFilter.cat_id.one_level_id;
+            // h5 与 小程序监听 paramsFilter的值，获取的时间不一样。1.这里为了兼容小程序和h5
+            this.filter.cat_id.one_level_id = Number(this.paramsFilter.cat_id.one_level_id) || 0;
             this.filter.keyword = this.paramsFilter.keyword;
-            this.filter.sort = this.paramsFilter.sort;
+            this.filter.sort = Number(this.paramsFilter.sort);
 
             this.getData();
             this.getTableData();
@@ -449,10 +453,12 @@ export default {
                     if (value === 0) {
                         this.filter.cat_id.one_level_id = 0;
                         this.catTwoMenu = [];
+                        this.curCategory = '全部';
                         // this.toggleMenu('category');
                     } else {
                         this.filter.cat_id.one_level_id = value.cat_id;
                         this.catTwoMenu = value.children;
+                        this.curCategory = value.name;
                         // if (!this.catTwoMenu.length) {
                         //     this.toggleMenu('category');
                         // }
@@ -494,6 +500,9 @@ export default {
         getData() {
             api.get('/api/works/cats').then((res) => {
                 this.categoryData = res;
+                this.curCategory = res[2].list.filter(
+                    d => d.cat_id === this.filter.cat_id.one_level_id,
+                )[0].name || '全部';
             });
         },
         getTableData() {
@@ -609,6 +618,7 @@ export default {
     .menu-list {
         text-align: center;
         padding-bottom: 20upx;
+        padding-top: 10upx;
     }
     .menu-item {
         font-size: 32upx;
