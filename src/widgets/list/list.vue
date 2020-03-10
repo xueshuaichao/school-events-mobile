@@ -293,11 +293,14 @@
             class="main"
         >
             <template v-if="tableData.length > 0">
-                <work
+                <view
                     v-for="item in tableData"
                     :key="item.id"
-                    :info="item"
-                />
+                    class="work-item"
+                >
+                    <work :info="item" />
+                </view>
+
                 <uni-load-more :status="loadMoreStatus" />
             </template>
             <view
@@ -581,7 +584,10 @@ export default {
     margin-top: 180upx;
     padding: 40upx 30upx;
     margin-right: -35upx;
-
+    .work-item {
+        margin-bottom: 16upx;
+        display: inline-block;
+    }
     .blank-box {
         margin-top: 150upx;
     }
