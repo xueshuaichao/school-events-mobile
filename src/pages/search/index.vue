@@ -55,7 +55,6 @@
                 />
             </view>
             <view
-                v-if="type === 'search'"
                 v-show="searchEmpty"
                 class="empty"
             >
@@ -326,6 +325,9 @@ export default {
             width: 606upx;
             height: 60upx;
             float: left;
+            display: block;
+            padding-left: 40upx;
+            box-sizing: border-box;
         }
         .placeholderStyle {
             color: #999999;

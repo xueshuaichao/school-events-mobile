@@ -139,7 +139,7 @@
                     />
                 </view>
                 <text class="name">
-                    大赛介绍
+                    大赛简介
                 </text>
             </navigator>
             <!-- <navigator
@@ -202,8 +202,8 @@
                 </text>
             </navigator>
             <navigator
+                url="/pages/activities/index"
                 class="item"
-                :url="`/pages/doc/list/list?type=guinness`"
             >
                 <view class="icon-wrap">
                     <image
@@ -348,7 +348,7 @@ export default {
                 return;
             }
             uni.navigateTo({
-                url: `/pages/search/index?name=${this.changeValue.trim()}`,
+                url: `/pages/work/list/list?keyword=${this.changeValue.trim()}`,
             });
         },
         getUserInfo() {
@@ -533,18 +533,25 @@ uni-swiper {
         width: 100%;
         font-size: 24upx;
         overflow: hidden;
+        padding: 20upx 0 20upx 30upx;
+        background: #fff;
+        box-shadow: 0 0upx 5upx 0 rgba(0, 0, 0, 0.05);
+        margin-bottom: 10upx;
         input {
             background: #f3f3f3;
             border: none;
             border-radius: 30upx;
             width: 606upx;
             height: 60upx;
-            margin-left: 20upx;
             float: left;
+            display: block;
+            padding-left: 40upx;
+            box-sizing: border-box;
         }
         .placeholderStyle {
             color: #999999;
-            text-align: center;
+            text-align: left;
+            font-size: 24upx;
         }
         .button {
             float: left;

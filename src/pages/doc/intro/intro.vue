@@ -150,11 +150,11 @@ export default {
                 share({
                     title: this.info.title,
                 });
-                if (!this.noticeMode) {
-                    uni.setNavigationBarTitle({
-                        title: this.info.title,
-                    });
-                }
+                // if (!this.noticeMode) {
+                // uni.setNavigationBarTitle({
+                //     title: curItem.name,
+                // });
+                // }
 
                 if (this.info.is_proclamation === 0) {
                     // 获取推荐信息
@@ -164,6 +164,10 @@ export default {
         },
         toggle(code) {
             this.activeMenuIndex = code;
+            const curItem = this.menu.filter(d => d.code === code)[0];
+            uni.setNavigationBarTitle({
+                title: curItem.name,
+            });
             if (code !== 'guide' && this.contentNodes[code].length === 0) {
                 uni.showLoading();
                 this.getData(code);
@@ -209,12 +213,14 @@ export default {
     }
 
     .menu-item {
-        line-height: 108rpx;
+        line-height: 88rpx;
         text-align: center;
         font-size: 28rpx;
         color: #999999;
         width: 20%;
         float: left;
+        margin-bottom: 30rpx;
+        margin-top: 10rpx;
         // border-bottom:4upx;
         // border-color:transparent;
         // &.active {
@@ -242,7 +248,7 @@ export default {
     .content {
         flex: 1;
 
-        padding: 40rpx;
+        padding: 60rpx 30rpx 0;
         font-size: 28rpx;
         color: #333333;
 

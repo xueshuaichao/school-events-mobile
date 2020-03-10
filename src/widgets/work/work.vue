@@ -49,12 +49,15 @@ export default {
     props: {
         title: {
             type: String,
+            default: '',
         },
         moreUrl: {
             type: String,
+            default: '',
         },
         info: {
             type: Array,
+            default: () => [],
         },
     },
 
@@ -88,7 +91,7 @@ export default {
 <style lang="less">
 .widget-work {
     .panel-bd {
-        margin: 30upx;
+        margin: 28upx 0 28upx 28upx;
         display: flex;
         flex-wrap: wrap;
         justify-content: space-between;
@@ -97,7 +100,7 @@ export default {
             justify-content: space-between;
             width: 330upx;
             height: 300upx;
-            margin-right: 24upx;
+            margin-right: 20upx;
             margin-bottom: 30upx;
         }
     }

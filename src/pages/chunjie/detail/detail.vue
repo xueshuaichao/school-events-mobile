@@ -2,6 +2,8 @@
     <view
         v-if="!isLoading"
         class="page-work-detail"
+        @touchstart="touchstart"
+        @touchend="touchend"
     >
         <view
             v-if="prompt"
@@ -210,12 +212,12 @@
             >
                 帮TA拉票
             </button>
-            <button
+            <!-- <button
                 class="btn"
                 @click="goHome"
             >
                 返回首页
-            </button>
+            </button> -->
         </view>
 
         <view
@@ -348,6 +350,7 @@ export default {
             prompt: false,
             canvasImg: '',
             showTicketMask: false,
+            startY: 0,
         };
     },
     methods: {
@@ -505,12 +508,13 @@ export default {
                     this.isLoading = false;
                     console.log(res);
                     this.pageData = res;
-                    this.posterConfig.images[1].url = res.video_img_url;
-                    this.posterConfig.texts[0].text[0].text = `#${res.cat_name}#  ${res.resource_name}`;
-                    this.initShare();
-                    uni.setNavigationBarTitle({
-                        title: res.resource_name,
-                    });
+                    this.setGetDetail(res);
+                    // this.posterConfig.images[1].url = res.video_img_url;
+                    // this.posterConfig.texts[0].text[0].text = `#${res.cat_name}#  ${res.resource_name}`;
+                    // this.initShare();
+                    // uni.setNavigationBarTitle({
+                    //     title: res.resource_name,
+                    // });
                 },
                 (err) => {
                     uni.showToast({
@@ -654,6 +658,47 @@ export default {
         togglePlayStatus() {
             this.$refs.video.play();
             this.isPaused = false;
+        },
+        touchstart(e) {
+            this.startY = e.changedTouches[0].clientY;
+        },
+        touchend(e) {
+            const moveY = this.startY - e.changedTouches[0].clientY;
+            if (Math.abs(moveY) > 20) {
+                const paramData = {
+                    resource_id: this.id,
+                    list_type: 2,
+                    activity_id: 3,
+                };
+                if (moveY > 0) {
+                    // next
+                    paramData.list_type = 3;
+                }
+                api.get('/api/activity/resourcelist', paramData).then((res) => {
+                    console.log(res, this.id);
+                    if (res.id) {
+                        this.id = res.resource_id;
+                        this.pageData = res;
+                        this.setGetDetail(res);
+                        this.getLikeStatus();
+                    }
+                });
+            }
+        },
+        setGetDetail(res) {
+            this.posterConfig.images[1].url = res.video_img_url;
+            this.posterConfig.texts[0].text[0].text = res.resource_name;
+            this.initShare();
+            uni.setNavigationBarTitle({
+                title: res.resource_name,
+            });
+            if (res.resource_type === 2) {
+                // 说明是图片，计算播放量
+                this.pageData.play_count = this.pageData.play_count + 1;
+                api.get('/api/works/playcount', {
+                    id: this.id,
+                });
+            }
         },
     },
     onLoad(query) {

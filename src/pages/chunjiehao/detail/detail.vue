@@ -210,12 +210,12 @@
             >
                 帮TA拉票
             </button>
-            <button
+            <!-- <button
                 class="btn"
                 @click="goHome"
             >
                 返回首页
-            </button>
+            </button> -->
         </view>
 
         <view

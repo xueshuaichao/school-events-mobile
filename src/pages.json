@@ -41,7 +41,7 @@
         {
             "path": "pages/doc/intro/intro",
             "style": {
-                "navigationBarTitleText": "大赛介绍"
+                "navigationBarTitleText": "参赛指南"
             }
         },
         {
@@ -91,7 +91,10 @@
         {
             "path": "pages/work/detail/detail",
             "style": {
-                "navigationBarTitleText": "作品详情"
+                "navigationBarTitleText": "作品详情",
+                "usingComponents": {
+                    "poster": "/wxcomponents/third-party/poster/poster/index"
+                }
             }
         },
         {
@@ -258,6 +261,12 @@
             "path": "pages/search/index",
             "style": {
                 "navigationBarTitleText": "作品展示"
+            }
+        },
+        {
+            "path": "pages/activities/index",
+            "style": {
+                "navigationBarTitleText": "精彩活动"
             }
         },
         {
