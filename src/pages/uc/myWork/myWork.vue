@@ -45,8 +45,14 @@
                             :show-class="false"
                         />
                         <view class="btns">
-                            <button
+                            <!-- <button
                                 v-if="item.status === 1"
+                                class="btn"
+                                @click="toDetail(item)"
+                            >
+                                查看
+                            </button> -->
+                            <button
                                 class="btn"
                                 @click="toDetail(item)"
                             >
@@ -125,7 +131,7 @@ export default {
         },
         toDetail(item) {
             uni.navigateTo({
-                url: `/pages/work/detail/detail?id=${item.id}`,
+                url: `/pages/work/detail/detail?id=${item.id}&from=mywork`,
             });
         },
         showCause() {

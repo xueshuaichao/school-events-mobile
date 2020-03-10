@@ -33,27 +33,30 @@
                 v-if="showTicketMask"
                 class="ticket-mask"
             >
-                <poster
-                    id="poster"
-                    :config="posterConfig"
-                    @success="onPosterSuccess"
-                    @fail="onPosterFail"
-                >
-                    <view class="ticket-poster">
-                        <image src="/static/images/yiqing/poster.png" />
-                        <view>生成海报</view>
+                <view class="ticket-mask-content">
+                    <poster
+                        id="poster"
+                        :config="posterConfig"
+                        @success="onPosterSuccess"
+                        @fail="onPosterFail"
+                    >
+                        <view class="ticket-poster">
+                            <image src="/static/images/work/posters.png" />
+                            <view>生成海报</view>
+                        </view>
+                    </poster>
+                    <view class="ticket-friend">
+                        <button open-type="share" />
+                        <view>发送给好友</view>
                     </view>
-                </poster>
-                <view class="ticket-friend">
-                    <button open-type="share" />
-                    <view>发送给好友</view>
-                </view>
 
-                <image
-                    class="ticket-close"
-                    src="/static/images/yiqing/close-icon.png"
-                    @click="showTicketMask = false"
-                />
+                    <text
+                        class="ticket-close"
+                        @click="showTicketMask = false"
+                    >
+                        取消
+                    </text>
+                </view>
             </view>
         </template>
 
@@ -159,40 +162,37 @@
                     {{ pageData.create_name }}
                 </text>
             </view>
-            <view class="author-from">
-                {{ pageData.school_name }}
+            <view
+                v-if="pageData.record"
+                class="school-and-record"
+            >
+                <text>{{ pageData.school_name }}</text>
+                <image
+                    class="icon-grail"
+                    :src="`/static/images/work/record-${pageData.record}.png`"
+                />
+                <text class="yellow">
+                    {{ recordTxts[pageData.record - 1] }}
+                </text>
             </view>
             <view class="work-name-wrap text-one-line">
-                <image
+                <!-- <image
                     class="avatar"
                     src="/static/images/work/file.png"
-                />
+                /> -->
                 <text class="work-name text-one-line">
                     {{ pageData.resource_name }}
                 </text>
+                <text
+                    v-if="pageData.achievement"
+                    class="deatil-achievement yellow"
+                >
+                    成绩：{{ pageData.achievement
+                    }}{{ pageData.achievement_unit }}
+                </text>
             </view>
-            <!-- <view class="extra">
-                {{ pageData.publish_time }}
-                {{ pageData.play_count }}次播放 点赞：{{
-                    pageData.praise_count
-                }}
-            </view> -->
             <view class="intro text-three-line">
                 {{ pageData.introduce || "暂无简介" }}
-            </view>
-            <view class="from">
-                <text
-                    v-if="pageData.recommend"
-                    class="recommend text-one-line"
-                >
-                    单位：{{ pageData.recommend || "是简介信息这是简介信息这" }}
-                </text>
-                <text
-                    v-if="pageData.teacher"
-                    class="teacher text-one-line"
-                >
-                    指导老师：{{ pageData.teacher || "李四" }}
-                </text>
             </view>
         </view>
 
@@ -369,6 +369,8 @@ export default {
             canvasImg: '',
             showTicketMask: false,
             startY: 0,
+            recordTxts: ['校级记录', '市级记录', '省级记录'],
+            isFrom: '',
         };
     },
     created() {},
@@ -639,7 +641,7 @@ export default {
         initShare() {
             const titleList = [
                 `我的作品《${this.pageData.resource_name}》，快来帮我助力吧！`,
-                `我的作品《${this.pageData.resource_name}》，大家“艺”起来，为武汉加油！'`,
+                `我的作品《${this.pageData.resource_name}》，大家“艺”起来，为梦想加油！'`,
             ];
             const title = titleList[Math.floor(Math.random() * titleList.length)];
             const desc = `${this.pageData.resource_name}-${this.pageData.create_name}`;
@@ -701,19 +703,32 @@ export default {
                     // next
                     paramData.type = 3;
                 }
-                api.get('/api/works/list', paramData).then((res) => {
-                    console.log(res, this.id);
-                    if (res.id) {
-                        this.id = res.id;
-                        this.pageData = res;
-                        this.setGetDetail(res);
-                        this.getLikeStatus();
-                    }
-                });
+                if (this.isFrom === 'mywork') {
+                    api.get('/api/user/worklist', paramData).then((res) => {
+                        console.log(res, this.id);
+                        if (res.id) {
+                            this.id = res.id;
+                            this.pageData = res;
+                            this.setGetDetail(res);
+                            this.getLikeStatus();
+                        }
+                    });
+                } else {
+                    api.get('/api/works/list', paramData).then((res) => {
+                        console.log(res, this.id);
+                        if (res.id) {
+                            this.id = res.id;
+                            this.pageData = res;
+                            this.setGetDetail(res);
+                            this.getLikeStatus();
+                        }
+                    });
+                }
             }
         },
     },
     onLoad(query) {
+        this.isFrom = utils.getParam(query, 'from') || '';
         this.id = utils.getParam(query, 'id');
         this.getData();
         // hack for html5 video size notwoking
@@ -750,6 +765,9 @@ export default {
     #poster {
         // position: absolute;
         // left:-999upx;
+    }
+    .yellow {
+        color: #ffd339;
     }
     .activerulebox {
         position: fixed;
@@ -863,26 +881,30 @@ export default {
 
     .content {
         position: absolute;
-        bottom: 0;
+        bottom: 20upx;
         width: 480rpx;
         padding: 30upx;
         color: #fff;
         pointer-events: none;
         .avatar {
             display: inline-block;
-            width: 24rpx;
-            height: 26rpx;
+            width: 34rpx;
+            height: 32rpx;
             margin-right: 16upx;
         }
 
         .author-info {
             .author-name {
                 color: #fff;
-                font-size: 28upx;
+                font-size: 34upx;
                 position: relative;
                 top: -2rpx;
             }
             margin-bottom: 10rpx;
+        }
+        .school-and-record {
+            font-size: 24upx;
+            margin: 2upx 0 14upx 0;
         }
 
         .author-from {
@@ -896,29 +918,29 @@ export default {
             margin-bottom: 13rpx;
             font-weight: 600;
             position: relative;
-            top: -2rpx;
         }
-
-        .extra {
-            font-size: 22upx;
-            margin-bottom: 32upx;
+        .deatil-achievement {
+            margin-left: 10upx;
+            font-size: 24upx;
         }
 
         .intro {
-            font-size: 28upx;
+            font-size: 25upx;
             line-height: 44upx;
             margin-bottom: 30rpx;
         }
 
         .icon-grail {
             display: inline-block;
-            width: 32upx;
-            height: 32upx;
-            margin-left: 32upx;
+            width: 26upx;
+            height: 22upx;
+            margin-left: 22upx;
+            margin-right: 2upx;
+            vertical-align: middle;
         }
     }
 
-    swiper {
+    .swiper {
         width: 750rpx;
         // height: 1334rpx;
         height: 100vh;
@@ -956,20 +978,6 @@ export default {
         right: 30rpx;
         bottom: 20rpx;
         z-index: 100;
-    }
-
-    .from {
-        font-size: 24rpx;
-
-        .recommend {
-            width: 260rpx;
-            display: inline-block;
-        }
-
-        .teacher {
-            display: inline-block;
-            width: 220rpx;
-        }
     }
 
     .fixed-panel {
@@ -1064,18 +1072,31 @@ export default {
         height: 100%;
         background: rgba(0, 0, 0, 0.7);
         text-align: center;
-        color: #fff;
+        color: #999;
         font-size: 28upx;
+        .ticket-mask-content {
+            width: 100%;
+            height: 324upx;
+            background: #fff;
+            border-radius: 30upx 30upx 0 0;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+        }
         .ticket-friend {
             position: absolute;
-            left: 160rpx;
-            top: 784rpx;
+            left: 180rpx;
+            top: 46rpx;
             text-align: center;
             button {
-                width: 160rpx;
-                height: 160rpx;
-                background: url("../../../static/images/yiqing/sendToFriend.png");
+                width: 110rpx;
+                height: 110rpx;
+                background: url("../../../static/images/work/weixin.png");
                 background-size: 100% 100%;
+                background-color: transparent;
+                &:after {
+                    border-width: 0;
+                }
             }
             view {
                 margin-top: 14upx;
@@ -1084,15 +1105,15 @@ export default {
 
         .ticket-poster {
             position: absolute;
-            left: 400rpx;
-            top: 784rpx;
+            left: 420rpx;
+            top: 44rpx;
             text-align: center;
             image {
-                width: 160rpx;
-                height: 160rpx;
+                width: 110rpx;
+                height: 110rpx;
             }
             view {
-                margin-top: 14upx;
+                margin-top: 4upx;
             }
         }
         .ticket-close {
@@ -1100,7 +1121,9 @@ export default {
             width: 56upx;
             height: 56upx;
             left: 347upx;
-            top: 1037upx;
+            top: 260upx;
+            color: #333;
+            font-size: 28upx;
         }
     }
 

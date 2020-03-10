@@ -171,9 +171,9 @@
                             <view
                                 class="menu-item"
                                 :class="{
-                                    active: filter.cat_id.one_level_id === 0
+                                    active: filter.cat_id.one_level_id === -1
                                 }"
-                                @click="onSelect('cat_one', 0)"
+                                @click="onSelect('cat_one', -1)"
                             >
                                 全部
                             </view>
@@ -300,7 +300,12 @@
                 />
                 <uni-load-more :status="loadMoreStatus" />
             </template>
-            <blank v-else />
+            <view
+                v-else
+                class="blank-box"
+            >
+                <blank />
+            </view>
         </view>
     </view>
 </template>
@@ -391,7 +396,7 @@ export default {
         paramsFilter(val) {
             if (val) {
                 // // h5 与 小程序监听 paramsFilter的值，获取的时间不一样。1.这里为了兼容小程序和h5
-                this.filter.cat_id.one_level_id = Number(val.cat_id.one_level_id) || 0;
+                this.filter.cat_id.one_level_id = Number(val.cat_id.one_level_id) || -1;
                 this.filter.keyword = val.keyword;
                 this.filter.sort = val.sort;
 
@@ -406,14 +411,15 @@ export default {
     created() {
         // tabbar不需要设置参数，直接从接口得到
         if (this.isFromTabbar) {
+            this.filter.cat_id.one_level_id = -1;
             this.getData();
             this.getTableData();
         } else if (
             this.paramsFilter.cat_id.one_level_id > 0
-            || this.paramsFilterkeyword
+            || this.paramsFilter.keyword
         ) {
             // h5 与 小程序监听 paramsFilter的值，获取的时间不一样。1.这里为了兼容小程序和h5
-            this.filter.cat_id.one_level_id = Number(this.paramsFilter.cat_id.one_level_id) || 0;
+            this.filter.cat_id.one_level_id = Number(this.paramsFilter.cat_id.one_level_id) || -1;
             this.filter.keyword = this.paramsFilter.keyword;
             this.filter.sort = Number(this.paramsFilter.sort);
 
@@ -450,8 +456,8 @@ export default {
                     break;
                 case 'cat_one':
                     this.toggleMenu('category');
-                    if (value === 0) {
-                        this.filter.cat_id.one_level_id = 0;
+                    if (value === -1) {
+                        this.filter.cat_id.one_level_id = -1;
                         this.catTwoMenu = [];
                         this.curCategory = '全部';
                         // this.toggleMenu('category');
@@ -508,6 +514,7 @@ export default {
         getTableData() {
             this.filter.page_num = 1;
             this.filter.address.province_id = 0;
+
             api.post('/api/works/list', this.filter).then((res) => {
                 this.tableData = res.list;
                 this.total = res.total;
@@ -575,7 +582,7 @@ export default {
     padding: 40upx 30upx;
     margin-right: -35upx;
 
-    .blank-wrap {
+    .blank-box {
         margin-top: 150upx;
     }
 }

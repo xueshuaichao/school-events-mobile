@@ -350,9 +350,6 @@ export default {
             uni.navigateTo({
                 url: `/pages/work/list/list?keyword=${this.changeValue.trim()}`,
             });
-            // uni.navigateTo({
-            //     url: `/pages/search/index?name=${this.changeValue.trim()}`,
-            // });
         },
         getUserInfo() {
             console.log('首页请求个人信息');

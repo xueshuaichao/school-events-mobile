@@ -30,7 +30,7 @@ export default {
                 sort: 1,
 
                 cat_id: {
-                    one_level_id: 0,
+                    one_level_id: -1,
                 },
             },
         };

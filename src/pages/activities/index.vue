@@ -185,7 +185,10 @@ export default {
         },
         onReachBottom() {
             console.log(`${this.total}------total`);
-            if (this.total > this.filter.page_num * this.filter.page_size) {
+            if (
+                this.total > this.filter.page_num * this.filter.page_size
+                || this.filter.page_num * this.filter.page_size < 101
+            ) {
                 this.filter.page_num = this.filter.page_num + 1;
                 this.loadMoreStatus = 'loading';
                 this.getData('reachBottom');

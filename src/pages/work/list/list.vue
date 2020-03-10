@@ -43,10 +43,10 @@ export default {
         this.isReachBtm = true;
     },
     onLoad(params) {
-        const id = params.cat_id;
+        const id = params.cat_id || -1;
+        this.filter.keyword = params.keyword || '';
         this.filter.cat_id.one_level_id = id;
 
-        this.filter.keyword = params.keyword || '';
         const title = '作品展示';
         this.hasPageParams = true;
         uni.setNavigationBarTitle({
