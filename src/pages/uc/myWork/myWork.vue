@@ -53,7 +53,7 @@
                                 查看
                             </button>
                             <button
-                                v-if="item.status === 0"
+                                v-if="item.status === 2"
                                 class="btn"
                                 @click="showCause(item)"
                             >

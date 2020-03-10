@@ -1,4 +1,5 @@
 <template>
+    <!-- 我的记录 -->
     <view class="page-record">
         <view class="panel">
             <view class="panel-hd">
@@ -34,14 +35,7 @@
                     <work
                         :info="item"
                         :mode="'single'"
-                    >
-                        <view
-                            slot="tag"
-                            class="tag-result"
-                        >
-                            {{ item.achievement }}
-                        </view>
-                    </work>
+                    />
                     <view class="btns">
                         <view
                             class="btn"
@@ -52,6 +46,9 @@
                     </view>
                 </view>
             </template>
+            <template v-else>
+                <blank />
+            </template>
         </view>
     </view>
 </template>
@@ -59,10 +56,12 @@
 <script>
 import api from '../../../common/api';
 import work from '../../../components/work/work.vue';
+import blank from '../../../widgets/blank/blank.vue';
 
 export default {
     components: {
         work,
+        blank,
     },
     data() {
         return {
@@ -339,7 +338,7 @@ export default {
         border-bottom: none;
         margin: 0 30rpx 20rpx;
         display: flex;
-        justify-content: space-around;
+        // justify-content: space-around;
     }
     .panel .panel-hd .panel-title {
         display: inline-block;
@@ -353,7 +352,6 @@ export default {
         .work-item {
             border-bottom: 1upx solid #ddd;
             padding: 30upx 0 100upx;
-
             position: relative;
         }
         .tag-result {
@@ -361,6 +359,7 @@ export default {
             left: 0;
             top: 8upx;
             height: 30upx;
+            min-width: 45upx;
             background: rgba(17, 102, 255, 1);
             border-radius: 0px 15px 15px 0px;
             border: 1px solid rgba(255, 255, 255, 1);
@@ -378,7 +377,6 @@ export default {
             margin-top: 0;
             font-size: 22upx;
         }
-
         .btns {
             position: absolute;
             right: 0;

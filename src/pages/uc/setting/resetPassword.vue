@@ -6,34 +6,55 @@
         >
             <view class="uni-form-item uni-column">
                 <view class="title">
-                    用户名
+                    手机号
                 </view>
-                <view class="uni-input">
-                    43434
+                <view class="input-flex">
+                    <input
+                        v-model="phone"
+                        name="phone"
+                        class="uni-input"
+                        type="text"
+                        placeholder="请输入手机号"
+                    >
                 </view>
             </view>
             <view class="uni-form-item uni-column">
                 <view class="title">
-                    原密码
+                    验证码
                 </view>
-                <input
-                    name="password"
-                    class="uni-input"
-                    password
-                    type="text"
-                    placeholder="填写原密码"
-                >
+                <view class="input-flex get-captcha">
+                    <input
+                        v-model="captcha"
+                        name="captcha"
+                        class="uni-input captcha-input"
+                        type="text"
+                        placeholder="请输入验证码"
+                    >
+                    <view
+                        v-if="!captchaAll.isSend"
+                        class="send-captcha"
+                        @click="sendCaptcha"
+                    >
+                        获取验证码
+                    </view>
+                    <view
+                        v-if="captchaAll.isSend"
+                        class="send-captcha is-send"
+                    >
+                        {{ captchaAll.remain }}s 后重新发
+                    </view>
+                </view>
             </view>
             <view class="uni-form-item uni-column">
                 <view class="title">
                     新密码
                 </view>
                 <input
-                    class="uni-input"
+                    class="uni-input input-flex"
                     password
-                    name="new_password"
+                    name="first_pwd"
                     type="text"
-                    placeholder="填写新密码"
+                    placeholder="请输入新密码"
                 >
             </view>
             <view class="uni-form-item uni-column">
@@ -41,16 +62,12 @@
                     再次输入密码
                 </view>
                 <input
-                    class="uni-input"
+                    class="uni-input input-flex"
                     password
-                    name="again_password"
+                    name="second_pwd"
                     type="text"
-                    placeholder="再次填写确认"
+                    placeholder="请再次输入确认"
                 >
-            </view>
-            <view class="uni-column">
-                <view>密码必须时8-16位的数字，字符组合（不能是纯数字）</view>
-                忘记密码
             </view>
             <view class="uni-btn-v">
                 <button form-type="submit">
@@ -61,21 +78,136 @@
     </div>
 </template>
 <script>
+import api from '../../../common/api';
+
 export default {
     data() {
         return {
-            password: '',
-            new_password: '',
-            again_password: '',
+            captcha: '',
+            isMobile: /^1[0-9]{10}$/,
+            phone: '',
+            first_pwd: '',
+            second_pwd: '',
+            captchaText: '获取验证码',
+            time: null,
+            lock: true,
+            captchaAll: {
+                create_at: '',
+                remain: '',
+                isSend: false,
+            },
         };
     },
     methods: {
         formSubmit(e) {
-            const formdata = e.detail.value;
-            uni.showModal({
-                content: `表单数据内容：${JSON.stringify(formdata)}`,
-                showCancel: false,
-            });
+            if (this.lock) {
+                this.lock = false;
+                const formdata = e.detail.value;
+                const keyArr = {
+                    phone: '手机号',
+                    captcha: '验证码码',
+                    first_pwd: '密码',
+                };
+                if (formdata.phone && !this.isMobile.test(this.phone)) {
+                    this.lock = true;
+                    return uni.showToast({
+                        title: '请输入正确的手机号',
+                        icon: 'none',
+                    });
+                }
+                try {
+                    Object.keys(formdata).forEach((item) => {
+                        if (!formdata[item]) {
+                            throw Error(item);
+                        }
+                    });
+                } catch (e) {
+                    this.lock = true;
+                    return uni.showToast({
+                        title: `请输入${keyArr[e.message]}`,
+                        icon: 'none',
+                    });
+                }
+                if (formdata.first_pwd !== formdata.second_pwd) {
+                    this.lock = true;
+                    return uni.showToast({
+                        title: '密码输入不一致，请重新输入',
+                        icon: 'none',
+                    });
+                }
+                api.post('/api/account/resetpassword', formdata).then(
+                    () => {
+                        uni.navigateTo({
+                            url: '/pages/uc/setting/resetPasswordResult',
+                        });
+                    },
+                    err => uni.showToast({
+                        title: err.message,
+                        icon: 'none',
+                    }),
+                );
+            }
+            return true;
+        },
+        sendCaptcha() {
+            //  1 注册 2-登录  3-找回密码 8-绑定手机号
+            console.log('-000');
+            if (this.lock) {
+                this.lock = false;
+                if (!this.phone) {
+                    return uni.showToast({
+                        title: '请输入手机号',
+                        icon: 'none',
+                    });
+                }
+                if (!this.isMobile.test(this.phone)) {
+                    return uni.showToast({
+                        title: '请输入正确的手机号',
+                        icon: 'none',
+                    });
+                }
+
+                return api
+                    .get('/api/account/sendbindmsg', {
+                        phone: this.phone,
+                    })
+                    .then(
+                        () => {
+                            try {
+                                this.captchaAll.create_at = new Date() - 0;
+                                this.captchaAll.remain = 30;
+                                this.captchaAll.isSend = true;
+                                this.countDown();
+                            } catch (e) {
+                                console.log(e);
+                            }
+                            this.lock = true;
+                        },
+                        (err) => {
+                            uni.showToast({
+                                icon: 'none',
+                                title: err.message,
+                            });
+                            this.lock = true;
+                        },
+                    );
+            }
+            return true;
+        },
+        countDown() {
+            const sep = 30 * 1000;
+            const now = new Date() - 0;
+            const duration = this.captchaAll.create_at + sep - now;
+
+            if (duration > 0) {
+                this.captchaAll.remain = Math.round(duration / 1000);
+
+                setTimeout(() => {
+                    this.countDown();
+                }, 300);
+            } else {
+                this.captchaAll.isSend = false;
+            }
         },
     },
 };
@@ -90,6 +222,39 @@ export default {
         border-bottom: 1upx solid #ddd;
         height: 110upx;
         line-height: 110upx;
+        font-size: 30upx;
+    }
+    .uni-input {
+        height: 110upx;
+        text-align: right;
+        font-size: 28upx;
+    }
+    .input-flex {
+        flex: 1;
+        margin-left: 10upx;
+    }
+    .get-captcha {
+        display: flex;
+        .captcha-input {
+            flex: 1;
+        }
+        .send-captcha {
+            color: #1166ff;
+            margin-left: 20upx;
+            text-align: right;
+        }
+    }
+    .uni-btn-v {
+        button {
+            margin-top: 80upx;
+            color: #fff;
+            background-color: #1166ff;
+            width: 690upx;
+            height: 98upx;
+            line-height: 98upx;
+            font-size: 32upx;
+            border-radius: 0;
+        }
     }
 }
 </style>

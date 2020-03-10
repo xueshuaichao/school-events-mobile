@@ -75,15 +75,10 @@
                 :type="'video'"
                 @change="updateVideo"
             />
-            <view
-                v-if="uploadMode === 'image'"
-                class="upload-desc"
-            >
-                拖动图片可调整展示顺序，第一张图片会作为该作品的封面图
-            </view>
             <upload
                 v-if="uploadMode === 'video'"
                 :type="'image'"
+                :is-video="true"
                 @change="updateImage"
             />
 

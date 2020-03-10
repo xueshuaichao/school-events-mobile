@@ -35,31 +35,45 @@
                 <text class="form-item-text">
                     参赛项目
                 </text>
-                <my-picker
-                    class="form-item-cont"
-                    :picker-list="catData"
-                    :picker-key="{
-                        value: 'cat_id',
-                        label: 'name',
-                        children: 'child'
-                    }"
-                    @confirm="confirm($event)"
-                >
-                    <view>
-                        <view
-                            v-if="!formData.cat_id"
-                            class="uni-input placeholder fake-input"
-                        >
+                <template v-if="catData.length === 0">
+                    <view
+                        class="form-item-cont"
+                        @click="
+                            disableSelect(catData.length === 0 ? false : true)
+                        "
+                    >
+                        <view class="uni-input placeholder fake-input">
                             参赛项目
                         </view>
-                        <view
-                            v-else
-                            class="uni-input fake-input"
-                        >
-                            {{ catText }}
-                        </view>
                     </view>
-                </my-picker>
+                </template>
+                <template v-else>
+                    <my-picker
+                        class="form-item-cont"
+                        :picker-list="catData"
+                        :picker-key="{
+                            value: 'cat_id',
+                            label: 'name',
+                            children: 'child'
+                        }"
+                        @confirm="confirm($event)"
+                    >
+                        <view>
+                            <view
+                                v-if="!formData.cat_id"
+                                class="uni-input placeholder fake-input"
+                            >
+                                参赛项目
+                            </view>
+                            <view
+                                v-else
+                                class="uni-input fake-input"
+                            >
+                                {{ catText }}
+                            </view>
+                        </view>
+                    </my-picker>
+                </template>
             </view>
             <view class="uni-list-cell-db">
                 <text class="form-item-text">
@@ -73,51 +87,84 @@
                 <text class="form-item-text">
                     年&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;级
                 </text>
-                <picker
-                    :value="index"
-                    :range="gradeData"
-                    range-key="grade_name"
-                    class="form-item-cont"
-                    @change="selectGrade"
-                >
+                <template v-if="gradeData.length === 0">
                     <view
-                        v-if="!formData.grade_id"
-                        class="uni-input placeholder fake-input"
+                        class="form-item-cont"
+                        @click="
+                            disableSelect(gradeData.length === 0 ? false : true)
+                        "
                     >
-                        请选择年级
+                        <view class="uni-input placeholder fake-input">
+                            请选择年级
+                        </view>
                     </view>
-                    <view
-                        v-else
-                        class="uni-input fake-input"
+                </template>
+                <template v-else>
+                    <picker
+                        :value="index"
+                        :range="gradeData"
+                        range-key="grade_name"
+                        class="form-item-cont"
+                        @change="selectGrade"
                     >
-                        {{ gradeData[gradeDataIndex].grade_name }}
-                    </view>
-                </picker>
+                        <view
+                            v-if="!formData.grade_id"
+                            class="uni-input placeholder fake-input"
+                        >
+                            请选择年级
+                        </view>
+                        <view
+                            v-else
+                            class="uni-input fake-input"
+                        >
+                            {{ gradeData[gradeDataIndex].grade_name }}
+                        </view>
+                    </picker>
+                </template>
             </view>
             <view class="uni-list-cell-db">
                 <text class="form-item-text">
                     班&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;级
                 </text>
-                <picker
-                    :value="classDataIndex"
-                    :range="classData"
-                    range-key="class_name"
-                    class="form-item-cont"
-                    @change="selectClass"
-                >
+                <template v-if="!formData.grade_id || classData.length === 0">
                     <view
-                        v-if="!formData.class_id"
-                        class="uni-input placeholder fake-input"
+                        class="form-item-cont"
+                        @click="
+                            disableSelect(
+                                classData.length === 0 && formData.grade_id
+                                    ? false
+                                    : true,
+                                0
+                            )
+                        "
                     >
-                        请选择班级
+                        <view class="uni-input placeholder fake-input">
+                            请选择班级
+                        </view>
                     </view>
-                    <view
-                        v-else
-                        class="uni-input fake-input"
+                </template>
+                <template v-else>
+                    <picker
+                        :value="classDataIndex"
+                        :range="classData"
+                        range-key="class_name"
+                        class="form-item-cont"
+                        @change="selectClass"
                     >
-                        {{ classData[classDataIndex].class_name }}
-                    </view>
-                </picker>
+                        <view
+                            v-if="!formData.class_id"
+                            class="uni-input placeholder fake-input"
+                        >
+                            请选择班级
+                        </view>
+                        <view
+                            v-else
+                            class="uni-input fake-input"
+                        >
+                            {{ classData[classDataIndex].class_name }}
+                        </view>
+                    </picker>
+                </template>
             </view>
             <view
                 v-if="rangeIndex === 0"
@@ -126,26 +173,53 @@
                 <text class="form-item-text">
                     参赛姓名
                 </text>
-                <picker
-                    :value="studentDataIndex"
-                    :range="studentData"
-                    range-key="student_name"
-                    class="form-item-cont"
-                    @change="selectStudents"
+                <template
+                    v-if="
+                        !formData.class_id ||
+                            !formData.grade_id ||
+                            studentData.length === 0
+                    "
                 >
                     <view
-                        v-if="!formData.create_info_array.length"
-                        class="uni-input placeholder fake-input"
+                        class="form-item-cont"
+                        @click="
+                            disableSelect(
+                                studentData.length === 0 &&
+                                    formData.class_id &&
+                                    formData.grade_id
+                                    ? false
+                                    : true,
+                                1
+                            )
+                        "
                     >
-                        请选择参赛者姓名
+                        <view class="uni-input placeholder fake-input">
+                            请选择参赛者姓名
+                        </view>
                     </view>
-                    <view
-                        v-else
-                        class="uni-input fake-input"
+                </template>
+                <template v-else>
+                    <picker
+                        :value="studentDataIndex"
+                        :range="studentData"
+                        range-key="student_name"
+                        class="form-item-cont"
+                        @change="selectStudents"
                     >
-                        {{ studentData[studentDataIndex].student_name }}
-                    </view>
-                </picker>
+                        <view
+                            v-if="!formData.create_info_array.length"
+                            class="uni-input placeholder fake-input"
+                        >
+                            请选择参赛者姓名
+                        </view>
+                        <view
+                            v-else
+                            class="uni-input fake-input"
+                        >
+                            {{ studentData[studentDataIndex].student_name }}
+                        </view>
+                    </picker>
+                </template>
             </view>
 
             <view
@@ -155,45 +229,75 @@
                 <text class="form-item-text">
                     参赛姓名
                 </text>
-                <my-picker
-                    :picker-list="studentData"
-                    :multiple="true"
-                    :picker-key="{
-                        value: 'user_id',
-                        label: 'student_name'
-                    }"
-                    class="form-item-cont"
-                    :checked-array="checkedStudents"
-                    @confirm="selectAllStudent($event)"
+                <template
+                    v-if="
+                        !formData.class_id ||
+                            !formData.grade_id ||
+                            studentData.length === 0
+                    "
                 >
-                    <view>
-                        <view
-                            v-if="!formData.create_info_array.length"
-                            class="uni-input placeholder fake-input "
-                        >
+                    <view
+                        class="form-item-cont"
+                        @click="
+                            disableSelect(
+                                studentData.length === 0 &&
+                                    formData.class_id &&
+                                    formData.grade_id
+                                    ? false
+                                    : true,
+                                1
+                            )
+                        "
+                    >
+                        <view class="uni-input placeholder fake-input">
                             请选择参赛者姓名
                         </view>
-                        <view
-                            v-else
-                            class="uni-input fake-input student-list"
-                        >
+                    </view>
+                </template>
+                <template v-else>
+                    <my-picker
+                        :picker-list="studentData"
+                        :multiple="true"
+                        :picker-key="{
+                            value: 'user_id',
+                            label: 'student_name'
+                        }"
+                        class="form-item-cont"
+                        :checked-array="checkedStudents"
+                        @confirm="selectAllStudent($event)"
+                    >
+                        <view>
                             <view
-                                v-for="item in formData.create_info_array"
-                                :key="item.user_id"
-                                class="student-item"
+                                v-if="!formData.create_info_array.length"
+                                class="uni-input placeholder fake-input "
                             >
-                                {{ item.student_name }}
-                                <text
-                                    class="delete-btn"
-                                    @click.stop="deleteStudent(item.user_id)"
+                                请选择参赛者姓名
+                            </view>
+                            <view
+                                v-else
+                                class="uni-input fake-input student-list"
+                            >
+                                <view
+                                    v-for="item in formData.create_info_array"
+                                    :key="item.user_id"
+                                    class="student-item"
                                 >
-                                    x
-                                </text>
-                                <!-- <image @click="deleteStudent" src="" /> -->
+                                    {{ item.student_name }}
+
+                                    <image
+                                        class="delete-btn"
+                                        src="/static/images/uc/close.png"
+                                        @click.stop="
+                                            deleteStudent(item.user_id)
+                                        "
+                                    />
+
+                                    <!-- <image @click="deleteStudent" src="" /> -->
+                                </view>
                             </view>
                         </view>
-                    </view>
-                </my-picker>
+                    </my-picker>
+                </template>
             </view>
             <view class="uni-list-cell-db">
                 <text class="form-item-text">
@@ -204,26 +308,29 @@
                     class="achievement-dete form-item-cont"
                 >
                     <input
-                        v-model="formData.achievement"
+                        v-model="achievementDateInfo.minutes"
                         class="uni-input"
                         type="number"
                         placeholder="分"
+                        @blur="isNumber"
                     >
                     <text>分</text>
                     <input
-                        v-model="formData.seconds"
+                        v-model="achievementDateInfo.seconds"
                         :maxlength="2"
                         type="number"
                         class="uni-input"
                         placeholder="秒"
+                        @blur="isNumber"
                     >
                     <text>秒</text>
                     <input
-                        v-model="formData.millisecond"
+                        v-model="achievementDateInfo.millisecond"
                         :maxlength="3"
                         type="number"
                         class="uni-input"
                         placeholder="毫秒"
+                        @blur="isNumber"
                     >毫秒
                 </view>
                 <view
@@ -235,6 +342,7 @@
                         class="uni-input"
                         type="text"
                         placeholder="请输入成绩"
+                        @blur="isNumber"
                     >
                     <text>{{ formData.achievement_unit }}</text>
                 </view>
@@ -274,9 +382,15 @@
                     class="btn"
                     @click="submitReporte"
                 >
-                    保存
+                    提交审核
                 </view>
-                <view class="btn" />
+                <navigator
+                    url="/pages/tabBar/uc/uc"
+                    open-type="switchTab"
+                    class="btn btn-nor"
+                >
+                    <view>取消</view>
+                </navigator>
             </view>
             <view />
         </view>
@@ -316,6 +430,19 @@ export default {
                 video_img_url: '',
                 school_id: '',
             },
+            achievementDateInfo: {
+                minutes: '0',
+                seconds: '0',
+                millisecond: '0',
+            },
+            validate: {
+                teacher: '', // 指导教师
+                attestation_name: '', // 认证官姓名
+                achievement_unit: '', // 单位
+                minutes: '0',
+                seconds: '0',
+                millisecond: '0',
+            },
             checkedStudents: [],
             catText: '',
             rangeIndex: 0,
@@ -342,6 +469,20 @@ export default {
         };
     },
     methods: {
+        disableSelect(type, index = 0) {
+            console.log(type);
+            const textArr = ['年级', '年级和班级'];
+            if (type) {
+                return uni.showToast({
+                    icon: 'none',
+                    title: `请选择${textArr[index]}`,
+                });
+            }
+            return uni.showToast({
+                icon: 'none',
+                title: '暂无数据',
+            });
+        },
         radioChange(e) {
             this.formData.cat_id = '';
             this.rangeIndex = e.detail.value - 1;
@@ -381,10 +522,15 @@ export default {
             });
         },
         selectGrade(e) {
+            const id = this.formData.grade_id;
             this.gradeDataIndex = e.detail.value;
             this.formData.grade_id = this.gradeData[
                 this.gradeDataIndex
             ].grade_id;
+            if (id !== this.formData.grade_id) {
+                this.formData.class_id = '';
+                this.formData.create_info_array = [];
+            }
             this.getClass();
         },
         getClass() {
@@ -398,17 +544,23 @@ export default {
             });
         },
         selectClass(e) {
+            const id = this.formData.class_id;
             this.classDataIndex = e.detail.value;
             this.formData.class_id = this.classData[this.classDataIndex].id;
+            if (id !== this.formData.class_id) {
+                this.formData.create_info_array = [];
+            }
             this.getStudents();
         },
         getStudents() {
+            this.formData.create_info_array = [];
             // 获取学生 传 school_id 学校id  grade_id 年级id class_id 班级 id
             api.get('/api/school/listgrade', {
                 school_id: this.formData.school_id,
                 grade_id: this.formData.grade_id,
                 class_id: this.formData.class_id,
             }).then((res) => {
+                console.log(res);
                 this.studentData = res;
             });
         },
@@ -488,24 +640,77 @@ export default {
             this.catIndex = e.detail.cat_id;
             this.formData.range_id = this.range[this.catIndex].id;
         },
+        isNumber(e) {
+            if (Number.isNaN(Number(e.detail.value))) {
+                uni.showToast({
+                    icon: 'none',
+                    title: '请输入数字',
+                });
+            }
+        },
+        getTimeSeconds({ minutes, seconds, millisecond }) {
+            return (minutes / 1) * 60 + seconds / 1 + millisecond / 1000;
+        },
+        onValidate() {
+            let status = true;
+            const validateObj = {
+                teacher: '请输入指导教师', // 指导教师
+                attestation_name: '请输入认证关姓名', // 认证官姓名
+                achievement: '请输入成绩',
+                minutes: '请输入成绩',
+                seconds: '请输入成绩',
+                millisecond: '请输入成绩',
+                cat_id: '请选择参赛项目',
+                grade_id: '请选择年级',
+                class_id: '请选择班级',
+                video_id: '请上传视频',
+                create_info_array: '请选择参赛学生',
+                video_img_url: '请上传封面',
+            };
+            try {
+                Object.keys(this.formData).forEach((item) => {
+                    if (item === 'create_info_array') {
+                        if (this.formData[item].length === 0) {
+                            throw Error(item);
+                        }
+                    } else if (!this.formData[item]) {
+                        throw Error(item);
+                    }
+                });
+            } catch (e) {
+                status = false;
+                uni.showToast({
+                    title: validateObj[e.message],
+                    icon: 'none',
+                });
+            }
+            return status;
+        },
         submitReporte() {
-            uni.showLoading();
-            api.post('/api/works/uploadgrade', this.formData).then(
-                (res) => {
-                    console.log(res);
-                    uni.hideLoading();
-                    uni.navigateTo({
-                        url: '/pages/uc/reported/result',
-                    });
-                },
-                (err) => {
-                    uni.hideLoading();
-                    uni.showToast({
-                        icon: 'none',
-                        title: err.message,
-                    });
-                },
-            );
+            if (this.date) {
+                this.formData.achievement = this.getTimeSeconds(
+                    this.achievementDateInfo,
+                );
+            }
+            if (this.onValidate()) {
+                uni.showLoading();
+                api.post('/api/works/uploadgrade', this.formData).then(
+                    (res) => {
+                        console.log(res);
+                        uni.hideLoading();
+                        uni.navigateTo({
+                            url: '/pages/uc/reported/result',
+                        });
+                    },
+                    (err) => {
+                        uni.hideLoading();
+                        uni.showToast({
+                            icon: 'none',
+                            title: err.message,
+                        });
+                    },
+                );
+            }
         },
     },
     onload() {
@@ -559,6 +764,7 @@ export default {
     .achievement-dete {
         display: flex;
         align-items: center;
+        font-size: 28upx;
         input {
             width: 139upx;
         }
@@ -566,9 +772,12 @@ export default {
     .achievement-nor {
         display: flex;
         align-items: center;
+        font-size: 28upx;
+        color: #333;
         input {
             flex: 1;
             margin-right: 5upx;
+            color: #000;
         }
     }
     .uni-input {
@@ -616,7 +825,7 @@ export default {
             background-color: #ecf3ff;
             color: #1166ff;
             margin-right: 16upx;
-            margin-bottom: 5upx;
+            margin-bottom: 16upx;
             position: relative;
             .delete-btn {
                 position: absolute;
@@ -624,7 +833,24 @@ export default {
                 right: 0;
                 width: 35upx;
                 height: 27upx;
-                border-radius: 50%;
+            }
+        }
+    }
+    .button-cont {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 35upx;
+        .btn {
+            width: 333upx;
+            height: 98upx;
+            line-height: 98upx;
+            text-align: center;
+            color: #fff;
+            background-color: #1166ff;
+            border: 1upx solid #1166ff;
+            .nor {
+                background-color: #fff;
+                color: #1166ff;
             }
         }
     }

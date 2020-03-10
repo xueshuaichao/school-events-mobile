@@ -15,10 +15,10 @@
                 <text class="text">
                     头像
                 </text>
-                <img
+                <image
                     class="img"
-                    :src="avatar_url"
-                >
+                    :src="userInfo.avatar_url || '/static/images/uc/avatar.png'"
+                />
             </view>
             <view
                 class="item"
@@ -28,7 +28,10 @@
                     姓名
                 </text>
                 <view class="arrow">
-                    <template v-if="userInfo.identity === 3">
+                    <template
+                        v-if="userInfo.identity === 1"
+                        @click="settingName"
+                    >
                         <text v-if="userInfo.name">
                             {{ userInfo.name }}
                         </text>
@@ -54,7 +57,7 @@
                     <text class="text">
                         用户名
                     </text>
-                    <text>{{ userInfo.name }}</text>
+                    <text>{{ userInfo.user_account }}</text>
                 </view>
             </template>
             <template v-if="userInfo.identity === 2">
@@ -81,24 +84,30 @@
                     <text class="text">
                         学校
                     </text>
-                    <text>{{ userInfo.school }}</text>
+                    <text>{{ userInfo.student_info.school_name }}</text>
+                </view>
+                <view class="item">
+                    <text class="text">
+                        年级
+                    </text>
+                    <text>{{ userInfo.student_info.grade_name }}</text>
                 </view>
                 <view class="item">
                     <text class="text">
                         班级
                     </text>
-                    <text>{{ userInfo.class }}</text>
+                    <text>{{ userInfo.student_info.class_name }}</text>
                 </view>
                 <view class="item">
                     <text class="text">
                         用户名
                     </text>
-                    <text>{{ userInfo.nickName }}</text>
+                    <text>{{ userInfo.user_account }}</text>
                 </view>
             </template>
             <navigator
                 class="item"
-                url="/pages/uc/setting/setting"
+                url="/pages/uc/setting/resetPassword"
             >
                 <text class="text">
                     重置密码
@@ -112,7 +121,16 @@
             </navigator>
             <view class="item">
                 <text>绑定手机号</text>
-                <text>{{ userInfo.mobile }}</text>
+                <text>
+                    {{
+                        userInfo.mobile
+                            ? userInfo.mobile.replace(
+                                /^(\d{3})\d{4}(\d+)/,
+                                "$1****$2"
+                            )
+                            : ""
+                    }}
+                </text>
             </view>
             <view
                 class="btn"
@@ -141,7 +159,7 @@ export default {
                 name: '',
                 school: '',
                 class: '',
-                nickName: '',
+                user_account: '',
                 phone: '',
                 identity: '',
             },
@@ -171,11 +189,30 @@ export default {
                     Promise.all(
                         res.tempFilePaths.map(filePath => this.uploadFile(filePath)),
                     ).then((data) => {
-                        console.log(data);
+                        this.updataUser(data[0]);
                     });
-                    this.imgSrc = res.tempFilePaths;
                 },
             });
+        },
+        settingName() {
+            uni.navigateTo({
+                url: '/pages/uc/setting/userName',
+            });
+        },
+        updataUser(data) {
+            api.post('/api/user/updateuser', {
+                avatar_url: data.path,
+            }).then(
+                () => {
+                    this.userInfo.avatar_url = data.path;
+                },
+                (err) => {
+                    uni.showToast({
+                        icon: 'none',
+                        title: err.message,
+                    });
+                },
+            );
         },
         uploadFile(tempFilePath) {
             this.tempFilePath = tempFilePath;
@@ -229,7 +266,7 @@ export default {
             const { identity } = this.userInfo;
             if (identity === 1) {
                 uni.navigateTo({
-                    url: '/pages/uc/setting/userName',
+                    url: '/pages/uc/setting/resetName',
                 });
             }
         },
@@ -273,7 +310,16 @@ export default {
     .arrow-r {
         width: 12upx;
         height: 22upx;
-        margin-left: 5upx;
+        margin-left: 10upx;
+    }
+    .btn {
+        background-color: #1166ff;
+        height: 98upx;
+        line-height: 98upx;
+        width: 690upx;
+        color: #fff;
+        margin-top: 80upx;
+        text-align: center;
     }
 }
 </style>

@@ -497,7 +497,7 @@ checkbox .wx-checkbox-input.wx-checkbox-input-checked {
                 font-size: 36rpx;
             }
             .confirm {
-                color: #007aff;
+                color: #42b983;
             }
         }
 

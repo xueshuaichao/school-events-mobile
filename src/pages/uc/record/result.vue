@@ -100,11 +100,25 @@ export default {
     .canvas-img {
         width: 689upx;
         height: 1103upx;
-        margin: 0 auto;
+        margin: 0 auto 120upx;
         image {
             width: 100%;
             height: 100%;
         }
+    }
+    .btn {
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #1166ff;
+        height: 98upx;
+        line-height: 98upx;
+        width: 100%;
+        color: #fff;
+        margin-top: 80upx;
+        text-align: center;
+        margin: 0 auto;
     }
 }
 </style>

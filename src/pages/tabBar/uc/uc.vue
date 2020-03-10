@@ -27,7 +27,6 @@
                 <image
                     class="avatar"
                     :src="userInfo.avatar_url || '/static/images/uc/avatar.png'"
-                    @click="setAvatar"
                 />
                 <view class="main-info">
                     <view class="user-name">
@@ -37,13 +36,13 @@
                         <!-- 普通用户 -->
                         <view
                             v-if="
-                                userInfo.is_set_name === 1 ||
+                                userInfo.name === 1 ||
                                     userInfo.avatar_url ||
                                     userInfo.is_set_password
                             "
                             class="info user-from"
                         >
-                            <template v-if="userInfo.is_set_name === 1">
+                            <template>
                                 {{ userInfo.mobile || "" }}
                             </template>
                         </view>
@@ -52,6 +51,7 @@
                             class="info user-from"
                         >
                             请尽快完善用户信息！<navigator
+                                class="go-setting"
                                 url="/pages/uc/setting/setting"
                             >
                                 点击去完善
@@ -232,6 +232,8 @@
 
 <script>
 import api from '../../../common/api';
+import config from '../../../common/config';
+import utils from '../../../common/utils';
 import login from '../../../widgets/login/login.vue';
 
 export default {
@@ -256,34 +258,82 @@ export default {
     },
     methods: {
         setBg() {
-            this.updateUser(1);
+            this.isSetImg = true;
+            this.chooseImage();
         },
-        setAvatar() {
-            this.updateUser(2);
-        },
-        updateUser(type = 1) {
+        chooseImage(type = 1) {
             uni.chooseImage({
                 count: 1, // 默认9
-                success(res) {
-                    api.get('/api/user/updateuser', {
-                        url: res.tempFilePaths,
-                        type,
-                    }).then(
-                        (res) => {
-                            this.userInfo = res.user_info;
-                            this.isLoading = false;
-                        },
-                        () => {
+                success: (res) => {
+                    Promise.all(
+                        res.tempFilePaths.map(filePath => this.uploadFile(filePath, type)),
+                    ).then((data) => {
+                        this.updataUser(data[0]);
+                    });
+                },
+            });
+        },
+        updataUser(data) {
+            api.post('/api/user/updateuser', {
+                bg_img: data.path,
+            }).then(
+                () => {
+                    this.userInfo.bg_img = data.path;
+                },
+                (err) => {
+                    uni.showToast({
+                        icon: 'none',
+                        title: err.message,
+                    });
+                },
+            );
+        },
+        uploadFile(tempFilePath) {
+            this.tempFilePath = tempFilePath;
+            uni.showToast({
+                icon: 'loading',
+                title: '上传中',
+                duration: 200000,
+            });
+            return new Promise((resolve, reject) => {
+                uni.uploadFile({
+                    url: `${config.host}/api/file/uploadfile`,
+                    filePath: tempFilePath,
+                    name: 'file',
+                    formData: {
+                        file_type: 'image',
+                    },
+                    header: {
+                        userKey: utils.getToken(),
+                    },
+                    success: (uploadFileRes) => {
+                        let resp;
+                        try {
+                            resp = JSON.parse(uploadFileRes.data);
+                        } catch (e) {
                             uni.showToast({
-                                title:
-                                    type === 1
-                                        ? '背景更新失败'
-                                        : '头像更新失败',
+                                title: '服务器开小差了~',
                                 icon: 'none',
                             });
-                        },
-                    );
-                },
+                            return reject(e);
+                        }
+                        if (resp.status === 200) {
+                            // success
+                            this.url = resp.data.path;
+                            uni.hideToast();
+                            resolve(resp.data);
+                            // this.$emit('change', resp.data);
+                        } else {
+                            // fail
+                            uni.showToast({
+                                title: resp.msg,
+                                icon: 'none',
+                            });
+                            return reject(resp.msg);
+                        }
+                        return false;
+                    },
+                });
             });
         },
         getData() {
@@ -403,6 +453,10 @@ export default {
                 color: #999;
                 font-size: 22upx;
                 margin-bottom: 16upx;
+            }
+            .go-setting {
+                display: inline-block;
+                color: #1166ff;
             }
         }
     }

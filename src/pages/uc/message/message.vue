@@ -1,9 +1,6 @@
 <template>
     <view class="page-message">
-        <view
-            v-if="unreadList.length"
-            class="panel"
-        >
+        <view class="panel">
             <view
                 v-if="!showCheckboxPanel"
                 class="select-text"
@@ -77,13 +74,18 @@
                 </view>
             </checkbox-group>
         </view>
+        <blank />
     </view>
 </template>
 
 <script>
 import api from '../../../common/api';
+import blank from '../../../widgets/blank/blank.vue';
 
 export default {
+    components: {
+        blank,
+    },
     data() {
         return {
             showCheckboxPanel: false,
@@ -138,19 +140,25 @@ export default {
             this.checkedArr = [];
         },
         showCheckbox(status) {
+            if (this.unreadList.length === 0) {
+                return uni.showToast({
+                    icon: 'none',
+                    title: '暂无未读消息',
+                });
+            }
             this.showCheckboxPanel = status;
             if (!status) {
                 this.showDataList = this.dataList;
             } else {
                 this.showDataList = this.unreadList;
             }
+            return true;
         },
         setMessageStatus() {
-            if (this.checkedArr.lenght === 0) {
+            if (this.checkedArr.length === 0) {
                 uni.showToast({
                     icon: 'none',
                     title: '请选择待标记的消息',
-                    duration: 200000,
                 });
             } else {
                 this.handleMessage(this.checkedArr, 'all');

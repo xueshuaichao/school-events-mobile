@@ -279,9 +279,15 @@
             }
         },
         {
-            "path": "pages/uc/setting/forgetPassword",
+            "path": "pages/uc/setting/resetPasswordResult",
             "style": {
                 "navigationBarTitleText": "重置密码"
+            }
+        },
+        {
+            "path": "pages/uc/setting/resetName",
+            "style": {
+                "navigationBarTitleText": "设置姓名"
             }
         },
         {

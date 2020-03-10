@@ -3,83 +3,112 @@
         class="comp-upload"
         @click="chooseResource"
     >
-        <view class="cover-wrap">
-            <template v-if="type === 'video'">
-                <template v-if="!url">
+        <view
+            v-if="type === 'video'"
+            class="comp-title"
+        >
+            上传视频
+        </view>
+        <view
+            v-if="type === 'image'"
+            class="comp-title"
+        >
+            {{ isVideo ? "上传封面（选填）" : "上传图片" }}
+        </view>
+        <view class="comp-upload-box">
+            <view class="cover-wrap">
+                <template v-if="type === 'video'">
+                    <template v-if="!url">
+                        <image
+                            v-if="theme === 'normal'"
+                            class="icon-video"
+                            src="/static/images/comp/upload/upload-video.png"
+                        />
+                        <image
+                            v-if="theme === 'red'"
+                            class="icon-video red"
+                            src="/static/images/comp/upload/video_red.png"
+                        />
+                        <image
+                            v-if="theme === 'blue'"
+                            class="icon-video red"
+                            src="/static/images/comp/upload/video_blue.png"
+                        />
+                    </template>
+                    <image
+                        v-else
+                        class="icon-success"
+                        :src="`/static/images/comp/upload/success-${theme}.png`"
+                    />
+                    <view
+                        v-if="url"
+                        class="text-success"
+                    >
+                        已上传
+                    </view>
+                </template>
+                <template v-if="type === 'image'">
                     <image
                         v-if="theme === 'normal'"
-                        class="icon-video"
-                        src="/static/images/comp/upload/upload-video.png"
+                        class="icon-image"
+                        src="/static/images/comp/upload/upload-img.png"
                     />
                     <image
                         v-if="theme === 'red'"
-                        class="icon-video red"
-                        src="/static/images/comp/upload/video_red.png"
+                        class="icon-image red"
+                        src="/static/images/comp/upload/image_red.png"
                     />
                     <image
                         v-if="theme === 'blue'"
-                        class="icon-video red"
-                        src="/static/images/comp/upload/video_blue.png"
+                        class="icon-image red"
+                        src="/static/images/comp/upload/image_blue.png"
+                    />
+                    <image
+                        v-if="preview && url"
+                        class="preview"
+                        :src="url"
                     />
                 </template>
-                <image
-                    v-else
-                    class="icon-success"
-                    src="/static/images/comp/upload/success.png"
-                />
-                <view
-                    v-if="url"
-                    class="icon-desc"
-                >
-                    更换视频
-                </view>
-            </template>
-            <template v-if="type === 'image'">
-                <image
-                    v-if="theme === 'normal'"
-                    class="icon-image"
-                    src="/static/images/comp/upload/upload-img.png"
-                />
-                <image
-                    v-if="theme === 'red'"
-                    class="icon-image red"
-                    src="/static/images/comp/upload/image_red.png"
-                />
-                <image
-                    v-if="theme === 'blue'"
-                    class="icon-image red"
-                    src="/static/images/comp/upload/image_blue.png"
-                />
-                <image
-                    v-if="preview && url"
-                    class="preview"
-                    :src="url"
-                />
-            </template>
+            </view>
+            <view
+                class="desc"
+                :class="{ image: type === 'image' }"
+            >
+                <template v-if="type === 'video'">
+                    <view>
+                        不支持大于200的视频
+                    </view>
+                    <view>
+                        支持 MP4 等格式
+                    </view>
+                    <view
+                        v-if="url"
+                        class="blue-text"
+                    >
+                        更换视频
+                    </view>
+                </template>
+                <template v-if="type === 'image'">
+                    <view>
+                        支持.jpg,.jpeg,.png格式
+                    </view>
+                    <view>
+                        图片尺寸建议950*550
+                    </view>
+                    <view
+                        v-if="url"
+                        class="blue-text"
+                    >
+                        更换封面
+                    </view>
+                </template>
+            </view>
         </view>
         <view
-            class="desc"
-            :class="{ image: type === 'image' }"
+            v-if="type === 'image' && isVideo"
+            class="tips"
         >
-            <template v-if="type === 'video'">
-                <view>
-                    不支持大于1G的视频
-                </view>
-                <view>
-                    支持 MP4 等格式
-                </view>
-            </template>
-            <template v-if="type === 'image'">
-                <view>
-                    支持.jpg, png格式
-                </view>
-                <view>
-                    图片尺寸建议950*550
-                </view>
-                <view class="tips">
-                    若不上传，我们将截取视频画面作为封面
-                </view>
-            </template>
+            系统为您自动截取视频内容作为封面，可更换
         </view>
     </view>
 </template>
@@ -91,6 +120,10 @@ import utils from "../../common/utils";
 
 export default {
     props: {
+        isVideo: {
+            type: Boolean,
+            default: false
+        },
         type: {
             type: String,
             default: "video"
@@ -193,6 +226,7 @@ export default {
                         userKey: utils.getToken()
                     },
                     success: uploadFileRes => {
+                        console.log(uploadFileRes.data);
                         let resp;
                         try {
                             resp = JSON.parse(uploadFileRes.data);
@@ -294,7 +328,7 @@ export default {
                     success: res => {
                         if (res.size / 1000 / 1000 > 200) {
                             return uni.showToast({
-                                title: "最大不超过200M",
+                                title: "视频规格过大，请在PC官网上传",
                                 icon: "none"
                             });
                         }
@@ -323,8 +357,14 @@ export default {
 
 <style lang="less">
 .comp-upload {
-    display: flex;
-
+    .comp-upload-box {
+        display: flex;
+    }
+    .comp-title {
+        font-size: 28upx;
+        color: #999;
+        margin-bottom: 15upx;
+    }
     .cover-wrap {
         width: 192upx;
         height: 108upx;
@@ -350,7 +390,10 @@ export default {
         font-size: 24upx;
         color: #666;
         line-height: 40upx;
-        padding-top: 14upx;
+        .blue-text {
+            color: #1166ff;
+            line-height: 1.2;
+        }
         &.image {
             padding-top: 0;
             line-height: 38upx;
@@ -364,12 +407,16 @@ export default {
         height: 56upx;
         margin-top: 26rpx;
     }
+    .text-success {
+        color: #999;
+        font-size: 24upx;
+    }
 
     .icon-success {
         display: inline-block;
         width: 42rpx;
         height: 42rpx;
-        margin-top: 12rpx;
+        margin-top: 15rpx;
     }
 
     .icon-desc {

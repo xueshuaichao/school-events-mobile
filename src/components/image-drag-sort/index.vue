@@ -21,6 +21,12 @@
                         src="/static/images/work/icon-del.png"
                         @click="imageDel(index)"
                     >
+                    <view
+                        v-if="index === 0"
+                        class="tag"
+                    >
+                        封面
+                    </view>
                 </view>
                 <movable-view
                     v-show="active"
@@ -352,6 +358,20 @@ export default {
     height: 100%;
     overflow: hidden;
     border-radius: 12upx;
+    position: relative;
+}
+.item .tag {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: 78upx;
+    height: 36upx;
+    background: rgba(0, 0, 0, 1);
+    border-radius: 12upx 0px 0px 0px;
+    opacity: 0.6;
+    font-size: 24upx;
+    color: #fff;
+    text-align: center;
 }
 
 .item-move-active {

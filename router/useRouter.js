@@ -172,6 +172,30 @@ const routesConfig = {
             component: () => import('@/pages/work/detail/detail.vue'),
         },
         {
+            path: '/pages/uc/setting/setting',
+        },
+        {
+            path: '/pages/uc/setting/resetPassword',
+        },
+        {
+            path: '/pages/uc/setting/resetPasswordResult',
+        },
+        {
+            path: '/pages/uc/setting/resetName',
+        },
+        {
+            path: '/pages/uc/setting/message',
+        },
+        {
+            path: '/pages/uc/reported/reported',
+        },
+        {
+            path: '/pages/uc/record/record',
+        },
+        {
+            path: '/pages/uc/reported/result',
+        },
+        {
             path: '*',
             name: 'moddle',
             redirect: (to) => {
