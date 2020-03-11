@@ -37,44 +37,51 @@
             </view>
         </view>
         <view class="message-list">
-            <checkbox-group @change="changeCheckbox">
-                <view
-                    v-for="(item, index) in showDataList"
-                    :key="index"
-                    class="message-item"
-                    :class="{ unread: !showCheckboxPanel }"
-                >
-                    <text
-                        v-if="!item.is_read && !showCheckboxPanel"
-                        class="status"
-                    />
-                    <view class="checkbox-view">
-                        <checkbox
-                            v-if="showCheckboxPanel"
-                            style="transform:scale(0.7)"
-                            :value="String(item.msg_id)"
-                            :checked="checkedArr.includes(String(item.msg_id))"
-                            class="checkbox"
-                            :class="{
-                                checked: checkedArr.includes(
-                                    String(item.msg_id)
-                                )
-                            }"
-                        />
-                    </view>
-                    <text class="detail-text">
-                        {{ item.content }}
-                    </text>
+            <template v-if="showDataList">
+                <checkbox-group @change="changeCheckbox">
                     <view
-                        class="handle"
-                        @click="handleMessage(item.msg_id)"
+                        v-for="(item, index) in showDataList"
+                        :key="index"
+                        class="message-item"
+                        :class="{ unread: !showCheckboxPanel }"
                     >
-                        点击查看
+                        <text
+                            v-if="!item.is_read && !showCheckboxPanel"
+                            class="status"
+                        />
+                        <view class="checkbox-view">
+                            <checkbox
+                                v-if="showCheckboxPanel"
+                                style="transform:scale(0.7)"
+                                :value="String(item.msg_id)"
+                                :checked="
+                                    checkedArr.includes(String(item.msg_id))
+                                "
+                                class="checkbox"
+                                :class="{
+                                    checked: checkedArr.includes(
+                                        String(item.msg_id)
+                                    )
+                                }"
+                            />
+                        </view>
+                        <text class="detail-text">
+                            {{ item.content }}
+                        </text>
+                        <view
+                            v-if="item.type === 1 || item.type === 2"
+                            class="handle"
+                            @click="handleMessage(item.msg_id, item.type)"
+                        >
+                            点击查看
+                        </view>
                     </view>
-                </view>
-            </checkbox-group>
+                </checkbox-group>
+            </template>
+            <template v-else>
+                <blank />
+            </template>
         </view>
-        <blank />
     </view>
 </template>
 
@@ -125,7 +132,7 @@ export default {
                     return this.resetChecbox();
                 }
                 return uni.navigateTo({
-                    url: '/pages/uc/myWork/myWork?type',
+                    url: `/pages/uc/myWork/myWork?type=${type}`,
                 });
             });
         },

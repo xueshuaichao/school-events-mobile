@@ -32,32 +32,6 @@
                     <view class="user-name">
                         {{ userInfo.name || "" }}
                     </view>
-                    <template v-if="userInfo.identity === 1">
-                        <!-- 普通用户 -->
-                        <view
-                            v-if="
-                                userInfo.name === 1 ||
-                                    userInfo.avatar_url ||
-                                    userInfo.is_set_password
-                            "
-                            class="info user-from"
-                        >
-                            <template>
-                                {{ userInfo.mobile || "" }}
-                            </template>
-                        </view>
-                        <view
-                            v-else
-                            class="info user-from"
-                        >
-                            请尽快完善用户信息！<navigator
-                                class="go-setting"
-                                url="/pages/uc/setting/setting"
-                            >
-                                点击去完善
-                            </navigator>
-                        </view>
-                    </template>
                     <template v-if="userInfo.identity === 2">
                         <!-- 教育局员工 -->
                         <view class="info user-from">
@@ -212,7 +186,7 @@
                 </navigator> -->
             </view>
             <navigator
-                v-if="userInfo.is_admin === 1"
+                v-if="userInfo.is_admin === 1 && !isH5"
                 class="submit-button"
                 url="/pages/uc/reported/reported"
             >

@@ -29,67 +29,62 @@
                     未通过({{ workStatics.refuse_num || 0 }})
                 </text>
             </view>
-            <view
-                v-if="!isLoadingTableData"
-                class="panel-bd work-list"
-            >
-                <template v-if="tableData.length">
-                    <view
-                        v-for="item in tableData"
-                        :key="item.id"
-                        class="work-item"
-                    >
-                        <work
-                            :info="item"
-                            :mode="'single'"
-                            :show-class="false"
-                        />
-                        <view class="btns">
-                            <!-- <button
-                                v-if="item.status === 1"
-                                class="btn"
-                                @click="toDetail(item)"
-                            >
-                                查看
-                            </button> -->
-                            <button
-                                class="btn"
-                                @click="toDetail(item)"
-                            >
-                                查看
-                            </button>
-                            <button
-                                v-if="item.status === 2"
-                                class="btn"
-                                @click="showCause(item)"
-                            >
-                                驳回原因
-                            </button>
-                            <button
-                                v-if="!isH5 && item.status !== 1"
-                                class="btn"
-                                @click="editWork(item)"
-                            >
-                                编辑
-                            </button>
-                            <button
-                                class="btn"
-                                @click="onConfirmDelete(item)"
-                            >
-                                删除
-                            </button>
-                        </view>
-                    </view>
-                </template>
-                <template v-else>
-                    <blank />
-                </template>
-            </view>
         </view>
-
-        <view v-else>
-            <view class="sep" />
-            <blank :type="'uc'" />
+        <view class="work-list">
+            <template v-if="tableData.length">
+                <view
+                    v-for="item in tableData"
+                    :key="item.id"
+                    class="work-item"
+                >
+                    <work
+                        :info="item"
+                        :mode="'single'"
+                        :show-class="false"
+                    />
+                    <view class="btns">
+                        <button
+                            class="btn"
+                            @click="toDetail(item)"
+                        >
+                            查看
+                        </button>
+                        <button
+                            v-if="item.status === 2"
+                            class="btn"
+                            @click="showCause(item)"
+                        >
+                            驳回原因
+                        </button>
+                        <button
+                            v-if="!isH5 && item.status !== 1"
+                            class="btn"
+                            @click="editWork(item)"
+                        >
+                            编辑
+                        </button>
+                        <button
+                            class="btn"
+                            @click="onConfirmDelete(item)"
+                        >
+                            删除
+                        </button>
+                    </view>
+                </view>
+                <uni-load-more
+                    class="loadMore"
+                    :status="loadMoreStatus"
+                    :content-text="{
+                        contentdown: '上拉显示更多',
+                        contentrefresh: '正在加载...',
+                        contentnomore: '———— 已经到底了~ ————'
+                    }"
+                    color="#999"
+                />
+            </template>
+            <template v-else>
+                <blank type="uc" />
+            </template>
         </view>
     </view>
 </template>
@@ -97,22 +92,28 @@
 <script>
 import api from '../../../common/api';
 import work from '../../../components/work/work.vue';
+import uniLoadMore from '../../../components/uni-load-more/uni-load-more.vue';
 import blank from '../../../widgets/blank/blank.vue';
 
 export default {
     components: {
         blank,
         work,
+        uniLoadMore,
     },
     data() {
         return {
             isLoading: true,
             userInfo: null,
-
+            loadMoreStatus: 'none',
             // #ifdef H5
             isH5: true,
             // #endif
-
+            filter: {
+                page_num: 1,
+                page_size: 10,
+                status: 1,
+            },
             tabActiveIndex: 0,
             workStatics: {},
             isLoadingTableData: true,
@@ -134,10 +135,10 @@ export default {
                 url: `/pages/work/detail/detail?id=${item.id}&from=mywork`,
             });
         },
-        showCause() {
+        showCause({ memo }) {
             uni.showModal({
                 title: '驳回原因',
-                content: '4234234234324',
+                content: memo,
                 showCancel: false,
             });
         },
@@ -151,40 +152,54 @@ export default {
 
             api.post('/api/user/delwork', {
                 id: item.id,
-            }).then((res) => {
+            }).then(() => {
                 uni.showToast({
                     title: '删除成功',
                 });
-                console.log(res);
                 if (index !== -1) {
                     this.tableData.splice(index, 1);
                 }
                 this.getWorkStatic();
             });
         },
-        getWorkData() {
+        onReachBottom() {
+            console.log('到底部');
+            if (this.loadMoreStatus === 'more') {
+                this.filter.page_num = this.filter.page_num + 1;
+                this.loadMoreStatus = 'loading';
+                this.getWorkData('reachBottom');
+            }
+        },
+        getWorkData(title) {
             this.getWorkStatic();
             // 作品状态 status 0—待审核 1—已通过 2—未通过 -1 全部
-            let status = 1;
+            this.filter.status = 1;
             if (this.tabActiveIndex === 1) {
-                status = 0;
+                this.filter.status = 0;
             } else if (this.tabActiveIndex === 2) {
-                status = 2;
+                this.filter.status = 2;
             }
-            return api
-                .get('/api/user/worklist', {
-                    status,
-                    page_size: 100,
-                })
-                .then(
-                    (res) => {
-                        this.isLoadingTableData = false;
-                        this.tableData = res.list;
-                    },
-                    () => {
-                        this.tableData = [];
-                    },
-                );
+            return api.get('/api/user/worklist', this.filter).then(
+                ({ list, total }) => {
+                    if (title === 'reachBottom') {
+                        this.tableData = this.tableData.concat(list);
+                    } else {
+                        this.tableData = list;
+                    }
+                    this.total = total;
+                    if (
+                        this.total
+                        <= this.filter.page_num * this.filter.page_size
+                    ) {
+                        this.loadMoreStatus = title === 'reachBottom' ? 'noMore' : 'none';
+                    } else {
+                        this.loadMoreStatus = 'more';
+                    }
+                },
+                () => {
+                    this.tableData = [];
+                },
+            );
         },
         setTabActive(i) {
             this.tabActiveIndex = i;
@@ -217,7 +232,6 @@ export default {
                 // 来自页面内分享按钮
                 const index = res.target.id;
                 const item = this.tableData[index];
-
                 return {
                     title: item.resource_name,
                     imageUrl: item.video_img_url,
@@ -229,7 +243,11 @@ export default {
     },
     onLoad(query) {
         const { type } = query;
-        this.tabActiveIndex = Number(type) || 0;
+        this.tabActiveIndex = 0;
+        if (Number(type) === 1) {
+            this.tabActiveIndex = 0;
+        }
+        this.tabActiveIndex = Number(type);
         this.getWorkData();
     },
 };
@@ -237,6 +255,16 @@ export default {
 
 <style lang="less">
 .page-my-work {
+    padding: 84upx 30upx 0;
+    .panel {
+        position: fixed;
+        top: 0;
+        height: 84upx;
+        left: 0;
+        right: 0;
+        background-color: #fff;
+        z-index: 1;
+    }
     .panel .panel-hd .panel-title {
         display: inline-block;
         padding-left: 0;
@@ -246,7 +274,6 @@ export default {
             color: #1166ff;
         }
     }
-
     .work-list {
         .work-item {
             padding: 30upx 0 0upx;

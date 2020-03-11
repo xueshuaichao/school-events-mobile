@@ -14,14 +14,14 @@
                 </text>
             </view>
         </view>
-        <view class="hide">
-            <poster
-                id="poster"
-                :config="posterConfig"
-                @success="onPosterSuccess"
-                @fail="onPosterFail"
-            />
-        </view>
+        <poster
+            v-if="!isH5"
+            id="poster"
+            :hide-loading="true"
+            :config="posterConfig"
+            @success="onPosterSuccess"
+            @fail="onPosterFail"
+        />
         <view
             v-if="!isLoadingTableData"
             class="panel-bd work-list"
@@ -34,6 +34,10 @@
                 >
                     <work
                         :info="item"
+                        :show-class="false"
+                        :show-achievement="true"
+                        :show-time="false"
+                        query="&from=record"
                         :mode="'single'"
                     />
                     <view class="btns">
@@ -45,6 +49,16 @@
                         </view>
                     </view>
                 </view>
+                <uni-load-more
+                    class="loadMore"
+                    :status="loadMoreStatus"
+                    :content-text="{
+                        contentdown: '上拉显示更多',
+                        contentrefresh: '正在加载...',
+                        contentnomore: '———— 已经到底了~ ————'
+                    }"
+                    color="#999"
+                />
             </template>
             <template v-else>
                 <blank />
@@ -56,15 +70,19 @@
 <script>
 import api from '../../../common/api';
 import work from '../../../components/work/work.vue';
+import uniLoadMore from '../../../components/uni-load-more/uni-load-more.vue';
 import blank from '../../../widgets/blank/blank.vue';
 
 export default {
     components: {
         work,
         blank,
+        uniLoadMore,
     },
     data() {
         return {
+            imgTest: '',
+            h5ItemData: {},
             navList: ['校级记录', '市级记录', '省级记录'],
             isLoading: true,
             userInfo: null,
@@ -72,7 +90,12 @@ export default {
             // #ifdef H5
             isH5: true,
             // #endif
-
+            filter: {
+                page_num: 1,
+                page_size: 10,
+                record: 1,
+                resource_scope: [1, 2],
+            },
             tabActiveIndex: 1,
             workStatics: {},
             isLoadingTableData: true,
@@ -163,26 +186,42 @@ export default {
         console.log(111, this.posterText(texts, textStyle, position));
     },
     methods: {
-        getWorkData(record = 1) {
-            return api
-                .get('/api/user/worklist', {
-                    record,
-                    resource_scope: [1, 2],
-                    page_size: 100,
-                })
-                .then(
-                    (res) => {
-                        this.isLoadingTableData = false;
-                        this.tableData = res.list;
-                    },
-                    () => {
-                        this.tableData = [];
-                    },
-                );
+        onReachBottom() {
+            console.log('到底部');
+            if (this.loadMoreStatus === 'more') {
+                this.filter.page_num = this.filter.page_num + 1;
+                this.loadMoreStatus = 'loading';
+                this.getWorkData('reachBottom');
+            }
+        },
+        getWorkData(title) {
+            this.filter.record = this.tabActiveIndex;
+            return api.get('/api/user/worklist', this.filter).then(
+                ({ list, total }) => {
+                    this.isLoadingTableData = false;
+                    if (title === 'reachBottom') {
+                        this.tableData = this.tableData.concat(list);
+                    } else {
+                        this.tableData = list;
+                    }
+                    this.total = total;
+                    if (
+                        this.total
+                        <= this.filter.page_num * this.filter.page_size
+                    ) {
+                        this.loadMoreStatus = title === 'reachBottom' ? 'noMore' : 'none';
+                    } else {
+                        this.loadMoreStatus = 'more';
+                    }
+                },
+                () => {
+                    this.tableData = [];
+                },
+            );
         },
         setTabActive(index) {
             this.tabActiveIndex = index;
-            this.getWorkData(index);
+            this.getWorkData();
         },
         posterText(texts, textStyle = {}, position = {}) {
             let defaultStyle = {
@@ -251,13 +290,23 @@ export default {
                 this.posterText(texts, textStyle, position),
             );
         },
+        h5SetCanvasImg(id) {
+            this.h5ItemData = {
+                ...this.h5ItemData,
+                ...this.tableData.filter(v => v.id === id)[0],
+            };
+            this.h5ItemData.recordImage = `https://aitiaozhan.oss-cn-beijing.aliyuncs.com/record/record${this.h5ItemData.record}.png`;
+        },
         creatPoster({ id }) {
             uni.showLoading();
+            // #ifdef MP-WEIXIN
             this.setCanvasImg(id);
+            // #endif
+            if (this.isH5) {
+                this.h5SetCanvasImg(id);
+            }
             // eslint-disable-next-line no-undef
-            const pages = getCurrentPages(); // 获取加载的页面
-            const currentPage = pages[pages.length - 1]; // 获取当前页面的对象
-            const url = currentPage.route || 'pages/detail/detail';
+            const url = 'pages/detail/detail';
             const scene = `id=${id}`;
             api.post('/api/weixin/getminiqrcode', {
                 path: url,
@@ -268,30 +317,50 @@ export default {
                     ({ url }) => {
                         uni.hideLoading();
                         if (url) {
-                            this.base64src(url, (res) => {
-                                this.posterConfig.images[3].url = res;
-                            }).then((data) => {
-                                if (data) {
-                                    this.poster.onCreate();
-                                }
-                            });
+                            if (this.isH5) {
+                                this.h5ItemData.qrcode = url;
+                            } else {
+                                this.base64src(url, (res) => {
+                                    this.posterConfig.images[3].url = res;
+                                }).then((data) => {
+                                    if (data) {
+                                        this.poster.onCreate();
+                                    }
+                                });
+                            }
                         } else {
                             this.posterConfig.images[3].url = 'http://aitiaozhan.oss-cn-beijing.aliyuncs.com/main-erweima.png';
+                            if (this.isH5) {
+                                this.h5ItemData.qrcode = 'http://aitiaozhan.oss-cn-beijing.aliyuncs.com/main-erweima.png';
+                            }
                             return false;
                         }
                     },
                     () => {
                         this.posterConfig.images[3].url = 'http://aitiaozhan.oss-cn-beijing.aliyuncs.com/main-erweima.png';
+                        if (this.isH5) {
+                            this.h5ItemData.qrcode = 'http://aitiaozhan.oss-cn-beijing.aliyuncs.com/main-erweima.png';
+                        }
                         return false;
                     },
                 )
                 .then((data) => {
                     if (!data) {
+                        // #ifdef MP-WEIXIN
                         this.poster.onCreate();
+                        // #endif
+                        if (this.isH5) {
+                            this.h5OnCreate();
+                        }
                     }
                 });
         },
-
+        h5OnCreate() {
+            localStorage.setItem('recordData', JSON.stringify(this.h5ItemData));
+            uni.navigateTo({
+                url: '/pages/uc/record/result',
+            });
+        },
         // base64转url
         base64src(base64data, cb) {
             // eslint-disable-next-line consistent-return
@@ -322,37 +391,51 @@ export default {
             });
         },
     },
+    onLoad() {
+        this.getWorkData();
+    },
     onReady() {
+        // #ifdef MP-WEIXIN
         this.poster = this.selectComponent('#poster');
+        // #endif
     },
 };
 </script>
 
 <style lang="less">
 .page-record {
-    padding: 0 30rpx;
+    padding: 84upx 30upx 0;
     .hide {
         opacity: 0;
     }
-    .panel .panel-hd {
-        border-bottom: none;
-        margin: 0 30rpx 20rpx;
-        display: flex;
-        // justify-content: space-around;
+    .panel {
+        position: fixed;
+        top: 0;
+        height: 84upx;
+        left: 0;
+        right: 0;
+        background-color: #fff;
+        z-index: 1;
     }
     .panel .panel-hd .panel-title {
         display: inline-block;
         padding-left: 0;
         padding-right: 0;
-        &.active::after {
-            background: #1166ff;
+        color: #666;
+        &.active {
+            color: #1166ff;
         }
     }
     .work-list {
         .work-item {
-            border-bottom: 1upx solid #ddd;
-            padding: 30upx 0 100upx;
+            padding: 30upx 0 0upx;
+            margin-bottom: 40upx;
             position: relative;
+            .thumbnail-wrap,
+            .thumbnail {
+                width: 266upx;
+                height: 155upx;
+            }
         }
         .tag-result {
             position: absolute;
@@ -380,18 +463,18 @@ export default {
         .btns {
             position: absolute;
             right: 0;
-            bottom: 20upx;
-            height: 66upx;
-
+            bottom: 0upx;
+            height: 60upx;
             .btn {
                 display: inline-block;
-                padding: 0 28upx;
+                padding: 0;
+                min-width: 136upx;
                 height: 60upx;
                 font-size: 26upx;
                 line-height: 60upx;
                 color: #fff;
                 text-align: center;
-                margin-left: 40upx;
+                margin-left: 16upx;
                 background: #1166ff;
                 border-radius: 0;
             }
