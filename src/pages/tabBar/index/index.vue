@@ -458,7 +458,7 @@ export default {
                     one_level_id: catId,
                 },
                 sort: 2,
-                page_size: 4,
+                page_size: 10,
             }).then((res) => {
                 if (type === 'individual') {
                     this.workData.individual = res.list;

@@ -99,6 +99,14 @@ export default {
             type: Boolean,
             default: true,
         },
+        curPosition: {
+            type: Number,
+            default: 0,
+        },
+        pageSize: {
+            type: Number,
+            default: 0,
+        },
     },
     data() {
         return {};
@@ -108,7 +116,7 @@ export default {
             if (this.info.status === 1) {
                 this.info.play_count = this.info.play_count + 1;
                 uni.navigateTo({
-                    url: `/pages/work/detail/detail?id=${this.info.id}`,
+                    url: `/pages/work/detail/detail?id=${this.info.id}&pageSize=${this.pageSize}&curPosition=${this.curPosition}`,
                 });
             }
         },

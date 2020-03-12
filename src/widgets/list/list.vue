@@ -294,11 +294,15 @@
         >
             <template v-if="tableData.length > 0">
                 <view
-                    v-for="item in tableData"
+                    v-for="(item, index) in tableData"
                     :key="item.id"
                     class="work-item"
                 >
-                    <work :info="item" />
+                    <work
+                        :info="item"
+                        :cur-position="index + 1"
+                        :page-size="10"
+                    />
                 </view>
 
                 <uni-load-more :status="loadMoreStatus" />
@@ -509,9 +513,14 @@ export default {
         getData() {
             api.get('/api/works/cats').then((res) => {
                 this.categoryData = res;
-                this.curCategory = res[2].list.filter(
+                const arr = res[2].list.filter(
                     d => d.cat_id === this.filter.cat_id.one_level_id,
-                )[0].name || '全部';
+                );
+                if (arr.length) {
+                    this.curCategory = arr[0].name;
+                } else {
+                    this.curCategory = '全部';
+                }
             });
         },
         getTableData() {
