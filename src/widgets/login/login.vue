@@ -1,5 +1,15 @@
 <template>
     <view>
+        <button
+            class="bottom"
+            type="primary"
+            open-type="getPhoneNumber"
+            withCredentials="true"
+            lang="zh_CN"
+            @getphonenumber="getphonenumber"
+        >
+            授权登录
+        </button>
         <view class="page-bind-mobile">
             <image
                 class="logo"
@@ -158,14 +168,39 @@ export default {
                 remain: '',
                 isSend: false,
             },
+            // #ifdef MP-WEIXIN
+            isWeixin: true,
+            // #endif
             // loginMode: 'sms',
             loginMode: 'sms',
             // needBindMobile: false,
             userInfo: {},
             userkey: '',
+            isCanUse: uni.getStorageSync('isCanUse') || true,
+            weixinData: {
+                code: '',
+            },
+            jscode: '',
         };
     },
+    created() {
+        const _this = this;
+        uni.login({
+            provider: 'weixin',
+            success({ code }) {
+                _this.jscode = code;
+            },
+        });
+    },
     methods: {
+        getLogIn() {
+            uni.getStorage({
+                key: 'medusa_key',
+                success(res) {
+                    console.log(res.data);
+                },
+            });
+        },
         login() {
             if (!this.formData.username) {
                 return uni.showToast({
@@ -408,6 +443,22 @@ export default {
                     }),
                 );
         },
+        getphonenumber(e) {
+            console.log(e);
+            const { errMsg, encryptedData, iv } = e.detail;
+            if (errMsg === 'getPhoneNumber:ok') {
+                api.post('/api/account/getminmobile', {
+                    jscode: this.jscode,
+                    encryptedData,
+                    iv,
+                }).then((res) => {
+                    console.log(res);
+                });
+            } else {
+                alert('为啥要拒绝');
+            }
+        },
+        onShow() {},
     },
 };
 </script>

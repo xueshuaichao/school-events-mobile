@@ -94,7 +94,9 @@
 </template>
 
 <script>
+// #ifdef H5
 import html2canvas from 'html2canvas';
+// #endif
 import utils from '../../../common/utils';
 
 export default {
