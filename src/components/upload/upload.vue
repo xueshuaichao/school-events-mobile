@@ -90,7 +90,7 @@
                 </template>
                 <template v-if="type === 'image'">
                     <view>
-                        支持.jpg,.jpeg,.png格式
+                        支持.jpg、jpeg、png格式
                     </view>
                     <view>
                         图片尺寸建议950*550

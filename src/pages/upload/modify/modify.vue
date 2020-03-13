@@ -72,11 +72,13 @@
             <upload
                 v-if="uploadMode === 'video'"
                 :type="'video'"
+                :source="formData.video_id"
                 @change="updateVideo"
             />
             <upload
                 :type="'image'"
                 :preview="uploadMode === 'video' ? true : false"
+                :source="formData.video_img_url"
                 @change="updateImage"
             />
 
@@ -370,7 +372,7 @@ export default {
         height: 98upx;
         line-height: 98upx;
         text-align: center;
-        margin-top: 168upx;
+        margin-top: 80upx;
     }
 
     .show-type-hd {

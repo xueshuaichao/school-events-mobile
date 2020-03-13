@@ -44,6 +44,7 @@
                     />
                     <view class="btns">
                         <button
+                            v-if="item.status === 1"
                             class="btn"
                             @click="toDetail(item)"
                         >
