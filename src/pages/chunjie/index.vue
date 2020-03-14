@@ -349,14 +349,14 @@
                     </view>
                     <view class="media-box">
                         <view
-                            v-for="item in dataList"
+                            v-for="(item, index) in dataList"
                             :key="item.id"
                             class="media-content"
                         >
                             <event-craft-cover
                                 :info="item"
                                 :bg-color="'B11A27'"
-                                @click.native="viewDetail(item)"
+                                @click.native="viewDetail(item, index)"
                             />
 
                             <view class="media-name text-one-line">
@@ -595,9 +595,12 @@ export default {
                     'http://aitiaozhan.oss-cn-beijing.aliyuncs.com/banner.png?x-oss-process=image/format,png/interlace,1/quality,Q_80/resize,m_pad,h_100',
             });
         },
-        viewDetail(item) {
+        viewDetail(item, position) {
             uni.navigateTo({
-                url: `/pages/chunjie/detail/detail?id=${item.id}&fr=${this.fr}`,
+                url: `/pages/work/detail/detail?id=${item.id}&fr=${
+                    this.fr
+                }&total=${this.total}&curPosition=${position
+                    + 1}&from=3&actSort=${this.filter.sort || ''}`,
             });
         },
         toggle(k) {

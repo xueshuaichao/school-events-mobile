@@ -74,14 +74,14 @@
             </view>
             <view v-if="total > 0">
                 <view
-                    v-for="item in dataList"
+                    v-for="(item, index) in dataList"
                     :key="item.id"
                     class="media-content"
                 >
                     <event-craft-cover
                         :info="item"
                         :bg-color="'f5dca3'"
-                        @click.native="viewDetail(item)"
+                        @click.native="viewDetail(item, index)"
                     />
                     <view
                         v-if="type === 'myWork'"
@@ -220,6 +220,7 @@ export default {
             type: 'myWork',
             allNum: {},
             allTotal: 0,
+            fr: '',
         };
     },
     computed: {
@@ -334,11 +335,22 @@ export default {
             this.tabActiveIndex = i;
             this.getWorkData();
         },
-        viewDetail(item) {
+        viewDetail(item, position) {
             if (this.tabActiveIndex === 2) {
-                uni.navigateTo({
-                    url: `/pages/chunjie/detail/detail?id=${item.id}`,
-                });
+                if (this.type === 'myWork') {
+                    uni.navigateTo({
+                        url: `/pages/work/detail/detail?id=${item.id}&fr=${this.fr}&from=3&disableslide=1`,
+                    });
+                } else {
+                    uni.navigateTo({
+                        url: `/pages/work/detail/detail?id=${item.id}&fr=${
+                            this.fr
+                        }&total=${this.total}&curPosition=${position
+                            + 1}&from=3&actSort=${this.filter.sort || ''}&kw=${
+                            this.filter.search
+                        }`,
+                    });
+                }
             }
         },
     },

@@ -86,34 +86,52 @@
             circular="true"
             @change="changeOutSwiper"
         >
-            <swiper-item class="pre-swiper">
+            <swiper-item
+                id="1"
+                class="pre-swiper"
+                item-id="0"
+            >
                 <detail
                     :page-data="pageDataOne"
+                    :page-from="pageFrom"
                     @doAction="doAction"
                 />
             </swiper-item>
+
+            <template>
+                <swiper-item
+                    v-if="disableslide"
+                    class="cur-swiper"
+                    @touchmove.stop="stopTouchMove"
+                >
+                    <detail
+                        :page-data="pageDataTwo"
+                        :page-from="pageFrom"
+                        @doAction="doAction"
+                    />
+                </swiper-item>
+                <swiper-item
+                    v-else
+                    id="2"
+                    class="cur-swiper"
+                    item-id="1"
+                >
+                    <detail
+                        :page-data="pageDataTwo"
+                        :page-from="pageFrom"
+                        @doAction="doAction"
+                    />
+                </swiper-item>
+            </template>
+
             <swiper-item
-                v-if="isFrom"
-                class="cur-swiper"
-                @touchmove.stop="stopTouchMove"
+                id="3"
+                class="next-swiper"
+                item-id="2"
             >
-                <detail
-                    :page-data="pageDataTwo"
-                    @doAction="doAction"
-                />
-            </swiper-item>
-            <swiper-item
-                v-else
-                class="cur-swiper"
-            >
-                <detail
-                    :page-data="pageDataTwo"
-                    @doAction="doAction"
-                />
-            </swiper-item>
-            <swiper-item class="next-swiper">
                 <detail
                     :page-data="pageDataThree"
+                    :page-from="pageFrom"
                     @doAction="doAction"
                 />
             </swiper-item>
@@ -255,7 +273,7 @@ export default {
             canvasImg: '',
             showTicketMask: false,
             // startY: 0,
-            isFrom: '',
+            pageFrom: '',
             pagaDataCenter: {},
             pageDataTwo: {},
             pageDataThree: {},
@@ -270,6 +288,14 @@ export default {
             prePageParam: {},
             currentSwiper: 1,
             outSwiperIncrease: true,
+            levelid: -1,
+            sort: 1,
+            actCat: 0,
+            actSort: '',
+            search: '',
+            keyword: '',
+            disableslide: false,
+            filterUrl: {},
         };
     },
     created() {},
@@ -360,7 +386,7 @@ export default {
                     that.prompt = false;
                     that.showTicketMask = true;
                     uni.showToast({
-                        title: '保存成功',
+                        title: '已保存成功',
                         icon: 'success',
                         duration: 2000,
                     });
@@ -417,7 +443,15 @@ export default {
             console.log(e, 'fail-------------------');
         },
         getData() {
-            api.get('/api/works/detail', {
+            if (this.pageFrom > 2) {
+                this.getDateFromId('/api/activity/detail');
+            } else {
+                this.getDateFromId('/api/works/detail');
+            }
+            this.getLikeStatus();
+        },
+        getDateFromId(url) {
+            api.get(url, {
                 id: this.id,
             }).then(
                 (res) => {
@@ -439,15 +473,13 @@ export default {
                     }, 1500);
                 },
             );
-
-            this.getLikeStatus();
         },
         setGetDetail(res) {
             this.posterConfig.images[1].url = res.video_img_url;
             this.posterConfig.texts[0].text[0].text = res.resource_name;
             this.initShare(res);
             uni.setNavigationBarTitle({
-                title: res.resource_name,
+                title: res.resource_name || '',
             });
             if (res.resource_type === 2) {
                 // 说明是图片，计算播放量
@@ -577,14 +609,47 @@ export default {
             this.isPaused = false;
         },
         getPageMoreDate(paramData, cb) {
-            if (this.isFrom === 'mywork') {
+            // 设置接口，根据条件增加参数
+            if (this.pageFrom === 'mywork') {
+                // 我的作品的详情，暂时屏蔽了。
                 this.getFromAPI('/api/user/worklist', paramData, cb);
+            } else if (this.pageFrom > 2) {
+                this.postFromAPI(
+                    '/api/activity/resourcelist',
+                    {
+                        ...paramData,
+                        ...this.filterUrl,
+                        activity_id: Number(this.pageFrom),
+                        list_type: 2,
+                    },
+                    cb,
+                );
             } else {
-                this.getFromAPI('/api/works/list', paramData, cb);
+                this.postFromAPI(
+                    '/api/works/list',
+                    {
+                        ...paramData,
+                        cat_id: { one_level_id: this.levelid },
+                        sort: this.sort,
+                        keyword: this.keyword,
+                    },
+                    cb,
+                );
             }
         },
         getFromAPI(url, paramData, cb) {
-            api.get(url, paramData).then((res) => {
+            api.post(url, paramData).then((res) => {
+                if (res.id) {
+                    if (cb) {
+                        cb(res);
+                    }
+                } else if (cb) {
+                    cb(false);
+                }
+            });
+        },
+        postFromAPI(url, paramData, cb) {
+            api.post(url, paramData).then((res) => {
                 if (res.id) {
                     if (cb) {
                         cb(res);
@@ -595,7 +660,8 @@ export default {
             });
         },
         changeOutSwiper(event) {
-            // 判断移动方向
+            //  已经滑动到下一个作品，获取下下个，或者上上个作品。
+            // 判断移动方向,向上，向下。
             if (this.currentSwiper > event.detail.current) {
                 this.outSwiperIncrease = false;
             } else {
@@ -607,22 +673,57 @@ export default {
             if (this.currentSwiper === 0 && event.detail.current === 2) {
                 this.outSwiperIncrease = false;
             }
-            // 预获取数据
+            console.log(
+                this.prePageParam.slideCurPosition,
+                '---变化前显示的位置',
+            );
+            // 预获取数据。最后一页的数据可以划到第一页来。
             let objPosition = {};
+            let targetPosition = this.prePageParam.slideCurPosition;
             if (this.outSwiperIncrease) {
-                objPosition = this.getPageSizeInfo(
-                    this.prePageParam.initCurPosition + 2,
-                    10,
-                );
-                this.prePageParam.initCurPosition += 1;
+                targetPosition = this.prePageParam.slideCurPosition + 2;
+                if (
+                    this.prePageParam.slideCurPosition
+                    === this.prePageParam.MaxPosition - 1
+                ) {
+                    this.prePageParam.slideCurPosition += 1;
+                    targetPosition = 1;
+                } else if (
+                    this.prePageParam.slideCurPosition
+                    === this.prePageParam.MaxPosition
+                ) {
+                    this.prePageParam.slideCurPosition = 1;
+                    targetPosition = 2;
+                } else {
+                    this.prePageParam.slideCurPosition += 1;
+                }
+
+                objPosition = this.getPageSizeInfo(targetPosition);
             } else {
-                objPosition = this.getPageSizeInfo(
-                    this.prePageParam.initCurPosition - 2,
-                    10,
-                );
-                this.prePageParam.initCurPosition -= 1;
+                targetPosition = this.prePageParam.slideCurPosition - 2;
+
+                if (this.prePageParam.slideCurPosition === 2) {
+                    targetPosition = this.prePageParam.MaxPosition;
+                    this.prePageParam.slideCurPosition -= 1;
+                } else if (this.prePageParam.slideCurPosition === 1) {
+                    this.prePageParam.slideCurPosition = this.prePageParam.MaxPosition;
+                    targetPosition = this.prePageParam.MaxPosition - 1;
+                } else {
+                    this.prePageParam.slideCurPosition -= 1;
+                }
+
+                objPosition = this.getPageSizeInfo(targetPosition);
             }
+            console.log(
+                this.prePageParam.slideCurPosition,
+                '---变化后显示的位置-----目标--',
+                targetPosition,
+            );
+            this.setSwiperPageData(event, objPosition);
+        },
+        setSwiperPageData(event, objPosition) {
             this.getPageMoreDate(objPosition, (res) => {
+                //  滚动的时候去获取得到第三页的详情，详情有值再修改轮播Item匹配的数据，详情没有值，就是获取到了最后一个数据
                 if (res) {
                     if (this.outSwiperIncrease) {
                         // 下一个
@@ -660,7 +761,7 @@ export default {
                 this.currentSwiper = event.detail.current;
             });
 
-            // 修改下pageData，进行页面的转发，与二维码功能
+            // 不需要等待接口数据，直接修改下pageData，以便进行页面的转发，与二维码功能
             let curPageData = {};
             switch (event.detail.current) {
                 case 0:
@@ -679,13 +780,11 @@ export default {
             this.pageData = curPageData;
             this.setGetDetail(curPageData);
         },
-        getPageSizeInfo(position, pageSize) {
+        getPageSizeInfo(position) {
             // 设置参数
+            const pageSize = 10;
             const pageNum = Math.ceil(position / pageSize);
             const currentPosition = position - pageSize * (pageNum - 1) - 1;
-            this.pageParam.page_size = pageSize;
-            this.pageParam.page_num = pageNum;
-            this.pageParam.current_position = currentPosition;
             return {
                 page_size: pageSize,
                 page_num: pageNum,
@@ -710,36 +809,64 @@ export default {
         },
     },
     onLoad(query) {
-        this.isFrom = utils.getParam(query, 'from') || '';
-
+        this.pageFrom = utils.getParam(query, 'from') || '';
+        this.levelid = Number(utils.getParam(query, 'levelid')) || -1;
+        this.sort = Number(utils.getParam(query, 'sort')) || 1;
         this.id = utils.getParam(query, 'id');
+        this.actCat = utils.getParam(query, 'actCat') || 0;
+        this.keyword = utils.getParam(query, 'keyword') || '';
+        this.disableslide = utils.getParam(query, 'disableslide') || false;
+
+        this.actSort = utils.getParam(query, 'actSort') || '';
+        this.fr = utils.getParam(query, 'fr') || '';
+        this.search = utils.getParam(query, 'kw') || '';
+        if (this.search) {
+            this.filterUrl.search = this.search;
+        }
+        if (this.actSort) {
+            this.filterUrl.sort = this.actSort;
+        }
+        if (this.actCat) {
+            this.filterUrl.activity_cat = this.actCat;
+        }
+
         const curPosition = Number(utils.getParam(query, 'curPosition')) || 0;
-        const pageSize = Number(utils.getParam(query, 'pageSize')) || 10;
-        const pageNum = Math.ceil(curPosition / pageSize);
-        const currentPosition = curPosition - pageSize * (pageNum - 1) - 1;
+        const total = Number(utils.getParam(query, 'total')) || 1;
+        console.log(
+            utils.getParam(query, 'total'),
+            this.pageFrom,
+            typeof this.pageFrom,
+            '.....onLoad.....',
+        );
 
-        this.pageParam.page_size = pageSize;
-        this.pageParam.page_num = pageNum;
-        this.pageParam.current_position = currentPosition;
+        // 获取detail页面的内容
         this.getData();
-        if (!this.isFrom) {
-            this.prePageParam = JSON.parse(JSON.stringify(this.pageParam));
-            this.prePageParam.initCurPosition = curPosition; // 第一次进来的位置
+        // 获取前后两页面的内容。
+        if (!this.disableslide) {
+            this.prePageParam.initPosition = curPosition;
+            this.prePageParam.slideCurPosition = curPosition; // 第一次进来的位置
+            this.prePageParam.MaxPosition = total;
 
-            const a = this.getPageSizeInfo(
-                this.prePageParam.initCurPosition - 1,
-                10,
-            );
-            const b = this.getPageSizeInfo(
-                this.prePageParam.initCurPosition + 1,
-                10,
-            );
-            this.getPageMoreDate(a, (res) => {
+            let toPreTarget = curPosition;
+            let toNewTarget = curPosition;
+            if (curPosition === 1) {
+                toPreTarget = total;
+                toNewTarget += 1;
+            } else if (curPosition === total) {
+                toNewTarget = 1;
+                toPreTarget -= 1;
+            } else {
+                toPreTarget -= 1;
+                toNewTarget += 1;
+            }
+            const paramPre = this.getPageSizeInfo(toPreTarget);
+            const paramNext = this.getPageSizeInfo(toNewTarget);
+            this.getPageMoreDate(paramPre, (res) => {
                 if (res) {
                     this.pageDataOne = res;
                 }
             });
-            this.getPageMoreDate(b, (res) => {
+            this.getPageMoreDate(paramNext, (res) => {
                 if (res) {
                     this.pageDataThree = res;
                 }
@@ -754,6 +881,25 @@ export default {
         );
         window.addEventListener('orientationchange', this.html5VideoAutoAdjust);
         // #endif
+
+        uni.getStorage({
+            key: 'hasPromtSlide',
+            complete(res) {
+                if (!res.data) {
+                    uni.setStorage({
+                        key: 'hasPromtSlide',
+                        data: 'lll',
+                    });
+                    uni.showToast({
+                        title: '上下滑动可以切换喔～',
+                        duration: 3000,
+                        position: 'top',
+                        mask: true,
+                        icon: 'none',
+                    });
+                }
+            },
+        });
     },
     onHide() {
         // this.isPaused = true;

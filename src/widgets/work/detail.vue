@@ -52,7 +52,7 @@
                                     ? '/static/images/work/mini-like-ac.png'
                                     : '/static/images/work/mini-like.png'
                             "
-                            @click="toggleLike1"
+                            @click="toggleLike"
                         />
                     </cover-view>
                 </cover-view>
@@ -73,101 +73,53 @@
                 />
             </template>
         </view>
-        <view class="content">
-            <view class="author-info">
-                <image
-                    class="avatar"
-                    src="/static/images/work/avatar.png"
-                />
-                <text class="author-name text-one-line">
-                    {{ pageData.create_name }}
-                </text>
-            </view>
-            <view
-                v-if="pageData.record"
-                class="school-and-record"
-            >
-                <text>{{ pageData.school_name }}</text>
-                <image
-                    class="icon-grail"
-                    :src="`/static/images/work/record-${pageData.record}.png`"
-                />
-                <text class="yellow">
-                    <!-- {{ recordTxts[0] }} -->
-                </text>
-            </view>
-            <view class="work-name-wrap text-one-line">
-                <!-- <image
-                    class="avatar"
-                    src="/static/images/work/file.png"
-                /> -->
-                <text class="work-name text-one-line">
-                    {{ pageData.resource_name }}
-                </text>
-                <text
-                    v-if="pageData.achievement"
-                    class="deatil-achievement yellow"
-                >
-                    成绩：{{ pageData.achievement
-                    }}{{ pageData.achievement_unit }}
-                </text>
-            </view>
-            <view class="intro text-three-line">
-                {{ pageData.introduce || "暂无简介" }}
-            </view>
-        </view>
-        <view class="fixed-panel">
-            <view class="icon-wrap">
-                <view
-                    class="item"
-                    @click="toggleLike1"
-                >
-                    <image
-                        class="icon"
-                        :src="
-                            likeStatus === 0
-                                ? '/static/images/yiqing/detail/like.png'
-                                : '/static/images/yiqing/detail/like-ac.png'
-                        "
-                    />
-                    <view> {{ pageData.praise_count }} </view>
-                </view>
-
-                <view
-                    class="item"
-                    @click="handleCanvass1"
-                >
-                    <image
-                        class="icon"
-                        src="/static/images/yiqing/detail/share.png"
-                    />
-                </view>
-
-                <view class="item">
-                    <image
-                        class="icon"
-                        src="/static/images/yiqing/detail/view.png"
-                    />
-                    <view> {{ pageData.play_count }} </view>
-                </view>
-            </view>
-
-            <view
-                class="btn primary"
-                @click="joinGame1"
-            >
-                我要参与
-                <image
-                    class="join"
-                    src="/static/images/yiqing/arrow.png"
-                />
-            </view>
-        </view>
+        <template>
+            <leftContent
+                v-if="pageFrom === ''"
+                :page-data="pageData"
+            />
+            <leftContentChunjie
+                v-if="pageFrom === '3'"
+                :page-data="pageData"
+            />
+            <leftContentChunjiehao
+                v-if="pageFrom === '4' || pageFrom === '5'"
+                :page-data="pageData"
+            />
+        </template>
+        <template>
+            <fixedPanel
+                v-if="pageFrom === '' || pageFrom === '5'"
+                :page-data="pageData"
+                @panelAction="panelAction"
+            />
+            <fixedPanelChunjie
+                v-if="pageFrom === '3' || pageFrom === '4'"
+                :page-from="pageFrom"
+                :page-data="pageData"
+                @panelAction="panelAction"
+            />
+        </template>
     </view>
 </template>
 
 <script>
+import leftContent from './detail/left-content.vue';
+import leftContentChunjie from './detail/left-content-chunjie.vue';
+import leftContentChunjiehao from './detail/left-content-chunjiehao.vue';
+import fixedPanel from './detail/fixed-panel.vue';
+import fixedPanelChunjie from './detail/fixed-panel-chunjie.vue';
+// import fixedPanelChunjiehao from './detail/fixed-panel-chunjiehao.vue';
+
 export default {
+    components: {
+        leftContent,
+        fixedPanel,
+        leftContentChunjiehao,
+        leftContentChunjie,
+        fixedPanelChunjie,
+        // fixedPanelChunjiehao,
+    },
     filters: {
         optimizeImage: (val) => {
             let newUrl = '';
@@ -194,8 +146,9 @@ export default {
             type: Number,
             default: 0,
         },
-        show: {
-            type: Boolean,
+        pageFrom: {
+            type: String,
+            default: '',
         },
     },
     data() {
@@ -210,14 +163,8 @@ export default {
         };
     },
     methods: {
-        handleCanvass1() {
-            this.$emit('doAction', 'handleCanvass');
-        },
-        joinGame1() {
-            this.$emit('doAction', 'joinGame');
-        },
-        toggleLike1() {
-            this.$emit('doAction', 'toggleLike');
+        panelAction(action) {
+            this.$emit('doAction', action);
         },
         onPlay() {},
         onWaiting() {},
@@ -297,72 +244,6 @@ export default {
     width: 100%;
     height: 100%;
 }
-// uni-view {
-//     width: 100%;
-//     height: 100%;
-// }
-
-.content {
-    position: absolute;
-    bottom: 20upx;
-    width: 480rpx;
-    padding: 30upx;
-    color: #fff;
-    left: 0;
-    pointer-events: none;
-    .avatar {
-        display: inline-block;
-        width: 34rpx;
-        height: 32rpx;
-        margin-right: 16upx;
-    }
-
-    .author-info {
-        .author-name {
-            color: #fff;
-            font-size: 34upx;
-            position: relative;
-            top: -2rpx;
-        }
-        margin-bottom: 10rpx;
-    }
-    .school-and-record {
-        font-size: 24upx;
-        margin: 2upx 0 14upx 0;
-    }
-
-    .author-from {
-        font-size: 24rpx;
-        margin-bottom: 10rpx;
-    }
-
-    .work-name {
-        font-size: 28rpx;
-        color: #fff;
-        margin-bottom: 13rpx;
-        font-weight: 600;
-        position: relative;
-    }
-    .deatil-achievement {
-        margin-left: 10upx;
-        font-size: 24upx;
-    }
-
-    .intro {
-        font-size: 25upx;
-        line-height: 44upx;
-        margin-bottom: 30rpx;
-    }
-
-    .icon-grail {
-        display: inline-block;
-        width: 26upx;
-        height: 22upx;
-        margin-left: 22upx;
-        margin-right: 2upx;
-        vertical-align: middle;
-    }
-}
 
 .swiper {
     width: 750rpx;
@@ -389,83 +270,6 @@ export default {
     .banner-image {
         width: 750rpx;
         height: 100vh;
-    }
-}
-
-.join-game {
-    width: 134rpx;
-    height: 140rpx;
-    position: fixed;
-    right: 30rpx;
-    bottom: 20rpx;
-    z-index: 100;
-}
-
-.fixed-panel {
-    position: absolute;
-    width: 146rpx;
-    right: 30rpx;
-    bottom: 20rpx;
-    color: #ffde98;
-    font-size: 24rpx;
-    text-align: center;
-    z-index: 9999;
-
-    .icon-wrap {
-        //margin-right: 36rpx;
-        text-align: center;
-        position: relative;
-        right: -30rpx;
-        margin-bottom: 20rpx;
-        color: #fff;
-
-        .item {
-            margin-bottom: 10rpx;
-        }
-    }
-
-    .icon {
-        width: 56rpx;
-        height: 56rpx;
-    }
-
-    .btn-icon {
-        width: 56rpx;
-        height: 56rpx;
-        background: transparent;
-        display: inline-block;
-        padding: 0;
-        font-size: 0;
-    }
-}
-.btn {
-    width: 174rpx;
-    height: 54rpx;
-    background: rgba(222, 39, 30, 1);
-    border-radius: 27rpx 0px 0px 27rpx;
-    color: #0096ff;
-    font-size: 24rpx;
-    background: #fff;
-    line-height: 54rpx;
-    text-align: center;
-    margin-bottom: 30rpx;
-    padding: 0;
-
-    &.primary {
-        background: #0096ff;
-        color: #fff;
-    }
-    .join {
-        width: 34upx;
-        height: 31upx;
-        vertical-align: middle;
-        margin-right: 8upx;
-    }
-    .arrow {
-        width: 12upx;
-        height: 21upx;
-        vertical-align: middle;
-        margin-right: 8upx;
     }
 }
 </style>

@@ -222,17 +222,26 @@
         <work
             :title="'爱挑战优秀个人'"
             :more-url="'/pages/work/list/list?cat_id=1'"
-            :info="workData.individual"
+            :info="workData.individual.list"
+            :cat-id="1"
+            :sort="4"
+            :total="workData.individual.total"
         />
         <work
             :title="'爱挑战优秀团体'"
             :more-url="'/pages/work/list/list?cat_id=2'"
-            :info="workData.team"
+            :info="workData.team.list"
+            :cat-id="2"
+            :sort="4"
+            :total="workData.team.total"
         />
         <work
             :title="'才艺秀优秀作品'"
             :more-url="'/pages/work/list/list?cat_id=3'"
-            :info="workData.talent"
+            :info="workData.talent.list"
+            :cat-id="3"
+            :sort="4"
+            :total="workData.talent.total"
         />
 
         <!-- news -->
@@ -305,9 +314,9 @@ export default {
             ],
             newsData: [],
             workData: {
-                individual: [],
-                team: [],
-                talent: [],
+                individual: { list: [], total: 0 },
+                team: { list: [], total: 0 },
+                talent: { list: [], total: 0 },
             },
             prompt: false,
             isFirstLogin: 'isFirstLogin3',
@@ -457,15 +466,15 @@ export default {
                 cat_id: {
                     one_level_id: catId,
                 },
-                sort: 2,
+                sort: 4,
                 page_size: 10,
             }).then((res) => {
                 if (type === 'individual') {
-                    this.workData.individual = res.list;
+                    this.workData.individual = res;
                 } else if (type === 'team') {
-                    this.workData.team = res.list;
+                    this.workData.team = res;
                 } else if (type === 'talent') {
-                    this.workData.talent = res.list;
+                    this.workData.talent = res;
                 }
             });
         },

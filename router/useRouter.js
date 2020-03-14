@@ -135,6 +135,12 @@ const routesConfig = {
             path: '/pages/chunjiehao/index',
         },
         {
+            path: '/pages/yiqing/index',
+        },
+        {
+            path: '/pages/yiqing/detail/detail',
+        },
+        {
             path: '/pages/login/login',
         },
         {

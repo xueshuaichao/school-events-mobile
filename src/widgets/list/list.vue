@@ -50,7 +50,7 @@
                     }"
                     @click="toggleMenu('sort')"
                 >
-                    <text>最热</text>
+                    <text>{{ curSort }}</text>
                 </view>
             </view>
         </view>
@@ -270,8 +270,8 @@
                             </view> -->
                             <view
                                 class="menu-item"
-                                :class="{ active: filter.sort === 2 }"
-                                @click="onSelect('sort', 2)"
+                                :class="{ active: filter.sort === 1 }"
+                                @click="onSelect('sort', 1)"
                             >
                                 最热
                             </view>
@@ -302,6 +302,10 @@
                         :info="item"
                         :cur-position="index + 1"
                         :page-size="10"
+                        :levelid="filter.cat_id.one_level_id"
+                        :sort="filter.sort"
+                        :total="total"
+                        :keyword="filter.keyword"
                     />
                 </view>
 
@@ -405,7 +409,7 @@ export default {
                 // // h5 与 小程序监听 paramsFilter的值，获取的时间不一样。1.这里为了兼容小程序和h5
                 this.filter.cat_id.one_level_id = Number(val.cat_id.one_level_id) || -1;
                 this.filter.keyword = val.keyword;
-                this.filter.sort = val.sort;
+                this.filter.sort = Number(val.sort) || 1;
 
                 this.getData();
                 this.getTableData();
@@ -428,7 +432,7 @@ export default {
             // h5 与 小程序监听 paramsFilter的值，获取的时间不一样。1.这里为了兼容小程序和h5
             this.filter.cat_id.one_level_id = Number(this.paramsFilter.cat_id.one_level_id) || -1;
             this.filter.keyword = this.paramsFilter.keyword;
-            this.filter.sort = Number(this.paramsFilter.sort);
+            this.filter.sort = Number(this.paramsFilter.sort) || 1;
 
             this.getData();
             this.getTableData();
@@ -460,6 +464,11 @@ export default {
                 case 'sort':
                     this.filter.sort = value;
                     this.toggleMenu('sort');
+                    if (value === 1) {
+                        this.curSort = '最热';
+                    } else if (value === 3) {
+                        this.curSort = '最新';
+                    }
                     break;
                 case 'cat_one':
                     this.toggleMenu('category');

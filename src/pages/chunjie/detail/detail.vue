@@ -2,8 +2,6 @@
     <view
         v-if="!isLoading"
         class="page-work-detail"
-        @touchstart="touchstart"
-        @touchend="touchend"
     >
         <view
             v-if="prompt"
@@ -212,12 +210,12 @@
             >
                 帮TA拉票
             </button>
-            <!-- <button
+            <button
                 class="btn"
                 @click="goHome"
             >
                 返回首页
-            </button> -->
+            </button>
         </view>
 
         <view
