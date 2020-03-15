@@ -148,7 +148,9 @@
                 v-show="myWorkEmpty"
                 class="work-empty"
             >
-                <image src="../../../static/images/chunjie/work-empty.png" />
+                <image
+                    src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/chunjie/work-empty.png"
+                />
                 <view>
                     {{ allTotal === 0 ? "您还没有上传作品" : "暂无作品" }}
                 </view>

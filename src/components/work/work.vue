@@ -61,8 +61,17 @@
                 >
                     {{ info.cat_name }}
                 </view>
-                <view class="text-info">
+                <view
+                    v-if="showTime"
+                    class="text-info"
+                >
                     {{ info.created_at }}
+                </view>
+                <view
+                    v-if="showAchievement"
+                    class="text-info"
+                >
+                    {{ info.achievement }}{{ info.achievement_unit }}
                 </view>
             </template>
         </view>
@@ -119,6 +128,18 @@ export default {
             type: String,
             default: '',
         },
+        showTime: {
+            type: Boolean,
+            default: true,
+        },
+        showAchievement: {
+            type: Boolean,
+            default: false,
+        },
+        query: {
+            type: String,
+            default: '',
+        },
     },
     data() {
         return {};
@@ -127,6 +148,7 @@ export default {
         goDetail() {
             if (this.info.status === 1) {
                 this.info.play_count = this.info.play_count + 1;
+                //
                 uni.navigateTo({
                     url: `/pages/work/detail/detail?id=${this.info.id}&total=${this.total}&curPosition=${this.curPosition}&sort=${this.sort}&levelid=${this.levelid}&keyword=${this.keyword}`,
                 });

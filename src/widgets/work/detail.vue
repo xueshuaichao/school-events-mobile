@@ -63,11 +63,10 @@
                     </cover-view>
                 </cover-view>
                 <video
-                    id="myVideo"
                     ref="video"
                     class="video"
                     preload
-                    :src="pageData.video.cloud_path_sd"
+                    :src="clear ? '' : pageData.video.cloud_path_sd"
                     :autoplay="isAutoPlay"
                     :controls="true"
                     :loop="true"
@@ -214,8 +213,12 @@ export default {
             default: 0,
         },
         isChangeSlide: {
-            type: Boolean,
-            default: false,
+            type: Number,
+            default: 1,
+        },
+        swiperPage: {
+            type: Number,
+            default: 1,
         },
     },
     data() {
@@ -226,21 +229,25 @@ export default {
             // #ifdef H5
             isH5: true,
             // #endif
-            isAutoPlay: false,
+            isAutoPlay: true,
             isPlayed: false,
             isPaused: false,
             isVideoWaiting: false,
+            clear: false,
         };
     },
     watch: {
-        isChangeSlide() {
-            // this.$refs.video.pause();
-            this.onPause();
+        isChangeSlide(val) {
+            if (val !== this.swiperPage && this.pageData.resource_type === 1) {
+                // this.$refs.video.pause();
+                this.clear = true;
+            }
+            if (val === this.swiperPage && this.pageData.resource_type === 1) {
+                this.clear = false;
+            }
         },
     },
-    mounted() {
-        this.videoContext = uni.createVideoContext('myVideo');
-    },
+    mounted() {},
     methods: {
         panelAction(action) {
             this.$emit('doAction', action);
@@ -259,16 +266,7 @@ export default {
             console.log('暂停了-------');
         },
         togglePlayStatus() {
-            console.log('12121212121togglePlayStatus');
-            console.log(this.videoContext);
-            // if (!this.isPlayed) {
-            //     this.$refs.video.play();
-            //     this.isPaused = false;
-            // } else {
-            //     this.videoContext.stop();
-            //     this.isPaused = true;
-            //     this.isPlayed = false;
-            // }
+            console.log('--------togglePlayStatus');
             this.$refs.video.play();
             this.isPaused = false;
         },

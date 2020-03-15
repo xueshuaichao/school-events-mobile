@@ -95,7 +95,8 @@
                     ref="pageDataOne"
                     :page-data="pageDataOne"
                     :like-status="likeStatus"
-                    :is-change-slide="isChangeSlide"
+                    :is-change-slide="currentSwiper"
+                    :swiper-page="0"
                     @doAction="doAction"
                 />
             </swiper-item>
@@ -110,7 +111,8 @@
                         ref="pageDataTwo"
                         :page-data="pageDataTwo"
                         :like-status="likeStatus"
-                        :is-change-slide="isChangeSlide"
+                        :is-change-slide="currentSwiper"
+                        :swiper-page="1"
                         @doAction="doAction"
                     />
                 </swiper-item>
@@ -124,7 +126,8 @@
                         ref="pageDataTwo"
                         :page-data="pageDataTwo"
                         :like-status="likeStatus"
-                        :is-change-slide="isChangeSlide"
+                        :is-change-slide="currentSwiper"
+                        :swiper-page="1"
                         @doAction="doAction"
                     />
                 </swiper-item>
@@ -139,7 +142,8 @@
                     ref="pageDataThree"
                     :page-data="pageDataThree"
                     :like-status="likeStatus"
-                    :is-change-slide="isChangeSlide"
+                    :is-change-slide="currentSwiper"
+                    :swiper-page="2"
                     @doAction="doAction"
                 />
             </swiper-item>

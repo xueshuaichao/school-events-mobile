@@ -124,7 +124,7 @@
                 <text>
                     {{
                         userInfo.mobile
-                            ? userInfo.mobile.replace(
+                            ? String(userInfo.mobile).replace(
                                 /^(\d{3})\d{4}(\d+)/,
                                 "$1****$2"
                             )

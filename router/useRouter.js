@@ -202,13 +202,16 @@ const routesConfig = {
             path: '/pages/uc/setting/resetName',
         },
         {
-            path: '/pages/uc/setting/message',
+            path: '/pages/uc/message/message',
         },
         {
             path: '/pages/uc/reported/reported',
         },
         {
             path: '/pages/uc/record/record',
+        },
+        {
+            path: '/pages/uc/record/result',
         },
         {
             path: '/pages/uc/reported/result',

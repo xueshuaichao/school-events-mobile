@@ -1,126 +1,154 @@
 <template>
     <view>
         <view class="page-bind-mobile">
-            <image
-                class="logo"
-                src="/static/images/widgets/login/logo.png"
-            />
-            <view class="tabs row">
-                <view
-                    class="tab tab-login"
-                    :class="{ active: loginMode === 'sms' }"
-                    @click="loginMode = 'sms'"
-                >
-                    手机号登录
+            <template v-if="isWeixin && showWeixin">
+                <view class="weixin-login">
+                    <view class="login-text">
+                        登录或注册爱挑战账号后，您可以上传作品或参与活动。
+                    </view>
+                    <button
+                        class="weixin-login-btn"
+                        type="primary"
+                        open-type="getPhoneNumber"
+                        withCredentials="true"
+                        lang="zh_CN"
+                        @getphonenumber="getphonenumber"
+                    >
+                        微信用户快速登录
+                    </button>
+                    <navigator
+                        class="no-text"
+                        url="/pages/tabBar/index/index"
+                    >
+                        暂不登录
+                    </navigator>
                 </view>
-                <view
-                    class="tab tab-register"
-                    :class="{ active: loginMode === 'password' }"
-                    @click="loginMode = 'password'"
-                >
-                    帐号密码登录
+            </template>
+            <template v-else>
+                <!-- 账号密码登录 -->
+                <image
+                    class="logo"
+                    src="/static/images/widgets/login/logo.png"
+                />
+                <view class="tabs row">
+                    <view
+                        class="tab tab-login"
+                        :class="{ active: loginMode === 'sms' }"
+                        @click="loginMode = 'sms'"
+                    >
+                        手机号登录
+                    </view>
+                    <view
+                        class="tab tab-register"
+                        :class="{ active: loginMode === 'password' }"
+                        @click="loginMode = 'password'"
+                    >
+                        帐号密码登录
+                    </view>
                 </view>
-            </view>
 
-            <!-- 帐号登录 -->
-            <template v-if="true">
-                <view
-                    class="form-item-wrap"
-                    :class="{
-                        inValid: accountData.isValid === false
-                    }"
-                >
-                    <image
+                <!-- 帐号登录 -->
+                <template v-if="true">
+                    <view
+                        class="form-item-wrap"
+                        :class="{
+                            inValid: accountData.isValid === false
+                        }"
+                    >
+                        <image
+                            v-if="loginMode === 'password'"
+                            class="icon"
+                            src="/static/images/widgets/login/phone.png"
+                        />
+                        <image
+                            v-if="loginMode === 'sms'"
+                            class="icon"
+                            src="/static/images/widgets/login/user.png"
+                        />
+
+                        <input
+                            v-model="formData.username"
+                            class="form-input"
+                            placeholder-class="placeholder"
+                            maxlength="30"
+                            :placeholder="
+                                loginMode === 'password'
+                                    ? '请输入手机号或用户名'
+                                    : '请输入手机号'
+                            "
+                        >
+                        <view class="error-tip">
+                            {{
+                                accountData.isValid ? "" : accountData.msg || ""
+                            }}
+                        </view>
+                    </view>
+
+                    <view
                         v-if="loginMode === 'password'"
-                        class="icon"
-                        src="/static/images/widgets/login/phone.png"
-                    />
-                    <image
-                        v-if="loginMode === 'sms'"
-                        class="icon"
-                        src="/static/images/widgets/login/user.png"
-                    />
-
-                    <input
-                        v-model="formData.username"
-                        class="form-input"
-                        placeholder-class="placeholder"
-                        maxlength="30"
-                        :placeholder="
-                            loginMode === 'password'
-                                ? '请输入手机号或用户名'
-                                : '请输入手机号'
-                        "
+                        class="form-item-wrap"
                     >
-                    <view class="error-tip">
-                        {{ accountData.isValid ? "" : accountData.msg || "" }}
+                        <image
+                            class="icon"
+                            src="/static/images/widgets/login/lock.png"
+                        />
+                        <input
+                            v-model="formData.password"
+                            class="form-input"
+                            placeholder-class="placeholder"
+                            maxlength="30"
+                            placeholder="请输入密码"
+                            password
+                        >
                     </view>
-                </view>
 
-                <view
-                    v-if="loginMode === 'password'"
-                    class="form-item-wrap"
-                >
-                    <image
-                        class="icon"
-                        src="/static/images/widgets/login/lock.png"
-                    />
-                    <input
-                        v-model="formData.password"
-                        class="form-input"
-                        placeholder-class="placeholder"
-                        maxlength="30"
-                        placeholder="请输入密码"
-                        password
-                    >
-                </view>
-
-                <view
-                    v-if="loginMode === 'sms'"
-                    class="form-item-wrap"
-                >
-                    <image
-                        class="icon"
-                        src="/static/images/widgets/login/lock.png"
-                    />
-                    <input
-                        v-model="formData.password"
-                        class="form-input"
-                        placeholder-class="placeholder"
-                        maxlength="6"
-                        placeholder="请输入验证码"
-                    >
-                    <view
-                        v-if="!captcha.isSend"
-                        class="send-captcha"
-                        @click="sendCaptcha(2)"
-                    >
-                        获取验证码
-                    </view>
-                    <view
-                        v-if="captcha.isSend"
-                        class="send-captcha is-send"
-                    >
-                        {{ captcha.remain }}s 后重新发
-                    </view>
-                </view>
-                <view class="login-mode">
                     <view
                         v-if="loginMode === 'sms'"
-                        class="desc"
+                        class="form-item-wrap"
                     >
-                        未注册手机号验证后即完成注册
+                        <image
+                            class="icon"
+                            src="/static/images/widgets/login/lock.png"
+                        />
+                        <input
+                            v-model="formData.password"
+                            class="form-input"
+                            placeholder-class="placeholder"
+                            maxlength="6"
+                            placeholder="请输入验证码"
+                        >
+                        <view
+                            v-if="!captcha.isSend"
+                            class="send-captcha"
+                            @click="sendCaptcha(2)"
+                        >
+                            获取验证码
+                        </view>
+                        <view
+                            v-if="captcha.isSend"
+                            class="send-captcha is-send"
+                        >
+                            {{ captcha.remain }}s 后重新发
+                        </view>
                     </view>
-                </view>
+                    <view class="login-mode">
+                        <view
+                            v-if="loginMode === 'sms'"
+                            class="desc"
+                        >
+                            未注册手机号验证后即完成注册
+                        </view>
+                    </view>
 
-                <view class="form-item-wrap">
-                    <view
-                        class="btn login-btn"
-                        @click="login()"
-                    >
-                        确定
+                    <view class="form-item-wrap">
+                        <view
+                            class="btn login-btn"
+                            @click="login()"
+                        >
+                            确定
+                        </view>
                     </view>
-                </view>
+                </template>
             </template>
         </view>
     </view>
@@ -158,14 +186,40 @@ export default {
                 remain: '',
                 isSend: false,
             },
+            // #ifdef MP-WEIXIN
+            isWeixin: true,
+            // #endif
             // loginMode: 'sms',
             loginMode: 'sms',
             // needBindMobile: false,
             userInfo: {},
             userkey: '',
+            isCanUse: uni.getStorageSync('isCanUse') || true,
+            weixinData: {
+                code: '',
+            },
+            jscode: '',
+            showWeixin: true,
         };
     },
+    created() {
+        const _this = this;
+        uni.login({
+            provider: 'weixin',
+            success({ code }) {
+                _this.jscode = code;
+            },
+        });
+    },
     methods: {
+        getLogIn() {
+            uni.getStorage({
+                key: 'medusa_key',
+                success(res) {
+                    console.log(res.data);
+                },
+            });
+        },
         login() {
             if (!this.formData.username) {
                 return uni.showToast({
@@ -408,6 +462,22 @@ export default {
                     }),
                 );
         },
+        getphonenumber(e) {
+            console.log(e);
+            const { errMsg, encryptedData, iv } = e.detail;
+            if (errMsg === 'getPhoneNumber:ok') {
+                api.post('/api/account/getminmobile', {
+                    jscode: this.jscode,
+                    encryptedData,
+                    iv,
+                }).then((res) => {
+                    console.log(33333, res);
+                });
+            } else {
+                this.showWeixin = false;
+            }
+        },
+        onShow() {},
     },
 };
 </script>
@@ -415,7 +485,6 @@ export default {
 <style lang="less">
 .widget-login {
     padding: 65upx;
-
     .icon-user {
         display: inline-block;
         width: 58upx;
@@ -454,7 +523,28 @@ export default {
 }
 .page-bind-mobile {
     padding: 30rpx 60rpx 0;
-
+    .weixin-login {
+        padding-top: 168upx;
+        font-size: 36upx;
+        text-align: center;
+    }
+    .login-text {
+        width: 540upx;
+        margin: 0 auto 60upx;
+        color: #666;
+        line-height: 60upx;
+    }
+    .weixin-login-btn {
+        width: 620upx;
+        margin: 0 auto 30upx;
+        background-color: #1166ff;
+        border-radius: 0;
+        line-height: 100upx;
+        color: #fff;
+    }
+    .no-text {
+        color: #999990;
+    }
     .tip {
         font-size: 26rpx;
         color: #333;
