@@ -827,6 +827,24 @@ export default {
             this.getPageMoreDate(paramNext).then((res) => {
                 this.pageDataThree = res;
             });
+            uni.getStorage({
+                key: 'hasPromtSlide',
+                complete(res) {
+                    if (!res.data) {
+                        uni.setStorage({
+                            key: 'hasPromtSlide',
+                            data: 'lll',
+                        });
+                        uni.showToast({
+                            title: '上下滑动可以切换喔～',
+                            duration: 3000,
+                            position: 'top',
+                            mask: true,
+                            icon: 'none',
+                        });
+                    }
+                },
+            });
         }
         const myQuery = query;
         delete myQuery.id;

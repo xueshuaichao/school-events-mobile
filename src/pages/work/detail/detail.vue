@@ -72,12 +72,12 @@
             </view>
         </template>
 
-        <view
-            v-if="isFullScreen && isH5"
+        <!-- <view
+            v-show="isFullScreen && isH5"
             class="h5-full-screen-title text-one-line"
         >
             {{ pageData.resource_name }}
-        </view>
+        </view> -->
         <swiper
             class="out-swiper"
             vertical="true"
@@ -92,8 +92,10 @@
                 item-id="0"
             >
                 <detail
+                    ref="pageDataOne"
                     :page-data="pageDataOne"
                     :like-status="likeStatus"
+                    :is-change-slide="isChangeSlide"
                     @doAction="doAction"
                 />
             </swiper-item>
@@ -105,8 +107,10 @@
                     @touchmove.stop="stopTouchMove"
                 >
                     <detail
+                        ref="pageDataTwo"
                         :page-data="pageDataTwo"
                         :like-status="likeStatus"
+                        :is-change-slide="isChangeSlide"
                         @doAction="doAction"
                     />
                 </swiper-item>
@@ -117,8 +121,10 @@
                     item-id="1"
                 >
                     <detail
+                        ref="pageDataTwo"
                         :page-data="pageDataTwo"
                         :like-status="likeStatus"
+                        :is-change-slide="isChangeSlide"
                         @doAction="doAction"
                     />
                 </swiper-item>
@@ -130,14 +136,16 @@
                 item-id="2"
             >
                 <detail
+                    ref="pageDataThree"
                     :page-data="pageDataThree"
                     :like-status="likeStatus"
+                    :is-change-slide="isChangeSlide"
                     @doAction="doAction"
                 />
             </swiper-item>
         </swiper>
 
-        <view
+        <!-- <view
             v-if="isPlayed && isPaused"
             class="pause-cover"
         >
@@ -154,7 +162,7 @@
             style="pointer-events: none;color: #fff"
         >
             加载中
-        </view>
+        </view> -->
     </view>
 </template>
 
@@ -204,16 +212,16 @@ export default {
                 video_img_url: '',
             },
             likeStatus: 0,
-            isPlayed: false,
-            isPaused: false,
-            isVideoWaiting: false,
+            // isPlayed: false,
+            // isPaused: false,
+            // isVideoWaiting: false,
             showShareMask: false,
 
             // #ifdef H5
             isH5: true,
             // #endif
 
-            isFullScreen: false,
+            // isFullScreen: false,
 
             shareDesc: '',
             fr: '',
@@ -291,6 +299,7 @@ export default {
             disableslide: false,
             filterUrl: {},
             queryUrl: '',
+            isChangeSlide: false,
         };
     },
     created() {},
@@ -562,7 +571,6 @@ export default {
             });
         },
         joinGame() {
-            // 等待重新做。
             if (this.isH5) {
                 uni.showToast({
                     icon: 'none',
@@ -570,35 +578,22 @@ export default {
                 });
                 return;
             }
-            api.isLogin().then(() => {
-                // 1未开始，2进行中，3已结束
-
-                api.post('/api/activity/getactivitystatus', {
-                    activity_id: 5,
-                }).then((res) => {
-                    const { status } = res;
-                    if (status === 2) {
-                        uni.navigateTo({
-                            url: '/pages/yiqing/upload/upload',
-                        });
-                    } else if (status === 1) {
-                        uni.showToast({
-                            icon: 'none',
-                            title: '活动未开始',
-                        });
-                    } else if (status === 3) {
-                        uni.showToast({
-                            icon: 'none',
-                            title: '活动已结束',
-                        });
-                    }
-                });
-            });
+            api.isLogin().then(
+                () => {
+                    uni.switchTab({
+                        url: '/pages/tabBar/upload/upload',
+                    });
+                },
+                () => uni.showToast({
+                    icon: 'none',
+                    title: '请先登录',
+                }),
+            );
         },
-        togglePlayStatus() {
-            // this.$refs.video.play();
-            this.isPaused = false;
-        },
+        // togglePlayStatus() {
+        //     this.$refs.video.play();
+        //     this.isPaused = false;
+        // },
         getPageMoreDate(paramData) {
             // 设置接口，根据条件增加参数
             if (this.pageFrom === 'mywork') {
@@ -734,6 +729,7 @@ export default {
             }
             this.id = curPageData.id;
             this.pageData = curPageData;
+            this.isChangeSlide = !this.isChangeSlide;
             this.setGetDetail(curPageData);
             this.getLikeStatus();
         },
@@ -808,6 +804,24 @@ export default {
             this.getPageMoreDate(paramNext).then((res) => {
                 this.pageDataThree = res;
             });
+            uni.getStorage({
+                key: 'hasPromtSlide',
+                complete(res) {
+                    if (!res.data) {
+                        uni.setStorage({
+                            key: 'hasPromtSlide',
+                            data: 'lll',
+                        });
+                        uni.showToast({
+                            title: '上下滑动可以切换喔～',
+                            duration: 3000,
+                            position: 'top',
+                            mask: true,
+                            icon: 'none',
+                        });
+                    }
+                },
+            });
         }
         const myQuery = query;
         delete myQuery.id;
@@ -828,25 +842,6 @@ export default {
         );
         window.addEventListener('orientationchange', this.html5VideoAutoAdjust);
         // #endif
-
-        uni.getStorage({
-            key: 'hasPromtSlide',
-            complete(res) {
-                if (!res.data) {
-                    uni.setStorage({
-                        key: 'hasPromtSlide',
-                        data: 'lll',
-                    });
-                    uni.showToast({
-                        title: '上下滑动可以切换喔～',
-                        duration: 3000,
-                        position: 'top',
-                        mask: true,
-                        icon: 'none',
-                    });
-                }
-            },
-        });
     },
     onHide() {
         // this.isPaused = true;
@@ -874,8 +869,15 @@ export default {
         // position: absolute;
         // left:-999upx;
     }
-    .yellow {
-        color: #ffd339;
+    .h5-full-screen-title {
+        position: fixed;
+        width: 100%;
+        z-index: 10000;
+        color: #fff;
+        padding-top: 20upx;
+        padding-left: 20upx;
+        box-sizing: border-box;
+        top: 0;
     }
     .out-swiper {
         width: 100%;

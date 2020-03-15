@@ -1,5 +1,11 @@
 <template>
     <view class="swiper-detail-box">
+        <view
+            v-show="isFullScreen && isH5"
+            class="h5-full-screen-title text-one-line"
+        >
+            {{ pageData.resource_name }}
+        </view>
         <template v-if="pageData.resource_type === 2">
             <view class="main-swiper">
                 <swiper
@@ -57,6 +63,7 @@
                     </cover-view>
                 </cover-view>
                 <video
+                    id="myVideo"
                     ref="video"
                     class="video"
                     preload
@@ -66,6 +73,7 @@
                     :loop="true"
                     :poster="pageData.video_img_url"
                     x5-video-player-type="h5-page"
+                    @pause="onPause"
                     @play="onPlay"
                     @waiting="onWaiting"
                     @timeupdate="onTimeupdate"
@@ -156,6 +164,24 @@
                 我要参与
             </view>
         </view>
+        <view
+            v-if="isPaused && isPlayed"
+            class="pause-cover"
+        >
+            <view
+                class="uni-video-cover"
+                @click="togglePlayStatus"
+            >
+                <div class="uni-video-cover-play-button" />
+            </view>
+        </view>
+        <view
+            v-if="isVideoWaiting"
+            class="uni-video-cover"
+            style="pointer-events: none;color: #fff"
+        >
+            加载中
+        </view>
     </view>
 </template>
 
@@ -187,6 +213,10 @@ export default {
             type: Number,
             default: 0,
         },
+        isChangeSlide: {
+            type: Boolean,
+            default: false,
+        },
     },
     data() {
         return {
@@ -197,7 +227,19 @@ export default {
             isH5: true,
             // #endif
             isAutoPlay: false,
+            isPlayed: false,
+            isPaused: false,
+            isVideoWaiting: false,
         };
+    },
+    watch: {
+        isChangeSlide() {
+            // this.$refs.video.pause();
+            this.onPause();
+        },
+    },
+    mounted() {
+        this.videoContext = uni.createVideoContext('myVideo');
     },
     methods: {
         panelAction(action) {
@@ -212,10 +254,51 @@ export default {
         joinGame() {
             this.$emit('doAction', 'joinGame');
         },
-        onPlay() {},
-        onWaiting() {},
-        onTimeupdate() {},
-        onFullScreenChange() {},
+        onPause() {
+            this.isPaused = true;
+            console.log('暂停了-------');
+        },
+        togglePlayStatus() {
+            console.log('12121212121togglePlayStatus');
+            console.log(this.videoContext);
+            // if (!this.isPlayed) {
+            //     this.$refs.video.play();
+            //     this.isPaused = false;
+            // } else {
+            //     this.videoContext.stop();
+            //     this.isPaused = true;
+            //     this.isPlayed = false;
+            // }
+            this.$refs.video.play();
+            this.isPaused = false;
+        },
+        onPlay() {
+            console.log('play----------------');
+            if (!this.isPlayed) {
+                this.pageData.play_count = this.pageData.play_count + 1;
+                // api.get('/api/works/playcount', {
+                //     id: this.detailId,
+                // });
+            }
+            this.isVideoWaiting = false;
+            this.isPlayed = true;
+        },
+        onWaiting() {
+            this.isPlayed = true;
+            this.isVideoWaiting = true;
+            this.timeupdateCounter = 0;
+        },
+        onTimeupdate() {
+            if (this.timeupdateCounter > 1) {
+                this.isVideoWaiting = false;
+            } else {
+                this.timeupdateCounter += 1;
+            }
+        },
+        onFullScreenChange(e) {
+            const isFullScreenMode = e.detail.fullScreen;
+            this.isFullScreen = isFullScreenMode;
+        },
     },
 };
 </script>
@@ -230,16 +313,6 @@ export default {
 }
 .lightyellow {
     color: #ffd339;
-}
-.h5-full-screen-title {
-    position: fixed;
-    width: 100%;
-    z-index: 10000;
-    color: #fff;
-    padding-top: 20upx;
-    padding-left: 20upx;
-    box-sizing: border-box;
-    top: 0;
 }
 
 .mp-weixin-full-screen-title {
