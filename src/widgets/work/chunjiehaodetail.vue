@@ -131,10 +131,11 @@
                 帮TA拉票
             </button>
             <button
+                v-if="pageFrom"
                 class="btn"
                 @click="goHome"
             >
-                返回首页
+                返回1首页
             </button>
         </view>
         <!-- v-if="!isH5" -->
@@ -174,6 +175,10 @@ export default {
             type: Number,
             default: 0,
         },
+        pageFrom: {
+            type: String,
+            default: '',
+        },
     },
     data() {
         return {
@@ -198,6 +203,9 @@ export default {
         },
         joinGame() {
             this.$emit('doAction', 'joinGame');
+        },
+        goHome() {
+            this.$emit('doAction', 'goHome');
         },
         onPlay() {},
         onWaiting() {},

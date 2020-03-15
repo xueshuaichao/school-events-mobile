@@ -274,6 +274,7 @@ export default {
             search: '',
             disableslide: false,
             filterUrl: {},
+            queryUrl: '',
         };
     },
     created() {},
@@ -296,7 +297,8 @@ export default {
             const pages = getCurrentPages(); // 获取加载的页面
             const currentPage = pages[pages.length - 1]; // 获取当前页面的对象
             const url = currentPage.route || 'pages/yiqing/detail/detail';
-            const scene = `id=${this.id}` || 'id=325';
+            const scene = `id=${this.id}&${this.queryUrl}&curPosition=${this.prePageParam.slideCurPosition}`
+                || 'id=325';
             api.post('/api/weixin/getminiqrcode', {
                 path: url,
                 scene,
@@ -713,9 +715,11 @@ export default {
                 default:
                     console.log('-');
             }
-            this.id = curPageData.id;
+            this.detailId = curPageData.id;
+            this.id = curPageData.resource_id;
             this.pageData = curPageData;
             this.setGetDetail(curPageData);
+            this.getLikeStatus();
         },
         getPageSizeInfo(position) {
             // 设置参数
@@ -740,12 +744,16 @@ export default {
             if (action === 'toggleLike') {
                 this.toggleLike();
             }
+            if (action === 'goHome') {
+                this.goHome();
+            }
         },
         stopTouchMove() {
             //  禁止滑动。
         },
     },
     onLoad(query) {
+        console.log(query, 'query----------------');
         this.sort = Number(utils.getParam(query, 'sort')) || 1;
         this.id = utils.getParam(query, 'id');
         this.actCat = utils.getParam(query, 'actCat') || 0;
@@ -796,7 +804,17 @@ export default {
                 this.pageDataThree = res;
             });
         }
+        const myQuery = query;
+        delete myQuery.id;
+        delete myQuery.curPosition;
+        const myQuery2 = JSON.stringify(myQuery);
+        const queryStra = myQuery2.replace(/:/g, '=');
+        const queryStrb = queryStra.replace(/"/g, '');
 
+        const queryStrc = queryStrb.replace(/,/g, '&');
+        const queryStrd = queryStrc.match(/\{([^)]*)\}/)[1];
+        this.queryUrl = queryStrd;
+        console.log(this.queryUrl, 'url----');
         // hack for html5 video size notwoking
         // #ifdef H5
         window.removeEventListener(

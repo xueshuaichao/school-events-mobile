@@ -89,6 +89,7 @@
                 item-id="0"
             >
                 <detail
+                    :page-from="pageFrom"
                     :page-data="pageDataOne"
                     :like-status="likeStatus"
                     @doAction="doAction"
@@ -102,6 +103,7 @@
                     @touchmove.stop="stopTouchMove"
                 >
                     <detail
+                        :page-from="pageFrom"
                         :page-data="pageDataTwo"
                         :like-status="likeStatus"
                         @doAction="doAction"
@@ -114,6 +116,7 @@
                     item-id="1"
                 >
                     <detail
+                        :page-from="pageFrom"
                         :page-data="pageDataTwo"
                         :like-status="likeStatus"
                         @doAction="doAction"
@@ -127,6 +130,7 @@
                 item-id="2"
             >
                 <detail
+                    :page-from="pageFrom"
                     :page-data="pageDataThree"
                     :like-status="likeStatus"
                     @doAction="doAction"
@@ -192,6 +196,7 @@ export default {
     },
     data() {
         return {
+            detailId: '',
             id: '',
             // video: 'https://node.imgio.in/demo/birds.m3u8',
             video:
@@ -281,6 +286,7 @@ export default {
             search: '',
             disableslide: false,
             filterUrl: {},
+            queryUrl: '',
         };
     },
     methods: {
@@ -302,7 +308,8 @@ export default {
             const pages = getCurrentPages(); // 获取加载的页面
             const currentPage = pages[pages.length - 1]; // 获取当前页面的对象
             const url = currentPage.route || 'pages/chunjie/detail/detail';
-            const scene = `id=${this.id}` || 'id=325';
+            const scene = `id=${this.id}&${this.queryUrl}&curPosition=${this.prePageParam.slideCurPosition}`
+                || 'id=325';
             api.post('/api/weixin/getminiqrcode', {
                 path: url,
                 scene,
@@ -437,6 +444,7 @@ export default {
                 (res) => {
                     this.isLoading = false;
                     console.log(res);
+                    this.detailId = res.id;
                     this.pageData = res;
                     this.pageDataTwo = res;
                     this.setGetDetail(res);
@@ -506,7 +514,7 @@ export default {
             if (!this.isPlayed) {
                 this.pageData.play_count = this.pageData.play_count + 1;
                 api.get('/api/works/playcount', {
-                    id: this.id,
+                    id: this.detailId,
                 });
             }
             this.isVideoWaiting = false;
@@ -732,7 +740,8 @@ export default {
                 default:
                     console.log('-');
             }
-            this.id = curPageData.id;
+            this.detailId = curPageData.id;
+            this.id = curPageData.resource_id;
             this.pageData = curPageData;
             this.setGetDetail(curPageData);
         },
@@ -758,6 +767,9 @@ export default {
 
             if (action === 'toggleLike') {
                 this.toggleLike();
+            }
+            if (action === 'goHome') {
+                this.goHome();
             }
         },
         stopTouchMove() {
@@ -816,6 +828,17 @@ export default {
                 this.pageDataThree = res;
             });
         }
+        const myQuery = query;
+        delete myQuery.id;
+        delete myQuery.curPosition;
+        const myQuery2 = JSON.stringify(myQuery);
+        const queryStra = myQuery2.replace(/:/g, '=');
+        const queryStrb = queryStra.replace(/"/g, '');
+
+        const queryStrc = queryStrb.replace(/,/g, '&');
+        const queryStrd = queryStrc.match(/\{([^)]*)\}/)[1];
+        this.queryUrl = queryStrd;
+
         // hack for html5 video size notwoking
         // #ifdef H5
         window.removeEventListener(
@@ -1019,7 +1042,8 @@ export default {
 
     swiper {
         width: 750rpx;
-        height: 1334rpx;
+        // height: 1334rpx;
+        height: 100vh;
     }
 
     .main-swiper {
@@ -1045,14 +1069,14 @@ export default {
         }
     }
 
-    .join-game {
-        width: 134rpx;
-        height: 143rpx;
-        position: fixed;
-        right: 30rpx;
-        bottom: 20rpx;
-        z-index: 100;
-    }
+    // .join-game {
+    //     width: 134rpx;
+    //     height: 143rpx;
+    //     position: fixed;
+    //     right: 30rpx;
+    //     bottom: 20rpx;
+    //     z-index: 100;
+    // }
 
     .from {
         font-size: 24rpx;

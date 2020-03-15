@@ -95,12 +95,6 @@
                     {{ pageData.resource_name }}
                 </text>
             </view>
-            <!-- <view class="extra">
-                {{ pageData.publish_time }}
-                {{ pageData.play_count }}次播放 点赞：{{
-                    pageData.praise_count
-                }}
-            </view> -->
             <view class="intro text-three-line">
                 {{ pageData.introduce || "暂无简介" }}
             </view>
@@ -127,14 +121,13 @@
                 >
                     <image
                         class="icon"
-                        :status="likeStatus"
                         :src="
                             likeStatus === 0
                                 ? '/static/images/yiqing/detail/like.png'
                                 : '/static/images/yiqing/detail/like-ac.png'
                         "
                     />
-                    <view> {{ pageData.praise_count }} </view>
+                    <view> {{ pageData.ticket }} </view>
                 </view>
 
                 <view
@@ -160,11 +153,19 @@
                 class="btn primary"
                 @click="joinGame"
             >
-                我要参与
                 <image
                     class="join"
-                    src="/static/images/yiqing/arrow.png"
-                />
+                    src="../../../static/images/yiqing/like.png"
+                />我要参与
+            </view>
+            <view
+                class="btn"
+                @click="goHome"
+            >
+                <image
+                    class="arrow"
+                    src="../../../static/images/yiqing/arrow.png"
+                />返回首页
             </view>
         </view>
     </view>
@@ -222,6 +223,9 @@ export default {
         },
         joinGame() {
             this.$emit('doAction', 'joinGame');
+        },
+        goHome() {
+            this.$emit('doAction', 'goHome');
         },
         onPlay() {},
         onWaiting() {},

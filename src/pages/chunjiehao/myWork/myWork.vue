@@ -333,7 +333,7 @@ export default {
             if (this.tabActiveIndex === 2) {
                 if (this.type === 'myWork') {
                     uni.navigateTo({
-                        url: `/pages/chunjiehao/detail/detail?id=${item.id}&fr=${this.fr}&from=4&disableslide=1`,
+                        url: `/pages/chunjiehao/detail/detail?id=${item.id}&fr=${this.fr}&disableslide=1`,
                     });
                 } else {
                     uni.navigateTo({
@@ -341,8 +341,8 @@ export default {
                             item.id
                         }&fr=${this.fr}&total=${
                             this.total
-                        }&curPosition=${position + 1}&from=4&actSort=${this
-                            .filter.sort || ''}&kw=${this.filter.search}`,
+                        }&curPosition=${position + 1}&actSort=${this.filter
+                            .sort || ''}&kw=${this.filter.search}`,
                     });
                 }
             }

@@ -91,6 +91,7 @@
                 <detail
                     :page-data="pageDataOne"
                     :like-status="likeStatus"
+                    :page-from="pageFrom"
                     @doAction="doAction"
                 />
             </swiper-item>
@@ -104,6 +105,7 @@
                     <detail
                         :page-data="pageDataTwo"
                         :like-status="likeStatus"
+                        :page-from="pageFrom"
                         @doAction="doAction"
                     />
                 </swiper-item>
@@ -116,6 +118,7 @@
                     <detail
                         :page-data="pageDataTwo"
                         :like-status="likeStatus"
+                        :page-from="pageFrom"
                         @doAction="doAction"
                     />
                 </swiper-item>
@@ -129,6 +132,7 @@
                 <detail
                     :page-data="pageDataThree"
                     :like-status="likeStatus"
+                    :page-from="pageFrom"
                     @doAction="doAction"
                 />
             </swiper-item>
@@ -191,6 +195,7 @@ export default {
     },
     data() {
         return {
+            detailId: '',
             id: '',
             // video: 'https://node.imgio.in/demo/birds.m3u8',
             video:
@@ -280,6 +285,7 @@ export default {
             search: '',
             disableslide: false,
             filterUrl: {},
+            queryUrl: '',
         };
     },
     methods: {
@@ -301,7 +307,8 @@ export default {
             const pages = getCurrentPages(); // 获取加载的页面
             const currentPage = pages[pages.length - 1]; // 获取当前页面的对象
             const url = currentPage.route || 'pages/chunjiehao/detail/detail';
-            const scene = `id=${this.id}` || 'id=325';
+            const scene = `id=${this.id}&${this.queryUrl}&curPosition=${this.prePageParam.slideCurPosition}`
+                || 'id=325';
             api.post('/api/weixin/getminiqrcode', {
                 path: url,
                 scene,
@@ -731,7 +738,8 @@ export default {
                 default:
                     console.log('-');
             }
-            this.id = curPageData.id;
+            this.detailId = curPageData.id;
+            this.id = curPageData.resource_id;
             this.pageData = curPageData;
             this.setGetDetail(curPageData);
         },
@@ -757,6 +765,9 @@ export default {
 
             if (action === 'toggleLike') {
                 this.toggleLike();
+            }
+            if (action === 'goHome') {
+                this.goHome();
             }
         },
         stopTouchMove() {
@@ -815,6 +826,16 @@ export default {
                 this.pageDataThree = res;
             });
         }
+        const myQuery = query;
+        delete myQuery.id;
+        delete myQuery.curPosition;
+        const myQuery2 = JSON.stringify(myQuery);
+        const queryStra = myQuery2.replace(/:/g, '=');
+        const queryStrb = queryStra.replace(/"/g, '');
+
+        const queryStrc = queryStrb.replace(/,/g, '&');
+        const queryStrd = queryStrc.match(/\{([^)]*)\}/)[1];
+        this.queryUrl = queryStrd;
         // hack for html5 video size notwoking
         // #ifdef H5
         window.removeEventListener(

@@ -102,7 +102,7 @@
                 </text>
                 <text
                     v-if="pageData.achievement"
-                    class="deatil-achievement yellow"
+                    class="deatil-achievement lightyellow"
                 >
                     成绩：{{ pageData.achievement
                     }}{{ pageData.achievement_unit }}
@@ -154,10 +154,6 @@
                 @click="joinGame"
             >
                 我要参与
-                <image
-                    class="join"
-                    src="/static/images/yiqing/arrow.png"
-                />
             </view>
         </view>
     </view>
@@ -228,6 +224,12 @@ export default {
 .swiper-detail-box {
     width: 100%;
     height: 100vh;
+}
+.yellow {
+    color: #ff9b35;
+}
+.lightyellow {
+    color: #ffd339;
 }
 .h5-full-screen-title {
     position: fixed;
@@ -335,6 +337,7 @@ export default {
         width: 34rpx;
         height: 32rpx;
         margin-right: 16upx;
+        vertical-align: super;
     }
 
     .author-info {
@@ -343,12 +346,13 @@ export default {
             font-size: 34upx;
             position: relative;
             top: -2rpx;
+            display: inline-block;
+            width: 400rpx;
         }
-        margin-bottom: 10rpx;
     }
     .school-and-record {
         font-size: 24upx;
-        margin: 2upx 0 14upx 0;
+        margin: -10upx 0 14upx 0;
     }
 
     .author-from {
@@ -386,7 +390,7 @@ export default {
 .fixed-panel {
     position: absolute;
     width: 146rpx;
-    right: 30rpx;
+    right: 0;
     bottom: 20rpx;
     color: #ffde98;
     font-size: 24rpx;
@@ -421,33 +425,33 @@ export default {
     }
 }
 .btn {
-    width: 174rpx;
-    height: 54rpx;
+    width: 146rpx;
+    height: 56rpx;
     background: rgba(222, 39, 30, 1);
     border-radius: 27rpx 0px 0px 27rpx;
     color: #0096ff;
     font-size: 24rpx;
     background: #fff;
-    line-height: 54rpx;
+    line-height: 56rpx;
     text-align: center;
     margin-bottom: 30rpx;
     padding: 0;
-
+    position: relative;
+    &::before {
+        display: block;
+        position: absolute;
+        right: 12rpx;
+        top: 20rpx;
+        content: "";
+        width: 13rpx;
+        height: 13rpx;
+        border-top: 1rpx solid #fff;
+        border-right: 1rpx solid #fff;
+        transform: rotate(45deg);
+    }
     &.primary {
         background: #0096ff;
         color: #fff;
-    }
-    .join {
-        width: 34upx;
-        height: 31upx;
-        vertical-align: middle;
-        margin-right: 8upx;
-    }
-    .arrow {
-        width: 12upx;
-        height: 21upx;
-        vertical-align: middle;
-        margin-right: 8upx;
     }
 }
 </style>

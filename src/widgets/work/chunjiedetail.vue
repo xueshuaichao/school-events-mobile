@@ -131,6 +131,7 @@
                 帮TA拉票
             </button>
             <button
+                v-if="pageFrom"
                 class="btn"
                 @click="goHome"
             >
@@ -202,6 +203,9 @@ export default {
         joinGame() {
             this.$emit('doAction', 'joinGame');
         },
+        goHome() {
+            this.$emit('doAction', 'goHome');
+        },
         onPlay() {},
         onWaiting() {},
         onTimeupdate() {},
@@ -214,6 +218,7 @@ export default {
 .swiper-detail-box {
     width: 100%;
     height: 100vh;
+    overflow: hidden;
 }
 .h5-full-screen-title {
     position: fixed;

@@ -155,13 +155,13 @@ export default {
             if (this.tabIndex) {
                 uni.navigateTo({
                     url: `/pages/chunjiehao/detail/detail?id=${item.id}&total=${
-                        this.total
+                        this.total > 100 ? 100 : this.total
                     }&fr=${this.fr2}&curPosition=${position + 1}`,
                 });
             } else {
                 uni.navigateTo({
                     url: `/pages/chunjie/detail/detail?id=${item.id}&total=${
-                        this.total
+                        this.total > 100 ? 100 : this.total
                     }&fr=${this.fr1}&curPosition=${position + 1}`,
                 });
             }

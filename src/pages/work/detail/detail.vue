@@ -290,6 +290,7 @@ export default {
             keyword: '',
             disableslide: false,
             filterUrl: {},
+            queryUrl: '',
         };
     },
     created() {},
@@ -311,8 +312,9 @@ export default {
             // eslint-disable-next-line no-undef
             const pages = getCurrentPages(); // 获取加载的页面
             const currentPage = pages[pages.length - 1]; // 获取当前页面的对象
-            const url = currentPage.route || 'pages/yiqing/detail/detail';
-            const scene = `id=${this.id}` || 'id=325';
+            const url = currentPage.route || 'pages/work/detail/detail';
+            const scene = `id=${this.id}&${this.queryUrl}&curPosition=${this.prePageParam.slideCurPosition}`
+                || 'id=325';
             api.post('/api/weixin/getminiqrcode', {
                 path: url,
                 scene,
@@ -547,7 +549,7 @@ export default {
         initShare(res) {
             const titleList = [
                 `我的作品《${res.resource_name}》，快来帮我助力吧！`,
-                `我的作品《${res.resource_name}》，大家“艺”起来，为梦想加油！'`,
+                `我的作品《${res.resource_name}》，快来给我点赞吧！`,
             ];
             const title = titleList[Math.floor(Math.random() * titleList.length)];
             const desc = `${res.resource_name}-${res.create_name}`;
@@ -733,6 +735,7 @@ export default {
             this.id = curPageData.id;
             this.pageData = curPageData;
             this.setGetDetail(curPageData);
+            this.getLikeStatus();
         },
         getPageSizeInfo(position) {
             // 设置参数
@@ -806,6 +809,16 @@ export default {
                 this.pageDataThree = res;
             });
         }
+        const myQuery = query;
+        delete myQuery.id;
+        delete myQuery.curPosition;
+        const myQuery2 = JSON.stringify(myQuery);
+        const queryStra = myQuery2.replace(/:/g, '=');
+        const queryStrb = queryStra.replace(/"/g, '');
+
+        const queryStrc = queryStrb.replace(/,/g, '&');
+        const queryStrd = queryStrc.match(/\{([^)]*)\}/)[1];
+        this.queryUrl = queryStrd;
 
         // hack for html5 video size notwoking
         // #ifdef H5
