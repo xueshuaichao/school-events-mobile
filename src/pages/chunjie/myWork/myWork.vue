@@ -339,11 +339,11 @@ export default {
             if (this.tabActiveIndex === 2) {
                 if (this.type === 'myWork') {
                     uni.navigateTo({
-                        url: `/pages/work/detail/detail?id=${item.id}&fr=${this.fr}&from=3&disableslide=1`,
+                        url: `/pages/chunjie/detail/detail?id=${item.id}&fr=${this.fr}&from=3&disableslide=1`,
                     });
                 } else {
                     uni.navigateTo({
-                        url: `/pages/work/detail/detail?id=${item.id}&fr=${
+                        url: `/pages/chunjie/detail/detail?id=${item.id}&fr=${
                             this.fr
                         }&total=${this.total}&curPosition=${position
                             + 1}&from=3&actSort=${this.filter.sort || ''}&kw=${

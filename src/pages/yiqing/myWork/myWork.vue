@@ -335,11 +335,11 @@ export default {
             if (this.tabActiveIndex === 2) {
                 if (this.type === 'myWork') {
                     uni.navigateTo({
-                        url: `/pages/work/detail/detail?id=${item.id}&fr=${this.fr}&from=5&disableslide=1`,
+                        url: `/pages/yiqing/detail/detail?id=${item.id}&fr=${this.fr}&from=5&disableslide=1`,
                     });
                 } else {
                     uni.navigateTo({
-                        url: `/pages/work/detail/detail?id=${item.id}&fr=${
+                        url: `/pages/yiqing/detail/detail?id=${item.id}&fr=${
                             this.fr
                         }&total=${this.total}&curPosition=${position
                             + 1}&from=5&actSort=${this.filter.sort || ''}&kw=${

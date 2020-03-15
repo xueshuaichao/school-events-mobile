@@ -83,33 +83,40 @@
                     {{ pageData.create_name }}
                 </text>
             </view>
-            <view
-                v-if="pageData.record"
-                class="school-and-record"
-            >
-                <text>{{ pageData.school_name }}</text>
-                <image
-                    class="icon-grail"
-                    :src="`/static/images/work/record-${pageData.record}.png`"
-                />
-                <text class="yellow">
-                    {{ recordTxts[pageData.record - 1] }}
-                </text>
+            <view class="author-from">
+                {{ pageData.school_name }}
             </view>
             <view class="work-name-wrap text-one-line">
+                <image
+                    class="avatar"
+                    src="/static/images/work/file.png"
+                />
                 <text class="work-name text-one-line">
                     {{ pageData.resource_name }}
                 </text>
-                <text
-                    v-if="pageData.achievement"
-                    class="deatil-achievement yellow"
-                >
-                    成绩：{{ pageData.achievement
-                    }}{{ pageData.achievement_unit }}
-                </text>
             </view>
+            <!-- <view class="extra">
+                {{ pageData.publish_time }}
+                {{ pageData.play_count }}次播放 点赞：{{
+                    pageData.praise_count
+                }}
+            </view> -->
             <view class="intro text-three-line">
                 {{ pageData.introduce || "暂无简介" }}
+            </view>
+            <view class="from">
+                <text
+                    v-if="pageData.recommend"
+                    class="recommend text-one-line"
+                >
+                    单位：{{ pageData.recommend || "是简介信息这是简介信息这" }}
+                </text>
+                <text
+                    v-if="pageData.teacher"
+                    class="teacher text-one-line"
+                >
+                    指导老师：{{ pageData.teacher || "李四" }}
+                </text>
             </view>
         </view>
         <view class="fixed-panel">
@@ -324,31 +331,26 @@ export default {
 }
 .content {
     position: absolute;
-    bottom: 20upx;
+    bottom: 0;
     width: 480rpx;
     padding: 30upx;
     color: #fff;
-    left: 0;
     pointer-events: none;
     .avatar {
         display: inline-block;
-        width: 34rpx;
-        height: 32rpx;
+        width: 24rpx;
+        height: 26rpx;
         margin-right: 16upx;
     }
 
     .author-info {
         .author-name {
             color: #fff;
-            font-size: 34upx;
+            font-size: 28upx;
             position: relative;
             top: -2rpx;
         }
         margin-bottom: 10rpx;
-    }
-    .school-and-record {
-        font-size: 24upx;
-        margin: 2upx 0 14upx 0;
     }
 
     .author-from {
@@ -362,25 +364,25 @@ export default {
         margin-bottom: 13rpx;
         font-weight: 600;
         position: relative;
+        top: -2rpx;
     }
-    .deatil-achievement {
-        margin-left: 10upx;
-        font-size: 24upx;
+
+    .extra {
+        font-size: 22upx;
+        margin-bottom: 32upx;
     }
 
     .intro {
-        font-size: 25upx;
+        font-size: 28upx;
         line-height: 44upx;
         margin-bottom: 30rpx;
     }
 
     .icon-grail {
         display: inline-block;
-        width: 26upx;
-        height: 22upx;
-        margin-left: 22upx;
-        margin-right: 2upx;
-        vertical-align: middle;
+        width: 32upx;
+        height: 32upx;
+        margin-left: 32upx;
     }
 }
 .fixed-panel {

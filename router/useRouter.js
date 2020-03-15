@@ -141,6 +141,15 @@ const routesConfig = {
             path: '/pages/yiqing/detail/detail',
         },
         {
+            path: '/pages/yiqing/myWork/myWork',
+        },
+        {
+            path: '/pages/yiqing/upload/upload',
+        },
+        {
+            path: '/pages/yiqing/upload/result',
+        },
+        {
             path: '/pages/login/login',
         },
         {

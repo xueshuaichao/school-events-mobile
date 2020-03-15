@@ -93,7 +93,7 @@
             >
                 <detail
                     :page-data="pageDataOne"
-                    :page-from="pageFrom"
+                    :like-status="likeStatus"
                     @doAction="doAction"
                 />
             </swiper-item>
@@ -106,7 +106,7 @@
                 >
                     <detail
                         :page-data="pageDataTwo"
-                        :page-from="pageFrom"
+                        :like-status="likeStatus"
                         @doAction="doAction"
                     />
                 </swiper-item>
@@ -118,7 +118,7 @@
                 >
                     <detail
                         :page-data="pageDataTwo"
-                        :page-from="pageFrom"
+                        :like-status="likeStatus"
                         @doAction="doAction"
                     />
                 </swiper-item>
@@ -131,7 +131,7 @@
             >
                 <detail
                     :page-data="pageDataThree"
-                    :page-from="pageFrom"
+                    :like-status="likeStatus"
                     @doAction="doAction"
                 />
             </swiper-item>
@@ -272,19 +272,13 @@ export default {
             prompt: false,
             canvasImg: '',
             showTicketMask: false,
-            // startY: 0,
+
             pageFrom: '',
-            pagaDataCenter: {},
+
             pageDataTwo: {},
             pageDataThree: {},
             pageDataOne: {},
-            pageParam: {
-                page_size: 10,
-                type: 2,
-                page_num: 1,
-                current_position: 0,
-                // cat_id: {one_level_id: 1}
-            },
+
             prePageParam: {},
             currentSwiper: 1,
             outSwiperIncrease: true,
@@ -443,15 +437,7 @@ export default {
             console.log(e, 'fail-------------------');
         },
         getData() {
-            if (this.pageFrom > 2) {
-                this.getDateFromId('/api/activity/detail');
-            } else {
-                this.getDateFromId('/api/works/detail');
-            }
-            this.getLikeStatus();
-        },
-        getDateFromId(url) {
-            api.get(url, {
+            api.get('/api/works/detail', {
                 id: this.id,
             }).then(
                 (res) => {
@@ -473,6 +459,7 @@ export default {
                     }, 1500);
                 },
             );
+            this.getLikeStatus();
         },
         setGetDetail(res) {
             this.posterConfig.images[1].url = res.video_img_url;
@@ -573,6 +560,7 @@ export default {
             });
         },
         joinGame() {
+            // 等待重新做。
             if (this.isH5) {
                 uni.showToast({
                     icon: 'none',
@@ -582,6 +570,7 @@ export default {
             }
             api.isLogin().then(() => {
                 // 1未开始，2进行中，3已结束
+
                 api.post('/api/activity/getactivitystatus', {
                     activity_id: 5,
                 }).then((res) => {
@@ -608,56 +597,21 @@ export default {
             // this.$refs.video.play();
             this.isPaused = false;
         },
-        getPageMoreDate(paramData, cb) {
+        getPageMoreDate(paramData) {
             // 设置接口，根据条件增加参数
             if (this.pageFrom === 'mywork') {
                 // 我的作品的详情，暂时屏蔽了。
-                this.getFromAPI('/api/user/worklist', paramData, cb);
-            } else if (this.pageFrom > 2) {
-                this.postFromAPI(
-                    '/api/activity/resourcelist',
-                    {
-                        ...paramData,
-                        ...this.filterUrl,
-                        activity_id: Number(this.pageFrom),
-                        list_type: 2,
-                    },
-                    cb,
-                );
-            } else {
-                this.postFromAPI(
-                    '/api/works/list',
-                    {
-                        ...paramData,
-                        cat_id: { one_level_id: this.levelid },
-                        sort: this.sort,
-                        keyword: this.keyword,
-                    },
-                    cb,
-                );
+                return this.postFromAPI('/api/user/worklist', paramData);
             }
-        },
-        getFromAPI(url, paramData, cb) {
-            api.post(url, paramData).then((res) => {
-                if (res.id) {
-                    if (cb) {
-                        cb(res);
-                    }
-                } else if (cb) {
-                    cb(false);
-                }
+            return this.postFromAPI('/api/works/list', {
+                ...paramData,
+                cat_id: { one_level_id: this.levelid },
+                sort: this.sort,
+                keyword: this.keyword,
             });
         },
-        postFromAPI(url, paramData, cb) {
-            api.post(url, paramData).then((res) => {
-                if (res.id) {
-                    if (cb) {
-                        cb(res);
-                    }
-                } else if (cb) {
-                    cb(false);
-                }
-            });
+        postFromAPI(url, paramData) {
+            return api.post(url, paramData);
         },
         changeOutSwiper(event) {
             //  已经滑动到下一个作品，获取下下个，或者上上个作品。
@@ -722,7 +676,7 @@ export default {
             this.setSwiperPageData(event, objPosition);
         },
         setSwiperPageData(event, objPosition) {
-            this.getPageMoreDate(objPosition, (res) => {
+            this.getPageMoreDate(objPosition).then((res) => {
                 //  滚动的时候去获取得到第三页的详情，详情有值再修改轮播Item匹配的数据，详情没有值，就是获取到了最后一个数据
                 if (res) {
                     if (this.outSwiperIncrease) {
@@ -813,31 +767,15 @@ export default {
         this.levelid = Number(utils.getParam(query, 'levelid')) || -1;
         this.sort = Number(utils.getParam(query, 'sort')) || 1;
         this.id = utils.getParam(query, 'id');
-        this.actCat = utils.getParam(query, 'actCat') || 0;
+
         this.keyword = utils.getParam(query, 'keyword') || '';
+
         this.disableslide = utils.getParam(query, 'disableslide') || false;
 
-        this.actSort = utils.getParam(query, 'actSort') || '';
         this.fr = utils.getParam(query, 'fr') || '';
-        this.search = utils.getParam(query, 'kw') || '';
-        if (this.search) {
-            this.filterUrl.search = this.search;
-        }
-        if (this.actSort) {
-            this.filterUrl.sort = this.actSort;
-        }
-        if (this.actCat) {
-            this.filterUrl.activity_cat = this.actCat;
-        }
 
         const curPosition = Number(utils.getParam(query, 'curPosition')) || 0;
         const total = Number(utils.getParam(query, 'total')) || 1;
-        console.log(
-            utils.getParam(query, 'total'),
-            this.pageFrom,
-            typeof this.pageFrom,
-            '.....onLoad.....',
-        );
 
         // 获取detail页面的内容
         this.getData();
@@ -861,15 +799,11 @@ export default {
             }
             const paramPre = this.getPageSizeInfo(toPreTarget);
             const paramNext = this.getPageSizeInfo(toNewTarget);
-            this.getPageMoreDate(paramPre, (res) => {
-                if (res) {
-                    this.pageDataOne = res;
-                }
+            this.getPageMoreDate(paramPre).then((res) => {
+                this.pageDataOne = res;
             });
-            this.getPageMoreDate(paramNext, (res) => {
-                if (res) {
-                    this.pageDataThree = res;
-                }
+            this.getPageMoreDate(paramNext).then((res) => {
+                this.pageDataThree = res;
             });
         }
 

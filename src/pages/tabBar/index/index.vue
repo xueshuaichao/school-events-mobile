@@ -225,7 +225,9 @@
             :info="workData.individual.list"
             :cat-id="1"
             :sort="4"
-            :total="workData.individual.total"
+            :total="
+                workData.individual.total > 10 ? 10 : workData.individual.total
+            "
         />
         <work
             :title="'爱挑战优秀团体'"
@@ -233,7 +235,7 @@
             :info="workData.team.list"
             :cat-id="2"
             :sort="4"
-            :total="workData.team.total"
+            :total="workData.team.total > 10 ? 10 : workData.team.total"
         />
         <work
             :title="'才艺秀优秀作品'"
@@ -241,7 +243,7 @@
             :info="workData.talent.list"
             :cat-id="3"
             :sort="4"
-            :total="workData.talent.total"
+            :total="workData.talent.total > 10 ? 10 : workData.talent.total"
         />
 
         <!-- news -->

@@ -83,83 +83,65 @@
                     {{ pageData.create_name }}
                 </text>
             </view>
-            <view
-                v-if="pageData.record"
-                class="school-and-record"
-            >
-                <text>{{ pageData.school_name }}</text>
-                <image
-                    class="icon-grail"
-                    :src="`/static/images/work/record-${pageData.record}.png`"
-                />
-                <text class="yellow">
-                    {{ recordTxts[pageData.record - 1] }}
-                </text>
+            <view class="author-from">
+                {{ pageData.school_name }}
             </view>
             <view class="work-name-wrap text-one-line">
+                <image
+                    class="avatar"
+                    src="/static/images/work/file.png"
+                />
                 <text class="work-name text-one-line">
                     {{ pageData.resource_name }}
-                </text>
-                <text
-                    v-if="pageData.achievement"
-                    class="deatil-achievement yellow"
-                >
-                    成绩：{{ pageData.achievement
-                    }}{{ pageData.achievement_unit }}
                 </text>
             </view>
             <view class="intro text-three-line">
                 {{ pageData.introduce || "暂无简介" }}
             </view>
+            <view class="from">
+                <text
+                    v-if="pageData.recommend"
+                    class="recommend text-one-line"
+                >
+                    单位：{{ pageData.recommend || "是简介信息这是简介信息这" }}
+                </text>
+                <text
+                    v-if="pageData.teacher"
+                    class="teacher text-one-line"
+                >
+                    指导老师：{{ pageData.teacher || "李四" }}
+                </text>
+            </view>
         </view>
         <view class="fixed-panel">
-            <view class="icon-wrap">
-                <view
-                    class="item"
-                    @click="toggleLike"
-                >
-                    <image
-                        class="icon"
-                        :status="likeStatus"
-                        :src="
-                            likeStatus === 0
-                                ? '/static/images/yiqing/detail/like.png'
-                                : '/static/images/yiqing/detail/like-ac.png'
-                        "
-                    />
-                    <view> {{ pageData.praise_count }} </view>
-                </view>
-
-                <view
-                    class="item"
-                    @click="handleCanvass"
-                >
-                    <image
-                        class="icon"
-                        src="/static/images/yiqing/detail/share.png"
-                    />
-                </view>
-
-                <view class="item">
-                    <image
-                        class="icon"
-                        src="/static/images/yiqing/detail/view.png"
-                    />
-                    <view> {{ pageData.play_count }} </view>
-                </view>
+            <view class="result">
+                {{ pageData.ticket || 0 }}票
             </view>
-
-            <view
-                class="btn primary"
-                @click="joinGame"
+            <button
+                class="btn"
+                @click="toggleLike"
             >
-                我要参与
-                <image
-                    class="join"
-                    src="/static/images/yiqing/arrow.png"
-                />
-            </view>
+                {{ likeStatus === 0 ? "投TA一票" : "已投票" }}
+            </button>
+
+            <button
+                class="btn"
+                @click="handleCanvass"
+            >
+                帮TA拉票
+            </button>
+            <button
+                class="btn"
+                @click="goHome"
+            >
+                返回首页
+            </button>
         </view>
+        <image
+            src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/chunjiehao/festival.png"
+            class="join-game"
+            @click="joinGame"
+        />
     </view>
 </template>
 
@@ -190,6 +172,10 @@ export default {
         likeStatus: {
             type: Number,
             default: 0,
+        },
+        pageFrom: {
+            type: String,
+            default: '',
         },
     },
     data() {
@@ -324,31 +310,26 @@ export default {
 }
 .content {
     position: absolute;
-    bottom: 20upx;
+    bottom: 0;
     width: 480rpx;
     padding: 30upx;
     color: #fff;
-    left: 0;
     pointer-events: none;
     .avatar {
         display: inline-block;
-        width: 34rpx;
-        height: 32rpx;
+        width: 24rpx;
+        height: 26rpx;
         margin-right: 16upx;
     }
 
     .author-info {
         .author-name {
             color: #fff;
-            font-size: 34upx;
+            font-size: 28upx;
             position: relative;
             top: -2rpx;
         }
         margin-bottom: 10rpx;
-    }
-    .school-and-record {
-        font-size: 24upx;
-        margin: 2upx 0 14upx 0;
     }
 
     .author-from {
@@ -362,92 +343,80 @@ export default {
         margin-bottom: 13rpx;
         font-weight: 600;
         position: relative;
+        top: -2rpx;
     }
-    .deatil-achievement {
-        margin-left: 10upx;
-        font-size: 24upx;
+
+    .extra {
+        font-size: 22upx;
+        margin-bottom: 32upx;
     }
 
     .intro {
-        font-size: 25upx;
+        font-size: 28upx;
         line-height: 44upx;
         margin-bottom: 30rpx;
     }
 
     .icon-grail {
         display: inline-block;
-        width: 26upx;
-        height: 22upx;
-        margin-left: 22upx;
-        margin-right: 2upx;
-        vertical-align: middle;
+        width: 32upx;
+        height: 32upx;
+        margin-left: 32upx;
+    }
+}
+.from {
+    font-size: 24rpx;
+
+    .recommend {
+        width: 260rpx;
+        display: inline-block;
+    }
+
+    .teacher {
+        display: inline-block;
+        width: 220rpx;
     }
 }
 .fixed-panel {
-    position: absolute;
+    position: fixed;
     width: 146rpx;
-    right: 30rpx;
-    bottom: 20rpx;
-    color: #ffde98;
+    right: 27rpx;
+    bottom: 160rpx;
+    color: #fff0cc;
     font-size: 24rpx;
     text-align: center;
-    z-index: 9999;
-
-    .icon-wrap {
-        //margin-right: 36rpx;
-        text-align: center;
-        position: relative;
-        right: -30rpx;
-        margin-bottom: 20rpx;
-        color: #fff;
-
-        .item {
-            margin-bottom: 10rpx;
-        }
-    }
-
-    .icon {
-        width: 56rpx;
-        height: 56rpx;
-    }
-
-    .btn-icon {
-        width: 56rpx;
-        height: 56rpx;
-        background: transparent;
-        display: inline-block;
-        padding: 0;
-        font-size: 0;
-    }
+    z-index: 100;
 }
+
 .btn {
-    width: 174rpx;
-    height: 54rpx;
-    background: rgba(222, 39, 30, 1);
-    border-radius: 27rpx 0px 0px 27rpx;
-    color: #0096ff;
+    color: #fff0cc;
     font-size: 24rpx;
-    background: #fff;
-    line-height: 54rpx;
+    width: 134rpx;
+    height: 56rpx;
+    background: linear-gradient(
+        0deg,
+        rgba(255, 22, 16, 1),
+        rgba(255, 189, 103, 1)
+    );
+    border-image: linear-gradient(
+            -57deg,
+            rgba(255, 231, 174, 1),
+            rgba(255, 225, 154, 1)
+        )
+        2 2;
+    border-radius: 28rpx;
+    border: 2rpx solid;
+    line-height: 56rpx;
     text-align: center;
     margin-bottom: 30rpx;
     padding: 0;
-
-    &.primary {
-        background: #0096ff;
-        color: #fff;
-    }
-    .join {
-        width: 34upx;
-        height: 31upx;
-        vertical-align: middle;
-        margin-right: 8upx;
-    }
-    .arrow {
-        width: 12upx;
-        height: 21upx;
-        vertical-align: middle;
-        margin-right: 8upx;
-    }
+}
+.join-game {
+    width: 134rpx;
+    height: 143rpx;
+    position: fixed;
+    right: 30rpx;
+    bottom: 20rpx;
+    z-index: 100;
 }
 </style>

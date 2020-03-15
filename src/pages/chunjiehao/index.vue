@@ -571,7 +571,7 @@ export default {
         },
         viewDetail(item, position) {
             uni.navigateTo({
-                url: `/pages/work/detail/detail?id=${item.id}&fr=${
+                url: `/pages/chunjiehao/detail/detail?id=${item.id}&fr=${
                     this.fr
                 }&total=${this.total}&curPosition=${position
                     + 1}&from=4&actSort=${this.filter.sort || ''}`,

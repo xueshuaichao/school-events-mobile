@@ -335,12 +335,12 @@ export default {
     },
     methods: {
         getCrouselList() {
-            this._crouselList();
+            this.postCrouselList();
             this.setId = setInterval(() => {
-                this._crouselList();
+                this.postCrouselList();
             }, 1000 * 60 * 5);
         },
-        _crouselList() {
+        postCrouselList() {
             api.post('/api/activity/resourcelist', {
                 activity_id: 5,
                 page_num: 1,
@@ -443,7 +443,7 @@ export default {
         },
         viewDetail(item, position) {
             uni.navigateTo({
-                url: `/pages/work/detail/detail?id=${item.id}&fr=${
+                url: `/pages/yiqing/detail/detail?id=${item.id}&fr=${
                     this.fr
                 }&total=${this.total}&curPosition=${position
                     + 1}&from=5&actSort=${this.filter.sort || ''}&actCat=${

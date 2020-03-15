@@ -123,8 +123,8 @@ export default {
         };
     },
     onLoad(params) {
-        this.fr1 = logger.getFr('dsxnh', params);
-        this.fr2 = logger.getFr('xchd', params);
+        this.fr1 = logger.getFr('xchd', params);
+        this.fr2 = logger.getFr('dsxnh', params);
     },
     onShareAppMessage(res) {
         if (res.from === 'button') {
@@ -152,18 +152,19 @@ export default {
             }
         },
         viewDetail(item, position) {
-            // if (this.tabIndex === 0) {
-            //     this.fr = logger.getFr('xchd', params);
-            // } else if (this.tabIndex === 1) {
-            //     this.fr = logger.getFr('dsxnh', params);
-            // }
-            uni.navigateTo({
-                url: `/pages/work/detail/detail?id=${item.id}&total=${
-                    this.total
-                }&fr=${this.fr}&curPosition=${position + 1}&from=${
-                    this.tabIndex ? 4 : 3
-                }`,
-            });
+            if (this.tabIndex) {
+                uni.navigateTo({
+                    url: `/pages/chunjiehao/detail/detail?id=${item.id}&total=${
+                        this.total
+                    }&fr=${this.fr2}&curPosition=${position + 1}`,
+                });
+            } else {
+                uni.navigateTo({
+                    url: `/pages/chunjie/detail/detail?id=${item.id}&total=${
+                        this.total
+                    }&fr=${this.fr1}&curPosition=${position + 1}`,
+                });
+            }
         },
         getData(title) {
             api.post('/api/activity/resourcelist', this.filter).then(
