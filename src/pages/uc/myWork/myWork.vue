@@ -244,11 +244,13 @@ export default {
     },
     onLoad(query) {
         const { type } = query;
-        this.tabActiveIndex = 0;
-        if (Number(type) === 1) {
-            this.tabActiveIndex = 0;
+        if (type) {
+            if (Number(type) === 1) {
+                this.tabActiveIndex = 0;
+            }
+            this.tabActiveIndex = Number(type);
         }
-        this.tabActiveIndex = Number(type);
+
         this.getWorkData();
     },
 };

@@ -17,6 +17,7 @@
         <poster
             v-if="!isH5"
             id="poster"
+            class="poster-hide"
             :hide-loading="true"
             :config="posterConfig"
             @success="onPosterSuccess"
@@ -405,7 +406,7 @@ export default {
 <style lang="less">
 .page-record {
     padding: 84upx 30upx 0;
-    .hide {
+    .poster-hide {
         opacity: 0;
     }
     .panel {
