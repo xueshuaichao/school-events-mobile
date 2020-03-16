@@ -209,14 +209,14 @@
                     </view>
                     <view class="media-box">
                         <view
-                            v-for="item in dataList"
+                            v-for="(item, index) in dataList"
                             :key="item.id"
                             class="media-content"
                         >
                             <event-craft-cover
                                 :info="item"
                                 :bg-color="'006EDE'"
-                                @click.native="viewDetail(item)"
+                                @click.native="viewDetail(item, index)"
                             />
 
                             <view class="media-name text-one-line">
@@ -335,12 +335,12 @@ export default {
     },
     methods: {
         getCrouselList() {
-            this._crouselList();
+            this.postCrouselList();
             this.setId = setInterval(() => {
-                this._crouselList();
+                this.postCrouselList();
             }, 1000 * 60 * 5);
         },
-        _crouselList() {
+        postCrouselList() {
             api.post('/api/activity/resourcelist', {
                 activity_id: 5,
                 page_num: 1,
@@ -441,9 +441,14 @@ export default {
                     'http: //aitiaozhan.oss-cn-beijing.aliyuncs.com/chunjiehao/yiqing-poster01.png?x-oss-process=image/format,png/interlace,1/quality,Q_80/resize,m_pad,h_100',
             });
         },
-        viewDetail(item) {
+        viewDetail(item, position) {
             uni.navigateTo({
-                url: `/pages/yiqing/detail/detail?id=${item.id}&fr=${this.fr}`,
+                url: `/pages/yiqing/detail/detail?id=${item.id}&fr=${
+                    this.fr
+                }&total=${this.total}&curPosition=${position
+                    + 1}&from=5&actSort=${this.filter.sort || ''}&actCat=${
+                    this.filter.activity_cat
+                }`,
             });
         },
         toggle(k) {

@@ -16,11 +16,17 @@
         </view>
         <view class="panel-bd has-swiper">
             <view
-                v-for="item in info"
+                v-for="(item, index) in info"
                 :key="item.id"
                 class="scroll-view-item"
             >
-                <work :info="item" />
+                <work
+                    :info="item"
+                    :levelid="catId"
+                    :sort="sort"
+                    :cur-position="index + 1"
+                    :total="total"
+                />
             </view>
             <!-- <scroll-view
                 class="scroll-view"
@@ -58,6 +64,18 @@ export default {
         info: {
             type: Array,
             default: () => [],
+        },
+        catId: {
+            type: Number,
+            default: 1,
+        },
+        sort: {
+            type: Number,
+            default: 4,
+        },
+        total: {
+            type: Number,
+            default: 0,
         },
     },
 

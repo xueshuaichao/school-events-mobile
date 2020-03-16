@@ -133,7 +133,7 @@ export default {
         },
         toDetail(item) {
             uni.navigateTo({
-                url: `/pages/work/detail/detail?id=${item.id}&from=mywork`,
+                url: `/pages/work/detail/detail?id=${item.id}&from=mywork&disableslide=1`,
             });
         },
         showCause({ memo }) {

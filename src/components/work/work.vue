@@ -108,6 +108,26 @@ export default {
             type: Boolean,
             default: true,
         },
+        curPosition: {
+            type: Number,
+            default: 0,
+        },
+        levelid: {
+            type: Number,
+            default: -1,
+        },
+        sort: {
+            type: Number,
+            default: 1,
+        },
+        total: {
+            type: Number,
+            default: 1,
+        },
+        keyword: {
+            type: String,
+            default: '',
+        },
         showTime: {
             type: Boolean,
             default: true,
@@ -128,8 +148,9 @@ export default {
         goDetail() {
             if (this.info.status === 1) {
                 this.info.play_count = this.info.play_count + 1;
+                //
                 uni.navigateTo({
-                    url: `/pages/work/detail/detail?id=${this.info.id}${this.query}`,
+                    url: `/pages/work/detail/detail?id=${this.info.id}&total=${this.total}&curPosition=${this.curPosition}&sort=${this.sort}&levelid=${this.levelid}&keyword=${this.keyword}`,
                 });
             }
         },

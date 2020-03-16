@@ -74,150 +74,69 @@
         >
             {{ pageData.resource_name }}
         </view>
-        <template v-if="pageData.resource_type === 2">
-            <view class="main-swiper">
-                <swiper
-                    class="swiper"
-                    :indicator-dots="true"
-                    :autoplay="true"
-                    :interval="5000"
-                    :duration="500"
-                    :circular="true"
-                >
-                    <swiper-item
-                        v-for="item in pageData.img"
-                        :key="item"
-                    >
-                        <view class="swiper-item">
-                            <image
-                                class="banner-image"
-                                :src="item | optimizeImage"
-                            />
-                        </view>
-                    </swiper-item>
-                </swiper>
-            </view>
-        </template>
-        <view
-            v-if="pageData.resource_type === 1"
-            class="video-wrap"
+        <!--换成组件啦-->
+        <swiper
+            class="out-swiper"
+            vertical="true"
+            current="1"
+            :indicator-dots="false"
+            circular="true"
+            @change="changeOutSwiper"
         >
+            <swiper-item
+                id="1"
+                class="pre-swiper"
+                item-id="0"
+            >
+                <detail
+                    :page-data="pageDataOne"
+                    :like-status="likeStatus"
+                    :page-from="pageFrom"
+                    @doAction="doAction"
+                />
+            </swiper-item>
+
             <template>
-                <cover-view
-                    v-if="isFullScreen && !isH5"
-                    class="mp-weixin-full-screen-title text-one-line"
+                <swiper-item
+                    v-if="disableslideCurrent"
+                    class="cur-swiper"
+                    @touchmove.stop="stopTouchMove"
                 >
-                    <cover-view class="cover-title" />
-                    <cover-view class="cover-action">
-                        <button
-                            class="mini-btn"
-                            open-type="share"
-                        >
-                            <cover-image
-                                class="mini-icon"
-                                :src="'/static/images/work/mini-share.png'"
-                            />
-                        </button>
-                        <cover-image
-                            class="cover-like"
-                            :src="
-                                likeStatus === 1
-                                    ? '/static/images/work/mini-like-ac.png'
-                                    : '/static/images/work/mini-like.png'
-                            "
-                            @click="toggleLike"
-                        />
-                    </cover-view>
-                </cover-view>
-                <video
-                    ref="video"
-                    class="video"
-                    preload
-                    :autoplay="isH5 ? false : true"
-                    :src="pageData.video.cloud_path_sd"
-                    :controls="true"
-                    :loop="true"
-                    :poster="pageData.video_img_url"
-                    x5-video-player-type="h5-page"
-                    @play="onPlay"
-                    @waiting="onWaiting"
-                    @timeupdate="onTimeupdate"
-                    @fullscreenchange="onFullScreenChange"
-                />
+                    <detail
+                        :page-data="pageDataTwo"
+                        :like-status="likeStatus"
+                        :page-from="pageFrom"
+                        @doAction="doAction"
+                    />
+                </swiper-item>
+                <swiper-item
+                    v-else
+                    id="2"
+                    class="cur-swiper"
+                    item-id="1"
+                >
+                    <detail
+                        :page-data="pageDataTwo"
+                        :like-status="likeStatus"
+                        :page-from="pageFrom"
+                        @doAction="doAction"
+                    />
+                </swiper-item>
             </template>
-        </view>
-        <view class="content">
-            <view class="author-info">
-                <image
-                    class="avatar"
-                    src="/static/images/work/avatar.png"
+
+            <swiper-item
+                id="3"
+                class="next-swiper"
+                item-id="2"
+            >
+                <detail
+                    :page-data="pageDataThree"
+                    :like-status="likeStatus"
+                    :page-from="pageFrom"
+                    @doAction="doAction"
                 />
-                <text class="author-name text-one-line">
-                    {{ pageData.create_name }}
-                </text>
-            </view>
-            <view class="author-from">
-                {{ pageData.school_name }}
-            </view>
-            <view class="work-name-wrap text-one-line">
-                <image
-                    class="avatar"
-                    src="/static/images/work/file.png"
-                />
-                <text class="work-name text-one-line">
-                    {{ pageData.resource_name }}
-                </text>
-            </view>
-            <!-- <view class="extra">
-                {{ pageData.publish_time }}
-                {{ pageData.play_count }}次播放 点赞：{{
-                    pageData.praise_count
-                }}
-            </view> -->
-            <view class="intro text-three-line">
-                {{ pageData.introduce || "暂无简介" }}
-            </view>
-            <view class="from">
-                <text
-                    v-if="pageData.recommend"
-                    class="recommend text-one-line"
-                >
-                    单位：{{ pageData.recommend || "是简介信息这是简介信息这" }}
-                </text>
-                <text
-                    v-if="pageData.teacher"
-                    class="teacher text-one-line"
-                >
-                    指导老师：{{ pageData.teacher || "李四" }}
-                </text>
-            </view>
-        </view>
-
-        <view class="fixed-panel">
-            <view class="result">
-                {{ pageData.ticket }}票
-            </view>
-            <button
-                class="btn"
-                @click="toggleLike"
-            >
-                {{ likeStatus === 0 ? "投TA一票" : "已投票" }}
-            </button>
-
-            <button
-                class="btn"
-                @click="handleCanvass"
-            >
-                帮TA拉票
-            </button>
-            <!-- <button
-                class="btn"
-                @click="goHome"
-            >
-                返回首页
-            </button> -->
-        </view>
-
+            </swiper-item>
+        </swiper>
         <view
             v-if="isPlayed && isPaused"
             class="pause-cover"
@@ -238,11 +157,11 @@
         </view>
 
         <!-- v-if="!isH5" -->
-        <image
+        <!-- <image
             src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/chunjiehao/join.png"
             class="join-game"
             @click="joinGame"
-        />
+        /> -->
     </view>
 </template>
 
@@ -250,8 +169,12 @@
 import api from '../../../common/api';
 import utils from '../../../common/utils';
 import share from '../../../common/share';
+import detail from '../../../widgets/work/chunjiehaodetail.vue';
 
 export default {
+    components: {
+        detail,
+    },
     filters: {
         optimizeImage: (val) => {
             if (!val) {
@@ -272,6 +195,7 @@ export default {
     },
     data() {
         return {
+            detailId: '',
             id: '',
             // video: 'https://node.imgio.in/demo/birds.m3u8',
             video:
@@ -348,6 +272,21 @@ export default {
             prompt: false,
             canvasImg: '',
             showTicketMask: false,
+            pageFrom: '',
+            pageDataTwo: {},
+            pageDataThree: {},
+            pageDataOne: {},
+            prePageParam: {},
+            currentSwiper: 1,
+            outSwiperIncrease: true,
+            sort: 1,
+            actCat: 0,
+            actSort: '',
+            search: '',
+            disableslide: false,
+            filterUrl: {},
+            queryUrl: '',
+            disableslideCurrent: true,
         };
     },
     methods: {
@@ -369,7 +308,8 @@ export default {
             const pages = getCurrentPages(); // 获取加载的页面
             const currentPage = pages[pages.length - 1]; // 获取当前页面的对象
             const url = currentPage.route || 'pages/chunjiehao/detail/detail';
-            const scene = `id=${this.id}` || 'id=325';
+            const scene = `id=${this.id}&${this.queryUrl}&curPosition=${this.prePageParam.slideCurPosition}`
+                || 'id=325';
             api.post('/api/weixin/getminiqrcode', {
                 path: url,
                 scene,
@@ -505,6 +445,7 @@ export default {
                     this.isLoading = false;
                     console.log(res);
                     this.pageData = res;
+                    this.pageDataTwo = res;
                     this.posterConfig.images[1].url = res.video_img_url;
                     this.posterConfig.texts[0].text[0].text = `${res.resource_name}`;
                     this.initShare();
@@ -657,13 +598,263 @@ export default {
             this.$refs.video.play();
             this.isPaused = false;
         },
+        setGetDetail(res) {
+            this.posterConfig.images[1].url = res.video_img_url;
+            this.posterConfig.texts[0].text[0].text = res.resource_name;
+            this.initShare();
+            uni.setNavigationBarTitle({
+                title: res.resource_name,
+            });
+            if (res.resource_type === 2) {
+                // 说明是图片，计算播放量
+                this.pageData.play_count = this.pageData.play_count + 1;
+                api.get('/api/works/playcount', {
+                    id: this.id,
+                });
+            }
+        },
+        getPageMoreDate(paramData) {
+            const params = {
+                ...paramData,
+                ...this.filterUrl,
+                activity_id: 4,
+                list_type: 2,
+            };
+            return api.post('/api/activity/resourcelist', params);
+        },
+        changeOutSwiper(event) {
+            //  已经滑动到下一个作品，获取下下个，或者上上个作品。
+            // 判断移动方向,向上，向下。
+            if (this.currentSwiper > event.detail.current) {
+                this.outSwiperIncrease = false;
+            } else {
+                this.outSwiperIncrease = true;
+            }
+            if (this.currentSwiper === 2 && event.detail.current === 0) {
+                this.outSwiperIncrease = true;
+            }
+            if (this.currentSwiper === 0 && event.detail.current === 2) {
+                this.outSwiperIncrease = false;
+            }
+            console.log(
+                this.prePageParam.slideCurPosition,
+                '---变化前显示的位置',
+            );
+            // 预获取数据。最后一页的数据可以划到第一页来。
+            let objPosition = {};
+            let targetPosition = this.prePageParam.slideCurPosition;
+            if (this.outSwiperIncrease) {
+                targetPosition = this.prePageParam.slideCurPosition + 2;
+                if (
+                    this.prePageParam.slideCurPosition
+                    === this.prePageParam.MaxPosition - 1
+                ) {
+                    this.prePageParam.slideCurPosition += 1;
+                    targetPosition = 1;
+                } else if (
+                    this.prePageParam.slideCurPosition
+                    === this.prePageParam.MaxPosition
+                ) {
+                    this.prePageParam.slideCurPosition = 1;
+                    targetPosition = 2;
+                } else {
+                    this.prePageParam.slideCurPosition += 1;
+                }
+
+                objPosition = this.getPageSizeInfo(targetPosition);
+            } else {
+                targetPosition = this.prePageParam.slideCurPosition - 2;
+
+                if (this.prePageParam.slideCurPosition === 2) {
+                    targetPosition = this.prePageParam.MaxPosition;
+                    this.prePageParam.slideCurPosition -= 1;
+                } else if (this.prePageParam.slideCurPosition === 1) {
+                    this.prePageParam.slideCurPosition = this.prePageParam.MaxPosition;
+                    targetPosition = this.prePageParam.MaxPosition - 1;
+                } else {
+                    this.prePageParam.slideCurPosition -= 1;
+                }
+
+                objPosition = this.getPageSizeInfo(targetPosition);
+            }
+            console.log(
+                this.prePageParam.slideCurPosition,
+                '---变化后显示的位置-----目标--',
+                targetPosition,
+            );
+            this.setSwiperPageData(event, objPosition);
+        },
+        setSwiperPageData(event, objPosition) {
+            this.getPageMoreDate(objPosition).then((res) => {
+                //  滚动的时候去获取得到第三页的详情，详情有值再修改轮播Item匹配的数据，详情没有值，就是获取到了最后一个数据
+                if (res) {
+                    if (this.outSwiperIncrease) {
+                        // 下一个
+                        switch (this.currentSwiper) {
+                            case 0:
+                                this.pageDataThree = res;
+                                break;
+                            case 1:
+                                this.pageDataOne = res;
+                                break;
+                            case 2:
+                                this.pageDataTwo = res;
+                                break;
+                            default:
+                                console.log('1');
+                        }
+                    } else {
+                        switch (this.currentSwiper) {
+                            case 2:
+                                this.pageDataOne = res;
+                                break;
+                            case 1:
+                                this.pageDataThree = res;
+                                break;
+                            case 0:
+                                this.pageDataTwo = res;
+                                break;
+                            default:
+                                console.log('-');
+                        }
+                    }
+                } else {
+                    console.log('没有获取到数据呀。');
+                }
+                this.currentSwiper = event.detail.current;
+            });
+
+            // 不需要等待接口数据，直接修改下pageData，以便进行页面的转发，与二维码功能
+            let curPageData = {};
+            switch (event.detail.current) {
+                case 0:
+                    curPageData = this.pageDataOne;
+                    break;
+                case 1:
+                    curPageData = this.pageDataTwo;
+                    break;
+                case 2:
+                    curPageData = this.pageDataThree;
+                    break;
+                default:
+                    console.log('-');
+            }
+            this.detailId = curPageData.id;
+            this.id = curPageData.resource_id;
+            this.pageData = curPageData;
+            this.setGetDetail(curPageData);
+        },
+        getPageSizeInfo(position) {
+            // 设置参数
+            const pageSize = 10;
+            const pageNum = Math.ceil(position / pageSize);
+            const currentPosition = position - pageSize * (pageNum - 1) - 1;
+            return {
+                page_size: pageSize,
+                page_num: pageNum,
+                current_position: currentPosition,
+                type: 2,
+            };
+        },
+        doAction(action) {
+            if (action === 'handleCanvass') {
+                this.handleCanvass();
+            }
+            if (action === 'joinGame') {
+                this.joinGame();
+            }
+
+            if (action === 'toggleLike') {
+                this.toggleLike();
+            }
+            if (action === 'goHome') {
+                this.goHome();
+            }
+        },
+        stopTouchMove() {
+            //  禁止滑动。
+        },
     },
     onLoad(query) {
-        const { fr } = query;
+        this.pageFrom = utils.getParam(query, 'from') || '';
+        this.sort = Number(utils.getParam(query, 'sort')) || 1;
         this.id = utils.getParam(query, 'id');
-        this.fr = fr || '';
+        this.actCat = utils.getParam(query, 'actCat') || 0;
+        this.disableslide = utils.getParam(query, 'disableslide') || false;
 
+        this.actSort = utils.getParam(query, 'actSort') || '';
+        this.fr = utils.getParam(query, 'fr') || '';
+        this.search = utils.getParam(query, 'kw') || '';
+        if (this.search) {
+            this.filterUrl.search = this.search;
+        }
+        if (this.actSort) {
+            this.filterUrl.sort = this.actSort;
+        }
+        if (this.actCat) {
+            this.filterUrl.activity_cat = this.actCat;
+        }
+
+        const curPosition = Number(utils.getParam(query, 'curPosition')) || 0;
+        const total = Number(utils.getParam(query, 'total')) || 1;
+
+        // 获取detail页面的内容
         this.getData();
+        // 获取前后两页面的内容。
+        if (!this.disableslideCurrent) {
+            this.prePageParam.initPosition = curPosition;
+            this.prePageParam.slideCurPosition = curPosition; // 第一次进来的位置
+            this.prePageParam.MaxPosition = total;
+
+            let toPreTarget = curPosition;
+            let toNewTarget = curPosition;
+            if (curPosition === 1) {
+                toPreTarget = total;
+                toNewTarget += 1;
+            } else if (curPosition === total) {
+                toNewTarget = 1;
+                toPreTarget -= 1;
+            } else {
+                toPreTarget -= 1;
+                toNewTarget += 1;
+            }
+            const paramPre = this.getPageSizeInfo(toPreTarget);
+            const paramNext = this.getPageSizeInfo(toNewTarget);
+            this.getPageMoreDate(paramPre).then((res) => {
+                this.pageDataOne = res;
+            });
+            this.getPageMoreDate(paramNext).then((res) => {
+                this.pageDataThree = res;
+            });
+            uni.getStorage({
+                key: 'hasPromtSlide',
+                complete(res) {
+                    if (!res.data) {
+                        uni.setStorage({
+                            key: 'hasPromtSlide',
+                            data: 'lll',
+                        });
+                        uni.showToast({
+                            title: '上下滑动可以切换喔～',
+                            duration: 3000,
+                            position: 'top',
+                            mask: true,
+                            icon: 'none',
+                        });
+                    }
+                },
+            });
+        }
+        const myQuery = query;
+        delete myQuery.id;
+        delete myQuery.curPosition;
+        const myQuery2 = JSON.stringify(myQuery);
+        const queryStra = myQuery2.replace(/:/g, '=');
+        const queryStrb = queryStra.replace(/"/g, '');
+
+        const queryStrc = queryStrb.replace(/,/g, '&');
+        const queryStrd = queryStrc.match(/\{([^)]*)\}/)[1];
+        this.queryUrl = queryStrd;
         // hack for html5 video size notwoking
         // #ifdef H5
         window.removeEventListener(

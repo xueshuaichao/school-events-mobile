@@ -42,14 +42,14 @@
             :class="[activityList[tabIndex].name]"
         >
             <view
-                v-for="item in dataList"
+                v-for="(item, index) in dataList"
                 :key="item.id"
                 class="media-content"
             >
                 <event-craft-cover
                     :info="item"
                     :bg-color="activityList[tabIndex].bgcolor"
-                    @click.native="viewDetail(item)"
+                    @click.native="viewDetail(item, index)"
                 />
 
                 <view class="media-name text-one-line">
@@ -91,7 +91,8 @@ export default {
     },
     data() {
         return {
-            fr: '',
+            fr1: '',
+            fr2: '',
             tabIndex: 0,
             activityList: [
                 {
@@ -122,7 +123,8 @@ export default {
         };
     },
     onLoad(params) {
-        this.fr = logger.getFr('dsxnh', params);
+        this.fr1 = logger.getFr('xchd', params);
+        this.fr2 = logger.getFr('dsxnh', params);
     },
     onShareAppMessage(res) {
         if (res.from === 'button') {
@@ -149,14 +151,18 @@ export default {
                 uni.showLoading();
             }
         },
-        viewDetail(item) {
-            if (this.tabIndex === 0) {
+        viewDetail(item, position) {
+            if (this.tabIndex) {
                 uni.navigateTo({
-                    url: `/pages/chunjie/detail/detail?id=${item.id}&fr=${this.fr}`,
+                    url: `/pages/chunjiehao/detail/detail?id=${item.id}&total=${
+                        this.total > 100 ? 100 : this.total
+                    }&fr=${this.fr2}&curPosition=${position + 1}`,
                 });
-            } else if (this.tabIndex === 1) {
+            } else {
                 uni.navigateTo({
-                    url: `/pages/chunjiehao/detail/detail?id=${item.id}&fr=${this.fr}`,
+                    url: `/pages/chunjie/detail/detail?id=${item.id}&total=${
+                        this.total > 100 ? 100 : this.total
+                    }&fr=${this.fr1}&curPosition=${position + 1}`,
                 });
             }
         },
