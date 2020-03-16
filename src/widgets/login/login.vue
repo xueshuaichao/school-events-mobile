@@ -1,7 +1,7 @@
 <template>
     <view>
         <view class="page-bind-mobile">
-            <!-- <template v-if="isWeixin && showWeixin">
+            <template v-if="isWeixin && showWeixin">
                 <view class="weixin-login">
                     <view class="login-text">
                         登录或注册爱挑战账号后，您可以上传作品或参与活动。
@@ -24,8 +24,8 @@
                         暂不登录
                     </navigator>
                 </view>
-            </template> -->
-            <template>
+            </template>
+            <template v-else>
                 <!-- 账号密码登录 -->
                 <image
                     class="logo"
@@ -465,16 +465,27 @@ export default {
             uni.login({
                 provider: 'weixin',
                 success({ code }) {
+                    console.log(errMsg);
                     if (errMsg === 'getPhoneNumber:ok') {
-                        api.post('/api/account/getminmobile', {
-                            jscode: code,
-                            encryptedData,
-                            iv,
+                        console.log(code);
+                        api.post('/api/account/miniprogramlogin', {
+                            code,
                         }).then((res) => {
-                            uni.showToast({
-                                icon: 'none',
-                                title: res.mobile,
-                            });
+                            if (res.is_bind) {
+                                const { userkey } = res;
+                                try {
+                                    uni.setStorageSync('medusa_key', userkey);
+                                } catch (e) {
+                                    // error
+                                }
+                            } else {
+                                api.post('/api/account/getminipprogramphone', {
+                                    encrypted_data: encryptedData,
+                                    iv,
+                                }).then((res) => {
+                                    console.log(res);
+                                });
+                            }
                         });
                     } else {
                         _this.showWeixin = false;
