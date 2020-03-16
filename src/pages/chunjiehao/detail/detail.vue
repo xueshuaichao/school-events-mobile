@@ -98,7 +98,7 @@
 
             <template>
                 <swiper-item
-                    v-if="disableslide"
+                    v-if="disableslideCurrent"
                     class="cur-swiper"
                     @touchmove.stop="stopTouchMove"
                 >
@@ -286,6 +286,7 @@ export default {
             disableslide: false,
             filterUrl: {},
             queryUrl: '',
+            disableslideCurrent: true,
         };
     },
     methods: {
@@ -800,7 +801,7 @@ export default {
         // 获取detail页面的内容
         this.getData();
         // 获取前后两页面的内容。
-        if (!this.disableslide) {
+        if (!this.disableslideCurrent) {
             this.prePageParam.initPosition = curPosition;
             this.prePageParam.slideCurPosition = curPosition; // 第一次进来的位置
             this.prePageParam.MaxPosition = total;

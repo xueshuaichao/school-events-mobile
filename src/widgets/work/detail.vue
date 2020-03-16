@@ -1,5 +1,8 @@
 <template>
-    <view class="swiper-detail-box">
+    <view
+        :id="`detail${swiperPage}`"
+        class="swiper-detail-box"
+    >
         <view
             v-show="isFullScreen && isH5"
             class="h5-full-screen-title text-one-line"
@@ -229,15 +232,19 @@ export default {
             // #ifdef H5
             isH5: true,
             // #endif
-            isAutoPlay: true,
+            isAutoPlay: false,
             isPlayed: false,
             isPaused: false,
             isVideoWaiting: false,
             clear: false,
+            showVideo: this.swiperPage === this.isChangeSlide,
         };
     },
     watch: {
         isChangeSlide(val) {
+            console.log(val, '滑动到的页面', this.swiperPage, '当前页面');
+            this.showVideo = this.swiperPage === val;
+            console.log(this.showVideo, '---------show');
             if (val !== this.swiperPage && this.pageData.resource_type === 1) {
                 // this.$refs.video.pause();
                 this.clear = true;

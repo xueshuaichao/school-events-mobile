@@ -103,7 +103,7 @@
 
             <template>
                 <swiper-item
-                    v-if="disableslide"
+                    v-if="disableslideCurrent"
                     class="cur-swiper"
                     @touchmove.stop="stopTouchMove"
                 >
@@ -304,6 +304,7 @@ export default {
             filterUrl: {},
             queryUrl: '',
             isChangeSlide: false,
+            disableslideCurrent: true,
         };
     },
     created() {},
@@ -316,6 +317,9 @@ export default {
             // #ifndef H5
             this.handleTicketMask();
             // #endif
+            if (this.pageData.resource_scope === 3) {
+                this.posterConfig.images[0].url = 'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/aitiaozhan-poster2.png';
+            }
         },
         // 生成二维码，并弹出mask
         handleTicketMask() {
@@ -393,7 +397,7 @@ export default {
                 filePath: this.canvasImg,
                 success() {
                     that.prompt = false;
-                    that.showTicketMask = true;
+                    that.showTicketMask = false;
                     uni.showToast({
                         title: '已保存成功',
                         icon: 'success',
@@ -560,11 +564,11 @@ export default {
             document.querySelector('.uni-video-type-fullscreen').style = '';
         },
         initShare(res) {
-            const titleList = [
-                `我的作品《${res.resource_name}》，快来帮我助力吧！`,
-                `我的作品《${res.resource_name}》，快来给我点赞吧！`,
-            ];
-            const title = titleList[Math.floor(Math.random() * titleList.length)];
+            let title = `我的作品《${res.resource_name}》，【我正在参加青少年爱挑战活动】,快来给我点赞吧！`;
+
+            if (this.pageData.resource_scope === 3) {
+                title = `我的作品《${res.resource_name}》，【我正在参加才艺秀活动】,快来给我点赞吧！`;
+            }
             const desc = `${res.resource_name}-${res.create_name}`;
             this.pageData.video_img_url = res.video_img_url;
             this.shareDesc = title;
@@ -783,7 +787,7 @@ export default {
         // 获取detail页面的内容
         this.getData();
         // 获取前后两页面的内容。
-        if (!this.disableslide) {
+        if (!this.disableslideCurrent) {
             this.prePageParam.initPosition = curPosition;
             this.prePageParam.slideCurPosition = curPosition; // 第一次进来的位置
             this.prePageParam.MaxPosition = total;
