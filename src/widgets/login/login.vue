@@ -1,7 +1,7 @@
 <template>
     <view>
         <view class="page-bind-mobile">
-            <template v-if="isWeixin && showWeixin">
+            <!-- <template v-if="isWeixin && showWeixin">
                 <view class="weixin-login">
                     <view class="login-text">
                         登录或注册爱挑战账号后，您可以上传作品或参与活动。
@@ -18,13 +18,14 @@
                     </button>
                     <navigator
                         class="no-text"
+                        open-type="switchTab"
                         url="/pages/tabBar/index/index"
                     >
                         暂不登录
                     </navigator>
                 </view>
-            </template>
-            <template v-else>
+            </template> -->
+            <template>
                 <!-- 账号密码登录 -->
                 <image
                     class="logo"
@@ -148,6 +149,10 @@
                             确定
                         </view>
                     </view>
+                    <!-- <view>
+                        <text>微信授权手机号登录</text>
+                        <image @click="showWeiXin" src="/static/images/uc/wx.png" />
+                    </view> -->
                 </template>
             </template>
         </view>
@@ -201,15 +206,6 @@ export default {
             jscode: '',
             showWeixin: true,
         };
-    },
-    created() {
-        const _this = this;
-        uni.login({
-            provider: 'weixin',
-            success({ code }) {
-                _this.jscode = code;
-            },
-        });
     },
     methods: {
         getLogIn() {
@@ -465,19 +461,30 @@ export default {
         getphonenumber(e) {
             console.log(e);
             const { errMsg, encryptedData, iv } = e.detail;
-            if (errMsg === 'getPhoneNumber:ok') {
-                api.post('/api/account/getminmobile', {
-                    jscode: this.jscode,
-                    encryptedData,
-                    iv,
-                }).then((res) => {
-                    console.log(33333, res);
-                });
-            } else {
-                this.showWeixin = false;
-            }
+            const _this = this;
+            uni.login({
+                provider: 'weixin',
+                success({ code }) {
+                    if (errMsg === 'getPhoneNumber:ok') {
+                        api.post('/api/account/getminmobile', {
+                            jscode: code,
+                            encryptedData,
+                            iv,
+                        }).then((res) => {
+                            uni.showToast({
+                                icon: 'none',
+                                title: res.mobile,
+                            });
+                        });
+                    } else {
+                        _this.showWeixin = false;
+                    }
+                },
+            });
         },
-        onShow() {},
+        showWeiXin() {
+            this.showWeixin = true;
+        },
     },
 };
 </script>
@@ -657,7 +664,8 @@ export default {
         height: 98rpx;
         line-height: 98rpx;
         text-align: center;
-        margin-top: 100rpx;
+        margin-top: 30rpx;
+        margin-bottom: 56rpx;
         font-size: 36rpx;
     }
 

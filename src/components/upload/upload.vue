@@ -83,7 +83,8 @@
                     </view>
                     <view
                         v-if="url"
-                        class="blue-text"
+                        class="normal-text"
+                        :class="{ 'blue-text': theme === 'blue' }"
                     >
                         更换视频
                     </view>
@@ -97,7 +98,8 @@
                     </view>
                     <view
                         v-if="url"
-                        class="blue-text"
+                        class="normal-text"
+                        :class="{ 'blue-text': theme === 'blue' }"
                     >
                         更换封面
                     </view>
@@ -209,6 +211,18 @@ export default {
     methods: {
         uploadFile(tempFilePath) {
             this.tempFilePath = tempFilePath;
+            if (
+                [".jpg", ".jpeg", ".png", ".gif"].indexOf(
+                    tempFilePath.toLowerCase()
+                ) === -1
+            ) {
+                return uni.showToast({
+                    icon: "none",
+                    title: "图片规格不正确",
+                    duration: 200000
+                });
+            }
+
             uni.showToast({
                 icon: "loading",
                 title: "上传中",
@@ -390,8 +404,12 @@ export default {
         font-size: 24upx;
         color: #666;
         line-height: 40upx;
-        .blue-text {
+        .normal-text {
             color: #1166ff;
+            line-height: 1.2;
+        }
+        .blue-text {
+            color: #fff;
             line-height: 1.2;
         }
         &.image {

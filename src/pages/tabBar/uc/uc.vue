@@ -1,6 +1,6 @@
 <template>
     <view
-        v-if="!isLoading"
+        v-show="!isLoading"
         class="page-uc-index"
     >
         <login
