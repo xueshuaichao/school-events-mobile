@@ -71,14 +71,14 @@
             </view>
             <view v-if="total > 0">
                 <view
-                    v-for="item in dataList"
+                    v-for="(item, index) in dataList"
                     :key="item.id"
                     class="media-content"
                 >
                     <event-craft-cover
                         :info="item"
                         :bg-color="'006EDE'"
-                        @click.native="viewDetail(item)"
+                        @click.native="viewDetail(item, index)"
                     />
                     <view
                         v-if="type === 'myWork'"
@@ -135,14 +135,18 @@
                 v-show="searchEmpty"
                 class="empty"
             >
-                <image src="../../../static/images/yiqing/empty.png" />
+                <image
+                    src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/yiqing/empty.png"
+                />
                 <view>搜索不到您要的结果，换个关键词试试吧～</view>
             </view>
             <view
                 v-show="myWorkEmpty"
                 class="work-empty"
             >
-                <image src="../../../static/images/yiqing/work-empty.png" />
+                <image
+                    src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/yiqing/work-empty.png"
+                />
                 <view>
                     {{ allTotal === 0 ? "您还没有上传作品" : "暂无作品" }}
                 </view>
@@ -331,11 +335,22 @@ export default {
             this.tabActiveIndex = i;
             this.getWorkData();
         },
-        viewDetail(item) {
+        viewDetail(item, position) {
             if (this.tabActiveIndex === 2) {
-                uni.navigateTo({
-                    url: `/pages/yiqing/detail/detail?id=${item.id}`,
-                });
+                if (this.type === 'myWork') {
+                    uni.navigateTo({
+                        url: `/pages/yiqing/detail/detail?id=${item.id}&fr=${this.fr}&disableslide=1`,
+                    });
+                } else {
+                    uni.navigateTo({
+                        url: `/pages/yiqing/detail/detail?id=${item.id}&fr=${
+                            this.fr
+                        }&total=${this.total}&curPosition=${position
+                            + 1}&actSort=${this.filter.sort || ''}&kw=${
+                            this.filter.search
+                        }&actCat=${this.filter.activity_cat}`,
+                    });
+                }
             }
         },
     },
