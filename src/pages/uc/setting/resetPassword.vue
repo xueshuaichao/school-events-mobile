@@ -137,14 +137,18 @@ export default {
                 }
                 api.post('/api/account/resetpassword', formdata).then(
                     () => {
+                        this.lock = true;
                         uni.navigateTo({
                             url: '/pages/uc/setting/resetPasswordResult',
                         });
                     },
-                    err => uni.showToast({
-                        title: err.message,
-                        icon: 'none',
-                    }),
+                    (err) => {
+                        this.lock = true;
+                        uni.showToast({
+                            title: err.message,
+                            icon: 'none',
+                        });
+                    },
                 );
             }
             return true;
