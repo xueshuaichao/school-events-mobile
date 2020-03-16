@@ -17,6 +17,9 @@ export default {
     data() {
         return {
             fr: '',
+            // #ifdef H5
+            isH5: true,
+            // #endif
         };
     },
     onLoad(params) {
@@ -25,7 +28,11 @@ export default {
     },
     methods: {
         onLogin() {
-            uni.navigateBack();
+            if (this.isH5) {
+                window.history.back();
+            } else {
+                uni.navigateBack();
+            }
         },
     },
 };
