@@ -123,7 +123,7 @@
                 <text>绑定手机号</text>
                 <text>
                     {{
-                        userInfo.mobile
+                        userInfo && userInfo.mobile
                             ? String(userInfo.mobile).replace(
                                 /^(\d{3})\d{4}(\d+)/,
                                 "$1****$2"
