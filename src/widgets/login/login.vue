@@ -149,10 +149,16 @@
                             确定
                         </view>
                     </view>
-                    <!-- <view>
-                        <text>微信授权手机号登录</text>
-                        <image @click="showWeiXin" src="/static/images/uc/wx.png" />
-                    </view> -->
+                    <view class="wx-login">
+                        <text class="wx-login-text">
+                            微信授权手机号登录
+                        </text>
+                        <image
+                            class="wx-login-btn"
+                            src="/static/images/uc/wx.png"
+                            @click="showWeiXin"
+                        />
+                    </view>
                 </template>
             </template>
         </view>
@@ -174,7 +180,7 @@ export default {
             formData: {
                 username:
                     process.env.NODE_ENV === 'development' ? '13370123965' : '',
-                password: process.env.NODE_ENV === 'development' ? '111111' : '',
+                password: process.env.NODE_ENV === 'development' ? '123456' : '',
             },
             newUser: {
                 phone: '',
@@ -206,6 +212,11 @@ export default {
             jscode: '',
             showWeixin: true,
         };
+    },
+    created() {
+        if (this.isWeixin) {
+            this.getCode();
+        }
     },
     methods: {
         getLogIn() {
@@ -458,40 +469,88 @@ export default {
                     }),
                 );
         },
-        getphonenumber(e) {
-            console.log(e);
-            const { errMsg, encryptedData, iv } = e.detail;
+        getCode(fn) {
             const _this = this;
             uni.login({
                 provider: 'weixin',
                 success({ code }) {
-                    console.log(errMsg);
-                    if (errMsg === 'getPhoneNumber:ok') {
-                        console.log(code);
-                        api.post('/api/account/miniprogramlogin', {
-                            code,
-                        }).then((res) => {
-                            if (res.is_bind) {
-                                const { userkey } = res;
-                                try {
-                                    uni.setStorageSync('medusa_key', userkey);
-                                } catch (e) {
-                                    // error
-                                }
-                            } else {
-                                api.post('/api/account/getminipprogramphone', {
-                                    encrypted_data: encryptedData,
-                                    iv,
-                                }).then((res) => {
-                                    console.log(res);
-                                });
-                            }
-                        });
-                    } else {
-                        _this.showWeixin = false;
+                    console.log(5454545);
+                    _this.jscode = code;
+                    if (fn) {
+                        fn();
                     }
                 },
+                fail() {
+                    uni.showToast({
+                        title: '登录失败',
+                    });
+                },
             });
+        },
+        checkSession({ encryptedData, iv }) {
+            const _this = this;
+            uni.checkSession({
+                success() {
+                    // session_key 未过期，并且在本生命周期一直有效
+                    _this.onGetPhoneNumber(encryptedData, iv);
+                },
+                fail() {
+                    // session_key 已经失效，需要重新执行登录流程
+                    _this.getCode(() => {
+                        _this.onGetPhoneNumber(encryptedData, iv);
+                    });
+                },
+            });
+        },
+        getphonenumber(e) {
+            const { errMsg } = e.detail;
+            uni.showLoading({
+                title: '加载中',
+            });
+            if (errMsg === 'getPhoneNumber:ok') {
+                this.checkSession(e.detail);
+            } else {
+                this.showWeixin = false;
+            }
+        },
+        onGetPhoneNumber(encryptedData, iv) {
+            const _this = this;
+            api.post('/api/account/miniprogramlogin', {
+                code: this.jscode,
+            }).then(
+                (res) => {
+                    const { userkey } = res;
+                    if (res.is_bind) {
+                        try {
+                            uni.setStorageSync('medusa_key', userkey);
+                        } catch (e) {
+                            // error
+                        }
+                        _this.getUserInfo();
+                        uni.hideLoading();
+                    } else {
+                        api.post('/api/account/getminipprogramphone', {
+                            encrypted_data: encryptedData,
+                            iv,
+                            userkey,
+                        }).then((data) => {
+                            try {
+                                uni.setStorageSync('medusa_key', data.userkey);
+                            } catch (e) {
+                                // error
+                            }
+                            _this.getUserInfo();
+                            uni.hideLoading();
+                        });
+                    }
+                },
+                () => {
+                    // eslint-disable-next-line no-undef
+                    const page = getCurrentPages().pop();
+                    if (!page) return;
+                    page.onLoad();
+                },
+            );
         },
         showWeiXin() {
             this.showWeixin = true;
@@ -690,6 +749,17 @@ export default {
     .desc {
         color: #aaa;
         font-size: 32rpx;
+    }
+    .wx-login-text {
+        color: #666;
+        font-size: 32upx;
+        margin-bottom: 30upx;
+    }
+    .wx-login-btn {
+        width: 100upx;
+        height: 100upx;
+        margin: 0 auto 40upx;
+        display: block;
     }
 }
 </style>
