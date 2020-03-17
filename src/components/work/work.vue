@@ -148,9 +148,8 @@ export default {
         goDetail() {
             if (this.info.status === 1) {
                 this.info.play_count = this.info.play_count + 1;
-                //
                 uni.navigateTo({
-                    url: `/pages/work/detail/detail?id=${this.info.id}&total=${this.total}&curPosition=${this.curPosition}&sort=${this.sort}&levelid=${this.levelid}&keyword=${this.keyword}`,
+                    url: `/pages/work/detail/detail?id=${this.info.id}&total=${this.total}&curPosition=${this.curPosition}&sort=${this.sort}&levelid=${this.levelid}&keyword=${this.keyword}query`,
                 });
             }
         },

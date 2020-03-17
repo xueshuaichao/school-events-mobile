@@ -25,7 +25,7 @@ export default {
             hasPageParams: false,
             filter: {
                 keyword: '',
-                sort: 2,
+                sort: 1,
                 cat_id: {
                     one_level_id: 0,
                 },

@@ -160,6 +160,7 @@
             </view>
 
             <view
+                v-if="pageData.resource_scope === 3"
                 class="btn primary"
                 @click="joinGame"
             >
