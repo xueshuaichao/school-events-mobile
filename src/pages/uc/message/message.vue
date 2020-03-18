@@ -37,7 +37,7 @@
             </view>
         </view>
         <view class="message-list">
-            <template v-if="showDataList">
+            <template v-if="showDataList.length">
                 <checkbox-group @change="changeCheckbox">
                     <view
                         v-for="(item, index) in showDataList"
@@ -120,11 +120,12 @@ export default {
             api.post('/api/common/readmsg', {
                 msg_id: idArr,
             }).then(() => {
-                this.dataList.forEach((item) => {
+                this.dataList.forEach((item, index) => {
                     idArr.forEach((itemId) => {
                         if (item.msg_id === itemId) {
                             // eslint-disable-next-line no-param-reassign
-                            item.is_read = 1;
+                            // item.is_read = 1;
+                            this.$set(this.dataList[index], 'is_read', 1);
                         }
                     });
                 });
@@ -169,6 +170,7 @@ export default {
                 });
             } else {
                 this.handleMessage(this.checkedArr, 'all');
+                this.unreadList = this.dataList.filter(v => v.is_read === 0);
             }
         },
         // 多选复选框改变事件

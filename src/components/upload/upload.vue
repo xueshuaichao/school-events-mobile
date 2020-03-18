@@ -211,15 +211,15 @@ export default {
     methods: {
         uploadFile(tempFilePath) {
             this.tempFilePath = tempFilePath;
-            if (
-                [".jpg", ".jpeg", ".png", ".gif"].indexOf(
-                    tempFilePath.toLowerCase()
-                ) === -1
-            ) {
+            let suffix;
+            try {
+                suffix = tempFilePath.split(".").pop();
+                // eslint-disable-next-line no-empty
+            } catch {}
+            if (["jpg", "jpeg", "png", "gif"].indexOf(suffix) === -1) {
                 return uni.showToast({
                     icon: "none",
-                    title: "图片规格不正确",
-                    duration: 200000
+                    title: "图片规格不正确"
                 });
             }
 

@@ -89,6 +89,7 @@
                     @change="updateImage"
                 />
                 <image-drag-sort
+                    v-show="images.length"
                     ref="preview"
                     :list="images"
                 />
@@ -209,6 +210,7 @@ export default {
             needBindMobile: false,
             catData: [],
             index: 0,
+            lock: true,
         };
     },
     onLoad() {},
@@ -219,6 +221,20 @@ export default {
         this.getData();
     },
     methods: {
+        resetData() {
+            this.formData = {
+                cat_id: '',
+                resource_name: '',
+                introduce: '',
+                type: 2,
+                video_id: '',
+                video_img_url: '',
+                img: [],
+            };
+            this.newsTabActiveIndex = 0;
+            this.uploadMode = 'video';
+            this.images = [];
+        },
         setNewsTabActive(index) {
             this.newsTabActiveIndex = index;
             if (index === 0) {
@@ -362,57 +378,70 @@ export default {
                 );
         },
         upload() {
-            const formData = Object.assign({}, this.formData);
+            if (this.lock) {
+                this.lock = false;
+                const formData = Object.assign({}, this.formData);
 
-            if (this.uploadMode === 'video') {
-                formData.resource_type = 1;
-                if (!formData.resource_name) {
-                    return this.errTip('请输入视频名称');
+                if (this.uploadMode === 'video') {
+                    formData.resource_type = 1;
+                    if (!formData.resource_name) {
+                        this.lock = true;
+                        return this.errTip('请输入视频名称');
+                    }
+                    if (!formData.cat_id) {
+                        this.lock = true;
+                        return this.errTip('请选择视频分类');
+                    }
+                    if (!formData.video_id) {
+                        this.lock = true;
+                        return this.errTip('请上传视频文件');
+                    }
+                    // if (!formData.video_img_url) {
+                    //     return this.errTip('请上传视频封面');
+                    // }
+                } else {
+                    formData.resource_type = 2;
+                    if (!formData.resource_name) {
+                        this.lock = true;
+                        return this.errTip('请输入作品名称');
+                    }
+                    if (!formData.cat_id) {
+                        this.lock = true;
+                        return this.errTip('请选择作品分类');
+                    }
+                    formData.img = this.$refs.preview.dump();
+                    if (!formData.img.length) {
+                        this.lock = true;
+                        return this.errTip('请上传作品图片');
+                    }
                 }
-                if (!formData.cat_id) {
-                    return this.errTip('请选择视频分类');
-                }
-                if (!formData.video_id) {
-                    return this.errTip('请上传视频文件');
-                }
-                // if (!formData.video_img_url) {
-                //     return this.errTip('请上传视频封面');
-                // }
-            } else {
-                formData.resource_type = 2;
-                if (!formData.resource_name) {
-                    return this.errTip('请输入作品名称');
-                }
-                if (!formData.cat_id) {
-                    return this.errTip('请选择作品分类');
-                }
-                formData.img = this.$refs.preview.dump();
-                if (!formData.img.length) {
-                    return this.errTip('请上传作品图片');
-                }
+
+                uni.showLoading();
+                // check input
+                console.log(this.formData);
+                return api.isLogin().then(() => {
+                    api.post('/api/user/editwork', formData).then(
+                        (res) => {
+                            console.log(res);
+                            uni.hideLoading();
+                            uni.navigateTo({
+                                url: '/pages/upload/result/result?type=success',
+                            });
+                            this.resetData();
+                            this.lock = true;
+                        },
+                        (err) => {
+                            uni.hideLoading();
+                            uni.showToast({
+                                icon: 'none',
+                                title: err.message,
+                            });
+                            this.lock = true;
+                        },
+                    );
+                });
             }
-
-            uni.showLoading();
-            // check input
-            console.log(this.formData);
-            return api.isLogin().then(() => {
-                api.post('/api/user/editwork', formData).then(
-                    (res) => {
-                        console.log(res);
-                        uni.hideLoading();
-                        uni.navigateTo({
-                            url: '/pages/upload/result/result?type=success',
-                        });
-                    },
-                    (err) => {
-                        uni.hideLoading();
-                        uni.showToast({
-                            icon: 'none',
-                            title: err.message,
-                        });
-                    },
-                );
-            });
+            return true;
         },
     },
 };
@@ -466,7 +495,7 @@ export default {
         height: 98upx;
         line-height: 98upx;
         text-align: center;
-        margin-top: 168upx;
+        margin-top: 80upx;
     }
 
     .show-type-hd {

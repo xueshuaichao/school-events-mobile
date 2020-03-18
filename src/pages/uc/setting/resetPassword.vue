@@ -74,7 +74,7 @@
                 >
             </view>
             <text class="psw-tips">
-                密码必须是8-16位的数字，字母组合（不能是纯数字）
+                密码必须是8-16位的数字、字母组合（不能是纯数字）
             </text>
             <view class="uni-btn-v">
                 <button form-type="submit">
