@@ -122,14 +122,7 @@
             <view class="item">
                 <text>绑定手机号</text>
                 <text>
-                    {{
-                        userInfo && userInfo.mobile
-                            ? String(userInfo.mobile).replace(
-                                /^(\d{3})\d{4}(\d+)/,
-                                "$1****$2"
-                            )
-                            : ""
-                    }}
+                    {{ userInfo.mobile }}
                 </text>
             </view>
             <view
@@ -160,7 +153,7 @@ export default {
                 school: '',
                 class: '',
                 user_account: '',
-                phone: '',
+                mobile: '',
                 identity: '',
             },
         };

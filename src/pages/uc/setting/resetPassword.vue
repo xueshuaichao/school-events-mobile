@@ -13,6 +13,7 @@
                         v-model="phone"
                         name="phone"
                         class="uni-input"
+                        maxlength="11"
                         type="text"
                         placeholder="请输入手机号"
                     >
@@ -27,6 +28,7 @@
                         v-model="captcha"
                         name="captcha"
                         class="uni-input captcha-input"
+                        maxlength="6"
                         type="text"
                         placeholder="请输入验证码"
                     >
@@ -54,6 +56,7 @@
                     password
                     name="first_pwd"
                     type="text"
+                    maxlength="16"
                     placeholder="请输入新密码"
                 >
             </view>
@@ -65,10 +68,14 @@
                     class="uni-input input-flex"
                     password
                     name="second_pwd"
+                    maxlength="16"
                     type="text"
                     placeholder="请再次输入确认"
                 >
             </view>
+            <text class="psw-tips">
+                密码必须时8-16位的数字，字符组合（不能是纯数字）
+            </text>
             <view class="uni-btn-v">
                 <button form-type="submit">
                     提交
@@ -85,6 +92,7 @@ export default {
         return {
             captcha: '',
             isMobile: /^1[0-9]{10}$/,
+            isPassword: /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{8,16}$/,
             phone: '',
             first_pwd: '',
             second_pwd: '',
@@ -125,6 +133,16 @@ export default {
                     this.lock = true;
                     return uni.showToast({
                         title: `请输入${keyArr[e.message]}`,
+                        icon: 'none',
+                    });
+                }
+                if (
+                    formdata.first_pwd
+                    && !this.isPassword.test(formdata.first_pwd)
+                ) {
+                    this.lock = true;
+                    return uni.showToast({
+                        title: '密码格式错误，请重新输入',
                         icon: 'none',
                     });
                 }
@@ -247,6 +265,10 @@ export default {
             margin-left: 20upx;
             text-align: right;
         }
+    }
+    .psw-tips {
+        color: #999;
+        font-size: 24upx;
     }
     .uni-btn-v {
         button {
