@@ -233,7 +233,7 @@ export default {
             // #ifdef H5
             isH5: true,
             // #endif
-            isAutoPlay: false,
+            isAutoPlay: true,
             isPlayed: false,
             isPaused: false,
             isVideoWaiting: false,
