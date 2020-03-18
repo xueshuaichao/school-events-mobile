@@ -118,7 +118,7 @@ export default {
             justify-content: space-between;
             width: 330upx;
             height: 300upx;
-            margin-right: 20upx;
+            margin-right: 28upx;
             margin-bottom: 30upx;
         }
     }
