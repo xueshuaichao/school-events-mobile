@@ -208,7 +208,7 @@ export default {
             // #ifdef H5
             isH5: true,
             // #endif
-            isAutoPlay: false,
+            isAutoPlay: true,
         };
     },
     methods: {
