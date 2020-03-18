@@ -150,9 +150,9 @@
                         </view>
                     </view>
                     <view class="wx-login">
-                        <text class="wx-login-text">
+                        <view class="wx-login-text">
                             微信授权手机号登录
-                        </text>
+                        </view>
                         <image
                             class="wx-login-btn"
                             src="/static/images/uc/wx.png"
@@ -510,6 +510,7 @@ export default {
             if (errMsg === 'getPhoneNumber:ok') {
                 this.checkSession(e.detail);
             } else {
+                uni.hideLoading();
                 this.showWeixin = false;
             }
         },
@@ -533,15 +534,23 @@ export default {
                             encrypted_data: encryptedData,
                             iv,
                             userkey,
-                        }).then((data) => {
-                            try {
-                                uni.setStorageSync('medusa_key', data.userkey);
-                            } catch (e) {
-                                // error
-                            }
-                            _this.getUserInfo();
-                            uni.hideLoading();
-                        });
+                        }).then(
+                            (data) => {
+                                try {
+                                    uni.setStorageSync(
+                                        'medusa_key',
+                                        data.userkey,
+                                    );
+                                } catch (e) {
+                                    // error
+                                }
+                                _this.getUserInfo();
+                                uni.hideLoading();
+                            },
+                            () => {
+                                uni.hideLoading();
+                            },
+                        );
                     }
                 },
                 () => {
@@ -549,6 +558,7 @@ export default {
                     const page = getCurrentPages().pop();
                     if (!page) return;
                     page.onLoad();
+                    uni.hideLoading();
                 },
             );
         },
@@ -754,6 +764,7 @@ export default {
         color: #666;
         font-size: 32upx;
         margin-bottom: 30upx;
+        text-align: center;
     }
     .wx-login-btn {
         width: 100upx;

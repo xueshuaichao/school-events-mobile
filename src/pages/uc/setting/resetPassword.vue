@@ -13,6 +13,7 @@
                         v-model="phone"
                         name="phone"
                         class="uni-input"
+                        maxlength="11"
                         type="text"
                         placeholder="请输入手机号"
                     >
@@ -27,6 +28,7 @@
                         v-model="captcha"
                         name="captcha"
                         class="uni-input captcha-input"
+                        maxlength="6"
                         type="text"
                         placeholder="请输入验证码"
                     >
@@ -54,6 +56,7 @@
                     password
                     name="first_pwd"
                     type="text"
+                    maxlength="16"
                     placeholder="请输入新密码"
                 >
             </view>
@@ -65,13 +68,12 @@
                     class="uni-input input-flex"
                     password
                     name="second_pwd"
+                    maxlength="16"
                     type="text"
                     placeholder="请再次输入确认"
                 >
             </view>
-            <text
-                class="psw-tips"
-            >
+            <text class="psw-tips">
                 密码必须时8-16位的数字，字符组合（不能是纯数字）
             </text>
             <view class="uni-btn-v">
