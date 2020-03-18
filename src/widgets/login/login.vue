@@ -1,7 +1,7 @@
 <template>
     <view>
         <view class="page-bind-mobile">
-            <template v-if="isWeixin && showWeixin">
+            <template v-if="!isH5 && showWeixin">
                 <view class="weixin-login">
                     <view class="login-text">
                         登录或注册爱挑战账号后，您可以上传作品或参与活动。
@@ -144,12 +144,16 @@
                     <view class="form-item-wrap">
                         <view
                             class="btn login-btn"
+                            :class="{ 'h5-btn': isH5 }"
                             @click="login()"
                         >
                             确定
                         </view>
                     </view>
-                    <view class="wx-login">
+                    <view
+                        v-if="!isH5"
+                        class="wx-login"
+                    >
                         <view class="wx-login-text">
                             微信授权手机号登录
                         </view>
@@ -197,8 +201,8 @@ export default {
                 remain: '',
                 isSend: false,
             },
-            // #ifdef MP-WEIXIN
-            isWeixin: true,
+            // #ifdef H5
+            isH5: true,
             // #endif
             // loginMode: 'sms',
             loginMode: 'sms',
@@ -214,7 +218,7 @@ export default {
         };
     },
     created() {
-        if (this.isWeixin) {
+        if (!this.isH5) {
             this.getCode();
         }
     },
@@ -747,6 +751,9 @@ export default {
         margin-top: 30rpx;
         margin-bottom: 56rpx;
         font-size: 36rpx;
+        &.h5-btn {
+            margin-top: 100rpx;
+        }
     }
 
     .logo {

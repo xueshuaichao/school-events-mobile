@@ -150,6 +150,12 @@ const routesConfig = {
             path: '/pages/yiqing/upload/result',
         },
         {
+            path: '/pages/yiqing/bind-mobile/index',
+        },
+        {
+            path: '/pages/search/index',
+        },
+        {
             path: '/pages/login/login',
         },
         {
