@@ -18,7 +18,7 @@
                     :interval="5000"
                     :duration="500"
                     :circular="true"
-                    loop="true"
+                    :loop="false"
                 >
                     <swiper-item
                         v-for="item in pageData.img"
@@ -189,6 +189,8 @@
 </template>
 
 <script>
+import api from '../../common/api';
+
 export default {
     filters: {
         optimizeImage: (val) => {
@@ -281,10 +283,11 @@ export default {
         onPlay() {
             console.log('play----------------');
             if (!this.isPlayed) {
-                this.pageData.play_count = this.pageData.play_count + 1;
-                // api.get('/api/works/playcount', {
-                //     id: this.detailId,
-                // });
+                api.post('/api/works/playcount', {
+                    id: this.pageData.id,
+                }).then(() => {
+                    this.pageData.play_count = this.pageData.play_count + 1;
+                });
             }
             this.isVideoWaiting = false;
             this.isPlayed = true;
