@@ -14,7 +14,7 @@
             v-if="type === 'normal'"
             class="text"
         >
-            暂无数据
+            {{ msg }}
         </view>
         <view
             v-if="type === 'uc'"
@@ -36,6 +36,10 @@ export default {
         type: {
             type: String,
             default: 'normal',
+        },
+        msg: {
+            type: String,
+            default: '暂无数据',
         },
     },
 };

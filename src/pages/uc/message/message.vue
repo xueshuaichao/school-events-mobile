@@ -1,87 +1,89 @@
 <template>
     <view class="page-message">
-        <view class="panel">
-            <view
-                v-if="!showCheckboxPanel"
-                class="select-text"
-                @click="showCheckbox(true)"
-            >
-                选择
-            </view>
-            <view
-                v-else
-                class="select-handle"
-            >
-                <checkbox-group @change="allChoose">
-                    <label>
-                        <checkbox
-                            style="transform:scale(0.7)"
-                            value="all"
-                            color="#1166FF"
-                            :class="{ checked: allChecked }"
-                            :checked="allChecked ? true : false"
-                        />全选
-                    </label>
-                </checkbox-group>
-                <view class="btn">
-                    <text @click="cancel">
-                        取消
-                    </text>
-                    <text
-                        class="btn"
-                        @click="setMessageStatus"
-                    >
-                        标记为已读
-                    </text>
+        <template v-if="showDataList.length">
+            <view class="panel">
+                <view
+                    v-if="!showCheckboxPanel"
+                    class="select-text"
+                    @click="showCheckbox(true)"
+                >
+                    选择
+                </view>
+                <view
+                    v-else
+                    class="select-handle"
+                >
+                    <checkbox-group @change="allChoose">
+                        <label>
+                            <checkbox
+                                style="transform:scale(0.7)"
+                                value="all"
+                                color="#1166FF"
+                                :class="{ checked: allChecked }"
+                                :checked="allChecked ? true : false"
+                            />全选
+                        </label>
+                    </checkbox-group>
+                    <view class="btn">
+                        <text @click="cancel">
+                            取消
+                        </text>
+                        <text
+                            class="btn"
+                            @click="setMessageStatus"
+                        >
+                            标记为已读
+                        </text>
+                    </view>
                 </view>
             </view>
-        </view>
-        <view class="message-list">
-            <template v-if="showDataList.length">
-                <checkbox-group @change="changeCheckbox">
-                    <view
-                        v-for="(item, index) in showDataList"
-                        :key="index"
-                        class="message-item"
-                        :class="{ unread: !showCheckboxPanel }"
-                    >
-                        <text
-                            v-if="!item.is_read && !showCheckboxPanel"
-                            class="status"
-                        />
-                        <view class="checkbox-view">
-                            <checkbox
-                                v-if="showCheckboxPanel"
-                                style="transform:scale(0.7)"
-                                :value="String(item.msg_id)"
-                                :checked="
-                                    checkedArr.includes(String(item.msg_id))
-                                "
-                                class="checkbox"
-                                :class="{
-                                    checked: checkedArr.includes(
-                                        String(item.msg_id)
-                                    )
-                                }"
-                            />
-                        </view>
-                        <text class="detail-text">
-                            {{ item.content }}
-                        </text>
+            <view class="message-list">
+                <template>
+                    <checkbox-group @change="changeCheckbox">
                         <view
-                            v-if="item.type === 1 || item.type === 2"
-                            class="handle"
-                            @click="handleMessage(item.msg_id, item.type)"
+                            v-for="(item, index) in showDataList"
+                            :key="index"
+                            class="message-item"
+                            :class="{ unread: !showCheckboxPanel }"
                         >
-                            点击查看
+                            <text
+                                v-if="!item.is_read && !showCheckboxPanel"
+                                class="status"
+                            />
+                            <view class="checkbox-view">
+                                <checkbox
+                                    v-if="showCheckboxPanel"
+                                    style="transform:scale(0.7)"
+                                    :value="String(item.msg_id)"
+                                    :checked="
+                                        checkedArr.includes(String(item.msg_id))
+                                    "
+                                    class="checkbox"
+                                    :class="{
+                                        checked: checkedArr.includes(
+                                            String(item.msg_id)
+                                        )
+                                    }"
+                                />
+                            </view>
+                            <text class="detail-text">
+                                {{ item.content }}
+                            </text>
+                            <view
+                                v-if="item.type === 1 || item.type === 2"
+                                class="handle"
+                                @click="handleMessage(item.msg_id, item.type)"
+                            >
+                                点击查看
+                            </view>
                         </view>
-                    </view>
-                </checkbox-group>
-            </template>
-            <template v-else>
-                <blank />
-            </template>
-        </view>
+                    </checkbox-group>
+                </template>
+            </view>
+        </template>
+        <template v-else>
+            <blank msg="暂无消息通知" />
+        </template>
     </view>
 </template>
 
@@ -304,6 +306,9 @@ checkbox .wx-checkbox-input.wx-checkbox-input-checked {
             font-size: 28upx;
             color: #0861ff;
         }
+    }
+    .blank-wrap {
+        margin-top: 180upx;
     }
 }
 </style>
