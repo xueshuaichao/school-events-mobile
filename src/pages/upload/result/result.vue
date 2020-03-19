@@ -105,8 +105,8 @@ export default {
         },
         goToUc() {
             if (this.from === 'upload') {
-                uni.reLaunch({
-                    url: '/pages/tabBar/uc/uc',
+                uni.navigateTo({
+                    url: '/pages/uc/myWork/myWork?type=0',
                 });
             } else if (this.from === 'festival') {
                 uni.reLaunch({

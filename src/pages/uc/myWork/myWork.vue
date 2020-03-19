@@ -243,14 +243,15 @@ export default {
         },
     },
     onLoad(query) {
+        // 作品状态 status 0—待审核 1—已通过 2—未通过 -1 全部
         const { type } = query;
-        if (type) {
-            if (Number(type) === 1) {
-                this.tabActiveIndex = 0;
-            }
-            this.tabActiveIndex = Number(type);
+        const index = type && Number(type);
+        this.tabActiveIndex = index || 0;
+        if (index === 1) {
+            this.tabActiveIndex = 0;
+        } else if (index === 0) {
+            this.tabActiveIndex = 1;
         }
-
         this.getWorkData();
     },
 };
