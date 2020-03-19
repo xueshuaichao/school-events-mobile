@@ -155,7 +155,7 @@
                         class="icon"
                         src="/static/images/yiqing/detail/view.png"
                     />
-                    <view> {{ pageData.play_count }} </view>
+                    <view> {{ play_count }} </view>
                 </view>
             </view>
 
@@ -241,6 +241,7 @@ export default {
             isVideoWaiting: false,
             clear: false,
             showVideo: this.swiperPage === this.isChangeSlide,
+            play_count: 0,
         };
     },
     watch: {
@@ -256,6 +257,9 @@ export default {
                 this.clear = false;
             }
         },
+    },
+    created() {
+        this.play_count = this.pageData.play_count;
     },
     mounted() {},
     methods: {
@@ -276,17 +280,15 @@ export default {
             console.log('暂停了-------');
         },
         togglePlayStatus() {
-            console.log('--------togglePlayStatus');
-            this.$refs.video.play();
+            console.log('--------togglePlayStatus---');
             this.isPaused = false;
         },
         onPlay() {
-            console.log('play----------------');
             if (!this.isPlayed) {
                 api.post('/api/works/playcount', {
                     id: this.pageData.id,
                 }).then(() => {
-                    this.pageData.play_count = this.pageData.play_count + 1;
+                    this.play_count = this.play_count + 1;
                 });
             }
             this.isVideoWaiting = false;
