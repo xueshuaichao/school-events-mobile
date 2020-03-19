@@ -70,19 +70,19 @@
                         '介绍（不超过500字）'
                 "
             />
-            <upload
-                v-if="uploadMode === 'video'"
-                :type="'video'"
-                @change="updateVideo"
-            />
-            <upload
-                v-if="uploadMode === 'video'"
-                :type="'image'"
-                :is-video="true"
-                @change="updateImage"
-            />
+            <template v-if="uploadMode === 'video' && isReset">
+                <upload
+                    :type="'video'"
+                    @change="updateVideo"
+                />
+                <upload
+                    :type="'image'"
+                    :is-video="true"
+                    @change="updateImage"
+                />
+            </template>
 
-            <template v-if="uploadMode === 'image'">
+            <template v-if="uploadMode === 'image' && isReset">
                 <upload
                     :type="'image'"
                     :preview="false"
@@ -176,6 +176,7 @@ export default {
     },
     data() {
         return {
+            isReset: true,
             isLoading: true,
 
             tabs: [
@@ -422,12 +423,14 @@ export default {
                 return api.isLogin().then(() => {
                     api.post('/api/user/editwork', formData).then(
                         (res) => {
+                            this.isReset = false;
                             console.log(res);
                             uni.hideLoading();
                             uni.navigateTo({
                                 url: '/pages/upload/result/result?type=success',
                             });
                             this.resetData();
+                            this.isReset = true;
                             this.lock = true;
                         },
                         (err) => {
