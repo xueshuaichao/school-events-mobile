@@ -620,6 +620,7 @@ export default {
                 video_id: data.video_id,
                 file_name: data.tempFilePath,
                 file_size: data.size,
+                file_suffix: data.tempFilePath.split('.').pop() || '',
             };
         },
         updateImage(data) {
@@ -664,7 +665,6 @@ export default {
                     }
                 });
             } catch (e) {
-                console.log(3);
                 status = false;
                 uni.showToast({
                     title: validateObj[e.message],
