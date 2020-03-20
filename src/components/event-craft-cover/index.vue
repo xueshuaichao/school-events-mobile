@@ -10,6 +10,12 @@
             :src="optimizeImage(info.img_url)"
             class="video"
         />
+        <view
+            v-if="info.grade"
+            class="is-excellect"
+        >
+            优秀
+        </view>
         <view class="media-icon">
             <image :src="mediaIcon[info.resource_type]" />
         </view>
@@ -113,6 +119,19 @@ export default {
         box-sizing: border-box;
         padding-left: 10rpx;
         line-height: 36rpx;
+    }
+    .is-excellect {
+        position: absolute;
+        width: 66upx;
+        height: 30upx;
+        background: rgba(17, 102, 255, 1);
+        border-radius: 0px 15upx 15upx 0px;
+        border: 1px solid rgba(255, 255, 255, 0.75);
+        left: 0;
+        top: 8upx;
+        font-size: 20upx;
+        text-align: center;
+        color: #fff;
     }
 }
 </style>
