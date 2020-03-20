@@ -418,6 +418,20 @@ export default {
         },
         isShow() {
             this.showMenu = false;
+            console.log(this.paramsFilter.from);
+            try {
+                const value = uni.getStorageSync('onShowFrom');
+                if (value === 'detail') {
+                    this.getData();
+                    this.getTableData();
+                    if (!this.paramsFilter.from) {
+                        uni.setStorageSync('onShowFrom', '');
+                    }
+                }
+            } catch (e) {
+                // error
+                uni.setStorageSync('onShowFrom', '');
+            }
         },
     },
     created() {
@@ -616,7 +630,7 @@ export default {
         margin-bottom: 30upx;
     }
     .blank-box {
-        margin-top: 150upx;
+        margin-top: 350upx;
     }
 }
 .comp-work {

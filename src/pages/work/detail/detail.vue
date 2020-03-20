@@ -856,7 +856,9 @@ export default {
     onHide() {
         // this.isPaused = true;
     },
-    onShow() {},
+    onShow() {
+        uni.setStorageSync('onShowFrom', 'detail');
+    },
     onShareAppMessage(res) {
         if (res.from === 'button') {
             // 来自页面内分享按钮

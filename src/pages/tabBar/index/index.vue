@@ -346,7 +346,19 @@ export default {
         this.getUserInfo();
     },
     onShow() {
-        this.chunjieStatus();
+        // 页面从详情过来的，则，需要刷新一下页面数据，点赞量会变化。
+        try {
+            const value = uni.getStorageSync('onShowFrom');
+            if (value === 'detail') {
+                this.getData();
+                this.getUserInfo();
+                uni.setStorageSync('onShowFrom', '');
+            }
+        } catch (e) {
+            uni.setStorageSync('onShowFrom', '');
+            // error
+        }
+        // this.chunjieStatus();
     },
     created() {},
     methods: {

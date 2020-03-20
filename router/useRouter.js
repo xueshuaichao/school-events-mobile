@@ -249,7 +249,7 @@ router.beforeEach(async (to, from, next) => {
     next();
 });
 router.afterEach((to, from) => {
-    console.log('afterEach');
+    console.log('afterEach------');
 });
 
 // setTimeout(() => {
