@@ -40,7 +40,7 @@
                     <div class="item-cont">
                         <image
                             class="resource-img"
-                            :src="itemData.video_img_url"
+                            :src="`${itemData.video_img_url}${ossImg}`"
                             mode=""
                         />
                         <view class="text">
@@ -123,6 +123,8 @@ export default {
             canvasImg: '',
             itemData: {},
             record: ['校级记录', '市级记录', '省级记录'],
+            ossImg:
+                '?x-oss-process=image/format,jpg/interlace,1/quality,Q_80/resize,m_pad,w_388,h_261',
             posterConfig: {
                 pixelRatio: 3,
                 width: 689,
@@ -232,8 +234,7 @@ export default {
             );
         },
         setCanvasImg() {
-            const query = '?x-oss-process=image/format,jpg/interlace,1/quality,Q_80/resize,m_pad,w_485,h_324';
-            this.posterConfig.images[1].url = `${this.itemData.video_img_url}${query}`;
+            this.posterConfig.images[1].url = `${this.itemData.video_img_url}${this.ossImg}`;
             const record = ['校级记录', '市级记录', '省级记录'];
             this.posterConfig.images[2].url = `https://aitiaozhan.oss-cn-beijing.aliyuncs.com/record/record${this.itemData.record}.png`;
             const texts = [
