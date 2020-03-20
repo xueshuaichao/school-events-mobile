@@ -385,6 +385,7 @@ export default {
 
         onPosterSuccess(e) {
             const { detail } = e;
+            console.log(1111, e);
             this.canvasImg = detail;
             this.showTicketMask = false;
             this.prompt = true;

@@ -122,12 +122,10 @@ export default {
             api.post('/api/common/readmsg', {
                 msg_id: idArr,
             }).then(() => {
-                this.dataList.forEach((item, index) => {
+                this.showDataList.forEach((item, index) => {
                     idArr.forEach((itemId) => {
-                        if (item.msg_id === itemId) {
-                            // eslint-disable-next-line no-param-reassign
-                            // item.is_read = 1;
-                            this.$set(this.dataList[index], 'is_read', 1);
+                        if (item.msg_id === Number(itemId)) {
+                            this.$set(this.showDataList[index], 'is_read', 1);
                         }
                     });
                 });
@@ -148,6 +146,7 @@ export default {
             // 取消选择
             this.allChecked = false;
             this.checkedArr = [];
+            this.unreadList = this.showDataList.filter(v => v.is_read === 0);
         },
         showCheckbox(status) {
             if (this.unreadList.length === 0) {
@@ -172,7 +171,6 @@ export default {
                 });
             } else {
                 this.handleMessage(this.checkedArr, 'all');
-                this.unreadList = this.dataList.filter(v => v.is_read === 0);
             }
         },
         // 多选复选框改变事件

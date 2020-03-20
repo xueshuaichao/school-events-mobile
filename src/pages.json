@@ -302,16 +302,16 @@
         {
             "path": "pages/uc/record/record",
             "style": {
-                "navigationBarTitleText": "我的记录",
-                "usingComponents": {
-                    "poster": "/wxcomponents/third-party/poster/poster/index"
-                }
+                "navigationBarTitleText": "我的记录"
             }
         },
         {
             "path": "pages/uc/record/result",
             "style": {
-                "navigationBarTitleText": "我的记录"
+                "navigationBarTitleText": "我的记录",
+                "usingComponents": {
+                    "poster": "/wxcomponents/third-party/poster/poster/index"
+                }
             }
         },
         {

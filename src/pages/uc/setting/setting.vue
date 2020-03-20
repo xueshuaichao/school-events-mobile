@@ -39,7 +39,7 @@
                             v-else
                             class="placeholder"
                         >
-                            去设置
+                            未设置
                         </text>
                         <image
                             class="arrow-r"

@@ -139,7 +139,7 @@ export default {
         showCause({ memo }) {
             uni.showModal({
                 title: '驳回原因',
-                content: memo,
+                content: memo || '暂无内容',
                 showCancel: false,
             });
         },

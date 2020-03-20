@@ -1,13 +1,25 @@
 <template>
     <div class="page-record-result">
         <template v-if="!isH5">
-            <view class="canvas-img">
+            <template v-if="startCreateCanvas">
+                <poster
+                    id="poster"
+                    :config="posterConfig"
+                    @success="onPosterSuccess"
+                    @fail="onPosterFail"
+                />
+            </template>
+            <view
+                v-else
+                class="canvas-img"
+            >
                 <image
                     :src="canvasImg"
                     mode=""
                 />
             </view>
             <view
+                v-if="!startCreateCanvas"
                 class="btn"
                 @click="handleSave"
             >
@@ -15,80 +27,82 @@
             </view>
         </template>
         <template v-else>
-            <view
-                id="canvas-img"
-                class="h5-canvas-img"
-            >
-                <image
-                    src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/record/recordbg.png"
-                    class="bg-img"
-                    mode=""
-                />
-                <div class="item-cont">
+            <template v-if="Object.keys(itemData).length">
+                <view
+                    id="canvas-img"
+                    class="h5-canvas-img"
+                >
                     <image
-                        class="resource-img"
-                        :src="itemData.video_img_url"
+                        src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/record/recordbg.png"
+                        class="bg-img"
                         mode=""
                     />
-                    <view class="text">
-                        <text class="text-tit">
-                            作品名称：
-                        </text>
-                        <text>{{ itemData.resource_name }}</text>
-                    </view>
-                    <view class="text">
-                        <text class="text-tit">
-                            成绩：
-                        </text>
-                        <text>
-                            {{ itemData.achievement
-                            }}{{ itemData.achievement_unit }}
-                        </text>
-                    </view>
-                    <view class="text">
-                        <text class="text-tit">
-                            记录等级：
-                        </text>
-                        <text>{{ record[itemData.record - 1] }}</text>
-                    </view>
-                    <view class="text">
-                        <text class="text-tit">
-                            参赛者名称
-                        </text>
-                        <text>{{ itemData.create_name }}</text>
-                    </view>
-                    <view class="text">
-                        <text class="text-tit">
-                            学校年级：
-                        </text>
-                        <text>{{ itemData.create_user_class }}</text>
-                    </view>
-                    <view class="text">
-                        <text class="text-tit">
-                            创造记录时间：
-                        </text>
-                        <text>{{ itemData.created_at }}</text>
-                    </view>
-                    <view class="image-view">
+                    <div class="item-cont">
                         <image
-                            class="record-img"
-                            :src="itemData.recordImage"
+                            class="resource-img"
+                            :src="itemData.video_img_url"
                             mode=""
                         />
-                        <image
-                            class="qrcode-img"
-                            :src="itemData.qrcode"
-                            mode=""
-                        />
-                    </view>
-                </div>
-            </view>
-            <view
-                class="btn"
-                @click="h5HandleSave"
-            >
-                保存图片
-            </view>
+                        <view class="text">
+                            <text class="text-tit">
+                                作品名称：
+                            </text>
+                            <text>{{ itemData.resource_name }}</text>
+                        </view>
+                        <view class="text">
+                            <text class="text-tit">
+                                成绩：
+                            </text>
+                            <text>
+                                {{ itemData.achievement
+                                }}{{ itemData.achievement_unit }}
+                            </text>
+                        </view>
+                        <view class="text">
+                            <text class="text-tit">
+                                记录等级：
+                            </text>
+                            <text>{{ record[itemData.record - 1] }}</text>
+                        </view>
+                        <view class="text">
+                            <text class="text-tit">
+                                参赛者名称
+                            </text>
+                            <text>{{ itemData.create_name }}</text>
+                        </view>
+                        <view class="text">
+                            <text class="text-tit">
+                                学校年级：
+                            </text>
+                            <text>{{ itemData.create_user_class }}</text>
+                        </view>
+                        <view class="text">
+                            <text class="text-tit">
+                                创造记录时间：
+                            </text>
+                            <text>{{ itemData.created_at }}</text>
+                        </view>
+                        <view class="image-view">
+                            <image
+                                class="record-img"
+                                :src="itemData.recordImage"
+                                mode=""
+                            />
+                            <image
+                                class="qrcode-img"
+                                :src="itemData.qrcode"
+                                mode=""
+                            />
+                        </view>
+                    </div>
+                </view>
+                <view
+                    class="btn"
+                    @click="h5HandleSave"
+                >
+                    保存图片
+                </view>
+            </template>
         </template>
     </div>
 </template>
@@ -97,20 +111,185 @@
 // #ifdef H5
 import html2canvas from 'html2canvas';
 // #endif
-import utils from '../../../common/utils';
 
 export default {
     data() {
         return {
+            poster: null,
             // #ifdef H5
             isH5: true,
             // #endif
+            startCreateCanvas: true,
             canvasImg: '',
             itemData: {},
             record: ['校级记录', '市级记录', '省级记录'],
+            posterConfig: {
+                pixelRatio: 3,
+                width: 689,
+                height: 1103,
+                debug: true,
+                texts: [
+                    {
+                        x: 50,
+                        y: 101,
+                        text: [
+                            {
+                                text: '作品名称',
+                                fontSize: 29,
+                                color: '#ACAFBF',
+                                opacity: 1,
+                                marginRight: 10,
+                                lineHeight: 40,
+                                lineNum: 1,
+                                width: 1210,
+                                textOverflow: 'ellipsis',
+                            },
+                        ],
+                        baseLine: 'middle',
+                    },
+                ],
+                images: [
+                    {
+                        url:
+                            'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/record/recordbg.png',
+                        width: 689,
+                        height: 1103,
+                        y: 0,
+                        x: 0,
+                    },
+                    {
+                        url: '',
+                        width: 388,
+                        height: 261,
+                        y: 276,
+                        x: 150,
+                    },
+                    {
+                        url: '',
+                        width: 313,
+                        height: 68,
+                        y: 939,
+                        x: 103,
+                    },
+                    {
+                        url: '',
+                        width: 160,
+                        height: 160,
+                        y: 890,
+                        x: 470,
+                    },
+                ],
+            },
         };
     },
+    watch: {
+        itemData(val) {
+            console.log(val);
+            const _this = this;
+            if (!_this.isH5) {
+                _this.posterConfig.images[3].url = val.qrcode;
+                _this.initCanvasText();
+                _this.setCanvasImg();
+                setTimeout(() => {
+                    _this.poster.onCreate(_this.posterConfig);
+                }, 200);
+            }
+        },
+    },
     methods: {
+        onPosterSuccess({ detail }) {
+            this.startCreateCanvas = false;
+            this.canvasImg = detail;
+        },
+        onPosterFail(err) {
+            console.log(err);
+        },
+        initCanvasText() {
+            const texts = [
+                '作品名称：',
+                '成绩：',
+                '记录等级：',
+                '参赛者姓名：',
+                '学校年级：',
+                '创建记录时间：',
+            ];
+            const textStyle = {
+                fontSize: 24,
+                lineHeight: 72,
+                color: '#ACAFBF',
+                width: 450,
+            };
+            const position = {
+                x: 101,
+                y: 540,
+                ySpace: 53,
+                xSpace: 0,
+            };
+            this.posterConfig.texts = this.posterText(
+                texts,
+                textStyle,
+                position,
+            );
+        },
+        setCanvasImg() {
+            const query = '?x-oss-process=image/format,jpg/interlace,1/quality,Q_80/resize,m_pad,w_485,h_324';
+            this.posterConfig.images[1].url = `${this.itemData.video_img_url}${query}`;
+            const record = ['校级记录', '市级记录', '省级记录'];
+            this.posterConfig.images[2].url = `https://aitiaozhan.oss-cn-beijing.aliyuncs.com/record/record${this.itemData.record}.png`;
+            const texts = [
+                this.itemData.resource_name,
+                `${this.itemData.achievement}${this.itemData.achievement_unit}`,
+                record[this.itemData.record - 1],
+                this.itemData.create_name,
+                this.itemData.create_user_class,
+                this.itemData.created_at,
+            ];
+            const textStyle = {
+                fontSize: '28',
+                lineHeight: '72',
+                color: '#4D4E56',
+                width: 980,
+            };
+            const position = {
+                x: 283,
+                y: 540,
+                ySpace: 53,
+                xSpace: 0,
+            };
+            // console.log(this.posterText(texts, textStyle, position))
+            console.log(this.posterConfig.texts);
+            this.posterConfig.texts = this.posterConfig.texts.concat(
+                this.posterText(texts, textStyle, position),
+            );
+        },
+        posterText(texts, textStyle = {}, position = {}) {
+            let defaultStyle = {
+                ...textStyle,
+                opacity: 1,
+                lineNum: 1,
+                textOverflow: 'ellipsis',
+            };
+            console.log(defaultStyle);
+            let defaultPositon = {
+                x: position.x,
+                y: position.y,
+            };
+            return texts.map((item) => {
+                defaultStyle = {
+                    ...defaultStyle,
+                    text: item,
+                };
+                defaultPositon = {
+                    x: defaultPositon.x + position.xSpace,
+                    y: defaultPositon.y + position.ySpace,
+                };
+                return {
+                    ...defaultPositon,
+                    text: [defaultStyle],
+                    baseLine: 'middle',
+                };
+            });
+        },
         handleSave() {
             console.log(this.canvasImg, '触发图片保存');
             const that = this;
@@ -192,15 +371,22 @@ export default {
             });
         },
     },
-    onLoad(query) {
-        this.canvasImg = utils.getParam(query, 'img');
-        this.itemData = JSON.parse(localStorage.getItem('recordData')) || {};
+    onLoad() {
+        const _this = this;
+        uni.getStorage({
+            key: 'recordData',
+            success({ data }) {
+                _this.itemData = JSON.parse(data);
+                _this.poster = _this.selectComponent('#poster');
+            },
+        });
     },
 };
 </script>
 <style lang="less">
 .page-record-result {
     padding-top: 14upx;
+    position: relative;
     .canvas-img {
         width: 689upx;
         height: 1103upx;
@@ -233,8 +419,8 @@ export default {
             right: 0;
         }
         .resource-img {
-            width: 480upx;
-            height: 324upx;
+            width: 388upx;
+            height: 261upx;
             margin: 0 auto 25upx;
             display: block;
         }
@@ -264,11 +450,11 @@ export default {
         .record-img {
             width: 313upx;
             height: 68upx;
-            padding-top: 15upx;
+            padding-top: 40upx;
         }
         .qrcode-img {
-            width: 100upx;
-            height: 100upx;
+            width: 160upx;
+            height: 160upx;
         }
     }
     .btn {
