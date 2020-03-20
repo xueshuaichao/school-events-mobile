@@ -539,7 +539,8 @@ uni-swiper {
 
 .page-index {
     padding-bottom: 20upx;
-    display: relative;
+    position: relative;
+    overflow-x: hidden;
     .search {
         width: 100%;
         font-size: 24upx;
