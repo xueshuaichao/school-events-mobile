@@ -186,7 +186,9 @@
                 </navigator> -->
             </view>
             <navigator
-                v-if="userInfo.is_admin === 1 && !isH5"
+                v-if="
+                    userInfo.identity === 3 && userInfo.is_admin === 1 && !isH5
+                "
                 class="submit-button"
                 url="/pages/uc/reported/reported"
             >

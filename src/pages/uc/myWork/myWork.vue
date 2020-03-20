@@ -219,10 +219,10 @@ export default {
                         this.deleteWork(item);
                         console.log('用户点击确定');
                     } else if (res.cancel) {
-                        uni.showToast({
-                            title: '删除失败',
-                            icon: 'none',
-                        });
+                        // uni.showToast({
+                        //     title: '删除失败',
+                        //     icon: 'none',
+                        // });
                         console.log('用户点击取消');
                     }
                 },
