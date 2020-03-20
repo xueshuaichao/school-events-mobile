@@ -70,29 +70,33 @@
                         '介绍（不超过500字）'
                 "
             />
-            <template v-if="uploadMode === 'video' && isReset">
-                <upload
-                    :type="'video'"
-                    @change="updateVideo"
-                />
-                <upload
-                    :type="'image'"
-                    :is-video="true"
-                    @change="updateImage"
-                />
-            </template>
+            <template v-if="uploadMode !== ''">
+                <template v-if="uploadMode === 'video'">
+                    <upload
+                        :type="'video'"
+                        :source="formData.video_id"
+                        @change="updateVideo"
+                    />
+                    <upload
+                        :type="'image'"
+                        :is-video="true"
+                        :source="formData.video_img_url"
+                        @change="updateImage"
+                    />
+                </template>
 
-            <template v-if="uploadMode === 'image' && isReset">
-                <upload
-                    :type="'image'"
-                    :preview="false"
-                    @change="updateImage"
-                />
-                <image-drag-sort
-                    v-show="images.length"
-                    ref="preview"
-                    :list="images"
-                />
+                <template v-if="uploadMode === 'image'">
+                    <upload
+                        :type="'image'"
+                        :preview="false"
+                        @change="updateImage"
+                    />
+                    <image-drag-sort
+                        v-show="images.length"
+                        ref="preview"
+                        :list="images"
+                    />
+                </template>
             </template>
 
             <view
@@ -176,7 +180,6 @@ export default {
     },
     data() {
         return {
-            isReset: true,
             isLoading: true,
 
             tabs: [
@@ -224,6 +227,7 @@ export default {
     methods: {
         resetData() {
             this.formData = {
+                ...this.formData,
                 cat_id: '',
                 resource_name: '',
                 introduce: '',
@@ -418,19 +422,14 @@ export default {
                 }
 
                 uni.showLoading();
-                // check input
-                console.log(this.formData);
                 return api.isLogin().then(() => {
                     api.post('/api/user/editwork', formData).then(
-                        (res) => {
-                            this.isReset = false;
-                            console.log(res);
+                        () => {
                             uni.hideLoading();
                             uni.navigateTo({
                                 url: '/pages/upload/result/result?type=success',
                             });
                             this.resetData();
-                            this.isReset = true;
                             this.lock = true;
                         },
                         (err) => {

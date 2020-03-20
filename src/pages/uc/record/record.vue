@@ -110,7 +110,7 @@ export default {
         },
         getWorkData(title) {
             this.filter.record = this.tabActiveIndex;
-            return api.get('/api/user/worklist', this.filter).then(
+            return api.post('/api/user/worklist', this.filter).then(
                 ({ list, total }) => {
                     this.isLoadingTableData = false;
                     if (title === 'reachBottom') {

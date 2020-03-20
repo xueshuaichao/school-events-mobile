@@ -312,26 +312,31 @@
                         class="uni-input"
                         type="number"
                         placeholder="分"
-                        @blur="isNumber"
+                        maxlength="2"
                     >
-                    <text>分</text>
+                    <text class="date-text">
+                        分
+                    </text>
                     <input
                         v-model="achievementDateInfo.seconds"
-                        :maxlength="2"
+                        maxlength="2"
                         type="number"
                         class="uni-input"
                         placeholder="秒"
-                        @blur="isNumber"
                     >
-                    <text>秒</text>
+                    <text class="date-text">
+                        秒
+                    </text>
                     <input
                         v-model="achievementDateInfo.millisecond"
-                        :maxlength="3"
+                        maxlength="3"
                         type="number"
                         class="uni-input"
                         placeholder="毫秒"
-                        @blur="isNumber"
-                    >毫秒
+                    >
+                    <text class="date-text">
+                        毫秒
+                    </text>
                 </view>
                 <view
                     v-else
@@ -340,9 +345,8 @@
                     <input
                         v-model="formData.achievement"
                         class="uni-input"
-                        type="text"
+                        type="number"
                         placeholder="请输入成绩"
-                        @blur="isNumber"
                     >
                     <text>{{ formData.achievement_unit }}</text>
                 </view>
@@ -422,6 +426,7 @@ export default {
                 teacher: '', // 指导教师
                 attestation_name: '', // 认证官姓名
                 achievement_unit: '', // 单位
+                achievement: '',
                 type: 2,
                 video_id: '',
                 file_name: '',
@@ -431,17 +436,9 @@ export default {
                 school_id: '',
             },
             achievementDateInfo: {
-                minutes: '0',
-                seconds: '0',
-                millisecond: '0',
-            },
-            validate: {
-                teacher: '', // 指导教师
-                attestation_name: '', // 认证官姓名
-                achievement_unit: '', // 单位
-                minutes: '0',
-                seconds: '0',
-                millisecond: '0',
+                minutes: '',
+                seconds: '',
+                millisecond: '',
             },
             checkedStudents: [],
             catText: '',
@@ -640,14 +637,6 @@ export default {
             this.catIndex = e.detail.cat_id;
             this.formData.range_id = this.range[this.catIndex].id;
         },
-        isNumber(e) {
-            if (Number.isNaN(Number(e.detail.value))) {
-                uni.showToast({
-                    icon: 'none',
-                    title: '请输入数字',
-                });
-            }
-        },
         getTimeSeconds({ minutes, seconds, millisecond }) {
             return (minutes / 1) * 60 + seconds / 1 + millisecond / 1000;
         },
@@ -656,19 +645,16 @@ export default {
             const validateObj = {
                 teacher: '请输入指导教师', // 指导教师
                 attestation_name: '请输入认证关姓名', // 认证官姓名
-                achievement: '请输入成绩',
-                minutes: '请输入成绩',
-                seconds: '请输入成绩',
-                millisecond: '请输入成绩',
                 cat_id: '请选择参赛项目',
                 grade_id: '请选择年级',
                 class_id: '请选择班级',
                 video_id: '请上传视频',
                 create_info_array: '请选择参赛学生',
                 video_img_url: '请上传封面',
+                achievement: '请输入成绩',
             };
             try {
-                Object.keys(this.formData).forEach((item) => {
+                Object.keys(validateObj).forEach((item) => {
                     if (item === 'create_info_array') {
                         if (this.formData[item].length === 0) {
                             throw Error(item);
@@ -678,6 +664,7 @@ export default {
                     }
                 });
             } catch (e) {
+                console.log(3);
                 status = false;
                 uni.showToast({
                     title: validateObj[e.message],
@@ -766,7 +753,11 @@ export default {
         align-items: center;
         font-size: 28upx;
         input {
-            width: 139upx;
+            width: 140upx;
+        }
+        .date-text {
+            display: inline-block;
+            margin: 0 9upx;
         }
     }
     .achievement-nor {
