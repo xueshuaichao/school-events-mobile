@@ -29,6 +29,7 @@ export default {
                 cat_id: {
                     one_level_id: 0,
                 },
+                from: '/list/list',
             },
             isShow: false,
         };
@@ -52,6 +53,9 @@ export default {
         uni.setNavigationBarTitle({
             title,
         });
+    },
+    onShow() {
+        this.isShow = !this.isShow;
     },
 };
 </script>
