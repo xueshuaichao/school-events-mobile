@@ -1,8 +1,48 @@
 <template>
     <view class="page-index">
+        <view
+            v-if="prompt && status === 2"
+            class="cover"
+        >
+            <image
+                src="http://aitiaozhan.oss-cn-beijing.aliyuncs.com/chunjiehao/suspension01.png"
+                @click="handleChunjie"
+            />
+            <image
+                src="../../../static/images/chunjie/third_entry_close.png"
+                @click="handleClose"
+            />
+            疫情入口
+        </view>
+        <navigator
+            v-if="yiqingshow === 1 && isShow"
+            url="/pages/yiqing/index"
+        >
+            <view class="chunjie-entry">
+                <image
+                    src="/static/images/yiqing/close.png"
+                    class="close-icon"
+                    @click.stop="handleCloseSuspension"
+                />
+                春节入口
+            </view>
+        </navigator>
+        <!-- search -->
+        <view class="search">
+            <input
+                v-model="changeValue"
+                placeholder-class="placeholderStyle"
+                placeholder="请输入作品名称/作者姓名"
+                @confirm="bindconfirm"
+            >
+            <text
+                class="button"
+                @click="bindconfirm"
+            >
+                搜索
+            </text>
+        </view>
         <!-- swiper -->
-        <!-- 一个简单的name跳转 -->
-
         <view class="swiper main-swiper">
             <view class="page-section-spacing">
                 <swiper
@@ -13,14 +53,49 @@
                     :duration="duration"
                     :circular="circular"
                 >
-                    <swiper-item>
+                    <!-- 疫情入口 -->
+                    <swiper-item v-if="!isH5 && yiqingshow === 1">
+                        <navigator
+                            url="/pages/yiqing/index"
+                            class="swiper-item"
+                        >
+                            <image
+                                class="banner-image"
+                                src="http://aitiaozhan.oss-cn-beijing.aliyuncs.com/chunjiehao/yiqing-banner.png?t=2"
+                            />
+                        </navigator>
+                    </swiper-item>
+                    <swiper-item v-if="show === 1">
+                        <navigator
+                            url="/pages/chunjie/index"
+                            class="swiper-item"
+                        >
+                            <image
+                                class="banner-image"
+                                src="http://aitiaozhan.oss-cn-beijing.aliyuncs.com/banner4.png"
+                            />
+                        </navigator>
+                    </swiper-item>
+                    <!-- 春节好入口 -->
+                    <swiper-item v-if="!isH5 && chunjiehaoshow === 1">
+                        <navigator
+                            url="/pages/chunjiehao/index"
+                            class="swiper-item"
+                        >
+                            <image
+                                class="banner-image"
+                                src="http://aitiaozhan.oss-cn-beijing.aliyuncs.com/chunjiehao.png?t=1"
+                            />
+                        </navigator>
+                    </swiper-item>
+                    <!-- <swiper-item>
                         <navigator
                             url="/pages/doc/notice/notice"
                             class="swiper-item"
                         >
                             <image
                                 class="banner-image"
-                                src="/static/images/index/banner0.jpg"
+                                src="http://aitiaozhan.oss-cn-beijing.aliyuncs.com/banner0.jpg"
                             />
                         </navigator>
                     </swiper-item>
@@ -28,7 +103,7 @@
                         <view class="swiper-item">
                             <image
                                 class="banner-image"
-                                src="/static/images/index/banner1.jpg"
+                                src="http://aitiaozhan.oss-cn-beijing.aliyuncs.com/banner1.jpg"
                             />
                         </view>
                     </swiper-item>
@@ -36,7 +111,7 @@
                         <view class="swiper-item">
                             <image
                                 class="banner-image"
-                                src="/static/images/index/banner2.jpg"
+                                src="http://aitiaozhan.oss-cn-beijing.aliyuncs.com/banner2.jpg"
                             />
                         </view>
                     </swiper-item>
@@ -44,16 +119,30 @@
                         <view class="swiper-item">
                             <image
                                 class="banner-image"
-                                src="/static/images/index/banner3.jpg"
+                                src="http://aitiaozhan.oss-cn-beijing.aliyuncs.com/banner3.jpg"
                             />
                         </view>
-                    </swiper-item>
+                    </swiper-item> -->
                 </swiper>
             </view>
         </view>
 
         <view class="menu-list">
             <navigator
+                class="item"
+                :url="`/pages/doc/intro/intro?id=rule`"
+            >
+                <view class="icon-wrap">
+                    <image
+                        class="icon"
+                        src="/static/images/index/0001.png"
+                    />
+                </view>
+                <text class="name">
+                    大赛简介
+                </text>
+            </navigator>
+            <!-- <navigator
                 class="item"
                 :url="`/pages/doc/detail/detail?id=rule`"
             >
@@ -66,20 +155,20 @@
                 <text class="name">
                     参赛指南
                 </text>
-            </navigator>
+            </navigator> -->
 
             <navigator
                 class="item"
                 :url="`/pages/doc/list/list?type=challenge`"
             >
-                <view class="icon-wrap light-blue">
+                <view class="icon-wrap">
                     <image
                         class="icon"
                         src="/static/images/index/0002.png"
                     />
                 </view>
                 <text class="name">
-                    爱挑战项目
+                    爱挑战
                 </text>
             </navigator>
 
@@ -87,14 +176,14 @@
                 class="item"
                 :url="`/pages/doc/list/list?type=talent`"
             >
-                <view class="icon-wrap dark-blue">
+                <view class="icon-wrap">
                     <image
                         class="icon"
                         src="/static/images/index/0003.png"
                     />
                 </view>
                 <text class="name">
-                    才艺秀项目
+                    才艺秀
                 </text>
             </navigator>
 
@@ -102,108 +191,63 @@
                 class="item"
                 :url="`/pages/doc/list/list?type=guinness`"
             >
-                <view class="icon-wrap pink">
+                <view class="icon-wrap">
                     <image
                         class="icon"
                         src="/static/images/index/0004.png"
                     />
                 </view>
                 <text class="name">
-                    吉尼斯项目
+                    吉尼斯
+                </text>
+            </navigator>
+            <navigator
+                url="/pages/activities/index"
+                class="item"
+            >
+                <view class="icon-wrap">
+                    <image
+                        class="icon"
+                        src="/static/images/index/0005.png"
+                    />
+                </view>
+                <text class="name">
+                    精彩活动
                 </text>
             </navigator>
         </view>
         <!-- menu -->
-        <view class="menu-list">
-            <navigator
-                class="item"
-                :url="
-                    `/pages/news/detail/detail?id=${menuConf.intro.id}&title=大赛简介`
-                "
-            >
-                <view class="icon-wrap purple">
-                    <!-- <view class="icon icon-intro"></view> -->
-                    <image
-                        class="icon"
-                        src="/static/images/index/intro.png"
-                    />
-                </view>
-                <text class="name">
-                    大赛简介
-                </text>
-            </navigator>
-
-            <navigator
-                class="item"
-                :url="
-                    `/pages/news/detail/detail?id=${menuConf.notice.id}&title=大赛须知`
-                "
-            >
-                <view class="icon-wrap green">
-                    <image
-                        class="icon"
-                        src="/static/images/index/rule.png"
-                    />
-                </view>
-                <text class="name">
-                    大赛须知
-                </text>
-            </navigator>
-
-            <navigator
-                class="item"
-                :url="
-                    `/pages/news/detail/detail?id=${menuConf.process.id}&title=大赛流程`
-                "
-            >
-                <view class="icon-wrap yellow">
-                    <image
-                        class="icon"
-                        src="/static/images/index/flow.png"
-                    />
-                </view>
-                <text class="name">
-                    大赛流程
-                </text>
-            </navigator>
-
-            <navigator
-                class="item"
-                :url="
-                    `/pages/news/detail/detail?id=${menuConf.time.id}&title=大赛时间`
-                "
-            >
-                <view class="icon-wrap blue">
-                    <image
-                        class="icon"
-                        src="/static/images/index/time.png"
-                    />
-                </view>
-                <text class="name">
-                    大赛时间
-                </text>
-            </navigator>
-        </view>
         <!-- work show -->
 
         <work
             :title="'爱挑战优秀个人'"
             :more-url="'/pages/work/list/list?cat_id=1'"
-            :info="workData.individual"
+            :info="workData.individual.list"
+            :cat-id="1"
+            :sort="4"
+            :total="
+                workData.individual.total > 10 ? 10 : workData.individual.total
+            "
         />
         <work
             :title="'爱挑战优秀团体'"
             :more-url="'/pages/work/list/list?cat_id=2'"
-            :info="workData.team"
+            :info="workData.team.list"
+            :cat-id="2"
+            :sort="4"
+            :total="workData.team.total > 10 ? 10 : workData.team.total"
         />
         <work
             :title="'才艺秀优秀作品'"
             :more-url="'/pages/work/list/list?cat_id=3'"
-            :info="workData.talent"
+            :info="workData.talent.list"
+            :cat-id="3"
+            :sort="4"
+            :total="workData.talent.total > 10 ? 10 : workData.talent.total"
         />
 
         <!-- news -->
-        <view class="panel">
+        <!-- <view class="panel">
             <view class="panel-hd">
                 <text
                     v-for="(item, k) in newsColumn"
@@ -234,27 +278,29 @@
                     </text>
                 </navigator>
             </view>
-        </view>
+        </view> -->
     </view>
 </template>
 
 <script>
 import work from '../../../widgets/work/work.vue';
 import api from '../../../common/api';
+// import bindMobile from '../../../components/bind-mobile/index.vue';
 
 export default {
     components: {
         work,
+        // bindMobile,
     },
     data() {
         return {
             background: ['color1', 'color2', 'color3'],
             indicatorDots: true,
-            autoplay: false,
-            interval: 2000,
+            autoplay: true,
+            interval: 5000,
             duration: 500,
-            circular: true,
-
+            circular: false,
+            isShow: true,
             newsTabActiveIndex: 0,
 
             menuConf: {
@@ -270,37 +316,151 @@ export default {
             ],
             newsData: [],
             workData: {
-                individual: [],
-                team: [],
-                talent: [],
+                individual: { list: [], total: 0 },
+                team: { list: [], total: 0 },
+                talent: { list: [], total: 0 },
             },
+            prompt: false,
+            isFirstLogin: 'isFirstLogin3',
+            status: 2,
+            show: 1,
+            chunjiehaoshow: 1,
+            yiqingshow: 1,
+            // #ifdef H5
+            isH5: true,
+            // #endif
+            needBindMobile: false,
+            changeValue: '',
         };
     },
-    onLoad() {},
-    created() {
-        this.getData();
+    onHide() {
+        this.changeValue = '';
+        this.prompt = false;
     },
+    onLoad() {
+        this.chunjieStatus();
+        this.chunjiehaoStatus();
+        this.yiqingStatus();
+        this.thirdEntryPrompt();
+        this.getData();
+        this.getUserInfo();
+    },
+    onShow() {
+        // 页面从详情过来的，则，需要刷新一下页面数据，点赞量会变化。
+        try {
+            const value = uni.getStorageSync('onShowFrom');
+            if (value === 'detail') {
+                this.getData();
+                this.getUserInfo();
+                uni.setStorageSync('onShowFrom', '');
+            }
+        } catch (e) {
+            uni.setStorageSync('onShowFrom', '');
+            // error
+        }
+        // this.chunjieStatus();
+    },
+    created() {},
     methods: {
-        setNewsTabActive(index) {
-            this.newsTabActiveIndex = index;
-            this.getArticle(this.newsColumn[index].id);
+        bindconfirm() {
+            if (!this.changeValue.trim()) {
+                uni.showToast({
+                    title: '请输入搜索内容',
+                    icon: 'none',
+                });
+                return;
+            }
+            uni.navigateTo({
+                url: `/pages/work/list/list?keyword=${this.changeValue.trim()}`,
+            });
         },
+        getUserInfo() {
+            console.log('首页请求个人信息');
+            api.get('/api/user/info').then(
+                (res) => {
+                    this.needBindMobile = res.user_info
+                        && res.user_info.is_bind_mobile === 0
+                        && res.user_info.shop_id === 1;
+                    // this.needBindMobile = true;
+                    if (this.needBindMobile) {
+                        uni.removeStorageSync('medusa_key');
+                        uni.navigateTo({
+                            url: '/pages/login/login',
+                        });
+                    }
+                },
+                () => {},
+            );
+        },
+        handleCloseSuspension() {
+            this.isShow = false;
+        },
+        chunjieStatus() {
+            // 1未开始，2进行中，3已结束
+            api.post('/api/activity/getactivitystatus', {
+                activity_id: 3,
+            }).then((res) => {
+                // this.status = res.status;
+                // 1显示  0不显示
+                this.show = res.show;
+            });
+        },
+        chunjiehaoStatus() {
+            // 1未开始，2进行中，3已结束
+            api.post('/api/activity/getactivitystatus', {
+                activity_id: 4,
+            }).then((res) => {
+                // 1显示  0不显示
+                this.chunjiehaoshow = res.show;
+            });
+        },
+        yiqingStatus() {
+            // 1未开始，2进行中，3已结束
+            api.post('/api/activity/getactivitystatus', {
+                activity_id: 5,
+            }).then((res) => {
+                this.status = res.status;
+                // 1显示  0不显示
+                this.yiqingshow = res.show;
+            });
+        },
+        thirdEntryPrompt() {
+            const isFirstLogin = uni.getStorageSync(this.isFirstLogin);
+            console.log(isFirstLogin, 'isFirstLogin');
+            if (!isFirstLogin) {
+                this.prompt = true;
+            }
+        },
+        handleChunjie() {
+            uni.setStorageSync(this.isFirstLogin, true);
+            uni.navigateTo({
+                url: '/pages/yiqing/index',
+            });
+        },
+        handleClose() {
+            this.prompt = false;
+            uni.setStorageSync(this.isFirstLogin, true);
+        },
+        // setNewsTabActive(index) {
+        //     this.newsTabActiveIndex = index;
+        //     this.getArticle(this.newsColumn[index].id);
+        // },
         moreArticle() {
             uni.navigateTo({
                 url: `/pages/news/list/list?tab=${this.newsTabActiveIndex}`,
             });
         },
-        getArticle(columnId) {
-            return api
-                .get('/api/article/list', {
-                    column: columnId,
-                    page_num: 1,
-                    page_size: 5,
-                })
-                .then((res) => {
-                    this.newsData = res.list;
-                });
-        },
+        // getArticle(columnId) {
+        //     return api
+        //         .get('/api/article/list', {
+        //             column: columnId,
+        //             page_num: 1,
+        //             page_size: 5,
+        //         })
+        //         .then((res) => {
+        //             this.newsData = res.list;
+        //         });
+        // },
         getMenuData() {
             api.get('/api/index/entry').then((res) => {
                 this.menuConf = res;
@@ -320,15 +480,15 @@ export default {
                 cat_id: {
                     one_level_id: catId,
                 },
-                sort: 2,
-                page_size: 6,
+                sort: 4,
+                page_size: 10,
             }).then((res) => {
                 if (type === 'individual') {
-                    this.workData.individual = res.list;
+                    this.workData.individual = res;
                 } else if (type === 'team') {
-                    this.workData.team = res.list;
+                    this.workData.team = res;
                 } else if (type === 'talent') {
-                    this.workData.talent = res.list;
+                    this.workData.talent = res;
                 }
             });
         },
@@ -340,7 +500,7 @@ export default {
 
             //     this.newsColumn = res.list;
 
-            this.getArticle(this.newsColumn[0].id);
+            // this.getArticle(this.newsColumn[0].id);
             this.getMenuData();
             this.getWorkList('individual');
             this.getWorkList('team');
@@ -352,6 +512,37 @@ export default {
 </script>
 
 <style lang="less">
+.cover {
+    position: fixed;
+    z-index: 9999;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    text-align: center;
+    font-size: 0;
+    image:first-child {
+        width: 591upx;
+        height: 518upx;
+        margin-top: 193upx;
+        display: block;
+        margin-left: 90upx;
+    }
+    image:nth-child(2) {
+        margin-top: 40upx;
+        width: 54upx;
+        height: 54upx;
+        margin-left: 357upx;
+        display: block;
+    }
+    view {
+        position: absolute;
+        top: 680upx;
+        left: 210upx;
+        font-size: 0;
+        width: 360upx;
+        height: 100upx;
+    }
+}
 uni-swiper {
     .swiper-item {
         height: 100%;
@@ -360,7 +551,60 @@ uni-swiper {
 
 .page-index {
     padding-bottom: 20upx;
-
+    position: relative;
+    overflow-x: hidden;
+    .search {
+        width: 100%;
+        font-size: 24upx;
+        overflow: hidden;
+        padding: 20upx 0 20upx 30upx;
+        background: #fff;
+        box-shadow: 0 0upx 5upx 0 rgba(0, 0, 0, 0.05);
+        margin-bottom: 10upx;
+        input {
+            background: #f3f3f3;
+            border: none;
+            border-radius: 30upx;
+            width: 606upx;
+            height: 60upx;
+            float: left;
+            display: block;
+            padding-left: 40upx;
+            box-sizing: border-box;
+        }
+        .placeholderStyle {
+            color: #999999;
+            text-align: left;
+            font-size: 24upx;
+        }
+        .button {
+            float: left;
+            height: 60upx;
+            line-height: 60upx;
+            color: #666666;
+            font-size: 32upx;
+            margin-left: 28upx;
+        }
+    }
+    .chunjie-entry {
+        .close-icon {
+            width: 20upx;
+            height: 20upx;
+            position: absolute;
+            top: 0;
+            right: 0;
+        }
+        font-size: 0;
+        background: url("http://aitiaozhan.oss-cn-beijing.aliyuncs.com/chunjiehao/suspension.png")
+            no-repeat;
+        background-size: 100% 100%;
+        width: 144upx;
+        height: 156upx;
+        position: fixed;
+        top: 640upx;
+        right: 0upx;
+        z-index: 999;
+    }
     .main-swiper {
         padding: 30upx;
 
@@ -395,7 +639,6 @@ uni-swiper {
                 height: 70upx;
                 border-radius: 35upx;
                 margin-bottom: 15upx;
-
                 &.red {
                     background: linear-gradient(
                         180deg,
@@ -477,13 +720,12 @@ uni-swiper {
                     );
                     box-shadow: 0 2upx 4upx 0 #fe6033;
                 }
-
                 .icon {
                     top: 15upx;
                     position: relative;
                     margin: auto;
-                    width: 40upx;
-                    height: 40upx;
+                    width: 78upx;
+                    height: 70upx;
                     background-size: 40upx 40upx;
 
                     // &.icon-intro {

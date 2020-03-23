@@ -37,6 +37,9 @@ const routesConfig = {
     debugger: true,
     routes: [
         {
+            path: '/pages/app/index',
+        },
+        {
             path: '/pages/tabBar/index/index',
             name: 'tabbar-index',
             aliasPath: '/',
@@ -48,12 +51,6 @@ const routesConfig = {
             component: () => import('@/pages/tabBar/list/list.vue'),
             aliasPath: '/list',
             name: 'tabbar-list',
-        },
-        {
-            path: '/pages/tabBar/challenge/challenge',
-            component: () => import('@/pages/tabBar/challenge/challenge.vue'),
-            aliasPath: '/challenge',
-            name: 'tabbar-challenge',
         },
         {
             path: '/pages/tabBar/upload/upload',
@@ -88,6 +85,14 @@ const routesConfig = {
             component: () => import('@/pages/doc/detail/detail.vue'),
         },
         {
+            path: '/pages/doc/intro/intro',
+            name: 'doc',
+            component: () => import('@/pages/doc/intro/intro.vue'),
+        },
+        {
+            path: '/pages/activities/index',
+        },
+        {
             path: '/pages/address/index',
             component: () => import('@/pages/address/index.vue'),
             aliasPath: '/mall/exchange',
@@ -98,6 +103,63 @@ const routesConfig = {
         },
         {
             path: '/pages/address/edit',
+        },
+        {
+            path: '/pages/chunjie/upload/upload',
+        },
+        {
+            path: '/pages/chunjiehao/upload/upload',
+        },
+        {
+            path: '/pages/chunjie/detail/detail',
+        },
+        {
+            path: '/pages/upload/result/result',
+        },
+        {
+            path: '/pages/upload/modify/modify',
+        },
+        {
+            path: '/pages/chunjie/myWork/myWork',
+        },
+        {
+            path: '/pages/chunjiehao/myWork/myWork',
+        },
+        {
+            path: '/pages/chunjiehao/upload/result',
+        },
+        {
+            path: '/pages/chunjie/index',
+        },
+        {
+            path: '/pages/chunjiehao/index',
+        },
+        {
+            path: '/pages/yiqing/index',
+        },
+        {
+            path: '/pages/yiqing/detail/detail',
+        },
+        {
+            path: '/pages/yiqing/myWork/myWork',
+        },
+        {
+            path: '/pages/yiqing/upload/upload',
+        },
+        {
+            path: '/pages/yiqing/upload/result',
+        },
+        {
+            path: '/pages/yiqing/bind-mobile/index',
+        },
+        {
+            path: '/pages/search/index',
+        },
+        {
+            path: '/pages/login/login',
+        },
+        {
+            path: '/pages/chunjiehao/detail/detail',
         },
         {
             path: '/pages/address/exchangeRecord',
@@ -133,12 +195,33 @@ const routesConfig = {
             name: 'work-detail',
             component: () => import('@/pages/work/detail/detail.vue'),
         },
-        // {
-        //     path: '/pages/test/404',
-        //     aliasPath: '/404',
-        //     name: '404',
-        //     component: () => import('@/pages/tabBar/index/index.vue'),
-        // },
+        {
+            path: '/pages/uc/setting/setting',
+        },
+        {
+            path: '/pages/uc/setting/resetPassword',
+        },
+        {
+            path: '/pages/uc/setting/resetPasswordResult',
+        },
+        {
+            path: '/pages/uc/setting/resetName',
+        },
+        {
+            path: '/pages/uc/message/message',
+        },
+        {
+            path: '/pages/uc/reported/reported',
+        },
+        {
+            path: '/pages/uc/record/record',
+        },
+        {
+            path: '/pages/uc/record/result',
+        },
+        {
+            path: '/pages/uc/reported/result',
+        },
         {
             path: '*',
             name: 'moddle',
@@ -166,7 +249,7 @@ router.beforeEach(async (to, from, next) => {
     next();
 });
 router.afterEach((to, from) => {
-    console.log('afterEach');
+    console.log('afterEach------');
 });
 
 // setTimeout(() => {

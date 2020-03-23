@@ -1,6 +1,12 @@
 <template>
     <view class="blank-wrap">
         <image
+            v-if="type === 'normal'"
+            class="blank-icon nor-icon"
+            src="/static/images/widgets/blank/data-error.png"
+        />
+        <image
+            v-if="type === 'uc'"
             class="blank-icon"
             src="/static/images/widgets/blank/blank.png"
         />
@@ -8,7 +14,7 @@
             v-if="type === 'normal'"
             class="text"
         >
-            暂无数据
+            {{ msg }}
         </view>
         <view
             v-if="type === 'uc'"
@@ -31,6 +37,10 @@ export default {
             type: String,
             default: 'normal',
         },
+        msg: {
+            type: String,
+            default: '暂无数据',
+        },
     },
 };
 </script>
@@ -42,6 +52,11 @@ export default {
         margin: 0 auto;
         width: 194upx;
         height: 194upx;
+    }
+    .nor-icon {
+        transform: translateX(-15upx);
+        width: 190upx;
+        height: 168upx;
     }
 
     .text {

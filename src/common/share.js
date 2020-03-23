@@ -27,7 +27,7 @@ function initWechatShare(config, params) {
 
         wx.ready(() => {
             wx.onMenuShareTimeline({
-                title: '我正在参加"青少年爱挑战"，快来为我点赞' || params.title,
+                title: params.title,
                 desc: params.desc,
                 link: params.url,
                 imgUrl: params.thumbnail,
@@ -132,7 +132,6 @@ const contentList = [
 
 function h5InitShare(customShareConfig) {
     let params = {};
-
     const index = Math.floor(Math.random() * contentList.length);
 
     const defaultParams = {
@@ -149,7 +148,6 @@ function h5InitShare(customShareConfig) {
     } else {
         params = Object.assign(defaultParams, customShareConfig);
     }
-    console.log(params);
     // if (!h5InitShare.config) {
     api.get('/api/weixin/getshareconfig', {
         url: location.href,

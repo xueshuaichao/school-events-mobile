@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-globals */
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-undef */
 import Vue from 'vue';
@@ -15,22 +16,21 @@ import logger from './common/logger';
 console.log(share);
 
 const common = {
-    onShow: () => {
+    onShow: (option) => {
         uni.showShareMenu();
-        share();
-    },
-    onReady: () => {
+        // 自定义分享的网址 应该忽略初始化分享，否则会覆盖掉页面级别的分享
+
         // #ifdef H5
-        // 404
-        const pages = getCurrentPages();
-        if (!pages.length) {
-            console.log('__404__');
-            uni.switchTab({
-                url: '/pages/tabBar/index/index',
-            });
+        if (
+            ['/pages/chunjie/index', '/pages/chunjie/detail/detail'].indexOf(
+                location.pathname,
+            ) === -1
+        ) {
+            share();
         }
         // #endif
     },
+    onReady: () => {},
     onShareAppMessage(res) {
         if (res.from === 'button') {
             // 来自页面内分享按钮
@@ -51,8 +51,10 @@ const common = {
             path: '/pages/tabBar/index/index',
         };
     },
+
     onLoad: () => {
-        logger.log();
+        console.log('on<<<<<');
+        logger.onPageView();
     },
 };
 

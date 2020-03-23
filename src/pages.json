@@ -38,22 +38,24 @@
                 "enablePullDownRefresh": true
             }
         },
-
-        //
+        {
+            "path": "pages/doc/intro/intro",
+            "style": {
+                "navigationBarTitleText": "参赛指南"
+            }
+        },
         {
             "path": "pages/doc/detail/detail",
             "style": {
                 "navigationBarTitleText": "参赛指南"
             }
         },
-
         {
             "path": "pages/doc/list/list",
             "style": {
                 "navigationBarTitleText": "参赛说明"
             }
         },
-
         {
             "path": "pages/qa/detail/detail",
             "style": {
@@ -66,7 +68,6 @@
                 "navigationBarTitleText": "通知"
             }
         },
-
         // second page
         {
             "path": "pages/news/list/list",
@@ -80,7 +81,6 @@
                 "navigationBarTitleText": "资讯详情"
             }
         },
-
         // 作品详情
         {
             "path": "pages/work/list/list",
@@ -91,7 +91,10 @@
         {
             "path": "pages/work/detail/detail",
             "style": {
-                "navigationBarTitleText": "作品详情"
+                "navigationBarTitleText": "作品详情",
+                "usingComponents": {
+                    "poster": "/wxcomponents/third-party/poster/poster/index"
+                }
             }
         },
         {
@@ -100,7 +103,6 @@
                 "navigationBarTitleText": "我的作品"
             }
         },
-
         // 上传详情
         {
             "path": "pages/upload/result/result",
@@ -138,12 +140,204 @@
             "style": {
                 "navigationBarTitleText": "编辑收货地址"
             }
+        },
+        // ============== 春节 活动 =================
+        {
+            "path": "pages/chunjie/index",
+            "style": {
+                "navigationBarTitleText": "秀才艺，赢好礼",
+                "softinputNavBar": "none"
+            }
+        },
+        {
+            "path": "pages/chunjie/detail/detail",
+            "style": {
+                "navigationBarTitleText": "作品详情",
+                "usingComponents": {
+                    "poster": "/wxcomponents/third-party/poster/poster/index"
+                }
+            }
+        },
+        {
+            "path": "pages/chunjie/upload/upload",
+            "style": {
+                "navigationBarTitleText": "上传作品"
+            }
+        },
+        {
+            "path": "pages/chunjie/myWork/myWork",
+            "style": {
+                "navigationBarTitleText": "我的作品"
+            }
+        },
+        // ============== 春节 end ======================
+
+        // ============== 春节好 ========================
+        {
+            "path": "pages/chunjiehao/index",
+            "style": {
+                "navigationBarTitleText": "dou说新年好",
+                "softinputNavBar": "none"
+            }
+        },
+        {
+            "path": "pages/chunjiehao/detail/detail",
+            "style": {
+                "navigationBarTitleText": "作品详情",
+                "usingComponents": {
+                    "poster": "/wxcomponents/third-party/poster/poster/index"
+                }
+            }
+        },
+        {
+            "path": "pages/chunjiehao/upload/upload",
+            "style": {
+                "navigationBarTitleText": "上传作品"
+            }
+        },
+        {
+            "path": "pages/chunjiehao/upload/result",
+            "style": {
+                "navigationBarTitleText": "上传结果"
+            }
+        },
+        {
+            "path": "pages/chunjiehao/myWork/myWork",
+            "style": {
+                "navigationBarTitleText": "我的作品"
+            }
+        },
+        // ============== 春节好 end =====================
+        // ============== 疫情 ========================
+        {
+            "path": "pages/yiqing/index",
+            "style": {
+                "navigationBarTitleText": "抗击疫情“艺”起来"
+            }
+        },
+        {
+            "path": "pages/yiqing/detail/detail",
+            "style": {
+                "navigationBarTitleText": "作品详情",
+                "usingComponents": {
+                    "poster": "/wxcomponents/third-party/poster/poster/index"
+                }
+            }
+        },
+        {
+            "path": "pages/yiqing/upload/upload",
+            "style": {
+                "navigationBarTitleText": "上传作品"
+            }
+        },
+        {
+            "path": "pages/yiqing/upload/result",
+            "style": {
+                "navigationBarTitleText": "上传结果"
+            }
+        },
+        {
+            "path": "pages/yiqing/myWork/myWork",
+            "style": {
+                "navigationBarTitleText": "我的作品"
+            }
+        },
+        {
+            "path": "pages/yiqing/bind-mobile/index",
+            "style": {
+                "navigationBarTitleText": "绑定手机号"
+            }
+        },
+        // ============== 疫情end ========================
+        // #ifdef H5
+        {
+            "path": "pages/login/login",
+            "style": {
+                "navigationBarTitleText": "登录"
+            }
+        },
+        // #endif
+        {
+            "path": "pages/search/index",
+            "style": {
+                "navigationBarTitleText": "作品展示"
+            }
+        },
+        {
+            "path": "pages/activities/index",
+            "style": {
+                "navigationBarTitleText": "精彩活动"
+            }
+        },
+        {
+            "path": "pages/login/login",
+            "style": {
+                "navigationBarTitleText": "登录"
+            }
+        },
+        {
+            "path": "pages/uc/setting/setting",
+            "style": {
+                "navigationBarTitleText": "设置"
+            }
+        },
+        {
+            "path": "pages/uc/setting/resetPassword",
+            "style": {
+                "navigationBarTitleText": "重置密码"
+            }
+        },
+        {
+            "path": "pages/uc/setting/resetPasswordResult",
+            "style": {
+                "navigationBarTitleText": "重置密码"
+            }
+        },
+        {
+            "path": "pages/uc/setting/resetName",
+            "style": {
+                "navigationBarTitleText": "设置姓名"
+            }
+        },
+        {
+            "path": "pages/uc/record/record",
+            "style": {
+                "navigationBarTitleText": "我的记录"
+            }
+        },
+        {
+            "path": "pages/uc/record/result",
+            "style": {
+                "navigationBarTitleText": "我的记录",
+                "usingComponents": {
+                    "poster": "/wxcomponents/third-party/poster/poster/index"
+                }
+            }
+        },
+        {
+            "path": "pages/uc/message/message",
+            "style": {
+                "navigationBarTitleText": "消息"
+            }
+        },
+        {
+            "path": "pages/uc/reported/reported",
+            "style": {
+                "navigationBarTitleText": "上报成绩"
+            }
+        },
+        {
+            "path": "pages/uc/reported/result",
+            "style": {
+                "navigationBarTitleText": "上报成功"
+            }
         }
     ],
     "globalStyle": {
         // #ifdef H5
         "navigationStyle": "custom",
         // #endif
+        "softinputNavBar": "none",
         "navigationBarTextStyle": "black",
         "navigationBarTitleText": "uni-app",
         "navigationBarBackgroundColor": "#F8F8F8",
@@ -175,6 +369,7 @@
                 "text": "我要秀才艺"
             },
             // #endif
+
             // {
             //     "pagePath": "pages/tabBar/mall/mall",
             //     "iconPath": "static/images/tab/mall.png",

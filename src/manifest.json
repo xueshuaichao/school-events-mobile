@@ -5,6 +5,11 @@
     "versionName": "1.0.0",
     "versionCode": "100",
     "transformPx": false,
+    "networkTimeout": {
+        "request": 600000,
+        "uploadFile": 600000,
+        "downloadFile": 600000
+    },
     "app-plus": {
         /* 5+App特有相关 */
         "usingComponents": true,
@@ -63,7 +68,9 @@
         "setting": {
             "urlCheck": false
         },
-        "usingComponents": true
+        "usingComponents": true,
+        /* 跳转到云学堂小程序 */
+        "navigateToMiniProgramAppIdList": ["wxe8f8e50ab33cbce8"]
     },
     "mp-alipay": {
         "usingComponents": true
@@ -87,12 +94,22 @@
             "disableHostCheck": true,
             "proxy": {
                 "/api": {
-                    "target": "http://aitiaozhan.wdyclass.com:8000/",
+                    // "target": "http://aitiaozhan.wdyclass.com:8000/",
+                    "target": "http://aitiaozhan.dev.wdyclass.com:8000/",
                     // "target": "http://atz.qsnatz.com",
                     "changeOrigin": true,
-                    "secure": false
+                    "secure": false,
+                    "proxyTimeout": 3000000,
+                    "timeout": 30000000
                 }
             }
+        },
+        "async": {
+            //页面js异步加载配置
+            "loading": "AsyncLoading", //页面js加载时使用的组件（需注册为全局组件）
+            "error": "AsyncError", //页面js加载失败时使用的组件（需注册为全局组件）
+            "delay": 200, //展示 loading 加载组件的延时时间（页面 js 若在 delay 时间内加载完成，则不会显示 loading 组件）
+            "timeout": 60000 //页面js加载超时时间（超时后展示 error 对应的组件）
         }
     }
 }

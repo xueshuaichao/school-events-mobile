@@ -1,7 +1,33 @@
 <script>
 export default {
     onLaunch() {
-        console.log('App Launch');
+        // #ifdef MP-WEIXIN
+        // eslint-disable-next-line no-undef
+        const updateManager = wx.getUpdateManager();
+
+        updateManager.onCheckForUpdate((res) => {
+            // 请求完新版本信息的回调
+            console.log(res.hasUpdate);
+        });
+
+        updateManager.onUpdateReady(() => {
+            // eslint-disable-next-line no-undef
+            wx.showModal({
+                title: '更新提示',
+                content: '新版本已经准备好，是否重启应用？',
+                success(res) {
+                    if (res.confirm) {
+                        // 新的版本已经下载好，调用 applyUpdate 应用新版本并重启
+                        updateManager.applyUpdate();
+                    }
+                },
+            });
+        });
+
+        updateManager.onUpdateFailed(() => {
+            // 新版本下载失败
+        });
+        // #endif
     },
     onShow() {
         console.log('App Show');
@@ -17,6 +43,10 @@ export default {
 /*每个页面公共css */
 uni-tabbar .uni-tabbar__bd {
     height: 60px;
+}
+
+uni-toast .uni-simple-toast__text {
+    padding: 10px;
 }
 
 .uni-body {
@@ -37,6 +67,13 @@ uni-tabbar .uni-tabbar__bd {
     -webkit-box-orient: vertical;
 }
 
+.text-three-line {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+}
 .page-rich-text {
     color: #333;
     font-size: 28upx;

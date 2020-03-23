@@ -6,7 +6,6 @@
                     v-for="(item, index) in lists"
                     :key="index"
                     class="item"
-                    @click="imageTap(index)"
                     @longpress="longtap"
                     @touchend="touchend"
                     @touchmove.stop="touchm"
@@ -15,7 +14,19 @@
                         class="img"
                         :src="item"
                         mode="aspectFill"
+                        @click="imageTap(index)"
                     />
+                    <img
+                        class="icon-del"
+                        src="/static/images/work/icon-del.png"
+                        @click="imageDel(index)"
+                    >
+                    <view
+                        v-if="index === 0"
+                        class="tag"
+                    >
+                        封面
+                    </view>
                 </view>
                 <movable-view
                     v-show="active"
@@ -80,13 +91,9 @@ export default {
         };
     },
     watch: {
-        lists() {
+        list(oVal, nVal) {
             // 监听数组变化
-            const l = this.lists.length;
-            if (l) {
-                // 有图片或图片数量改变时重新初始化
-                this.init();
-            }
+            console.log(oVal, nVal);
         },
     },
     mounted() {
@@ -112,6 +119,9 @@ export default {
                 wrapLeft = data.left; // 设置拖拽范围的左边界坐标
                 this.setNodeWH();
             }).exec();
+        },
+        reset() {
+            this.lists.splice(0, this.lists.length);
         },
         setNodeWH() {
             // 设置拖拽元素的宽高
@@ -292,7 +302,7 @@ export default {
 
 .image-drag-sort {
     width: 100%;
-    padding: 30upx;
+    /* padding: 30upx; */
     box-sizing: border-box;
 }
 
@@ -306,8 +316,9 @@ export default {
 .item {
     flex: 0 0 31%;
     height: calc(31vw * 0.7);
-    overflow: hidden;
+    /* overflow: hidden; */
     border-radius: 12upx;
+    position: relative;
 }
 
 .item:not(:nth-child(3n + 3)) {
@@ -347,6 +358,20 @@ export default {
     height: 100%;
     overflow: hidden;
     border-radius: 12upx;
+    position: relative;
+}
+.item .tag {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: 78upx;
+    height: 36upx;
+    background: rgba(0, 0, 0, 1);
+    border-radius: 12upx 0px 0px 0px;
+    opacity: 0.6;
+    font-size: 24upx;
+    color: #fff;
+    text-align: center;
 }
 
 .item-move-active {
@@ -358,5 +383,14 @@ export default {
     line-height: 40upx;
     color: #999;
     margin-top: 28upx;
+}
+
+.icon-del {
+    position: absolute;
+    right: -19rpx;
+    top: -19rpx;
+    display: inline-block;
+    width: 38rpx;
+    height: 38rpx;
 }
 </style>

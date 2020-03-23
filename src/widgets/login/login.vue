@@ -1,187 +1,190 @@
 <template>
-    <view class="page-bind-mobile">
-        <view class="tabs row">
-            <view
-                class="tab tab-login"
-                :class="{ active: activeTab === 0 }"
-                @click="activeTab = 0"
-            >
-                帐号登录
-            </view>
-            <view
-                class="tab col tab-register"
-                :class="{ active: activeTab === 1 }"
-                @click="activeTab = 1"
-            >
-                手机号注册
-            </view>
-            <view class="col" />
-        </view>
-
-        <!-- 帐号登录 -->
-        <template v-if="activeTab === 0">
-            <view
-                class="form-item-wrap"
-                :class="{
-                    inValid: accountData.isValid === false
-                }"
-            >
-                <input
-                    v-model="formData.username"
-                    class="form-input"
-                    placeholder-class="placeholder"
-                    maxlength="30"
-                    :placeholder="
-                        loginMode === 'password'
-                            ? '请输入手机号或用户名'
-                            : '请输入手机号'
-                    "
-                >
-                <view class="error-tip">
-                    {{ accountData.isValid ? "" : accountData.msg || "" }}
-                </view>
-            </view>
-
-            <view
-                v-if="loginMode === 'password'"
-                class="form-item-wrap"
-            >
-                <input
-                    v-model="formData.password"
-                    class="form-input"
-                    placeholder-class="placeholder"
-                    maxlength="30"
-                    placeholder="请输入密码"
-                    password
-                >
-                <view
-                    v-if="!captcha.isSend"
-                    class="send-captcha"
-                    @click="sendCaptcha"
-                >
-                    获取验证码
-                </view>
-                <view
-                    v-if="captcha.isSend"
-                    class="send-captcha is-send"
-                >
-                    {{ captcha.remain }}S后重新发
-                </view>
-            </view>
-
-            <view
-                v-if="loginMode !== 'password'"
-                class="form-item-wrap"
-            >
-                <input
-                    v-model="formData.password"
-                    class="form-input"
-                    placeholder-class="placeholder"
-                    maxlength="30"
-                    placeholder="请输入验证码"
-                >
-                <view
-                    v-if="!captcha.isSend"
-                    class="send-captcha"
-                    @click="sendCaptcha(2)"
-                >
-                    获取验证码
-                </view>
-                <view
-                    v-if="captcha.isSend"
-                    class="send-captcha is-send"
-                >
-                    {{ captcha.remain }}S后重新发
-                </view>
-            </view>
-            <view class="login-mode">
-                <view
-                    v-if="loginMode === 'sms'"
-                    @click="loginMode = 'password'"
-                >
-                    密码登录
-                </view>
-                <view
-                    v-if="loginMode === 'password'"
-                    @click="loginMode = 'sms'"
-                >
-                    短信验证码登录
-                </view>
-            </view>
-
-            <view class="form-item-wrap">
-                <view
-                    class="btn login-btn"
-                    @click="login()"
-                >
-                    确定
-                </view>
-            </view>
-        </template>
-
-        <!-- 手机号注册 -->
-        <template v-if="activeTab === 1">
-            <view class="form-item-wrap">
-                <view class="form-item-wrap">
-                    <input
-                        v-model="newUser.phone"
-                        class="form-input"
-                        placeholder-class="placeholder"
-                        maxlength="30"
-                        placeholder="请输入手机号"
+    <view>
+        <view class="page-bind-mobile">
+            <template v-if="!isH5 && showWeixin">
+                <view class="weixin-login">
+                    <view class="login-text">
+                        登录或注册爱挑战账号后，您可以上传作品或参与活动。
+                    </view>
+                    <button
+                        class="weixin-login-btn"
+                        type="primary"
+                        open-type="getPhoneNumber"
+                        withCredentials="true"
+                        lang="zh_CN"
+                        @getphonenumber="getphonenumber"
                     >
-                    <view class="error-tip">
-                        {{ accountData.isValid ? "" : accountData.msg || "" }}
+                        微信用户快速登录
+                    </button>
+                    <navigator
+                        class="no-text"
+                        open-type="switchTab"
+                        url="/pages/tabBar/index/index"
+                    >
+                        暂不登录
+                    </navigator>
+                </view>
+            </template>
+            <template v-else>
+                <!-- 账号密码登录 -->
+                <image
+                    class="logo"
+                    src="/static/images/widgets/login/logo.png"
+                />
+                <view class="tabs row">
+                    <view
+                        class="tab tab-login"
+                        :class="{ active: loginMode === 'sms' }"
+                        @click="loginMode = 'sms'"
+                    >
+                        手机号登录
+                    </view>
+                    <view
+                        class="tab tab-register"
+                        :class="{ active: loginMode === 'password' }"
+                        @click="loginMode = 'password'"
+                    >
+                        帐号密码登录
                     </view>
                 </view>
 
-                <input
-                    v-model="newUser.captcha"
-                    class="form-input"
-                    placeholder-class="placeholder"
-                    maxlength="30"
-                    placeholder="请输入验证码"
-                >
-                <view
-                    v-if="!captchaNewUser.isSend"
-                    class="send-captcha"
-                    @click="sendRegisterCaptcha()"
-                >
-                    获取验证码
-                </view>
-                <view
-                    v-if="captchaNewUser.isSend"
-                    class="send-captcha is-send"
-                >
-                    {{ captchaNewUser.remain }}S后重新发
-                </view>
-            </view>
+                <!-- 帐号登录 -->
+                <template v-if="true">
+                    <view
+                        class="form-item-wrap"
+                        :class="{
+                            inValid: accountData.isValid === false
+                        }"
+                    >
+                        <image
+                            v-if="loginMode === 'password'"
+                            class="icon"
+                            src="/static/images/widgets/login/phone.png"
+                        />
+                        <image
+                            v-if="loginMode === 'sms'"
+                            class="icon"
+                            src="/static/images/widgets/login/user.png"
+                        />
 
-            <view class="form-item-wrap">
-                <view
-                    class="btn login-btn"
-                    @click="doRegister()"
-                >
-                    确定
-                </view>
-            </view>
-        </template>
+                        <input
+                            v-model="formData.username"
+                            class="form-input"
+                            placeholder-class="placeholder"
+                            maxlength="30"
+                            :placeholder="
+                                loginMode === 'password'
+                                    ? '请输入手机号或用户名'
+                                    : '请输入手机号'
+                            "
+                        >
+                        <view class="error-tip">
+                            {{
+                                accountData.isValid ? "" : accountData.msg || ""
+                            }}
+                        </view>
+                    </view>
+
+                    <view
+                        v-if="loginMode === 'password'"
+                        class="form-item-wrap"
+                    >
+                        <image
+                            class="icon"
+                            src="/static/images/widgets/login/lock.png"
+                        />
+                        <input
+                            v-model="formData.password"
+                            class="form-input"
+                            placeholder-class="placeholder"
+                            maxlength="30"
+                            placeholder="请输入密码"
+                            password
+                        >
+                    </view>
+
+                    <view
+                        v-if="loginMode === 'sms'"
+                        class="form-item-wrap"
+                    >
+                        <image
+                            class="icon"
+                            src="/static/images/widgets/login/lock.png"
+                        />
+                        <input
+                            v-model="formData.password"
+                            class="form-input"
+                            placeholder-class="placeholder"
+                            maxlength="6"
+                            placeholder="请输入验证码"
+                        >
+                        <view
+                            v-if="!captcha.isSend"
+                            class="send-captcha"
+                            @click="sendCaptcha(2)"
+                        >
+                            获取验证码
+                        </view>
+                        <view
+                            v-if="captcha.isSend"
+                            class="send-captcha is-send"
+                        >
+                            {{ captcha.remain }}s 后重新发
+                        </view>
+                    </view>
+                    <view class="login-mode">
+                        <view
+                            v-if="loginMode === 'sms'"
+                            class="desc"
+                        >
+                            未注册手机号验证后即完成注册
+                        </view>
+                    </view>
+
+                    <view class="form-item-wrap">
+                        <view
+                            class="btn login-btn"
+                            :class="{ 'h5-btn': isH5 }"
+                            @click="login()"
+                        >
+                            确定
+                        </view>
+                    </view>
+                    <view
+                        v-if="!isH5"
+                        class="wx-login"
+                    >
+                        <view class="wx-login-text">
+                            微信授权手机号登录
+                        </view>
+                        <image
+                            class="wx-login-btn"
+                            src="/static/images/uc/wx.png"
+                            @click="showWeiXin"
+                        />
+                    </view>
+                </template>
+            </template>
+        </view>
     </view>
-
-    <!--
-    -->
 </template>
 
 <script>
 import api from '../../common/api';
 
 export default {
+    props: {
+        fr: {
+            type: String,
+            default: '',
+        },
+    },
     data() {
         return {
             formData: {
                 username:
                     process.env.NODE_ENV === 'development' ? '13370123965' : '',
-                password: process.env.NODE_ENV === 'development' ? '111111' : '',
+                password: process.env.NODE_ENV === 'development' ? '123456' : '',
             },
             newUser: {
                 phone: '',
@@ -198,12 +201,36 @@ export default {
                 remain: '',
                 isSend: false,
             },
-            activeTab: 0,
+            // #ifdef H5
+            isH5: true,
+            // #endif
+            // loginMode: 'sms',
             loginMode: 'sms',
-            // loginMode: 'password',
+            // needBindMobile: false,
+            userInfo: {},
+            userkey: '',
+            isCanUse: uni.getStorageSync('isCanUse') || true,
+            weixinData: {
+                code: '',
+            },
+            jscode: '',
+            showWeixin: true,
         };
     },
+    created() {
+        if (!this.isH5) {
+            this.getCode();
+        }
+    },
     methods: {
+        getLogIn() {
+            uni.getStorage({
+                key: 'medusa_key',
+                success(res) {
+                    console.log(res.data);
+                },
+            });
+        },
         login() {
             if (!this.formData.username) {
                 return uni.showToast({
@@ -229,8 +256,12 @@ export default {
             return true;
         },
         doLogin() {
+            uni.showLoading({
+                mask: true,
+            });
             return api.post('/api/account/login', this.formData).then(
                 (res) => {
+                    uni.hideLoading();
                     console.log(res);
                     const { userkey } = res;
                     try {
@@ -238,10 +269,11 @@ export default {
                     } catch (e) {
                         // error
                     }
-
-                    this.$emit('login', res);
+                    // 看是否是陕西用户
+                    this.getUserInfo();
                 },
                 (err) => {
+                    uni.hideLoading();
                     uni.showToast({
                         title: err.message,
                         icon: 'none',
@@ -249,15 +281,38 @@ export default {
                 },
             );
         },
+        getUserInfo() {
+            api.get('/api/user/info').then(
+                (res) => {
+                    this.needBindMobile = res.user_info
+                        && res.user_info.is_bind_mobile === 0
+                        && res.user_info.shop_id === 1;
+                    if (this.needBindMobile) {
+                        uni.navigateTo({
+                            url: '/pages/yiqing/bind-mobile/index',
+                        });
+                    } else {
+                        this.userInfo = res;
+                        this.$emit('login', res);
+                    }
+                },
+                () => {},
+            );
+        },
         doSMSLogin() {
             console.log('sms login');
+            uni.showLoading({
+                mask: true,
+            });
             return api
                 .post('/api/account/userlogin', {
+                    channel: 'aitiaozhan/xian',
                     captcha: this.formData.password,
                     phone: this.formData.username,
                 })
                 .then(
                     (res) => {
+                        uni.hideLoading();
                         console.log(res);
                         const { userkey } = res;
                         try {
@@ -269,6 +324,7 @@ export default {
                         this.$emit('login', res);
                     },
                     (err) => {
+                        uni.hideLoading();
                         uni.showToast({
                             title: err.message,
                             icon: 'none',
@@ -292,8 +348,10 @@ export default {
 
             return api
                 .post('/api/account/userlogin', {
+                    channel: 'aitiaozhan/xian',
                     phone: this.newUser.phone,
                     captcha: this.newUser.captcha,
+                    fr: this.fr,
                 })
                 .then(
                     (res) => {
@@ -401,17 +459,10 @@ export default {
                 .then(
                     () => {
                         try {
-                            if (this.activeTab === 0) {
-                                this.captcha.create_at = new Date() - 0;
-                                this.captcha.remain = 30;
-                                this.captcha.isSend = true;
-                                this.countDown();
-                            } else {
-                                this.captchaNewUser.create_at = new Date() - 0;
-                                this.captchaNewUser.remain = 30;
-                                this.captchaNewUser.isSend = true;
-                                this.newUserCountDown();
-                            }
+                            this.captcha.create_at = new Date() - 0;
+                            this.captcha.remain = 30;
+                            this.captcha.isSend = true;
+                            this.countDown();
                         } catch (e) {
                             console.log(e);
                         }
@@ -422,6 +473,102 @@ export default {
                     }),
                 );
         },
+        getCode(fn) {
+            const _this = this;
+            uni.login({
+                provider: 'weixin',
+                success({ code }) {
+                    console.log(5454545);
+                    _this.jscode = code;
+                    if (fn) {
+                        fn();
+                    }
+                },
+                fail() {
+                    uni.showToast({
+                        title: '登录失败',
+                    });
+                },
+            });
+        },
+        checkSession({ encryptedData, iv }) {
+            const _this = this;
+            uni.checkSession({
+                success() {
+                    // session_key 未过期，并且在本生命周期一直有效
+                    _this.onGetPhoneNumber(encryptedData, iv);
+                },
+                fail() {
+                    // session_key 已经失效，需要重新执行登录流程
+                    _this.getCode(() => {
+                        _this.onGetPhoneNumber(encryptedData, iv);
+                    });
+                },
+            });
+        },
+        getphonenumber(e) {
+            const { errMsg } = e.detail;
+            uni.showLoading({
+                title: '加载中',
+            });
+            if (errMsg === 'getPhoneNumber:ok') {
+                this.checkSession(e.detail);
+            } else {
+                uni.hideLoading();
+                this.showWeixin = false;
+            }
+        },
+        onGetPhoneNumber(encryptedData, iv) {
+            const _this = this;
+            api.post('/api/account/miniprogramlogin', {
+                code: this.jscode,
+            }).then(
+                (res) => {
+                    const { userkey } = res;
+                    if (res.is_bind) {
+                        try {
+                            uni.setStorageSync('medusa_key', userkey);
+                        } catch (e) {
+                            // error
+                        }
+                        _this.getUserInfo();
+                        uni.hideLoading();
+                    } else {
+                        api.post('/api/account/getminipprogramphone', {
+                            encrypted_data: encryptedData,
+                            iv,
+                            userkey,
+                        }).then(
+                            (data) => {
+                                try {
+                                    uni.setStorageSync(
+                                        'medusa_key',
+                                        data.userkey,
+                                    );
+                                } catch (e) {
+                                    // error
+                                }
+                                _this.getUserInfo();
+                                uni.hideLoading();
+                            },
+                            () => {
+                                uni.hideLoading();
+                            },
+                        );
+                    }
+                },
+                () => {
+                    // eslint-disable-next-line no-undef
+                    const page = getCurrentPages().pop();
+                    if (!page) return;
+                    page.onLoad();
+                    uni.hideLoading();
+                },
+            );
+        },
+        showWeiXin() {
+            this.showWeixin = true;
+        },
     },
 };
 </script>
@@ -429,7 +576,6 @@ export default {
 <style lang="less">
 .widget-login {
     padding: 65upx;
-
     .icon-user {
         display: inline-block;
         width: 58upx;
@@ -466,10 +612,30 @@ export default {
         }
     }
 }
-
 .page-bind-mobile {
-    padding: 96rpx 65rpx;
-
+    padding: 30rpx 60rpx 0;
+    .weixin-login {
+        padding-top: 168upx;
+        font-size: 36upx;
+        text-align: center;
+    }
+    .login-text {
+        width: 540upx;
+        margin: 0 auto 60upx;
+        color: #666;
+        line-height: 60upx;
+    }
+    .weixin-login-btn {
+        width: 620upx;
+        margin: 0 auto 30upx;
+        background-color: #1166ff;
+        border-radius: 0;
+        line-height: 100upx;
+        color: #fff;
+    }
+    .no-text {
+        color: #999990;
+    }
     .tip {
         font-size: 26rpx;
         color: #333;
@@ -480,8 +646,9 @@ export default {
     .login-mode {
         color: #1166ff;
         font-size: 30rpx;
-        margin-top: 24rpx;
-        text-align: right;
+        margin-top: 50rpx;
+        height: 30rpx;
+        text-align: center;
     }
 
     .tabs {
@@ -500,12 +667,13 @@ export default {
 
         .tab-login {
             text-align: center;
-            width: 160rpx;
-            margin-right: 80rpx;
+            width: 200rpx;
+            margin-left: 60rpx;
+            margin-right: 60rpx;
         }
         .tab-register {
-            width: 200rpx;
             text-align: center;
+            width: 240rpx;
         }
     }
 
@@ -526,6 +694,15 @@ export default {
             border-bottom: 1rpx solid #d8d8d8;
             height: 90rpx;
             margin-top: 20rpx;
+            padding-left: 72rpx;
+        }
+
+        .icon {
+            position: absolute;
+            width: 34rpx;
+            height: 32rpx;
+            left: 20rpx;
+            top: 30rpx;
         }
 
         &.inValid {
@@ -571,8 +748,36 @@ export default {
         height: 98rpx;
         line-height: 98rpx;
         text-align: center;
-        margin-top: 72rpx;
+        margin-top: 30rpx;
+        margin-bottom: 56rpx;
         font-size: 36rpx;
+        &.h5-btn {
+            margin-top: 100rpx;
+        }
+    }
+
+    .logo {
+        width: 438rpx;
+        height: 264rpx;
+        display: block;
+        margin: 30rpx auto 60rpx;
+    }
+
+    .desc {
+        color: #aaa;
+        font-size: 32rpx;
+    }
+    .wx-login-text {
+        color: #666;
+        font-size: 32upx;
+        margin-bottom: 30upx;
+        text-align: center;
+    }
+    .wx-login-btn {
+        width: 100upx;
+        height: 100upx;
+        margin: 0 auto 40upx;
+        display: block;
     }
 }
 </style>
