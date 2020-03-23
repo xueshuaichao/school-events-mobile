@@ -18,7 +18,7 @@
                         class="radio"
                     ><radio
                         value="1"
-                        checked="true"
+                        :checked="formData.resource_scope === '1'"
                         style="transform: scale(0.6);"
                         color="#1166FF"
                     />爱挑战-个人</label>
@@ -26,6 +26,7 @@
                         class="radio"
                     ><radio
                         value="2"
+                        :checked="formData.resource_scope === '2'"
                         style="transform: scale(0.6);"
                         color="#1166FF"
                     />爱挑战-团队</label>
@@ -207,7 +208,7 @@
                         @change="selectStudents"
                     >
                         <view
-                            v-if="!formData.create_info_array.length"
+                            v-if="!statudent.length"
                             class="uni-input placeholder fake-input"
                         >
                             请选择参赛者姓名
@@ -268,7 +269,7 @@
                     >
                         <view>
                             <view
-                                v-if="!formData.create_info_array.length"
+                                v-if="!statudentCheckbox.length"
                                 class="uni-input placeholder fake-input "
                             >
                                 请选择参赛者姓名
@@ -278,7 +279,7 @@
                                 class="uni-input fake-input student-list"
                             >
                                 <view
-                                    v-for="item in formData.create_info_array"
+                                    v-for="item in statudentCheckbox"
                                     :key="item.user_id"
                                     class="student-item"
                                 >
@@ -375,10 +376,12 @@
             </view>
             <upload
                 :type="'video'"
+                :source="formData.video_id"
                 @change="updateVideo"
             />
             <upload
                 :type="'image'"
+                :source="formData.video_img_url"
                 @change="updateImage"
             />
             <view class="button-cont">
@@ -413,7 +416,6 @@ export default {
     },
     data() {
         return {
-            navActiveIndex: 0,
             formData: {
                 resource_name: '青少年爱挑战',
                 resource_scope: '1',
@@ -435,6 +437,8 @@ export default {
                 video_img_url: '',
                 school_id: '',
             },
+            statudentCheckbox: [],
+            statudent: [],
             achievementDateInfo: {
                 minutes: '',
                 seconds: '',
@@ -466,6 +470,33 @@ export default {
         };
     },
     methods: {
+        resetData() {
+            this.formData = {
+                ...this.formData,
+                resource_scope: '1',
+                cat_id: '',
+                cat_name: '',
+                education_level: '', // 学段
+                create_info_array: [],
+                grade_id: '',
+                class_id: '',
+                teacher: '', // 指导教师
+                attestation_name: '', // 认证官姓名
+                achievement_unit: '', // 单位
+                achievement: '',
+                type: 2,
+                video_id: '',
+                file_name: '',
+                file_size: '',
+                file_suffix: '',
+                video_img_url: '',
+            };
+            this.rangeIndex = 0;
+            this.catData = this.catDataArray[this.rangeIndex].child;
+            this.checkedStudents = [];
+            this.statudent = [];
+            this.statudentCheckbox = [];
+        },
         disableSelect(type, index = 0) {
             console.log(type);
             const textArr = ['年级', '年级和班级'];
@@ -485,6 +516,7 @@ export default {
             this.rangeIndex = e.detail.value - 1;
             this.catData = this.catDataArray[this.rangeIndex].child;
             this.formData.resource_scope = e.detail.value;
+            // this.formData.create_info_array = [];
         },
         getCatData() {
             api.get('/api/works/gradecategory').then((res) => {
@@ -526,7 +558,7 @@ export default {
             ].grade_id;
             if (id !== this.formData.grade_id) {
                 this.formData.class_id = '';
-                this.formData.create_info_array = [];
+                this.formData.statudentCheckbox = [];
             }
             this.getClass();
         },
@@ -545,12 +577,22 @@ export default {
             this.classDataIndex = e.detail.value;
             this.formData.class_id = this.classData[this.classDataIndex].id;
             if (id !== this.formData.class_id) {
-                this.formData.create_info_array = [];
+                if (this.rangeIndex === 0) {
+                    this.statudent = [];
+                } else {
+                    this.statudentCheckbox = [];
+                }
+                // this.formData.create_info_array = [];
             }
             this.getStudents();
         },
         getStudents() {
-            this.formData.create_info_array = [];
+            if (this.rangeIndex === 0) {
+                this.statudent = [];
+            } else {
+                this.statudentCheckbox = [];
+            }
+            // this.formData.create_info_array = [];
             // 获取学生 传 school_id 学校id  grade_id 年级id class_id 班级 id
             api.get('/api/school/listgrade', {
                 school_id: this.formData.school_id,
@@ -562,8 +604,9 @@ export default {
             });
         },
         selectStudents(e) {
+            console.log(e);
             this.studentDataIndex = e.detail.value;
-            this.formData.create_info_array.push({
+            this.statudent.push({
                 user_id: this.studentData[this.studentDataIndex].user_id,
                 student_name: this.studentData[this.studentDataIndex]
                     .student_name,
@@ -571,11 +614,11 @@ export default {
         },
         selectAllStudent(picked) {
             this.checkedStudents = picked.values;
-            this.formData.create_info_array = [];
+            this.statudentCheckbox = [];
             this.studentData.forEach((item) => {
                 picked.values.forEach((id) => {
                     if (item.user_id === Number(id)) {
-                        this.formData.create_info_array.push({
+                        this.statudentCheckbox.push({
                             user_id: id,
                             student_name: item.student_name,
                         });
@@ -585,10 +628,10 @@ export default {
         },
         deleteStudent(id) {
             const index = this.checkedStudents.findIndex(item => item === id);
-            const studentIndex = this.formData.create_info_array.findIndex(
+            const studentIndex = this.statudentCheckbox.findIndex(
                 item => item.user_id === id,
             );
-            this.formData.create_info_array.splice(studentIndex, 1);
+            this.statudentCheckbox.splice(studentIndex, 1);
             this.checkedStudents.splice(index, 1);
         },
         confirm(picked) {
@@ -643,6 +686,12 @@ export default {
         },
         onValidate() {
             let status = true;
+            this.formData.create_info_array = [];
+            if (this.rangeIndex === 0) {
+                this.formData.create_info_array = this.statudent;
+            } else {
+                this.formData.create_info_array = this.statudentCheckbox;
+            }
             const validateObj = {
                 teacher: '请输入指导教师', // 指导教师
                 attestation_name: '请输入认证关姓名', // 认证官姓名
@@ -651,7 +700,6 @@ export default {
                 class_id: '请选择班级',
                 video_id: '请上传视频',
                 create_info_array: '请选择参赛学生',
-                video_img_url: '请上传封面',
                 achievement: '请输入成绩',
             };
             try {
@@ -674,6 +722,7 @@ export default {
             return status;
         },
         submitReporte() {
+            // return this.resetData();
             if (this.date) {
                 this.formData.achievement = this.getTimeSeconds(
                     this.achievementDateInfo,
@@ -684,6 +733,7 @@ export default {
                 api.post('/api/works/uploadgrade', this.formData).then(
                     (res) => {
                         console.log(res);
+                        this.resetData();
                         uni.hideLoading();
                         uni.navigateTo({
                             url: '/pages/uc/reported/result',
@@ -753,11 +803,11 @@ export default {
         align-items: center;
         font-size: 28upx;
         input {
-            width: 140upx;
+            width: 138upx;
         }
         .date-text {
             display: inline-block;
-            margin: 0 9upx;
+            margin: 0 10upx;
         }
     }
     .achievement-nor {
@@ -838,7 +888,9 @@ export default {
             text-align: center;
             color: #fff;
             background-color: #1166ff;
+            box-sizing: border-box;
             border: 1upx solid #1166ff;
+            font-size: 32rpx;
             .nor {
                 background-color: #fff;
                 color: #1166ff;

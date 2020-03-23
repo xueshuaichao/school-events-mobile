@@ -169,6 +169,7 @@ export default {
                                         this.onCreate();
                                     }
                                 });
+                                return true;
                             }
                         } else {
                             this.itemData.qrcode = 'http://aitiaozhan.oss-cn-beijing.aliyuncs.com/main-erweima.png';

@@ -1,7 +1,7 @@
 <template>
     <div class="page-record-result">
         <template v-if="!isH5">
-            <template v-if="startCreateCanvas">
+            <template>
                 <poster
                     id="poster"
                     :config="posterConfig"
@@ -9,10 +9,7 @@
                     @fail="onPosterFail"
                 />
             </template>
-            <view
-                v-else
-                class="canvas-img"
-            >
+            <view class="canvas-img">
                 <image
                     :src="canvasImg"
                     mode=""
@@ -388,6 +385,10 @@ export default {
 .page-record-result {
     padding-top: 14upx;
     position: relative;
+    #poster {
+        position: absolute;
+        transform: translate3d(-9999rpx, 0, 0);
+    }
     .canvas-img {
         width: 689upx;
         height: 1103upx;
