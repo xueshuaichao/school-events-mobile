@@ -36,10 +36,10 @@
                     <view class="show-type-list">
                         <text
                             v-for="(item, index) in tabs"
+                            v-show="uploadMode === item.type"
                             :key="index"
                             class="show-type-title"
                             :class="{ active: uploadMode === item.type }"
-                            @click="setNewsTabActive(item.type)"
                         >
                             {{ item.column_name }}
                         </text>
@@ -213,9 +213,6 @@ export default {
     //     this.getData();
     // },
     methods: {
-        setNewsTabActive(type) {
-            this.uploadMode = type;
-        },
         updateVideo(data) {
             this.formData.video_id = data.video_id;
         },
