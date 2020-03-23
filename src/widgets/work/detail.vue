@@ -70,7 +70,7 @@
                     class="video"
                     preload
                     :src="clear ? '' : pageData.video.cloud_path_sd"
-                    :autoplay="isAutoPlay"
+                    :autoplay="!isH5"
                     :controls="true"
                     :loop="true"
                     :poster="pageData.video_img_url"
@@ -282,6 +282,7 @@ export default {
         togglePlayStatus() {
             console.log('--------togglePlayStatus---');
             this.isPaused = false;
+            this.$refs.video.play();
         },
         onPlay() {
             // if (!this.isPlayed) {
