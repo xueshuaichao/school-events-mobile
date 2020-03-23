@@ -122,7 +122,7 @@
                     </view>
                 </navigator>
                 <navigator
-                    v-if="userInfo.identity === 4"
+                    v-if="userInfo.identity === 4 && !isH5"
                     class="menu-item"
                     url="/pages/uc/record/record"
                 >
