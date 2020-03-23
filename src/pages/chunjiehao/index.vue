@@ -157,7 +157,7 @@
                         <view class="qr-wrap">
                             <image
                                 class="qr-code"
-                                src="/static/images/chunjie/qrcode.jpg"
+                                src="http://aitiaozhan.oss-cn-beijing.aliyuncs.com/chunjiehao/qrcode.jpg"
                             />
                             <view class="text">
                                 关注“UP青少年爱挑战”公众号，了解更多活动信息
@@ -307,14 +307,14 @@
                     </view>
                     <view class="media-box">
                         <view
-                            v-for="item in dataList"
+                            v-for="(item, index) in dataList"
                             :key="item.id"
                             class="media-content"
                         >
                             <event-craft-cover
                                 :info="item"
                                 :bg-color="'B11A27'"
-                                @click.native="viewDetail(item)"
+                                @click.native="viewDetail(item, index)"
                             />
 
                             <view class="media-name text-one-line">
@@ -415,12 +415,14 @@ export default {
                 {
                     prize_score: '一等奖',
                     name: '学习机*1个',
-                    prize: '../../static/images/chunjie/prize01.png',
+                    prize:
+                        'http://aitiaozhan.oss-cn-beijing.aliyuncs.com/chunjiehao/prize01.png',
                 },
                 {
                     prize_score: '二等奖',
                     name: '小度*4个',
-                    prize: '../../static/images/chunjie/prize02.png',
+                    prize:
+                        'http://aitiaozhan.oss-cn-beijing.aliyuncs.com/chunjiehao/prize02.png',
                 },
                 {
                     prize_score: '三等奖',
@@ -567,9 +569,12 @@ export default {
                     'http://aitiaozhan.oss-cn-beijing.aliyuncs.com/chunjiehao-banner.png?x-oss-process=image/format,png/interlace,1/quality,Q_80/resize,m_pad,h_100',
             });
         },
-        viewDetail(item) {
+        viewDetail(item, position) {
             uni.navigateTo({
-                url: `/pages/chunjiehao/detail/detail?id=${item.id}&fr=${this.fr}`,
+                url: `/pages/chunjiehao/detail/detail?id=${item.id}&fr=${
+                    this.fr
+                }&total=${this.total}&curPosition=${position
+                    + 1}&from=4&actSort=${this.filter.sort || ''}`,
             });
         },
         toggle(k) {

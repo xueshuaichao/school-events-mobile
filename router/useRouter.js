@@ -85,6 +85,14 @@ const routesConfig = {
             component: () => import('@/pages/doc/detail/detail.vue'),
         },
         {
+            path: '/pages/doc/intro/intro',
+            name: 'doc',
+            component: () => import('@/pages/doc/intro/intro.vue'),
+        },
+        {
+            path: '/pages/activities/index',
+        },
+        {
             path: '/pages/address/index',
             component: () => import('@/pages/address/index.vue'),
             aliasPath: '/mall/exchange',
@@ -127,6 +135,27 @@ const routesConfig = {
             path: '/pages/chunjiehao/index',
         },
         {
+            path: '/pages/yiqing/index',
+        },
+        {
+            path: '/pages/yiqing/detail/detail',
+        },
+        {
+            path: '/pages/yiqing/myWork/myWork',
+        },
+        {
+            path: '/pages/yiqing/upload/upload',
+        },
+        {
+            path: '/pages/yiqing/upload/result',
+        },
+        {
+            path: '/pages/yiqing/bind-mobile/index',
+        },
+        {
+            path: '/pages/search/index',
+        },
+        {
             path: '/pages/login/login',
         },
         {
@@ -167,6 +196,33 @@ const routesConfig = {
             component: () => import('@/pages/work/detail/detail.vue'),
         },
         {
+            path: '/pages/uc/setting/setting',
+        },
+        {
+            path: '/pages/uc/setting/resetPassword',
+        },
+        {
+            path: '/pages/uc/setting/resetPasswordResult',
+        },
+        {
+            path: '/pages/uc/setting/resetName',
+        },
+        {
+            path: '/pages/uc/message/message',
+        },
+        {
+            path: '/pages/uc/reported/reported',
+        },
+        {
+            path: '/pages/uc/record/record',
+        },
+        {
+            path: '/pages/uc/record/result',
+        },
+        {
+            path: '/pages/uc/reported/result',
+        },
+        {
             path: '*',
             name: 'moddle',
             redirect: (to) => {
@@ -193,7 +249,7 @@ router.beforeEach(async (to, from, next) => {
     next();
 });
 router.afterEach((to, from) => {
-    console.log('afterEach');
+    console.log('afterEach------');
 });
 
 // setTimeout(() => {

@@ -7,36 +7,6 @@
             v-if="!needBindMobile"
             class="main"
         >
-            <view class="panel">
-                <view class="panel-hd">
-                    <text
-                        class="panel-title"
-                        :class="{ active: uploadMode === 'video' }"
-                    >
-                        上传视频作品
-                    </text>
-                    <text
-                        class="panel-title"
-                        :class="{ active: uploadMode === 'image' }"
-                    >
-                        上传图片作品
-                    </text>
-                </view>
-            </view>
-
-            <view class="uni-form-item uni-column">
-                <input
-                    v-model="formData.resource_name"
-                    class="uni-input"
-                    placeholder-class="placeholder"
-                    maxlength="30"
-                    :placeholder="
-                        (uploadMode === 'video' ? '视频' : '作品') +
-                            '名称*（不超过30字）'
-                    "
-                >
-            </view>
-
             <view class="uni-list-cell-db">
                 <picker
                     :value="index"
@@ -54,9 +24,48 @@
                         v-if="formData.cat_id"
                         class="uni-input fake-input"
                     >
-                        {{ catData[index].name }}
+                        <template v-if="init">
+                            {{ catName }}
+                        </template>
+                        <template v-else>
+                            {{ catData[index].name }}
+                        </template>
                     </view>
                 </picker>
+            </view>
+            <view class="show-type">
+                <view class="show-type-hd">
+                    <text class="show-type-text">
+                        表现形式
+                    </text>
+                    <view class="show-type-list">
+                        <text
+                            v-if="formData.resource_type === 1"
+                            class="show-type-title active"
+                        >
+                            视频
+                        </text>
+                        <text
+                            v-else
+                            class="show-type-title active"
+                        >
+                            图片
+                        </text>
+                    </view>
+                </view>
+            </view>
+
+            <view class="uni-form-item uni-column">
+                <input
+                    v-model="formData.resource_name"
+                    class="uni-input"
+                    placeholder-class="placeholder"
+                    maxlength="30"
+                    :placeholder="
+                        (uploadMode === 'video' ? '视频' : '作品') +
+                            '名称*（不超过30字）'
+                    "
+                >
             </view>
 
             <textarea
@@ -71,17 +80,13 @@
             <upload
                 v-if="uploadMode === 'video'"
                 :type="'video'"
+                :source="formData.video_id"
                 @change="updateVideo"
             />
-            <view
-                v-if="uploadMode === 'image'"
-                class="upload-desc"
-            >
-                拖动图片可调整展示顺序，第一张图片会作为该作品的封面图
-            </view>
             <upload
                 :type="'image'"
                 :preview="uploadMode === 'video' ? true : false"
+                :source="formData.video_img_url"
                 @change="updateImage"
             />
 
@@ -175,13 +180,13 @@ export default {
         return {
             isLoading: true,
             id: '',
-
+            init: true,
             tabs: [
-                { id: '1', column_name: '上传视频作品' },
-                { id: '2', column_name: '上传图片作品' },
+                { type: 'video', column_name: '视频' },
+                { type: 'image', column_name: '图片' },
             ],
             images: [],
-
+            catName: '',
             newsTabActiveIndex: 0,
             uploadMode: 'video',
 
@@ -207,10 +212,7 @@ export default {
             },
             needBindMobile: false,
             catData: [],
-            title: 'picker',
-            array: ['中国', '美国', '巴西', '日本'],
             index: 0,
-            time: '12:01',
         };
     },
     created() {
@@ -220,14 +222,6 @@ export default {
     //     this.getData();
     // },
     methods: {
-        // setNewsTabActive(index) {
-        // this.newsTabActiveIndex = index;
-        // if (index === 0) {
-        //     this.uploadMode = 'video';
-        // } else {
-        //     this.uploadMode = 'image';
-        // }
-        // },
         updateVideo(data) {
             this.formData.video_id = data.video_id;
         },
@@ -258,9 +252,8 @@ export default {
                     this.formData.cat_id = res.cat_id;
                     this.formData.resource_name = res.resource_name;
                     this.formData.introduce = res.introduce;
-
+                    this.catName = res.cat_name;
                     if (res.resource_type === 2) {
-                        console.log('image');
                         this.uploadMode = 'image';
                         this.images = res.img;
                     } else {
@@ -271,6 +264,7 @@ export default {
             }
         },
         onSelect(e) {
+            this.init = false;
             this.index = e.detail.value;
             const catId = this.catData[this.index].cat_id;
             this.formData.cat_id = catId;
@@ -309,6 +303,10 @@ export default {
                     return this.errTip('请选择作品分类');
                 }
                 formData.img = this.$refs.preview.dump();
+                if (!formData.img.length) {
+                    this.lock = true;
+                    return this.errTip('请上传作品图片');
+                }
             }
 
             // check input
@@ -385,12 +383,31 @@ export default {
         height: 98upx;
         line-height: 98upx;
         text-align: center;
-        margin-top: 168upx;
+        margin-top: 80upx;
     }
 
-    .panel-hd {
+    .show-type-hd {
         margin: 0 0 40rpx 0;
-        text-align: center;
+        display: flex;
+        align-items: center;
+        .show-type-text {
+            margin-right: 40upx;
+            color: #999;
+            font-size: 28upx;
+        }
+    }
+    .show-type-title {
+        margin-right: 30rpx;
+        padding: 0 40rpx;
+        height: 64rpx;
+        line-height: 64rpx;
+        color: #1166ff;
+        border: 1rpx solid #1166ff;
+        display: inline-block;
+        &.active {
+            background-color: #1166ff;
+            color: #fff;
+        }
     }
 
     .upload-desc {

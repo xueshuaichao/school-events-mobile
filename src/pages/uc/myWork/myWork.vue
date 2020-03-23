@@ -29,54 +29,63 @@
                     未通过({{ workStatics.refuse_num || 0 }})
                 </text>
             </view>
-            <view
-                v-if="!isLoadingTableData"
-                class="panel-bd work-list"
-            >
-                <template v-if="tableData.length">
-                    <view
-                        v-for="(item, k) in tableData"
-                        :key="item.id"
-                        class="work-item"
-                    >
-                        <work
-                            :info="item"
-                            :mode="'single'"
-                        />
-                        <view class="btns">
-                            <button
-                                v-if="!isH5 && item.status === 1"
-                                :id="k"
-                                class="btn btn-share"
-                                open-type="share"
-                            >
-                                分享
-                            </button>
-                            <button
-                                v-if="!isH5 && item.status !== 1"
-                                class="btn"
-                                @click="editWork(item)"
-                            >
-                                编辑
-                            </button>
-                            <button
-                                class="btn"
-                                @click="onConfirmDelete(item)"
-                            >
-                                删除
-                            </button>
-                        </view>
-                    </view>
-                </template>
-                <template v-else>
-                    <blank />
-                </template>
-            </view>
         </view>
-
-        <view v-else>
-            <view class="sep" />
-            <blank :type="'uc'" />
+        <view class="work-list">
+            <template v-if="tableData.length">
+                <view
+                    v-for="item in tableData"
+                    :key="item.id"
+                    class="work-item"
+                >
+                    <work
+                        :info="item"
+                        :mode="'single'"
+                        :show-class="false"
+                    />
+                    <view class="btns">
+                        <button
+                            v-if="item.status === 1"
+                            class="btn"
+                            @click="toDetail(item)"
+                        >
+                            查看
+                        </button>
+                        <button
+                            v-if="item.status === 2"
+                            class="btn"
+                            @click="showCause(item)"
+                        >
+                            驳回原因
+                        </button>
+                        <button
+                            v-if="!isH5 && item.status !== 1"
+                            class="btn"
+                            @click="editWork(item)"
+                        >
+                            编辑
+                        </button>
+                        <button
+                            class="btn"
+                            @click="onConfirmDelete(item)"
+                        >
+                            删除
+                        </button>
+                    </view>
+                </view>
+                <uni-load-more
+                    class="loadMore"
+                    :status="loadMoreStatus"
+                    :content-text="{
+                        contentdown: '上拉显示更多',
+                        contentrefresh: '正在加载...',
+                        contentnomore: '———— 已经到底了~ ————'
+                    }"
+                    color="#999"
+                />
+            </template>
+            <template v-else>
+                <blank type="uc" />
+            </template>
         </view>
     </view>
 </template>
@@ -84,22 +93,28 @@
 <script>
 import api from '../../../common/api';
 import work from '../../../components/work/work.vue';
+import uniLoadMore from '../../../components/uni-load-more/uni-load-more.vue';
 import blank from '../../../widgets/blank/blank.vue';
 
 export default {
     components: {
         blank,
         work,
+        uniLoadMore,
     },
     data() {
         return {
             isLoading: true,
             userInfo: null,
-
+            loadMoreStatus: 'none',
             // #ifdef H5
             isH5: true,
             // #endif
-
+            filter: {
+                page_num: 1,
+                page_size: 10,
+                status: 1,
+            },
             tabActiveIndex: 0,
             workStatics: {},
             isLoadingTableData: true,
@@ -116,6 +131,18 @@ export default {
                 () => {},
             );
         },
+        toDetail(item) {
+            uni.navigateTo({
+                url: `/pages/work/detail/detail?id=${item.id}&from=mywork&disableslide=1`,
+            });
+        },
+        showCause({ memo }) {
+            uni.showModal({
+                title: '驳回原因',
+                content: memo || '暂无内容',
+                showCancel: false,
+            });
+        },
         editWork(item) {
             uni.navigateTo({
                 url: `/pages/upload/modify/modify?id=${item.id}`,
@@ -126,40 +153,54 @@ export default {
 
             api.post('/api/user/delwork', {
                 id: item.id,
-            }).then((res) => {
+            }).then(() => {
                 uni.showToast({
                     title: '删除成功',
                 });
-                console.log(res);
                 if (index !== -1) {
                     this.tableData.splice(index, 1);
                 }
                 this.getWorkStatic();
             });
         },
-        getWorkData() {
+        onReachBottom() {
+            console.log('到底部');
+            if (this.loadMoreStatus === 'more') {
+                this.filter.page_num = this.filter.page_num + 1;
+                this.loadMoreStatus = 'loading';
+                this.getWorkData('reachBottom');
+            }
+        },
+        getWorkData(title) {
             this.getWorkStatic();
             // 作品状态 status 0—待审核 1—已通过 2—未通过 -1 全部
-            let status = 1;
+            this.filter.status = 1;
             if (this.tabActiveIndex === 1) {
-                status = 0;
+                this.filter.status = 0;
             } else if (this.tabActiveIndex === 2) {
-                status = 2;
+                this.filter.status = 2;
             }
-            return api
-                .get('/api/user/worklist', {
-                    status,
-                    page_size: 100,
-                })
-                .then(
-                    (res) => {
-                        this.isLoadingTableData = false;
-                        this.tableData = res.list;
-                    },
-                    () => {
-                        this.tableData = [];
-                    },
-                );
+            return api.get('/api/user/worklist', this.filter).then(
+                ({ list, total }) => {
+                    if (title === 'reachBottom') {
+                        this.tableData = this.tableData.concat(list);
+                    } else {
+                        this.tableData = list;
+                    }
+                    this.total = total;
+                    if (
+                        this.total
+                        <= this.filter.page_num * this.filter.page_size
+                    ) {
+                        this.loadMoreStatus = title === 'reachBottom' ? 'noMore' : 'none';
+                    } else {
+                        this.loadMoreStatus = 'more';
+                    }
+                },
+                () => {
+                    this.tableData = [];
+                },
+            );
         },
         setTabActive(i) {
             this.tabActiveIndex = i;
@@ -178,10 +219,10 @@ export default {
                         this.deleteWork(item);
                         console.log('用户点击确定');
                     } else if (res.cancel) {
-                        uni.showToast({
-                            title: '删除失败',
-                            icon: 'none',
-                        });
+                        // uni.showToast({
+                        //     title: '删除失败',
+                        //     icon: 'none',
+                        // });
                         console.log('用户点击取消');
                     }
                 },
@@ -192,7 +233,6 @@ export default {
                 // 来自页面内分享按钮
                 const index = res.target.id;
                 const item = this.tableData[index];
-
                 return {
                     title: item.resource_name,
                     imageUrl: item.video_img_url,
@@ -202,7 +242,16 @@ export default {
             return false;
         },
     },
-    onLoad() {
+    onLoad(query) {
+        // 作品状态 status 0—待审核 1—已通过 2—未通过 -1 全部
+        const { type } = query;
+        const index = type && Number(type);
+        this.tabActiveIndex = index || 0;
+        if (index === 1) {
+            this.tabActiveIndex = 0;
+        } else if (index === 0) {
+            this.tabActiveIndex = 1;
+        }
         this.getWorkData();
     },
 };
@@ -210,34 +259,62 @@ export default {
 
 <style lang="less">
 .page-my-work {
+    padding: 84upx 30upx 0;
+    .panel {
+        position: fixed;
+        top: 0;
+        height: 84upx;
+        left: 0;
+        right: 0;
+        background-color: #fff;
+        z-index: 1;
+    }
     .panel .panel-hd .panel-title {
         display: inline-block;
         padding-left: 0;
         padding-right: 0;
+        color: #666;
+        &.active {
+            color: #1166ff;
+        }
     }
-
     .work-list {
         .work-item {
-            border-bottom: 1upx solid #ddd;
-            padding: 30upx 0 50upx;
+            padding: 30upx 0 0upx;
+            margin-bottom: 40upx;
 
             position: relative;
+            .thumbnail-wrap,
+            .thumbnail {
+                width: 266upx;
+                height: 155upx;
+            }
+        }
+        .work-name {
+            line-height: 1;
+        }
+        .text-info {
+            margin-bottom: 24upx;
+            margin-top: 0;
+            font-size: 22upx;
         }
 
         .btns {
             position: absolute;
             right: 0;
-            bottom: 10upx;
+            bottom: 0upx;
+            height: 60upx;
 
             .btn {
                 display: inline-block;
-                width: 120upx;
+                padding: 0;
+                min-width: 120upx;
                 height: 60upx;
                 font-size: 26upx;
                 line-height: 60upx;
                 color: #fff;
                 text-align: center;
-                margin-left: 40upx;
+                margin-left: 16upx;
                 background: #1166ff;
                 border-radius: 0;
             }

@@ -3,7 +3,7 @@
         <view class="top-sec">
             <image
                 class="banner"
-                src="/static/images/mall/banner.png"
+                src="http://aitiaozhan.oss-cn-beijing.aliyuncs.com/chunjiehao/banner.png"
             />
             <view class="menu">
                 <view
@@ -69,7 +69,7 @@
         <view class="btm-sec">
             <image
                 class="banner"
-                src="/static/images/mall/continue.png"
+                src="http://aitiaozhan.oss-cn-beijing.aliyuncs.com/chunjiehao/continue.png"
             />
         </view>
     </view>

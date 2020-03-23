@@ -36,14 +36,17 @@
             v-if="type === 'success'"
             class="sub-title"
         >
+            <view class="tips">
+                管理员会尽快审核，请耐心等候！
+            </view>
             <text
-                class="link mr-right"
+                class="link btn mr-right"
                 @click="reUpload"
             >
                 再次上传作品
             </text>
             <text
-                class="link"
+                class="link btn blue-bg"
                 @click="goToUc"
             >
                 查看作品
@@ -102,8 +105,8 @@ export default {
         },
         goToUc() {
             if (this.from === 'upload') {
-                uni.reLaunch({
-                    url: '/pages/tabBar/uc/uc',
+                uni.navigateTo({
+                    url: '/pages/uc/myWork/myWork?type=0',
                 });
             } else if (this.from === 'festival') {
                 uni.reLaunch({
@@ -129,7 +132,7 @@ export default {
     text-align: center;
 
     .icon-wrap {
-        padding-top: 375upx;
+        padding-top: 270upx;
         margin-bottom: 50upx;
     }
 
@@ -143,14 +146,32 @@ export default {
         color: #333;
         font-size: 40upx;
         margin-bottom: 20upx;
+        font-weight: bold;
     }
 
     .sub-title {
         font-size: 32upx;
         color: #333;
-
+        .tips {
+            color: #999;
+            font-size: 28upx;
+            margin-bottom: 60upx;
+        }
         .link {
             color: #1166ff;
+        }
+        .link.btn {
+            padding: 0 34upx;
+            height: 74upx;
+            line-height: 74upx;
+            border: 1px solid #1166ff;
+            text-align: center;
+            display: inline-block;
+            min-width: 236upx;
+        }
+        .blue-bg {
+            background-color: #1166ff;
+            color: #fff;
         }
 
         .mr-right {

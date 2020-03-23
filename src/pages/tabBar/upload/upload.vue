@@ -7,33 +7,6 @@
             v-if="!needBindMobile"
             class="main"
         >
-            <view class="panel">
-                <view class="panel-hd">
-                    <text
-                        v-for="(item, k) in tabs"
-                        :key="item.id"
-                        class="panel-title"
-                        :class="{ active: newsTabActiveIndex === k }"
-                        @click="setNewsTabActive(k)"
-                    >
-                        {{ item.column_name }}
-                    </text>
-                </view>
-            </view>
-
-            <view class="uni-form-item uni-column">
-                <input
-                    v-model="formData.resource_name"
-                    class="uni-input"
-                    placeholder-class="placeholder"
-                    maxlength="30"
-                    :placeholder="
-                        (uploadMode === 'video' ? '视频' : '作品') +
-                            '名称*（不超过30字）'
-                    "
-                >
-            </view>
-
             <view class="uni-list-cell-db">
                 <picker
                     :value="index"
@@ -56,6 +29,38 @@
                 </picker>
             </view>
 
+            <view class="show-type">
+                <view class="show-type-hd">
+                    <text class="show-type-text">
+                        表现形式
+                    </text>
+                    <view class="show-type-list">
+                        <text
+                            v-for="(item, k) in tabs"
+                            :key="k"
+                            class="show-type-title"
+                            :class="{ active: newsTabActiveIndex === k }"
+                            @click="setNewsTabActive(k)"
+                        >
+                            {{ item.column_name }}
+                        </text>
+                    </view>
+                </view>
+            </view>
+
+            <view class="uni-form-item uni-column">
+                <input
+                    v-model="formData.resource_name"
+                    class="uni-input"
+                    placeholder-class="placeholder"
+                    maxlength="30"
+                    :placeholder="
+                        (uploadMode === 'video' ? '视频' : '作品') +
+                            '名称*（不超过30字）'
+                    "
+                >
+            </view>
+
             <textarea
                 v-model="formData.introduce"
                 class="uni-textarea"
@@ -65,33 +70,33 @@
                         '介绍（不超过500字）'
                 "
             />
-            <upload
-                v-if="uploadMode === 'video'"
-                :type="'video'"
-                @change="updateVideo"
-            />
-            <view
-                v-if="uploadMode === 'image'"
-                class="upload-desc"
-            >
-                拖动图片可调整展示顺序，第一张图片会作为该作品的封面图
-            </view>
-            <upload
-                v-if="uploadMode === 'video'"
-                :type="'image'"
-                @change="updateImage"
-            />
+            <template v-if="uploadMode !== ''">
+                <template v-if="uploadMode === 'video'">
+                    <upload
+                        :type="'video'"
+                        :source="formData.video_id"
+                        @change="updateVideo"
+                    />
+                    <upload
+                        :type="'image'"
+                        :is-video="true"
+                        :source="formData.video_img_url"
+                        @change="updateImage"
+                    />
+                </template>
 
-            <template v-if="uploadMode === 'image'">
-                <upload
-                    :type="'image'"
-                    :preview="false"
-                    @change="updateImage"
-                />
-                <image-drag-sort
-                    ref="preview"
-                    :list="images"
-                />
+                <template v-if="uploadMode === 'image'">
+                    <upload
+                        :type="'image'"
+                        :preview="false"
+                        @change="updateImage"
+                    />
+                    <image-drag-sort
+                        v-show="images.length"
+                        ref="preview"
+                        :list="images"
+                    />
+                </template>
             </template>
 
             <view
@@ -178,8 +183,8 @@ export default {
             isLoading: true,
 
             tabs: [
-                { id: '1', column_name: '上传视频作品' },
-                { id: '2', column_name: '上传图片作品' },
+                { id: '1', column_name: '视频' },
+                { id: '2', column_name: '图片' },
             ],
             images: [],
 
@@ -208,10 +213,8 @@ export default {
             },
             needBindMobile: false,
             catData: [],
-            title: 'picker',
-            array: ['中国', '美国', '巴西', '日本'],
             index: 0,
-            time: '12:01',
+            lock: true,
         };
     },
     onLoad() {},
@@ -222,6 +225,21 @@ export default {
         this.getData();
     },
     methods: {
+        resetData() {
+            this.formData = {
+                ...this.formData,
+                cat_id: '',
+                resource_name: '',
+                introduce: '',
+                type: 2,
+                video_id: '',
+                video_img_url: '',
+                img: [],
+            };
+            this.newsTabActiveIndex = 0;
+            this.uploadMode = 'video';
+            this.images = [];
+        },
         setNewsTabActive(index) {
             this.newsTabActiveIndex = index;
             if (index === 0) {
@@ -248,6 +266,7 @@ export default {
             }
         },
         getData() {
+            console.log(this.needBindMobile, '我要秀才艺');
             // this.isLoading = true;
             api.get('/api/works/childcat', {
                 cat_id: 3,
@@ -263,6 +282,7 @@ export default {
                 },
                 () => {
                     this.isLoading = false;
+                    this.needBindMobile = false;
                     // uni.switchTab({
                     //     url: '/pages/tabBar/uc/uc',
                     // });
@@ -363,57 +383,67 @@ export default {
                 );
         },
         upload() {
-            const formData = Object.assign({}, this.formData);
+            if (this.lock) {
+                this.lock = false;
+                const formData = Object.assign({}, this.formData);
 
-            if (this.uploadMode === 'video') {
-                formData.resource_type = 1;
-                if (!formData.resource_name) {
-                    return this.errTip('请输入视频名称');
+                if (this.uploadMode === 'video') {
+                    formData.resource_type = 1;
+                    if (!formData.resource_name) {
+                        this.lock = true;
+                        return this.errTip('请输入视频名称');
+                    }
+                    if (!formData.cat_id) {
+                        this.lock = true;
+                        return this.errTip('请选择视频分类');
+                    }
+                    if (!formData.video_id) {
+                        this.lock = true;
+                        return this.errTip('请上传视频文件');
+                    }
+                    // if (!formData.video_img_url) {
+                    //     return this.errTip('请上传视频封面');
+                    // }
+                } else {
+                    formData.resource_type = 2;
+                    if (!formData.resource_name) {
+                        this.lock = true;
+                        return this.errTip('请输入作品名称');
+                    }
+                    if (!formData.cat_id) {
+                        this.lock = true;
+                        return this.errTip('请选择作品分类');
+                    }
+                    formData.img = this.$refs.preview.dump();
+                    if (!formData.img.length) {
+                        this.lock = true;
+                        return this.errTip('请上传作品图片');
+                    }
                 }
-                if (!formData.cat_id) {
-                    return this.errTip('请选择视频分类');
-                }
-                if (!formData.video_id) {
-                    return this.errTip('请上传视频文件');
-                }
-                // if (!formData.video_img_url) {
-                //     return this.errTip('请上传视频封面');
-                // }
-            } else {
-                formData.resource_type = 2;
-                if (!formData.resource_name) {
-                    return this.errTip('请输入作品名称');
-                }
-                if (!formData.cat_id) {
-                    return this.errTip('请选择作品分类');
-                }
-                formData.img = this.$refs.preview.dump();
-                if (!formData.img.length) {
-                    return this.errTip('请上传作品图片');
-                }
+
+                uni.showLoading();
+                return api.isLogin().then(() => {
+                    api.post('/api/user/editwork', formData).then(
+                        () => {
+                            uni.hideLoading();
+                            uni.navigateTo({
+                                url: '/pages/upload/result/result?type=success',
+                            });
+                            this.resetData();
+                            this.lock = true;
+                        },
+                        (err) => {
+                            uni.hideLoading();
+                            uni.showToast({
+                                icon: 'none',
+                                title: err.message,
+                            });
+                            this.lock = true;
+                        },
+                    );
+                });
             }
-
-            uni.showLoading();
-            // check input
-            console.log(this.formData);
-            return api.isLogin().then(() => {
-                api.post('/api/user/editwork', formData).then(
-                    (res) => {
-                        console.log(res);
-                        uni.hideLoading();
-                        uni.navigateTo({
-                            url: '/pages/upload/result/result?type=success',
-                        });
-                    },
-                    (err) => {
-                        uni.hideLoading();
-                        uni.showToast({
-                            icon: 'none',
-                            title: err.message,
-                        });
-                    },
-                );
-            });
+            return true;
         },
     },
 };
@@ -467,12 +497,31 @@ export default {
         height: 98upx;
         line-height: 98upx;
         text-align: center;
-        margin-top: 168upx;
+        margin-top: 80upx;
     }
 
-    .panel-hd {
+    .show-type-hd {
         margin: 0 0 40rpx 0;
-        text-align: center;
+        display: flex;
+        align-items: center;
+        .show-type-text {
+            margin-right: 40upx;
+            color: #999;
+            font-size: 28upx;
+        }
+    }
+    .show-type-title {
+        margin-right: 30rpx;
+        padding: 0 40rpx;
+        height: 64rpx;
+        line-height: 64rpx;
+        color: #1166ff;
+        border: 1rpx solid #1166ff;
+        display: inline-block;
+        &.active {
+            background-color: #1166ff;
+            color: #fff;
+        }
     }
 
     .upload-desc {

@@ -112,7 +112,6 @@ export default {
 
 <style lang="less">
 @uni-text-color-grey: "#ccc";
-
 .uni-load-more {
     display: flex;
     flex-direction: row;

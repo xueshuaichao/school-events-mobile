@@ -132,7 +132,6 @@ const contentList = [
 
 function h5InitShare(customShareConfig) {
     let params = {};
-
     const index = Math.floor(Math.random() * contentList.length);
 
     const defaultParams = {
@@ -149,7 +148,6 @@ function h5InitShare(customShareConfig) {
     } else {
         params = Object.assign(defaultParams, customShareConfig);
     }
-    console.log(params);
     // if (!h5InitShare.config) {
     api.get('/api/weixin/getshareconfig', {
         url: location.href,

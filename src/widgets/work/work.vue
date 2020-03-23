@@ -15,7 +15,20 @@
             </view>
         </view>
         <view class="panel-bd has-swiper">
-            <scroll-view
+            <view
+                v-for="(item, index) in info"
+                :key="item.id"
+                class="scroll-view-item"
+            >
+                <work
+                    :info="item"
+                    :levelid="catId"
+                    :sort="sort"
+                    :cur-position="index + 1"
+                    :total="total"
+                />
+            </view>
+            <!-- <scroll-view
                 class="scroll-view"
                 scroll-x="true"
                 @scroll="scroll"
@@ -27,7 +40,7 @@
                 >
                     <work :info="item" />
                 </view>
-            </scroll-view>
+            </scroll-view> -->
         </view>
     </view>
 </template>
@@ -42,12 +55,27 @@ export default {
     props: {
         title: {
             type: String,
+            default: '',
         },
         moreUrl: {
             type: String,
+            default: '',
         },
         info: {
             type: Array,
+            default: () => [],
+        },
+        catId: {
+            type: Number,
+            default: 1,
+        },
+        sort: {
+            type: Number,
+            default: 4,
+        },
+        total: {
+            type: Number,
+            default: 0,
         },
     },
 
@@ -81,18 +109,29 @@ export default {
 <style lang="less">
 .widget-work {
     .panel-bd {
-        padding: 30upx 0;
+        margin: 28upx 0 28upx 28upx;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+
+        .scroll-view-item {
+            justify-content: space-between;
+            width: 330upx;
+            height: 300upx;
+            margin-right: 28upx;
+            margin-bottom: 30upx;
+        }
     }
 }
 
-.scroll-view {
-    white-space: nowrap;
+// .scroll-view {
+//     white-space: nowrap;
 
-    .scroll-view-item {
-        display: inline-block;
-        width: 330upx;
-        height: 300upx;
-        margin-right: 24upx;
-    }
-}
+//     .scroll-view-item {
+//         display: inline-block;
+//         width: 330upx;
+//         height: 300upx;
+//         margin-right: 24upx;
+//     }
+// }
 </style>

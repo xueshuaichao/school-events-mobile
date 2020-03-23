@@ -84,7 +84,7 @@
                         <view class="qr-wrap">
                             <image
                                 class="qr-code"
-                                src="/static/images/chunjie/qrcode.jpg"
+                                src="http://aitiaozhan.oss-cn-beijing.aliyuncs.com/chunjiehao/qrcode.jpg"
                             />
                             <view class="text">
                                 关注“UP青少年爱挑战”公众号，了解更多活动信息
@@ -136,7 +136,7 @@
                                 由活动组委会根据才艺秀作品质量和内容，综合评选出20名优秀参赛者，奖励蓝牙音箱1个
                             </view>
                             <image
-                                src="../../static/images/chunjie/prize06.png"
+                                src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/chunjie/prize06.png"
                             />
                         </view>
                         <view class="prize-prompt">
@@ -146,7 +146,7 @@
 
                     <image
                         class="register02"
-                        src="../../static/images/chunjie/register02.png"
+                        src="http://aitiaozhan.oss-cn-beijing.aliyuncs.com/chunjiehao/register02.png"
                     />
                     <view class="jinguizi">
                         <view>
@@ -211,7 +211,7 @@
                         <view class="qr-wrap">
                             <image
                                 class="qr-code"
-                                src="/static/images/chunjie/qrcode.jpg"
+                                src="http://aitiaozhan.oss-cn-beijing.aliyuncs.com/chunjiehao/qrcode.jpg"
                             />
                             <view class="text">
                                 关注“UP青少年爱挑战”公众号，了解更多活动信息
@@ -241,22 +241,30 @@
                     <text>结果公布：2月11日</text>
                 </view>
                 <view class="register">
-                    <image src="../../static/images/chunjie/register.png" />
+                    <image
+                        src="http://aitiaozhan.oss-cn-beijing.aliyuncs.com/chunjiehao/register.png"
+                    />
                 </view>
                 <view class="prize">
                     <view>
                         <text>一等奖</text>
-                        <image src="../../static/images/chunjie/prize01.png" />
+                        <image
+                            src="http://aitiaozhan.oss-cn-beijing.aliyuncs.com/chunjiehao/prize01.png"
+                        />
                         <text>学习机*1个</text>
                     </view>
                     <view>
                         <text>二等奖</text>
-                        <image src="../../static/images/chunjie/prize02.png" />
+                        <image
+                            src="http://aitiaozhan.oss-cn-beijing.aliyuncs.com/chunjiehao/prize02.png"
+                        />
                         <text>小度*4个</text>
                     </view>
                     <view>
                         <text>三等奖</text>
-                        <image src="../../static/images/chunjie/prize03.png" />
+                        <image
+                            src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/chunjie/prize03.png"
+                        />
                         <text>无人机*6个</text>
                     </view>
                     <view
@@ -343,14 +351,14 @@
                     </view>
                     <view class="media-box">
                         <view
-                            v-for="item in dataList"
+                            v-for="(item, index) in dataList"
                             :key="item.id"
                             class="media-content"
                         >
                             <event-craft-cover
                                 :info="item"
                                 :bg-color="'B11A27'"
-                                @click.native="viewDetail(item)"
+                                @click.native="viewDetail(item, index)"
                             />
 
                             <view class="media-name text-one-line">
@@ -435,27 +443,32 @@ export default {
                 {
                     prize_score: '一等奖',
                     name: '学习机*1个',
-                    prize: '../../static/images/chunjie/prize01.png',
+                    prize:
+                        'http://aitiaozhan.oss-cn-beijing.aliyuncs.com/chunjiehao/prize01.png',
                 },
                 {
                     prize_score: '二等奖',
                     name: '小度*4个',
-                    prize: '../../static/images/chunjie/prize02.png',
+                    prize:
+                        'http://aitiaozhan.oss-cn-beijing.aliyuncs.com/chunjiehao/prize02.png',
                 },
                 {
                     prize_score: '三等奖',
                     name: '无人机*6个',
-                    prize: '../../static/images/chunjie/prize03.png',
+                    prize:
+                        'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/chunjie/prize03.png',
                 },
                 {
                     prize_score: '四等奖',
                     name: '护眼灯*8个',
-                    prize: '../../static/images/chunjie/prize04.png',
+                    prize:
+                        'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/chunjie/prize04.png',
                 },
                 {
                     prize_score: '五等奖',
                     name: '液晶手写板*20个',
-                    prize: '../../static/images/chunjie/prize05.png',
+                    prize:
+                        'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/chunjie/prize05.png',
                 },
             ],
             status: 2,
@@ -587,9 +600,12 @@ export default {
                     'http://aitiaozhan.oss-cn-beijing.aliyuncs.com/banner.png?x-oss-process=image/format,png/interlace,1/quality,Q_80/resize,m_pad,h_100',
             });
         },
-        viewDetail(item) {
+        viewDetail(item, position) {
             uni.navigateTo({
-                url: `/pages/chunjie/detail/detail?id=${item.id}&fr=${this.fr}`,
+                url: `/pages/chunjie/detail/detail?id=${item.id}&fr=${
+                    this.fr
+                }&total=${this.total}&curPosition=${position
+                    + 1}&from=3&actSort=${this.filter.sort || ''}`,
             });
         },
         toggle(k) {
@@ -910,7 +926,7 @@ body.dialog-open {
             margin-bottom: 10upx;
         }
         view:nth-child(2) {
-            background: url("../../static/images/chunjie/prize-bg.png")
+            background: url("https://aitiaozhan.oss-cn-beijing.aliyuncs.com/chunjie/prize-bg.png")
                 no-repeat;
             background-size: 100% 100%;
             width: 193upx;
@@ -978,7 +994,8 @@ body.dialog-open {
     margin-top: 20upx;
 }
 .prize {
-    background: url("../../static/images/chunjie/prize_bg.png") no-repeat;
+    background: url("https://aitiaozhan.oss-cn-beijing.aliyuncs.com/chunjie/prize_bg.png")
+        no-repeat;
     background-size: 100% 100%;
     height: 242upx;
     // display:flex;

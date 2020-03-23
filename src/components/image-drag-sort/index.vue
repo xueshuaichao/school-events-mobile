@@ -21,6 +21,12 @@
                         src="/static/images/work/icon-del.png"
                         @click="imageDel(index)"
                     >
+                    <view
+                        v-if="index === 0"
+                        class="tag"
+                    >
+                        封面
+                    </view>
                 </view>
                 <movable-view
                     v-show="active"
@@ -85,13 +91,9 @@ export default {
         };
     },
     watch: {
-        lists() {
+        list(oVal, nVal) {
             // 监听数组变化
-            const l = this.lists.length;
-            if (l) {
-                // 有图片或图片数量改变时重新初始化
-                this.init();
-            }
+            console.log(oVal, nVal);
         },
     },
     mounted() {
@@ -117,6 +119,9 @@ export default {
                 wrapLeft = data.left; // 设置拖拽范围的左边界坐标
                 this.setNodeWH();
             }).exec();
+        },
+        reset() {
+            this.lists.splice(0, this.lists.length);
         },
         setNodeWH() {
             // 设置拖拽元素的宽高
@@ -353,6 +358,20 @@ export default {
     height: 100%;
     overflow: hidden;
     border-radius: 12upx;
+    position: relative;
+}
+.item .tag {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: 78upx;
+    height: 36upx;
+    background: rgba(0, 0, 0, 1);
+    border-radius: 12upx 0px 0px 0px;
+    opacity: 0.6;
+    font-size: 24upx;
+    color: #fff;
+    text-align: center;
 }
 
 .item-move-active {

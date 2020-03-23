@@ -20,10 +20,17 @@
             <view class="browse-num">
                 <image
                     class="icon-view"
-                    src="/static/images/widgets/work/view.png"
+                    src="/static/images/widgets/work/like-outline.png"
                 />
-                {{ info.play_count || 0 }}
+                {{ info.praise_count || 0 }}
             </view>
+            <view
+                v-if="info.grade"
+                class="is-excellect"
+            >
+                优秀
+            </view>
+            <slot name="tag" />
         </view>
         <view class="work-info">
             <view class="work-name text-one-line">
@@ -48,11 +55,23 @@
             </template>
 
             <template v-if="mode === 'single'">
-                <view class="text-info">
+                <view
+                    v-if="showClass"
+                    class="text-info"
+                >
                     {{ info.cat_name }}
                 </view>
-                <view class="text-info">
+                <view
+                    v-if="showTime"
+                    class="text-info"
+                >
                     {{ info.created_at }}
+                </view>
+                <view
+                    v-if="showAchievement"
+                    class="text-info"
+                >
+                    {{ info.achievement }}{{ info.achievement_unit }}
                 </view>
             </template>
         </view>
@@ -85,6 +104,42 @@ export default {
             // mini, single
             default: 'mini',
         },
+        showClass: {
+            type: Boolean,
+            default: true,
+        },
+        curPosition: {
+            type: Number,
+            default: 0,
+        },
+        levelid: {
+            type: Number,
+            default: -1,
+        },
+        sort: {
+            type: Number,
+            default: 1,
+        },
+        total: {
+            type: Number,
+            default: 1,
+        },
+        keyword: {
+            type: String,
+            default: '',
+        },
+        showTime: {
+            type: Boolean,
+            default: true,
+        },
+        showAchievement: {
+            type: Boolean,
+            default: false,
+        },
+        query: {
+            type: String,
+            default: '',
+        },
     },
     data() {
         return {};
@@ -94,7 +149,7 @@ export default {
             if (this.info.status === 1) {
                 this.info.play_count = this.info.play_count + 1;
                 uni.navigateTo({
-                    url: `/pages/work/detail/detail?id=${this.info.id}`,
+                    url: `/pages/work/detail/detail?id=${this.info.id}&total=${this.total}&curPosition=${this.curPosition}&sort=${this.sort}&levelid=${this.levelid}&keyword=${this.keyword}query`,
                 });
             }
         },
@@ -107,6 +162,7 @@ export default {
     display: inline-block;
     width: 330upx;
     height: 300upx;
+    margin-right: 20upx;
 
     .thumbnail-wrap {
         width: 330upx;
@@ -118,14 +174,15 @@ export default {
             position: absolute;
             right: 16upx;
             bottom: 16upx;
-            color: #fff;
+            color: rgba(255, 255, 255, 0.8);
             font-size: 22upx;
-
+            line-height: 20upx;
             .icon-view {
                 display: inline-block;
-                width: 28upx;
-                height: 18upx;
+                width: 20upx;
+                height: 20upx;
                 margin-right: 8upx;
+                vertical-align: top;
             }
         }
 
@@ -160,12 +217,25 @@ export default {
                 rgba(0, 0, 0, 0.4)
             );
         }
+        .is-excellect {
+            position: absolute;
+            width: 66upx;
+            height: 30upx;
+            background: rgba(17, 102, 255, 1);
+            border-radius: 0px 15upx 15upx 0px;
+            border: 1px solid rgba(255, 255, 255, 0.75);
+            left: 0;
+            top: 8upx;
+            font-size: 20upx;
+            text-align: center;
+            color: #fff;
+        }
     }
 
     .work-name {
         font-size: 28upx;
         color: #333;
-        margin-bottom: 24upx;
+        margin-bottom: 16upx;
     }
 
     .work-author {
