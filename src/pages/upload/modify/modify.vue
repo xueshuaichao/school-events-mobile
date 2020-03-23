@@ -24,7 +24,12 @@
                         v-if="formData.cat_id"
                         class="uni-input fake-input"
                     >
-                        {{ catData[index].name }}
+                        <template v-if="init">
+                            {{ catName }}
+                        </template>
+                        <template v-else>
+                            {{ catData[index].name }}
+                        </template>
                     </view>
                 </picker>
             </view>
@@ -35,13 +40,16 @@
                     </text>
                     <view class="show-type-list">
                         <text
-                            v-for="(item, index) in tabs"
-                            v-show="uploadMode === item.type"
-                            :key="index"
-                            class="show-type-title"
-                            :class="{ active: uploadMode === item.type }"
+                            v-if="formData.resource_type === 1"
+                            class="show-type-title active"
                         >
-                            {{ item.column_name }}
+                            视频
+                        </text>
+                        <text
+                            v-else
+                            class="show-type-title active"
+                        >
+                            图片
                         </text>
                     </view>
                 </view>
@@ -172,12 +180,13 @@ export default {
         return {
             isLoading: true,
             id: '',
+            init: true,
             tabs: [
                 { type: 'video', column_name: '视频' },
                 { type: 'image', column_name: '图片' },
             ],
             images: [],
-
+            catName: '',
             newsTabActiveIndex: 0,
             uploadMode: 'video',
 
@@ -243,7 +252,7 @@ export default {
                     this.formData.cat_id = res.cat_id;
                     this.formData.resource_name = res.resource_name;
                     this.formData.introduce = res.introduce;
-
+                    this.catName = res.cat_name;
                     if (res.resource_type === 2) {
                         this.uploadMode = 'image';
                         this.images = res.img;
@@ -255,6 +264,7 @@ export default {
             }
         },
         onSelect(e) {
+            this.init = false;
             this.index = e.detail.value;
             const catId = this.catData[this.index].cat_id;
             this.formData.cat_id = catId;

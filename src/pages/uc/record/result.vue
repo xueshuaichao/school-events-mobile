@@ -123,37 +123,20 @@ export default {
             canvasImg: '',
             itemData: {},
             record: ['校级记录', '市级记录', '省级记录'],
+            bgOssimg:
+                '?x-oss-process=image/format,jpg/interlace,1/quality,Q_80/resize,m_pad,w_689,h_1103',
             ossImg:
                 '?x-oss-process=image/format,jpg/interlace,1/quality,Q_80/resize,m_pad,w_388,h_261',
             posterConfig: {
-                pixelRatio: 3,
+                pixelRatio: 2,
                 width: 689,
                 height: 1103,
                 debug: false,
-                texts: [
-                    {
-                        x: 50,
-                        y: 101,
-                        text: [
-                            {
-                                text: '作品名称',
-                                fontSize: 29,
-                                color: '#ACAFBF',
-                                opacity: 1,
-                                marginRight: 10,
-                                lineHeight: 40,
-                                lineNum: 1,
-                                width: 1210,
-                                textOverflow: 'ellipsis',
-                            },
-                        ],
-                        baseLine: 'middle',
-                    },
-                ],
+                texts: [],
                 images: [
                     {
                         url:
-                            'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/record/recordbg.png',
+                            'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/record/recordbg.png?x-oss-process=image/format,jpg/interlace,1/quality,Q_80/resize,m_pad,w_689,h_1103',
                         width: 689,
                         height: 1103,
                         y: 0,
