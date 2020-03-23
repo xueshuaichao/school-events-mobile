@@ -5,6 +5,7 @@
                 <poster
                     id="poster"
                     :config="posterConfig"
+                    :hide-loading="true"
                     @success="onPosterSuccess"
                     @fail="onPosterFail"
                 />
@@ -123,8 +124,6 @@ export default {
             canvasImg: '',
             itemData: {},
             record: ['校级记录', '市级记录', '省级记录'],
-            bgOssimg:
-                '?x-oss-process=image/format,jpg/interlace,1/quality,Q_80/resize,m_pad,w_689,h_1103',
             ossImg:
                 '?x-oss-process=image/format,jpg/interlace,1/quality,Q_80/resize,m_pad,w_388,h_261',
             posterConfig: {
@@ -174,7 +173,13 @@ export default {
             if (!_this.isH5) {
                 _this.posterConfig.images[3].url = val.qrcode;
                 _this.setCanvasImg().then(() => {
-                    _this.poster.onCreate(_this.posterConfig);
+                    uni.showLoading({ mask: true, title: '生成中' });
+                    Promise.all([
+                        _this.initCanvasText(),
+                        _this.setCanvasImg(),
+                    ]).then(() => {
+                        _this.poster.onCreate(_this.posterConfig);
+                    });
                 });
             }
         },
@@ -183,36 +188,40 @@ export default {
         onPosterSuccess({ detail }) {
             this.startCreateCanvas = false;
             this.canvasImg = detail;
+            uni.hideLoading();
         },
         onPosterFail(err) {
             console.log(err);
         },
         initCanvasText() {
-            const texts = [
-                '作品名称：',
-                '成绩：',
-                '记录等级：',
-                '参赛者姓名：',
-                '学校年级：',
-                '创建记录时间：',
-            ];
-            const textStyle = {
-                fontSize: 24,
-                lineHeight: 72,
-                color: '#ACAFBF',
-                width: 450,
-            };
-            const position = {
-                x: 101,
-                y: 540,
-                ySpace: 53,
-                xSpace: 0,
-            };
-            this.posterConfig.texts = this.posterText(
-                texts,
-                textStyle,
-                position,
-            );
+            return new Promise((resolve) => {
+                const texts = [
+                    '作品名称：',
+                    '成绩：',
+                    '记录等级：',
+                    '参赛者姓名：',
+                    '学校年级：',
+                    '创建记录时间：',
+                ];
+                const textStyle = {
+                    fontSize: 24,
+                    lineHeight: 72,
+                    color: '#ACAFBF',
+                    width: 450,
+                };
+                const position = {
+                    x: 101,
+                    y: 540,
+                    ySpace: 53,
+                    xSpace: 0,
+                };
+                this.posterConfig.texts = this.posterText(
+                    texts,
+                    textStyle,
+                    position,
+                );
+                resolve('3232');
+            });
         },
         setCanvasImg() {
             return new Promise((resolve) => {
@@ -276,7 +285,6 @@ export default {
             });
         },
         handleSave() {
-            console.log(this.canvasImg, '触发图片保存');
             uni.showLoading({ mask: true, title: '保存中' });
             const that = this;
             // 图片保存到本地

@@ -467,6 +467,7 @@ export default {
                     id: 2,
                 },
             ],
+            lock: true,
         };
     },
     methods: {
@@ -718,35 +719,41 @@ export default {
                     title: validateObj[e.message],
                     icon: 'none',
                 });
+                this.lock = true;
             }
             return status;
         },
         submitReporte() {
-            // return this.resetData();
-            if (this.date) {
-                this.formData.achievement = this.getTimeSeconds(
-                    this.achievementDateInfo,
-                );
-            }
-            if (this.onValidate()) {
-                uni.showLoading();
-                api.post('/api/works/uploadgrade', this.formData).then(
-                    (res) => {
-                        console.log(res);
-                        this.resetData();
-                        uni.hideLoading();
-                        uni.navigateTo({
-                            url: '/pages/uc/reported/result',
-                        });
-                    },
-                    (err) => {
-                        uni.hideLoading();
-                        uni.showToast({
-                            icon: 'none',
-                            title: err.message,
-                        });
-                    },
-                );
+            if (this.lock) {
+                this.lock = false;
+                // return this.resetData();
+                if (this.date) {
+                    this.formData.achievement = this.getTimeSeconds(
+                        this.achievementDateInfo,
+                    );
+                }
+                if (this.onValidate()) {
+                    uni.showLoading();
+                    api.post('/api/works/uploadgrade', this.formData).then(
+                        (res) => {
+                            console.log(res);
+                            this.resetData();
+                            uni.hideLoading();
+                            uni.navigateTo({
+                                url: '/pages/uc/reported/result',
+                            });
+                            this.lock = true;
+                        },
+                        (err) => {
+                            uni.hideLoading();
+                            uni.showToast({
+                                icon: 'none',
+                                title: err.message,
+                            });
+                            this.lock = true;
+                        },
+                    );
+                }
             }
         },
     },
