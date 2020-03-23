@@ -296,6 +296,10 @@ export default {
                     return this.errTip('请选择作品分类');
                 }
                 formData.img = this.$refs.preview.dump();
+                if (!formData.img.length) {
+                    this.lock = true;
+                    return this.errTip('请上传作品图片');
+                }
             }
 
             // check input

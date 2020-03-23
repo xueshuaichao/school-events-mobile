@@ -1,7 +1,7 @@
 <template>
     <div class="page-record-result">
         <template v-if="!isH5">
-            <template>
+            <template v-if="startCreateCanvas">
                 <poster
                     id="poster"
                     :config="posterConfig"
@@ -9,7 +9,10 @@
                     @fail="onPosterFail"
                 />
             </template>
-            <view class="canvas-img">
+            <view
+                v-else
+                class="canvas-img"
+            >
                 <image
                     :src="canvasImg"
                     mode=""
@@ -126,7 +129,7 @@ export default {
                 pixelRatio: 3,
                 width: 689,
                 height: 1103,
-                debug: true,
+                debug: false,
                 texts: [
                     {
                         x: 50,
@@ -290,13 +293,14 @@ export default {
         },
         handleSave() {
             console.log(this.canvasImg, '触发图片保存');
+            uni.showLoading({ mask: true, title: '保存中' });
             const that = this;
             // 图片保存到本地
             // eslint-disable-next-line no-undef
             wx.saveImageToPhotosAlbum({
                 filePath: this.canvasImg,
                 success() {
-                    console.log('保存成功');
+                    uni.hideLoading();
                     that.prompt = false;
                     that.showTicketMask = true;
                     uni.showToast({
@@ -306,8 +310,7 @@ export default {
                     });
                 },
                 fail(err) {
-                    console.log('保存图片失败');
-                    console.log(err.errMsg);
+                    uni.hideLoading();
                     if (
                         err.errMsg
                             === 'saveImageToPhotosAlbum:fail:auth denied'
@@ -385,10 +388,10 @@ export default {
 .page-record-result {
     padding-top: 14upx;
     position: relative;
-    #poster {
-        position: absolute;
-        transform: translate3d(-9999rpx, 0, 0);
-    }
+    // #poster {
+    //     position: absolute;
+    //     transform: translate3d(-9999rpx, 0, 0);
+    // }
     .canvas-img {
         width: 689upx;
         height: 1103upx;

@@ -153,39 +153,34 @@ export default {
             api.post('/api/weixin/getminiqrcode', {
                 path: url,
                 scene,
-            })
-                .then(
-                    // eslint-disable-next-line consistent-return
-                    ({ url }) => {
-                        uni.hideLoading();
-                        if (url) {
-                            if (this.isH5) {
-                                this.itemData.qrcode = url;
-                            } else {
-                                this.base64src(url, (res) => {
-                                    this.itemData.qrcode = res;
-                                }).then((data) => {
-                                    if (data) {
-                                        this.onCreate();
-                                    }
-                                });
-                                return true;
-                            }
+            }).then(
+                // eslint-disable-next-line consistent-return
+                ({ url }) => {
+                    uni.hideLoading();
+                    if (url) {
+                        if (this.isH5) {
+                            this.itemData.qrcode = url;
+                            this.onCreate();
                         } else {
-                            this.itemData.qrcode = 'http://aitiaozhan.oss-cn-beijing.aliyuncs.com/main-erweima.png';
-                            return false;
+                            this.base64src(url, (res) => {
+                                this.itemData.qrcode = res;
+                            }).then((data) => {
+                                if (data) {
+                                    this.onCreate();
+                                }
+                            });
                         }
-                    },
-                    () => {
+                    } else {
                         this.itemData.qrcode = 'http://aitiaozhan.oss-cn-beijing.aliyuncs.com/main-erweima.png';
-                        return false;
-                    },
-                )
-                .then((data) => {
-                    if (!data) {
                         this.onCreate();
                     }
-                });
+                },
+                () => {
+                    this.itemData.qrcode = 'http://aitiaozhan.oss-cn-beijing.aliyuncs.com/main-erweima.png';
+                    uni.hideLoading();
+                    this.onCreate();
+                },
+            );
 
             return true;
         },
