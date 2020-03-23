@@ -190,11 +190,9 @@ export default {
             const _this = this;
             if (!_this.isH5) {
                 _this.posterConfig.images[3].url = val.qrcode;
-                _this.initCanvasText();
-                _this.setCanvasImg();
-                setTimeout(() => {
+                _this.setCanvasImg().then(() => {
                     _this.poster.onCreate(_this.posterConfig);
-                }, 200);
+                });
             }
         },
     },
@@ -234,34 +232,37 @@ export default {
             );
         },
         setCanvasImg() {
-            this.posterConfig.images[1].url = `${this.itemData.video_img_url}${this.ossImg}`;
-            const record = ['校级记录', '市级记录', '省级记录'];
-            this.posterConfig.images[2].url = `https://aitiaozhan.oss-cn-beijing.aliyuncs.com/record/record${this.itemData.record}.png`;
-            const texts = [
-                this.itemData.resource_name,
-                `${this.itemData.achievement}${this.itemData.achievement_unit}`,
-                record[this.itemData.record - 1],
-                this.itemData.create_name,
-                this.itemData.create_user_class,
-                this.itemData.created_at,
-            ];
-            const textStyle = {
-                fontSize: '28',
-                lineHeight: '72',
-                color: '#4D4E56',
-                width: 980,
-            };
-            const position = {
-                x: 283,
-                y: 540,
-                ySpace: 53,
-                xSpace: 0,
-            };
-            // console.log(this.posterText(texts, textStyle, position))
-            console.log(this.posterConfig.texts);
-            this.posterConfig.texts = this.posterConfig.texts.concat(
-                this.posterText(texts, textStyle, position),
-            );
+            return new Promise((resolve) => {
+                this.posterConfig.images[1].url = `${this.itemData.video_img_url}${this.ossImg}`;
+                const record = ['校级记录', '市级记录', '省级记录'];
+                this.posterConfig.images[2].url = `https://aitiaozhan.oss-cn-beijing.aliyuncs.com/record/record${this.itemData.record}.png`;
+                const texts = [
+                    this.itemData.resource_name,
+                    `${this.itemData.achievement}${this.itemData.achievement_unit}`,
+                    record[this.itemData.record - 1],
+                    this.itemData.create_name,
+                    this.itemData.create_user_class,
+                    this.itemData.created_at,
+                ];
+                const textStyle = {
+                    fontSize: '28',
+                    lineHeight: '72',
+                    color: '#4D4E56',
+                    width: 980,
+                };
+                const position = {
+                    x: 283,
+                    y: 540,
+                    ySpace: 53,
+                    xSpace: 0,
+                };
+                // console.log(this.posterText(texts, textStyle, position))
+                console.log(this.posterConfig.texts);
+                this.posterConfig.texts = this.posterConfig.texts.concat(
+                    this.posterText(texts, textStyle, position),
+                );
+                resolve(true);
+            });
         },
         posterText(texts, textStyle = {}, position = {}) {
             let defaultStyle = {
@@ -379,6 +380,7 @@ export default {
             success({ data }) {
                 _this.itemData = JSON.parse(data);
                 _this.poster = _this.selectComponent('#poster');
+                _this.initCanvasText();
             },
         });
     },

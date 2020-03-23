@@ -270,7 +270,9 @@ export default {
         },
         // fetch user info
         onLogin() {
-            this.getData();
+            uni.switchTab({
+                url: '/pages/tabBar/uc/uc',
+            });
         },
     },
     onLoad() {
