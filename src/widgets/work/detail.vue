@@ -155,7 +155,7 @@
                         class="icon"
                         src="/static/images/yiqing/detail/view.png"
                     />
-                    <view> {{ pageData.play_count }} </view>
+                    <view> {{ play_count }} </view>
                 </view>
             </view>
 
@@ -189,7 +189,7 @@
 </template>
 
 <script>
-// import api from '../../common/api';
+import api from '../../common/api';
 
 export default {
     filters: {
@@ -260,6 +260,9 @@ export default {
     },
     created() {
         this.play_count = this.pageData.play_count;
+        if (this.pageData.resource_type === 2) {
+            this.play_count += 1;
+        }
     },
     mounted() {},
     methods: {
@@ -285,18 +288,16 @@ export default {
             this.$refs.video.play();
         },
         onPlay() {
-            // if (!this.isPlayed) {
-            //     api.post('/api/works/playcount', {
-            //         id: this.pageData.id,
-            //     }).then(() => {
-            //         this.play_count = this.play_count + 1;
-            //     });
-            // }
+            if (!this.isPlayed) {
+                this.play_count = this.play_count + 1;
+                api.post('/api/works/playcount', {
+                    id: this.pageData.id,
+                });
+            }
             this.isVideoWaiting = false;
             this.isPlayed = true;
         },
         onWaiting() {
-            this.isPlayed = true;
             this.isVideoWaiting = true;
             this.timeupdateCounter = 0;
         },
