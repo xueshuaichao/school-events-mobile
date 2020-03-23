@@ -488,14 +488,12 @@ export default {
             uni.setNavigationBarTitle({
                 title: res.resource_name || '',
             });
-            // if (res.resource_type === 2) {
-            // 说明是图片，计算播放量
-            api.post('/api/works/playcount', {
-                id: res.id,
-            }).then(() => {
-                this.pageData.play_count = res.play_count + 1;
-            });
-            // }
+            if (res.resource_type === 2) {
+                // 说明是图片，计算播放量
+                api.post('/api/works/playcount', {
+                    id: res.id,
+                });
+            }
         },
         toggleLike() {
             api.isLogin().then(
