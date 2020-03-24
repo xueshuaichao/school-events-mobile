@@ -22,10 +22,6 @@ function onPageView() {
         console.log(page);
 
         try {
-            window._hmt.push([
-                '_trackPageview',
-                location.pathname + location.search,
-            ]);
             // 伟东云统计
             // - 设置采集系统帐户, 必须设置账户,
             window._gaq.push(['_setAccount', 'aitiaozhan']);
@@ -49,6 +45,11 @@ function onPageView() {
 
             // 事件采集
             // window._gaq.push(['_trackEvent', category, action, label, cnt, amt, content]);
+
+            window._hmt.push([
+                '_trackPageview',
+                location.pathname + location.search,
+            ]);
         } catch (e) {
             console.log(e);
         }
