@@ -4,13 +4,15 @@
         {
             "path": "pages/tabBar/index/index",
             "style": {
-                "navigationBarTitleText": "大赛首页"
+                "navigationBarTitleText": "大赛首页",
+                "enablePullDownRefresh": true
             }
         },
         {
             "path": "pages/tabBar/list/list",
             "style": {
-                "navigationBarTitleText": "作品展示"
+                "navigationBarTitleText": "作品展示",
+                "enablePullDownRefresh": true
             }
         },
         {

@@ -6,6 +6,7 @@
             :has-page-params="hasPageParams"
             :is-show="isShow"
             :is-from-tabbar="true"
+            :refresh="refresh"
             @changeBottom="changeBottom"
         />
     </view>
@@ -25,6 +26,7 @@ export default {
             isReachBtm: false,
             hasPageParams: true,
             isShow: false,
+            refresh: false,
             filter: {
                 keyword: '',
                 sort: 1,
@@ -47,6 +49,10 @@ export default {
 
     onShow() {
         this.isShow = !this.isShow;
+    },
+    onPullDownRefresh() {
+        // this.getData('refresh')
+        this.refresh = !this.refresh;
     },
 };
 </script>
