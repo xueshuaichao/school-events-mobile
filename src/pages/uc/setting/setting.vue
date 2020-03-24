@@ -193,13 +193,16 @@ export default {
             });
         },
         updataUser(data) {
+            uni.showLoading();
             api.post('/api/user/updateuser', {
                 avatar_url: data.path,
             }).then(
                 () => {
                     this.userInfo.avatar_url = data.path;
+                    uni.hideLoading();
                 },
                 (err) => {
+                    uni.hideLoading();
                     uni.showToast({
                         icon: 'none',
                         title: err.message,

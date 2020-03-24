@@ -135,7 +135,7 @@ export default {
                 images: [
                     {
                         url:
-                            'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/record/recordbg.png?x-oss-process=image/format,jpg/interlace,1/quality,Q_80/resize,m_pad,w_689,h_1103',
+                            'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/record/recordbg.png?x-oss-process=image/format,jpg/interlace,1/quality,Q_70/resize,m_pad,w_689,h_1103',
                         width: 689,
                         height: 1103,
                         y: 0,
@@ -174,12 +174,7 @@ export default {
                 _this.posterConfig.images[3].url = val.qrcode;
                 _this.setCanvasImg().then(() => {
                     uni.showLoading({ mask: true, title: '生成中' });
-                    Promise.all([
-                        _this.initCanvasText(),
-                        _this.setCanvasImg(),
-                    ]).then(() => {
-                        _this.poster.onCreate(_this.posterConfig);
-                    });
+                    _this.poster.onCreate(_this.posterConfig);
                 });
             }
         },
@@ -193,41 +188,12 @@ export default {
         onPosterFail(err) {
             console.log(err);
         },
-        initCanvasText() {
-            return new Promise((resolve) => {
-                const texts = [
-                    '作品名称：',
-                    '成绩：',
-                    '记录等级：',
-                    '参赛者姓名：',
-                    '学校年级：',
-                    '创建记录时间：',
-                ];
-                const textStyle = {
-                    fontSize: 24,
-                    lineHeight: 72,
-                    color: '#ACAFBF',
-                    width: 450,
-                };
-                const position = {
-                    x: 101,
-                    y: 540,
-                    ySpace: 53,
-                    xSpace: 0,
-                };
-                this.posterConfig.texts = this.posterText(
-                    texts,
-                    textStyle,
-                    position,
-                );
-                resolve('3232');
-            });
-        },
         setCanvasImg() {
             return new Promise((resolve) => {
                 this.posterConfig.images[1].url = `${this.itemData.video_img_url}${this.ossImg}`;
                 const record = ['校级记录', '市级记录', '省级记录'];
-                this.posterConfig.images[2].url = `https://aitiaozhan.oss-cn-beijing.aliyuncs.com/record/record${this.itemData.record}.png`;
+                const query = '?x-oss-process=image/format,png/interlace,1/quality,Q_80/resize,m_pad,w_313,h_68';
+                this.posterConfig.images[2].url = `https://aitiaozhan.oss-cn-beijing.aliyuncs.com/record/record${this.itemData.record}.png${query}`;
                 const texts = [
                     this.itemData.resource_name,
                     `${this.itemData.achievement}${this.itemData.achievement_unit}`,
@@ -371,7 +337,6 @@ export default {
             success({ data }) {
                 _this.itemData = JSON.parse(data);
                 _this.poster = _this.selectComponent('#poster');
-                _this.initCanvasText();
             },
         });
     },
