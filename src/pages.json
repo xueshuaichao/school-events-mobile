@@ -11,8 +11,7 @@
         {
             "path": "pages/tabBar/list/list",
             "style": {
-                "navigationBarTitleText": "作品展示",
-                "enablePullDownRefresh": true
+                "navigationBarTitleText": "作品展示"
             }
         },
         {

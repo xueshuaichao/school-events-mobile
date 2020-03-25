@@ -355,10 +355,6 @@ export default {
             type: Boolean,
             default: true,
         },
-        refresh: {
-            type: Boolean,
-            default: false,
-        },
     },
 
     data() {
@@ -435,9 +431,6 @@ export default {
                 // error
                 uni.setStorageSync('onShowFrom', '');
             }
-        },
-        refresh() {
-            this.getTableData('refresh');
         },
     },
     created() {
@@ -553,7 +546,7 @@ export default {
                 }
             });
         },
-        getTableData(refresh) {
+        getTableData() {
             this.filter.page_num = 1;
             this.filter.address.province_id = 0;
 
@@ -564,9 +557,6 @@ export default {
                 console.log(res);
                 if (this.total < 10) {
                     this.loadMoreStatus = 'noMore';
-                }
-                if (refresh) {
-                    uni.stopPullDownRefresh();
                 }
             });
         },
