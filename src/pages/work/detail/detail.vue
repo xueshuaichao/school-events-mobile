@@ -175,6 +175,7 @@ import api from '../../../common/api';
 import utils from '../../../common/utils';
 import share from '../../../common/share';
 import detail from '../../../widgets/work/detail.vue';
+import detailConf from './detail.config';
 // 上下滑动的功能的拆解
 // 使用Swiper组件，把页面的主要内容，当作独立的部分，迁移到../../../widgets/work/detail.vue。
 // 页面滑动的时候，确定下当前显示的数据，用来做转发，二维码的数据
@@ -183,24 +184,6 @@ import detail from '../../../widgets/work/detail.vue';
 // 根据页面翻动的方向, 获取相对的第二页面的数据，并修改视图。
 
 export default {
-    filters: {
-        optimizeImage: (val) => {
-            if (!val) {
-                return '';
-            }
-            let newUrl = '';
-            const width = 375;
-            const height = 667;
-            if (val.indexOf('?') !== -1) {
-                newUrl = `${val}&x-oss-process=image/format,png/interlace,1/quality,Q_80/resize,m_pad,h_${height
-                    * 2},w_${width * 2},color_000000`;
-            } else {
-                newUrl = `${val}?x-oss-process=image/format,png/interlace,1/quality,Q_80/resize,m_pad,h_${height
-                    * 2},w_${width * 2},color_000000`;
-            }
-            return newUrl;
-        },
-    },
     components: {
         detail,
     },
@@ -229,57 +212,7 @@ export default {
 
             shareDesc: '',
             fr: '',
-            posterConfig: {
-                pixelRatio: 3,
-                width: 570,
-                height: 826,
-                debug: false,
-                texts: [
-                    {
-                        x: 60,
-                        y: 590,
-                        text: [
-                            {
-                                text: '',
-                                fontSize: 30,
-                                color: '#333',
-                                opacity: 1,
-                                marginRight: 10,
-                                lineHeight: 40,
-                                lineNum: 1,
-                                width: 1210,
-                                textOverflow: 'ellipsis',
-                            },
-                        ],
-                        baseLine: 'middle',
-                    },
-                ],
-                images: [
-                    {
-                        url:
-                            'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/aitiaozhan-poster.png',
-                        width: 570,
-                        height: 826,
-                        y: 0,
-                        x: 0,
-                    },
-                    {
-                        url: '',
-                        width: 469,
-                        height: 315,
-                        y: 233,
-                        x: 50,
-                    },
-                    {
-                        url: '',
-                        width: 142,
-                        height: 142,
-                        y: 666,
-                        x: 380,
-                        borderRadius: 140,
-                    },
-                ],
-            },
+            posterConfig: detailConf.atz.posterConfig,
 
             prompt: false,
             canvasImg: '',
@@ -482,6 +415,7 @@ export default {
             this.getLikeStatus();
         },
         setGetDetail(res) {
+            console.log('---------setGetDetail--------');
             this.posterConfig.images[1].url = res.video_img_url;
             this.posterConfig.texts[0].text[0].text = res.resource_name;
             this.initShare(res);
@@ -564,11 +498,16 @@ export default {
             document.querySelector('.uni-video-type-fullscreen').style = '';
         },
         initShare(res) {
-            let title = `我的作品《${res.resource_name}》，【我正在参加青少年爱挑战活动】,快来给我点赞吧！`;
-
-            if (this.pageData.resource_scope === 3) {
-                title = `我的作品《${res.resource_name}》，【我正在参加才艺秀活动】,快来给我点赞吧！`;
-            }
+            const { titleList } = detailConf.five;
+            let title = titleList[Math.floor(Math.random() * titleList.length)];
+            const arr = Object.entries(res);
+            arr.forEach(([key, val]) => {
+                title = title
+                    .toString()
+                    .replace(key, val)
+                    .replace(',', '');
+            });
+            console.log(title, '----------titel');
             const desc = `${res.resource_name}-${res.create_name}`;
             this.pageData.video_img_url = res.video_img_url;
             this.shareDesc = title;
@@ -841,6 +780,11 @@ export default {
         const queryStrc = queryStrb.replace(/,/g, '&');
         const queryStrd = queryStrc.match(/\{([^)]*)\}/)[1];
         this.queryUrl = queryStrd;
+
+        this.posterConfig = {
+            ...this.posterConfig,
+            ...detailConf.five.posterConfig,
+        };
 
         // hack for html5 video size notwoking
         // #ifdef H5
