@@ -38,11 +38,11 @@ export default {
     created() {},
     methods: {
         changeBottom() {
-            this.isReachBtm = false;
+            // this.isReachBtm = !this.isReachBtm;
         },
     },
     onReachBottom() {
-        this.isReachBtm = true;
+        this.isReachBtm = !this.isReachBtm;
     },
 
     onShow() {
