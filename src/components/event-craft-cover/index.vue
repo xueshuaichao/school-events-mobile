@@ -50,8 +50,8 @@ export default {
     data() {
         return {
             mediaIcon: {
-                1: '../../static/images/chunjie/video-icon.png',
-                2: '../../static/images/chunjie/img-icon.png',
+                1: '/static/images/chunjie/video-icon.png',
+                2: '/static/images/chunjie/img-icon.png',
             },
         };
     },
