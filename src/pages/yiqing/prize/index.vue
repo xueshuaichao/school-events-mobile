@@ -63,7 +63,7 @@
             />
             <view
                 class="btn"
-                @click="handleupload"
+                @click="handleGetPrize"
             >
                 领取证书
             </view>
@@ -98,19 +98,15 @@ export default {
                 debug: false,
                 texts: [
                     {
-                        // 0
                         x: 61,
                         y: 243,
                         text: [
                             {
-                                text: '一二三',
+                                text: '',
                                 fontSize: 32,
                                 color: '#333333',
                                 opacity: 1,
                                 lineHeight: 40,
-                                // lineNum: 1,
-                                width: 1600,
-                                // textOverflow: 'ellipsis',
                             },
                         ],
                         baseLine: 'middle',
@@ -126,34 +122,13 @@ export default {
                                 color: '#666666',
                                 opacity: 1,
                                 lineHeight: 40,
-                                // lineNum: 1,
                                 width: 1600,
-                                // textOverflow: 'ellipsis',
                             },
                         ],
                         baseLine: 'middle',
                     },
                     {
                         // 2
-                        x: 61,
-                        y: 320,
-                        text: [
-                            {
-                                text:
-                                    '       感谢您参与“抗击疫情艺起来”主题公益活动，在这个特殊的时期，您用才艺和爱心传递力量，共同抗击疫情，用自己独特的方式为武汉加油！为中国加油！',
-                                fontSize: 28,
-                                color: '#666',
-                                opacity: 1,
-                                lineHeight: 40,
-                                lineNum: 4,
-                                width: 1600,
-                                // textOverflow: 'ellipsis',
-                            },
-                        ],
-                        baseLine: 'middle',
-                    },
-                    {
-                        // 3
                         x: 61,
                         y: 495,
                         text: [
@@ -165,13 +140,12 @@ export default {
                                 lineHeight: 40,
                                 lineNum: 2,
                                 width: 1600,
-                                // textOverflow: 'ellipsis',
                             },
                         ],
                         baseLine: 'middle',
                     },
                     {
-                        // 4
+                        // 3
                         x: 61,
                         y: 495,
                         text: [
@@ -183,13 +157,12 @@ export default {
                                 lineHeight: 40,
                                 lineNum: 2,
                                 width: 1600,
-                                // textOverflow: 'ellipsis',
                             },
                         ],
                         baseLine: 'middle',
                     },
                     {
-                        // 5
+                        // 4
                         x: 61,
                         y: 495,
                         text: [
@@ -201,15 +174,12 @@ export default {
                                 lineHeight: 40,
                                 lineNum: 2,
                                 width: 1600,
-                                // textOverflow: 'ellipsis',
                             },
                         ],
                         baseLine: 'middle',
                     },
                     {
-                        // 6
-                        // x: 400,
-                        // y: 533,
+                        // 5
                         x: 61,
                         y: 495,
                         text: [
@@ -221,49 +191,12 @@ export default {
                                 lineHeight: 40,
                                 lineNum: 2,
                                 width: 1600,
-                                // textOverflow: 'ellipsis',
                             },
                         ],
                         baseLine: 'middle',
                     },
                     {
-                        // 7
-                        x: 374,
-                        y: 633,
-                        text: [
-                            {
-                                text: '特颁此证，以资纪念',
-                                fontSize: 28,
-                                color: '#666',
-                                opacity: 1,
-                                lineHeight: 40,
-                                // lineNum: 1,
-                                width: 800,
-                                // textOverflow: 'ellipsis',
-                            },
-                        ],
-                        baseLine: 'middle',
-                    },
-                    {
-                        // 8
-                        x: 335,
-                        y: 821,
-                        text: [
-                            {
-                                text: '青少年“爱挑战”活动组委会',
-                                fontSize: 24,
-                                color: '#666',
-                                opacity: 1,
-                                lineHeight: 40,
-                                lineNum: 1,
-                                width: 900,
-                                // textOverflow: 'ellipsis',
-                            },
-                        ],
-                        baseLine: 'middle',
-                    },
-                    {
-                        // 9
+                        // 6
                         x: 360,
                         y: 856,
                         text: [
@@ -275,7 +208,6 @@ export default {
                                 lineHeight: 40,
                                 lineNum: 1,
                                 width: 900,
-                                // textOverflow: 'ellipsis',
                             },
                         ],
                         baseLine: 'middle',
@@ -305,8 +237,8 @@ export default {
     onLoad(query) {
         const { activity_cat: activityCat, id } = query;
         this.activityCat = activityCat;
+        this.id = id;
         this.poster = this.selectComponent('#poster');
-        this.handleTicketMask(id);
         this.getAuthStatus();
     },
     created() {},
@@ -346,7 +278,7 @@ export default {
                         uni.showLoading({
                             mask: true,
                         });
-                        that.saveImage();
+                        that.handleSave();
                     },
                 });
             }
@@ -354,28 +286,6 @@ export default {
         handleSave() {
             console.log('保存触发');
             const that = this;
-            // eslint-disable-next-line no-undef
-            wx.authorize({
-                // 获取相册授权信息
-                scope: 'scope.writePhotosAlbum',
-                success() {
-                    // 已授权
-                    that.saveImage();
-                },
-                fail() {
-                    // 未授权
-                    that.imgAuthBtn = true;
-                    // eslint-disable-next-line no-undef
-                    wx.showToast({
-                        title: '保存失败请授权',
-                        icon: 'none',
-                    });
-                },
-            });
-        },
-        saveImage() {
-            const that = this;
-            // 图片保存到本地
             // eslint-disable-next-line no-undef
             wx.saveImageToPhotosAlbum({
                 filePath: this.canvasImg,
@@ -391,32 +301,42 @@ export default {
                         uni.navigateBack();
                     }, 2000);
                 },
-                fail() {},
+                fail(err) {
+                    console.log(err, 'err111');
+                    uni.hideLoading();
+                    // 未授权
+                    that.imgAuthBtn = true;
+                    // eslint-disable-next-line no-undef
+                    wx.showToast({
+                        title: '保存失败请授权',
+                        icon: 'none',
+                    });
+                },
             });
         },
-        handleTicketMask(id) {
-            uni.showLoading({
-                mask: true,
-            });
+        handleTicketMask() {
             const url = 'pages/yiqing/detail/detail';
-            const scene = `id=${id}` || 'id=325';
+            const scene = `id=${this.id}` || 'id=325';
             api.post('/api/weixin/getminiqrcode', {
                 path: url,
                 scene,
             }).then(
                 ({ url }) => {
-                    uni.hideLoading();
                     if (url) {
                         this.base64src(url, (res) => {
                             this.posterConfig.images[1].url = res;
+                            setTimeout(() => {
+                                this.poster.onCreate(this.posterConfig);
+                            }, 100);
                         });
                     } else {
                         this.posterConfig.images[1].url = 'http://aitiaozhan.oss-cn-beijing.aliyuncs.com/main-erweima.png';
+                        this.poster.onCreate(this.posterConfig);
                     }
                 },
                 () => {
                     this.posterConfig.images[1].url = 'http://aitiaozhan.oss-cn-beijing.aliyuncs.com/main-erweima.png';
-                    uni.hideLoading();
+                    this.poster.onCreate(this.posterConfig);
                 },
             );
         },
@@ -516,7 +436,7 @@ export default {
             }
             return result;
         },
-        handleupload() {
+        handleGetPrize() {
             const formData = Object.assign({}, this.formData);
             // 移除首尾空格
             formData.name = formData.name.replace(/(^\s*)|(\s*$)/g, '');
@@ -526,30 +446,56 @@ export default {
             if (!formData.work) {
                 return this.errTip('请填写作品名称！');
             }
-            this.posterConfig.texts[0].text[0].text = this.formData.name;
-            if (this.activityCat === '1') {
-                this.posterConfig.texts[1].text[0].text = `${this.getTextPadding(
-                    this.formData.name.length,
-                )}同学`;
+            uni.showLoading({ mask: true, title: '生成中' });
+            if (uni.getSystemInfoSync().platform === 'android') {
+                // android 环境
+                this.posterConfig.texts[0].text[0].text = this.formData.name;
+                if (this.activityCat === '1') {
+                    this.posterConfig.texts[1].text[0].text = `${this.getTextPadding(
+                        this.formData.name.length,
+                        '  ',
+                    )}同学`;
+                }
+                this.posterConfig.texts[3].text[0].text = `${this.getTextPadding(
+                    8,
+                )}《${this.formData.work}》`;
+                const texts5 = `在本次活动中荣获${
+                    this.activityCat === '1' ? '青少年组' : '成年组'
+                }`;
+                this.posterConfig.texts[4].text[0].text = `${this.getTextPadding(
+                    this.formData.work.length + 11,
+                    '  ',
+                )}${texts5}`;
+                this.posterConfig.texts[5].text[0].text = `${this.getTextPadding(
+                    this.formData.work.length + 8 + texts5.length,
+                    ' ',
+                )}优秀奖`;
+                this.posterConfig.texts[6].text[0].text = `${this.ConverToDate()}`;
+            } else {
+                // ios 环境
+                this.posterConfig.texts[0].text[0].text = this.formData.name;
+                if (this.activityCat === '1') {
+                    this.posterConfig.texts[1].text[0].text = `${this.getTextPadding(
+                        this.formData.name.length,
+                    )}同学`;
+                }
+                this.posterConfig.texts[3].text[0].text = `${this.getTextPadding(
+                    7,
+                    ' ',
+                )}《${this.formData.work}》`;
+                const texts5 = `在本次活动中荣获${
+                    this.activityCat === '1' ? '青少年组' : '成年组'
+                }`;
+                this.posterConfig.texts[4].text[0].text = `${this.getTextPadding(
+                    this.formData.work.length + 10,
+                )}${texts5}`;
+                this.posterConfig.texts[5].text[0].text = `${this.getTextPadding(
+                    this.formData.work.length + 5 + texts5.length,
+                    '   ',
+                )}优秀奖`;
+                this.posterConfig.texts[6].text[0].text = `${this.ConverToDate()}`;
             }
-            this.posterConfig.texts[4].text[0].text = `${this.getTextPadding(
-                7,
-                ' ',
-            )}《${this.formData.work}》`;
-            const texts5 = `在本次活动中荣获${
-                this.activityCat === '1' ? '青少年组' : '成年组'
-            }`;
-            this.posterConfig.texts[5].text[0].text = `${this.getTextPadding(
-                this.formData.work.length + 10,
-            )}${texts5}`;
-            this.posterConfig.texts[6].text[0].text = `${this.getTextPadding(
-                this.formData.work.length + 5 + texts5.length,
-                '   ',
-            )}优秀奖`;
-            this.posterConfig.texts[9].text[0].text = `${this.ConverToDate()}`;
-            uni.showLoading();
-
-            this.poster.onCreate(this.posterConfig);
+            this.handleTicketMask();
             return '';
         },
         getTextPadding(length, space) {
@@ -595,8 +541,9 @@ export default {
             position: absolute;
             width: 690upx;
             height: 988upx;
-            left: 30upx;
-            top: 30upx;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -56%);
         }
         .saveBtn {
             position: absolute;

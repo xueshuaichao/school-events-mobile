@@ -135,7 +135,7 @@
                     class="video"
                     preload
                     :src="pageData.video.cloud_path_sd"
-                    :autoplay="true"
+                    :autoplay="!isH5"
                     :controls="true"
                     :loop="true"
                     :poster="pageData.video_img_url"
