@@ -10,12 +10,12 @@
             :src="optimizeImage(info.img_url)"
             class="video"
         />
-        <view
+        <!-- <view
             v-if="info.grade"
             class="is-excellect"
         >
             优秀
-        </view>
+        </view> -->
         <view class="media-icon">
             <image :src="mediaIcon[info.resource_type]" />
         </view>

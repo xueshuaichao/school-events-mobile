@@ -1,18 +1,18 @@
 <template>
     <view class="page-index">
         <view
-            v-if="prompt && status === 2"
+            v-if="prompt"
             class="cover"
         >
             <image
-                src="http://aitiaozhan.oss-cn-beijing.aliyuncs.com/chunjiehao/suspension01.png"
+                src="http://aitiaozhan.oss-cn-beijing.aliyuncs.com/school-events-mobile/suspension01.png"
                 @click="handleChunjie"
             />
             <image
                 src="../../../static/images/chunjie/third_entry_close.png"
                 @click="handleClose"
             />
-            疫情入口
+            首页弹出框入口
         </view>
         <navigator
             v-if="yiqingshow === 1 && isShow"
@@ -24,7 +24,7 @@
                     class="close-icon"
                     @click.stop="handleCloseSuspension"
                 />
-                春节入口
+                右侧悬浮入口
             </view>
         </navigator>
         <!-- search -->
@@ -61,7 +61,7 @@
                         >
                             <image
                                 class="banner-image"
-                                src="http://aitiaozhan.oss-cn-beijing.aliyuncs.com/chunjiehao/yiqing-banner.png?t=2"
+                                src="http://aitiaozhan.oss-cn-beijing.aliyuncs.com/school-events-mobile/prize-banner.png"
                             />
                         </navigator>
                     </swiper-item>
@@ -321,7 +321,7 @@ export default {
                 talent: { list: [], total: 0 },
             },
             prompt: false,
-            isFirstLogin: 'isFirstLogin3',
+            isFirstLogin: 'isFirstLogin4',
             status: 2,
             show: 1,
             chunjiehaoshow: 1,
@@ -426,7 +426,6 @@ export default {
         },
         thirdEntryPrompt() {
             const isFirstLogin = uni.getStorageSync(this.isFirstLogin);
-            console.log(isFirstLogin, 'isFirstLogin');
             if (!isFirstLogin) {
                 this.prompt = true;
             }
@@ -601,7 +600,7 @@ uni-swiper {
             right: 0;
         }
         font-size: 0;
-        background: url("http://aitiaozhan.oss-cn-beijing.aliyuncs.com/chunjiehao/suspension.png")
+        background: url("http://aitiaozhan.oss-cn-beijing.aliyuncs.com/school-events-mobile/suspension.png")
             no-repeat;
         background-size: 100% 100%;
         width: 144upx;

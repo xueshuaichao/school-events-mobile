@@ -250,10 +250,10 @@
                 </view>
 
                 <view
-                    :class="status === 2 ? 'upload' : 'upload-disable'"
+                    class="upload"
                     @click="handleUpload"
                 >
-                    上传作品
+                    点击领取你的证书
                 </view>
             </view>
         </view>
@@ -382,23 +382,23 @@ export default {
             });
         },
         handleUpload() {
-            if (this.status === 2) {
-                api.isLogin({
-                    fr: this.fr,
-                }).then(() => {
-                    uni.navigateTo({
-                        url: '/pages/yiqing/upload/upload',
-                    });
+            // if (this.status === 2) {
+            api.isLogin({
+                fr: this.fr,
+            }).then(() => {
+                uni.navigateTo({
+                    url: '/pages/yiqing/myWork/myWork?type=myWork',
                 });
-            } else {
-                uni.showToast({
-                    title:
-                        this.status === 1
-                            ? '活动未开始，敬请期待'
-                            : '活动已结束',
-                    icon: 'none',
-                });
-            }
+            });
+            // } else {
+            //     uni.showToast({
+            //         title:
+            //             this.status === 1
+            //                 ? '活动未开始，敬请期待'
+            //                 : '活动已结束',
+            //         icon: 'none',
+            //     });
+            // }
         },
 
         onReachBottom() {

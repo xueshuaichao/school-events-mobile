@@ -354,20 +354,20 @@ export default {
                         y: 0,
                         x: 0,
                     },
-                    {
-                        url: '',
-                        width: 469,
-                        height: 315,
-                        y: 233,
-                        x: 50,
-                    },
-                    {
-                        url: '',
-                        width: 142,
-                        height: 142,
-                        y: 645,
-                        x: 348,
-                    },
+                    // {
+                    //     url: '',
+                    //     width: 469,
+                    //     height: 315,
+                    //     y: 233,
+                    //     x: 50,
+                    // },
+                    // {
+                    //     url: '',
+                    //     width: 142,
+                    //     height: 142,
+                    //     y: 645,
+                    //     x: 348,
+                    // },
                 ],
             },
 
@@ -721,10 +721,6 @@ export default {
 .page-work-detail {
     background: #000;
     height: 100vh;
-    #poster {
-        // position: absolute;
-        // left:-999upx;
-    }
     .activerulebox {
         position: fixed;
         background-color: rgba(0, 0, 0, 0.8);
