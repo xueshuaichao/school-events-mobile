@@ -54,7 +54,7 @@
                     :circular="circular"
                 >
                     <!-- 疫情入口 -->
-                    <swiper-item v-if="!isH5 && yiqingshow === 1">
+                    <swiper-item v-if="yiqingshow === 1">
                         <navigator
                             url="/pages/yiqing/index"
                             class="swiper-item"
@@ -77,7 +77,7 @@
                         </navigator>
                     </swiper-item>
                     <!-- 春节好入口 -->
-                    <swiper-item v-if="!isH5 && chunjiehaoshow === 1">
+                    <swiper-item v-if="chunjiehaoshow === 1">
                         <navigator
                             url="/pages/chunjiehao/index"
                             class="swiper-item"
