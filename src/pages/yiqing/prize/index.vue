@@ -534,6 +534,7 @@ export default {
             }
             this.posterConfig.texts[4].text[0].text = `${this.getTextPadding(
                 7,
+                ' ',
             )}《${this.formData.work}》`;
             const texts5 = `在本次活动中荣获${
                 this.activityCat === '1' ? '青少年组' : '成年组'
@@ -543,7 +544,7 @@ export default {
             )}${texts5}`;
             this.posterConfig.texts[6].text[0].text = `${this.getTextPadding(
                 this.formData.work.length + 5 + texts5.length,
-                '',
+                '   ',
             )}优秀奖`;
             this.posterConfig.texts[9].text[0].text = `${this.ConverToDate()}`;
             uni.showLoading();
