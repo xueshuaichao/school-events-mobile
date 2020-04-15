@@ -117,6 +117,13 @@
                 "navigationBarTitleText": "上传作品"
             }
         },
+        // 默认上传作品的页面
+        {
+            "path": "pages/upload/default/upload",
+            "style": {
+                "navigationBarTitleText": "上传作品"
+            }
+        },
         // 地址详情
         {
             "path": "pages/address/index",

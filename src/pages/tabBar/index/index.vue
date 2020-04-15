@@ -5,16 +5,19 @@
             class="cover"
         >
             <image
-                src="http://aitiaozhan.oss-cn-beijing.aliyuncs.com/chunjiehao/suspension01.png"
-                @click="handleChunjie"
+                src="http://aitiaozhan.oss-cn-beijing.aliyuncs.com/h5/read-prompt.png"
+                @click="handlePromt"
             />
-            <image
-                src="../../../static/images/chunjie/third_entry_close.png"
+            <view
+                class="close"
                 @click="handleClose"
             />
-            疫情入口
+            <!-- <image
+                src="/static/images/chunjie/third_entry_close.png"
+
+            /> -->
         </view>
-        <navigator
+        <!-- <navigator
             v-if="yiqingshow === 1 && isShow"
             url="/pages/read/index"
         >
@@ -24,9 +27,8 @@
                     class="close-icon"
                     @click.stop="handleCloseSuspension"
                 />
-                春节入口
             </view>
-        </navigator>
+        </navigator> -->
         <!-- search -->
         <view class="search">
             <input
@@ -51,10 +53,21 @@
                     :autoplay="autoplay"
                     :interval="interval"
                     :duration="duration"
-                    :circular="circular"
+                    :circular="true"
                 >
+                    <swiper-item v-show="activitiesStatus[3].show">
+                        <navigator
+                            url="/pages/read/index"
+                            class="swiper-item"
+                        >
+                            <image
+                                class="banner-image"
+                                src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/h5/read-banner.png"
+                            />
+                        </navigator>
+                    </swiper-item>
                     <!-- 疫情入口 -->
-                    <swiper-item v-if="!isH5 && yiqingshow === 1">
+                    <swiper-item v-show="activitiesStatus[2].show">
                         <navigator
                             url="/pages/yiqing/index"
                             class="swiper-item"
@@ -65,7 +78,7 @@
                             />
                         </navigator>
                     </swiper-item>
-                    <swiper-item v-if="show === 1">
+                    <swiper-item v-show="activitiesStatus[1].show">
                         <navigator
                             url="/pages/chunjie/index"
                             class="swiper-item"
@@ -77,14 +90,14 @@
                         </navigator>
                     </swiper-item>
                     <!-- 春节好入口 -->
-                    <swiper-item v-if="!isH5 && chunjiehaoshow === 1">
+                    <swiper-item v-show="activitiesStatus[0].show">
                         <navigator
                             url="/pages/chunjiehao/index"
                             class="swiper-item"
                         >
                             <image
                                 class="banner-image"
-                                src="http://aitiaozhan.oss-cn-beijing.aliyuncs.com/chunjiehao.png?t=1"
+                                src="http://aitiaozhan.oss-cn-beijing.aliyuncs.com/h5/chunjiehao.png?t=1"
                             />
                         </navigator>
                     </swiper-item>
@@ -223,27 +236,33 @@
             :title="'爱挑战优秀个人'"
             :more-url="'/pages/work/list/list?cat_id=1'"
             :info="workData.individual.list"
-            :cat-id="1"
-            :sort="4"
-            :total="
-                workData.individual.total > 10 ? 10 : workData.individual.total
+            :query="
+                `levelid=1&sort=4&total=${
+                    workData.individual.total > 10
+                        ? 10
+                        : workData.individual.total
+                }`
             "
         />
         <work
             :title="'爱挑战优秀团体'"
             :more-url="'/pages/work/list/list?cat_id=2'"
             :info="workData.team.list"
-            :cat-id="2"
-            :sort="4"
-            :total="workData.team.total > 10 ? 10 : workData.team.total"
+            :query="
+                `levelid=2&sort=4&total=${
+                    workData.team.total > 10 ? 10 : workData.team.total
+                }`
+            "
         />
         <work
             :title="'才艺秀优秀作品'"
             :more-url="'/pages/work/list/list?cat_id=3'"
             :info="workData.talent.list"
-            :cat-id="3"
-            :sort="4"
-            :total="workData.talent.total > 10 ? 10 : workData.talent.total"
+            :query="
+                `levelid=3&sort=4&total=${
+                    workData.talent.total > 10 ? 10 : workData.talent.total
+                }`
+            "
         />
 
         <!-- news -->
@@ -294,43 +313,46 @@ export default {
     },
     data() {
         return {
-            background: ['color1', 'color2', 'color3'],
+            // background: ['color1', 'color2', 'color3'],
             indicatorDots: true,
             autoplay: true,
             interval: 5000,
             duration: 500,
-            circular: false,
-            isShow: true,
-            newsTabActiveIndex: 0,
+            // isShow: true,
+            // newsTabActiveIndex: 0,
 
-            menuConf: {
-                intro: {},
-                notice: {},
-                process: {},
-                time: {},
-            },
-            newsColumn: [
-                { id: '1', column_name: '大赛动态', sort_ids: '1,2,3,4,5' },
-                { id: '2', column_name: '新闻资讯', sort_ids: '1,2,3,4,5' },
-                { id: '3', column_name: '最新公告', sort_ids: '2,2,2,2,2' },
-            ],
-            newsData: [],
+            // menuConf: {
+            //     intro: {},
+            //     notice: {},
+            //     process: {},
+            //     time: {},
+            // },
+            // newsColumn: [
+            //     { id: '1', column_name: '大赛动态', sort_ids: '1,2,3,4,5' },
+            //     { id: '2', column_name: '新闻资讯', sort_ids: '1,2,3,4,5' },
+            //     { id: '3', column_name: '最新公告', sort_ids: '2,2,2,2,2' },
+            // ],
+            // newsData: [],
             workData: {
                 individual: { list: [], total: 0 },
                 team: { list: [], total: 0 },
                 talent: { list: [], total: 0 },
             },
             prompt: false,
-            isFirstLogin: 'isFirstLogin3',
-            status: 2,
-            show: 1,
-            chunjiehaoshow: 1,
-            yiqingshow: 1,
+            isFirstLogin: 'hasReadPromt',
+            status: 1,
+            // show: 1,
             // #ifdef H5
             isH5: true,
             // #endif
             needBindMobile: false,
             changeValue: '',
+            activitiesStatus: [
+                { activity_id: 3, status: 1, show: 0 },
+                { activity_id: 4, status: 1, show: 0 },
+                { activity_id: 5, status: 1, show: 1 },
+                { activity_id: 6, status: 1, show: 1 },
+            ],
         };
     },
     onHide() {
@@ -338,9 +360,7 @@ export default {
         this.prompt = false;
     },
     onLoad() {
-        this.chunjieStatus();
-        this.chunjiehaoStatus();
-        this.yiqingStatus();
+        this.getAllActivityStatus();
         this.thirdEntryPrompt();
         this.getData();
         this.getUserInfo();
@@ -358,7 +378,7 @@ export default {
             uni.setStorageSync('onShowFrom', '');
             // error
         }
-        // this.chunjieStatus();
+        // this.getAllActivityStatus();
     },
     created() {},
     methods: {
@@ -392,36 +412,17 @@ export default {
                 () => {},
             );
         },
-        handleCloseSuspension() {
-            this.isShow = false;
-        },
-        chunjieStatus() {
+        // handleCloseSuspension() {
+        //     this.isShow = false;
+        // },
+        getAllActivityStatus() {
             // 1未开始，2进行中，3已结束
             api.post('/api/activity/getactivitystatus', {
-                activity_id: 3,
-            }).then((res) => {
-                // this.status = res.status;
+                in_activity_id: [3, 4, 5, 6],
+            }).then((data) => {
                 // 1显示  0不显示
-                this.show = res.show;
-            });
-        },
-        chunjiehaoStatus() {
-            // 1未开始，2进行中，3已结束
-            api.post('/api/activity/getactivitystatus', {
-                activity_id: 4,
-            }).then((res) => {
-                // 1显示  0不显示
-                this.chunjiehaoshow = res.show;
-            });
-        },
-        yiqingStatus() {
-            // 1未开始，2进行中，3已结束
-            api.post('/api/activity/getactivitystatus', {
-                activity_id: 5,
-            }).then((res) => {
-                this.status = res.status;
-                // 1显示  0不显示
-                this.yiqingshow = res.show;
+                this.status = data[data.length - 1].status;
+                this.activitiesStatus = data;
             });
         },
         thirdEntryPrompt() {
@@ -431,10 +432,10 @@ export default {
                 this.prompt = true;
             }
         },
-        handleChunjie() {
+        handlePromt() {
             uni.setStorageSync(this.isFirstLogin, true);
             uni.navigateTo({
-                url: '/pages/yiqing/index',
+                url: '/pages/read/index',
             });
         },
         handleClose() {
@@ -445,11 +446,11 @@ export default {
         //     this.newsTabActiveIndex = index;
         //     this.getArticle(this.newsColumn[index].id);
         // },
-        moreArticle() {
-            uni.navigateTo({
-                url: `/pages/news/list/list?tab=${this.newsTabActiveIndex}`,
-            });
-        },
+        // moreArticle() {
+        //     uni.navigateTo({
+        //         url: `/pages/news/list/list?tab=${this.newsTabActiveIndex}`,
+        //     });
+        // },
         // getArticle(columnId) {
         //     return api
         //         .get('/api/article/list', {
@@ -461,11 +462,11 @@ export default {
         //             this.newsData = res.list;
         //         });
         // },
-        getMenuData() {
-            api.get('/api/index/entry').then((res) => {
-                this.menuConf = res;
-            });
-        },
+        // getMenuData() {
+        //     api.get('/api/index/entry').then((res) => {
+        //         this.menuConf = res;
+        //     });
+        // },
         getWorkList(type, refresh) {
             let catId;
             if (type === 'individual') {
@@ -527,26 +528,50 @@ export default {
     text-align: center;
     font-size: 0;
     image:first-child {
-        width: 591upx;
-        height: 518upx;
+        width: 627upx;
+        height: 827upx;
         margin-top: 193upx;
         display: block;
         margin-left: 90upx;
     }
-    image:nth-child(2) {
-        margin-top: 40upx;
-        width: 54upx;
-        height: 54upx;
-        margin-left: 357upx;
-        display: block;
-    }
-    view {
+    // image:nth-child(2) {
+    //     margin-top: 40upx;
+    //     width: 54upx;
+    //     height: 54upx;
+    //     margin-left: 357upx;
+    //     display: block;
+    // }
+    // view {
+    //     position: absolute;
+    //     top: 680upx;
+    //     left: 210upx;
+    //     font-size: 0;
+    //     width: 360upx;
+    //     height: 100upx;
+    // }
+    .close {
+        width: 52upx;
+        height: 52upx;
+        border-radius: 50%;
+        background: #04c284;
         position: absolute;
-        top: 680upx;
-        left: 210upx;
-        font-size: 0;
-        width: 360upx;
-        height: 100upx;
+        top: 250upx;
+        right: 80upx;
+        &::before,
+        &::after {
+            position: absolute;
+            content: "";
+            width: 22upx;
+            height: 4upx;
+            left: 15upx;
+            top: 25upx;
+            border-radius: 2upx;
+            background: #fff;
+            transform: rotate(45deg);
+        }
+        &::after {
+            transform: rotate(-45deg);
+        }
     }
 }
 uni-swiper {
@@ -592,25 +617,25 @@ uni-swiper {
             margin-left: 28upx;
         }
     }
-    .chunjie-entry {
-        .close-icon {
-            width: 20upx;
-            height: 20upx;
-            position: absolute;
-            top: 0;
-            right: 0;
-        }
-        font-size: 0;
-        background: url("http://aitiaozhan.oss-cn-beijing.aliyuncs.com/chunjiehao/suspension.png")
-            no-repeat;
-        background-size: 100% 100%;
-        width: 144upx;
-        height: 156upx;
-        position: fixed;
-        top: 640upx;
-        right: 0upx;
-        z-index: 999;
-    }
+    // .chunjie-entry {
+    //     .close-icon {
+    //         width: 20upx;
+    //         height: 20upx;
+    //         position: absolute;
+    //         top: 0;
+    //         right: 0;
+    //     }
+    //     font-size: 0;
+    //     background: url("http://aitiaozhan.oss-cn-beijing.aliyuncs.com/chunjiehao/suspension.png")
+    //         no-repeat;
+    //     background-size: 100% 100%;
+    //     width: 144upx;
+    //     height: 156upx;
+    //     position: fixed;
+    //     top: 640upx;
+    //     right: 0upx;
+    //     z-index: 999;
+    // }
     .main-swiper {
         padding: 30upx;
 
@@ -645,87 +670,87 @@ uni-swiper {
                 height: 70upx;
                 border-radius: 35upx;
                 margin-bottom: 15upx;
-                &.red {
-                    background: linear-gradient(
-                        180deg,
-                        rgba(255, 142, 148, 1) 0%,
-                        rgba(255, 82, 109, 1) 100%
-                    );
-                    box-shadow: 0rpx 2rpx 4rpx 0px rgba(255, 134, 153, 1);
-                }
+                // &.red {
+                //     background: linear-gradient(
+                //         180deg,
+                //         rgba(255, 142, 148, 1) 0%,
+                //         rgba(255, 82, 109, 1) 100%
+                //     );
+                //     box-shadow: 0rpx 2rpx 4rpx 0px rgba(255, 134, 153, 1);
+                // }
 
-                &.light-blue {
-                    background: linear-gradient(
-                        180deg,
-                        rgba(131, 225, 255, 1) 0%,
-                        rgba(70, 176, 255, 1) 100%
-                    );
-                    box-shadow: 0rpx 2rpx 4rpx 0rpx rgba(70, 176, 255, 1);
-                }
+                // &.light-blue {
+                //     background: linear-gradient(
+                //         180deg,
+                //         rgba(131, 225, 255, 1) 0%,
+                //         rgba(70, 176, 255, 1) 100%
+                //     );
+                //     box-shadow: 0rpx 2rpx 4rpx 0rpx rgba(70, 176, 255, 1);
+                // }
 
-                &.dark-blue {
-                    background: linear-gradient(
-                        180deg,
-                        rgba(58, 138, 255, 1) 0%,
-                        rgba(35, 98, 254, 1) 100%
-                    );
-                    box-shadow: 0rpx 2rpx 4rpx 0rpx rgba(38, 103, 254, 1);
-                }
+                // &.dark-blue {
+                //     background: linear-gradient(
+                //         180deg,
+                //         rgba(58, 138, 255, 1) 0%,
+                //         rgba(35, 98, 254, 1) 100%
+                //     );
+                //     box-shadow: 0rpx 2rpx 4rpx 0rpx rgba(38, 103, 254, 1);
+                // }
 
-                &.pink {
-                    background: linear-gradient(
-                        180deg,
-                        rgba(243, 141, 255, 1) 0%,
-                        rgba(182, 111, 255, 1) 100%
-                    );
-                    box-shadow: 0rpx 2rpx 4rpx 0rpx rgba(189, 114, 255, 1);
-                }
+                // &.pink {
+                //     background: linear-gradient(
+                //         180deg,
+                //         rgba(243, 141, 255, 1) 0%,
+                //         rgba(182, 111, 255, 1) 100%
+                //     );
+                //     box-shadow: 0rpx 2rpx 4rpx 0rpx rgba(189, 114, 255, 1);
+                // }
 
-                &.purple {
-                    background: rgb(192, 170, 255);
-                    background: linear-gradient(
-                        180deg,
-                        rgba(192, 170, 255, 1) 0%,
-                        rgba(138, 133, 255, 1) 100%
-                    );
-                    box-shadow: 0 2upx 4upx 0 #928bff;
-                }
-                &.green {
-                    background: rgb(124, 239, 145);
-                    background: linear-gradient(
-                        180deg,
-                        rgba(124, 239, 145, 1) 0%,
-                        rgba(84, 232, 80, 1) 100%
-                    );
-                    box-shadow: 0 2upx 4upx 0 #8bffb3;
-                }
-                &.yellow {
-                    background: rgb(255, 205, 58);
-                    background: linear-gradient(
-                        180deg,
-                        rgba(255, 205, 58, 1) 0%,
-                        rgba(254, 161, 35, 1) 100%
-                    );
-                    box-shadow: 0 2upx 4upx 0 #fea525;
-                }
-                &.blue {
-                    background: rgb(141, 197, 255);
-                    background: linear-gradient(
-                        180deg,
-                        rgba(141, 197, 255, 1) 0%,
-                        rgba(111, 132, 255, 1) 100%
-                    );
-                    box-shadow: 0 2upx 4upx 0 #6f84ff;
-                }
-                &.orange {
-                    background: rgb(255, 181, 101);
-                    background: linear-gradient(
-                        180deg,
-                        rgba(255, 181, 101, 1) 0%,
-                        rgba(254, 96, 51, 1) 100%
-                    );
-                    box-shadow: 0 2upx 4upx 0 #fe6033;
-                }
+                // &.purple {
+                //     background: rgb(192, 170, 255);
+                //     background: linear-gradient(
+                //         180deg,
+                //         rgba(192, 170, 255, 1) 0%,
+                //         rgba(138, 133, 255, 1) 100%
+                //     );
+                //     box-shadow: 0 2upx 4upx 0 #928bff;
+                // }
+                // &.green {
+                //     background: rgb(124, 239, 145);
+                //     background: linear-gradient(
+                //         180deg,
+                //         rgba(124, 239, 145, 1) 0%,
+                //         rgba(84, 232, 80, 1) 100%
+                //     );
+                //     box-shadow: 0 2upx 4upx 0 #8bffb3;
+                // }
+                // &.yellow {
+                //     background: rgb(255, 205, 58);
+                //     background: linear-gradient(
+                //         180deg,
+                //         rgba(255, 205, 58, 1) 0%,
+                //         rgba(254, 161, 35, 1) 100%
+                //     );
+                //     box-shadow: 0 2upx 4upx 0 #fea525;
+                // }
+                // &.blue {
+                //     background: rgb(141, 197, 255);
+                //     background: linear-gradient(
+                //         180deg,
+                //         rgba(141, 197, 255, 1) 0%,
+                //         rgba(111, 132, 255, 1) 100%
+                //     );
+                //     box-shadow: 0 2upx 4upx 0 #6f84ff;
+                // }
+                // &.orange {
+                //     background: rgb(255, 181, 101);
+                //     background: linear-gradient(
+                //         180deg,
+                //         rgba(255, 181, 101, 1) 0%,
+                //         rgba(254, 96, 51, 1) 100%
+                //     );
+                //     box-shadow: 0 2upx 4upx 0 #fe6033;
+                // }
                 .icon {
                     top: 15upx;
                     position: relative;
@@ -759,16 +784,16 @@ uni-swiper {
         }
     }
 
-    .news-list {
-        margin-bottom: 40upx;
+    // .news-list {
+    //     margin-bottom: 40upx;
 
-        .news-item {
-            font-size: 28upx;
-            color: #666;
-            line-height: 45upx;
-            border-bottom: 1px solid #f0f0f0;
-            padding: 25upx 0;
-        }
-    }
+    //     .news-item {
+    //         font-size: 28upx;
+    //         color: #666;
+    //         line-height: 45upx;
+    //         border-bottom: 1px solid #f0f0f0;
+    //         padding: 25upx 0;
+    //     }
+    // }
 }
 </style>

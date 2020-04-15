@@ -1,8 +1,5 @@
 <template>
-    <view
-        :id="`detail${swiperPage}`"
-        class="swiper-detail-box"
-    >
+    <view class="swiper-detail-box">
         <view
             v-show="isFullScreen && isH5"
             class="h5-full-screen-title text-one-line"
@@ -69,7 +66,7 @@
                     ref="video"
                     class="video"
                     preload
-                    :src="clear ? '' : pageData.video.cloud_path_sd"
+                    :src="pageData.video.cloud_path_sd"
                     :autoplay="!isH5"
                     :controls="true"
                     :loop="true"
@@ -160,11 +157,24 @@
             </view>
 
             <view
-                v-if="pageData.resource_scope === 3"
+                v-if="activity_id !== 6"
                 class="btn primary"
                 @click="joinGame"
             >
                 我要参与
+            </view>
+            <view
+                v-else
+                class="join-game-read"
+                @click="joinGame"
+            >
+                <image
+                    class="icon"
+                    src="/static/images/yiqing/detail/like.png"
+                />
+                <text>
+                    我要参与
+                </text>
             </view>
         </view>
         <view
@@ -218,13 +228,9 @@ export default {
             type: Number,
             default: 0,
         },
-        isChangeSlide: {
+        activityId: {
             type: Number,
-            default: 1,
-        },
-        swiperPage: {
-            type: Number,
-            default: 1,
+            default: 0,
         },
     },
     data() {
@@ -239,24 +245,8 @@ export default {
             isPlayed: false,
             isPaused: false,
             isVideoWaiting: false,
-            clear: false,
-            showVideo: this.swiperPage === this.isChangeSlide,
             play_count: 0,
         };
-    },
-    watch: {
-        isChangeSlide(val) {
-            console.log(val, '滑动到的页面', this.swiperPage, '当前页面');
-            this.showVideo = this.swiperPage === val;
-            console.log(this.showVideo, '---------show');
-            if (val !== this.swiperPage && this.pageData.resource_type === 1) {
-                // this.$refs.video.pause();
-                this.clear = true;
-            }
-            if (val === this.swiperPage && this.pageData.resource_type === 1) {
-                this.clear = false;
-            }
-        },
     },
     created() {
         this.play_count = this.pageData.play_count;
@@ -280,10 +270,8 @@ export default {
         },
         onPause() {
             this.isPaused = true;
-            console.log('暂停了-------');
         },
         togglePlayStatus() {
-            console.log('--------togglePlayStatus---');
             this.isPaused = false;
             this.$refs.video.play();
         },
@@ -320,6 +308,7 @@ export default {
 .swiper-detail-box {
     width: 100%;
     height: 100vh;
+    position: relative;
 }
 .yellow {
     color: #ff9b35;
@@ -418,6 +407,7 @@ export default {
     color: #fff;
     left: 0;
     pointer-events: none;
+    z-index: 10;
     .avatar {
         display: inline-block;
         width: 34rpx;
@@ -477,11 +467,11 @@ export default {
     position: absolute;
     width: 146rpx;
     right: 0;
-    bottom: 20rpx;
+    bottom: 30rpx;
     color: #ffde98;
     font-size: 24rpx;
     text-align: center;
-    z-index: 9999;
+    z-index: 10;
 
     .icon-wrap {
         //margin-right: 36rpx;
@@ -508,6 +498,22 @@ export default {
         display: inline-block;
         padding: 0;
         font-size: 0;
+    }
+    .join-game-read {
+        background: #0f8c64;
+        width: 160rpx;
+        text-align: left;
+        padding: 10rpx 20rpx;
+        border-radius: 27rpx 0 0 27rpx;
+        color: #fff;
+        margin-left: -40rpx;
+        line-height: 40rpx;
+        .icon {
+            width: 44rpx;
+            height: 42rpx;
+            margin-right: 10rpx;
+            vertical-align: middle;
+        }
     }
 }
 .btn {

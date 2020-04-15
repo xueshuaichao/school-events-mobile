@@ -26,6 +26,7 @@
                     :sort="sort"
                     :cur-position="index + 1"
                     :total="total"
+                    :query="`${query}&curPosition=${index + 1}`"
                 />
             </view>
             <!-- <scroll-view
@@ -76,6 +77,10 @@ export default {
         total: {
             type: Number,
             default: 0,
+        },
+        query: {
+            type: String,
+            default: '',
         },
     },
 

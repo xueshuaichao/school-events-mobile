@@ -42,14 +42,14 @@
             :class="[activityList[tabIndex].name]"
         >
             <view
-                v-for="(item, index) in dataList"
+                v-for="item in dataList"
                 :key="item.id"
                 class="media-content"
             >
                 <event-craft-cover
                     :info="item"
                     :bg-color="activityList[tabIndex].bgcolor"
-                    @click.native="viewDetail(item, index)"
+                    @click.native="viewDetail(item)"
                 />
 
                 <view class="media-name text-one-line">
@@ -97,7 +97,7 @@ export default {
             activityList: [
                 {
                     path:
-                        'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/activity-chunjie.png',
+                        'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/h5/activity-chunjie.png',
                     title: '春节活动',
                     activity_id: 3,
                     name: 'chunjie',
@@ -105,7 +105,7 @@ export default {
                 },
                 {
                     path:
-                        'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/activity-chunjiehao.png',
+                        'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/h5/activity-chunjiehao.png',
                     title: 'dou说春节好',
                     activity_id: 4,
                     name: 'chunjiehao',
@@ -151,20 +151,10 @@ export default {
                 uni.showLoading();
             }
         },
-        viewDetail(item, position) {
-            if (this.tabIndex) {
-                uni.navigateTo({
-                    url: `/pages/chunjiehao/detail/detail?id=${item.id}&total=${
-                        this.total > 100 ? 100 : this.total
-                    }&fr=${this.fr2}&curPosition=${position + 1}`,
-                });
-            } else {
-                uni.navigateTo({
-                    url: `/pages/chunjie/detail/detail?id=${item.id}&total=${
-                        this.total > 100 ? 100 : this.total
-                    }&fr=${this.fr1}&curPosition=${position + 1}`,
-                });
-            }
+        viewDetail(item) {
+            uni.navigateTo({
+                url: `/pages/work/detail/detail?id=${item.id}&activity_id=${this.filter.activity_id}`,
+            });
         },
         getData(title) {
             api.post('/api/activity/resourcelist', this.filter).then(
@@ -190,7 +180,6 @@ export default {
             uni.hideLoading();
         },
         onReachBottom() {
-            console.log(`${this.total}------total`);
             if (
                 this.total > this.filter.page_num * this.filter.page_size
                 && this.filter.page_num * this.filter.page_size < 100
