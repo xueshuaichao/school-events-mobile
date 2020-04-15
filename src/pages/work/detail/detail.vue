@@ -540,7 +540,7 @@ export default {
         this.fr = utils.getParam(query, 'fr') || '';
 
         this.activity_id = Number(utils.getParam(query, 'activity_id')) || 0;
-        console.log(this.activity_id, 'wqwqwqwqwqwq');
+        console.log(this.activity_id, 'this.activity_id---');
         if (!this.activity_id) {
             this.isActvitity = false;
         } else {
