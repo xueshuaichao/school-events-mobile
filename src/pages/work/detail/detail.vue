@@ -282,14 +282,11 @@ export default {
                     that.prompt = false;
                     that.showTicketMask = false;
                     that.imgAuthBtn = false;
-                    // uni.showToast({
-                    //     title: '已保存成功lllllllllllll',
-                    //     icon: 'success',
-                    //     duration: 2000,
-                    // });
-                    // setTimeout(() => {
-                    //     uni.navigateBack();
-                    // }, 2000);
+                    uni.showToast({
+                        title: '已保存成功到相册',
+                        icon: 'success',
+                        duration: 2000,
+                    });
                 },
                 fail(err) {
                     if (

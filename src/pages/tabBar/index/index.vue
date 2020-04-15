@@ -1,7 +1,7 @@
 <template>
     <view class="page-index">
         <view
-            v-if="prompt && status === 2"
+            v-if="prompt"
             class="cover"
         >
             <image
@@ -74,7 +74,7 @@
                         >
                             <image
                                 class="banner-image"
-                                src="http://aitiaozhan.oss-cn-beijing.aliyuncs.com/chunjiehao/yiqing-banner.png?t=2"
+                                src="http://aitiaozhan.oss-cn-beijing.aliyuncs.com/school-events-mobile/prize-banner.png"
                             />
                         </navigator>
                     </swiper-item>
@@ -427,7 +427,6 @@ export default {
         },
         thirdEntryPrompt() {
             const isFirstLogin = uni.getStorageSync(this.isFirstLogin);
-            console.log(isFirstLogin, 'isFirstLogin');
             if (!isFirstLogin) {
                 this.prompt = true;
             }

@@ -98,6 +98,13 @@
                             {{ item.ticket }}赞
                         </text>
                         <view
+                            v-if="tabActiveIndex === 2"
+                            class="getprize"
+                            @click="getPrize(item)"
+                        >
+                            领取证书
+                        </view>
+                        <view
                             v-if="tabActiveIndex === 3"
                             class="reject-reason text-three-line"
                         >
@@ -231,6 +238,20 @@ export default {
         },
     },
     methods: {
+        getPrize(item) {
+            // #ifdef H5
+            // eslint-disable-next-line no-undef
+            wx.showToast({
+                title: '请到UP爱挑战小程序去领取奖状',
+                icon: 'none',
+            });
+            // #endif
+            // #ifndef H5
+            uni.navigateTo({
+                url: `/pages/yiqing/prize/index?id=${item.id}&activity_cat=${item.activity_cat}`,
+            });
+            // #endif
+        },
         goHome() {
             uni.reLaunch({
                 url: '/pages/yiqing/index',
@@ -353,7 +374,6 @@ export default {
         const { type, name } = query;
         console.log(type, 'tye');
         this.type = type;
-
         if (type === 'myWork') {
             this.getWorkData();
         } else if (type === 'search') {
@@ -487,6 +507,19 @@ export default {
             left: 0;
             position: absolute;
             bottom: 14upx;
+        }
+        .getprize {
+            width: 150upx;
+            height: 56upx;
+            background: #fff;
+            border-radius: 28upx;
+            color: #0096ff;
+            position: absolute;
+            bottom: 6upx;
+            right: 20upx;
+            font-size: 28upx;
+            text-align: center;
+            line-height: 56upx;
         }
     }
 }
