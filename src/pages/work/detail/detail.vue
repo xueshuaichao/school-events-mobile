@@ -87,7 +87,7 @@
         <detail
             :page-data="pageData"
             :like-status="likeStatus"
-            :activity_id="activity_id"
+            :activity-id="activity_id"
             @doAction="doAction"
         />
     </view>
