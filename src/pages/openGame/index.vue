@@ -41,11 +41,11 @@
 </template>
 
 <script>
-import simpleAddress from './simple-address/simple-address.vue';
+// import simpleAddress from './simple-address/simple-address.vue';
 
 export default {
     components: {
-        simpleAddress,
+        // simpleAddress,
     },
     data() {
         return {

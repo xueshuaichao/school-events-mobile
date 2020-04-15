@@ -218,7 +218,7 @@
         </view>
         <!-- menu -->
         <!-- zhibo-entry -->
-        <navigator url="/pages/openGame/index">
+        <navigator url="/pages/openGame/signUp">
             <image
                 class="zhibo-entry"
                 src="http://aitiaozhan.oss-cn-beijing.aliyuncs.com/school-events-mobile/zhibo-entry.png"

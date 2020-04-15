@@ -358,7 +358,7 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="less" scoped>
 .simple-address {
     /* #ifndef APP-NVUE */
     display: flex;
@@ -451,7 +451,7 @@ export default {
     /* #endif */
     flex-direction: row;
     justify-content: space-between;
-    border-top-color: $uni-border-color;
+    // border-top-color: $uni-border-color;
     border-top-style: solid;
     border-top-width: 1rpx;
 }
@@ -468,7 +468,7 @@ export default {
 
 .simple-address__header-text {
     text-align: center;
-    font-size: $uni-font-size-base;
+    // font-size: $uni-font-size-base;
     color: #1aad19;
     line-height: 70rpx;
     padding-left: 40rpx;
