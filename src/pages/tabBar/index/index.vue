@@ -16,7 +16,7 @@
         </view>
         <navigator
             v-if="yiqingshow === 1 && isShow"
-            url="/pages/yiqing/index"
+            url="/pages/read/index"
         >
             <view class="chunjie-entry">
                 <image

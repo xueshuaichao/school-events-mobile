@@ -249,6 +249,32 @@
             }
         },
         // ============== 疫情end ========================
+
+        {
+            "path": "pages/read/index",
+            "style": {
+                "navigationBarTitleText": "世界读书日"
+            }
+        },
+        {
+            "path": "pages/read/upload/modify",
+            "style": {
+                "navigationBarTitleText": "上传作品"
+            }
+        },
+        {
+            "path": "pages/read/upload/result",
+            "style": {
+                "navigationBarTitleText": "上传结果"
+            }
+        },
+        {
+            "path": "pages/read/myWork/myWork",
+            "style": {
+                "navigationBarTitleText": "我的作品"
+            }
+        },
+
         // #ifdef H5
         {
             "path": "pages/login/login",

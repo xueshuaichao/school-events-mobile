@@ -284,7 +284,7 @@ export default {
                     userKey: utils.getToken()
                 },
                 success: uploadFileRes => {
-                    console.log(1111, file);
+                    // console.log(1111, file);
                     let resp;
                     try {
                         resp = JSON.parse(uploadFileRes.data);

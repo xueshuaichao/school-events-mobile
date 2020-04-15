@@ -114,6 +114,7 @@ export default {
                 page_num: 1,
                 page_size: 10,
                 status: 1,
+                parent_scope: 2,
             },
             tabActiveIndex: 0,
             workStatics: {},
@@ -132,9 +133,15 @@ export default {
             );
         },
         toDetail(item) {
-            uni.navigateTo({
-                url: `/pages/work/detail/detail?id=${item.id}&from=mywork&disableslide=1`,
-            });
+            if (item.activity_id === 0) {
+                uni.navigateTo({
+                    url: `/pages/work/detail/detail?id=${item.id}&from=mywork`,
+                });
+            } else {
+                uni.navigateTo({
+                    url: `/pages/work/detail/detail?id=${item.id}&activity_id=${item.activity_id}`,
+                });
+            }
         },
         showCause({ memo }) {
             uni.showModal({
@@ -143,14 +150,28 @@ export default {
                 showCancel: false,
             });
         },
-        editWork(item) {
-            uni.navigateTo({
-                url: `/pages/upload/modify/modify?id=${item.id}`,
+        editWork({
+            id,
+            activity_id: activityId,
+            activity_status: activityStatus,
+        }) {
+            // activityStatus 1未开始 2进行中  3已过期
+            if (activityStatus === 3) {
+                return uni.showToast({
+                    title: '活动已结束！',
+                    icon: 'none',
+                });
+            }
+            let urlPath = '/pages/upload/modify/modify';
+            if (activityId === 6) {
+                urlPath = '/pages/read/upload/modify';
+            }
+            return uni.navigateTo({
+                url: `${urlPath}?id=${id}`,
             });
         },
         deleteWork(item) {
             const index = this.tableData.indexOf(item);
-
             api.post('/api/user/delwork', {
                 id: item.id,
             }).then(() => {
@@ -164,7 +185,6 @@ export default {
             });
         },
         onReachBottom() {
-            console.log('到底部');
             if (this.loadMoreStatus === 'more') {
                 this.filter.page_num = this.filter.page_num + 1;
                 this.loadMoreStatus = 'loading';
@@ -219,10 +239,6 @@ export default {
                         this.deleteWork(item);
                         console.log('用户点击确定');
                     } else if (res.cancel) {
-                        // uni.showToast({
-                        //     title: '删除失败',
-                        //     icon: 'none',
-                        // });
                         console.log('用户点击取消');
                     }
                 },

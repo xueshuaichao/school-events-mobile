@@ -75,6 +75,7 @@
                 v-model="formData.introduce"
                 class="uni-textarea"
                 placeholder-class="placeholder"
+                maxlength="80"
                 :placeholder="
                     (uploadMode === 'video' ? '视频' : '作品') +
                         '介绍（不超过80字）'
