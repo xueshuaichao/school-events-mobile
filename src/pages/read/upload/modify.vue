@@ -132,7 +132,7 @@ export default {
         // 编辑作品
         getItemData() {
             if (this.id) {
-                api.get('/api/user/workinfo', {
+                api.get('/api/activity/info', {
                     id: this.id,
                     activity_id: 6,
                 }).then((res) => {
@@ -295,13 +295,13 @@ export default {
                 this.disabled = true;
                 let apiUrl = '/api/activity/add';
                 if (this.id) {
-                    apiUrl = '/api/user/editwork';
+                    apiUrl = '/api/activity/edit';
                 }
                 // check input
                 return api.post(apiUrl, formData).then(
-                    (res) => {
+                    () => {
+                        console.log(4343);
                         this.disabled = false;
-                        console.log(res);
                         uni.hideLoading();
                         uni.navigateTo({
                             url: '/pages/read/upload/result',
@@ -397,6 +397,20 @@ export default {
 
         .desc {
             color: #0f8c64;
+            line-height: 32upx;
+            &.image {
+                line-height: 32upx;
+            }
+        }
+        .normal-text {
+            display: inline-flex;
+            background-color: #0f8c64;
+            border-radius: 25upx;
+            padding: 0 29upx;
+            height: 40upx;
+            line-height: 40upx;
+            font-size: 24upx;
+            margin-top: 4upx;
         }
         .comp-title {
             color: #0f8c64;

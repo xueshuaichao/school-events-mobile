@@ -22,21 +22,21 @@
                     :class="{ active: tabActiveIndex === 2 }"
                     @click="setTabActive(2)"
                 >
-                    已通过（{{ allNum.pass || 0 }}）
+                    已通过({{ allNum.pass || 0 }})
                 </text>
                 <text
                     class="panel-title"
                     :class="{ active: tabActiveIndex === 1 }"
                     @click="setTabActive(1)"
                 >
-                    待审核（{{ allNum.wait || 0 }}）
+                    待审核({{ allNum.wait || 0 }})
                 </text>
                 <text
                     class="panel-title"
                     :class="{ active: tabActiveIndex === 3 }"
                     @click="setTabActive(3)"
                 >
-                    未通过（{{ allNum.no_pass || 0 }}）
+                    未通过({{ allNum.no_pass || 0 }})
                 </text>
             </view>
             <view
@@ -393,7 +393,7 @@ export default {
         viewDetail(item) {
             if (this.tabActiveIndex === 2) {
                 uni.navigateTo({
-                    url: `/pages/work/detail/detail?id=${item.id}&activity_id=${item.activity_id}`,
+                    url: `/pages/work/detail/detail?id=${item.id}&activity_id=6`,
                 });
             }
         },
@@ -404,7 +404,7 @@ export default {
                 showCancel: false,
             });
         },
-        modifyItem({ resource_id: id, activity_status: activityStatus }) {
+        modifyItem({ id, activity_status: activityStatus }) {
             // activityStatus 1未开始 2进行中  3已过期
             if (activityStatus === 3) {
                 return uni.showToast({
@@ -711,7 +711,7 @@ export default {
     }
     .panel .panel-hd {
         border-bottom: none;
-        margin: 0 30rpx 20rpx;
+        margin: 0 20rpx 20rpx;
         display: flex;
         justify-content: space-around;
         top: 0upx;
