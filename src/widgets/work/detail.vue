@@ -157,7 +157,7 @@
             </view>
 
             <view
-                v-if="activity_id !== 6"
+                v-if="activityId !== 6"
                 class="btn primary"
                 @click="joinGame"
             >

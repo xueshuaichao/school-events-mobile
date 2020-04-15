@@ -87,7 +87,7 @@
         <detail
             :page-data="pageData"
             :like-status="likeStatus"
-            :activity_id="activity_id"
+            :activity-id="activity_id"
             @doAction="doAction"
         />
     </view>
@@ -282,14 +282,11 @@ export default {
                     that.prompt = false;
                     that.showTicketMask = false;
                     that.imgAuthBtn = false;
-                    // uni.showToast({
-                    //     title: '已保存成功lllllllllllll',
-                    //     icon: 'success',
-                    //     duration: 2000,
-                    // });
-                    // setTimeout(() => {
-                    //     uni.navigateBack();
-                    // }, 2000);
+                    uni.showToast({
+                        title: '已保存成功到相册',
+                        icon: 'success',
+                        duration: 2000,
+                    });
                 },
                 fail(err) {
                     if (
@@ -540,7 +537,7 @@ export default {
         this.fr = utils.getParam(query, 'fr') || '';
 
         this.activity_id = Number(utils.getParam(query, 'activity_id')) || 0;
-        console.log(this.activity_id, 'wqwqwqwqwqwq');
+        console.log(this.activity_id, 'this.activity_id---');
         if (!this.activity_id) {
             this.isActvitity = false;
         } else {

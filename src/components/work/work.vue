@@ -24,12 +24,12 @@
                 />
                 {{ info.praise_count || 0 }}
             </view>
-            <view
+            <!-- <view
                 v-if="info.grade"
                 class="is-excellect"
             >
                 优秀
-            </view>
+            </view> -->
             <slot name="tag" />
         </view>
         <view class="work-info">
