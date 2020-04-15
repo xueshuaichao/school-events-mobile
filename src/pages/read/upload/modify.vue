@@ -334,7 +334,7 @@ export default {
             title,
             imageUrl:
                 'http: //aitiaozhan.oss-cn-beijing.aliyuncs.com/chunjiehao/yiqing-poster01.png',
-            path: '/pages/yiqing/index',
+            path: '/pages/read/index',
         };
     },
 };

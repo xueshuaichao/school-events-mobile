@@ -86,6 +86,7 @@
                             <image
                                 class="prize-img-text"
                                 src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/read_prize5.png"
+                                @click="handleActiverule"
                             />
                         </view>
                     </view>
@@ -212,7 +213,7 @@
                     </view>
                 </view>
                 <view
-                    :class="status === 2 ? 'upload' : 'upload-disable'"
+                    :class="status === 2 || isH5 ? 'upload' : 'upload-disable'"
                     @click="handleUpload"
                 >
                     上传作品
@@ -260,6 +261,9 @@ export default {
     },
     data() {
         return {
+            // #ifdef H5
+            isH5: true,
+            // #endif
             prizeList: [
                 {
                     text: ['一等奖', '护眼仪'],
@@ -415,6 +419,12 @@ export default {
             });
         },
         handleUpload() {
+            if (this.isH5) {
+                return uni.showToast({
+                    title: '请在UP爱挑战小程序上传作品',
+                    icon: 'none',
+                });
+            }
             if (this.status === 2) {
                 api.isLogin({
                     fr: this.fr,
@@ -432,6 +442,7 @@ export default {
                     icon: 'none',
                 });
             }
+            return true;
         },
 
         onReachBottom() {
@@ -442,14 +453,6 @@ export default {
             }
         },
         bindconfirm() {
-            if (!this.changeValue.trim()) {
-                uni.showToast({
-                    title: '请输入搜索内容',
-                    icon: 'none',
-                });
-                return;
-            }
-
             uni.navigateTo({
                 url: `/pages/read/myWork/myWork?type=search&name=${this.changeValue.trim()}`,
             });

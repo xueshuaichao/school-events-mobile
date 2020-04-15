@@ -1,7 +1,18 @@
 <template>
-    <view class="page-my-work">
+    <view
+        v-show="!isLoading"
+        class="page-read-work"
+        :class="{ login: userInfo === null }"
+    >
+        <login
+            v-if="userInfo === null"
+            @login="onLogin"
+        />
         <!-- my works -->
-        <view class="panel">
+        <view
+            v-else
+            class="panel"
+        >
             <view
                 v-if="type === 'myWork'"
                 class="panel-hd"
@@ -11,21 +22,21 @@
                     :class="{ active: tabActiveIndex === 2 }"
                     @click="setTabActive(2)"
                 >
-                    已通过({{ allNum.pass || 0 }})
+                    已通过（{{ allNum.pass || 0 }}）
                 </text>
                 <text
                     class="panel-title"
                     :class="{ active: tabActiveIndex === 1 }"
                     @click="setTabActive(1)"
                 >
-                    待审核({{ allNum.wait || 0 }})
+                    待审核（{{ allNum.wait || 0 }}）
                 </text>
                 <text
                     class="panel-title"
                     :class="{ active: tabActiveIndex === 3 }"
                     @click="setTabActive(3)"
                 >
-                    未通过({{ allNum.no_pass || 0 }})
+                    未通过（{{ allNum.no_pass || 0 }}）
                 </text>
             </view>
             <view
@@ -187,12 +198,7 @@
                     </view>
                 </navigator>
             </view>
-            <button
-                class="btn goHome"
-                @click="goHome"
-            >
-                {{ text }}
-            </button>
+            <goHome home-path="/pages/read/index" />
         </view>
     </view>
 </template>
@@ -200,13 +206,18 @@
 <script>
 // work.vue
 import api from '../../../common/api';
+import share from '../../../common/share';
+import goHome from '../common/goHome.vue';
+import login from '../../../widgets/login/login.vue';
 import uniLoadMore from '../../../components/uni-load-more/uni-load-more.vue';
 import EventCraftCover from '../../../components/event-craft-cover/index.vue';
 
 export default {
     components: {
+        goHome,
         uniLoadMore,
         EventCraftCover,
+        login,
     },
     filters: {
         optimizeImage: (val) => {
@@ -228,7 +239,8 @@ export default {
     },
     data() {
         return {
-            text: '< 返回首页',
+            isLoading: true,
+            userInfo: null,
             dataList: [],
             activeMenuIndex: '1',
             changeValue: '',
@@ -249,6 +261,7 @@ export default {
             type: 'myWork',
             allNum: {},
             allTotal: 0,
+            shareDesc: '',
         };
     },
     computed: {
@@ -259,11 +272,24 @@ export default {
             return this.total === 0 && this.type === 'myWork';
         },
     },
+    created() {
+        this.initShare();
+    },
     methods: {
-        goHome() {
-            uni.reLaunch({
-                url: '/pages/read/index',
-            });
+        onLogin() {
+            this.getData();
+        },
+        getData() {
+            api.get('/api/user/info').then(
+                (res) => {
+                    this.userInfo = res.user_info;
+                    this.isLoading = false;
+                },
+                () => {
+                    this.isLoading = false;
+                    this.userInfo = null;
+                },
+            );
         },
         toggle(k) {
             uni.showLoading();
@@ -431,10 +457,26 @@ export default {
                 }
             });
         },
+        initShare() {
+            const title = this.isH5
+                ? '我是朗读者，读给你听'
+                : '4.23世界读书日，读书赢好礼，一起来读书吧！';
+            const desc = this.isH5
+                ? '4.23世界读书日，读书赢好礼，一起来读书吧！'
+                : '';
+            this.shareDesc = title;
+
+            share({
+                title,
+                desc,
+                thumbnail:
+                    'http: //aitiaozhan.oss-cn-beijing.aliyuncs.com/chunjiehao/yiqing-poster01.png?x-oss-process=image/format,png/interlace,1/quality,Q_80/resize,m_pad,h_100',
+            });
+        },
     },
     onLoad(query) {
+        this.getData();
         const { type, name, status } = query;
-        console.log(type, 'tye');
         this.type = type;
         if (status) {
             this.tabActiveIndex = Number(status);
@@ -453,12 +495,9 @@ export default {
             // 来自页面内分享按钮
             console.log(res.target);
         }
-        const titleList = ['4.23世界读书日，读书赢好礼，一起来读书吧！'];
-        const title = titleList[Math.floor(Math.random() * titleList.length)];
         return {
-            title,
-            imageUrl:
-                'http: //aitiaozhan.oss-cn-beijing.aliyuncs.com/chunjiehao/yiqing-poster01.png',
+            title: this.shareDesc,
+            imageUrl: '',
             path: '/pages/read/index',
         };
     },
@@ -466,20 +505,6 @@ export default {
 </script>
 
 <style lang="less">
-.goHome {
-    position: fixed;
-    bottom: 40upx;
-    right: 0upx;
-    color: #08402f;
-    font-size: 24upx;
-    width: 166upx;
-    height: 54upx;
-    background: #fff;
-    border-radius: 27upx 0 0 27upx;
-    line-height: 54upx;
-    text-align: center;
-    padding: 0;
-}
 .empty {
     text-align: center;
     image {
@@ -514,7 +539,7 @@ export default {
         display: inline-block;
     }
     view {
-        color: #ffedc3;
+        color: #0f8c64;
         font-size: 28upx;
         margin-top: 30upx;
     }
@@ -604,17 +629,29 @@ export default {
     }
 }
 
-.page-my-work {
+.page-read-work {
     padding: 0 30upx;
     padding-top: 30upx;
     box-sizing: border-box;
     width: 100%;
     min-height: 100vh;
     background: #a1debe;
+    &.login {
+        background-color: #fff;
+    }
     // background-size: contain;
     .search-box {
         overflow: hidden;
         margin-bottom: 30rpx;
+        margin: 0 30rpx 20rpx;
+        top: 0upx;
+        height: 84rpx;
+        left: 0;
+        right: 0;
+        position: fixed;
+        z-index: 10;
+        background-color: #a1debe;
+        padding: 20upx 0upx;
         button {
             width: 144upx;
             height: 68upx;
@@ -689,10 +726,10 @@ export default {
 
     .panel .panel-hd .panel-title {
         display: inline-block;
-        padding-left: 0;
-        padding-right: 0;
         color: #0f8c64;
-        padding: 19upx 22upx;
+        padding: 0 25upx;
+        height: 68upx;
+        line-height: 68upx;
         font-size: 30upx;
 
         &.active {

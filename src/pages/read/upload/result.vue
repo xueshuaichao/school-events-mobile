@@ -26,22 +26,17 @@
                 查看作品
             </text>
         </view>
-        <button
-            class="btn goHome"
-            @click="goHome"
-        >
-            <image
-                class="arr-left"
-                src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/read_home.png"
-                mode=""
-            />
-            返回首页
-        </button>
+        <goHome home-path="/pages/read/index" />
     </div>
 </template>
 
 <script>
+import goHome from '../common/goHome.vue';
+
 export default {
+    components: {
+        goHome,
+    },
     onShareAppMessage(res) {
         if (res.from === 'button') {
             // 来自页面内分享按钮
@@ -64,12 +59,7 @@ export default {
         },
         goToUc() {
             uni.navigateTo({
-                url: '/pages/read/myWork/myWork?status=1',
-            });
-        },
-        goHome() {
-            uni.reLaunch({
-                url: '/pages/tabBar/index/index',
+                url: '/pages/read/myWork/myWork?status=1&type=myWork',
             });
         },
     },
