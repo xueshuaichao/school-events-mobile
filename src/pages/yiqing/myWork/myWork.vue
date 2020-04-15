@@ -71,14 +71,14 @@
             </view>
             <view v-if="total > 0">
                 <view
-                    v-for="(item, index) in dataList"
+                    v-for="item in dataList"
                     :key="item.id"
                     class="media-content"
                 >
                     <event-craft-cover
                         :info="item"
                         :bg-color="'006EDE'"
-                        @click.native="viewDetail(item, index)"
+                        @click.native="viewDetail(item)"
                     />
                     <view
                         v-if="type === 'myWork'"
@@ -335,20 +335,15 @@ export default {
             this.tabActiveIndex = i;
             this.getWorkData();
         },
-        viewDetail(item, position) {
+        viewDetail(item) {
             if (this.tabActiveIndex === 2) {
                 if (this.type === 'myWork') {
                     uni.navigateTo({
-                        url: `/pages/yiqing/detail/detail?id=${item.id}&fr=${this.fr}&disableslide=1`,
+                        url: `/pages/work/detail/detail?id=${item.id}&fr=${this.fr}&activity_id=5&from=yiqing`,
                     });
                 } else {
                     uni.navigateTo({
-                        url: `/pages/yiqing/detail/detail?id=${item.id}&fr=${
-                            this.fr
-                        }&total=${this.total}&curPosition=${position
-                            + 1}&actSort=${this.filter.sort || ''}&kw=${
-                            this.filter.search
-                        }&actCat=${this.filter.activity_cat}`,
+                        url: `/pages/work/detail/detail?id=${item.id}&fr=${this.fr}&activity_id=5`,
                     });
                 }
             }

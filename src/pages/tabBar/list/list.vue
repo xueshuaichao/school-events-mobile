@@ -38,7 +38,7 @@ export default {
     created() {},
     methods: {
         changeBottom() {
-            // this.isReachBtm = !this.isReachBtm;
+            this.isReachBtm = !this.isReachBtm;
         },
     },
     onReachBottom() {

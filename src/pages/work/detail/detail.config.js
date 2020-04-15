@@ -1,5 +1,5 @@
-const detailConf = {
-    atz: {
+const detailConf = [
+    {
         posterConfig: {
             pixelRatio: 3,
             width: 570,
@@ -28,7 +28,7 @@ const detailConf = {
             images: [
                 {
                     url:
-                        'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/aitiaozhan-poster.png',
+                        'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/h5/aitiaozhan-poster.png',
                     width: 570,
                     height: 826,
                     y: 0,
@@ -52,20 +52,24 @@ const detailConf = {
             ],
         },
         titleList: [
-            '我的作品《',
-            'resource_name',
-            '》，【我正在参加青少年爱挑战活动】,快来给我点赞吧！',
+            [
+                '我的作品《',
+                'resource_name',
+                '》，【我正在参加青少年爱挑战活动】,快来给我点赞吧！',
+            ],
         ],
     },
-    talent: {
+    {
         posterConfig: {},
         titleList: [
-            '我的作品《',
-            'resource_name',
-            '》，我正在参加才艺秀活动】,快来给我点赞吧！',
+            [
+                '我的作品《',
+                'resource_name',
+                '》，我正在参加才艺秀活动】,快来给我点赞吧！',
+            ],
         ],
     },
-    three: {
+    {
         posterConfig: {
             width: 520,
             height: 730,
@@ -120,7 +124,7 @@ const detailConf = {
             ['才艺拜大年，好礼送不停，我需要你宝贵的一票！'],
         ],
     },
-    four: {
+    {
         posterConfig: {
             width: 570,
             height: 820,
@@ -181,7 +185,7 @@ const detailConf = {
             ['嗨～我在参加“记录新年赢大奖”活动，动动手指为我投票吧！'],
         ],
     },
-    five: {
+    {
         posterConfig: {
             width: 570,
             height: 820,
@@ -249,8 +253,57 @@ const detailConf = {
             ],
         ],
     },
-    six: {
-        posterConfig: {},
+    {
+        posterConfig: {
+            width: 570,
+            height: 820,
+            debug: false,
+            texts: [
+                {
+                    x: 60,
+                    y: 583,
+                    text: [
+                        {
+                            text: '',
+                            fontSize: 29,
+                            color: '#04A875',
+                            opacity: 1,
+                            marginRight: 10,
+                            lineHeight: 40,
+                            lineNum: 1,
+                            width: 1210,
+                            textOverflow: 'ellipsis',
+                        },
+                    ],
+                    baseLine: 'middle',
+                },
+            ],
+            images: [
+                {
+                    url:
+                        'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/h5/read-poster.png',
+                    width: 570,
+                    height: 820,
+                    y: 0,
+                    x: 0,
+                },
+                {
+                    url: '',
+                    width: 469,
+                    height: 315,
+                    y: 233,
+                    x: 50,
+                },
+                {
+                    url: '',
+                    width: 142,
+                    height: 142,
+                    y: 656,
+                    x: 390,
+                    borderRadius: 140,
+                },
+            ],
+        },
         titleList: [
             [
                 '我是',
@@ -266,6 +319,6 @@ const detailConf = {
             ['不负好春光，读书正当时！4.23世界读书日，一起读书赢好礼！'],
         ],
     },
-};
+];
 
 export default detailConf;

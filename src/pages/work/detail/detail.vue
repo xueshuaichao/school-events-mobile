@@ -6,6 +6,10 @@
         <view
             v-if="prompt"
             class="activerulebox"
+            :class="[
+                { read: activity_id === 6 },
+                { chunjie: activity_id === 3 || activity_id === 4 }
+            ]"
         >
             <image
                 class="saveImg"
@@ -13,14 +17,23 @@
             />
             <!-- 保存图片 -->
             <view
+                v-show="!imgAuthBtn"
                 class="saveBtn"
                 @click="handleSave"
             >
                 保存到本地
             </view>
-            <image
+            <button
+                v-show="imgAuthBtn"
+                open-type="openSetting"
+                class="saveBtn"
+                @opensetting="checkImgAuthFun"
+            >
+                授权相册并保存到本地
+            </button>
+
+            <view
                 class="close"
-                src="/static/images/yiqing/close-icon.png"
                 @click="handleClose"
             />
         </view>
@@ -71,102 +84,12 @@
                 />
             </view>
         </template>
-
-        <!-- <view
-            v-show="isFullScreen && isH5"
-            class="h5-full-screen-title text-one-line"
-        >
-            {{ pageData.resource_name }}
-        </view> -->
-        <swiper
-            class="out-swiper"
-            vertical="true"
-            current="1"
-            :indicator-dots="false"
-            circular="true"
-            @change="changeOutSwiper"
-        >
-            <swiper-item
-                id="1"
-                class="pre-swiper"
-                item-id="0"
-            >
-                <detail
-                    ref="pageDataOne"
-                    :page-data="pageDataOne"
-                    :like-status="likeStatus"
-                    :is-change-slide="currentSwiper"
-                    :swiper-page="0"
-                    @doAction="doAction"
-                />
-            </swiper-item>
-
-            <template>
-                <swiper-item
-                    v-if="disableslideCurrent"
-                    class="cur-swiper"
-                    @touchmove.stop="stopTouchMove"
-                >
-                    <detail
-                        ref="pageDataTwo"
-                        :page-data="pageDataTwo"
-                        :like-status="likeStatus"
-                        :is-change-slide="currentSwiper"
-                        :swiper-page="1"
-                        @doAction="doAction"
-                    />
-                </swiper-item>
-                <swiper-item
-                    v-else
-                    id="2"
-                    class="cur-swiper"
-                    item-id="1"
-                >
-                    <detail
-                        ref="pageDataTwo"
-                        :page-data="pageDataTwo"
-                        :like-status="likeStatus"
-                        :is-change-slide="currentSwiper"
-                        :swiper-page="1"
-                        @doAction="doAction"
-                    />
-                </swiper-item>
-            </template>
-
-            <swiper-item
-                id="3"
-                class="next-swiper"
-                item-id="2"
-            >
-                <detail
-                    ref="pageDataThree"
-                    :page-data="pageDataThree"
-                    :like-status="likeStatus"
-                    :is-change-slide="currentSwiper"
-                    :swiper-page="2"
-                    @doAction="doAction"
-                />
-            </swiper-item>
-        </swiper>
-
-        <!-- <view
-            v-if="isPlayed && isPaused"
-            class="pause-cover"
-        >
-            <view
-                class="uni-video-cover"
-                @click="togglePlayStatus"
-            >
-                <div class="uni-video-cover-play-button" />
-            </view>
-        </view>
-        <view
-            v-if="isVideoWaiting"
-            class="uni-video-cover"
-            style="pointer-events: none;color: #fff"
-        >
-            加载中
-        </view> -->
+        <detail
+            :page-data="pageData"
+            :like-status="likeStatus"
+            :activity_id="activity_id"
+            @doAction="doAction"
+        />
     </view>
 </template>
 
@@ -174,6 +97,7 @@
 import api from '../../../common/api';
 import utils from '../../../common/utils';
 import share from '../../../common/share';
+import logger from '../../../common/logger';
 import detail from '../../../widgets/work/detail.vue';
 import detailConf from './detail.config';
 // 上下滑动的功能的拆解
@@ -212,36 +136,62 @@ export default {
 
             shareDesc: '',
             fr: '',
-            posterConfig: detailConf.atz.posterConfig,
+            posterConfig: detailConf[0].posterConfig,
 
             prompt: false,
             canvasImg: '',
             showTicketMask: false,
 
             pageFrom: '',
-
-            pageDataTwo: {},
-            pageDataThree: {},
-            pageDataOne: {},
-
-            prePageParam: {},
-            currentSwiper: 1,
-            outSwiperIncrease: true,
-            levelid: -1,
-            sort: 1,
-            actCat: 0,
-            actSort: '',
-            search: '',
-            keyword: '',
-            disableslide: false,
-            filterUrl: {},
-            queryUrl: '',
-            isChangeSlide: false,
-            disableslideCurrent: true,
+            curDetailConf: detailConf[0],
+            isActvitity: true,
+            activity_id: 0,
+            imgAuthBtn: false,
         };
     },
     created() {},
     methods: {
+        getAuthStatus() {
+            const that = this;
+            // eslint-disable-next-line no-undef
+            wx.getSetting({
+                // 获取设置
+                success(res) {
+                    if (res.authSetting['scope.writePhotosAlbum'] === false) {
+                        // 说明未授权
+                        that.imgAuthBtn = true;
+                    } else {
+                        that.imgAuthBtn = false;
+                    }
+                },
+            });
+        },
+        checkImgAuthFun(res) {
+            // 二次以上检验是否授权图片
+            const that = this;
+            if (!res.detail.authSetting['scope.writePhotosAlbum']) {
+                // 二次以上授权, 如果未授权
+                // eslint-disable-next-line no-undef
+                wx.showToast({
+                    title: '授权失败',
+                    icon: 'none',
+                });
+                that.imgAuthBtn = true;
+            } else {
+                // eslint-disable-next-line no-undef
+                wx.showToast({
+                    title: '授权成功',
+                    icon: 'none',
+                    success() {
+                        uni.showLoading({
+                            mask: true,
+                        });
+                        that.imgAuthBtn = false;
+                        that.handleSave();
+                    },
+                });
+            }
+        },
         handleCanvass() {
             // #ifdef H5
             this.showShareMask = true;
@@ -251,7 +201,7 @@ export default {
             this.handleTicketMask();
             // #endif
             if (this.pageData.resource_scope === 3) {
-                this.posterConfig.images[0].url = 'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/aitiaozhan-poster2.png';
+                this.posterConfig.images[0].url = 'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/h5/aitiaozhan-poster2.png';
             }
         },
         // 生成二维码，并弹出mask
@@ -263,8 +213,7 @@ export default {
             const pages = getCurrentPages(); // 获取加载的页面
             const currentPage = pages[pages.length - 1]; // 获取当前页面的对象
             const url = currentPage.route || 'pages/work/detail/detail';
-            const scene = `id=${this.id}&${this.queryUrl}&curPosition=${this.prePageParam.slideCurPosition}`
-                || 'id=325';
+            const scene = `id=${this.id}&activity_id=${this.activity_id}` || 'id=325';
             api.post('/api/weixin/getminiqrcode', {
                 path: url,
                 scene,
@@ -332,11 +281,15 @@ export default {
                 success() {
                     that.prompt = false;
                     that.showTicketMask = false;
-                    uni.showToast({
-                        title: '已保存成功',
-                        icon: 'success',
-                        duration: 2000,
-                    });
+                    that.imgAuthBtn = false;
+                    // uni.showToast({
+                    //     title: '已保存成功lllllllllllll',
+                    //     icon: 'success',
+                    //     duration: 2000,
+                    // });
+                    // setTimeout(() => {
+                    //     uni.navigateBack();
+                    // }, 2000);
                 },
                 fail(err) {
                     if (
@@ -344,41 +297,49 @@ export default {
                             === 'saveImageToPhotosAlbum:fail:auth denied'
                         || err.errMsg === 'saveImageToPhotosAlbum:fail auth deny'
                     ) {
-                        // 这边微信做过调整，必须要在按钮中触发，因此需要在弹框回调中进行调用
-                        console.log('开始授权');
+                        uni.hideLoading();
+                        that.imgAuthBtn = true;
                         // eslint-disable-next-line no-undef
-                        wx.openSetting({
-                            success(settingdata) {
-                                console.log('settingdata', settingdata);
-                                if (
-                                    settingdata.authSetting[
-                                        'scope.writePhotosAlbum'
-                                    ]
-                                ) {
-                                    // eslint-disable-next-line no-undef
-                                    wx.showModal({
-                                        title: '提示',
-                                        content:
-                                            '获取权限成功,再次点击图片即可保存',
-                                        showCancel: false,
-                                    });
-                                } else {
-                                    // eslint-disable-next-line no-undef
-                                    wx.showModal({
-                                        title: '提示',
-                                        content:
-                                            '获取权限失败，将无法保存到相册哦~',
-                                        showCancel: false,
-                                    });
-                                }
-                            },
-                            fail(failData) {
-                                console.log('failData', failData);
-                            },
-                            complete(finishData) {
-                                console.log('finishData', finishData);
-                            },
+                        wx.showToast({
+                            title: '保存失败请授权',
+                            icon: 'none',
                         });
+
+                        // 这边微信做过调整，必须要在按钮中触发，因此需要在弹框回调中进行调用
+                        // console.log('开始授权');
+                        // eslint-disable-next-line no-undef
+                        // wx.openSetting({
+                        //     success(settingdata) {
+                        //         console.log('settingdata', settingdata);
+                        //         if (
+                        //             settingdata.authSetting[
+                        //                 'scope.writePhotosAlbum'
+                        //             ]
+                        //         ) {
+                        //             // eslint-disable-next-line no-undef
+                        //             wx.showModal({
+                        //                 title: '提示',
+                        //                 content:
+                        //                     '获取权限成功,再次点击图片即可保存',
+                        //                 showCancel: false,
+                        //             });
+                        //         } else {
+                        //             // eslint-disable-next-line no-undef
+                        //             wx.showModal({
+                        //                 title: '提示',
+                        //                 content:
+                        //                     '获取权限失败，将无法保存到相册哦~',
+                        //                 showCancel: false,
+                        //             });
+                        //         }
+                        //     },
+                        //     fail(failData) {
+                        //         console.log('failData', failData);
+                        //     },
+                        //     complete(finishData) {
+                        //         console.log('finishData', finishData);
+                        //     },
+                        // });
                     }
                 },
             });
@@ -390,14 +351,17 @@ export default {
             console.log(e, 'fail-------------------');
         },
         getData() {
-            api.get('/api/works/detail', {
+            let url = '/api/works/detail';
+            if (this.isActvitity) {
+                url = '/api/activity/detail';
+            }
+            api.get(url, {
                 id: this.id,
             }).then(
                 (res) => {
                     this.isLoading = false;
                     this.detailId = res.id;
                     this.pageData = res;
-                    this.pageDataTwo = res;
                     this.setGetDetail(res);
                 },
                 (err) => {
@@ -415,13 +379,11 @@ export default {
             this.getLikeStatus();
         },
         setGetDetail(res) {
-            console.log('---------setGetDetail--------');
             this.posterConfig.images[1].url = res.video_img_url;
             this.posterConfig.texts[0].text[0].text = res.resource_name;
+            this.pageData.video_img_url = res.video_img_url;
             this.initShare(res);
-            uni.setNavigationBarTitle({
-                title: res.resource_name || '',
-            });
+
             if (res.resource_type === 2) {
                 // 说明是图片，计算播放量
                 api.post('/api/works/playcount', {
@@ -430,30 +392,37 @@ export default {
             }
         },
         toggleLike() {
-            api.isLogin().then(
-                () => {
-                    const isLiked = this.likeStatus === 1;
-                    return api
-                        .get('/api/common/like', {
-                            object_id: this.id,
-                            object_type: 1,
-                            // 1-点赞 0 取消点赞
-                            type: isLiked ? 0 : 1,
-                        })
-                        .then(
-                            (res) => {
-                                console.log(res);
-                                this.likeStatus = isLiked ? 0 : 1;
-                                this.getData();
-                            },
-                            (err) => {
-                                uni.showToast({
-                                    icon: 'none',
-                                    title: err.message,
-                                });
-                            },
-                        );
-                },
+            let url = '/api/common/like';
+            let param = {
+                object_id: this.id,
+                object_type: 1,
+                type: 1,
+            };
+            if (this.isActvitity) {
+                url = '/api/activity/vote';
+                param = {
+                    id: this.id,
+                };
+            }
+            api.isLogin({
+                fr: this.fr,
+            }).then(
+                () => api.get(url, param).then(
+                    () => {
+                        this.likeStatus = 1;
+                        this.getData();
+                    },
+                    (err) => {
+                        let txt = err.message;
+                        if (err.status === 801) {
+                            txt = '今日已点赞成功，请明日再来！';
+                        }
+                        uni.showToast({
+                            icon: 'none',
+                            title: txt,
+                        });
+                    },
+                ),
                 () => uni.showToast({
                     icon: 'none',
                     title: '请先登录',
@@ -461,44 +430,27 @@ export default {
             );
         },
         getLikeStatus() {
-            api.get('/api/common/getlikestatus', {
+            let url = '/api/common/getlikestatus';
+            let param = {
                 object_type: 1,
-
                 object_id: this.id,
-            }).then((res) => {
-                this.likeStatus = res.status;
+            };
+            if (this.isActvitity) {
+                url = '/api/activity/getuserthumb';
+                param = {
+                    id: this.id,
+                };
+            }
+
+            api.get(url, param).then((res) => {
+                this.likeStatus = res.status ? 1 : 0;
             });
         },
-        // onPlay() {
-        //     if (!this.isPlayed) {
-        //         this.pageData.play_count = this.pageData.play_count + 1;
-        //         api.get('/api/works/playcount', {
-        //             id: this.detailId,
-        //         });
-        //     }
-        //     this.isVideoWaiting = false;
-        //     this.isPlayed = true;
-        // },
-        // onWaiting() {
-        //     this.isVideoWaiting = true;
-        //     this.timeupdateCounter = 0;
-        // },
-        // onTimeupdate() {
-        //     if (this.timeupdateCounter > 1) {
-        //         this.isVideoWaiting = false;
-        //     } else {
-        //         this.timeupdateCounter += 1;
-        //     }
-        // },
-        // onFullScreenChange(e) {
-        //     const isFullScreenMode = e.detail.fullScreen;
-        //     this.isFullScreen = isFullScreenMode;
-        // },
         html5VideoAutoAdjust() {
             document.querySelector('.uni-video-type-fullscreen').style = '';
         },
         initShare(res) {
-            const { titleList } = detailConf.five;
+            const { titleList } = this.curDetailConf;
             let title = titleList[Math.floor(Math.random() * titleList.length)];
             const arr = Object.entries(res);
             arr.forEach(([key, val]) => {
@@ -507,14 +459,15 @@ export default {
                     .replace(key, val)
                     .replace(',', '');
             });
-            console.log(title, '----------titel');
             const desc = `${res.resource_name}-${res.create_name}`;
-            this.pageData.video_img_url = res.video_img_url;
             this.shareDesc = title;
             share({
                 title,
                 desc,
                 thumbnail: res.video_img_url,
+            });
+            uni.setNavigationBarTitle({
+                title: res.resource_name || '',
             });
         },
         joinGame() {
@@ -525,11 +478,17 @@ export default {
                 });
                 return;
             }
-            api.isLogin().then(
+            api.isLogin({
+                fr: this.fr,
+            }).then(
                 () => {
-                    uni.switchTab({
-                        url: '/pages/tabBar/upload/upload',
-                    });
+                    if (this.isActvitity) {
+                        this.joinActivity();
+                    } else {
+                        uni.navigateTo({
+                            url: '/pages/upload/default/upload',
+                        });
+                    }
                 },
                 () => uni.showToast({
                     icon: 'none',
@@ -537,160 +496,29 @@ export default {
                 }),
             );
         },
-        // togglePlayStatus() {
-        //     this.$refs.video.play();
-        //     this.isPaused = false;
-        // },
-        getPageMoreDate(paramData) {
-            // 设置接口，根据条件增加参数
-            if (this.pageFrom === 'mywork') {
-                // 我的作品的详情，暂时屏蔽了。
-                return this.postFromAPI('/api/user/worklist', paramData);
-            }
-            return this.postFromAPI('/api/works/list', {
-                ...paramData,
-                cat_id: { one_level_id: this.levelid },
-                sort: this.sort,
-                keyword: this.keyword,
-            });
-        },
-        postFromAPI(url, paramData) {
-            return api.post(url, paramData);
-        },
-        changeOutSwiper(event) {
-            //  已经滑动到下一个作品，获取下下个，或者上上个作品。
-            // 判断移动方向,向上，向下。
-            if (this.currentSwiper > event.detail.current) {
-                this.outSwiperIncrease = false;
-            } else {
-                this.outSwiperIncrease = true;
-            }
-            if (this.currentSwiper === 2 && event.detail.current === 0) {
-                this.outSwiperIncrease = true;
-            }
-            if (this.currentSwiper === 0 && event.detail.current === 2) {
-                this.outSwiperIncrease = false;
-            }
-            console.log(
-                this.prePageParam.slideCurPosition,
-                '---变化前显示的位置',
-            );
-            // 预获取数据。最后一页的数据可以划到第一页来。
-            let objPosition = {};
-            let targetPosition = this.prePageParam.slideCurPosition;
-            if (this.outSwiperIncrease) {
-                targetPosition = this.prePageParam.slideCurPosition + 2;
-                if (
-                    this.prePageParam.slideCurPosition
-                    === this.prePageParam.MaxPosition - 1
-                ) {
-                    this.prePageParam.slideCurPosition += 1;
-                    targetPosition = 1;
-                } else if (
-                    this.prePageParam.slideCurPosition
-                    === this.prePageParam.MaxPosition
-                ) {
-                    this.prePageParam.slideCurPosition = 1;
-                    targetPosition = 2;
-                } else {
-                    this.prePageParam.slideCurPosition += 1;
-                }
-
-                objPosition = this.getPageSizeInfo(targetPosition);
-            } else {
-                targetPosition = this.prePageParam.slideCurPosition - 2;
-
-                if (this.prePageParam.slideCurPosition === 2) {
-                    targetPosition = this.prePageParam.MaxPosition;
-                    this.prePageParam.slideCurPosition -= 1;
-                } else if (this.prePageParam.slideCurPosition === 1) {
-                    this.prePageParam.slideCurPosition = this.prePageParam.MaxPosition;
-                    targetPosition = this.prePageParam.MaxPosition - 1;
-                } else {
-                    this.prePageParam.slideCurPosition -= 1;
-                }
-
-                objPosition = this.getPageSizeInfo(targetPosition);
-            }
-            console.log(
-                this.prePageParam.slideCurPosition,
-                '---变化后显示的位置-----目标--',
-                targetPosition,
-            );
-            this.setSwiperPageData(event, objPosition);
-        },
-        setSwiperPageData(event, objPosition) {
-            this.getPageMoreDate(objPosition).then((res) => {
-                //  滚动的时候去获取得到第三页的详情，详情有值再修改轮播Item匹配的数据，详情没有值，就是获取到了最后一个数据
-                if (res) {
-                    if (this.outSwiperIncrease) {
-                        // 下一个
-                        switch (this.currentSwiper) {
-                            case 0:
-                                this.pageDataThree = res;
-                                break;
-                            case 1:
-                                this.pageDataOne = res;
-                                break;
-                            case 2:
-                                this.pageDataTwo = res;
-                                break;
-                            default:
-                                console.log('1');
-                        }
-                    } else {
-                        switch (this.currentSwiper) {
-                            case 2:
-                                this.pageDataOne = res;
-                                break;
-                            case 1:
-                                this.pageDataThree = res;
-                                break;
-                            case 0:
-                                this.pageDataTwo = res;
-                                break;
-                            default:
-                                console.log('-');
-                        }
+        joinActivity() {
+            api.post('/api/activity/getactivitystatus', {
+                activity_id: this.activity_id,
+            }).then((res) => {
+                const { status } = res;
+                if (status === 2) {
+                    if (this.activity_id === 6) {
+                        uni.navigateTo({
+                            url: '/pages/read/upload/modify',
+                        });
                     }
-                } else {
-                    console.log('没有获取到数据呀。');
+                } else if (status === 1) {
+                    uni.showToast({
+                        icon: 'none',
+                        title: '活动未开始',
+                    });
+                } else if (status === 3) {
+                    uni.showToast({
+                        icon: 'none',
+                        title: '活动已结束',
+                    });
                 }
-                this.currentSwiper = event.detail.current;
             });
-
-            // 不需要等待接口数据，直接修改下pageData，以便进行页面的转发，与二维码功能
-            let curPageData = {};
-            switch (event.detail.current) {
-                case 0:
-                    curPageData = this.pageDataOne;
-                    break;
-                case 1:
-                    curPageData = this.pageDataTwo;
-                    break;
-                case 2:
-                    curPageData = this.pageDataThree;
-                    break;
-                default:
-                    console.log('-');
-            }
-            this.id = curPageData.id;
-            this.pageData = curPageData;
-            this.isChangeSlide = !this.isChangeSlide;
-            this.setGetDetail(curPageData);
-            this.getLikeStatus();
-        },
-        getPageSizeInfo(position) {
-            // 设置参数
-            const pageSize = 10;
-            const pageNum = Math.ceil(position / pageSize);
-            const currentPosition = position - pageSize * (pageNum - 1) - 1;
-            return {
-                page_size: pageSize,
-                page_num: pageNum,
-                current_position: currentPosition,
-                type: 2,
-            };
         },
         doAction(action) {
             if (action === 'handleCanvass') {
@@ -704,87 +532,43 @@ export default {
                 this.toggleLike();
             }
         },
-        stopTouchMove() {
-            //  禁止滑动。
-        },
     },
     onLoad(query) {
         this.pageFrom = utils.getParam(query, 'from') || '';
         this.levelid = Number(utils.getParam(query, 'levelid')) || -1;
-        this.sort = Number(utils.getParam(query, 'sort')) || 1;
         this.id = utils.getParam(query, 'id');
-
-        this.keyword = utils.getParam(query, 'keyword') || '';
-
-        this.disableslide = utils.getParam(query, 'disableslide') || false;
-
         this.fr = utils.getParam(query, 'fr') || '';
 
-        const curPosition = Number(utils.getParam(query, 'curPosition')) || 0;
-        const total = Number(utils.getParam(query, 'total')) || 1;
+        this.activity_id = Number(utils.getParam(query, 'activity_id')) || 0;
+        console.log(this.activity_id, 'wqwqwqwqwqwq');
+        if (!this.activity_id) {
+            this.isActvitity = false;
+        } else {
+            const arr = ['xchd', 'dsxnh', 'dsxnh', 'dshd'];
+            const type = arr[this.activity_id - 3];
+            this.fr = logger.getFr(type, {});
+        }
 
         // 获取detail页面的内容
         this.getData();
+
         // 获取前后两页面的内容。
-        if (!this.disableslideCurrent) {
-            this.prePageParam.initPosition = curPosition;
-            this.prePageParam.slideCurPosition = curPosition; // 第一次进来的位置
-            this.prePageParam.MaxPosition = total;
-
-            let toPreTarget = curPosition;
-            let toNewTarget = curPosition;
-            if (curPosition === 1) {
-                toPreTarget = total;
-                toNewTarget += 1;
-            } else if (curPosition === total) {
-                toNewTarget = 1;
-                toPreTarget -= 1;
-            } else {
-                toPreTarget -= 1;
-                toNewTarget += 1;
-            }
-            const paramPre = this.getPageSizeInfo(toPreTarget);
-            const paramNext = this.getPageSizeInfo(toNewTarget);
-            this.getPageMoreDate(paramPre).then((res) => {
-                this.pageDataOne = res;
-            });
-            this.getPageMoreDate(paramNext).then((res) => {
-                this.pageDataThree = res;
-            });
-            uni.getStorage({
-                key: 'hasPromtSlide',
-                complete(res) {
-                    if (!res.data) {
-                        uni.setStorage({
-                            key: 'hasPromtSlide',
-                            data: 'lll',
-                        });
-                        uni.showToast({
-                            title: '上下滑动可以切换喔～',
-                            duration: 3000,
-                            position: 'top',
-                            mask: true,
-                            icon: 'none',
-                        });
-                    }
-                },
-            });
+        if (this.activity_id) {
+            this.curDetailConf = detailConf[this.activity_id - 1];
+        } else if (this.levelid === 3 || this.pageFrom) {
+            [, this.curDetailConf] = detailConf;
+        } else {
+            [this.curDetailConf] = detailConf;
         }
-        const myQuery = query;
-        delete myQuery.id;
-        delete myQuery.curPosition;
-        const myQuery2 = JSON.stringify(myQuery);
-        const queryStra = myQuery2.replace(/:/g, '=');
-        const queryStrb = queryStra.replace(/"/g, '');
-
-        const queryStrc = queryStrb.replace(/,/g, '&');
-        const queryStrd = queryStrc.match(/\{([^)]*)\}/)[1];
-        this.queryUrl = queryStrd;
-
+        console.log(this.curDetailConf, '1212121212121');
         this.posterConfig = {
             ...this.posterConfig,
-            ...detailConf.five.posterConfig,
+            ...this.curDetailConf.posterConfig,
         };
+        // #ifndef H5
+        this.poster = this.selectComponent('#poster');
+        this.getAuthStatus();
+        // #endif
 
         // hack for html5 video size notwoking
         // #ifdef H5
@@ -836,15 +620,6 @@ export default {
     .out-swiper {
         width: 100%;
         height: 100vh;
-        .cur-swiper {
-            // background: red;
-        }
-        .pre-swiper {
-            // background: yellow;
-        }
-        .next-swiper {
-            // background: green;
-        }
     }
     .activerulebox {
         position: fixed;
@@ -865,9 +640,6 @@ export default {
             height: 96upx;
             left: 115upx;
             top: 938upx;
-
-            // width:570px;
-            // height:110px;
             background: linear-gradient(
                 180deg,
                 rgba(0, 132, 255, 1),
@@ -885,8 +657,54 @@ export default {
             position: absolute;
             width: 54upx;
             height: 54upx;
+            background: rgba(0, 132, 255, 1);
             left: 348upx;
             top: 1074upx;
+            border-radius: 50%;
+            display: inline-block;
+            &::before,
+            &::after {
+                content: "";
+                position: absolute;
+                display: block;
+                width: 20upx;
+                height: 2upx;
+                background: #fff;
+                left: 17upx;
+                top: 26upx;
+                border-radius: 2upx;
+            }
+            &:before {
+                transform: rotate(45deg);
+            }
+            &:after {
+                transform: rotate(-45deg);
+            }
+        }
+        &.read {
+            .saveBtn {
+                background: linear-gradient(
+                    180deg,
+                    rgba(4, 168, 117, 1),
+                    rgba(9, 231, 162, 1)
+                );
+            }
+            .close {
+                background: #06d08e;
+            }
+        }
+        &.chunjie {
+            .saveBtn {
+                background: linear-gradient(
+                    0deg,
+                    rgba(255, 22, 16, 1),
+                    rgba(255, 189, 103, 1)
+                );
+                color: #ffe57b;
+            }
+            .close {
+                background: rgb(255, 22, 16);
+            }
         }
     }
 

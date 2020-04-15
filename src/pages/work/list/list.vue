@@ -37,11 +37,10 @@ export default {
     created() {},
     methods: {
         changeBottom() {
-            // this.isReachBtm = false;
+            this.isReachBtm = !this.isReachBtm;
         },
     },
     onReachBottom() {
-        console.log('onReachBottom------------------');
         this.isReachBtm = !this.isReachBtm;
     },
     onLoad(params) {

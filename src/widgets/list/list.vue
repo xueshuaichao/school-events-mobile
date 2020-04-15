@@ -118,12 +118,13 @@
                     >
                         <work
                             :info="item"
-                            :cur-position="index + 1"
-                            :page-size="10"
-                            :levelid="filter.cat_id.one_level_id"
-                            :sort="filter.sort"
-                            :total="total"
-                            :keyword="filter.keyword"
+                            :query="
+                                `sort=${filter.sort}&keyword=${
+                                    filter.keyword
+                                }&total=${total}&levelid=${
+                                    filter.cat_id.one_level_id
+                                }&curPosition=${index + 1}`
+                            "
                         />
                     </view>
                 </view>

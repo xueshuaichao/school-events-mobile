@@ -209,14 +209,14 @@
                     </view>
                     <view class="media-box">
                         <view
-                            v-for="(item, index) in dataList"
+                            v-for="item in dataList"
                             :key="item.id"
                             class="media-content"
                         >
                             <event-craft-cover
                                 :info="item"
                                 :bg-color="'006EDE'"
-                                @click.native="viewDetail(item, index)"
+                                @click.native="viewDetail(item)"
                             />
 
                             <view class="media-name text-one-line">
@@ -441,14 +441,9 @@ export default {
                     'http: //aitiaozhan.oss-cn-beijing.aliyuncs.com/chunjiehao/yiqing-poster01.png?x-oss-process=image/format,png/interlace,1/quality,Q_80/resize,m_pad,h_100',
             });
         },
-        viewDetail(item, position) {
+        viewDetail(item) {
             uni.navigateTo({
-                url: `/pages/yiqing/detail/detail?id=${item.id}&fr=${
-                    this.fr
-                }&total=${this.total}&curPosition=${position
-                    + 1}&from=5&actSort=${this.filter.sort || ''}&actCat=${
-                    this.filter.activity_cat
-                }`,
+                url: `/pages/work/detail/detail?id=${item.id}&fr=${this.fr}&activity_id=5`,
             });
         },
         toggle(k) {
