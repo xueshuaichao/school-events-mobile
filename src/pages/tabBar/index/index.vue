@@ -466,7 +466,7 @@ export default {
                 this.menuConf = res;
             });
         },
-        getWorkList(type) {
+        getWorkList(type, refresh) {
             let catId;
             if (type === 'individual') {
                 catId = 1;
@@ -490,10 +490,13 @@ export default {
                 } else if (type === 'talent') {
                     this.workData.talent = res;
                 }
+                if (refresh) {
+                    uni.stopPullDownRefresh();
+                }
             });
         },
 
-        getData() {
+        getData(refresh) {
             // api.get('/api/column/list').then(res => {
             //     // 首页不展示第一个大赛动态 tab
             //     res.list.shift();
@@ -501,12 +504,15 @@ export default {
             //     this.newsColumn = res.list;
 
             // this.getArticle(this.newsColumn[0].id);
-            this.getMenuData();
+            // this.getMenuData();
             this.getWorkList('individual');
             this.getWorkList('team');
-            this.getWorkList('talent');
+            this.getWorkList('talent', refresh);
             // })
         },
+    },
+    onPullDownRefresh() {
+        this.getData('refresh');
     },
 };
 </script>

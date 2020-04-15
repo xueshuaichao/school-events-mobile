@@ -418,7 +418,6 @@ export default {
         },
         isShow() {
             this.showMenu = false;
-            console.log(this.paramsFilter.from);
             try {
                 const value = uni.getStorageSync('onShowFrom');
                 if (value === 'detail') {

@@ -4,7 +4,8 @@
         {
             "path": "pages/tabBar/index/index",
             "style": {
-                "navigationBarTitleText": "大赛首页"
+                "navigationBarTitleText": "大赛首页",
+                "enablePullDownRefresh": true
             }
         },
         {
