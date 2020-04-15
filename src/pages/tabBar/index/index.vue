@@ -217,6 +217,13 @@
             </navigator>
         </view>
         <!-- menu -->
+        <!-- zhibo-entry -->
+        <navigator url="/pages/openGame/index">
+            <image
+                class="zhibo-entry"
+                src="http://aitiaozhan.oss-cn-beijing.aliyuncs.com/school-events-mobile/zhibo-entry.png"
+            />
+        </navigator>
         <!-- work show -->
 
         <work
@@ -629,7 +636,11 @@ uni-swiper {
             height: 280upx;
         }
     }
-
+    .zhibo-entry {
+        width: 690upx;
+        height: 200upx;
+        margin-left: 30upx;
+    }
     .menu-list {
         display: flex;
         margin-bottom: 40upx;
