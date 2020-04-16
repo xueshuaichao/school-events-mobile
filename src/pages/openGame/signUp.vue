@@ -91,7 +91,7 @@
                             placeholder-class="placeholder"
                             maxlength="30"
                             disabled
-                            placeholder="请输入学校名称"
+                            placeholder="请选择所属地区"
                             @tap="openAddres"
                         >
                     </view>
@@ -105,7 +105,7 @@
                             v-model="formData.schoolName"
                             class="uni-input"
                             placeholder-class="placeholder"
-                            maxlength="30"
+                            maxlength="20"
                             placeholder="请输入学校名称"
                         >
                     </view>
@@ -119,7 +119,7 @@
                             v-model="formData.signName"
                             class="uni-input"
                             placeholder-class="placeholder"
-                            maxlength="30"
+                            maxlength="10"
                             placeholder="请输入提报人姓名"
                         >
                     </view>
@@ -133,7 +133,7 @@
                             v-model="formData.job"
                             class="uni-input"
                             placeholder-class="placeholder"
-                            maxlength="30"
+                            maxlength="10"
                             placeholder="请输入职务"
                         >
                     </view>
@@ -147,7 +147,7 @@
                             v-model="formData.phone"
                             class="uni-input"
                             placeholder-class="placeholder"
-                            maxlength="30"
+                            maxlength="11"
                             placeholder="请输入联系电话"
                         >
                     </view>
@@ -179,20 +179,9 @@ export default {
     },
     data() {
         return {
-            // :class=" disabled?'disable':item.active?'active':''"
-
-            // tabs: [
-            //     { id: '1', column_name: '挑战类', active: false },
-            //     { id: '2', column_name: '才艺类', active: false },
-            // ],
-            // tabs1: [
-            //     { id: '3', column_name: '小学组', active: false },
-            //     { id: '4', column_name: '中学组', active: false },
-            // ],
-            // disabled: true,
             formData: {
                 event: [
-                    { id: '1', column_name: '挑战类', active: false },
+                    { id: '1', column_name: '挑战类', active: true },
                     { id: '2', column_name: '才艺类', active: false },
                 ],
                 group: [
@@ -210,7 +199,20 @@ export default {
             },
             index: 0,
             lock: true,
+            // testInput: '',
         };
+    },
+    watch: {
+        // testInput(v) {
+        //     // if (String(v).indexOf('.') > 0){
+        //     //     this.$nextTick(() => { //这里
+        //     //         this.testInput= '';
+        //     //     });
+        //     // }
+        //     this.$nextTick(() => { //这里
+        //         this.testInput= String(v).replace(/\d/g, '');
+        //     });
+        // },
     },
     onLoad() {
         this.getenrollinfo();
@@ -218,16 +220,38 @@ export default {
     created() {},
     onShow() {},
     onHide() {
-        this.resetData();
+        // this.resetData();
     },
     methods: {
+        resetData() {
+            this.formData = {
+                event: [
+                    { id: '1', column_name: '挑战类', active: false },
+                    { id: '2', column_name: '才艺类', active: false },
+                ],
+                group: [
+                    { id: '3', column_name: '小学组', active: false },
+                    { id: '4', column_name: '中学组', active: false },
+                ],
+                eventText: [],
+                groupText: [],
+                district: '',
+                districtCode: [0, 0, 0],
+                schoolName: '',
+                signName: '',
+                job: '',
+                phone: '',
+            };
+        },
         openAddres() {
             this.$refs.simpleAddress.open();
         },
         onConfirm(e) {
+            console.log(this.formData);
+            console.log(e);
+            console.log(e.label.replace(/-/g, ''));
             this.formData.district = e.label.replace(/-/g, '');
             this.formData.districtCode = e.value;
-            console.log(e);
         },
         getenrollinfo() {
             uni.showLoading({
@@ -238,11 +262,10 @@ export default {
                     ({ detail, id }) => {
                         console.log(detail, 'res122');
                         uni.hideLoading();
-                        this.formData = detail;
-                        this.id = id;
-                        // uni.navigateTo({
-                        //     url: '/pages/upload/result/result?type=success',
-                        // });
+                        if (detail) {
+                            this.formData = detail;
+                            this.id = id;
+                        }
                     },
                     (err) => {
                         uni.hideLoading();
@@ -258,51 +281,52 @@ export default {
         handleSubmit() {
             if (this.lock) {
                 this.lock = false;
-                const formData = Object.assign({}, this.formData);
-                console.log(formData, 'formData.group');
-                if (!formData.event[0].active && !formData.event[1].active) {
+                // const formData = Object.assign({}, this.formData);
+                console.log(this.formData, 'formData.group');
+                if (
+                    !this.formData.event[0].active
+                    && !this.formData.event[1].active
+                ) {
                     this.lock = true;
                     return this.errTip('请选择申报项目');
                 }
                 if (
-                    formData.event[0].active
-                    && !formData.group[0].active
-                    && !formData.group[1].active
+                    this.formData.event[0].active
+                    && !this.formData.group[0].active
+                    && !this.formData.group[1].active
                 ) {
                     this.lock = true;
                     return this.errTip('请选择组别');
                 }
-                if (!formData.district) {
+                if (!this.formData.district) {
                     this.lock = true;
                     return this.errTip('请选择所属地区');
                 }
-                if (!formData.schoolName) {
+                if (!this.formData.schoolName) {
                     this.lock = true;
                     return this.errTip('请输入学校名称');
                 }
-                if (!formData.signName) {
+                if (!this.formData.signName) {
                     this.lock = true;
                     return this.errTip('请输入提报人姓名');
                 }
-                if (!formData.job) {
+                if (!this.formData.job) {
                     this.lock = true;
                     return this.errTip('请输入职务');
                 }
-                if (!formData.phone) {
+                if (!this.formData.phone) {
                     this.lock = true;
                     return this.errTip('请输入联系电话');
                 }
                 uni.showLoading();
-                formData.eventText = [];
-                formData.groupText = [];
-                formData.event.forEach((item) => {
+                this.formData.event.forEach((item) => {
                     if (item.active) {
-                        formData.eventText.push(item.column_name);
+                        this.formData.eventText.push(item.column_name);
                     }
                 });
-                formData.group.forEach((item) => {
+                this.formData.group.forEach((item) => {
                     if (item.active) {
-                        formData.groupText.push(item.column_name);
+                        this.formData.groupText.push(item.column_name);
                     }
                 });
                 return api.isLogin().then(() => {
@@ -311,7 +335,7 @@ export default {
                             this.id ? `&id=${this.id}` : ''
                         }`,
                         {
-                            detail: formData,
+                            detail: this.formData,
                         },
                     ).then(
                         () => {
@@ -335,53 +359,24 @@ export default {
             }
             return true;
         },
-        resetData() {
-            this.formData = {
-                ...this.formData,
-                event: [
-                    { id: '1', column_name: '挑战类', active: false },
-                    { id: '2', column_name: '才艺类', active: false },
-                ],
-                group: [
-                    { id: '3', column_name: '小学组', active: false },
-                    { id: '4', column_name: '中学组', active: false },
-                ],
-                district: '',
-                schoolName: '',
-                signName: '',
-                job: '',
-                phone: '',
-            };
-        },
+
         setNewsTabActive1(item) {
             console.log(item, 'item.column_name');
             // eslint-disable-next-line no-param-reassign
             item.active = !item.active;
-            this.formData.event[item.column_name] = item.active;
             if (item.column_name === '挑战类') {
-                // this.disabled = !item.active;
                 if (!item.active) {
-                    // this.formData.group = {
-                    //     小学组: false,
-                    //     中学组: false,
-                    // };
-                    // this.tabs1[0].active = false;
-                    // this.tabs1[1].active = false;
                     this.formData.group[0].active = false;
                     this.formData.group[1].active = false;
                 }
             }
         },
         setNewsTabActive2(item) {
-            // if(this.disabled) {
-            //     return;
-            // }
             if (!this.formData.event[0].active) {
                 return;
             }
             // eslint-disable-next-line no-param-reassign
             item.active = !item.active;
-            this.formData.group[item.column_name] = item.active;
         },
         errTip(title) {
             uni.showToast({

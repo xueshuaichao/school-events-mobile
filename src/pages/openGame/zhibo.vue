@@ -4,24 +4,6 @@
         <video
             src="http://prdsecurelive.ainemo.com/prdnemo/2c949824713649570171819755361521.m3u8?auth_key=b4218638e43e57952f5df736335d1367-1587110880-5da384e65aab41f4aacd7494fdea1ad6-"
         />
-        <image
-            class="success-icon"
-            src="/static/images/zhibo/success-icon.png"
-        />
-        <view class="success-text">
-            您已报名成功
-        </view>
-        <navigator url="/pages/openGame/successInfo">
-            <text class="success-info">
-                查看报名信息
-            </text>
-        </navigator>
-        <text
-            class="success-back"
-            @click="handleBack"
-        >
-            返回首页
-        </text>
     </view>
 </template>
 
