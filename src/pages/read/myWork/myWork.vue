@@ -95,6 +95,7 @@
                         :info="item"
                         :media-icon="type !== 'myWork'"
                         :like-icon="type === 'myWork'"
+                        :best-icon="false"
                         :bg-color="'19B583'"
                         @click.native="viewDetail(item, index)"
                     />
@@ -591,14 +592,14 @@ export default {
             line-height: 32upx;
             margin-bottom: 15upx;
             &.text-two-line {
-                height: 58upx;
+                height: 63upx;
             }
         }
         .media-time {
             color: #fff;
             font-size: 24upx;
             opacity: 0.7;
-            margin-bottom: 71upx;
+            margin-bottom: 66upx;
         }
         .vote-num {
             font-size: 30upx;
@@ -631,7 +632,6 @@ export default {
 }
 
 .page-read-work {
-    padding: 0 30upx;
     padding-top: 30upx;
     box-sizing: border-box;
     width: 100%;
@@ -644,7 +644,7 @@ export default {
     .search-box {
         overflow: hidden;
         margin-bottom: 30rpx;
-        margin: 0 30rpx 20rpx;
+        margin: 0 0rpx 20rpx;
         top: 0upx;
         height: 84rpx;
         left: 0;
@@ -652,7 +652,7 @@ export default {
         position: fixed;
         z-index: 10;
         background-color: #a1debe;
-        padding: 20upx 0upx;
+        padding: 20upx 30upx;
         button {
             width: 144upx;
             height: 68upx;
@@ -708,11 +708,11 @@ export default {
         }
     }
     .panel {
-        padding-top: 96upx;
+        padding: 96upx 30upx 0;
     }
     .panel .panel-hd {
         border-bottom: none;
-        margin: 0 20rpx 20rpx;
+        margin: 0 0 20rpx;
         display: flex;
         justify-content: space-around;
         top: 0upx;

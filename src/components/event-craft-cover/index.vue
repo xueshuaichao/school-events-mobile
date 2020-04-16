@@ -11,7 +11,7 @@
             class="video"
         />
         <view
-            v-if="info.grade"
+            v-if="info.grade && bestIcon"
             class="is-excellect"
         >
             优秀
@@ -56,6 +56,10 @@ export default {
         bgColor: {
             type: String,
             default: 'ffffff',
+        },
+        bestIcon: {
+            type: Boolean,
+            default: false,
         },
         likeIcon: {
             type: Boolean,

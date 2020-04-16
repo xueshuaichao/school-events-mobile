@@ -869,7 +869,7 @@ body.dialog-open {
     .media-fill {
         height: 253upx;
         text-align: center;
-        color: #000;
+        color: #0f8c64;
         width: 100%;
         line-height: 253upx;
     }
