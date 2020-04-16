@@ -510,9 +510,12 @@ export default {
                         title: '活动未开始',
                     });
                 } else if (status === 3) {
-                    uni.showToast({
-                        icon: 'none',
-                        title: '活动已结束',
+                    // uni.showToast({
+                    //     icon: 'none',
+                    //     title: '活动已结束',
+                    // });
+                    uni.navigateTo({
+                        url: '/pages/upload/default/upload',
                     });
                 }
             });

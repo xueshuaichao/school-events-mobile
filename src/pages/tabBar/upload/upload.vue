@@ -9,37 +9,74 @@
         <image
             src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/h5/upload-girl1.png"
         />
-        <navigator
+        <!-- <navigator
             url="/pages/upload/default/upload"
             class="swiper-item"
+        > -->
+        <view
+            class="btn"
+            @click="jumpRoute()"
         >
-            <view class="btn">
-                报名参加
-            </view>
-        </navigator>
+            报名参加
+        </view>
+        <!-- </navigator> -->
         <view class="sub-title">
             世界读书日
         </view>
         <image
             src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/h5/upload-girl2.png"
         />
-        <navigator
+        <!-- <navigator
             url="/pages/read/upload/modify"
             class="swiper-item"
+        > -->
+        <view
+            class="btn"
+            @click="jumpRoute('read')"
         >
-            <view class="btn">
-                报名参加
-            </view>
-        </navigator>
+            报名参加
+        </view>
+        <!-- </navigator> -->
     </view>
 </template>
 
 <script>
+import api from '../../../common/api';
+import logger from '../../../common/logger';
+
 export default {
     data() {
-        return {};
+        return {
+            fr: '',
+        };
     },
-    methods: {},
+    methods: {
+        jumpRoute(activity) {
+            if (activity === 'read') {
+                this.fr = logger.getFr('dshd', {});
+                console.log(this.fr);
+            }
+            api.isLogin({
+                fr: this.fr,
+            }).then(
+                () => {
+                    if (activity) {
+                        uni.navigateTo({
+                            url: '/pages/read/upload/modify',
+                        });
+                    } else {
+                        uni.navigateTo({
+                            url: '/pages/upload/default/upload',
+                        });
+                    }
+                },
+                () => uni.showToast({
+                    icon: 'none',
+                    title: '请先登录',
+                }),
+            );
+        },
+    },
 };
 </script>
 
