@@ -116,7 +116,7 @@
                     </view>
                     <view class="uni-list-cell-db">
                         <input
-                            v-model="formData.signName"
+                            v-model="testInput"
                             class="uni-input"
                             placeholder-class="placeholder"
                             maxlength="10"
@@ -199,26 +199,30 @@ export default {
             },
             index: 0,
             lock: true,
-            // testInput: '',
+            testInput: '',
         };
     },
     watch: {
-        // testInput(v) {
-        //     // if (String(v).indexOf('.') > 0){
-        //     //     this.$nextTick(() => { //这里
-        //     //         this.testInput= '';
-        //     //     });
-        //     // }
-        //     this.$nextTick(() => { //这里
-        //         this.testInput= String(v).replace(/\d/g, '');
-        //     });
-        // },
+        testInput(v) {
+            // if (String(v).indexOf('.') > 0){
+            //     this.$nextTick(() => { //这里
+            //         this.testInput= '';
+            //     });
+            // }
+            this.$nextTick(() => {
+                // 这里
+                this.testInput = String(v).replace(/\d/g, '');
+                this.formData.signName = this.testInput;
+            });
+        },
     },
-    onLoad() {
-        this.getenrollinfo();
-    },
+    onLoad() {},
     created() {},
-    onShow() {},
+    onShow() {
+        if (!this.isFirstGet) {
+            this.getenrollinfo();
+        }
+    },
     onHide() {
         // this.resetData();
     },
@@ -241,7 +245,9 @@ export default {
                 signName: '',
                 job: '',
                 phone: '',
+                isFirstGet: false,
             };
+            this.testInput = '';
         },
         openAddres() {
             this.$refs.simpleAddress.open();
@@ -260,11 +266,18 @@ export default {
             return api.isLogin().then(() => {
                 api.get('/api/activity/getenrollinfo?activity_id=7').then(
                     ({ detail, id }) => {
-                        console.log(detail, 'res122');
+                        // console.log(detail, 'res122');
+                        this.isFirstGet = true;
                         uni.hideLoading();
                         if (detail) {
                             this.formData = detail;
+                            this.formData = {
+                                ...detail,
+                                eventText: [],
+                                groupText: [],
+                            };
                             this.id = id;
+                            this.testInput = detail.signName;
                         }
                     },
                     (err) => {

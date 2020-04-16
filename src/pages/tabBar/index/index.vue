@@ -224,11 +224,25 @@
                 src="http://aitiaozhan.oss-cn-beijing.aliyuncs.com/school-events-mobile/zhibo-entry.png"
             />
         </navigator>
-        <navigator url="/pages/openGame/zhibo">
-            <button>直播</button>
-        </navigator>
         <!-- work show -->
-
+        <work
+            :title="'爱挑战网络公开赛'"
+            :info="workData.individual.list"
+            :cat-id="1"
+            :sort="4"
+            :total="
+                workData.individual.total > 10 ? 10 : workData.individual.total
+            "
+        >
+            <template slot="zhibo">
+                <navigator url="/pages/openGame/zhibo-list">
+                    <image
+                        class="zhibo-entry01"
+                        src="http://aitiaozhan.oss-cn-beijing.aliyuncs.com/school-events-mobile/zhibo-entry01.png"
+                    />
+                </navigator>
+            </template>
+        </work>
         <work
             :title="'爱挑战优秀个人'"
             :more-url="'/pages/work/list/list?cat_id=1'"
@@ -643,6 +657,10 @@ uni-swiper {
         width: 690upx;
         height: 200upx;
         margin-left: 30upx;
+    }
+    .zhibo-entry01 {
+        width: 690upx;
+        height: 391upx;
     }
     .menu-list {
         display: flex;

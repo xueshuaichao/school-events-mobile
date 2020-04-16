@@ -101,13 +101,13 @@
                     </view>
                 </view>
             </view>
+            <text
+                class="success-back"
+                @click="handleBack"
+            >
+                返回首页
+            </text>
         </view>
-        <text
-            class="success-back"
-            @click="handleBack"
-        >
-            返回首页
-        </text>
     </view>
 </template>
 
@@ -183,17 +183,18 @@ export default {
 <style lang="less" scoped>
 .page-upload {
     height: 100vh;
-    position: relative;
-    .success-back {
-        position: absolute;
-        color: #999999;
-        font-size: 28upx;
-        bottom: 16upx;
-        left: 321upx;
-    }
+
     .main {
         // padding: 40upx 30upx;
         background: #f8f8f8;
+        position: relative;
+        .success-back {
+            position: absolute;
+            color: #999999;
+            font-size: 28upx;
+            bottom: 16upx;
+            left: 321upx;
+        }
         .content-box {
             position: relative;
             height: 256rpx;
