@@ -30,18 +30,9 @@
                         申报项目：
                     </view>
                     <view class="show-type-list">
-                        <text
-                            v-for="(item, k) in formData.event"
-                            :key="k"
-                            class="show-type-title"
-                            :class="{ active: item.active }"
-                            @click="setNewsTabActive1(item)"
-                        >
-                            {{ item.column_name }}
+                        <text class="show-type-title">
+                            {{ formData.eventText.join("、") }}
                         </text>
-                    </view>
-                    <view class="show-type-remark">
-                        （可多选）
                     </view>
                 </view>
                 <view
@@ -52,24 +43,13 @@
                         组 别：
                     </view>
                     <view class="show-type-list">
-                        <text
-                            v-for="(item, k) in formData.group"
-                            :key="k"
-                            class="show-type-title"
-                            :class="
-                                !formData.event[0].active
-                                    ? 'disable'
-                                    : item.active
-                                        ? 'active'
-                                        : ''
-                            "
-                            @click="setNewsTabActive2(item)"
-                        >
-                            {{ item.column_name }}
+                        <text class="show-type-title">
+                            {{
+                                formData.groupText.length === 0
+                                    ? "--"
+                                    : formData.groupText.join("、")
+                            }}
                         </text>
-                    </view>
-                    <view class="show-type-remark">
-                        （可多选）
                     </view>
                 </view>
             </view>
@@ -85,15 +65,7 @@
                         所属地区：
                     </view>
                     <view class="uni-list-cell-db">
-                        <input
-                            v-model="formData.district"
-                            class="uni-input"
-                            placeholder-class="placeholder"
-                            maxlength="30"
-                            disabled
-                            placeholder="请输入学校名称"
-                            @tap="openAddres"
-                        >
+                        {{ formData.district }}
                     </view>
                 </view>
                 <view class="show-type-input">
@@ -101,13 +73,7 @@
                         学校名称：
                     </view>
                     <view class="uni-list-cell-db">
-                        <input
-                            v-model="formData.schoolName"
-                            class="uni-input"
-                            placeholder-class="placeholder"
-                            maxlength="30"
-                            placeholder="请输入学校名称"
-                        >
+                        {{ formData.schoolName }}
                     </view>
                 </view>
                 <view class="show-type-input">
@@ -115,13 +81,7 @@
                         提报人姓名：
                     </view>
                     <view class="uni-list-cell-db">
-                        <input
-                            v-model="formData.signName"
-                            class="uni-input"
-                            placeholder-class="placeholder"
-                            maxlength="30"
-                            placeholder="请输入提报人姓名"
-                        >
+                        {{ formData.signName }}
                     </view>
                 </view>
                 <view class="show-type-input">
@@ -129,13 +89,7 @@
                         职 务：
                     </view>
                     <view class="uni-list-cell-db">
-                        <input
-                            v-model="formData.job"
-                            class="uni-input"
-                            placeholder-class="placeholder"
-                            maxlength="30"
-                            placeholder="请输入职务"
-                        >
+                        {{ formData.job }}
                     </view>
                 </view>
                 <view class="show-type-input">
@@ -143,53 +97,26 @@
                         联系电话：
                     </view>
                     <view class="uni-list-cell-db">
-                        <input
-                            v-model="formData.phone"
-                            class="uni-input"
-                            placeholder-class="placeholder"
-                            maxlength="30"
-                            placeholder="请输入联系电话"
-                        >
+                        {{ formData.phone }}
                     </view>
                 </view>
             </view>
-            <simple-address
-                ref="simpleAddress"
-                :picker-value-default="formData.districtCode"
-                theme-color="#007AFF"
-                @onConfirm="onConfirm"
-            />
-            <view
-                class="btn"
-                @click="handleSubmit"
-            >
-                提交报名信息
-            </view>
         </view>
+        <text
+            class="success-back"
+            @click="handleBack"
+        >
+            返回首页
+        </text>
     </view>
 </template>
 
 <script>
 import api from '../../common/api';
-import simpleAddress from './simple-address/simple-address.vue';
 
 export default {
-    components: {
-        simpleAddress,
-    },
     data() {
         return {
-            // :class=" disabled?'disable':item.active?'active':''"
-
-            // tabs: [
-            //     { id: '1', column_name: '挑战类', active: false },
-            //     { id: '2', column_name: '才艺类', active: false },
-            // ],
-            // tabs1: [
-            //     { id: '3', column_name: '小学组', active: false },
-            //     { id: '4', column_name: '中学组', active: false },
-            // ],
-            // disabled: true,
             formData: {
                 event: [
                     { id: '1', column_name: '挑战类', active: false },
@@ -202,14 +129,12 @@ export default {
                 eventText: [],
                 groupText: [],
                 district: '',
-                districtCode: [0, 0, 0],
                 schoolName: '',
                 signName: '',
                 job: '',
                 phone: '',
             },
             index: 0,
-            lock: true,
         };
     },
     onLoad() {
@@ -217,29 +142,19 @@ export default {
     },
     created() {},
     onShow() {},
-    onHide() {
-        this.resetData();
-    },
     methods: {
-        openAddres() {
-            this.$refs.simpleAddress.open();
-        },
-        onConfirm(e) {
-            this.formData.district = e.label.replace(/-/g, '');
-            this.formData.districtCode = e.value;
-            console.log(e);
+        handleBack() {
+            uni.reLaunch({
+                url: '/pages/tabBar/index/index',
+            });
         },
         getenrollinfo() {
-            uni.showLoading({
-                mask: true,
-            });
             return api.isLogin().then(() => {
                 api.get('/api/activity/getenrollinfo?activity_id=7').then(
-                    ({ detail, id }) => {
-                        console.log(detail, 'res122');
+                    ({ detail }) => {
+                        console.log(detail, 'res111');
                         uni.hideLoading();
                         this.formData = detail;
-                        this.id = id;
                         // uni.navigateTo({
                         //     url: '/pages/upload/result/result?type=success',
                         // });
@@ -250,138 +165,9 @@ export default {
                             icon: 'none',
                             title: err.message,
                         });
-                        this.lock = true;
                     },
                 );
             });
-        },
-        handleSubmit() {
-            if (this.lock) {
-                this.lock = false;
-                const formData = Object.assign({}, this.formData);
-                console.log(formData, 'formData.group');
-                if (!formData.event[0].active && !formData.event[1].active) {
-                    this.lock = true;
-                    return this.errTip('请选择申报项目');
-                }
-                if (
-                    formData.event[0].active
-                    && !formData.group[0].active
-                    && !formData.group[1].active
-                ) {
-                    this.lock = true;
-                    return this.errTip('请选择组别');
-                }
-                if (!formData.district) {
-                    this.lock = true;
-                    return this.errTip('请选择所属地区');
-                }
-                if (!formData.schoolName) {
-                    this.lock = true;
-                    return this.errTip('请输入学校名称');
-                }
-                if (!formData.signName) {
-                    this.lock = true;
-                    return this.errTip('请输入提报人姓名');
-                }
-                if (!formData.job) {
-                    this.lock = true;
-                    return this.errTip('请输入职务');
-                }
-                if (!formData.phone) {
-                    this.lock = true;
-                    return this.errTip('请输入联系电话');
-                }
-                uni.showLoading();
-                formData.eventText = [];
-                formData.groupText = [];
-                formData.event.forEach((item) => {
-                    if (item.active) {
-                        formData.eventText.push(item.column_name);
-                    }
-                });
-                formData.group.forEach((item) => {
-                    if (item.active) {
-                        formData.groupText.push(item.column_name);
-                    }
-                });
-                return api.isLogin().then(() => {
-                    api.post(
-                        `/api/activity/enroll?activity_id=7${
-                            this.id ? `&id=${this.id}` : ''
-                        }`,
-                        {
-                            detail: formData,
-                        },
-                    ).then(
-                        () => {
-                            uni.hideLoading();
-                            uni.navigateTo({
-                                url: '/pages/openGame/success',
-                            });
-
-                            this.lock = true;
-                        },
-                        (err) => {
-                            uni.hideLoading();
-                            uni.showToast({
-                                icon: 'none',
-                                title: err.message,
-                            });
-                            this.lock = true;
-                        },
-                    );
-                });
-            }
-            return true;
-        },
-        resetData() {
-            this.formData = {
-                ...this.formData,
-                event: [
-                    { id: '1', column_name: '挑战类', active: false },
-                    { id: '2', column_name: '才艺类', active: false },
-                ],
-                group: [
-                    { id: '3', column_name: '小学组', active: false },
-                    { id: '4', column_name: '中学组', active: false },
-                ],
-                district: '',
-                schoolName: '',
-                signName: '',
-                job: '',
-                phone: '',
-            };
-        },
-        setNewsTabActive1(item) {
-            console.log(item, 'item.column_name');
-            // eslint-disable-next-line no-param-reassign
-            item.active = !item.active;
-            this.formData.event[item.column_name] = item.active;
-            if (item.column_name === '挑战类') {
-                // this.disabled = !item.active;
-                if (!item.active) {
-                    // this.formData.group = {
-                    //     小学组: false,
-                    //     中学组: false,
-                    // };
-                    // this.tabs1[0].active = false;
-                    // this.tabs1[1].active = false;
-                    this.formData.group[0].active = false;
-                    this.formData.group[1].active = false;
-                }
-            }
-        },
-        setNewsTabActive2(item) {
-            // if(this.disabled) {
-            //     return;
-            // }
-            if (!this.formData.event[0].active) {
-                return;
-            }
-            // eslint-disable-next-line no-param-reassign
-            item.active = !item.active;
-            this.formData.group[item.column_name] = item.active;
         },
         errTip(title) {
             uni.showToast({
@@ -396,6 +182,15 @@ export default {
 
 <style lang="less" scoped>
 .page-upload {
+    height: 100vh;
+    position: relative;
+    .success-back {
+        position: absolute;
+        color: #999999;
+        font-size: 28upx;
+        bottom: 16upx;
+        left: 321upx;
+    }
     .main {
         // padding: 40upx 30upx;
         background: #f8f8f8;
@@ -421,17 +216,11 @@ export default {
                     font-size: 28upx;
                     width: 168upx;
                 }
-                .show-type-remark {
-                    font-size: 22upx;
-                    color: rgba(153, 153, 153, 1);
-                }
                 .show-type-title {
                     margin-right: 30rpx;
                     padding: 0 40rpx;
                     height: 70rpx;
                     line-height: 70rpx;
-                    color: #1166ff;
-                    border: 1rpx solid #1166ff;
                     display: inline-block;
                     &.active {
                         background-color: #1166ff;

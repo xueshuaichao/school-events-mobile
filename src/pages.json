@@ -264,6 +264,18 @@
                 "navigationBarTitleText": "爱挑战网络公开赛报名"
             }
         },
+        {
+            "path": "pages/openGame/success",
+            "style": {
+                "navigationBarTitleText": "爱挑战网络公开赛报名"
+            }
+        },
+        {
+            "path": "pages/openGame/successInfo",
+            "style": {
+                "navigationBarTitleText": "爱挑战网络公开赛报名"
+            }
+        },
         // ============== 疫情end ========================
         // #ifdef H5
         {

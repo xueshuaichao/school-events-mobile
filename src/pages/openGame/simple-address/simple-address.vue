@@ -219,7 +219,7 @@ export default {
     },
     created() {
         console.log(provinceData, "provinceData");
-        // this.init();
+        this.init();
     },
     methods: {
         init() {
