@@ -55,7 +55,7 @@
                     :duration="duration"
                     :circular="true"
                 >
-                    <swiper-item v-show="activitiesStatus[3].show">
+                    <swiper-item v-if="activitiesStatus[3].show">
                         <navigator
                             url="/pages/read/index"
                             class="swiper-item"
@@ -67,7 +67,7 @@
                         </navigator>
                     </swiper-item>
                     <!-- 疫情入口 -->
-                    <swiper-item v-show="activitiesStatus[2].show">
+                    <swiper-item v-if="activitiesStatus[2].show">
                         <navigator
                             url="/pages/yiqing/index"
                             class="swiper-item"
@@ -78,7 +78,7 @@
                             />
                         </navigator>
                     </swiper-item>
-                    <swiper-item v-show="activitiesStatus[1].show">
+                    <swiper-item v-if="activitiesStatus[1].show">
                         <navigator
                             url="/pages/chunjie/index"
                             class="swiper-item"
@@ -90,7 +90,7 @@
                         </navigator>
                     </swiper-item>
                     <!-- 春节好入口 -->
-                    <swiper-item v-show="activitiesStatus[0].show">
+                    <swiper-item v-if="activitiesStatus[0].show">
                         <navigator
                             url="/pages/chunjiehao/index"
                             class="swiper-item"

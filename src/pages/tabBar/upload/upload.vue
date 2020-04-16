@@ -24,7 +24,7 @@
             src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/h5/upload-girl2.png"
         />
         <navigator
-            url="'/pages/read/upload/modify"
+            url="/pages/read/upload/modify"
             class="swiper-item"
         >
             <view class="btn">
@@ -74,7 +74,7 @@ export default {
         border-radius: 30upx;
         background: #1165ff;
         box-shadow: -3upx 5upx 6upx 0 rgba(17, 101, 255, 0.3);
-        margin: 30upx auto;
+        margin: 50upx auto;
     }
 }
 </style>
