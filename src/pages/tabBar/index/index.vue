@@ -224,6 +224,9 @@
                 src="http://aitiaozhan.oss-cn-beijing.aliyuncs.com/school-events-mobile/zhibo-entry.png"
             />
         </navigator>
+        <navigator url="/pages/openGame/zhibo">
+            <button>直播</button>
+        </navigator>
         <!-- work show -->
 
         <work
