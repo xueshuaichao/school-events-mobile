@@ -91,7 +91,10 @@
                         </view>
                     </view>
                     <!-- 跑马灯 -->
-                    <view class="page-section-spacing">
+                    <view
+                        v-if="crouselList.length > 0"
+                        class="page-section-spacing"
+                    >
                         <swiper
                             class="swiper"
                             :indicator-dots="false"
