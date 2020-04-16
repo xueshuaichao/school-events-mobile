@@ -153,6 +153,12 @@ const routesConfig = {
             path: '/pages/yiqing/bind-mobile/index',
         },
         {
+            path: '/pages/read/index',
+        },
+        {
+            path: 'pages/read/myWork/myWork',
+        },
+        {
             path: '/pages/search/index',
         },
         {
