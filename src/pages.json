@@ -45,7 +45,7 @@
         {
             "path": "pages/tabBar/uc/uc",
             "style": {
-                "navigationBarTitleText": "个人中心",
+                "navigationBarTitleText": "我的",
                 "enablePullDownRefresh": true
             }
         },
@@ -406,20 +406,20 @@
                 "pagePath": "pages/tabBar/index/index",
                 "iconPath": "static/images/tab/index.png",
                 "selectedIconPath": "static/images/tab/index_ac.png",
-                "text": "大赛首页"
+                "text": "大赛"
             },
             {
                 "pagePath": "pages/tabBar/list/list",
                 "iconPath": "static/images/tab/work.png",
                 "selectedIconPath": "static/images/tab/work_ac.png",
-                "text": "作品展示"
+                "text": "作品"
             },
             // #ifndef H5
             {
                 "pagePath": "pages/tabBar/upload/upload",
                 "iconPath": "static/images/tab/upload.png",
                 "selectedIconPath": "static/images/tab/upload_ac.png",
-                "text": "我要秀才艺"
+                "text": "活动"
             },
             // #endif
 
@@ -433,7 +433,7 @@
                 "pagePath": "pages/tabBar/uc/uc",
                 "iconPath": "static/images/tab/uc.png",
                 "selectedIconPath": "static/images/tab/uc_ac.png",
-                "text": "账户中心"
+                "text": "我的"
             }
         ]
     }

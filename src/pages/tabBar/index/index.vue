@@ -527,11 +527,10 @@ export default {
     text-align: center;
     font-size: 0;
     image:first-child {
-        width: 627upx;
-        height: 827upx;
-        margin-top: 193upx;
+        width: 608upx;
+        height: 828upx;
         display: block;
-        margin-left: 90upx;
+        margin: 130upx auto 0;
     }
     // image:nth-child(2) {
     //     margin-top: 40upx;
@@ -554,8 +553,8 @@ export default {
         border-radius: 50%;
         background: #04c284;
         position: absolute;
-        top: 250upx;
-        right: 80upx;
+        top: 100upx;
+        right: 60upx;
         &::before,
         &::after {
             position: absolute;

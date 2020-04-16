@@ -88,6 +88,7 @@
             :page-data="pageData"
             :like-status="likeStatus"
             :activity-id="activity_id"
+            :resource-scope="resource_scope"
             @doAction="doAction"
         />
     </view>
@@ -147,6 +148,7 @@ export default {
             isActvitity: true,
             activity_id: 0,
             imgAuthBtn: false,
+            resource_scope: 0,
         };
     },
     created() {},
@@ -214,6 +216,7 @@ export default {
             const currentPage = pages[pages.length - 1]; // 获取当前页面的对象
             const url = currentPage.route || 'pages/work/detail/detail';
             const scene = `id=${this.id}&activity_id=${this.activity_id}` || 'id=325';
+            console.log(url, scene, 'url---scene---');
             api.post('/api/weixin/getminiqrcode', {
                 path: url,
                 scene,
@@ -409,14 +412,10 @@ export default {
                         this.likeStatus = 1;
                         this.getData();
                     },
-                    (err) => {
-                        let txt = err.message;
-                        if (err.status === 801) {
-                            txt = '今日已点赞成功，请明日再来！';
-                        }
+                    () => {
                         uni.showToast({
                             icon: 'none',
-                            title: txt,
+                            title: '今日已点赞',
                         });
                     },
                 ),
@@ -514,6 +513,9 @@ export default {
                         icon: 'none',
                         title: '活动已结束',
                     });
+                    // uni.navigateTo({
+                    //     url: '/pages/upload/default/upload',
+                    // });
                 }
             });
         },
@@ -537,6 +539,7 @@ export default {
         this.fr = utils.getParam(query, 'fr') || '';
 
         this.activity_id = Number(utils.getParam(query, 'activity_id')) || 0;
+        this.resource_scope = Number(utils.getParam(query, 'resource_scope')) || 0;
         console.log(this.activity_id, 'this.activity_id---');
         if (!this.activity_id) {
             this.isActvitity = false;
@@ -590,7 +593,7 @@ export default {
         return {
             title: this.shareDesc,
             imageUrl: `${this.pageData.video_img_url}?x-oss-process=image/resize,m_fill,w_250,h_150`,
-            path: `/pages/work/detail/detail?id=${this.id}`,
+            path: `/pages/work/detail/detail?id=${this.id}&activity_id=${this.activity_id}`,
         };
     },
 };
