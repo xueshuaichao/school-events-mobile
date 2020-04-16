@@ -325,6 +325,7 @@ export default {
             this.searchWorkData();
         },
         getWorkData(title) {
+            this.filter.activity_cat = 0;
             return api
                 .post('/api/activity/userresource', {
                     ...this.filter,

@@ -91,7 +91,10 @@
                         </view>
                     </view>
                     <!-- 跑马灯 -->
-                    <view class="page-section-spacing">
+                    <view
+                        v-if="crouselList.length > 0"
+                        class="page-section-spacing"
+                    >
                         <swiper
                             class="swiper"
                             :indicator-dots="false"
@@ -318,7 +321,7 @@ export default {
                         '4、活动组委会将根据作品质量、内容以及投票数量进行综合评选，中文组和英文组各选出10个优秀作品奖，颁发证书；',
                         '5、投票截止时间为：2020年5月8日23:59:59；',
                         '6、获奖名单将于5月12日在爱挑战官网（http://atz.qsnatz.com）及官方服务号（UP青少年爱挑战）进行公布；',
-                        '7、本次活动最终解释权在法律允许范0围内归活动举办方所有。',
+                        '7、本次活动最终解释权在法律允许范围内归活动举办方所有。',
                     ],
                 },
                 {

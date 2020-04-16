@@ -5,7 +5,7 @@
             class="cover"
         >
             <image
-                src="http://aitiaozhan.oss-cn-beijing.aliyuncs.com/h5/read-prompt.png"
+                src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/suspension01.png"
                 @click="handlePromt"
             />
             <view
