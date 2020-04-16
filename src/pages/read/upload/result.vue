@@ -58,7 +58,7 @@ export default {
             });
         },
         goToUc() {
-            uni.navigateTo({
+            uni.reLaunch({
                 url: '/pages/read/myWork/myWork?status=1&type=myWork',
             });
         },

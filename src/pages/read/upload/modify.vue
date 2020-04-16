@@ -300,7 +300,6 @@ export default {
                 // check input
                 return api.post(apiUrl, formData).then(
                     () => {
-                        console.log(4343);
                         this.disabled = false;
                         uni.hideLoading();
                         uni.navigateTo({
