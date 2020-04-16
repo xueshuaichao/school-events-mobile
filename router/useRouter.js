@@ -156,7 +156,7 @@ const routesConfig = {
             path: '/pages/read/index',
         },
         {
-            path: 'pages/read/myWork/myWork',
+            path: '/pages/read/myWork/myWork',
         },
         {
             path: '/pages/search/index',
