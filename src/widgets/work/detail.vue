@@ -147,7 +147,10 @@
                     />
                 </view>
 
-                <view class="item">
+                <view
+                    :class="{ margin: resourceScope }"
+                    class="item"
+                >
                     <image
                         class="icon"
                         src="/static/images/yiqing/detail/view.png"
@@ -487,6 +490,9 @@ export default {
 
         .item {
             margin-bottom: 10rpx;
+            &.margin {
+                margin-bottom: 40rpx;
+            }
         }
     }
 
@@ -512,6 +518,7 @@ export default {
         color: #fff;
         margin-left: -40rpx;
         line-height: 40rpx;
+        margin-bottom: 40rpx;
         .icon {
             width: 44rpx;
             height: 42rpx;
@@ -530,7 +537,7 @@ export default {
     background: #fff;
     line-height: 56rpx;
     text-align: center;
-    margin-bottom: 30rpx;
+    margin-bottom: 40rpx;
     padding: 0;
     position: relative;
     &::before {
