@@ -140,15 +140,16 @@
                 </view>
                 <view class="show-type-input">
                     <view class="show-type-text">
-                        联系电话：
+                        手机号：
                     </view>
                     <view class="uni-list-cell-db">
                         <input
                             v-model="formData.phone"
+                            type="phone"
                             class="uni-input"
                             placeholder-class="placeholder"
                             maxlength="11"
-                            placeholder="请输入联系电话"
+                            placeholder="请输入手机号"
                         >
                     </view>
                 </view>
@@ -315,21 +316,28 @@ export default {
                     this.lock = true;
                     return this.errTip('请选择所属地区');
                 }
-                if (!this.formData.schoolName) {
+                if (!this.formData.schoolName.trim()) {
                     this.lock = true;
                     return this.errTip('请输入学校名称');
                 }
-                if (!this.formData.signName) {
+                if (!this.formData.signName.trim()) {
                     this.lock = true;
                     return this.errTip('请输入提报人姓名');
                 }
-                if (!this.formData.job) {
+                if (!this.formData.job.trim()) {
                     this.lock = true;
                     return this.errTip('请输入职务');
                 }
-                if (!this.formData.phone) {
+                if (!this.formData.phone.trim()) {
                     this.lock = true;
-                    return this.errTip('请输入联系电话');
+                    return this.errTip('请输入手机号');
+                }
+                if (
+                    this.formData.phone.trim()
+                    && this.formData.phone.trim().length !== 11
+                ) {
+                    this.lock = true;
+                    return this.errTip('请输入11位手机号');
                 }
                 uni.showLoading();
                 this.formData.event.forEach((item) => {
