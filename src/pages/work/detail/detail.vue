@@ -214,6 +214,7 @@ export default {
             const currentPage = pages[pages.length - 1]; // 获取当前页面的对象
             const url = currentPage.route || 'pages/work/detail/detail';
             const scene = `id=${this.id}&activity_id=${this.activity_id}` || 'id=325';
+            console.log(url, scene, 'url---scene---');
             api.post('/api/weixin/getminiqrcode', {
                 path: url,
                 scene,
@@ -593,7 +594,7 @@ export default {
         return {
             title: this.shareDesc,
             imageUrl: `${this.pageData.video_img_url}?x-oss-process=image/resize,m_fill,w_250,h_150`,
-            path: `/pages/work/detail/detail?id=${this.id}`,
+            path: `/pages/work/detail/detail?id=${this.id}&activity_id=${this.activity_id}`,
         };
     },
 };
