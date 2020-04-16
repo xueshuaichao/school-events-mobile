@@ -712,7 +712,7 @@ export default {
     }
     .panel .panel-hd {
         border-bottom: none;
-        margin: 0 20rpx 20rpx;
+        margin: 0 0 20rpx;
         display: flex;
         justify-content: space-around;
         top: 0upx;
