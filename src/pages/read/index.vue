@@ -470,7 +470,7 @@ export default {
                 title,
                 desc,
                 thumbnail:
-                    'http: //aitiaozhan.oss-cn-beijing.aliyuncs.com/chunjiehao/yiqing-poster01.png?x-oss-process=image/format,png/interlace,1/quality,Q_80/resize,m_pad,h_100',
+                    'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/read_share.png?x-oss-process=image/format,png/interlace,1/quality,Q_80/resize,m_pad,h_100',
             });
         },
         viewDetail({ id }) {

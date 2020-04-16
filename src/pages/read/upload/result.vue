@@ -47,7 +47,7 @@ export default {
         return {
             title,
             imageUrl:
-                'http: //aitiaozhan.oss-cn-beijing.aliyuncs.com/chunjiehao/yiqing-poster01.png',
+                'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/read_share.png',
             path: '/pages/read/index',
         };
     },
