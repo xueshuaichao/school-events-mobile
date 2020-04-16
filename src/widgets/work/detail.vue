@@ -157,14 +157,14 @@
             </view>
 
             <view
-                v-if="activityId !== 6"
+                v-if="activityId !== 6 && !resourceScope"
                 class="btn primary"
                 @click="joinGame"
             >
                 我要参与
             </view>
             <view
-                v-else
+                v-if="activityId === 6"
                 class="join-game-read"
                 @click="joinGame"
             >
@@ -229,6 +229,10 @@ export default {
             default: 0,
         },
         activityId: {
+            type: Number,
+            default: 0,
+        },
+        resourceScope: {
             type: Number,
             default: 0,
         },
