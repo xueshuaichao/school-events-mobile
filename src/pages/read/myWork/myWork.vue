@@ -644,7 +644,7 @@ export default {
     .search-box {
         overflow: hidden;
         margin-bottom: 30rpx;
-        margin: 0 30rpx 20rpx;
+        margin: 0 0rpx 20rpx;
         top: 0upx;
         height: 84rpx;
         left: 0;
