@@ -300,7 +300,6 @@ export default {
                 // check input
                 return api.post(apiUrl, formData).then(
                     () => {
-                        console.log(4343);
                         this.disabled = false;
                         uni.hideLoading();
                         uni.navigateTo({
@@ -333,7 +332,7 @@ export default {
         return {
             title,
             imageUrl:
-                'http: //aitiaozhan.oss-cn-beijing.aliyuncs.com/chunjiehao/yiqing-poster01.png',
+                'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/read_share.png',
             path: '/pages/read/index',
         };
     },
