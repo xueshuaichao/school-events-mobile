@@ -15,21 +15,19 @@
             </view>
         </view>
         <view class="panel-bd has-swiper">
-            <slot name="zhibo">
-                <view
-                    v-for="(item, index) in info"
-                    :key="item.id"
-                    class="scroll-view-item"
-                >
-                    <work
-                        :info="item"
-                        :levelid="catId"
-                        :sort="sort"
-                        :cur-position="index + 1"
-                        :total="total"
-                    />
-                </view>
-            </slot>
+            <view
+                v-for="(item, index) in info"
+                :key="item.id"
+                class="scroll-view-item"
+            >
+                <work
+                    :info="item"
+                    :levelid="catId"
+                    :sort="sort"
+                    :cur-position="index + 1"
+                    :total="total"
+                />
+            </view>
 
             <!-- <scroll-view
                 class="scroll-view"

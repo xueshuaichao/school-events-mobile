@@ -258,36 +258,6 @@
                 }
             }
         },
-        {
-            "path": "pages/openGame/signUp",
-            "style": {
-                "navigationBarTitleText": "爱挑战网络公开赛报名"
-            }
-        },
-        {
-            "path": "pages/openGame/success",
-            "style": {
-                "navigationBarTitleText": "爱挑战网络公开赛报名"
-            }
-        },
-        {
-            "path": "pages/openGame/successInfo",
-            "style": {
-                "navigationBarTitleText": "爱挑战网络公开赛报名"
-            }
-        },
-        {
-            "path": "pages/openGame/zhibo-list",
-            "style": {
-                "navigationBarTitleText": "爱挑战网络公开赛"
-            }
-        },
-        {
-            "path": "pages/openGame/zhibo",
-            "style": {
-                "navigationBarTitleText": "爱挑战网络公开赛"
-            }
-        },
         // ============== 疫情end ========================
         // #ifdef H5
         {
