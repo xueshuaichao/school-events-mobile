@@ -412,11 +412,18 @@ export default {
                         this.likeStatus = 1;
                         this.getData();
                     },
-                    () => {
-                        uni.showToast({
-                            icon: 'none',
-                            title: '今日已点赞',
-                        });
+                    (err) => {
+                        if (this.isActvitity) {
+                            uni.showToast({
+                                icon: 'none',
+                                title: err.message,
+                            });
+                        } else {
+                            uni.showToast({
+                                icon: 'none',
+                                title: '今日已点赞',
+                            });
+                        }
                     },
                 ),
                 () => uni.showToast({

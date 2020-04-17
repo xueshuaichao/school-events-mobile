@@ -104,6 +104,10 @@
                 </text>
             </view>
             <view class="work-name-wrap text-one-line">
+                <image
+                    class="avatar file"
+                    src="/static/images/work/file.png"
+                />
                 <text class="work-name text-one-line">
                     {{ pageData.resource_name }}
                 </text>
@@ -316,9 +320,12 @@ export default {
 }
 .yellow {
     color: #ff9b35;
+    text-shadow: 0 1upx 2upx #ff9b35;
+    font-size: 22upx;
 }
 .lightyellow {
     color: #ffd339;
+    text-shadow: 0 1upx 2upx #ffd339;
 }
 
 .mp-weixin-full-screen-title {
@@ -405,19 +412,23 @@ export default {
 }
 .content {
     position: absolute;
-    bottom: 20upx;
-    width: 480rpx;
-    padding: 30upx;
+    bottom: 60upx;
+    width: 480upx;
+    padding: 30upx 30upx 0;
     color: #fff;
     left: 0;
     pointer-events: none;
     z-index: 10;
+    text-shadow: 0 2upx 2upx rgba(0, 0, 0, 0.35);
     .avatar {
         display: inline-block;
-        width: 34rpx;
-        height: 32rpx;
-        margin-right: 16upx;
-        vertical-align: super;
+        width: 32rpx;
+        height: 34rpx;
+        margin-right: 12upx;
+        &.file {
+            width: 34rpx;
+            vertical-align: middle;
+        }
     }
 
     .author-info {
@@ -425,14 +436,14 @@ export default {
             color: #fff;
             font-size: 34upx;
             position: relative;
-            top: -2rpx;
+            line-height: 34upx;
             display: inline-block;
             width: 400rpx;
         }
     }
     .school-and-record {
         font-size: 24upx;
-        margin: -10upx 0 14upx 0;
+        margin: 0 0 24upx 0;
     }
 
     .author-from {
@@ -455,16 +466,18 @@ export default {
     .intro {
         font-size: 25upx;
         line-height: 44upx;
-        margin-bottom: 30rpx;
     }
 
     .icon-grail {
         display: inline-block;
-        width: 26upx;
-        height: 22upx;
+        width: 25upx;
+        height: 21upx;
         margin-left: 22upx;
         margin-right: 2upx;
         vertical-align: middle;
+    }
+    .work-name-wrap {
+        line-height: 34upx;
     }
 }
 .fixed-panel {
