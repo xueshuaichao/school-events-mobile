@@ -405,6 +405,7 @@ export default {
                     uni.hideLoading();
                     if (url) {
                         this.base64src(url, (res) => {
+                            console.log(res, 'resddd');
                             this.posterConfig.images[2].url = res;
                             this.showTicketMask = true;
                         });

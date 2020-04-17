@@ -1,21 +1,11 @@
 {
     "pages": [
         //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
-
         {
             "path": "pages/tabBar/index/index",
             "style": {
                 "navigationBarTitleText": "大赛首页",
                 "enablePullDownRefresh": true
-            }
-        },
-        {
-            "path": "pages/yiqing/prize/index",
-            "style": {
-                "navigationBarTitleText": "领取证书",
-                "usingComponents": {
-                    "poster": "/wxcomponents/third-party/poster/poster/index"
-                }
             }
         },
         {
@@ -259,15 +249,45 @@
                 "navigationBarTitleText": "绑定手机号"
             }
         },
-        // {
-        //     "path": "pages/yiqing/prize/index",
-        //     "style": {
-        //         "navigationBarTitleText": "领取证书",
-        //         "usingComponents": {
-        //             "poster": "/wxcomponents/third-party/poster/poster/index"
-        //         }
-        //     }
-        // },
+        {
+            "path": "pages/yiqing/prize/index",
+            "style": {
+                "navigationBarTitleText": "领取证书",
+                "usingComponents": {
+                    "poster": "/wxcomponents/third-party/poster/poster/index"
+                }
+            }
+        },
+        {
+            "path": "pages/openGame/signUp",
+            "style": {
+                "navigationBarTitleText": "爱挑战网络公开赛报名"
+            }
+        },
+        {
+            "path": "pages/openGame/success",
+            "style": {
+                "navigationBarTitleText": "爱挑战网络公开赛报名"
+            }
+        },
+        {
+            "path": "pages/openGame/successInfo",
+            "style": {
+                "navigationBarTitleText": "爱挑战网络公开赛报名"
+            }
+        },
+        {
+            "path": "pages/openGame/zhibo-list",
+            "style": {
+                "navigationBarTitleText": "爱挑战网络公开赛"
+            }
+        },
+        {
+            "path": "pages/openGame/zhibo",
+            "style": {
+                "navigationBarTitleText": "爱挑战网络公开赛"
+            }
+        },
         // ============== 疫情end ========================
         // #ifdef H5
         {
