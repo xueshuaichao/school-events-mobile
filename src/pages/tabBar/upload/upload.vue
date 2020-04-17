@@ -10,7 +10,7 @@
                     世界读书日
                 </text>
                 <text class="count fl-r">
-                    {{ activity_num }}人参与
+                    {{ activity_num }}人关注
                 </text>
             </view>
             <view class="btm clearfix">
