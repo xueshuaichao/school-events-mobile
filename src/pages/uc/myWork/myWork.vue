@@ -171,8 +171,13 @@ export default {
             });
         },
         deleteWork(item) {
+            let url = '/api/user/delwork';
+            if (item.activity_id) {
+                // 活动
+                url = '/api/activity/del';
+            }
             const index = this.tableData.indexOf(item);
-            api.post('/api/user/delwork', {
+            api.post(url, {
                 id: item.id,
             }).then(() => {
                 uni.showToast({
