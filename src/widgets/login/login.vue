@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 <template>
     <view>
         <view class="page-bind-mobile">
@@ -540,6 +541,13 @@ export default {
                             userkey,
                         }).then(
                             (data) => {
+                                // 统计活动注册
+                                // eslint-disable-next-line no-undef
+                                wx.reportAnalytics('readregister', {
+                                    num: 1,
+                                    type: this.fr,
+                                });
+
                                 try {
                                     uni.setStorageSync(
                                         'medusa_key',

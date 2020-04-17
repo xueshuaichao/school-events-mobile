@@ -67,7 +67,6 @@ function isLogin(params = {}) {
         query = `?fr=${fr}`;
     }
     return new Promise((resolve, reject) => {
-        console.log(isLogin.userInfo, 'isLogin111');
         if (isLogin.userInfo) {
             return resolve(isLogin.user_info);
         }

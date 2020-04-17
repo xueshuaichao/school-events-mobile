@@ -1,8 +1,18 @@
 <template>
-    <view class="page-my-work">
-        <!-- identity 用户身份 1=>C端普通用户 ,2=> 教育局员工，3=>学校员工 4 学生 -->
+    <view
+        v-show="!isLoading"
+        class="page-read-work"
+        :class="{ login: userInfo === null }"
+    >
+        <login
+            v-if="userInfo === null"
+            @login="onLogin"
+        />
         <!-- my works -->
-        <view class="panel">
+        <view
+            v-else
+            class="panel"
+        >
             <view
                 v-if="type === 'myWork'"
                 class="panel-hd"
@@ -29,101 +39,124 @@
                     未通过({{ allNum.no_pass || 0 }})
                 </text>
             </view>
-            <view v-else>
-                <view class="search-box">
-                    <button
-                        :class="{
-                            active: activeMenuIndex === '1'
-                        }"
-                        @click="toggle('1')"
-                    >
-                        青少年组
-                    </button>
-                    <button
-                        :class="{
-                            active: activeMenuIndex === '2'
-                        }"
-                        @click="toggle('2')"
-                    >
-                        成年组
-                    </button>
-                    <view class="search">
-                        <image src="../../../static/images/yiqing/search.png" />
-                        <form action="javascript:return true">
-                            <input
-                                v-model="changeValue"
-                                type="text"
-                                confirm-type="search"
-                                confirm-hold="true"
-                                placeholder-style="color:#6691FF"
-                                placeholder="请输入作者姓名或作品名称"
-                                @confirm="bindconfirm"
-                            >
-                        </form>
-                        <text
-                            class="search-button"
-                            @click="bindconfirm"
+            <view
+                v-else
+                class="search-box"
+            >
+                <button
+                    :class="{
+                        active: activeMenuIndex === '1'
+                    }"
+                    @click="toggle('1')"
+                >
+                    中文组
+                </button>
+                <button
+                    :class="{
+                        active: activeMenuIndex === '2'
+                    }"
+                    @click="toggle('2')"
+                >
+                    英文组
+                </button>
+                <view class="search">
+                    <image
+                        src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/read_search.png"
+                    />
+                    <form action="javascript:return true">
+                        <input
+                            v-model="changeValue"
+                            type="text"
+                            confirm-type="search"
+                            confirm-hold="true"
+                            placeholder-style="color:#E5FFF7"
+                            placeholder="请输入作者姓名或作品名称"
+                            @confirm="bindconfirm"
                         >
-                            搜索
-                        </text>
-                    </view>
+                    </form>
+                    <text
+                        class="search-button"
+                        @click="bindconfirm"
+                    >
+                        搜索
+                    </text>
                 </view>
             </view>
-            <view v-if="total > 0">
+            <view
+                v-if="total > 0"
+                class="media-list"
+            >
                 <view
-                    v-for="item in dataList"
+                    v-for="(item, index) in dataList"
                     :key="item.id"
                     class="media-content"
                 >
                     <event-craft-cover
                         :info="item"
-                        :bg-color="'006EDE'"
-                        @click.native="viewDetail(item)"
+                        :media-icon="type !== 'myWork'"
+                        :like-icon="type === 'myWork'"
+                        :best-icon="false"
+                        :bg-color="'19B583'"
+                        @click.native="viewDetail(item, index)"
                     />
+
                     <view
                         v-if="type === 'myWork'"
                         class="work-info"
                     >
-                        <view class="media-name text-one-line">
+                        <view class="media-name text-two-line">
                             {{ ` ${item.resource_name}` }}
                         </view>
+
                         <view class="media-time">
                             {{ item.created_at }}
                         </view>
-                        <!-- 未通过的显示未通过审核的原因 -->
-                        <text
-                            v-if="tabActiveIndex !== 3"
-                            class="vote-num"
-                        >
-                            {{ item.ticket }}赞
-                        </text>
-                        <view
-                            v-if="tabActiveIndex === 2"
-                            class="getprize"
-                            @click="getPrize(item)"
-                        >
-                            领取证书
-                        </view>
-                        <view
-                            v-if="tabActiveIndex === 3"
-                            class="reject-reason text-three-line"
-                        >
-                            {{ item.reason }}
+                        <view class="btn">
+                            <text
+                                v-if="Number(tabActiveIndex) === 2"
+                                class="btn-item"
+                                @click="viewDetail(item)"
+                            >
+                                查看
+                            </text>
+                            <text
+                                v-if="Number(tabActiveIndex) === 3"
+                                class="btn-item big"
+                                @click="reason(item)"
+                            >
+                                驳回原因
+                            </text>
+                            <text
+                                v-if="Number(tabActiveIndex) !== 2"
+                                class="btn-item"
+                                @click="modifyItem(item)"
+                            >
+                                编辑
+                            </text>
+                            <text
+                                class="btn-item"
+                                @click="onConfirmDelete(item)"
+                            >
+                                删除
+                            </text>
                         </view>
                     </view>
                     <view
                         v-else
                         class="work-info"
                     >
-                        <view class="media-name">
-                            {{ item.user_name }}
-                        </view>
                         <view class="text-two-line">
                             {{ item.resource_name }}
                         </view>
-                        <text class="vote-num">
-                            {{ item.ticket }}票
-                        </text>
+                        <view class="media-name">
+                            {{ item.user_name }}
+                        </view>
+                        <view class="media-time">
+                            {{ item.created_at }}
+                        </view>
+                        <view class="vote-num">
+                            {{ item.ticket }}赞
+                        </view>
                     </view>
                 </view>
                 <uni-load-more
@@ -143,7 +176,7 @@
                 class="empty"
             >
                 <image
-                    src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/yiqing/empty.png"
+                    src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/empty_green.png"
                 />
                 <view>搜索不到您要的结果，换个关键词试试吧～</view>
             </view>
@@ -152,26 +185,21 @@
                 class="work-empty"
             >
                 <image
-                    src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/yiqing/work-empty.png"
+                    src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/work_empty_green.png"
                 />
                 <view>
                     {{ allTotal === 0 ? "您还没有上传作品" : "暂无作品" }}
                 </view>
                 <navigator
                     v-if="allTotal === 0"
-                    url="/pages/yiqing/upload/upload"
+                    url="/pages/read/upload/modify"
                 >
                     <view class="goUpload">
                         去上传
                     </view>
                 </navigator>
             </view>
-            <button
-                class="btn goHome"
-                @click="goHome"
-            >
-                {{ text }}
-            </button>
+            <goHome home-path="/pages/read/index" />
         </view>
     </view>
 </template>
@@ -179,13 +207,18 @@
 <script>
 // work.vue
 import api from '../../../common/api';
+import share from '../../../common/share';
+import goHome from '../common/goHome.vue';
+import login from '../../../widgets/login/login.vue';
 import uniLoadMore from '../../../components/uni-load-more/uni-load-more.vue';
 import EventCraftCover from '../../../components/event-craft-cover/index.vue';
 
 export default {
     components: {
+        goHome,
         uniLoadMore,
         EventCraftCover,
+        login,
     },
     filters: {
         optimizeImage: (val) => {
@@ -196,10 +229,10 @@ export default {
             const width = 335;
             const height = 225;
             if (val.indexOf('?') !== -1) {
-                newUrl = `${val}&x-oss-process=image/format,png/interlace,1/quality,Q_80/resize,m_pad,h_${height
+                newUrl = `${val}&x-oss-process=image/format,jpg/interlace,1/quality,Q_80/resize,m_pad,h_${height
                     * 2},w_${width * 2}`;
             } else {
-                newUrl = `${val}?x-oss-process=image/format,png/interlace,1/quality,Q_80/resize,m_pad,h_${height
+                newUrl = `${val}?x-oss-process=image/format,jpg/interlace,1/quality,Q_80/resize,m_pad,h_${height
                     * 2},w_${width * 2}`;
             }
             return newUrl;
@@ -207,7 +240,8 @@ export default {
     },
     data() {
         return {
-            text: '< 返回首页',
+            isLoading: true,
+            userInfo: null,
             dataList: [],
             activeMenuIndex: '1',
             changeValue: '',
@@ -220,13 +254,15 @@ export default {
             filter: {
                 page_num: 1,
                 page_size: 10,
-                activity_id: 5,
+                activity_id: 6,
                 activity_cat: 1,
+                status: 2,
             },
             total: 1,
             type: 'myWork',
             allNum: {},
             allTotal: 0,
+            shareDesc: '',
         };
     },
     computed: {
@@ -237,25 +273,24 @@ export default {
             return this.total === 0 && this.type === 'myWork';
         },
     },
+    created() {
+        this.initShare();
+    },
     methods: {
-        getPrize(item) {
-            // #ifdef H5
-            // eslint-disable-next-line no-undef
-            wx.showToast({
-                title: '请到UP爱挑战小程序去领取奖状',
-                icon: 'none',
-            });
-            // #endif
-            // #ifndef H5
-            uni.navigateTo({
-                url: `/pages/yiqing/prize/index?id=${item.id}&activity_cat=${item.activity_cat}`,
-            });
-            // #endif
+        onLogin() {
+            this.getData();
         },
-        goHome() {
-            uni.reLaunch({
-                url: '/pages/yiqing/index',
-            });
+        getData() {
+            api.get('/api/user/info').then(
+                (res) => {
+                    this.userInfo = res.user_info;
+                    this.isLoading = false;
+                },
+                () => {
+                    this.isLoading = false;
+                    this.userInfo = null;
+                },
+            );
         },
         toggle(k) {
             uni.showLoading();
@@ -290,6 +325,7 @@ export default {
             this.searchWorkData();
         },
         getWorkData(title) {
+            this.filter.activity_cat = 0;
             return api
                 .post('/api/activity/userresource', {
                     ...this.filter,
@@ -358,26 +394,99 @@ export default {
         },
         viewDetail(item) {
             if (this.tabActiveIndex === 2) {
-                if (this.type === 'myWork') {
-                    uni.navigateTo({
-                        url: `/pages/work/detail/detail?id=${item.id}&fr=${this.fr}&activity_id=5&from=yiqing`,
-                    });
-                } else {
-                    uni.navigateTo({
-                        url: `/pages/work/detail/detail?id=${item.id}&fr=${this.fr}&activity_id=5`,
-                    });
-                }
+                uni.navigateTo({
+                    url: `/pages/work/detail/detail?id=${item.id}&activity_id=6`,
+                });
             }
+        },
+        reason({ reason }) {
+            uni.showModal({
+                title: '驳回原因',
+                content: reason || '暂无内容',
+                showCancel: false,
+            });
+        },
+        modifyItem({ id, activity_status: activityStatus }) {
+            // activityStatus 1未开始 2进行中  3已过期
+            if (activityStatus === 3) {
+                return uni.showToast({
+                    title: '活动已结束！',
+                    icon: 'none',
+                });
+            }
+            return uni.navigateTo({
+                url: `/pages/read/upload/modify?id=${id}`,
+            });
+        },
+        onConfirmDelete(item) {
+            uni.showModal({
+                title: '删除提示',
+                content: '作品删除后将无法恢复 \n 确定删除吗？',
+                confirmText: '确定删除',
+                cancelText: '暂不删除',
+                cancelColor: '#1166FF',
+                confirmColor: '#999999',
+                success: (res) => {
+                    if (res.confirm) {
+                        this.deleteItem(item);
+                        console.log('用户点击确定');
+                    } else if (res.cancel) {
+                        console.log('用户点击取消');
+                    }
+                },
+            });
+        },
+        deleteItem(item) {
+            const index = this.dataList.indexOf(item);
+            api.post('/api/activity/del', {
+                id: item.id,
+            }).then(() => {
+                uni.showToast({
+                    title: '删除成功',
+                });
+                if (index !== -1) {
+                    this.dataList.splice(index, 1);
+                }
+                if (this.tabActiveIndex === 1) {
+                    // 待审核
+                    this.allNum.wait -= 1;
+                } else if (this.tabActiveIndex === 2) {
+                    // 已通过
+                    this.allNum.pass -= 1;
+                } else {
+                    // 未通过
+                    this.allNum.no_pass -= 1;
+                }
+            });
+        },
+        initShare() {
+            const title = this.isH5
+                ? '我是朗读者，读给你听'
+                : '4.23世界读书日，读书赢好礼，一起来读书吧！';
+            const desc = this.isH5
+                ? '4.23世界读书日，读书赢好礼，一起来读书吧！'
+                : '';
+            this.shareDesc = title;
+
+            share({
+                title,
+                desc,
+                thumbnail:
+                    'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/read_share.png?x-oss-process=image/format,png/interlace,1/quality,Q_80/resize,m_pad,h_100',
+            });
         },
     },
     onLoad(query) {
-        const { type, name } = query;
-        console.log(type, 'tye');
+        this.getData();
+        const { type, name, status } = query;
         this.type = type;
+        if (status) {
+            this.tabActiveIndex = Number(status);
+        }
         if (type === 'myWork') {
             this.getWorkData();
         } else if (type === 'search') {
-            uni.setNavigationBarTitle({ title: '抗击疫情“艺”起来' });
+            uni.setNavigationBarTitle({ title: '世界读书日' });
             this.filter.search = name;
             this.changeValue = name;
             this.searchWorkData();
@@ -388,35 +497,17 @@ export default {
             // 来自页面内分享按钮
             console.log(res.target);
         }
-        const titleList = [
-            '抗击疫情“艺”起来，参与活动为武汉加油！向英雄致敬！',
-        ];
-        const title = titleList[Math.floor(Math.random() * titleList.length)];
         return {
-            title,
+            title: this.shareDesc,
             imageUrl:
-                'http: //aitiaozhan.oss-cn-beijing.aliyuncs.com/chunjiehao/yiqing-poster01.png',
-            path: '/pages/yiqing/index',
+                'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/read_share.png',
+            path: '/pages/read/index',
         };
     },
 };
 </script>
 
 <style lang="less">
-.goHome {
-    position: fixed;
-    bottom: 40upx;
-    right: 0upx;
-    color: #1154ff;
-    font-size: 24upx;
-    width: 166upx;
-    height: 54upx;
-    background: #fff;
-    border-radius: 27upx 0 0 27upx;
-    line-height: 54upx;
-    text-align: center;
-    padding: 0;
-}
 .empty {
     text-align: center;
     image {
@@ -425,7 +516,7 @@ export default {
         margin-top: 174upx;
     }
     view {
-        color: #ffedc3;
+        color: #0f8c64;
         font-size: 28upx;
         margin-top: 30upx;
     }
@@ -441,7 +532,7 @@ export default {
         margin-top: 37upx;
         width: 450upx;
         height: 110upx;
-        background: rgba(0, 132, 255, 1);
+        background: #0f8c64;
         border-radius: 55px;
         font-size: 36upx;
         font-weight: 600;
@@ -451,10 +542,13 @@ export default {
         display: inline-block;
     }
     view {
-        color: #ffedc3;
+        color: #0f8c64;
         font-size: 28upx;
         margin-top: 30upx;
     }
+}
+.media-list {
+    overflow-y: auto;
 }
 .media-content {
     width: 690upx;
@@ -463,8 +557,8 @@ export default {
     display: flex;
     justify-content: space-between;
     position: relative;
-    background: #0096ff;
-    color: #ffde6d;
+    background: #0f8c64;
+    color: #fff;
     margin-bottom: 20upx;
     border-radius: 20upx;
     .work {
@@ -491,16 +585,22 @@ export default {
         }
     }
     .work-info {
-        width: 290upx;
+        width: 300upx;
         position: relative;
         .media-name {
             width: 100%;
             font-size: 28upx;
-            margin-bottom: 10upx;
+            line-height: 32upx;
+            margin-bottom: 15upx;
+            &.text-two-line {
+                height: 63upx;
+            }
         }
         .media-time {
             color: #fff;
             font-size: 24upx;
+            opacity: 0.7;
+            margin-bottom: 66upx;
         }
         .vote-num {
             font-size: 30upx;
@@ -508,46 +608,65 @@ export default {
             position: absolute;
             bottom: 14upx;
         }
-        .getprize {
-            width: 150upx;
-            height: 56upx;
-            background: #fff;
-            border-radius: 28upx;
-            color: #0096ff;
-            position: absolute;
-            bottom: 6upx;
-            right: 20upx;
-            font-size: 28upx;
+        .btn {
+            display: flex;
+            justify-content: space-between;
+        }
+        .btn-item {
+            flex: 1;
+            margin: 0 5upx;
+            height: 50upx;
+            background: rgba(25, 181, 131, 1);
+            border-radius: 25upx;
+            font-size: 24upx;
+            color: rgba(255, 255, 255, 1);
+            line-height: 50upx;
             text-align: center;
-            line-height: 56upx;
+            display: inline-block;
+            min-width: 80upx;
+            &.big {
+                flex: none;
+                width: 127upx;
+            }
         }
     }
 }
 
-.page-my-work {
-    padding: 0 30upx;
+.page-read-work {
     padding-top: 30upx;
     box-sizing: border-box;
     width: 100%;
     min-height: 100vh;
-    background: #1154ff;
+    background: #a1debe;
+    &.login {
+        background-color: #fff;
+    }
     // background-size: contain;
     .search-box {
         overflow: hidden;
         margin-bottom: 30rpx;
+        margin: 0 0rpx 20rpx;
+        top: 0upx;
+        height: 84rpx;
+        left: 0;
+        right: 0;
+        position: fixed;
+        z-index: 10;
+        background-color: #a1debe;
+        padding: 20upx 30upx;
         button {
             width: 144upx;
             height: 68upx;
             float: left;
             line-height: 68upx;
-            color: #ffffff;
+            color: #0f8c64;
             background: transparent;
             font-size: 30upx;
             font-weight: 700;
             border-radius: 34upx;
             padding: 0;
             &.active {
-                background: #0084ff;
+                background: #0f8c64;
                 color: #fff;
             }
             &::after {
@@ -555,8 +674,8 @@ export default {
             }
         }
         .search {
-            background: #003dd7;
-            width: 395upx;
+            background: #0f8c64;
+            width: 400upx;
             height: 72upx;
             position: relative;
             float: right;
@@ -566,44 +685,62 @@ export default {
                 width: 28upx;
                 height: 28upx;
                 position: absolute;
-                top: 23upx;
-                left: 17upx;
+                top: 50%;
+                transform: translateY(-50%);
+                left: 12upx;
             }
             input {
-                width: 270upx;
+                width: 293upx;
                 position: absolute;
-                top: 20upx;
-                // #ifndef H5
-                top: 15upx;
-                // #endif
-                left: 53upx;
+                top: 50%;
+                transform: translateY(-50%);
+                left: 50upx;
                 font-size: 22upx;
-                color: #ffbec4;
+                color: #e5fff7;
             }
             .search-button {
                 font-size: 24upx;
                 color: #fff;
                 position: absolute;
-                top: 20upx;
-                right: 14upx;
+                top: 50%;
+                transform: translateY(-50%);
+                right: 22upx;
             }
         }
     }
+    .panel {
+        padding: 96upx 30upx 0;
+    }
     .panel .panel-hd {
         border-bottom: none;
-        margin: 0 30rpx 20rpx;
+        margin: 0 0 20rpx;
         display: flex;
         justify-content: space-around;
+        top: 0upx;
+        height: 84rpx;
+        left: 0;
+        right: 0;
+        position: fixed;
+        z-index: 10;
+        background-color: #a1debe;
+        padding: 20upx 0;
     }
 
     .panel .panel-hd .panel-title {
         display: inline-block;
-        padding-left: 0;
-        padding-right: 0;
-        color: #ffe57b;
+        color: #0f8c64;
+        padding: 0 25upx;
+        height: 68upx;
+        line-height: 68upx;
+        font-size: 30upx;
 
+        &.active {
+            background: #0f8c64;
+            border-radius: 34px;
+            color: #fff;
+        }
         &.active::after {
-            background: #ffe57b;
+            display: none;
         }
     }
 
@@ -642,12 +779,6 @@ export default {
 
     .blank-wrap {
         margin-top: 180upx;
-    }
-
-    .reject-reason {
-        color: #fff;
-        font-size: 24rpx;
-        margin-top: 10rpx;
     }
 }
 </style>

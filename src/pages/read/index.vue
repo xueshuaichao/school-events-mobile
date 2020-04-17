@@ -1,5 +1,5 @@
 <template>
-    <view>
+    <view class="read-page-index">
         <official-account />
         <view :class="['page-index', { 'stop-scroll': prompt }]">
             <!-- 活动规则 -->
@@ -16,88 +16,19 @@
                         活动规则
                     </view>
                     <view class="active-rule-box">
-                        <view>
+                        <view
+                            v-for="(ruleItem, index) in rules"
+                            :key="index"
+                        >
                             <view class="title">
-                                一、活动主题
+                                {{ ruleItem.title }}
                             </view>
                             <view class="text">
-                                《抗击疫情，“艺”起来》主题绘画、书法、摄影、朗诵、舞蹈、音乐、设计...作品征集！
-                                假如我们上不了一线，就让我们拿起画笔、相机、手机...携手同心，以“艺”作枪，打赢疫情防控阻击战！用特别的方式向一线工作者致敬。
-                                用自己独特的方式为武汉加油！为中国加油！
-                            </view>
-                        </view>
-                        <view>
-                            <view class="title">
-                                二、活动时间
-                            </view>
-                            <view class="text">
-                                即日起-2020年3月31日
-                            </view>
-                        </view>
-                        <view>
-                            <view class="title">
-                                三、参与对象
-                            </view>
-                            <view class="text">
-                                <ul>
-                                    <li>
-                                        青少年组：3-18岁青少年
-                                    </li>
-                                    <li>
-                                        成年组：18岁以上的成年
-                                    </li>
-                                </ul>
-                            </view>
-                        </view>
-                        <view>
-                            <view class="title">
-                                四、作品类型
-                            </view>
-                            <view class="text">
-                                <view>
-                                    1、书法、绘画、摄影、朗诵、歌唱、创意设计等（类型不限）；
-                                </view>
-                                <view>
-                                    2、照片、视频格式均可；
-                                </view>
-                            </view>
-                        </view>
-                        <view>
-                            <view class="title">
-                                五、作品要求
-                            </view>
-                            <view class="text">
-                                <view>
-                                    1、作品需符合“抗击疫情”、“加油武汉”等相关主题；
-                                </view>
-                                <view>
-                                    2、作品要求积极向上，充满正能量，必须原创。如发现用户上传不合规内容，如涉及攻击我国政治制度、法律制度、黄赌毒等违背社会主义核心价值观的内容，该账号将取消活动参与资格；
-                                </view>
-                                <view>
-                                    3、视频格式：支持MP4、MOV、3GP、MP4V、M4V、MKV、AVI、FLV等，视频时长不超过10分钟；单张图片小于10MB；
-                                </view>
-                            </view>
-                        </view>
-                        <view>
-                            <view class="title">
-                                六、活动规则
-                            </view>
-                            <view class="text">
-                                <view>
-                                    1、参与活动用户在“青少年爱挑战”平台注册并通过活动页面上传作品，审核通过后可进行点赞分享等；
-                                </view>
-                                <view>
-                                    2、每个账户每天只能为同一个作品点赞1次；
-                                </view>
-                                <view>
-                                    3、活动组委会将根据作品质量、内容以及获赞数量进行综合评选，每个组别选出20件优秀作品，
-                                    将获得组委会颁发的荣誉证书；对于参与积极的学校、机构或单位组委会也将综合评选给予荣誉奖励；并对获奖作品、优秀组织单位进行报道宣传；
-                                </view>
-                                <view>
-                                    4、优秀作品及优秀组织单位获奖名单将于2020年4月10日在爱挑战官网（http://atz.qsnatz.com/)及官方微信公众号进行公布；荣誉证书将在5月下旬的爱挑战吉尼斯嘉年华现场进行统一颁发（不方便到现场的个人或单位将快递邮寄）；
-                                </view>
-                                <view>
-                                    5、本活动最终解释权在法律允许范围内归活动举办方所有；
+                                <view
+                                    v-for="(textItem, k) in ruleItem.texts"
+                                    :key="k"
+                                >
+                                    {{ textItem }}
                                 </view>
                             </view>
                         </view>
@@ -128,132 +59,167 @@
                     >
                         我的作品
                     </view>
-                    <i class="active-time">
-                        活动时间：即日起——3月31号
-                    </i>
                 </view>
-                <!-- 跑马灯 -->
-                <view class="page-section-spacing">
-                    <swiper
-                        class="swiper"
-                        :indicator-dots="false"
-                        :autoplay="true"
-                        :interval="3000"
-                        :duration="500"
-                        vertical="true"
-                        circular="true"
-                        :disable-touch="true"
-                        easing-function="easeInOutCubic"
-                    >
-                        <swiper-item
-                            v-for="item in crouselList"
-                            :key="item.id"
+                <view class="main-content">
+                    <!-- 奖品 -->
+                    <view class="prize">
+                        <view
+                            v-for="(item, index) in prizeList"
+                            :key="index"
+                            class="prize-item"
                         >
-                            <view class="swiper-item">
-                                <image src="/static/images/yiqing/horn.png" />
-                                <view class="swiper-info">
-                                    <text>
-                                        用户{{ item.user_name | plusXing }}
-                                    </text>
-                                    <text>发布了</text>
-                                    <text>#{{ item.cat_name }}#</text>
-                                    <text>{{ item.resource_name }}</text>
-                                </view>
-                                <text>刚刚</text>
-                            </view>
-                        </swiper-item>
-                    </swiper>
-                </view>
-                <view class="cansai-text">
-                    —— 活动作品 ——
-                </view>
-                <!-- work show -->
-                <view class="menu-list">
-                    <view class="search-box">
-                        <button
-                            :class="{
-                                active: activeMenuIndex === '1'
-                            }"
-                            @click="toggle('1')"
-                        >
-                            青少年组
-                        </button>
-                        <button
-                            :class="{
-                                active: activeMenuIndex === '2'
-                            }"
-                            @click="toggle('2')"
-                        >
-                            成年组
-                        </button>
-                        <view class="search">
+                            <text class="prize-text-1">
+                                {{ item.text[0] }}
+                            </text>
                             <image
-                                src="../../static/images/yiqing/search.png"
+                                class="prize-img"
+                                :src="
+                                    `https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/read_prize${index +
+                                        1}.png`
+                                "
                             />
-                            <input
-                                v-model="changeValue"
-                                placeholder-style="color:#6691FF"
-                                type="text"
-                                confirm-type="search"
-                                confirm-hold="true"
-                                placeholder="请输入作者姓名或作品名称"
-                                @confirm="bindconfirm"
-                            >
-                            <text
-                                class="search-button"
-                                @click="bindconfirm"
-                            >
-                                搜索
+                            <text class="prize-text-2">
+                                {{ item.text[1] }}
                             </text>
+                        </view>
+                        <view class="prize-item">
+                            <image
+                                class="prize-img-text"
+                                src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/read_prize5.png"
+                                @click="handleActiverule"
+                            />
                         </view>
                     </view>
-                    <view class="media-box">
-                        <view
-                            v-for="item in dataList"
-                            :key="item.id"
-                            class="media-content"
+                    <!-- 跑马灯 -->
+                    <view
+                        v-if="crouselList.length > 0"
+                        class="page-section-spacing"
+                    >
+                        <swiper
+                            class="swiper"
+                            :indicator-dots="false"
+                            :autoplay="true"
+                            :interval="3000"
+                            :duration="500"
+                            vertical="true"
+                            circular="true"
+                            :disable-touch="true"
+                            easing-function="easeInOutCubic"
                         >
-                            <event-craft-cover
-                                :info="item"
-                                :bg-color="'006EDE'"
-                                @click.native="viewDetail(item)"
-                            />
-
-                            <view class="media-name text-one-line">
-                                {{ `${item.resource_name}` }}
-                            </view>
-                            <text class="vote-num">
-                                {{ item.ticket }}赞
-                            </text>
-                            <view
-                                class="vote"
-                                @click="handleVote(item)"
+                            <swiper-item
+                                v-for="item in crouselList"
+                                :key="item.id"
                             >
-                                点赞加油
+                                <view class="swiper-item">
+                                    <image
+                                        src="/static/images/yiqing/horn.png"
+                                    />
+                                    <view class="swiper-info">
+                                        <text>
+                                            用户{{ item.user_name | plusXing }}
+                                        </text>
+                                        <text>发布了</text>
+                                        <text>#{{ item.cat_name }}#</text>
+                                        <text>{{ item.resource_name }}</text>
+                                    </view>
+                                    <text>刚刚</text>
+                                </view>
+                            </swiper-item>
+                        </swiper>
+                    </view>
+
+                    <view class="cansai-text">
+                        —— 活动作品 ——
+                    </view>
+                    <!-- work show -->
+                    <view class="menu-list">
+                        <view class="search-box">
+                            <button
+                                :class="{
+                                    active: activeMenuIndex === '1'
+                                }"
+                                @click="toggle('1')"
+                            >
+                                中文组
+                            </button>
+                            <button
+                                :class="{
+                                    active: activeMenuIndex === '2'
+                                }"
+                                @click="toggle('2')"
+                            >
+                                英文组
+                            </button>
+                            <view class="search">
+                                <image
+                                    src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/read_search.png"
+                                />
+                                <input
+                                    v-model="changeValue"
+                                    placeholder-style="color:#E5FFF7"
+                                    type="text"
+                                    confirm-type="search"
+                                    confirm-hold="true"
+                                    placeholder="请输入作者姓名或作品名称"
+                                    @confirm="bindconfirm"
+                                >
+                                <text
+                                    class="search-button"
+                                    @click="bindconfirm"
+                                >
+                                    搜索
+                                </text>
                             </view>
                         </view>
-                        <view
-                            v-if="dataList.length === 0"
-                            class="media-fill"
-                        />
-                        <uni-load-more
-                            class="loadMore"
-                            :status="loadMoreStatus"
-                            :content-text="{
-                                contentdown: '上拉显示更多',
-                                contentrefresh: '正在加载...',
-                                contentnomore: '———— 已经到底了~ ————'
-                            }"
-                            color="#fff"
-                        />
+                        <view class="media-box">
+                            <view
+                                v-for="item in dataList"
+                                :key="item.id"
+                                class="media-content"
+                            >
+                                <event-craft-cover
+                                    :info="item"
+                                    :bg-color="'11CD95'"
+                                    @click.native="viewDetail(item)"
+                                />
+
+                                <view class="media-name text-one-line">
+                                    {{ `${item.resource_name}` }}
+                                </view>
+                                <text class="vote-num">
+                                    {{ item.ticket }}赞
+                                </text>
+                                <view
+                                    class="vote"
+                                    @click="handleVote(item)"
+                                >
+                                    点赞加油
+                                </view>
+                            </view>
+                            <view
+                                v-if="dataList.length === 0"
+                                class="media-fill"
+                            >
+                                暂无数据～
+                            </view>
+                            <uni-load-more
+                                class="loadMore"
+                                :status="loadMoreStatus"
+                                :content-text="{
+                                    contentdown: '上拉显示更多',
+                                    contentrefresh: '正在加载...',
+                                    contentnomore: '———— 已经到底了~ ————'
+                                }"
+                                color="#fff"
+                            />
+                        </view>
                     </view>
                 </view>
-
                 <view
-                    class="upload"
+                    :class="status === 2 || isH5 ? 'upload' : 'upload-disable'"
                     @click="handleUpload"
                 >
-                    点击领取你的证书
+                    上传作品
                 </view>
             </view>
         </view>
@@ -298,6 +264,79 @@ export default {
     },
     data() {
         return {
+            // #ifdef H5
+            isH5: true,
+            // #endif
+            prizeList: [
+                {
+                    text: ['一等奖', '护眼仪'],
+                },
+                {
+                    text: ['二等奖', '护眼灯'],
+                },
+                {
+                    text: ['三等奖', '书包'],
+                },
+                {
+                    text: ['四等奖', '图片仅供参考'],
+                },
+            ],
+            rules: [
+                {
+                    title: '一、活动主题',
+                    texts: [
+                        '书籍是开启心灵之门的钥匙，是促进人类进步的阶梯，读书会让你成为一个有温度、有情趣、会思考的人。让书籍为我们打开一个崭新的世界，“4.23世界读书日”我是朗读者，让我读给你听！',
+                    ],
+                },
+                {
+                    title: '二、活动时间',
+                    texts: ['4月20日--5月8日'],
+                },
+                {
+                    title: '三、参与对象',
+                    texts: ['年龄不限'],
+                },
+                {
+                    title: '四、作品类型',
+                    texts: [
+                        '古诗词、诗歌、名著等作品内容不限，可采用中文或英文进行朗读，作品上传需为视频格式。',
+                    ],
+                },
+                {
+                    title: '五、作品要求',
+                    texts: [
+                        '1、视频格式：支持MP4、MOV、3GP、MP4V，视频大小不超过200M，视频完整清晰；',
+                        '2、内容健康、积极向上，如发现上传不合规内容，该账号将取消参与资格；',
+                        '3、穿着整洁，态度认真、充满自信、举止稳重大方；',
+                        '4、中文朗读需采用“普通话”语速适中，英文朗读需发音准确清晰，表达流畅。朗读中需轻重缓急合理，富有感情，声音能够传达出作品的意境，能读出作品的韵味；',
+                        '5、朗读时可辅助以合理的动作、配乐。',
+                    ],
+                },
+                {
+                    title: '六、活动规则',
+                    texts: [
+                        '1、参与活动用户在“青少年爱挑战”平台注册并通过活动页面上传作品，审核通过后可进行投票分享等；',
+                        '2、每个账户每天只能为同一个作品投票1次；',
+                        '3、中文组和英文组每组投票排名前10名的参赛者，颁发相应奖品及证书；',
+                        '4、活动组委会将根据作品质量、内容以及投票数量进行综合评选，中文组和英文组各选出10个优秀作品奖，颁发证书；',
+                        '5、投票截止时间为：2020年5月8日23:59:59；',
+                        '6、获奖名单将于5月12日在爱挑战官网（http://atz.qsnatz.com）及官方服务号（UP青少年爱挑战）进行公布；',
+                        '7、本次活动最终解释权在法律允许范围内归活动举办方所有。',
+                    ],
+                },
+                {
+                    title: '七、奖品兑换说明',
+                    texts: [
+                        '1、每名参赛选手只有一次兑奖机会，如同时获得了不同奖项，以最高奖项为准；',
+                        '2、每个账号视为一个参赛选手，请勿多人使用同一个账号上传，若同一账号下，多个作品获奖，只颁发排名最高的一个作品；',
+                        '3、工作人员将于5月13-14日期间电话联系获奖账号所绑定的手机号，电话无法联系的将视为自动放弃兑奖资格；',
+                        '4、奖品及证书将于5月30日之前通过普通快递寄出；',
+                        '5、奖品属于用户奖励活动，不提供发票、收据；',
+                        '6、奖品不支持退换和售后，请当面核实无质量问题再签收；',
+                        '7、因用户提供的收货地址等信息有误而导致的奖品未收到，不予补发。',
+                    ],
+                },
+            ],
             fr: '',
             shareDesc: '',
             changeValue: '',
@@ -308,7 +347,8 @@ export default {
             newsTabActiveIndex: 0,
             dataList: [],
             filter: {
-                activity_id: 5,
+                cat_id: 18,
+                activity_id: 6,
                 page_num: 1,
                 page_size: 10,
                 activity_cat: 1,
@@ -320,11 +360,11 @@ export default {
     },
     created() {
         this.getData();
-        this.chunjieStatus();
+        this.activityStatus();
         this.getCrouselList();
     },
     onLoad(params) {
-        this.fr = logger.getFr('dsxnh', params);
+        this.fr = logger.getFr('dshd', params);
     },
     onShow() {},
     onHide() {
@@ -342,7 +382,7 @@ export default {
         },
         postCrouselList() {
             api.post('/api/activity/resourcelist', {
-                activity_id: 5,
+                activity_id: 6,
                 page_num: 1,
                 page_size: 10,
             }).then(({ list }) => {
@@ -373,32 +413,39 @@ export default {
                 },
             );
         },
-        chunjieStatus() {
+        activityStatus() {
             // 1未开始，2进行中，3已结束
             api.post('/api/activity/getactivitystatus', {
-                activity_id: 5,
+                activity_id: 6,
             }).then((res) => {
                 this.status = res.status;
             });
         },
         handleUpload() {
-            // if (this.status === 2) {
-            api.isLogin({
-                fr: this.fr,
-            }).then(() => {
-                uni.navigateTo({
-                    url: '/pages/yiqing/myWork/myWork?type=myWork',
+            if (this.isH5) {
+                return uni.showToast({
+                    title: '请在UP爱挑战小程序上传作品',
+                    icon: 'none',
                 });
-            });
-            // } else {
-            //     uni.showToast({
-            //         title:
-            //             this.status === 1
-            //                 ? '活动未开始，敬请期待'
-            //                 : '活动已结束',
-            //         icon: 'none',
-            //     });
-            // }
+            }
+            if (this.status === 2) {
+                api.isLogin({
+                    fr: this.fr,
+                }).then(() => {
+                    uni.navigateTo({
+                        url: '/pages/read/upload/modify',
+                    });
+                });
+            } else {
+                uni.showToast({
+                    title:
+                        this.status === 1
+                            ? '活动未开始，敬请期待'
+                            : '活动已结束',
+                    icon: 'none',
+                });
+            }
+            return true;
         },
 
         onReachBottom() {
@@ -409,41 +456,29 @@ export default {
             }
         },
         bindconfirm() {
-            if (!this.changeValue.trim()) {
-                uni.showToast({
-                    title: '请输入搜索内容',
-                    icon: 'none',
-                });
-                return;
-            }
             uni.navigateTo({
-                url: `/pages/yiqing/myWork/myWork?type=search&name=${this.changeValue.trim()}`,
+                url: `/pages/read/myWork/myWork?type=search&name=${this.changeValue.trim()}`,
             });
         },
         initShare() {
-            // const titleList = [
-            //     '鼠年大吉，快来看我的拜年才艺秀！',
-            //     '才艺拜年乐趣多，我来表演你来赞！',
-            //     '我来给你拜新年，表演才艺送祝福！',
-            //     '鼠年春节我精彩，才艺拜年望喜爱！',
-            // ];
-            const titleList = [
-                '抗击疫情“艺”起来，参与活动为武汉加油！向英雄致敬！',
-            ];
-            const title = titleList[Math.floor(Math.random() * titleList.length)];
-            const desc = '快乐过寒假，才艺拜大年！';
+            const title = this.isH5
+                ? '我是朗读者，读给你听'
+                : '4.23世界读书日，读书赢好礼，一起来读书吧！';
+            const desc = this.isH5
+                ? '4.23世界读书日，读书赢好礼，一起来读书吧！'
+                : '';
             this.shareDesc = title;
 
             share({
                 title,
                 desc,
                 thumbnail:
-                    'http: //aitiaozhan.oss-cn-beijing.aliyuncs.com/chunjiehao/yiqing-poster01.png?x-oss-process=image/format,png/interlace,1/quality,Q_80/resize,m_pad,h_100',
+                    'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/read_share.png?x-oss-process=image/format,png/interlace,1/quality,Q_80/resize,m_pad,h_100',
             });
         },
-        viewDetail(item) {
+        viewDetail({ id }) {
             uni.navigateTo({
-                url: `/pages/work/detail/detail?id=${item.id}&fr=${this.fr}&activity_id=5`,
+                url: `/pages/work/detail/detail?id=${id}&activity_id=6`,
             });
         },
         toggle(k) {
@@ -461,7 +496,7 @@ export default {
                 fr: this.fr,
             }).then(() => {
                 uni.navigateTo({
-                    url: '/pages/yiqing/myWork/myWork?type=myWork',
+                    url: '/pages/read/myWork/myWork?type=myWork',
                 });
             });
         },
@@ -522,18 +557,21 @@ export default {
         }
         return {
             title: this.shareDesc,
-            path: '/pages/yiqing/index',
+            path: '/pages/read/index',
         };
     },
 };
 </script>
 
 <style lang="less" scoped>
+.read-page-index {
+    background-color: #a1debe;
+}
 // 跑马灯
 .page-section-spacing {
     width: 710upx;
     height: 46upx;
-    background: rgba(0, 0, 0, 0.5);
+    background: #05af7c;
     border-radius: 23upx;
     padding: 0 20upx;
     font-size: 24rpx;
@@ -683,7 +721,7 @@ body.dialog-open {
 .upload {
     position: fixed;
     bottom: 0upx;
-    background: #0096ff;
+    background: #04a875;
     text-align: center;
     width: 100%;
     color: #fff;
@@ -710,108 +748,55 @@ body.dialog-open {
     line-height: 116upx;
     z-index: 10;
 }
+.prize {
+    height: 242upx;
+    width: 725upz;
+    margin: 0 12upx;
+    background: url("https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/read_prize.png")
+        no-repeat center;
+    background-size: 100% 100%;
+    padding: 0 47upx;
+    display: flex;
+    text-align: center;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    .prize-item {
+        font-size: 20upx;
+        text-align: center;
+        width: 141upx;
+        height: 176upx;
+        &:last-of-type {
+            height: 238upx;
+        }
+        .prize-text-1 {
+            color: #ff3442;
+            width: 100%;
+            font-size: 24upx;
+        }
+        .prize-text-2 {
+            color: #08986d;
+            width: 100%;
+        }
+        .prize-img {
+            width: 116upx;
+            height: 116upx;
+        }
+        .prize-img-text {
+            width: 141upx;
+            height: 238upx;
+            margin-top: 10upx;
+            display: block;
+        }
+    }
+}
 .cansai-text {
     // width: 312upx;
     height: 44upx;
     // margin-left: 220upx;
     margin-top: 20upx;
-    color: #ffde98;
+    color: #138256;
     text-align: center;
-}
-.prize-prompt {
-    text-align: center;
-    .prize-item-prompt {
-        display: flex;
-        justify-content: space-between;
-        view {
-            font-size: 22upx;
-            text-align: center;
-            color: #ffde98;
-            // width: 154upx;
-            & text:first-child {
-                width: 100%;
-                float: left;
-                margin-top: 20upx;
-                font-size: 24upx;
-            }
-            & text:last-child {
-                width: 100%;
-                float: left;
-            }
-            & image {
-                width: 116upx;
-                height: 116upx;
-            }
-        }
-    }
-    .prize-slogan-prompt {
-        color: #b11a27;
-        font-size: 20upx;
-        display: inline-block;
-    }
-}
-
-.prize {
-    background: #ffde98;
-    // background-size: 100% 100%;
-    height: 242upx;
-    border: 10upx solid #b11a27;
-    margin: 0 30upx;
-    border-radius: 16upx;
-    padding-bottom: 20rpx;
-    text-align: center;
-    .prize-item {
-        display: flex;
-        justify-content: space-between;
-        view {
-            font-size: 20upx;
-            text-align: center;
-            // float: left;
-            // width: 154upx;
-            & text:first-child {
-                color: #ff3442;
-                width: 100%;
-                float: left;
-                margin-top: 20upx;
-                font-size: 24upx;
-            }
-            & text:last-child {
-                color: #ab7e3c;
-                width: 100%;
-                float: left;
-            }
-            & image {
-                width: 116upx;
-                height: 116upx;
-            }
-        }
-    }
-    .prize-slogan {
-        width: 576upx;
-        height: 32upx;
-        background: #b69755;
-        color: #932210;
-        border-radius: 16upx;
-        padding: 0 26upx;
-        line-height: 32upx;
-        text-align: center;
-        margin-top: 15rpx;
-        display: inline-block;
-        font-size: 20upx;
-    }
-    .prize-slogan01 {
-        width: 576upx;
-        height: 32upx;
-        background: #b69755;
-        color: #ffde98;
-        border-radius: 16upx;
-        padding: 0 26upx;
-        line-height: 32upx;
-        text-align: center;
-        margin-top: 15rpx;
-        display: inline-block;
-        font-size: 20upx;
-    }
 }
 .active-schedule {
     display: flex;
@@ -845,7 +830,7 @@ body.dialog-open {
             height: 225upx;
         }
         .media-name {
-            color: #fff;
+            color: #056446;
             width: 100%;
             // left:0;
             // top:290upx;
@@ -853,18 +838,15 @@ body.dialog-open {
             margin-bottom: 10upx;
         }
         .vote-num {
-            color: #ffdf9f;
+            color: #08402f;
             font-size: 30upx;
-            // left:0;
-            // position: absolute;
-            // top: 283upx;
             float: left;
         }
         .vote {
             float: right;
             width: 170upx;
             height: 60upx;
-            background: rgba(255, 88, 75, 1);
+            background: #0f8c64;
             border-radius: 30upx;
             color: rgba(255, 255, 255, 1);
             font-size: 28upx;
@@ -889,6 +871,10 @@ body.dialog-open {
     }
     .media-fill {
         height: 253upx;
+        text-align: center;
+        color: #0f8c64;
+        width: 100%;
+        line-height: 253upx;
     }
 }
 
@@ -909,16 +895,19 @@ body.dialog-open {
     }
     .title {
         font-size: 28upx;
-        color: #fff0a8;
+        color: #ffde6d;
         font-weight: bold;
         margin-bottom: 17upx;
     }
 
     .text {
         margin-bottom: 40upx;
+        font-weight: 300;
+        font-size: 28upx;
     }
     .title-icon {
-        background: url("../../static/images/yiqing/title.png") no-repeat;
+        background: url("https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/read_title.png")
+            no-repeat;
         background-size: 100% 100%;
         font-size: 0upx;
         width: 303upx;
@@ -931,7 +920,8 @@ body.dialog-open {
         z-index: 222;
     }
     .close {
-        background: url("../../static/images/yiqing/close-icon.png") no-repeat;
+        background: url("https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/read_close.png")
+            no-repeat;
         background-size: 100% 100%;
         width: 62upx;
         height: 62upx;
@@ -940,7 +930,7 @@ body.dialog-open {
         position: absolute;
     }
     .active-content {
-        background: #1154ff;
+        background-color: #04a875;
         position: absolute;
         top: 62upx;
         left: 35upx;
@@ -965,47 +955,37 @@ body.dialog-open {
 .page-index {
     padding-bottom: 20upx;
     display: relative;
-    background: #1154ff;
     .main-swiper {
         .banner {
             position: relative;
-            height: 740upx;
-            background: url(http://aitiaozhan.oss-cn-beijing.aliyuncs.com/chunjiehao/yiqing-poster01.png?t=2)
+            height: 889upx;
+            background: url(https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/read_main.jpg)
                 no-repeat;
             background-size: 100% 100%;
             text-align: center;
-            .active-rule {
-                position: absolute;
-                top: 19upx;
-                left: 15upx;
-                width: 120upx;
-                height: 48upx;
-                line-height: 48upx;
-                font-size: 22upx;
-                background: #fff;
-                color: #1154ff;
-                border-radius: 24upx;
-            }
+            .active-rule,
             .menu-title {
                 position: absolute;
                 top: 19upx;
-                right: 15upx;
                 width: 120upx;
                 height: 48upx;
                 line-height: 48upx;
                 font-size: 22upx;
                 background: #fff;
-                color: #1154ff;
+                color: #128544;
                 border-radius: 24upx;
             }
-            .active-time {
-                position: absolute;
-                top: 310upx;
-                left: 218upx;
-                color: #fff;
-                font-size: 22upx;
-                font-style: italic;
+            .active-rule {
+                left: 15upx;
             }
+            .menu-title {
+                right: 15upx;
+            }
+        }
+        .main-content {
+            margin-top: -85upx;
+            position: relative;
+            z-index: 1;
         }
     }
 
@@ -1020,21 +1000,22 @@ body.dialog-open {
                 height: 68upx;
                 float: left;
                 line-height: 68upx;
-                color: #ffffff;
+                color: #000;
                 background: transparent;
                 font-size: 30upx;
                 font-weight: 700;
                 border-radius: 34upx;
                 padding: 0;
                 &.active {
-                    background: #0096ff;
+                    background: #05af7c;
+                    color: #fff;
                 }
                 &::after {
                     border: none;
                 }
             }
             .search {
-                background: #003dd7;
+                background: #05af7c;
                 width: 400upx;
                 height: 72upx;
                 position: relative;
@@ -1045,25 +1026,25 @@ body.dialog-open {
                     width: 28upx;
                     height: 28upx;
                     position: absolute;
-                    top: 23upx;
+                    top: 50%;
+                    transform: translateY(-50%);
                     left: 12upx;
                 }
                 input {
                     width: 293upx;
                     position: absolute;
-                    top: 20upx;
-                    // #ifndef H5
-                    top: 15upx;
-                    // #endif
+                    top: 50%;
+                    transform: translateY(-50%);
                     left: 50upx;
                     font-size: 22upx;
-                    color: #ffbec4;
+                    color: #e5fff7;
                 }
                 .search-button {
                     font-size: 24upx;
                     color: #fff;
                     position: absolute;
-                    top: 20upx;
+                    top: 50%;
+                    transform: translateY(-50%);
                     right: 22upx;
                 }
             }

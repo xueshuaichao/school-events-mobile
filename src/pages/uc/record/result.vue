@@ -19,13 +19,25 @@
                     mode=""
                 />
             </view>
-            <view
-                v-if="!startCreateCanvas"
-                class="btn"
-                @click="handleSave"
-            >
-                保存图片
-            </view>
+            <template v-if="!imgAuthBtn">
+                <view
+                    v-if="!startCreateCanvas"
+                    class="btn"
+                    @click="handleSave"
+                >
+                    保存图片
+                </view>
+            </template>
+            <template v-else>
+                <button
+                    v-if="!startCreateCanvas"
+                    open-type="openSetting"
+                    class="btn"
+                    @opensetting="checkImgAuthFun"
+                >
+                    授权相册并保存到本地
+                </button>
+            </template>
         </template>
         <template v-else>
             <template v-if="Object.keys(itemData).length">
@@ -116,6 +128,7 @@ import html2canvas from 'html2canvas';
 export default {
     data() {
         return {
+            imgAuthBtn: false,
             poster: null,
             // #ifdef H5
             isH5: true,
@@ -180,6 +193,45 @@ export default {
         },
     },
     methods: {
+        getAuthStatus() {
+            const that = this;
+            // eslint-disable-next-line no-undef
+            wx.getSetting({
+                // 获取设置
+                success(res) {
+                    if (res.authSetting['scope.writePhotosAlbum'] === false) {
+                        // 说明未授权
+                        that.imgAuthBtn = true;
+                    } else {
+                        that.imgAuthBtn = false;
+                    }
+                },
+            });
+        },
+        checkImgAuthFun(res) {
+            // 二次以上检验是否授权图片
+            const that = this;
+            if (!res.detail.authSetting['scope.writePhotosAlbum']) {
+                // 二次以上授权, 如果未授权
+                // eslint-disable-next-line no-undef
+                wx.showToast({
+                    title: '授权失败',
+                    icon: 'none',
+                });
+            } else {
+                // eslint-disable-next-line no-undef
+                wx.showToast({
+                    title: '授权成功',
+                    icon: 'none',
+                    success() {
+                        uni.showLoading({
+                            mask: true,
+                        });
+                        that.handleSave();
+                    },
+                });
+            }
+        },
         onPosterSuccess({ detail }) {
             this.startCreateCanvas = false;
             this.canvasImg = detail;
@@ -337,6 +389,7 @@ export default {
             success({ data }) {
                 _this.itemData = JSON.parse(data);
                 _this.poster = _this.selectComponent('#poster');
+                _this.getAuthStatus();
             },
         });
     },

@@ -15,12 +15,8 @@ const getCookie = (name) => {
 };
 function onPageView() {
     // #ifdef H5
+    console.log(1111);
     if (location.host === 'atz.qsnatz.com') {
-        const pages = getCurrentPages();
-        const page = pages[pages.length - 1];
-
-        console.log(page);
-
         try {
             // 伟东云统计
             // - 设置采集系统帐户, 必须设置账户,
@@ -60,7 +56,8 @@ function onPageView() {
 }
 
 // prepare fr
-function getFr(type, params) {
+function getFr(type, params, mode = '') {
+    // mode online - 线上
     const { from } = params;
     const defaultFr = [type];
     let isH5 = false;
@@ -73,6 +70,9 @@ function getFr(type, params) {
 
     if (from) {
         defaultFr.push(from);
+    }
+    if (mode) {
+        defaultFr.push(mode);
     }
     return defaultFr.join('_');
 }

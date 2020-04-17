@@ -35,11 +35,18 @@
                             src="/static/images/comp/upload/video_blue.png"
                         />
                     </template>
-                    <image
-                        v-else
-                        class="icon-success"
-                        :src="`/static/images/comp/upload/success-${theme}.png`"
-                    />
+                    <template v-else>
+                        <image
+                            v-if="theme === 'normal'"
+                            class="icon-success"
+                            :src="`/static/images/comp/upload/success-blue.png`"
+                        />
+                        <image
+                            v-else
+                            class="icon-success"
+                            :src="`/static/images/comp/upload/success.png`"
+                        />
+                    </template>
                     <view
                         v-if="url"
                         class="text-success"
@@ -284,7 +291,7 @@ export default {
                     userKey: utils.getToken()
                 },
                 success: uploadFileRes => {
-                    console.log(1111, file);
+                    // console.log(1111, file);
                     let resp;
                     try {
                         resp = JSON.parse(uploadFileRes.data);
