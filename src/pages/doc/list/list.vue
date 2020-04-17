@@ -52,14 +52,13 @@
                             v-if="type === 'talent'"
                             :url="
                                 userInfo === null
-                                    ? '/pages/tabBar/uc/uc'
-                                    : '/pages/tabBar/upload/upload'
+                                    ? '/pages/login/login'
+                                    : '/pages/upload/default/upload'
                             "
-                            open-type="switchTab"
                             hover-class="other-navigator-hover"
                         >
                             <view class="btn">
-                                我要来挑战
+                                我要秀才艺
                             </view>
                         </navigator>
                     </template>
@@ -102,6 +101,11 @@ export default {
                 },
             );
         },
+    },
+    onShow() {
+        if (!this.userInfo) {
+            this.getData();
+        }
     },
     onLoad(query) {
         const { type } = query;
