@@ -424,7 +424,7 @@ export default {
         display: inline-block;
         width: 32rpx;
         height: 34rpx;
-        margin-right: 12upx;
+        margin-right: 6rpx;
         &.file {
             width: 34rpx;
             vertical-align: middle;
