@@ -193,7 +193,11 @@
                                     class="vote"
                                     @click="handleVote(item)"
                                 >
-                                    点赞加油
+                                    <image
+                                        class="like-icon"
+                                        src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/read_like_icon.png"
+                                    />
+                                    点赞
                                 </view>
                             </view>
                             <view
@@ -842,6 +846,11 @@ body.dialog-open {
             color: #08402f;
             font-size: 30upx;
             float: left;
+        }
+        .like-icon {
+            width: 27upx;
+            height: 27upx;
+            margin-right: 5upx;
         }
         .vote {
             float: right;
