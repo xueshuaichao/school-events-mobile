@@ -278,7 +278,7 @@ export default {
                     text: ['三等奖', '书包'],
                 },
                 {
-                    text: ['四等奖', '图片仅供参考'],
+                    text: ['四等奖', '奖状'],
                 },
             ],
             rules: [
@@ -768,6 +768,7 @@ body.dialog-open {
         height: 176upx;
         &:last-of-type {
             height: 238upx;
+            width: 169upx;
         }
         .prize-text-1 {
             color: #ff3442;
@@ -783,9 +784,9 @@ body.dialog-open {
             height: 116upx;
         }
         .prize-img-text {
-            width: 141upx;
-            height: 238upx;
-            margin-top: 10upx;
+            width: 100%;
+            height: 100%;
+            margin-top: 16upx;
             display: block;
         }
     }
