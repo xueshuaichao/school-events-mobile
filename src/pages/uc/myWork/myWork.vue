@@ -172,7 +172,7 @@ export default {
         },
         deleteWork(item) {
             let url = '/api/user/delwork';
-            if (item.activity_id === 6) {
+            if (item.activity_id) {
                 // 活动
                 url = '/api/activity/del';
             }
