@@ -193,7 +193,11 @@
                                     class="vote"
                                     @click="handleVote(item)"
                                 >
-                                    点赞加油
+                                    <image
+                                        class="like-icon"
+                                        src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/read_like_icon.png"
+                                    />
+                                    点赞
                                 </view>
                             </view>
                             <view
@@ -278,7 +282,7 @@ export default {
                     text: ['三等奖', '书包'],
                 },
                 {
-                    text: ['四等奖', '图片仅供参考'],
+                    text: ['四等奖', '奖状'],
                 },
             ],
             rules: [
@@ -768,6 +772,7 @@ body.dialog-open {
         height: 176upx;
         &:last-of-type {
             height: 238upx;
+            width: 169upx;
         }
         .prize-text-1 {
             color: #ff3442;
@@ -783,9 +788,9 @@ body.dialog-open {
             height: 116upx;
         }
         .prize-img-text {
-            width: 141upx;
-            height: 238upx;
-            margin-top: 10upx;
+            width: 100%;
+            height: 100%;
+            margin-top: 16upx;
             display: block;
         }
     }
@@ -841,6 +846,11 @@ body.dialog-open {
             color: #08402f;
             font-size: 30upx;
             float: left;
+        }
+        .like-icon {
+            width: 27upx;
+            height: 27upx;
+            margin-right: 5upx;
         }
         .vote {
             float: right;
