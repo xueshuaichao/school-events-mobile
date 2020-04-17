@@ -40,7 +40,7 @@ export default {
     data() {
         return {
             fr: '',
-            activity_num: 10000,
+            activity_num: 8659,
         };
     },
     methods: {
