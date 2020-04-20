@@ -10,18 +10,18 @@
                 />
                 <view class="tabs row">
                     <view
-                        class="tab tab-login"
-                        :class="{ active: loginMode === 'sms' }"
-                        @click="loginMode = 'sms'"
-                    >
-                        手机号登录
-                    </view>
-                    <view
                         class="tab tab-register"
                         :class="{ active: loginMode === 'password' }"
                         @click="loginMode = 'password'"
                     >
                         帐号密码登录
+                    </view>
+                    <view
+                        class="tab tab-login"
+                        :class="{ active: loginMode === 'sms' }"
+                        @click="loginMode = 'sms'"
+                    >
+                        手机号登录
                     </view>
                 </view>
 
@@ -190,7 +190,7 @@ export default {
             isH5: true,
             // #endif
             // loginMode: 'sms',
-            loginMode: 'sms',
+            loginMode: 'password',
             // needBindMobile: false,
             userInfo: {},
             userkey: '',
