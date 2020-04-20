@@ -70,10 +70,9 @@ export default {
         }).then((data) => {
             this.activity_num = data.activity_num;
         });
-        api.post('/api/activity/list', {
+        api.get('/api/activity/list', {
             page_size: 10,
             page_num: 1,
-            status: 2,
         }).then((data) => {
             console.log(data, '/api/activity/list');
         });
