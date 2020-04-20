@@ -1,7 +1,7 @@
 <template>
     <view class="read-page-index">
         <official-account />
-        <view :class="['page-index', { 'stop-scroll': prompt }]">
+        <view :class="['page-index', { 'stop-scroll': prompt || prizePrompt }]">
             <!-- 活动规则 -->
             <view
                 v-show="prompt"
@@ -44,7 +44,46 @@
                     </view>
                 </view>
             </view>
-
+            <!-- 奖品说明 -->
+            <view
+                v-show="prizePrompt"
+                class="activerulebox"
+            >
+                <view class="active-content">
+                    <view
+                        class="close"
+                        @click="handleClose"
+                    />
+                    <view class="title-icon prize-title-icon" />
+                    <view class="active-rule-box">
+                        <view
+                            v-for="(ruleItem, index) in prizes"
+                            :key="index"
+                        >
+                            <view class="title">
+                                {{ ruleItem.title }}
+                            </view>
+                            <view class="text">
+                                <view
+                                    v-for="(textItem, k) in ruleItem.texts"
+                                    :key="k"
+                                >
+                                    {{ textItem }}
+                                </view>
+                            </view>
+                        </view>
+                        <view class="qr-wrap">
+                            <image
+                                class="qr-code"
+                                src="http://aitiaozhan.oss-cn-beijing.aliyuncs.com/chunjiehao/qrcode.jpg"
+                            />
+                            <view class="text">
+                                关注“UP青少年爱挑战”公众号，了解更多活动信息
+                            </view>
+                        </view>
+                    </view>
+                </view>
+            </view>
             <view class="main-swiper">
                 <view class="banner">
                     <view
@@ -86,7 +125,7 @@
                             <image
                                 class="prize-img-text"
                                 src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/read_prize5.png"
-                                @click="handleActiverule"
+                                @click="handleActiveprize"
                             />
                         </view>
                     </view>
@@ -285,6 +324,28 @@ export default {
                     text: ['四等奖', '奖状'],
                 },
             ],
+            prizes: [
+                {
+                    title: '奖项及奖品说明',
+                    texts: [
+                        '1、中文组和英文组每组各选出投票排名前10名的参赛者，其中每组一等奖1名，二等奖3名，三等奖6名；',
+                        '2、中英文组一等奖各颁发倍轻松护眼仪1台+证书1个、二等奖各颁发欧普护眼台灯1台+证书1个、三等奖各颁发小米书包1个+证书1个；',
+                        '3、活动组委会将根据作品质量、内容以及投票数量进行综合评选，中文组和英文组再各选出10个优秀作品奖，颁发证书；',
+                    ],
+                },
+                {
+                    title: '奖品兑换说明',
+                    texts: [
+                        '1、每名参赛选手只有一次兑奖机会，如同时获得了不同奖项，以最高奖项为准：',
+                        '2、每个账号视为一个参赛选手，请勿多人使用同一个账号上传，若同一账号下，多个作品获奖，只颁发排名最高的一个作品；',
+                        '3、工作人员将于5月13-14日期间电话联系获奖账号所绑定的手机号，电话无法联系的将视为自动放弃兑奖资格；',
+                        '4、奖品及证书将于5月30日之前通过普通快递寄出；',
+                        '5、奖品属于用户奖励活动，不提供发票、收据；',
+                        '6、奖品不支持退换和售后，请当面核实无质量问题再签收；',
+                        '7、因用户提供的收货地址等信息有误而导致的奖品未收到，不予补发。',
+                    ],
+                },
+            ],
             rules: [
                 {
                     title: '一、活动主题',
@@ -321,8 +382,8 @@ export default {
                     texts: [
                         '1、参与活动用户在“青少年爱挑战”平台注册并通过活动页面上传作品，审核通过后可进行投票分享等；',
                         '2、每个账户每天只能为同一个作品投票1次；',
-                        '3、中文组和英文组每组投票排名前10名的参赛者，颁发相应奖品及证书；',
-                        '4、活动组委会将根据作品质量、内容以及投票数量进行综合评选，中文组和英文组各选出10个优秀作品奖，颁发证书；',
+                        '3、中文组和英文组每组各选出投票排名前10名的参赛者（其中每组一等奖1名，二等奖3名，三等奖6名），颁发相应奖品及证书（详情见奖品说明页）；',
+                        '4、活动组委会将根据作品质量、内容以及投票数量进行综合评选，中文组和英文组再各选出10个优秀作品奖，颁发证书；',
                         '5、投票截止时间为：2020年5月8日23:59:59；',
                         '6、获奖名单将于5月12日在爱挑战官网（http://atz.qsnatz.com）及官方服务号（UP青少年爱挑战）进行公布；',
                         '7、本次活动最终解释权在法律允许范围内归活动举办方所有。',
@@ -331,7 +392,7 @@ export default {
                 {
                     title: '七、奖品兑换说明',
                     texts: [
-                        '1、每名参赛选手只有一次兑奖机会，如同时获得了不同奖项，以最高奖项为准；',
+                        '1、每名参赛选手只有一次兑奖机会，如同时获得了不同奖项，以最高奖项为准：',
                         '2、每个账号视为一个参赛选手，请勿多人使用同一个账号上传，若同一账号下，多个作品获奖，只颁发排名最高的一个作品；',
                         '3、工作人员将于5月13-14日期间电话联系获奖账号所绑定的手机号，电话无法联系的将视为自动放弃兑奖资格；',
                         '4、奖品及证书将于5月30日之前通过普通快递寄出；',
@@ -347,6 +408,7 @@ export default {
             activeMenuIndex: '1',
             loadMoreStatus: 'more',
             prompt: false,
+            prizePrompt: false,
             isPlayed: false,
             newsTabActiveIndex: 0,
             dataList: [],
@@ -495,6 +557,9 @@ export default {
         handleActiverule() {
             this.prompt = true;
         },
+        handleActiveprize() {
+            this.prizePrompt = true;
+        },
         handleMywork() {
             api.isLogin({
                 fr: this.fr,
@@ -506,6 +571,7 @@ export default {
         },
         handleClose() {
             this.prompt = false;
+            this.prizePrompt = false;
         },
 
         onPlay() {
@@ -928,6 +994,11 @@ body.dialog-open {
         text-align: center;
         line-height: 69upx;
         z-index: 222;
+        &.prize-title-icon {
+            background: url("https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/read_prize_title.png")
+                no-repeat;
+            background-size: 100% 100%;
+        }
     }
     .close {
         background: url("https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/read_close.png")
