@@ -2,31 +2,7 @@
 <template>
     <view>
         <view class="page-bind-mobile">
-            <template v-if="!isH5 && showWeixin">
-                <view class="weixin-login">
-                    <view class="login-text">
-                        登录或注册爱挑战账号后，您可以上传作品或参与活动。
-                    </view>
-                    <button
-                        class="weixin-login-btn"
-                        type="primary"
-                        open-type="getPhoneNumber"
-                        withCredentials="true"
-                        lang="zh_CN"
-                        @getphonenumber="getphonenumber"
-                    >
-                        微信用户快速登录
-                    </button>
-                    <navigator
-                        class="no-text"
-                        open-type="switchTab"
-                        url="/pages/tabBar/index/index"
-                    >
-                        暂不登录
-                    </navigator>
-                </view>
-            </template>
-            <template v-else>
+            <template>
                 <!-- 账号密码登录 -->
                 <image
                     class="logo"
@@ -34,18 +10,18 @@
                 />
                 <view class="tabs row">
                     <view
-                        class="tab tab-login"
-                        :class="{ active: loginMode === 'sms' }"
-                        @click="loginMode = 'sms'"
-                    >
-                        手机号登录
-                    </view>
-                    <view
                         class="tab tab-register"
                         :class="{ active: loginMode === 'password' }"
                         @click="loginMode = 'password'"
                     >
                         帐号密码登录
+                    </view>
+                    <view
+                        class="tab tab-login"
+                        :class="{ active: loginMode === 'sms' }"
+                        @click="loginMode = 'sms'"
+                    >
+                        手机号登录
                     </view>
                 </view>
 
@@ -158,11 +134,19 @@
                         <view class="wx-login-text">
                             微信授权手机号登录
                         </view>
-                        <image
-                            class="wx-login-btn"
-                            src="/static/images/uc/wx.png"
-                            @click="showWeiXin"
-                        />
+                        <button
+                            class="weixin-login-btn"
+                            type="primary"
+                            open-type="getPhoneNumber"
+                            withCredentials="true"
+                            lang="zh_CN"
+                            @getphonenumber="getphonenumber"
+                        >
+                            <image
+                                class="wx-login-btn"
+                                src="/static/images/uc/wx.png"
+                            />
+                        </button>
                     </view>
                 </template>
             </template>
@@ -206,7 +190,7 @@ export default {
             isH5: true,
             // #endif
             // loginMode: 'sms',
-            loginMode: 'sms',
+            loginMode: 'password',
             // needBindMobile: false,
             userInfo: {},
             userkey: '',
@@ -215,7 +199,6 @@ export default {
                 code: '',
             },
             jscode: '',
-            showWeixin: true,
         };
     },
     created() {
@@ -509,14 +492,8 @@ export default {
         },
         getphonenumber(e) {
             const { errMsg } = e.detail;
-            uni.showLoading({
-                title: '加载中',
-            });
             if (errMsg === 'getPhoneNumber:ok') {
                 this.checkSession(e.detail);
-            } else {
-                uni.hideLoading();
-                this.showWeixin = false;
             }
         },
         onGetPhoneNumber(encryptedData, iv) {
@@ -573,9 +550,6 @@ export default {
                     uni.hideLoading();
                 },
             );
-        },
-        showWeiXin() {
-            this.showWeixin = true;
         },
     },
 };
@@ -634,12 +608,18 @@ export default {
         line-height: 60upx;
     }
     .weixin-login-btn {
-        width: 620upx;
+        width: 100upx;
+        height: 100upx;
         margin: 0 auto 30upx;
-        background-color: #1166ff;
+        background-color: rgba(0, 0, 0, 0);
         border-radius: 0;
         line-height: 100upx;
         color: #fff;
+        padding: 0;
+        border: 0 none;
+        &:after {
+            border: 0 none;
+        }
     }
     .no-text {
         color: #999990;
