@@ -1,21 +1,26 @@
 <template>
     <view
         class="activity-page-index"
-        :style="{ 'background-color': mainBgColor }"
+        :style="{ 'background-color': config.mainBgColor }"
     >
         <official-account />
         <view :class="['page-index', { 'stop-scroll': prompt }]">
             <!-- 活动规则 -->
             <rule
                 v-if="prompt"
-                :rules="rules"
+                :rules="config.rules"
                 bg-color="#f00"
                 name="labor"
                 @handle-close="handleClose"
             />
 
             <view class="main-swiper">
-                <view class="banner">
+                <view
+                    class="banner"
+                    :style="{
+                        'background-image': `url(https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/${config.activityName}_main.jpg)`
+                    }"
+                >
                     <view
                         class="active-rule"
                         @click="handleActiverule"
@@ -215,18 +220,6 @@ export default {
         EventCraftCover,
     },
     props: {
-        activityName: {
-            type: String,
-            default: 'labor',
-        },
-        activityId: {
-            type: Number,
-            default: 0,
-        },
-        mainBgColor: {
-            type: String,
-            default: '#f5f5f5',
-        },
         bgColor: {
             type: String,
             default: '#f5f5f5',
@@ -275,8 +268,8 @@ export default {
             newsTabActiveIndex: 0,
             dataList: [],
             filter: {
-                cat_id: this.catId,
-                activity_id: this.activityId,
+                cat_id: this.$store.state.activity.config.catId,
+                activity_id: this.$store.state.activity.config.activityId,
                 page_num: 1,
                 page_size: 10,
                 activity_cat: 1,
@@ -287,8 +280,8 @@ export default {
         };
     },
     computed: {
-        rules() {
-            return this.$store.state.activity[this.activityName].rules;
+        config() {
+            return this.$store.state.activity.config;
         },
     },
     created() {
@@ -315,7 +308,7 @@ export default {
         },
         postCrouselList() {
             api.post('/api/activity/resourcelist', {
-                activity_id: this.activityId,
+                activity_id: this.config.activityId,
                 page_num: 1,
                 page_size: 10,
             }).then(({ list }) => {
@@ -349,7 +342,7 @@ export default {
         activityStatus() {
             // 1未开始，2进行中，3已结束
             api.post('/api/activity/getactivitystatus', {
-                activity_id: this.activityId,
+                activity_id: this.config.activityId,
             }).then((res) => {
                 this.status = res.status;
             });
@@ -398,7 +391,7 @@ export default {
         },
         viewDetail({ id }) {
             uni.navigateTo({
-                url: `/pages/work/detail/detail?id=${id}&activity_id=${this.activityId}`,
+                url: `/pages/work/detail/detail?id=${id}&activity_id=${this.config.activityId}`,
             });
         },
         toggle(k) {
@@ -832,8 +825,7 @@ body.dialog-open {
         .banner {
             position: relative;
             height: 889upx;
-            background: url(https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/read_main.jpg)
-                no-repeat;
+            background-repeat: no-repeat;
             background-size: 100% 100%;
             text-align: center;
             .active-rule,

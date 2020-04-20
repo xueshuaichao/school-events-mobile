@@ -1,21 +1,16 @@
 <template>
     <indexPage
-        activity-name="labor"
-        log="dshd"
-        main-bg-color="#a1debe"
         bg-color="#05af7c"
         main-btn-color="#0f8c64"
         btn-color="#04a875"
         main-text-color="#056446"
         text-color="#08402f"
         img-bg-color="11CD95"
-        :activity-id="6"
-        :share-config="shareConfig"
-        cat-id="18"
     />
 </template>
 
 <script>
+import { mapMutations } from 'vuex';
 import indexPage from '../common/index.vue';
 
 export default {
@@ -28,6 +23,62 @@ export default {
             isH5: true,
             // #endif
             shareConfig: {},
+            rules: [
+                {
+                    title: '一、4343活动主题',
+                    texts: [
+                        '书籍是开启心灵之门的钥匙，是促进人类进步的阶梯，读书会让你成为一个有温度、有情趣、会思考的人。让书籍为我们打开一个崭新的世界，“4.23世界读书日”我是朗读者，让我读给你听！',
+                    ],
+                },
+                {
+                    title: '二、活动时间',
+                    texts: ['4月20日--5月8日'],
+                },
+                {
+                    title: '三、参与对象',
+                    texts: ['年龄不限'],
+                },
+                {
+                    title: '四、作品类型',
+                    texts: [
+                        '古诗词、诗歌、名著等作品内容不限，可采用中文或英文进行朗读，作品上传需为视频格式。',
+                    ],
+                },
+                {
+                    title: '五、作品要求',
+                    texts: [
+                        '1、视频格式：支持MP4、MOV、3GP、MP4V，视频大小不超过200M，视频完整清晰；',
+                        '2、内容健康、积极向上，如发现上传不合规内容，该账号将取消参与资格；',
+                        '3、穿着整洁，态度认真、充满自信、举止稳重大方；',
+                        '4、中文朗读需采用“普通话”语速适中，英文朗读需发音准确清晰，表达流畅。朗读中需轻重缓急合理，富有感情，声音能够传达出作品的意境，能读出作品的韵味；',
+                        '5、朗读时可辅助以合理的动作、配乐。',
+                    ],
+                },
+                {
+                    title: '六、活动规则',
+                    texts: [
+                        '1、参与活动用户在“青少年爱挑战”平台注册并通过活动页面上传作品，审核通过后可进行投票分享等；',
+                        '2、每个账户每天只能为同一个作品投票1次；',
+                        '3、中文组和英文组每组投票排名前10名的参赛者，颁发相应奖品及证书；',
+                        '4、活动组委会将根据作品质量、内容以及投票数量进行综合评选，中文组和英文组各选出10个优秀作品奖，颁发证书；',
+                        '5、投票截止时间为：2020年5月8日23:59:59；',
+                        '6、获奖名单将于5月12日在爱挑战官网（http://atz.qsnatz.com）及官方服务号（UP青少年爱挑战）进行公布；',
+                        '7、本次活动最终解释权在法律允许范围内归活动举办方所有。',
+                    ],
+                },
+                {
+                    title: '七、奖品兑换说明',
+                    texts: [
+                        '1、每名参赛选手只有一次兑奖机会，如同时获得了不同奖项，以最高奖项为准；',
+                        '2、每个账号视为一个参赛选手，请勿多人使用同一个账号上传，若同一账号下，多个作品获奖，只颁发排名最高的一个作品；',
+                        '3、工作人员将于5月13-14日期间电话联系获奖账号所绑定的手机号，电话无法联系的将视为自动放弃兑奖资格；',
+                        '4、奖品及证书将于5月30日之前通过普通快递寄出；',
+                        '5、奖品属于用户奖励活动，不提供发票、收据；',
+                        '6、奖品不支持退换和售后，请当面核实无质量问题再签收；',
+                        '7、因用户提供的收货地址等信息有误而导致的奖品未收到，不予补发。',
+                    ],
+                },
+            ],
             prizeList: [
                 {
                     text: ['一等奖', '护眼仪'],
@@ -46,12 +97,22 @@ export default {
     },
     created() {
         this.initShare();
+        this.setActivityConfig({
+            catId: 18,
+            activityId: 6,
+            mainBgColor: '#a1debe',
+            activityName: 'read',
+            log: 'dshd',
+            rules: this.rules,
+            shareConfig: this.shareConfig,
+        });
     },
     onLoad() {
         // this.fr = logger.getFr('dshd', params);
     },
     onShow() {},
     methods: {
+        ...mapMutations(['setActivityConfig']),
         initShare() {
             const title = this.isH5
                 ? '我是朗读者，读给你听'

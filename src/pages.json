@@ -291,6 +291,12 @@
                 "navigationBarTitleText": "我的作品"
             }
         },
+        {
+            "path": "pages/activity-pages/labor/index",
+            "style": {
+                "navigationBarTitleText": "青少年动起啦"
+            }
+        },
 
         // #ifdef H5
         {

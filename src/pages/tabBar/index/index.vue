@@ -55,6 +55,17 @@
                     :duration="duration"
                     :circular="true"
                 >
+                    <swiper-item>
+                        <navigator
+                            url="/pages/activity-pages/labor/index"
+                            class="swiper-item"
+                        >
+                            <image
+                                class="banner-image"
+                                src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/h5/read-banner.png"
+                            />
+                        </navigator>
+                    </swiper-item>
                     <swiper-item v-if="activitiesStatus[3].show">
                         <navigator
                             url="/pages/read/index"

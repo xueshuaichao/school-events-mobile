@@ -1,24 +1,40 @@
 export default {
     state: {
-        rules: [],
-        activityId: 6,
-        mainBgColor: '#f00',
-        catId: '',
+        config: {
+            rules: [],
+            log: '',
+            activityName: '',
+            activityId: 0,
+            mainBgColor: '',
+            catId: '',
+            shareConfig: {},
+        },
     },
     getters: {},
     actions: {},
     mutations: {
-        setConfig(state, {
-            rules, activityId, mainBgColor, catId,
-        }) {
-            // cat_id;
-            // eslint-disable-next-line no-param-reassign
-            state = {
-                ...state,
+        setActivityConfig(
+            state,
+            {
                 rules,
+                activityId,
+                activityName,
+                mainBgColor,
+                catId,
+                shareConfig,
+                log,
+            },
+        ) {
+            console.log(catId);
+            state.config = {
+                ...state.config,
+                rules,
+                activityName,
                 activityId,
                 mainBgColor,
                 catId,
+                shareConfig,
+                log,
             };
         },
     },
