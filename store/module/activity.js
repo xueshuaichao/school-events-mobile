@@ -9,6 +9,17 @@ export default {
             catId: '',
             shareConfig: {},
         },
+        workColor: {
+            imgBg: '11CD95',
+            text: '#08402f',
+            title: '#056446',
+            btnBg: '#0f8c64',
+            btnText: '#fff',
+        },
+        tipsColor: {
+            textColor: '#fff',
+            mainColor: '#ffde6d',
+        },
     },
     getters: {},
     actions: {},
@@ -25,7 +36,6 @@ export default {
                 log,
             },
         ) {
-            console.log(catId);
             state.config = {
                 ...state.config,
                 rules,
@@ -35,6 +45,25 @@ export default {
                 catId,
                 shareConfig,
                 log,
+            };
+        },
+        setActivityWorkColor(state, {
+            imgBg, text, title, btnBg, btnText,
+        }) {
+            state.workColor = {
+                ...state.workColor,
+                imgBg,
+                text,
+                title,
+                btnBg,
+                btnText,
+            };
+        },
+        setTipsColor(state, { textColor, mainColor }) {
+            state.tipsColor = {
+                ...state.tipsColor,
+                textColor,
+                mainColor,
             };
         },
     },

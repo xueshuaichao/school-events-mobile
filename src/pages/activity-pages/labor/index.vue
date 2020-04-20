@@ -1,11 +1,9 @@
 <template>
     <indexPage
-        bg-color="#05af7c"
-        main-btn-color="#0f8c64"
+        text-bg-color="#05af7c"
         btn-color="#04a875"
-        main-text-color="#056446"
-        text-color="#08402f"
-        img-bg-color="11CD95"
+        search-color="#E5FFF7"
+        :tips-color="tipsColor"
     />
 </template>
 
@@ -23,9 +21,20 @@ export default {
             isH5: true,
             // #endif
             shareConfig: {},
+            workColor: {
+                imgBg: '11CD95',
+                text: '#08402f',
+                title: '#056446',
+                btnBg: '#0f8c64',
+                btnText: '#fff',
+            },
+            tipsColor: {
+                textColor: '#fff',
+                mainColor: '#ffde6d',
+            },
             rules: [
                 {
-                    title: '一、4343活动主题',
+                    title: '一、活动主题',
                     texts: [
                         '书籍是开启心灵之门的钥匙，是促进人类进步的阶梯，读书会让你成为一个有温度、有情趣、会思考的人。让书籍为我们打开一个崭新的世界，“4.23世界读书日”我是朗读者，让我读给你听！',
                     ],
@@ -106,13 +115,20 @@ export default {
             rules: this.rules,
             shareConfig: this.shareConfig,
         });
+
+        this.setActivityWorkColor(this.workColor);
+        this.setTipsColor(this.tipsColor);
     },
     onLoad() {
         // this.fr = logger.getFr('dshd', params);
     },
     onShow() {},
     methods: {
-        ...mapMutations(['setActivityConfig']),
+        ...mapMutations([
+            'setActivityConfig',
+            'setActivityWorkColor',
+            'setTipsColor',
+        ]),
         initShare() {
             const title = this.isH5
                 ? '我是朗读者，读给你听'

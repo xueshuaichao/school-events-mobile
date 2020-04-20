@@ -65,11 +65,7 @@
                         </view>
                     </view>
                     <!-- 跑马灯 -->
-                    <tipsList
-                        :crousel-list="crouselList"
-                        text-color="#ffde6d"
-                    />
-
+                    <tipsList :crousel-list="crouselList" />
                     <view class="cansai-text">
                         —— 活动作品 ——
                     </view>
@@ -79,7 +75,9 @@
                             <button
                                 :style="{
                                     'background-color':
-                                        activeMenuIndex === '1' ? bgColor : '',
+                                        activeMenuIndex === '1'
+                                            ? textBgColor
+                                            : '',
                                     color: activeMenuIndex === '1' ? '#fff' : ''
                                 }"
                                 @click="toggle('1')"
@@ -89,7 +87,9 @@
                             <button
                                 :style="{
                                     'background-color':
-                                        activeMenuIndex === '2' ? bgColor : '',
+                                        activeMenuIndex === '2'
+                                            ? textBgColor
+                                            : '',
                                     color:
                                         activeMenuIndex === '2'
                                             ? '#fff'
@@ -99,7 +99,12 @@
                             >
                                 英文组
                             </button>
-                            <view class="search">
+                            <view
+                                class="search"
+                                :style="{
+                                    'background-color': textBgColor
+                                }"
+                            >
                                 <image
                                     src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/read_search.png"
                                 />
@@ -220,13 +225,19 @@ export default {
         EventCraftCover,
     },
     props: {
-        bgColor: {
+        btnColor: {
             type: String,
             default: '#f5f5f5',
         },
-        mainColor: {
+        textBgColor: {
             type: String,
-            default: '#f5f5f5',
+            default: '#fff',
+        },
+        tipsColor: {
+            type: Object,
+            default() {
+                return {};
+            },
         },
         shareConfig: {
             type: Object,
@@ -880,7 +891,6 @@ body.dialog-open {
                 }
             }
             .search {
-                background: #05af7c;
                 width: 400upx;
                 height: 72upx;
                 position: relative;

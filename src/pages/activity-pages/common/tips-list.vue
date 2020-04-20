@@ -21,9 +21,13 @@
                 <view class="swiper-item">
                     <image src="/static/images/yiqing/horn.png" />
                     <view class="swiper-info">
-                        <text> 用户{{ item.user_name | plusXing }} </text>
+                        <text :style="{ color: tipsColor.mainColor }">
+                            用户{{ item.user_name | plusXing }}
+                        </text>
                         <text>发布了</text>
-                        <text>#{{ item.cat_name }}#</text>
+                        <text :style="{ color: tipsColor.mainColor }">
+                            #{{ item.cat_name }}#
+                        </text>
                         <text>{{ item.resource_name }}</text>
                     </view>
                     <text>刚刚</text>
@@ -53,6 +57,11 @@ export default {
         textColor: {
             type: String,
             default: '#ffde6d',
+        },
+    },
+    computed: {
+        tipsColor() {
+            return this.$store.state.activity.tipsColor;
         },
     },
 };
