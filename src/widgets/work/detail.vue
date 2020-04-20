@@ -412,7 +412,7 @@ export default {
 }
 .content {
     position: absolute;
-    bottom: 60upx;
+    bottom: 80upx;
     width: 480upx;
     padding: 30upx 30upx 0;
     color: #fff;

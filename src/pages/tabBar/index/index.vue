@@ -97,7 +97,7 @@
                         >
                             <image
                                 class="banner-image"
-                                src="http://aitiaozhan.oss-cn-beijing.aliyuncs.com/h5/chunjiehao.png?t=1"
+                                src="http://aitiaozhan.oss-cn-beijing.aliyuncs.com/chunjiehao.png"
                             />
                         </navigator>
                     </swiper-item>
@@ -230,8 +230,6 @@
             </navigator>
         </view>
         <!-- menu -->
-        <!-- work show -->
-
         <work
             :title="'爱挑战优秀个人'"
             :more-url="'/pages/work/list/list?cat_id=1'"
@@ -653,7 +651,6 @@ uni-swiper {
             height: 280upx;
         }
     }
-
     .menu-list {
         display: flex;
         margin-bottom: 40upx;

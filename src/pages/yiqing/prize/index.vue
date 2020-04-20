@@ -324,7 +324,8 @@ export default {
                 ({ url }) => {
                     if (url) {
                         this.base64src(url, (res) => {
-                            this.posterConfig.images[1].url = res;
+                            this.posterConfig.images[1].url = res
+                                || 'http://aitiaozhan.oss-cn-beijing.aliyuncs.com/main-erweima.png';
                             setTimeout(() => {
                                 this.poster.onCreate(this.posterConfig);
                             }, 100);

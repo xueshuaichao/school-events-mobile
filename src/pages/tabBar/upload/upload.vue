@@ -1,6 +1,9 @@
 <template>
     <view class="page-upload">
-        <view class="item-card">
+        <view
+            class="item-card"
+            @click="jumpRoute"
+        >
             <image
                 class="banner"
                 src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/h5/read-banner.png"
@@ -21,10 +24,7 @@
                 <view class="fl-l time-start-end">
                     活动日期：4月20日-5月8日
                 </view>
-                <view
-                    class="join-game fl-r"
-                    @click="jumpRoute"
-                >
+                <view class="join-game fl-r">
                     立即参加
                 </view>
             </view>
@@ -51,7 +51,7 @@ export default {
             }).then(
                 () => {
                     uni.navigateTo({
-                        url: '/pages/read/upload/modify',
+                        url: '/pages/read/index',
                     });
                 },
                 () => uni.showToast({

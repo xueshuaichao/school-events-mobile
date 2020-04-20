@@ -1,33 +1,23 @@
 {
     "pages": [
         //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
-
         {
             "path": "pages/tabBar/index/index",
             "style": {
-                "navigationBarTitleText": "大赛首页",
+                "navigationBarTitleText": "首页",
                 "enablePullDownRefresh": true
-            }
-        },
-        {
-            "path": "pages/yiqing/prize/index",
-            "style": {
-                "navigationBarTitleText": "领取证书",
-                "usingComponents": {
-                    "poster": "/wxcomponents/third-party/poster/poster/index"
-                }
             }
         },
         {
             "path": "pages/tabBar/list/list",
             "style": {
-                "navigationBarTitleText": "作品展示"
+                "navigationBarTitleText": "作品"
             }
         },
         {
             "path": "pages/tabBar/upload/upload",
             "style": {
-                "navigationBarTitleText": "我要秀才艺"
+                "navigationBarTitleText": "活动"
             }
         },
         {
@@ -266,15 +256,15 @@
                 "navigationBarTitleText": "绑定手机号"
             }
         },
-        // {
-        //     "path": "pages/yiqing/prize/index",
-        //     "style": {
-        //         "navigationBarTitleText": "领取证书",
-        //         "usingComponents": {
-        //             "poster": "/wxcomponents/third-party/poster/poster/index"
-        //         }
-        //     }
-        // },
+        {
+            "path": "pages/yiqing/prize/index",
+            "style": {
+                "navigationBarTitleText": "领取证书",
+                "usingComponents": {
+                    "poster": "/wxcomponents/third-party/poster/poster/index"
+                }
+            }
+        },
         // ============== 疫情end ========================
 
         {
@@ -406,7 +396,7 @@
                 "pagePath": "pages/tabBar/index/index",
                 "iconPath": "static/images/tab/index.png",
                 "selectedIconPath": "static/images/tab/index_ac.png",
-                "text": "大赛"
+                "text": "首页"
             },
             {
                 "pagePath": "pages/tabBar/list/list",
