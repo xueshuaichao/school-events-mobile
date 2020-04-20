@@ -661,7 +661,7 @@ export default {
         }
         .tab-register {
             text-align: center;
-            width: 240rpx;
+            flex: 1;
         }
     }
 
