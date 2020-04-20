@@ -17,7 +17,8 @@
         {
             "path": "pages/tabBar/upload/upload",
             "style": {
-                "navigationBarTitleText": "活动"
+                "navigationBarTitleText": "活动",
+                "enablePullDownRefresh": true
             }
         },
         {

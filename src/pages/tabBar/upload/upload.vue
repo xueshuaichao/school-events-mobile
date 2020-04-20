@@ -41,6 +41,10 @@ export default {
         return {
             fr: '',
             activity_num: 8659,
+            filter: {
+                page_size: 10,
+                page_num: 1,
+            },
         };
     },
     methods: {
@@ -63,19 +67,27 @@ export default {
                 }),
             );
         },
+        getData(refresh) {
+            api.post('/api/activity/list', this.filter).then(
+                (data) => {
+                    console.log(data, '/api/activity/list');
+                    if (refresh) {
+                        uni.stopPullDownRefresh();
+                    }
+                },
+                () => {
+                    if (refresh) {
+                        uni.stopPullDownRefresh();
+                    }
+                },
+            );
+        },
     },
     onLoad() {
-        api.post('/api/activity/getactivitystatus', {
-            activity_id: 6,
-        }).then((data) => {
-            this.activity_num = data.activity_num;
-        });
-        api.get('/api/activity/list', {
-            page_size: 10,
-            page_num: 1,
-        }).then((data) => {
-            console.log(data, '/api/activity/list');
-        });
+        this.getData();
+    },
+    onPullDownRefresh() {
+        this.getData('refresh');
     },
 };
 </script>
