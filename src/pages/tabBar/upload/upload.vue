@@ -45,6 +45,9 @@ export default {
     },
     methods: {
         jumpRoute() {
+            // const arr = ['xchd', 'dsxnh', 'dsxnh', 'dshd'];
+            // const type = arr[this.activity_id - 3];
+            // this.fr = logger.getFr(type, {});
             this.fr = logger.getFr('dshd', {});
             api.isLogin({
                 fr: this.fr,
@@ -66,6 +69,13 @@ export default {
             activity_id: 6,
         }).then((data) => {
             this.activity_num = data.activity_num;
+        });
+        api.post('/api/activity/list', {
+            page_size: 10,
+            page_num: 1,
+            status: 2,
+        }).then((data) => {
+            console.log(data, '/api/activity/list');
         });
     },
 };

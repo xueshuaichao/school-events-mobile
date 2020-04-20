@@ -404,15 +404,12 @@
                 "selectedIconPath": "static/images/tab/work_ac.png",
                 "text": "作品"
             },
-            // #ifndef H5
             {
                 "pagePath": "pages/tabBar/upload/upload",
                 "iconPath": "static/images/tab/upload.png",
                 "selectedIconPath": "static/images/tab/upload_ac.png",
                 "text": "活动"
             },
-            // #endif
-
             // {
             //     "pagePath": "pages/tabBar/mall/mall",
             //     "iconPath": "static/images/tab/mall.png",
