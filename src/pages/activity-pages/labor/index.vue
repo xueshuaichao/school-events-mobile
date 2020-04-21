@@ -1,15 +1,20 @@
 <template>
-    <indexPage
-        text-bg-color="#05af7c"
-        btn-color="#04a875"
-        search-color="#E5FFF7"
-        :tips-color="tipsColor"
-    />
+    <div>
+        <indexPage
+            v-if="loading"
+            text-bg-color="#05af7c"
+            btn-color="#04a875"
+            search-color="#E5FFF7"
+            :index-config="indexConfig"
+            :public-config="publicConfig"
+            :tips-color="activityConfig.tipsColor"
+        />
+    </div>
 </template>
 
 <script>
-import { mapMutations } from 'vuex';
 import indexPage from '../common/index.vue';
+import share from '../../../common/share';
 
 export default {
     components: {
@@ -20,74 +25,10 @@ export default {
             // #ifdef H5
             isH5: true,
             // #endif
+            loading: false,
             shareConfig: {},
-            workColor: {
-                imgBg: '11CD95',
-                text: '#08402f',
-                title: '#056446',
-                btnBg: '#0f8c64',
-                btnText: '#fff',
-            },
-            tipsColor: {
-                textColor: '#fff',
-                mainColor: '#ffde6d',
-            },
-            rules: [
-                {
-                    title: '一、活动主题',
-                    texts: [
-                        '书籍是开启心灵之门的钥匙，是促进人类进步的阶梯，读书会让你成为一个有温度、有情趣、会思考的人。让书籍为我们打开一个崭新的世界，“4.23世界读书日”我是朗读者，让我读给你听！',
-                    ],
-                },
-                {
-                    title: '二、活动时间',
-                    texts: ['4月20日--5月8日'],
-                },
-                {
-                    title: '三、参与对象',
-                    texts: ['年龄不限'],
-                },
-                {
-                    title: '四、作品类型',
-                    texts: [
-                        '古诗词、诗歌、名著等作品内容不限，可采用中文或英文进行朗读，作品上传需为视频格式。',
-                    ],
-                },
-                {
-                    title: '五、作品要求',
-                    texts: [
-                        '1、视频格式：支持MP4、MOV、3GP、MP4V，视频大小不超过200M，视频完整清晰；',
-                        '2、内容健康、积极向上，如发现上传不合规内容，该账号将取消参与资格；',
-                        '3、穿着整洁，态度认真、充满自信、举止稳重大方；',
-                        '4、中文朗读需采用“普通话”语速适中，英文朗读需发音准确清晰，表达流畅。朗读中需轻重缓急合理，富有感情，声音能够传达出作品的意境，能读出作品的韵味；',
-                        '5、朗读时可辅助以合理的动作、配乐。',
-                    ],
-                },
-                {
-                    title: '六、活动规则',
-                    texts: [
-                        '1、参与活动用户在“青少年爱挑战”平台注册并通过活动页面上传作品，审核通过后可进行投票分享等；',
-                        '2、每个账户每天只能为同一个作品投票1次；',
-                        '3、中文组和英文组每组投票排名前10名的参赛者，颁发相应奖品及证书；',
-                        '4、活动组委会将根据作品质量、内容以及投票数量进行综合评选，中文组和英文组各选出10个优秀作品奖，颁发证书；',
-                        '5、投票截止时间为：2020年5月8日23:59:59；',
-                        '6、获奖名单将于5月12日在爱挑战官网（http://atz.qsnatz.com）及官方服务号（UP青少年爱挑战）进行公布；',
-                        '7、本次活动最终解释权在法律允许范围内归活动举办方所有。',
-                    ],
-                },
-                {
-                    title: '七、奖品兑换说明',
-                    texts: [
-                        '1、每名参赛选手只有一次兑奖机会，如同时获得了不同奖项，以最高奖项为准；',
-                        '2、每个账号视为一个参赛选手，请勿多人使用同一个账号上传，若同一账号下，多个作品获奖，只颁发排名最高的一个作品；',
-                        '3、工作人员将于5月13-14日期间电话联系获奖账号所绑定的手机号，电话无法联系的将视为自动放弃兑奖资格；',
-                        '4、奖品及证书将于5月30日之前通过普通快递寄出；',
-                        '5、奖品属于用户奖励活动，不提供发票、收据；',
-                        '6、奖品不支持退换和售后，请当面核实无质量问题再签收；',
-                        '7、因用户提供的收货地址等信息有误而导致的奖品未收到，不予补发。',
-                    ],
-                },
-            ],
+            publicConfig: {},
+            indexConfig: {},
             prizeList: [
                 {
                     text: ['一等奖', '护眼仪'],
@@ -104,46 +45,36 @@ export default {
             ],
         };
     },
-    created() {
-        this.initShare();
-        this.setActivityConfig({
-            catId: 18,
-            activityId: 6,
-            mainBgColor: '#a1debe',
-            activityName: 'read',
-            log: 'dshd',
-            rules: this.rules,
-            shareConfig: this.shareConfig,
-        });
 
-        this.setActivityWorkColor(this.workColor);
-        this.setTipsColor(this.tipsColor);
-    },
     onLoad() {
         // this.fr = logger.getFr('dshd', params);
+        this.activityId = 8;
+        this.publicConfig = this.$store.getters.getPublicConfig(
+            this.activityId,
+        );
+        this.indexConfig = this.$store.getters.getActivityConfig({
+            activityId: this.activityId,
+            page: 'indexConfig',
+        });
+        this.loading = true;
+        this.initShare();
     },
     onShow() {},
     methods: {
-        ...mapMutations([
-            'setActivityConfig',
-            'setActivityWorkColor',
-            'setTipsColor',
-        ]),
         initShare() {
-            const title = this.isH5
-                ? '我是朗读者，读给你听'
-                : '4.23世界读书日，读书赢好礼，一起来读书吧！';
-            const desc = this.isH5
-                ? '4.23世界读书日，读书赢好礼，一起来读书吧！'
-                : '';
-            this.shareDesc = title;
-            this.shareConfig = {
-                ...this.shareConfig,
-                title,
+            const titleList = this.isH5
+                ? this.publicConfig.shareConfig.h5Title
+                : this.publicConfig.shareConfig.title;
+            const descList = this.publicConfig.shareConfig.desc;
+            const random = Math.floor(Math.random() * titleList.length);
+            this.title = titleList[random];
+            const desc = descList[random];
+
+            share({
+                title: this.title,
                 desc,
-                thumbnail:
-                    'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/read_share.png?x-oss-process=image/format,png/interlace,1/quality,Q_80/resize,m_pad,h_100',
-            };
+                thumbnail: `${this.publicConfig.shareConfig.image}?x-oss-process=image/format,png/interlace,1/quality,Q_80/resize,m_pad,h_100`,
+            });
         },
     },
     onShareAppMessage(res) {
@@ -152,7 +83,8 @@ export default {
             console.log(res.target);
         }
         return {
-            title: this.shareDesc,
+            title: this.title,
+            imageUrl: this.publicConfig.shareConfig.image,
             path: '/pages/read/index',
         };
     },

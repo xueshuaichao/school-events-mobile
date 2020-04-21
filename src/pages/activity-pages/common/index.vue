@@ -1,16 +1,16 @@
 <template>
     <view
         class="activity-page-index"
-        :style="{ 'background-color': config.mainBgColor }"
+        :style="{ 'background-color': publicConfig.mainBgColor }"
     >
         <official-account />
         <view :class="['page-index', { 'stop-scroll': prompt }]">
             <!-- 活动规则 -->
             <rule
                 v-if="prompt"
-                :rules="config.rules"
+                :rules="indexConfig.rules"
                 bg-color="#f00"
-                name="labor"
+                :name="publicConfig.activityName"
                 @handle-close="handleClose"
             />
 
@@ -18,7 +18,7 @@
                 <view
                     class="banner"
                     :style="{
-                        'background-image': `url(https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/${config.activityName}_main.jpg)`
+                        'background-image': `url(https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/${publicConfig.activityName}_main.jpg)`
                     }"
                 >
                     <view
@@ -73,31 +73,21 @@
                     <view class="menu-list">
                         <view class="search-box">
                             <button
+                                v-for="(item, index) in indexConfig.catMenu"
+                                :key="index"
                                 :style="{
                                     'background-color':
-                                        activeMenuIndex === '1'
-                                            ? textBgColor
-                                            : '',
-                                    color: activeMenuIndex === '1' ? '#fff' : ''
-                                }"
-                                @click="toggle('1')"
-                            >
-                                中文组
-                            </button>
-                            <button
-                                :style="{
-                                    'background-color':
-                                        activeMenuIndex === '2'
+                                        activeMenuIndex === index + 1
                                             ? textBgColor
                                             : '',
                                     color:
-                                        activeMenuIndex === '2'
+                                        activeMenuIndex === index + 1
                                             ? '#fff'
-                                            : '#000'
+                                            : ''
                                 }"
-                                @click="toggle('2')"
+                                @click="toggle(index + 1)"
                             >
-                                英文组
+                                {{ item }}
                             </button>
                             <view
                                 class="search"
@@ -137,14 +127,28 @@
                                     @click.native="viewDetail(item)"
                                 />
 
-                                <view class="media-name text-one-line">
+                                <view
+                                    class="media-name text-one-line"
+                                    :style="{
+                                        color: indexConfig.workColor.title
+                                    }"
+                                >
                                     {{ `${item.resource_name}` }}
                                 </view>
-                                <text class="vote-num">
+                                <text
+                                    class="vote-num"
+                                    :style="{
+                                        color: indexConfig.workColor.text
+                                    }"
+                                >
                                     {{ item.ticket }}赞
                                 </text>
                                 <view
                                     class="vote"
+                                    :style="{
+                                        'background-color':
+                                            indexConfig.workColor.btnBg
+                                    }"
                                     @click="handleVote(item)"
                                 >
                                     <image
@@ -175,6 +179,7 @@
                 </view>
                 <view
                     :class="status === 2 || isH5 ? 'upload' : 'upload-disable'"
+                    :style="{ 'background-color': indexConfig.btnColor }"
                     @click="handleUpload"
                 >
                     上传作品
@@ -239,6 +244,18 @@ export default {
                 return {};
             },
         },
+        indexConfig: {
+            type: Object,
+            default() {
+                return {};
+            },
+        },
+        publicConfig: {
+            type: Object,
+            default() {
+                return {};
+            },
+        },
         shareConfig: {
             type: Object,
             default() {
@@ -272,15 +289,15 @@ export default {
             fr: '',
             shareDesc: '',
             changeValue: '',
-            activeMenuIndex: '1',
+            activeMenuIndex: 1,
             loadMoreStatus: 'more',
             prompt: false,
             isPlayed: false,
             newsTabActiveIndex: 0,
             dataList: [],
             filter: {
-                cat_id: this.$store.state.activity.config.catId,
-                activity_id: this.$store.state.activity.config.activityId,
+                cat_id: this.publicConfig.catId,
+                activity_id: this.publicConfig.activityId,
                 page_num: 1,
                 page_size: 10,
                 activity_cat: 1,
@@ -289,11 +306,6 @@ export default {
             crouselList: [],
             setId: '',
         };
-    },
-    computed: {
-        config() {
-            return this.$store.state.activity.config;
-        },
     },
     created() {
         this.getData();
@@ -319,7 +331,7 @@ export default {
         },
         postCrouselList() {
             api.post('/api/activity/resourcelist', {
-                activity_id: this.config.activityId,
+                activity_id: this.filter.activity_id,
                 page_num: 1,
                 page_size: 10,
             }).then(({ list }) => {
@@ -353,7 +365,7 @@ export default {
         activityStatus() {
             // 1未开始，2进行中，3已结束
             api.post('/api/activity/getactivitystatus', {
-                activity_id: this.config.activityId,
+                activity_id: this.filter.activity_id,
             }).then((res) => {
                 this.status = res.status;
             });
@@ -370,7 +382,7 @@ export default {
                     fr: this.fr,
                 }).then(() => {
                     uni.navigateTo({
-                        url: '/pages/read/upload/modify',
+                        url: `/pages/activity-pages/upload/modify?activity_id${this.filter.activity_id}`,
                     });
                 });
             } else {
@@ -394,7 +406,9 @@ export default {
         },
         bindconfirm() {
             uni.navigateTo({
-                url: `/pages/read/myWork/myWork?type=search&name=${this.changeValue.trim()}`,
+                url: `/pages/activity-pages/mywork/mywork?type=search&name=${this.changeValue.trim()}&activity_id=${
+                    this.filter.activity_id
+                }`,
             });
         },
         initShare() {
@@ -402,7 +416,7 @@ export default {
         },
         viewDetail({ id }) {
             uni.navigateTo({
-                url: `/pages/work/detail/detail?id=${id}&activity_id=${this.config.activityId}`,
+                url: `/pages/work/detail/detail?id=${id}&activity_id=${this.filter.activity_id}`,
             });
         },
         toggle(k) {
@@ -420,7 +434,7 @@ export default {
                 fr: this.fr,
             }).then(() => {
                 uni.navigateTo({
-                    url: '/pages/read/myWork/myWork?type=myWork',
+                    url: `/pages/activity-pages/mywork/mywork?type=myWork&activity_id=${this.filter.activity_id}`,
                 });
             });
         },

@@ -294,10 +294,21 @@
         {
             "path": "pages/activity-pages/labor/index",
             "style": {
-                "navigationBarTitleText": "青少年动起啦"
+                "navigationBarTitleText": "青少年动起来"
             }
         },
-
+        {
+            "path": "pages/activity-pages/upload/modify",
+            "style": {
+                "navigationBarTitleText": "青少年动起来"
+            }
+        },
+        {
+            "path": "pages/activity-pages/mywork/mywork",
+            "style": {
+                "navigationBarTitleText": "我的作品"
+            }
+        },
         // #ifdef H5
         {
             "path": "pages/login/login",
