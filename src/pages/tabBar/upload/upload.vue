@@ -1,6 +1,8 @@
 <template>
     <view class="page-upload">
         <view
+            v-for="item in list"
+            :key="item.id"
             class="item-card"
             @click="jumpRoute"
         >
@@ -10,10 +12,10 @@
             />
             <view class="top clearfix">
                 <text class="title fl-l">
-                    世界读书日
+                    {{ item.activity_name || "世界读书日" }}
                 </text>
                 <text class="count fl-r">
-                    {{ activity_num }}人关注
+                    {{ item.activity_num }}人关注
                 </text>
             </view>
             <view class="btm clearfix">
@@ -22,7 +24,9 @@
                     src="/static/images/upload/time.png"
                 />
                 <view class="fl-l time-start-end">
-                    活动日期：4月20日-5月8日
+                    活动日期：{{ item.start_time.slice(0, 10) }}/{{
+                        item.end_time.slice(0, 10)
+                    }}
                 </view>
                 <view class="join-game fl-r">
                     立即参加
@@ -45,6 +49,15 @@ export default {
                 page_size: 10,
                 page_num: 1,
             },
+            list: [
+                {
+                    activity_name: 6358,
+                    start_time: '2020-04-20',
+                    end_time: '2020-05-31',
+                    status: 2,
+                    id: 7,
+                },
+            ],
         };
     },
     methods: {
@@ -71,6 +84,7 @@ export default {
             api.post('/api/activity/list', this.filter).then(
                 (data) => {
                     console.log(data, '/api/activity/list');
+                    this.list = data.list;
                     if (refresh) {
                         uni.stopPullDownRefresh();
                     }
