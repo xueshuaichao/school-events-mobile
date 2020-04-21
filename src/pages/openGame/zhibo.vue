@@ -3,7 +3,7 @@
         <!-- <Icon class="success-icon" type="checkmark-circled" color="#3BCC70" size="60px"></Icon> -->
         <video
             class="video"
-            src="http://prdsecurelive.ainemo.com/prdnemo/2c949824713649570171819755361521.m3u8?auth_key=b4218638e43e57952f5df736335d1367-1587110880-5da384e65aab41f4aacd7494fdea1ad6-"
+            src="http://prdsecurelive.ainemo.com/prdnemo/2c94982b71364816017195a0650c4ee0.m3u8?auth_key=5e139ba69e2109b383410b579e000e90-1587461400-ee51cfabfb9d43fd9d0e9674675c14b0-"
         />
     </view>
 </template>

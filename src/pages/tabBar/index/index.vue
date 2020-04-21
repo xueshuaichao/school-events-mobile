@@ -218,14 +218,14 @@
         </view>
         <!-- menu -->
         <!-- zhibo-entry -->
-        <navigator url="/pages/openGame/signUp">
+        <!-- <navigator url="/pages/openGame/signUp">
             <image
                 class="zhibo-entry"
                 src="http://aitiaozhan.oss-cn-beijing.aliyuncs.com/school-events-mobile/zhibo-entry.png"
             />
-        </navigator>
+        </navigator> -->
         <!-- work show -->
-        <!-- <work
+        <work
             :title="'爱挑战网络公开赛'"
             :info="workData.individual.list"
             :cat-id="1"
@@ -242,7 +242,7 @@
                     />
                 </navigator>
             </template>
-        </work> -->
+        </work>
         <work
             :title="'爱挑战优秀个人'"
             :more-url="'/pages/work/list/list?cat_id=1'"
