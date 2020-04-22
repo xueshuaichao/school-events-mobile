@@ -112,20 +112,11 @@
             <template v-if="tableData.length > 0">
                 <view class="widget-list-box">
                     <view
-                        v-for="(item, index) in tableData"
+                        v-for="item in tableData"
                         :key="item.id"
                         class="work-item"
                     >
-                        <work
-                            :info="item"
-                            :query="
-                                `sort=${filter.sort}&keyword=${
-                                    filter.keyword
-                                }&total=${total}&levelid=${
-                                    filter.cat_id.one_level_id
-                                }&curPosition=${index + 1}`
-                            "
-                        />
+                        <work :info="item" />
                     </view>
                 </view>
                 <uni-load-more :status="loadMoreStatus" />

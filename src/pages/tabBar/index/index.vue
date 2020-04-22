@@ -1,7 +1,7 @@
 <template>
     <view class="page-index">
         <view
-            v-if="prompt"
+            v-if="prompt && status === 2"
             class="cover"
         >
             <image
@@ -55,7 +55,7 @@
                     :duration="duration"
                     :circular="true"
                 >
-                    <swiper-item v-if="activitiesStatus[3].show">
+                    <swiper-item>
                         <navigator
                             url="/pages/read/index"
                             class="swiper-item"
@@ -67,7 +67,7 @@
                         </navigator>
                     </swiper-item>
                     <!-- 疫情入口 -->
-                    <swiper-item v-if="activitiesStatus[2].show">
+                    <swiper-item>
                         <navigator
                             url="/pages/yiqing/index"
                             class="swiper-item"
@@ -78,7 +78,7 @@
                             />
                         </navigator>
                     </swiper-item>
-                    <swiper-item v-if="activitiesStatus[1].show">
+                    <!-- <swiper-item v-if="activitiesStatus[1].show">
                         <navigator
                             url="/pages/chunjie/index"
                             class="swiper-item"
@@ -88,9 +88,9 @@
                                 src="http://aitiaozhan.oss-cn-beijing.aliyuncs.com/banner4.png"
                             />
                         </navigator>
-                    </swiper-item>
+                    </swiper-item> -->
                     <!-- 春节好入口 -->
-                    <swiper-item v-if="activitiesStatus[0].show">
+                    <!-- <swiper-item v-if="activitiesStatus[0].show">
                         <navigator
                             url="/pages/chunjiehao/index"
                             class="swiper-item"
@@ -100,7 +100,7 @@
                                 src="http://aitiaozhan.oss-cn-beijing.aliyuncs.com/chunjiehao.png"
                             />
                         </navigator>
-                    </swiper-item>
+                    </swiper-item> -->
                     <!-- <swiper-item>
                         <navigator
                             url="/pages/doc/notice/notice"
@@ -229,38 +229,27 @@
                 </text>
             </navigator>
         </view>
+        <work
+            :title="'热门活动'"
+            :more-url="'/pages/tabBar/upload/upload'"
+            :info="workData.individual.list"
+            :show-card="false"
+        />
         <!-- menu -->
         <work
             :title="'爱挑战优秀个人'"
             :more-url="'/pages/work/list/list?cat_id=1'"
             :info="workData.individual.list"
-            :query="
-                `levelid=1&sort=4&total=${
-                    workData.individual.total > 10
-                        ? 10
-                        : workData.individual.total
-                }`
-            "
         />
         <work
             :title="'爱挑战优秀团体'"
             :more-url="'/pages/work/list/list?cat_id=2'"
             :info="workData.team.list"
-            :query="
-                `levelid=2&sort=4&total=${
-                    workData.team.total > 10 ? 10 : workData.team.total
-                }`
-            "
         />
         <work
             :title="'才艺秀优秀作品'"
             :more-url="'/pages/work/list/list?cat_id=3'"
             :info="workData.talent.list"
-            :query="
-                `levelid=3&sort=4&total=${
-                    workData.talent.total > 10 ? 10 : workData.talent.total
-                }`
-            "
         />
 
         <!-- news -->
@@ -337,7 +326,7 @@ export default {
                 talent: { list: [], total: 0 },
             },
             prompt: false,
-            isFirstLogin: 'hasReadPromt',
+            isFirstLogin: 'hasLaborPromt',
             status: 1,
             // show: 1,
             // #ifdef H5
@@ -345,12 +334,12 @@ export default {
             // #endif
             needBindMobile: false,
             changeValue: '',
-            activitiesStatus: [
-                { activity_id: 3, status: 1, show: 0 },
-                { activity_id: 4, status: 1, show: 0 },
-                { activity_id: 5, status: 1, show: 1 },
-                { activity_id: 6, status: 1, show: 1 },
-            ],
+            // activitiesStatus: [
+            //     { activity_id: 3, status: 1, show: 0 },
+            //     { activity_id: 4, status: 1, show: 0 },
+            //     { activity_id: 5, status: 1, show: 1 },
+            //     { activity_id: 6, status: 1, show: 1 },
+            // ],
         };
     },
     onHide() {
@@ -359,6 +348,7 @@ export default {
     },
     onLoad() {
         this.getAllActivityStatus();
+        // this.getAllShowActivity();
         this.thirdEntryPrompt();
         this.getData();
         this.getUserInfo();
@@ -416,15 +406,18 @@ export default {
         getAllActivityStatus() {
             // 1未开始，2进行中，3已结束
             api.post('/api/activity/getactivitystatus', {
-                in_activity_id: [3, 4, 5, 6],
+                activity_id: 8,
             }).then((data) => {
+                console.log(data, 'aaaa');
+                this.status = data.status;
                 // 1显示  0不显示
-                this.status = data[data.length - 1].status;
-                this.activitiesStatus = data;
             });
         },
         thirdEntryPrompt() {
             const isFirstLogin = uni.getStorageSync(this.isFirstLogin);
+            if (uni.getStorageSync('hasReadPromt')) {
+                uni.removeStorageSync('hasReadPromt');
+            }
             if (!isFirstLogin) {
                 this.prompt = true;
             }
@@ -503,10 +496,21 @@ export default {
 
             // this.getArticle(this.newsColumn[0].id);
             // this.getMenuData();
+            this.getAllShowActivity();
             this.getWorkList('individual');
             this.getWorkList('team');
             this.getWorkList('talent', refresh);
             // })
+        },
+        getAllShowActivity() {
+            api.post('/api/activity/list', {
+                page_size: 4,
+                page_num: 1,
+                status: 2,
+            }).then((data) => {
+                console.log(data, '/api/activity/list');
+                this.list = data.list;
+            });
         },
     },
     onPullDownRefresh() {

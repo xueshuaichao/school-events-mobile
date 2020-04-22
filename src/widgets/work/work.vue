@@ -14,20 +14,22 @@
                 <!-- </navigator> -->
             </view>
         </view>
-        <view class="panel-bd has-swiper">
+        <view
+            v-if="!showCard"
+            class="panel-bd has-swiper"
+        >
+            aasa
+        </view>
+        <view
+            v-if="showCard"
+            class="panel-bd has-swiper"
+        >
             <view
-                v-for="(item, index) in info"
+                v-for="item in info"
                 :key="item.id"
                 class="scroll-view-item"
             >
-                <work
-                    :info="item"
-                    :levelid="catId"
-                    :sort="sort"
-                    :cur-position="index + 1"
-                    :total="total"
-                    :query="`${query}&curPosition=${index + 1}`"
-                />
+                <work :info="item" />
             </view>
 
             <!-- <scroll-view
@@ -67,21 +69,9 @@ export default {
             type: Array,
             default: () => [],
         },
-        catId: {
-            type: Number,
-            default: 1,
-        },
-        sort: {
-            type: Number,
-            default: 4,
-        },
-        total: {
-            type: Number,
-            default: 0,
-        },
-        query: {
-            type: String,
-            default: '',
+        showCard: {
+            type: Boolean,
+            default: true,
         },
     },
 
@@ -98,15 +88,21 @@ export default {
         openTab() {
             // console.log(this.moreUrl);
             // utils.store.set('category', 2);
-            uni.navigateTo({
-                url: this.moreUrl,
-                success: () => {
-                    // console.log('switch success');
-                    // const page = getCurrentPages().pop();
-                    // if (page === undefined || page === null) return;
-                    // console.log(page);
-                },
-            });
+            if (!this.showCard) {
+                uni.switchTab({
+                    url: this.moreUrl,
+                });
+            } else {
+                uni.navigateTo({
+                    url: this.moreUrl,
+                    success: () => {
+                        // console.log('switch success');
+                        // const page = getCurrentPages().pop();
+                        // if (page === undefined || page === null) return;
+                        // console.log(page);
+                    },
+                });
+            }
         },
     },
 };

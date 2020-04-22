@@ -143,7 +143,7 @@ export default {
             canvasImg: '',
             showTicketMask: false,
 
-            pageFrom: '',
+            // pageFrom: '',
             curDetailConf: detailConf[0],
             isActvitity: true,
             activity_id: 0,
@@ -540,8 +540,8 @@ export default {
         },
     },
     onLoad(query) {
-        this.pageFrom = utils.getParam(query, 'from') || '';
-        this.levelid = Number(utils.getParam(query, 'levelid')) || -1;
+        // this.pageFrom = utils.getParam(query, 'from') || '';
+        // this.levelid = Number(utils.getParam(query, 'levelid')) || -1;
         this.id = utils.getParam(query, 'id');
         this.fr = utils.getParam(query, 'fr') || '';
 
@@ -551,7 +551,8 @@ export default {
         if (!this.activity_id) {
             this.isActvitity = false;
         } else {
-            const arr = ['xchd', 'dsxnh', 'dsxnh', 'dshd'];
+            // wyhd 五一活动
+            const arr = ['xchd', 'dsxnh', 'dsxnh', 'dshd', 'wyhd'];
             const type = arr[this.activity_id - 3];
             this.fr = logger.getFr(type, {});
         }
@@ -560,9 +561,9 @@ export default {
         this.getData();
 
         // 获取前后两页面的内容。
-        if (this.activity_id) {
+        if (this.activity_id > 2) {
             this.curDetailConf = detailConf[this.activity_id - 1];
-        } else if (this.levelid === 3 || this.pageFrom) {
+        } else if (this.resource_scope === 3) {
             [, this.curDetailConf] = detailConf;
         } else {
             [this.curDetailConf] = detailConf;
@@ -600,7 +601,7 @@ export default {
         return {
             title: this.shareDesc,
             imageUrl: `${this.pageData.video_img_url}?x-oss-process=image/resize,m_fill,w_250,h_150`,
-            path: `/pages/work/detail/detail?id=${this.id}&activity_id=${this.activity_id}`,
+            path: `/pages/work/detail/detail?id=${this.id}&activity_id=${this.activity_id}&resource_scope=${this.resource_scope}`,
         };
     },
 };

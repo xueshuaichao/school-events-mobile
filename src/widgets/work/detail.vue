@@ -161,7 +161,7 @@
             </view>
 
             <view
-                v-if="activityId !== 6 && !resourceScope"
+                v-if="activityId !== 6 && resourceScope > 2"
                 class="btn primary"
                 @click="joinGame"
             >
