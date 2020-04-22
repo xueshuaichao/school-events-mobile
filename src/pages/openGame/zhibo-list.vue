@@ -1,30 +1,29 @@
 <template>
     <view class="main">
-        <navigator
+        <view
             v-for="(item, k) in list"
             :key="k"
-            url="/pages/openGame/zhibo"
+            class="main-box"
         >
-            <view class="main-box">
-                <text class="zhibo-name">
-                    {{ item.name }}
-                </text>
-                <image
-                    class="event-space"
-                    src="/static/images/zhibo/event-space.png"
-                />
-                <text class="zhibo-type">
-                    {{ item.type }}
-                </text>
-                <text class="zhibo-date">
-                    {{ item.date }}
-                </text>
+            <text class="zhibo-name">
+                {{ item.name }}
+            </text>
+            <image
+                class="event-space"
+                src="/static/images/zhibo/event-space.png"
+            />
+            <text class="zhibo-type">
+                {{ item.type }}
+            </text>
+            <text class="zhibo-date">
+                {{ item.date }}
+            </text>
+            <navigator :url="item.url">
                 <text class="zhibo-time">
                     {{ item.time }}
                 </text>
-            </view>
-        </navigator>
-
+            </navigator>
+        </view>
         <uni-load-more
             class="loadMore"
             :status="loadMoreStatus"
@@ -51,40 +50,25 @@ export default {
             loadMoreStatus: 'more',
             list: [
                 {
-                    name: '西安市第二中学复赛直播进行时',
+                    name: '竞技类',
                     type: '四阶魔方六面复原',
                     date: '2020年5月10日',
                     time: '20:00:00',
+                    url: '/pages/openGame/jingjiupload',
                 },
                 {
-                    name: '西安市第二中学复赛直播进行时',
+                    name: '才艺类',
                     type: '四阶魔方六面复原',
                     date: '2020年5月10日',
                     time: '20:00:00',
+                    url: '/pages/openGame/caiyiupload',
                 },
                 {
-                    name: '西安市第二中学复赛直播进行时',
+                    name: '吉尼斯项目',
                     type: '四阶魔方六面复原',
                     date: '2020年5月10日',
                     time: '20:00:00',
-                },
-                {
-                    name: '西安市第二中学复赛直播进行时',
-                    type: '四阶魔方六面复原',
-                    date: '2020年5月10日',
-                    time: '20:00:00',
-                },
-                {
-                    name: '西安市第二中学复赛直播进行时',
-                    type: '四阶魔方六面复原',
-                    date: '2020年5月10日',
-                    time: '20:00:00',
-                },
-                {
-                    name: '西安市第二中学复赛直播进行时',
-                    type: '四阶魔方六面复原',
-                    date: '2020年5月10日',
-                    time: '20:00:00',
+                    url: '/pages/openGame/guinessupload',
                 },
             ],
             filter: {

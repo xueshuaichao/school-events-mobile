@@ -367,6 +367,18 @@
             }
         },
         {
+            "path": "pages/openGame/caiyiupload",
+            "style": {
+                "navigationBarTitleText": "才艺上传"
+            }
+        },
+        {
+            "path": "pages/openGame/jingjiupload",
+            "style": {
+                "navigationBarTitleText": "竞技上传"
+            }
+        },
+        {
             "path": "pages/uc/reported/result",
             "style": {
                 "navigationBarTitleText": "上报成功"
