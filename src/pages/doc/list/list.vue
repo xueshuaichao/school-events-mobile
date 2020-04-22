@@ -45,7 +45,7 @@
                             open-type="redirect"
                         >
                             <view class="btn">
-                                我要来挑战 !
+                                我要来挑战
                             </view>
                         </navigator>
                         <navigator

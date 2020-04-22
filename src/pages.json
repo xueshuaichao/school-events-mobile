@@ -4,7 +4,7 @@
         {
             "path": "pages/tabBar/index/index",
             "style": {
-                "navigationBarTitleText": "大赛",
+                "navigationBarTitleText": "首页",
                 "enablePullDownRefresh": true
             }
         },
@@ -397,7 +397,7 @@
                 "pagePath": "pages/tabBar/index/index",
                 "iconPath": "static/images/tab/index.png",
                 "selectedIconPath": "static/images/tab/index_ac.png",
-                "text": "大赛"
+                "text": "首页"
             },
             {
                 "pagePath": "pages/tabBar/list/list",
