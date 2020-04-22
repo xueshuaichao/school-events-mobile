@@ -10,14 +10,25 @@
             :src="optimizeImage(info.img_url)"
             class="video"
         />
-        <!-- <view
-            v-if="info.grade"
+        <view
+            v-if="info.grade && bestIcon"
             class="is-excellect"
         >
             优秀
-        </view> -->
-        <view class="media-icon">
-            <image :src="mediaIcon[info.resource_type]" />
+        </view>
+        <view
+            v-if="mediaIcon"
+            class="media-icon"
+        >
+            <image :src="mediaIconArr[info.resource_type]" />
+        </view>
+        <view
+            v-if="likeIcon"
+            class="like-icon"
+        >
+            <image
+                src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/read_like.png"
+            /><text>{{ info.ticket || 0 }}</text>
         </view>
         <view
             v-if="info.rank"
@@ -46,10 +57,22 @@ export default {
             type: String,
             default: 'ffffff',
         },
+        bestIcon: {
+            type: Boolean,
+            default: false,
+        },
+        likeIcon: {
+            type: Boolean,
+            default: false,
+        },
+        mediaIcon: {
+            type: Boolean,
+            default: true,
+        },
     },
     data() {
         return {
-            mediaIcon: {
+            mediaIconArr: {
                 1: '/static/images/chunjie/video-icon.png',
                 2: '/static/images/chunjie/img-icon.png',
             },
@@ -64,10 +87,10 @@ export default {
             const width = 335;
             const height = 225;
             if (val.indexOf('?') !== -1) {
-                newUrl = `${val}&x-oss-process=image/format,png/interlace,1/quality,Q_80/resize,m_pad,h_${height
+                newUrl = `${val}&x-oss-process=image/format,jpg/interlace,1/quality,Q_80/resize,m_pad,h_${height
                     * 2},w_${width * 2},color_${this.bgColor}`;
             } else {
-                newUrl = `${val}?x-oss-process=image/format,png/interlace,1/quality,Q_80/resize,m_pad,h_${height
+                newUrl = `${val}?x-oss-process=image/format,jpg/interlace,1/quality,Q_80/resize,m_pad,h_${height
                     * 2},w_${width * 2},color_${this.bgColor}`;
             }
             return newUrl;
@@ -80,11 +103,9 @@ export default {
 .event-craft-cover {
     position: relative;
 
-    .media-icon {
-        width: 40upx;
+    .media-icon,
+    .like-icon {
         height: 40upx;
-        background: rgba(0, 0, 0, 0.6);
-        border-radius: 20upx;
         text-align: center;
         line-height: 42upx;
         position: absolute;
@@ -93,6 +114,24 @@ export default {
         image {
             width: 22upx;
             height: 22upx;
+        }
+    }
+    .media-icon {
+        width: 40upx;
+        background: rgba(0, 0, 0, 0.6);
+        border-radius: 20upx;
+    }
+    .like-icon {
+        font-size: 24upx;
+        image {
+            width: 24upx;
+            height: 24upx;
+            margin-right: 9upx;
+            vertical-align: middle;
+            display: inline-block;
+        }
+        text {
+            vertical-align: middle;
         }
     }
 

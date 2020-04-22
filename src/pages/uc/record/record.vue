@@ -87,7 +87,7 @@ export default {
                 page_num: 1,
                 page_size: 10,
                 record: 1,
-                resource_scope: [1, 2],
+                parent_scope: 1,
             },
             tabActiveIndex: 1,
             workStatics: {},

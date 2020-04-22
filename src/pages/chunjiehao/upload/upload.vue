@@ -569,7 +569,7 @@ export default {
         return {
             title,
             imageUrl:
-                'http://aitiaozhan.oss-cn-beijing.aliyuncs.com/chunjiehao-banner.png',
+                'http://aitiaozhan.oss-cn-beijing.aliyuncs.com/h5/chunjiehao-banner.png',
             path: '/pages/chunjiehao/index',
         };
     },

@@ -15,21 +15,20 @@
             </view>
         </view>
         <view class="panel-bd has-swiper">
-            <slot name="zhibo">
-                <view
-                    v-for="(item, index) in info"
-                    :key="item.id"
-                    class="scroll-view-item"
-                >
-                    <work
-                        :info="item"
-                        :levelid="catId"
-                        :sort="sort"
-                        :cur-position="index + 1"
-                        :total="total"
-                    />
-                </view>
-            </slot>
+            <view
+                v-for="(item, index) in info"
+                :key="item.id"
+                class="scroll-view-item"
+            >
+                <work
+                    :info="item"
+                    :levelid="catId"
+                    :sort="sort"
+                    :cur-position="index + 1"
+                    :total="total"
+                    :query="`${query}&curPosition=${index + 1}`"
+                />
+            </view>
 
             <!-- <scroll-view
                 class="scroll-view"
@@ -79,6 +78,10 @@ export default {
         total: {
             type: Number,
             default: 0,
+        },
+        query: {
+            type: String,
+            default: '',
         },
     },
 

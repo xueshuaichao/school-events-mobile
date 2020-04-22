@@ -1,27 +1,18 @@
 <template>
     <view class="main">
         <view
-            v-for="(item, k) in list"
-            :key="k"
+            v-for="(item, index) in list"
+            :key="index"
             class="main-box"
+            :style="{ backgroundImage: 'url(' + item.bg + ')' }"
         >
             <text class="zhibo-name">
                 {{ item.name }}
             </text>
-            <image
-                class="event-space"
-                src="/static/images/zhibo/event-space.png"
-            />
-            <text class="zhibo-type">
-                {{ item.type }}
-            </text>
-            <text class="zhibo-date">
-                {{ item.date }}
-            </text>
             <navigator :url="item.url">
-                <text class="zhibo-time">
-                    {{ item.time }}
-                </text>
+                <div class="zhibo-time">
+                    立即参加
+                </div>
             </navigator>
         </view>
         <uni-load-more
@@ -51,24 +42,21 @@ export default {
             list: [
                 {
                     name: '竞技类',
-                    type: '四阶魔方六面复原',
-                    date: '2020年5月10日',
-                    time: '20:00:00',
+                    bg:
+                        'http://aitiaozhan.oss-cn-beijing.aliyuncs.com/school-events-mobile/jingji-bg.png',
                     url: '/pages/openGame/jingjiupload',
                 },
                 {
                     name: '才艺类',
-                    type: '四阶魔方六面复原',
-                    date: '2020年5月10日',
-                    time: '20:00:00',
+                    bg:
+                        'http://aitiaozhan.oss-cn-beijing.aliyuncs.com/school-events-mobile/caiyi-bg.png',
                     url: '/pages/openGame/caiyiupload',
                 },
                 {
                     name: '吉尼斯项目',
-                    type: '四阶魔方六面复原',
-                    date: '2020年5月10日',
-                    time: '20:00:00',
-                    url: '/pages/openGame/guinessupload',
+                    bg:
+                        'http://aitiaozhan.oss-cn-beijing.aliyuncs.com/school-events-mobile/jinisi-bg.png',
+                    url: '/pages/openGame/caiyiupload',
                 },
             ],
             filter: {
@@ -120,23 +108,23 @@ export default {
 .main {
     width: 100%;
     height: 100vh;
-    background: #f8f8f8;
+    // background: #f8f8f8;
     padding: 26upx 24upx;
     .loadMore {
         width: 100%;
     }
     .main-box {
-        width: 702upx;
-        height: 214upx;
-        background: url("http://aitiaozhan.oss-cn-beijing.aliyuncs.com/school-events-mobile/zhibo-list-bg.png");
+        width: 708upx;
+        height: 258upx;
         background-size: 100% 100%;
         position: relative;
-        margin-top: 18upx;
+        margin-top: 22upx;
         .zhibo-name {
             position: absolute;
-            top: 36upx;
-            left: 30upx;
-            font-size: 28upx;
+            top: 59upx;
+            left: 49upx;
+            font-size: 36upx;
+            font-weight: 500;
             color: #333333;
         }
         .zhibo-type {
@@ -155,10 +143,16 @@ export default {
         }
         .zhibo-time {
             position: absolute;
-            top: 152upx;
-            left: 192upx;
-            font-size: 22upx;
-            color: #999999;
+            top: 139upx;
+            left: 49upx;
+            font-size: 30upx;
+            color: #fff;
+            width: 200upx;
+            height: 60upx;
+            background: rgba(255, 101, 85, 1);
+            border-radius: 30upx;
+            text-align: center;
+            line-height: 60upx;
         }
         .event-space {
             position: absolute;

@@ -4,20 +4,20 @@
         {
             "path": "pages/tabBar/index/index",
             "style": {
-                "navigationBarTitleText": "大赛首页",
+                "navigationBarTitleText": "首页",
                 "enablePullDownRefresh": true
             }
         },
         {
             "path": "pages/tabBar/list/list",
             "style": {
-                "navigationBarTitleText": "作品展示"
+                "navigationBarTitleText": "作品"
             }
         },
         {
             "path": "pages/tabBar/upload/upload",
             "style": {
-                "navigationBarTitleText": "我要秀才艺"
+                "navigationBarTitleText": "活动"
             }
         },
         {
@@ -35,7 +35,7 @@
         {
             "path": "pages/tabBar/uc/uc",
             "style": {
-                "navigationBarTitleText": "个人中心",
+                "navigationBarTitleText": "我的",
                 "enablePullDownRefresh": true
             }
         },
@@ -113,6 +113,13 @@
         },
         {
             "path": "pages/upload/modify/modify",
+            "style": {
+                "navigationBarTitleText": "上传作品"
+            }
+        },
+        // 默认上传作品的页面
+        {
+            "path": "pages/upload/default/upload",
             "style": {
                 "navigationBarTitleText": "上传作品"
             }
@@ -258,37 +265,33 @@
                 }
             }
         },
-        {
-            "path": "pages/openGame/signUp",
-            "style": {
-                "navigationBarTitleText": "爱挑战网络公开赛报名"
-            }
-        },
-        {
-            "path": "pages/openGame/success",
-            "style": {
-                "navigationBarTitleText": "爱挑战网络公开赛报名"
-            }
-        },
-        {
-            "path": "pages/openGame/successInfo",
-            "style": {
-                "navigationBarTitleText": "爱挑战网络公开赛报名"
-            }
-        },
-        {
-            "path": "pages/openGame/zhibo-list",
-            "style": {
-                "navigationBarTitleText": "爱挑战网络公开赛"
-            }
-        },
-        {
-            "path": "pages/openGame/zhibo",
-            "style": {
-                "navigationBarTitleText": "爱挑战网络公开赛"
-            }
-        },
         // ============== 疫情end ========================
+
+        {
+            "path": "pages/read/index",
+            "style": {
+                "navigationBarTitleText": "世界读书日"
+            }
+        },
+        {
+            "path": "pages/read/upload/modify",
+            "style": {
+                "navigationBarTitleText": "上传作品"
+            }
+        },
+        {
+            "path": "pages/read/upload/result",
+            "style": {
+                "navigationBarTitleText": "上传结果"
+            }
+        },
+        {
+            "path": "pages/read/myWork/myWork",
+            "style": {
+                "navigationBarTitleText": "我的作品"
+            }
+        },
+
         // #ifdef H5
         {
             "path": "pages/login/login",
@@ -367,6 +370,12 @@
             }
         },
         {
+            "path": "pages/openGame/zhibo-list",
+            "style": {
+                "navigationBarTitleText": "青少年“爱挑战”校园网络赛"
+            }
+        },
+        {
             "path": "pages/openGame/caiyiupload",
             "style": {
                 "navigationBarTitleText": "才艺上传"
@@ -405,20 +414,20 @@
                 "pagePath": "pages/tabBar/index/index",
                 "iconPath": "static/images/tab/index.png",
                 "selectedIconPath": "static/images/tab/index_ac.png",
-                "text": "大赛首页"
+                "text": "首页"
             },
             {
                 "pagePath": "pages/tabBar/list/list",
                 "iconPath": "static/images/tab/work.png",
                 "selectedIconPath": "static/images/tab/work_ac.png",
-                "text": "作品展示"
+                "text": "作品"
             },
             // #ifndef H5
             {
                 "pagePath": "pages/tabBar/upload/upload",
                 "iconPath": "static/images/tab/upload.png",
                 "selectedIconPath": "static/images/tab/upload_ac.png",
-                "text": "我要秀才艺"
+                "text": "活动"
             },
             // #endif
 
@@ -432,7 +441,7 @@
                 "pagePath": "pages/tabBar/uc/uc",
                 "iconPath": "static/images/tab/uc.png",
                 "selectedIconPath": "static/images/tab/uc_ac.png",
-                "text": "账户中心"
+                "text": "我的"
             }
         ]
     }
