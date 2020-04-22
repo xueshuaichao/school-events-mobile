@@ -3,12 +3,15 @@
         v-if="!isLoading"
         class="page-upload"
     >
-        <view class="main">
-            <view class="selection">
-                <view class="label">
+        <view class="content-box">
+            <view class="title">
+                参赛项目信息
+            </view>
+            <view class="show-type-input">
+                <view class="show-type-text">
                     项目名称
                 </view>
-                <view class="items">
+                <view class="uni-list-cell-db">
                     <picker
                         :value="index"
                         :range="catData"
@@ -55,69 +58,108 @@
                     />
                 </template>
             </template>
-            <view class="uni-form-item uni-column">
-                <input
-                    v-model="formData.grade"
-                    class="uni-input"
-                    placeholder-class="placeholder"
-                    maxlength="30"
-                    placeholder="成绩"
-                >
+            <view class="show-type-input">
+                <view class="show-type-text">
+                    成绩
+                </view>
+                <view class="uni-list-cell-db">
+                    <input
+                        v-model="formData.grade"
+                        class="uni-input"
+                        placeholder-class="placeholder"
+                        maxlength="30"
+                        placeholder="成绩"
+                    >
+                </view>
             </view>
-
-            <view class="uni-form-item uni-column">
-                <input
-                    v-model="formData.teacher"
-                    class="uni-input"
-                    placeholder-class="placeholder"
-                    maxlength="30"
-                    placeholder="指导老师"
-                >
+            <view class="show-type-input">
+                <view class="show-type-text">
+                    指导老师
+                </view>
+                <view class="uni-list-cell-db">
+                    <input
+                        v-model="formData.teacher"
+                        class="uni-input"
+                        placeholder-class="placeholder"
+                        maxlength="30"
+                        placeholder="指导老师"
+                    >
+                </view>
             </view>
-            <view class="uni-form-item uni-column">
-                <input
-                    v-model="formData.teacher"
-                    class="uni-input"
-                    placeholder-class="placeholder"
-                    maxlength="30"
-                    placeholder="认证官姓名"
-                >
+            <view class="show-type-input">
+                <view class="show-type-text">
+                    认证官姓名
+                </view>
+                <view class="uni-list-cell-db">
+                    <input
+                        v-model="formData.teacher"
+                        class="uni-input"
+                        placeholder-class="placeholder"
+                        maxlength="30"
+                        placeholder="认证官姓名"
+                    >
+                </view>
             </view>
-            <view class="uni-form-item uni-column">
-                <input
-                    v-model="formData.teacher"
-                    class="uni-input"
-                    placeholder-class="placeholder"
-                    maxlength="30"
-                    placeholder="参赛者姓名"
-                >
-            </view>
-            <view class="uni-form-item uni-column">
-                <input
-                    v-model="formData.teacher"
-                    class="uni-input"
-                    placeholder-class="placeholder"
-                    maxlength="30"
-                    placeholder="学校姓名"
-                >
-            </view>
-            <view class="uni-form-item uni-column">
-                <input
-                    v-model="formData.teacher"
-                    class="uni-input"
-                    placeholder-class="placeholder"
-                    maxlength="30"
-                    placeholder="学段"
-                >
-            </view>
-            <view class="uni-form-item uni-column">
-                <input
-                    v-model="formData.teacher"
-                    class="uni-input"
-                    placeholder-class="placeholder"
-                    maxlength="30"
-                    placeholder="年级"
-                >
+            <view
+                class="content-box"
+                style="height:633upx;margin-top:20upx;padding-top:114upx"
+            >
+                <view class="show-type-input">
+                    <view class="show-type-text">
+                        参赛者姓名
+                    </view>
+                    <view class="uni-list-cell-db">
+                        <input
+                            v-model="formData.teacher"
+                            class="uni-input"
+                            placeholder-class="placeholder"
+                            maxlength="30"
+                            placeholder="参赛者姓名"
+                        >
+                    </view>
+                </view>
+                <view class="show-type-input">
+                    <view class="show-type-text">
+                        学校名称：
+                    </view>
+                    <view class="uni-list-cell-db">
+                        <input
+                            v-model="formData.teacher"
+                            class="uni-input"
+                            placeholder-class="placeholder"
+                            maxlength="30"
+                            placeholder="学校名称："
+                        >
+                    </view>
+                </view>
+                <view class="show-type-input">
+                    <view class="show-type-text">
+                        学 段：
+                    </view>
+                    <view class="uni-list-cell-db">
+                        <input
+                            v-model="formData.teacher"
+                            class="uni-input"
+                            placeholder-class="placeholder"
+                            maxlength="30"
+                            placeholder="参赛者姓名"
+                        >
+                    </view>
+                </view>
+                <view class="show-type-input">
+                    <view class="show-type-text">
+                        年 级：
+                    </view>
+                    <view class="uni-list-cell-db">
+                        <input
+                            v-model="formData.teacher"
+                            class="uni-input"
+                            placeholder-class="placeholder"
+                            maxlength="30"
+                            placeholder="参赛者姓名"
+                        >
+                    </view>
+                </view>
             </view>
             <view
                 class="btn"
