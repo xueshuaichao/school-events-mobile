@@ -412,7 +412,7 @@ export default {
 }
 .content {
     position: absolute;
-    bottom: 80upx;
+    bottom: 60upx;
     width: 480upx;
     padding: 30upx 30upx 0;
     color: #fff;
@@ -424,7 +424,7 @@ export default {
         display: inline-block;
         width: 32rpx;
         height: 34rpx;
-        margin-right: 6rpx;
+        margin-right: 12upx;
         &.file {
             width: 34rpx;
             vertical-align: middle;
