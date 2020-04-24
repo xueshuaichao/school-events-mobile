@@ -280,7 +280,6 @@ export default {
                     /(^\s*)|(\s*$)/g,
                     '',
                 );
-
                 formData.resource_type = 1;
                 if (!formData.resource_name) {
                     this.lock = true;
@@ -290,7 +289,6 @@ export default {
                     this.lock = true;
                     return this.errTip('请上传视频文件');
                 }
-
                 uni.showLoading();
                 this.disabled = true;
                 let apiUrl = '/api/activity/add';

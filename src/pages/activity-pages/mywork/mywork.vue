@@ -25,12 +25,12 @@
                     :style="{
                         'background-color':
                             tabActiveIndex === 2
-                                ? publicConfig.mainBgColor
+                                ? publicConfig.primaryColor
                                 : '',
                         color:
                             tabActiveIndex === 2
                                 ? '#fff'
-                                : myWorkConfig.textColor
+                                : publicConfig.primaryColor
                     }"
                     @click="setTabActive(2)"
                 >
@@ -42,12 +42,12 @@
                     :style="{
                         'background-color':
                             tabActiveIndex === 1
-                                ? publicConfig.mainBgColor
+                                ? publicConfig.primaryColor
                                 : '',
                         color:
                             tabActiveIndex === 1
                                 ? '#fff'
-                                : myWorkConfig.textColor
+                                : publicConfig.primaryColor
                     }"
                     @click="setTabActive(1)"
                 >
@@ -59,12 +59,12 @@
                     :style="{
                         'background-color':
                             tabActiveIndex === 3
-                                ? publicConfig.mainBgColor
+                                ? publicConfig.primaryColor
                                 : '',
                         color:
                             tabActiveIndex === 3
                                 ? '#fff'
-                                : myWorkConfig.textColor
+                                : publicConfig.primaryColor
                     }"
                     @click="setTabActive(3)"
                 >
@@ -77,24 +77,50 @@
                 :style="{ 'background-color': publicConfig.mainBgColor }"
             >
                 <button
+                    v-for="(item, index) in publicConfig.catMenu"
+                    :key="index"
                     :class="{
-                        active: activeMenuIndex === '1'
+                        active: filter.activity_cat === index + 1
                     }"
-                    @click="toggle('1')"
+                    :style="{
+                        'background-color':
+                            filter.activity_cat === index + 1
+                                ? publicConfig.primaryColor
+                                : '',
+                        color:
+                            filter.activity_cat === index + 1
+                                ? '#fff'
+                                : publicConfig.primaryColor
+                    }"
+                    @click="toggle(index + 1)"
                 >
-                    中文组
+                    {{ item }}
                 </button>
                 <button
-                    :class="{
-                        active: activeMenuIndex === '2'
+                    v-for="(item, index) in publicConfig.sort"
+                    :key="index"
+                    :style="{
+                        'background-color':
+                            filter.sort === (index === 0 ? 'new' : 'hot')
+                                ? publicConfig.primaryColor
+                                : '',
+                        color:
+                            filter.sort === (index === 0 ? 'new' : 'hot')
+                                ? '#fff'
+                                : publicConfig.primaryColor
                     }"
-                    @click="toggle('2')"
+                    @click="toggle(index === 0 ? 'new' : 'hot')"
                 >
-                    英文组
+                    {{ item }}
                 </button>
-                <view class="search">
+                <view
+                    class="search"
+                    :style="{ 'background-color': publicConfig.primaryBgColor }"
+                >
                     <image
-                        src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/read_search.png"
+                        :src="
+                            `https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/${publicConfig.activityName}_search.png`
+                        "
                     />
                     <form action="javascript:return true">
                         <input
@@ -102,7 +128,9 @@
                             type="text"
                             confirm-type="search"
                             confirm-hold="true"
-                            placeholder-style="color:#E5FFF7"
+                            :placeholder-style="
+                                `color:${publicConfig.placeholderColor}`
+                            "
                             placeholder="请输入作者姓名或作品名称"
                             @confirm="bindconfirm"
                         >
@@ -123,14 +151,14 @@
                     v-for="(item, index) in dataList"
                     :key="item.id"
                     class="media-content"
-                    :style="{ 'background-color': myWorkConfig.itemBgColor }"
+                    :style="{ 'background-color': publicConfig.primaryColor }"
                 >
                     <event-craft-cover
                         :info="item"
                         :media-icon="type !== 'myWork'"
                         :like-icon="type === 'myWork'"
                         :best-icon="false"
-                        :bg-color="myWorkConfig.workBgColor"
+                        :bg-color="publicConfig.primaryBgColor"
                         @click.native="viewDetail(item, index)"
                     />
 
@@ -149,6 +177,10 @@
                             <text
                                 v-if="Number(tabActiveIndex) === 2"
                                 class="btn-item"
+                                :style="{
+                                    'background-color':
+                                        publicConfig.primaryBgColor
+                                }"
                                 @click="viewDetail(item)"
                             >
                                 查看
@@ -156,6 +188,10 @@
                             <text
                                 v-if="Number(tabActiveIndex) === 3"
                                 class="btn-item big"
+                                :style="{
+                                    'background-color':
+                                        publicConfig.primaryBgColor
+                                }"
                                 @click="reason(item)"
                             >
                                 驳回原因
@@ -163,12 +199,20 @@
                             <text
                                 v-if="Number(tabActiveIndex) !== 2"
                                 class="btn-item"
+                                :style="{
+                                    'background-color':
+                                        publicConfig.primaryBgColor
+                                }"
                                 @click="modifyItem(item)"
                             >
                                 编辑
                             </text>
                             <text
                                 class="btn-item"
+                                :style="{
+                                    'background-color':
+                                        publicConfig.primaryBgColor
+                                }"
                                 @click="onConfirmDelete(item)"
                             >
                                 删除
@@ -210,30 +254,47 @@
                 class="empty"
             >
                 <image
-                    src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/empty_green.png"
+                    :src="
+                        `https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/${publicConfig.activityName}_empty_search.png`
+                    "
                 />
-                <view>搜索不到您要的结果，换个关键词试试吧～</view>
+                <view :style="{ color: publicConfig.primaryColor }">
+                    搜索不到您要的结果，换个关键词试试吧～
+                </view>
             </view>
             <view
                 v-show="myWorkEmpty"
                 class="work-empty"
             >
                 <image
-                    src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/work_empty_green.png"
+                    :src="
+                        `https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/${publicConfig.activityName}_empty_work.png`
+                    "
                 />
-                <view>
+                <view :style="{ color: publicConfig.primaryColor }">
                     {{ allTotal === 0 ? "您还没有上传作品" : "暂无作品" }}
                 </view>
                 <navigator
                     v-if="allTotal === 0"
-                    url="/pages/read/upload/modify"
+                    :url="
+                        `/pages/activity-pages/upload/modify?activity_id=${filter.activity_id}`
+                    "
                 >
-                    <view class="goUpload">
+                    <view
+                        class="goUpload"
+                        :style="{
+                            'background-color': publicConfig.primaryColor
+                        }"
+                    >
                         去上传
                     </view>
                 </navigator>
             </view>
-            <goHome home-path="/pages/read/index" />
+            <goHome
+                :path="publicConfig.homePath"
+                :text-color="publicConfig.primaryColor"
+                :name="publicConfig.activityName"
+            />
         </view>
     </view>
 </template>
@@ -279,19 +340,15 @@ export default {
             publicConfig: {},
             myWorkConfig: {},
             dataList: [],
-            activeMenuIndex: '1',
             changeValue: '',
             loadMoreStatus: 'none',
-            mediaIcon: {
-                1: '../../../static/images/chunjie/video-icon.png',
-                2: '../../../static/images/chunjie/img-icon.png',
-            },
             tabActiveIndex: 2,
             filter: {
                 page_num: 1,
                 page_size: 10,
-                activity_id: 6,
+                activity_id: '',
                 activity_cat: 1,
+                sort: 'new',
                 status: 2,
             },
             total: 1,
@@ -299,6 +356,7 @@ export default {
             allNum: {},
             allTotal: 0,
             shareDesc: '',
+            title: '',
         };
     },
     computed: {
@@ -330,8 +388,12 @@ export default {
         },
         toggle(k) {
             uni.showLoading();
-            this.activeMenuIndex = k;
-            this.filter.activity_cat = k;
+            if (this.publicConfig.catMenu.length) {
+                this.filter.activity_cat = Number(k);
+            }
+            if (this.publicConfig.sort.length) {
+                this.filter.sort = k;
+            }
             this.filter.page_num = 1;
             this.searchWorkData();
         },
@@ -496,43 +558,42 @@ export default {
             });
         },
         initShare() {
-            const title = this.isH5
-                ? '我是朗读者，读给你听'
-                : '4.23世界读书日，读书赢好礼，一起来读书吧！';
-            const desc = this.isH5
-                ? '4.23世界读书日，读书赢好礼，一起来读书吧！'
-                : '';
-            this.shareDesc = title;
+            const titleList = this.isH5
+                ? this.publicConfig.shareConfig.h5Title
+                : this.publicConfig.shareConfig.title;
+            const descList = this.publicConfig.shareConfig.desc;
+            const random = Math.floor(Math.random() * titleList.length);
+            this.title = titleList[random];
+            const desc = descList[random];
 
             share({
-                title,
+                title: this.title,
                 desc,
-                thumbnail:
-                    'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/read_share.png?x-oss-process=image/format,png/interlace,1/quality,Q_80/resize,m_pad,h_100',
+                thumbnail: `${this.publicConfig.shareConfig.image}?x-oss-process=image/format,png/interlace,1/quality,Q_80/resize,m_pad,h_100`,
             });
         },
     },
     onLoad(query) {
         this.getData();
-        const { type, name, status } = query;
+        const {
+            type, name, status, activity_id: activityId,
+        } = query;
         this.type = type;
         if (status) {
             this.tabActiveIndex = Number(status);
         }
-        this.activityId = 6;
-        this.publicConfig = this.$store.getters.getPublicConfig(
-            this.activityId,
-        );
+
+        this.publicConfig = this.$store.getters.getPublicConfig(activityId);
         this.myWorkConfig = this.$store.getters.getActivityConfig({
-            activityId: this.activityId,
+            activityId,
             page: 'myWorkConfig',
         });
-        this.filter.activity_id = this.activityId;
+        this.filter.activity_id = activityId;
 
         if (type === 'myWork') {
             this.getWorkData();
         } else if (type === 'search') {
-            uni.setNavigationBarTitle({ title: '世界读书日' });
+            uni.setNavigationBarTitle({ title: this.publicConfig.title });
             this.filter.search = name;
             this.changeValue = name;
             this.searchWorkData();
@@ -544,9 +605,8 @@ export default {
             console.log(res.target);
         }
         return {
-            title: this.shareDesc,
-            imageUrl:
-                'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/read_share.png',
+            title: this.title,
+            imageUrl: this.publicConfig.shareConfig.image,
             path: '/pages/read/index',
         };
     },
@@ -742,7 +802,7 @@ export default {
                 transform: translateY(-50%);
                 left: 50upx;
                 font-size: 22upx;
-                color: #e5fff7;
+                color: #fff;
             }
             .search-button {
                 font-size: 24upx;

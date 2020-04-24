@@ -6,43 +6,31 @@
         <view
             v-if="type === 'video'"
             class="comp-title"
+            :style="{ color: theme.primaryColor }"
         >
             上传视频
         </view>
         <view
             v-if="type === 'image'"
             class="comp-title"
+            :style="{ color: theme.primaryColor }"
         >
             {{ isVideo ? "上传封面（选填）" : "上传图片" }}
         </view>
         <view class="comp-upload-box">
-            <view class="cover-wrap">
+            <view
+                class="cover-wrap"
+                :style="{ 'background-color': theme.bgColor }"
+            >
                 <template v-if="type === 'video'">
                     <template v-if="!url">
                         <image
-                            v-if="theme === 'normal'"
-                            class="icon-video"
-                            src="/static/images/comp/upload/upload-video.png"
-                        />
-                        <image
-                            v-if="theme === 'red'"
-                            class="icon-video red"
-                            src="/static/images/comp/upload/video_red.png"
-                        />
-                        <image
-                            v-if="theme === 'blue'"
                             class="icon-video red"
                             src="/static/images/comp/upload/video_blue.png"
                         />
                     </template>
                     <template v-else>
                         <image
-                            v-if="theme === 'normal'"
-                            class="icon-success"
-                            :src="`/static/images/comp/upload/success-blue.png`"
-                        />
-                        <image
-                            v-else
                             class="icon-success"
                             :src="`/static/images/comp/upload/success.png`"
                         />
@@ -56,17 +44,6 @@
                 </template>
                 <template v-if="type === 'image'">
                     <image
-                        v-if="theme === 'normal'"
-                        class="icon-image"
-                        src="/static/images/comp/upload/upload-img.png"
-                    />
-                    <image
-                        v-if="theme === 'red'"
-                        class="icon-image red"
-                        src="/static/images/comp/upload/image_red.png"
-                    />
-                    <image
-                        v-if="theme === 'blue'"
                         class="icon-image red"
                         src="/static/images/comp/upload/image_blue.png"
                     />
@@ -79,6 +56,7 @@
             </view>
             <view
                 class="desc"
+                :style="{ color: theme.primaryColor }"
                 :class="{ image: type === 'image' }"
             >
                 <template v-if="type === 'video'">
@@ -91,7 +69,7 @@
                     <view
                         v-if="url"
                         class="normal-text"
-                        :class="{ 'blue-text': theme === 'blue' }"
+                        :style="{ 'background-color': theme.primaryColor }"
                     >
                         更换视频
                     </view>
@@ -104,9 +82,9 @@
                         图片尺寸建议950*550
                     </view>
                     <view
-                        v-if="url"
+                        v-if="url && preview"
                         class="normal-text"
-                        :class="{ 'blue-text': theme === 'blue' }"
+                        :style="{ 'background-color': theme.primaryColor }"
                     >
                         更换封面
                     </view>
@@ -116,6 +94,7 @@
         <view
             v-if="type === 'image' && isVideo"
             class="tips"
+            :style="{ color: theme.primaryColor }"
         >
             系统为您自动截取视频内容作为封面，可更换
         </view>
@@ -146,8 +125,10 @@ export default {
             default: true
         },
         theme: {
-            type: String,
-            default: "normal"
+            type: Object,
+            default() {
+                return {};
+            }
         },
         count: {
             type: Number,
@@ -423,7 +404,7 @@ export default {
         color: #666;
         line-height: 40upx;
         .normal-text {
-            color: #1166ff;
+            color: #fff;
             line-height: 1.2;
         }
         .blue-text {

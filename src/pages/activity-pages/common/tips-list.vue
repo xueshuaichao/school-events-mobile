@@ -2,6 +2,7 @@
     <view
         v-if="crouselList.length > 0"
         class="page-section-spacing"
+        :style="{ 'background-color': theme.bgColor }"
     >
         <swiper
             class="swiper"
@@ -21,14 +22,16 @@
                 <view class="swiper-item">
                     <image src="/static/images/yiqing/horn.png" />
                     <view class="swiper-info">
-                        <text :style="{ color: tipsColor.mainColor }">
+                        <text :style="{ color: theme.mainColor }">
                             用户{{ item.user_name | plusXing }}
                         </text>
                         <text>发布了</text>
-                        <text :style="{ color: tipsColor.mainColor }">
+                        <text :style="{ color: theme.mainColor }">
                             #{{ item.cat_name }}#
                         </text>
-                        <text>{{ item.resource_name }}</text>
+                        <text :style="{ color: theme.mainColor }">
+                            {{ item.resource_name }}
+                        </text>
                     </view>
                     <text>刚刚</text>
                 </view>
@@ -54,9 +57,11 @@ export default {
                 return [];
             },
         },
-        textColor: {
-            type: String,
-            default: '#ffde6d',
+        theme: {
+            type: Object,
+            default() {
+                return {};
+            },
         },
     },
     computed: {

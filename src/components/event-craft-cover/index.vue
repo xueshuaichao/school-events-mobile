@@ -86,6 +86,9 @@ export default {
             let newUrl = '';
             const width = 335;
             const height = 225;
+            this.bgColor = this.bgColor.indexOf('#') !== -1
+                ? this.bgColor.replace('#', '')
+                : this.bgColor;
             if (val.indexOf('?') !== -1) {
                 newUrl = `${val}&x-oss-process=image/format,jpg/interlace,1/quality,Q_80/resize,m_pad,h_${height
                     * 2},w_${width * 2},color_${this.bgColor}`;
