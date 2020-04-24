@@ -304,6 +304,12 @@
             }
         },
         {
+            "path": "pages/activity-pages/upload/result",
+            "style": {
+                "navigationBarTitleText": "上传成功"
+            }
+        },
+        {
             "path": "pages/activity-pages/mywork/mywork",
             "style": {
                 "navigationBarTitleText": "我的作品"

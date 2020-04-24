@@ -4,7 +4,7 @@
         <view class="activerulebox">
             <view
                 class="active-content"
-                :style="{ 'background-color': bgColor }"
+                :style="{ 'background-color': theme.bgColor }"
             >
                 <view
                     class="close"
@@ -28,14 +28,11 @@
                     >
                         <view
                             class="title"
-                            :style="{ color: titleColor }"
+                            :style="{ color: theme.titleColor }"
                         >
                             {{ ruleItem.title }}
                         </view>
-                        <view
-                            class="text"
-                            :style="{ color: textColor }"
-                        >
+                        <view class="text">
                             <view
                                 v-for="(textItem, k) in ruleItem.texts"
                                 :key="k"
@@ -68,21 +65,15 @@ export default {
                 return [];
             },
         },
-        bgColor: {
-            type: String,
-            default: '#fff',
-        },
-        titleColor: {
-            type: String,
-            default: '#ffde6d',
-        },
-        textColor: {
-            type: String,
-            default: '#fff',
+        theme: {
+            type: Object,
+            default() {
+                return {};
+            },
         },
         name: {
             type: String,
-            default: 'read',
+            default: '',
         },
     },
     methods: {
@@ -120,6 +111,7 @@ export default {
         margin-bottom: 40upx;
         font-weight: 300;
         font-size: 28upx;
+        color: #fff;
     }
     .title-icon {
         background-repeat: no-repeat;
@@ -162,6 +154,20 @@ export default {
         }
         .size {
             font-size: 28upx;
+        }
+    }
+    .qr-wrap {
+        .qr-code {
+            width: 190rpx;
+            height: 190rpx;
+            display: block;
+            margin: 35rpx auto 15rpx;
+            border-radius: 15rpx;
+        }
+
+        .text {
+            font-size: 24rpx;
+            text-align: center;
         }
     }
 }

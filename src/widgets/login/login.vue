@@ -310,6 +310,7 @@ export default {
                     channel: 'aitiaozhan/xian',
                     captcha: this.formData.password,
                     phone: this.formData.username,
+                    fr: this.fr,
                 })
                 .then(
                     (res) => {
@@ -346,7 +347,6 @@ export default {
                     icon: 'none',
                 });
             }
-
             return api
                 .post('/api/account/userlogin', {
                     channel: 'aitiaozhan/xian',
@@ -479,7 +479,7 @@ export default {
             uni.login({
                 provider: 'weixin',
                 success({ code }) {
-                    console.log(5454545);
+                    // console.log(5454545);
                     _this.jscode = code;
                     if (fn) {
                         fn();

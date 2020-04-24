@@ -5,13 +5,16 @@
     >
         <view
             class="main"
-            :style="{ background: config.mainBgColor }"
+            :style="{ background: publicConfig.mainBgColor }"
         >
             <view
                 v-if="uploadConfig.activityCat.length"
                 class="selection bb-sep"
             >
-                <view class="label">
+                <view
+                    class="label"
+                    :style="{ color: publicConfig.primaryColor }"
+                >
                     选择组别
                 </view>
                 <view class="items">
@@ -21,15 +24,15 @@
                         class="item"
                         :class="{ active: formData.activity_cat === k + 1 }"
                         :style="{
-                            'border-color': uploadConfig.textBgColor,
+                            'border-color': publicConfig.primaryColor,
                             'background-color':
                                 formData.activity_cat === k + 1
-                                    ? uploadConfig.textBgColor
+                                    ? publicConfig.primaryColor
                                     : '',
                             color:
                                 formData.activity_cat === k + 1
                                     ? '#fff'
-                                    : '#000'
+                                    : publicConfig.primaryColor
                         }"
                         @click="setActivityCat(k + 1)"
                     >
@@ -41,7 +44,10 @@
                 v-if="uploadConfig.uploadMode.length > 1"
                 class="selection bb-sep"
             >
-                <view class="label">
+                <view
+                    class="label"
+                    :style="{ color: publicConfig.primaryColor }"
+                >
                     表现形式
                 </view>
                 <view class="items">
@@ -51,15 +57,15 @@
                         class="item"
                         :class="{ active: formData.resource_type === k + 1 }"
                         :style="{
-                            'border-color': uploadConfig.textBgColor,
+                            'border-color': publicConfig.primaryColor,
                             'background-color':
                                 formData.resource_type === k + 1
-                                    ? uploadConfig.textBgColor
+                                    ? publicConfig.primaryColor
                                     : '',
                             color:
                                 formData.resource_type === k + 1
                                     ? '#fff'
-                                    : '#000'
+                                    : publicConfig.primaryColor
                         }"
                         @click="setNewsTabActive(k + 1)"
                     >
@@ -74,10 +80,10 @@
                     class="uni-input"
                     placeholder-class="placeholder"
                     :placeholder-style="
-                        `color:${uploadConfig.placeholderColor}`
+                        `color:${publicConfig.placeholderColor}`
                     "
                     :maxlength="uploadConfig.nameMaxLength"
-                    :style="{ background: uploadConfig.textBgColor }"
+                    :style="{ background: publicConfig.primaryBgColor }"
                     :placeholder="uploadConfig.placeholderNameText"
                 >
             </view>
@@ -86,8 +92,8 @@
                 v-model="formData.introduce"
                 class="uni-textarea"
                 placeholder-class="placeholder"
-                :placeholder-style="`color:${uploadConfig.placeholderColor}`"
-                :style="{ background: uploadConfig.textBgColor }"
+                :placeholder-style="`color:${publicConfig.placeholderColor}`"
+                :style="{ background: publicConfig.primaryBgColor }"
                 :maxlength="uploadConfig.descMaxLength"
                 :placeholder="uploadConfig.placeholderDescText"
             />
@@ -95,14 +101,14 @@
                 <upload
                     :type="'video'"
                     :source="formData.video_id"
-                    theme="blue"
+                    :theme="theme"
                     @change="updateVideo"
                 />
                 <upload
                     :type="'image'"
                     :is-video="true"
                     :source="formData.video_img_url"
-                    theme="blue"
+                    :theme="theme"
                     @change="updateImage"
                 />
             </template>
@@ -110,19 +116,20 @@
                 <upload
                     :type="'image'"
                     :preview="false"
-                    theme="blue"
+                    :theme="theme"
                     :source="formData.video_img_url"
                     @change="updateImage"
                 />
                 <image-drag-sort
                     ref="preview"
+                    :text-color="publicConfig.primaryColor"
                     :list="images"
                 />
             </template>
 
             <view
                 class="btn"
-                :style="{ background: uploadConfig.textBgColor }"
+                :style="{ background: publicConfig.primaryColor }"
                 @click="upload"
             >
                 上传
@@ -176,6 +183,7 @@ export default {
             lock: true,
             // 编辑
             id: '',
+            theme: {},
         };
     },
     computed: {
@@ -189,8 +197,7 @@ export default {
             uni.setNavigationBarTitle({ title: '编辑作品' });
         }
         this.getItemData();
-
-        this.activityId = 6;
+        this.activityId = params.activity_id;
         this.publicConfig = this.$store.getters.getPublicConfig(
             this.activityId,
         );
@@ -201,6 +208,11 @@ export default {
         [this.uploadMode] = [this.uploadConfig.uploadMode[0]];
         this.formData.cat_id = this.publicConfig.catId;
         this.formData.activity_id = this.activityId;
+        this.formData.resource_type = this.uploadMode === 'video' ? 1 : 2;
+        this.theme = {
+            primaryColor: this.publicConfig.primaryColor,
+            bgColor: this.publicConfig.primaryBgColor,
+        };
     },
     created() {
         // this.getData();
@@ -232,7 +244,8 @@ export default {
                 activity_id: 6,
                 activity_cat: 1,
                 resource_name: '',
-                resource_type: 1,
+                resource_type:
+                    this.publicConfig.uploadMode[0] === 'video' ? 1 : 2,
                 introduce: '',
                 type: 2,
                 video_id: '',
@@ -369,15 +382,26 @@ export default {
                     /(^\s*)|(\s*$)/g,
                     '',
                 );
-
-                formData.resource_type = 1;
-                if (!formData.resource_name) {
-                    this.lock = true;
-                    return this.errTip('请输入视频名称');
-                }
-                if (!formData.video_id) {
-                    this.lock = true;
-                    return this.errTip('请上传视频文件');
+                if (this.uploadMode === 'video') {
+                    formData.resource_type = 1;
+                    if (!formData.resource_name) {
+                        this.lock = true;
+                        return this.errTip('请输入视频名称');
+                    }
+                    if (!formData.video_id) {
+                        this.lock = true;
+                        return this.errTip('请上传视频文件');
+                    }
+                } else {
+                    formData.resource_type = 2;
+                    if (!formData.resource_name) {
+                        return this.errTip('请输入作品名称');
+                    }
+                    formData.img = this.$refs.preview.dump();
+                    if (!formData.img.length) {
+                        this.lock = true;
+                        return this.errTip('请上传作品图片');
+                    }
                 }
 
                 uni.showLoading();
@@ -392,7 +416,7 @@ export default {
                         this.disabled = false;
                         uni.hideLoading();
                         uni.navigateTo({
-                            url: '/pages/read/upload/result',
+                            url: `/pages/activity-pages/upload/result?activity_id=${this.activityId}`,
                         });
                         this.resetData();
                         this.lock = true;
@@ -416,13 +440,12 @@ export default {
             // 来自页面内分享按钮
             console.log(res.target);
         }
-        const titleList = ['4.23世界读书日，读书赢好礼，一起来读书吧！'];
+        const titleList = this.publicConfig.shareConfig.title;
         const title = titleList[Math.floor(Math.random() * titleList.length)];
         return {
             title,
-            imageUrl:
-                'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/read_share.png',
-            path: '/pages/read/index',
+            imageUrl: this.publicConfig.shareConfig.image,
+            path: this.publicConfig.homePath,
         };
     },
 };

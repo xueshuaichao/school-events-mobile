@@ -9,98 +9,142 @@
             <rule
                 v-if="prompt"
                 :rules="indexConfig.rules"
-                bg-color="#f00"
+                :theme="{
+                    bgColor: publicConfig.primaryBgColor,
+                    titleColor: publicConfig.titleColor
+                }"
                 :name="publicConfig.activityName"
                 @handle-close="handleClose"
             />
-
+            <!-- 奖品说明 -->
+            <prize-desc
+                v-if="prizePrompt"
+                :prizes-detail="indexConfig.prizesDetail"
+                :theme="{
+                    bgColor: publicConfig.primaryBgColor,
+                    titleColor: publicConfig.titleColor
+                }"
+                :name="publicConfig.activityName"
+                @handle-close="handleClose"
+            />
             <view class="main-swiper">
-                <view
-                    class="banner"
-                    :style="{
-                        'background-image': `url(https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/${publicConfig.activityName}_main.jpg)`
-                    }"
-                >
+                <view class="banner">
+                    <view>
+                        <image
+                            class="banner-image"
+                            style="height:914upx"
+                            :src="
+                                `https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/${publicConfig.activityName}_main.jpg`
+                            "
+                        />
+                    </view>
+
                     <view
                         class="active-rule"
+                        :style="{
+                            'background-color': publicConfig.primaryColor
+                        }"
                         @click="handleActiverule"
                     >
                         活动规则
                     </view>
                     <view
                         class="menu-title"
+                        :style="{
+                            'background-color': publicConfig.primaryColor
+                        }"
                         @click="handleMywork"
                     >
                         我的作品
                     </view>
+                    <template v-show="publicConfig.time !== ''">
+                        <i
+                            class="active-time"
+                            :style="{ color: publicConfig.primaryColor }"
+                        >
+                            活动时间：{{ publicConfig.time }}
+                        </i>
+                    </template>
                 </view>
                 <view class="main-content">
                     <!-- 奖品 -->
-                    <view class="prize">
-                        <view
-                            v-for="(item, index) in prizeList"
-                            :key="index"
-                            class="prize-item"
-                        >
-                            <text class="prize-text-1">
-                                {{ item.text[0] }}
-                            </text>
-                            <image
-                                class="prize-img"
-                                :src="
-                                    `https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/read_prize${index +
-                                        1}.png`
-                                "
-                            />
-                            <text class="prize-text-2">
-                                {{ item.text[1] }}
-                            </text>
-                        </view>
-                        <view class="prize-item">
-                            <image
-                                class="prize-img-text"
-                                src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/read_prize5.png"
-                                @click="handleActiverule"
-                            />
-                        </view>
-                    </view>
+                    <prize
+                        :name="publicConfig.activityName"
+                        :text-color="publicConfig.primaryColor"
+                        :prize-list="indexConfig.prizes"
+                        @handleActiveprize="handleActiveprize"
+                    />
+                    <slot name="rank" />
                     <!-- 跑马灯 -->
-                    <tipsList :crousel-list="crouselList" />
-                    <view class="cansai-text">
+                    <tipsList
+                        :crousel-list="crouselList"
+                        :theme="{
+                            mainColor: publicConfig.primaryColor,
+                            bgColor: publicConfig.primaryBgColor
+                        }"
+                    />
+                    <view
+                        class="cansai-text"
+                        :style="{ color: publicConfig.primaryColor }"
+                    >
                         —— 活动作品 ——
                     </view>
                     <!-- work show -->
                     <view class="menu-list">
                         <view class="search-box">
                             <button
-                                v-for="(item, index) in indexConfig.catMenu"
+                                v-for="(item, index) in publicConfig.catMenu"
                                 :key="index"
                                 :style="{
                                     'background-color':
-                                        activeMenuIndex === index + 1
-                                            ? textBgColor
+                                        filter.activity_cat === index + 1
+                                            ? publicConfig.primaryColor
                                             : '',
                                     color:
-                                        activeMenuIndex === index + 1
+                                        filter.activity_cat === index + 1
                                             ? '#fff'
-                                            : ''
+                                            : publicConfig.darkPrimaryColor
                                 }"
                                 @click="toggle(index + 1)"
+                            >
+                                {{ item }}
+                            </button>
+                            <button
+                                v-for="(item, index) in publicConfig.sort"
+                                :key="index"
+                                :style="{
+                                    'background-color':
+                                        filter.sort ===
+                                        (index === 0 ? 'new' : 'hot')
+                                            ? publicConfig.primaryColor
+                                            : '',
+                                    color:
+                                        filter.sort ===
+                                        (index === 0 ? 'new' : 'hot')
+                                            ? '#fff'
+                                            : publicConfig.darkPrimaryColor
+                                }"
+                                @click="toggle(index === 0 ? 'new' : 'hot')"
                             >
                                 {{ item }}
                             </button>
                             <view
                                 class="search"
                                 :style="{
-                                    'background-color': textBgColor
+                                    'background-color':
+                                        publicConfig.primaryBgColor
                                 }"
                             >
                                 <image
-                                    src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/read_search.png"
+                                    :src="
+                                        `https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/${publicConfig.activityName}_search.png`
+                                    "
                                 />
                                 <input
                                     v-model="changeValue"
-                                    placeholder-style="color:#E5FFF7"
+                                    :placeholder-style="
+                                        `color:${publicConfig.placeholderColor}`
+                                    "
                                     type="text"
                                     confirm-type="search"
                                     confirm-hold="true"
@@ -123,14 +167,14 @@
                             >
                                 <event-craft-cover
                                     :info="item"
-                                    :bg-color="'11CD95'"
+                                    :bg-color="publicConfig.primaryBgColor"
                                     @click.native="viewDetail(item)"
                                 />
 
                                 <view
                                     class="media-name text-one-line"
                                     :style="{
-                                        color: indexConfig.workColor.title
+                                        color: publicConfig.infoColor
                                     }"
                                 >
                                     {{ `${item.resource_name}` }}
@@ -138,7 +182,7 @@
                                 <text
                                     class="vote-num"
                                     :style="{
-                                        color: indexConfig.workColor.text
+                                        color: publicConfig.darkPrimaryColor
                                     }"
                                 >
                                     {{ item.ticket }}赞
@@ -147,7 +191,7 @@
                                     class="vote"
                                     :style="{
                                         'background-color':
-                                            indexConfig.workColor.btnBg
+                                            publicConfig.primaryColor
                                     }"
                                     @click="handleVote(item)"
                                 >
@@ -161,6 +205,9 @@
                             <view
                                 v-if="dataList.length === 0"
                                 class="media-fill"
+                                :style="{
+                                    color: publicConfig.primaryColor
+                                }"
                             >
                                 暂无数据～
                             </view>
@@ -179,7 +226,7 @@
                 </view>
                 <view
                     :class="status === 2 || isH5 ? 'upload' : 'upload-disable'"
-                    :style="{ 'background-color': indexConfig.btnColor }"
+                    :style="{ 'background-color': publicConfig.primaryColor }"
                     @click="handleUpload"
                 >
                     上传作品
@@ -192,10 +239,11 @@
 <script>
 import api from '../../../common/api';
 import rule from './rule.vue';
+import prizeDesc from './prize-desc.vue';
+import prize from './prize.vue';
 import tipsList from './tips-list.vue';
 import uniLoadMore from '../../../components/uni-load-more/uni-load-more.vue';
-import share from '../../../common/share';
-import logger from '../../../common/logger';
+// import share from '../../../common/share';
 import EventCraftCover from '../../../components/event-craft-cover/index.vue';
 
 export default {
@@ -226,24 +274,12 @@ export default {
     components: {
         uniLoadMore,
         rule,
+        prizeDesc,
+        prize,
         tipsList,
         EventCraftCover,
     },
     props: {
-        btnColor: {
-            type: String,
-            default: '#f5f5f5',
-        },
-        textBgColor: {
-            type: String,
-            default: '#fff',
-        },
-        tipsColor: {
-            type: Object,
-            default() {
-                return {};
-            },
-        },
         indexConfig: {
             type: Object,
             default() {
@@ -262,7 +298,7 @@ export default {
                 return {};
             },
         },
-        log: {
+        fr: {
             type: String,
             default: '',
         },
@@ -286,12 +322,12 @@ export default {
                     text: ['四等奖', '奖状'],
                 },
             ],
-            fr: '',
             shareDesc: '',
             changeValue: '',
             activeMenuIndex: 1,
             loadMoreStatus: 'more',
             prompt: false,
+            prizePrompt: false,
             isPlayed: false,
             newsTabActiveIndex: 0,
             dataList: [],
@@ -300,6 +336,7 @@ export default {
                 activity_id: this.publicConfig.activityId,
                 page_num: 1,
                 page_size: 10,
+                sort: 'new',
                 activity_cat: 1,
             },
             status: 2,
@@ -311,9 +348,6 @@ export default {
         this.getData();
         this.activityStatus();
         this.getCrouselList();
-    },
-    onLoad(params) {
-        this.fr = logger.getFr(this.log, params);
     },
     onShow() {},
     onHide() {
@@ -382,7 +416,7 @@ export default {
                     fr: this.fr,
                 }).then(() => {
                     uni.navigateTo({
-                        url: `/pages/activity-pages/upload/modify?activity_id${this.filter.activity_id}`,
+                        url: `/pages/activity-pages/upload/modify?activity_id=${this.filter.activity_id}`,
                     });
                 });
             } else {
@@ -412,7 +446,7 @@ export default {
             });
         },
         initShare() {
-            share(this.shareConfig);
+            // share(this.shareConfig);
         },
         viewDetail({ id }) {
             uni.navigateTo({
@@ -421,13 +455,20 @@ export default {
         },
         toggle(k) {
             uni.showLoading();
-            this.activeMenuIndex = k;
-            this.filter.activity_cat = k;
+            if (this.publicConfig.catMenu.length) {
+                this.filter.activity_cat = Number(k);
+            }
+            if (this.publicConfig.sort.length) {
+                this.filter.sort = k;
+            }
             this.filter.page_num = 1;
             this.getData();
         },
         handleActiverule() {
             this.prompt = true;
+        },
+        handleActiveprize() {
+            this.prizePrompt = true;
         },
         handleMywork() {
             api.isLogin({
@@ -440,6 +481,7 @@ export default {
         },
         handleClose() {
             this.prompt = false;
+            this.prizePrompt = false;
         },
 
         onPlay() {
@@ -633,49 +675,6 @@ body.dialog-open {
     line-height: 116upx;
     z-index: 10;
 }
-.prize {
-    height: 242upx;
-    width: 725upz;
-    margin: 0 12upx;
-    background: url("https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/read_prize.png")
-        no-repeat center;
-    background-size: 100% 100%;
-    padding: 0 47upx;
-    display: flex;
-    text-align: center;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    .prize-item {
-        font-size: 20upx;
-        text-align: center;
-        width: 141upx;
-        height: 176upx;
-        &:last-of-type {
-            height: 238upx;
-            width: 169upx;
-        }
-        .prize-text-1 {
-            color: #ff3442;
-            width: 100%;
-            font-size: 24upx;
-        }
-        .prize-text-2 {
-            color: #08986d;
-            width: 100%;
-        }
-        .prize-img {
-            width: 116upx;
-            height: 116upx;
-        }
-        .prize-img-text {
-            width: 100%;
-            height: 100%;
-            margin-top: 16upx;
-            display: block;
-        }
-    }
-}
 .cansai-text {
     // width: 312upx;
     height: 44upx;
@@ -849,10 +848,13 @@ body.dialog-open {
     .main-swiper {
         .banner {
             position: relative;
-            height: 889upx;
             background-repeat: no-repeat;
             background-size: 100% 100%;
             text-align: center;
+            .banner-image {
+                width: 100%;
+                height: 100%;
+            }
             .active-rule,
             .menu-title {
                 position: absolute;
@@ -861,19 +863,26 @@ body.dialog-open {
                 height: 48upx;
                 line-height: 48upx;
                 font-size: 22upx;
-                background: #fff;
-                color: #128544;
-                border-radius: 24upx;
+                color: #fff;
             }
             .active-rule {
-                left: 15upx;
+                left: 0;
+                border-radius: 0px 24px 24px 0px;
             }
             .menu-title {
-                right: 15upx;
+                right: 0;
+                border-radius: 24px 0px 0px 24px;
+            }
+            .active-time {
+                position: absolute;
+                top: 310upx;
+                left: 218upx;
+                color: #fff;
+                font-size: 22upx;
+                font-style: none;
             }
         }
         .main-content {
-            margin-top: -85upx;
             position: relative;
             z-index: 1;
         }
@@ -926,7 +935,7 @@ body.dialog-open {
                     transform: translateY(-50%);
                     left: 50upx;
                     font-size: 22upx;
-                    color: #e5fff7;
+                    color: #fff;
                 }
                 .search-button {
                     font-size: 24upx;

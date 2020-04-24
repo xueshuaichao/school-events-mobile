@@ -1,11 +1,14 @@
 <template>
     <button
         class="btn goHome"
+        :style="{ color: textColor }"
         @click="goHome"
     >
         <image
             class="arr-left"
-            src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/read_home.png"
+            :src="
+                `https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/${name}_home.png`
+            "
             mode=""
         />
         返回首页
@@ -15,7 +18,15 @@
 <script>
 export default {
     props: {
-        homePath: {
+        name: {
+            type: String,
+            default: '',
+        },
+        textColor: {
+            type: String,
+            default: '',
+        },
+        path: {
             type: String,
             default: '',
         },
@@ -23,7 +34,7 @@ export default {
     methods: {
         goHome() {
             uni.reLaunch({
-                url: this.homePath,
+                url: this.path,
             });
         },
     },
