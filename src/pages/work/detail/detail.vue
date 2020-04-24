@@ -550,7 +550,6 @@ export default {
         this.resource_scope = Number(utils.getParam(query, 'resource_scope')) || 0;
         console.log(this.activity_id, 'this.activity_id---');
         // activity_id,  没有7..
-        this.activity_id = 8;
         if (!this.activity_id) {
             this.isActvitity = false;
         } else {
