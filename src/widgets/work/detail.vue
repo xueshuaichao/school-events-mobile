@@ -119,8 +119,12 @@
                     }}{{ pageData.achievement_unit }}
                 </text>
             </view>
-            <view class="intro text-three-line">
+            <view
+                class="intro text-three-lines"
+                @click="showMore = !showMore"
+            >
                 {{ pageData.introduce || "暂无简介" }}
+                <!-- <text class="show-more">{{ showMore ? ' 收起' : ' 展开' }}</text> -->
             </view>
         </view>
         <view class="fixed-panel">
@@ -161,15 +165,16 @@
             </view>
 
             <view
-                v-if="activityId !== 6 && resourceScope > 2"
+                v-if="activityId < 5 && resourceScope > 2"
                 class="btn primary"
                 @click="joinGame"
             >
                 我要参与
             </view>
             <view
-                v-if="activityId === 6"
+                v-if="activityId > 5"
                 class="join-game-read"
+                :class="[{ wuyi: activityId === 8 }]"
                 @click="joinGame"
             >
                 <image
@@ -254,6 +259,7 @@ export default {
             isPaused: false,
             isVideoWaiting: false,
             play_count: 0,
+            showMore: false,
         };
     },
     created() {
@@ -327,7 +333,16 @@ export default {
     color: #ffd339;
     text-shadow: 0 1upx 2upx #ffd339;
 }
-
+.h5-full-screen-title {
+    position: fixed;
+    width: 100%;
+    z-index: 10000;
+    color: #fff;
+    padding-top: 20upx;
+    padding-left: 20upx;
+    box-sizing: border-box;
+    top: 0;
+}
 .mp-weixin-full-screen-title {
     position: absolute;
     top: 46upx;
@@ -412,12 +427,12 @@ export default {
 }
 .content {
     position: absolute;
-    bottom: 60upx;
+    bottom: 80upx;
     width: 480upx;
     padding: 30upx 30upx 0;
     color: #fff;
     left: 0;
-    pointer-events: none;
+    // pointer-events: none;
     z-index: 10;
     text-shadow: 0 2upx 2upx rgba(0, 0, 0, 0.35);
     .avatar {
@@ -466,6 +481,22 @@ export default {
     .intro {
         font-size: 25upx;
         line-height: 44upx;
+        position: relative;
+    }
+    .text-three-lines {
+        max-height: 132upx;
+        overflow-y: auto;
+        // overflow:hidden;
+        // text-overflow:ellipsis;
+        // display:-webkit-box;
+        // -webkit-line-clamp:3;
+        // -webkit-box-orient:vertical;
+    }
+    .show-more {
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        color: #db4e0e;
     }
 
     .icon-grail {
@@ -525,6 +556,9 @@ export default {
         color: #fff;
         margin-left: -40rpx;
         line-height: 40rpx;
+        &.wuyi {
+            background: #db4e0e;
+        }
         .icon {
             width: 44rpx;
             height: 42rpx;

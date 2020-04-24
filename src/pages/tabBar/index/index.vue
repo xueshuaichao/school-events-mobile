@@ -5,9 +5,14 @@
             class="cover"
         >
             <image
-                src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/suspension01.png"
-                @click="handlePromt"
+                src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/h5/suspension-wuyi.png"
             />
+            <view
+                class="join-btn"
+                @click="handlePromt"
+            >
+                立即参与
+            </view>
             <view
                 class="close"
                 @click="handleClose"
@@ -55,6 +60,28 @@
                     :duration="duration"
                     :circular="true"
                 >
+                    <swiper-item>
+                        <navigator
+                            url="/pages/activity-pages/labor/index"
+                            class="swiper-item"
+                        >
+                            <image
+                                class="banner-image"
+                                src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/h5/wuyi-banner.png"
+                            />
+                        </navigator>
+                    </swiper-item>
+                    <swiper-item>
+                        <navigator
+                            url="/pages/activity-pages/labor/index"
+                            class="swiper-item"
+                        >
+                            <image
+                                class="banner-image"
+                                src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/school-events-mobile/openEvent-banner.png"
+                            />
+                        </navigator>
+                    </swiper-item>
                     <swiper-item>
                         <navigator
                             url="/pages/read/index"
@@ -214,7 +241,7 @@
                     吉尼斯
                 </text>
             </navigator>
-            <navigator
+            <!-- <navigator
                 url="/pages/activities/index"
                 class="item"
             >
@@ -227,12 +254,12 @@
                 <text class="name">
                     精彩活动
                 </text>
-            </navigator>
+            </navigator> -->
         </view>
         <work
             :title="'热门活动'"
             :more-url="'/pages/tabBar/upload/upload'"
-            :info="workData.individual.list"
+            :info="hotList"
             :show-card="false"
         />
         <!-- menu -->
@@ -334,12 +361,32 @@ export default {
             // #endif
             needBindMobile: false,
             changeValue: '',
-            // activitiesStatus: [
-            //     { activity_id: 3, status: 1, show: 0 },
-            //     { activity_id: 4, status: 1, show: 0 },
-            //     { activity_id: 5, status: 1, show: 1 },
-            //     { activity_id: 6, status: 1, show: 1 },
-            // ],
+            hotList: [
+                {
+                    id: 8,
+                    img:
+                        'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/h5/wuyi-s-banner.png',
+                    url: '/pages/activity-pages/labor/index',
+                },
+                {
+                    id: 7,
+                    img:
+                        'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/h5/aitiaozhan-s-banner.png',
+                    url: '/pages/yiqing/index',
+                },
+                {
+                    id: 6,
+                    img:
+                        'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/h5/read-s-banner.png',
+                    url: '/pages/yiqing/index',
+                },
+                {
+                    id: 5,
+                    img:
+                        'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/h5/yiqing-s-banner.png',
+                    url: '/pages/read/index',
+                },
+            ],
         };
     },
     onHide() {
@@ -472,7 +519,7 @@ export default {
                     one_level_id: catId,
                 },
                 sort: 4,
-                page_size: 10,
+                page_size: 6,
             }).then((res) => {
                 if (type === 'individual') {
                     this.workData.individual = res;
@@ -508,8 +555,18 @@ export default {
                 page_num: 1,
                 status: 2,
             }).then((data) => {
-                console.log(data, '/api/activity/list');
-                this.list = data.list;
+                this.hotList = data.list.map((item) => {
+                    let obj = item;
+                    this.hotList.forEach((d) => {
+                        obj.start_time = obj.start_time.slice(0, 10);
+                        obj.end_time = obj.end_time.slice(0, 10);
+                        if (d.id === obj.id) {
+                            obj = { ...obj, ...d };
+                        }
+                    });
+                    return obj;
+                });
+                console.log(this.hotList, 'hot-------');
             });
         },
     },
@@ -529,34 +586,35 @@ export default {
     text-align: center;
     font-size: 0;
     image:first-child {
-        width: 608upx;
-        height: 828upx;
+        width: 558upx;
+        height: 700upx;
         display: block;
         margin: 130upx auto 0;
     }
-    // image:nth-child(2) {
-    //     margin-top: 40upx;
-    //     width: 54upx;
-    //     height: 54upx;
-    //     margin-left: 357upx;
-    //     display: block;
-    // }
-    // view {
-    //     position: absolute;
-    //     top: 680upx;
-    //     left: 210upx;
-    //     font-size: 0;
-    //     width: 360upx;
-    //     height: 100upx;
-    // }
+    .join-btn {
+        width: 420upx;
+        height: 110upx;
+        background: linear-gradient(
+            180deg,
+            rgba(219, 78, 14, 1),
+            rgba(255, 159, 115, 1)
+        );
+        border-radius: 55upx;
+        color: #fff;
+        font-size: 40upx;
+        line-height: 110upx;
+        text-align: center;
+        margin: -50upx auto 50upx;
+        position: relative;
+        z-index: 1;
+    }
     .close {
         width: 52upx;
         height: 52upx;
         border-radius: 50%;
-        background: #04c284;
-        position: absolute;
-        top: 100upx;
-        right: 60upx;
+        background: #de5416;
+        margin: 0 auto;
+        position: relative;
         &::before,
         &::after {
             position: absolute;
@@ -653,15 +711,20 @@ uni-swiper {
         .banner-image {
             width: 690upx;
             height: 280upx;
+            border-radius: 16upx;
         }
     }
     .menu-list {
         display: flex;
-        margin-bottom: 40upx;
+        padding-bottom: 16upx;
+        // margin-bottom: 40upx;
+        background: #f6f6f6;
 
         .item {
+            background: #fff;
             flex: 1;
             text-align: center;
+            padding-bottom: 38upx;
 
             .icon-wrap {
                 margin: 0 auto;
@@ -754,9 +817,9 @@ uni-swiper {
                     top: 15upx;
                     position: relative;
                     margin: auto;
-                    width: 78upx;
-                    height: 70upx;
-                    background-size: 40upx 40upx;
+                    width: 56upx;
+                    height: 56upx;
+                    background-size: 56upx 56upx;
 
                     // &.icon-intro {
                     //     background-image: url('/static/images/index/intro.png');
@@ -777,7 +840,9 @@ uni-swiper {
             }
 
             .name {
-                font-size: 24upx;
+                font-size: 26upx;
+                line-height: 26upx;
+                font-weight: 600;
                 color: #333;
             }
         }

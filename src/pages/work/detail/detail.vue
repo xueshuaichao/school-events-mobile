@@ -8,7 +8,8 @@
             class="activerulebox"
             :class="[
                 { read: activity_id === 6 },
-                { chunjie: activity_id === 3 || activity_id === 4 }
+                { chunjie: activity_id === 3 || activity_id === 4 },
+                { wuyi: activity_id === 8 }
             ]"
         >
             <image
@@ -548,11 +549,13 @@ export default {
         this.activity_id = Number(utils.getParam(query, 'activity_id')) || 0;
         this.resource_scope = Number(utils.getParam(query, 'resource_scope')) || 0;
         console.log(this.activity_id, 'this.activity_id---');
+        // activity_id,  没有7..
+        this.activity_id = 8;
         if (!this.activity_id) {
             this.isActvitity = false;
         } else {
             // wyhd 五一活动
-            const arr = ['xchd', 'dsxnh', 'dsxnh', 'dshd', 'wyhd'];
+            const arr = ['xchd', 'dsxnh', 'dsxnh', 'dshd', '', 'wyhd'];
             const type = arr[this.activity_id - 3];
             this.fr = logger.getFr(type, {});
         }
@@ -614,16 +617,6 @@ export default {
     #poster {
         // position: absolute;
         // left:-999upx;
-    }
-    .h5-full-screen-title {
-        position: fixed;
-        width: 100%;
-        z-index: 10000;
-        color: #fff;
-        padding-top: 20upx;
-        padding-left: 20upx;
-        box-sizing: border-box;
-        top: 0;
     }
     .out-swiper {
         width: 100%;
@@ -712,6 +705,20 @@ export default {
             }
             .close {
                 background: rgb(255, 22, 16);
+            }
+        }
+        &.wuyi {
+            .saveBtn {
+                background: linear-gradient(
+                    180deg,
+                    rgba(219, 78, 14, 1),
+                    rgba(255, 159, 115, 1)
+                );
+                border-radius: 55px;
+                color: #fff;
+            }
+            .close {
+                background: #e76a31;
             }
         }
     }

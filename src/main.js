@@ -8,7 +8,7 @@ import Vue from 'vue';
 import RouterMount from '../router/useRouter';
 // #endif
 import routerLink from '../node_modules/uni-simple-router/component/router-link.vue';
-
+import store from '../store';
 import App from './App.vue';
 import share from './common/share';
 import logger from './common/logger';
@@ -64,6 +64,7 @@ App.mpType = 'app';
 
 Vue.mixin(common);
 const app = new Vue({
+    store,
     ...App,
 });
 Vue.component('router-link', routerLink);

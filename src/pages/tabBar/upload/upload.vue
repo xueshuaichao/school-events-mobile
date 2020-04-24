@@ -4,33 +4,44 @@
             v-for="item in list"
             :key="item.id"
             class="item-card"
-            @click="jumpRoute"
+            @click="jumpRoute(item.url)"
         >
-            <image
-                class="banner"
-                src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/h5/read-banner.png"
-            />
-            <view class="top clearfix">
-                <text class="title fl-l">
-                    {{ item.activity_name || "世界读书日" }}
-                </text>
-                <text class="count fl-r">
-                    {{ item.activity_num }}人关注
-                </text>
+            <view class="clearfix">
+                <view class="fl-l">
+                    <view class="title">
+                        {{ item.activity_name }}
+                    </view>
+                    <view class="clearfix">
+                        <image
+                            class="time fl-l"
+                            src="/static/images/upload/time.png"
+                        />
+                        <view class="fl-l time-start-end">
+                            活动日期：{{ item.start_time }}/{{ item.end_time }}
+                        </view>
+                    </view>
+                </view>
+                <view class="fl-r activity_num">
+                    <image
+                        class="fl-l"
+                        src="/static/images/upload/fire.png"
+                    />
+                    <view class="count fl-r">
+                        {{ item.activity_base }}人关注
+                    </view>
+                </view>
             </view>
-            <view class="btm clearfix">
+            <view class="banner-box">
+                <view
+                    v-if="item.status === 3"
+                    class="has-end"
+                >
+                    已结束
+                </view>
                 <image
-                    class="time fl-l"
-                    src="/static/images/upload/time.png"
+                    class="banner"
+                    :src="item.img"
                 />
-                <view class="fl-l time-start-end">
-                    活动日期：{{ item.start_time.slice(0, 10) }}/{{
-                        item.end_time.slice(0, 10)
-                    }}
-                </view>
-                <view class="join-game fl-r">
-                    立即参加
-                </view>
             </view>
         </view>
     </view>
@@ -38,7 +49,7 @@
 
 <script>
 import api from '../../../common/api';
-import logger from '../../../common/logger';
+// import logger from '../../../common/logger';
 
 export default {
     data() {
@@ -49,42 +60,69 @@ export default {
                 page_size: 10,
                 page_num: 1,
             },
+            loading: false,
             list: [
                 {
-                    activity_name: 6358,
-                    start_time: '2020-04-20',
-                    end_time: '2020-05-31',
-                    status: 2,
+                    id: 8,
+                    img:
+                        'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/h5/wuyi-banner.png',
+                    url: '/pages/activity-pages/labor/index',
+                },
+                {
                     id: 7,
+                    img:
+                        'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/school-events-mobile/openEvent-banner.png',
+                    url: '',
+                },
+                {
+                    id: 6,
+                    img:
+                        'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/h5/read-banner.png',
+                    url: '/pages/read/index',
+                },
+                {
+                    id: 5,
+                    img:
+                        'http://aitiaozhan.oss-cn-beijing.aliyuncs.com/school-events-mobile/prize-banner.png',
+                    url: '/pages/yiqing/index',
+                },
+                {
+                    id: 4,
+                    img:
+                        'http://aitiaozhan.oss-cn-beijing.aliyuncs.com/chunjiehao.png',
+                    url: '/pages/chunjiehao/index',
+                },
+                {
+                    id: 3,
+                    img:
+                        'http://aitiaozhan.oss-cn-beijing.aliyuncs.com/banner4.png',
+                    url: '/pages/chunjie/index',
                 },
             ],
         };
     },
     methods: {
-        jumpRoute() {
-            // const arr = ['xchd', 'dsxnh', 'dsxnh', 'dshd'];
-            // const type = arr[this.activity_id - 3];
-            // this.fr = logger.getFr(type, {});
-            this.fr = logger.getFr('dshd', {});
-            api.isLogin({
-                fr: this.fr,
-            }).then(
-                () => {
-                    uni.navigateTo({
-                        url: '/pages/read/index',
-                    });
-                },
-                () => uni.showToast({
-                    icon: 'none',
-                    title: '请先登录',
-                }),
-            );
+        jumpRoute(url) {
+            uni.navigateTo({
+                url,
+            });
         },
         getData(refresh) {
             api.post('/api/activity/list', this.filter).then(
                 (data) => {
                     console.log(data, '/api/activity/list');
-                    this.list = data.list;
+                    this.list = data.list.map((item) => {
+                        let obj = item;
+                        this.list.forEach((d) => {
+                            if (d.id === obj.id) {
+                                obj.start_time = obj.start_time.slice(5, 10);
+                                obj.end_time = obj.end_time.slice(5, 10);
+                                obj = { ...obj, ...d };
+                            }
+                        });
+                        return obj;
+                    });
+                    console.log(this.list);
                     if (refresh) {
                         uni.stopPullDownRefresh();
                     }
@@ -107,68 +145,87 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.clearfix {
-    display: block;
-}
-.clearfix:after {
-    content: "";
-    display: block;
-    height: 0;
-    clear: both;
-    visibility: hidden;
-}
-.fl-l {
-    float: left;
-}
-.fl-r {
-    float: right;
-}
 .page-upload {
     .item-card {
         width: 670upx;
-        margin: 40upx;
+        margin: 40upx 40upx 56upx;
         box-shadow: 0px -4px 28px 0px rgba(0, 0, 0, 0.06);
-        padding-bottom: 20upx;
+        padding-top: 20upx;
+        border-radius: 4upx;
         .banner {
             width: 100%;
             height: 277upx;
-            border-radius: 30upx 30upx 0 0;
-            margin-bottom: 20upx;
+            border-radius: 0 0 4upx 4upx;
+            vertical-align: bottom;
         }
         .time {
-            width: 20upx;
-            height: 20upx;
+            width: 22upx;
+            height: 22upx;
             margin-top: 30upx;
             margin-right: 10upx;
             margin-left: 20upx;
         }
         .title {
-            font-size: 32upx;
-            color: #333;
+            font-size: 26upx;
+            color: #323643;
             margin-left: 20upx;
+            font-weight: 600;
         }
         .count {
             color: #ff6555;
-            font-size: 24upx;
-            margin-right: 40upx;
-        }
-        .btm {
-            height: 60upx;
+            font-size: 34upx;
+            margin-left: 10upx;
+            margin-right: 10upx;
+            position: relative;
+            padding-right: 40upx;
+            line-height: 28upx;
+            &::before,
+            &::after {
+                content: "";
+                border-radius: 4upx;
+                transform: rotate(45deg);
+                right: 4upx;
+                top: 6upx;
+                position: absolute;
+                width: 20upx;
+                height: 4upx;
+                background: #ff6555;
+                border-radius: 2upx;
+            }
+            &::after {
+                transform: rotate(-45deg);
+                top: 18upx;
+            }
         }
         .time-start-end {
-            font-size: 20upx;
+            font-size: 22upx;
             color: #999;
             line-height: 80upx;
         }
-        .join-game {
-            width: 200upx;
-            height: 60upx;
-            line-height: 60upx;
-            text-align: center;
-            color: #fff;
-            border-radius: 35upx;
-            background: #ff6555;
-            margin-right: 10upx;
+        .activity_num {
+            margin-top: 40upx;
+            image {
+                width: 29upx;
+                height: 30upx;
+                margin-right: 4upx;
+                margin-top: -2upx;
+            }
+        }
+        .banner-box {
+            position: relative;
+        }
+        .has-end {
+            position: absolute;
+            right: 0;
+            top: 20upx;
+            background: rgba(216, 216, 216, 1);
+            border-radius: 15upx 0 0 15upx;
+            border: 1upx solid rgba(255, 255, 255, 1);
+            color: #888;
+            font-size: 22upx;
+            line-height: 22upx;
+            padding: 4upx 15upx;
+            z-index: 1;
         }
     }
 }

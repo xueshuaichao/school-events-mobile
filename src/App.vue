@@ -167,4 +167,20 @@ uni-toast .uni-simple-toast__text {
 uni-picker .uni-picker-action.uni-picker-action-confirm {
     color: #1166ff;
 }
+.clearfix {
+    display: block;
+}
+.clearfix:after {
+    content: "";
+    display: block;
+    height: 0;
+    clear: both;
+    visibility: hidden;
+}
+.fl-l {
+    float: left;
+}
+.fl-r {
+    float: right;
+}
 </style>

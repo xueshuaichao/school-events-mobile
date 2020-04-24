@@ -379,20 +379,20 @@ export default {
 
 .main {
     white-space: pre-wrap;
-    margin-top: 180upx;
+    margin-top: 200upx;
     .widget-list-box {
         padding-top: 40upx;
-        margin: 0 0 14upx 28upx;
+        margin: 0 28upx 14upx 28upx;
         display: flex;
         flex-wrap: wrap;
         justify-content: space-between;
     }
     .work-item {
         justify-content: space-between;
-        width: 330upx;
-        height: 300upx;
-        margin-right: 28upx;
-        margin-bottom: 30upx;
+        width: 337upx;
+        height: 294upx;
+        // margin-right: 28upx;
+        margin-bottom: 16upx;
     }
     .blank-box {
         margin-top: 350upx;
