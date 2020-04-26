@@ -159,6 +159,13 @@ const routesConfig = {
             path: '/pages/read/myWork/myWork',
         },
         {
+            path: '/pages/activity-pages/labor/index',
+        },
+        {
+            path: '/pages/activity-pages/mywork/mywork',
+        },
+
+        {
             path: '/pages/search/index',
         },
         {

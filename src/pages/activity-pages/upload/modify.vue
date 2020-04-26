@@ -166,6 +166,7 @@ export default {
                 video_id: '',
                 video_img_url: '',
             },
+            images: [],
             accountData: {
                 mobile: '',
                 verify_code: '',
@@ -193,21 +194,20 @@ export default {
     },
     onLoad(params) {
         this.id = params.id;
+        this.formData.activity_id = params.activity_id;
         if (this.id) {
             uni.setNavigationBarTitle({ title: '编辑作品' });
+            this.getItemData();
         }
-        this.getItemData();
-        this.activityId = params.activity_id;
         this.publicConfig = this.$store.getters.getPublicConfig(
-            this.activityId,
+            this.formData.activity_id,
         );
         this.uploadConfig = this.$store.getters.getActivityConfig({
-            activityId: this.activityId,
+            activityId: this.formData.activity_id,
             page: 'uploadConfig',
         });
         [this.uploadMode] = [this.uploadConfig.uploadMode[0]];
         this.formData.cat_id = this.publicConfig.catId;
-        this.formData.activity_id = this.activityId;
         this.formData.resource_type = this.uploadMode === 'video' ? 1 : 2;
         this.theme = {
             primaryColor: this.publicConfig.primaryColor,
@@ -226,14 +226,21 @@ export default {
             if (this.id) {
                 api.get('/api/activity/info', {
                     id: this.id,
-                    activity_id: 6,
+                    activity_id: this.formData.activity_id,
                 }).then((res) => {
                     this.isLoading = false;
-                    console.log(res);
+                    this.uploadMode = res.resource_type === 1 ? 'video' : 'image';
                     this.formData = {
                         ...this.formData,
                         ...res,
                     };
+                    if (res.resource_type === 2) {
+                        this.uploadMode = 'image';
+                        this.images = res.img;
+                    } else {
+                        this.formData.video_id = res.video_id;
+                        this.formData.video_img_url = res.video_img_url;
+                    }
                     console.log(this.formData);
                 });
             }
@@ -257,8 +264,12 @@ export default {
             this.formData.activity_cat = index;
         },
         setNewsTabActive(index) {
+            if (this.id) {
+                return false;
+            }
             this.formData.resource_type = index;
             this.uploadMode = this.uploadConfig.uploadMode[index - 1];
+            return true;
         },
         updateVideo(data) {
             this.formData.video_id = data.video_id;

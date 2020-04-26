@@ -21,12 +21,12 @@
                     <view
                         v-if="historyRankList.length"
                         class="history-rank"
-                        @click="toggleHistoryRank(showHistoryRankList)"
+                        @click="toggleHistoryRank(true)"
                     >
                         历史榜单
                     </view>
                     <view
-                        v-if="showHistoryRankList"
+                        v-show="showHistoryRankList"
                         class="history-rank-list"
                     >
                         <view class="history-content">
@@ -35,7 +35,7 @@
                                 :src="
                                     `https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/${publicConfig.activityName}_close.png`
                                 "
-                                @click="toggleHistoryRank(showHistoryRankList)"
+                                @click="toggleHistoryRank(false)"
                             />
                             <view class="title">
                                 历史榜单
@@ -83,10 +83,6 @@
                                 立即参与活动吧！下一个劳动小能手就是你！
                             </view>
                         </view>
-                        <image
-                            src=""
-                            mode=""
-                        />
                     </view>
                     <view class="week-rank-list">
                         <view
@@ -179,7 +175,7 @@ export default {
             });
         },
         toggleHistoryRank(status) {
-            this.showHistoryRankList = !status;
+            this.showHistoryRankList = status;
         },
         initShare() {
             const titleList = this.isH5
