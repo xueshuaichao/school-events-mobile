@@ -112,20 +112,11 @@
             <template v-if="tableData.length > 0">
                 <view class="widget-list-box">
                     <view
-                        v-for="(item, index) in tableData"
+                        v-for="item in tableData"
                         :key="item.id"
                         class="work-item"
                     >
-                        <work
-                            :info="item"
-                            :query="
-                                `sort=${filter.sort}&keyword=${
-                                    filter.keyword
-                                }&total=${total}&levelid=${
-                                    filter.cat_id.one_level_id
-                                }&curPosition=${index + 1}`
-                            "
-                        />
+                        <work :info="item" />
                     </view>
                 </view>
                 <uni-load-more :status="loadMoreStatus" />
@@ -388,20 +379,20 @@ export default {
 
 .main {
     white-space: pre-wrap;
-    margin-top: 180upx;
+    margin-top: 200upx;
     .widget-list-box {
         padding-top: 40upx;
-        margin: 0 0 14upx 28upx;
+        margin: 0 28upx 14upx 28upx;
         display: flex;
         flex-wrap: wrap;
         justify-content: space-between;
     }
     .work-item {
         justify-content: space-between;
-        width: 330upx;
-        height: 300upx;
-        margin-right: 28upx;
-        margin-bottom: 30upx;
+        width: 337upx;
+        height: 294upx;
+        // margin-right: 28upx;
+        margin-bottom: 16upx;
     }
     .blank-box {
         margin-top: 350upx;

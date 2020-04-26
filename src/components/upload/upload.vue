@@ -83,7 +83,7 @@
             >
                 <template v-if="type === 'video'">
                     <view>
-                        不支持大于200的视频
+                        不支持大于200M的视频
                     </view>
                     <view>
                         支持 MP4 等格式

@@ -8,7 +8,8 @@
             class="activerulebox"
             :class="[
                 { read: activity_id === 6 },
-                { chunjie: activity_id === 3 || activity_id === 4 }
+                { chunjie: activity_id === 3 || activity_id === 4 },
+                { wuyi: activity_id === 8 }
             ]"
         >
             <image
@@ -143,7 +144,7 @@ export default {
             canvasImg: '',
             showTicketMask: false,
 
-            pageFrom: '',
+            // pageFrom: '',
             curDetailConf: detailConf[0],
             isActvitity: true,
             activity_id: 0,
@@ -540,18 +541,20 @@ export default {
         },
     },
     onLoad(query) {
-        this.pageFrom = utils.getParam(query, 'from') || '';
-        this.levelid = Number(utils.getParam(query, 'levelid')) || -1;
+        // this.pageFrom = utils.getParam(query, 'from') || '';
+        // this.levelid = Number(utils.getParam(query, 'levelid')) || -1;
         this.id = utils.getParam(query, 'id');
         this.fr = utils.getParam(query, 'fr') || '';
 
         this.activity_id = Number(utils.getParam(query, 'activity_id')) || 0;
         this.resource_scope = Number(utils.getParam(query, 'resource_scope')) || 0;
         console.log(this.activity_id, 'this.activity_id---');
+        // activity_id,  没有7..
         if (!this.activity_id) {
             this.isActvitity = false;
         } else {
-            const arr = ['xchd', 'dsxnh', 'dsxnh', 'dshd'];
+            // wyhd 五一活动
+            const arr = ['xchd', 'dsxnh', 'dsxnh', 'dshd', '', 'wyhd'];
             const type = arr[this.activity_id - 3];
             this.fr = logger.getFr(type, {});
         }
@@ -560,9 +563,9 @@ export default {
         this.getData();
 
         // 获取前后两页面的内容。
-        if (this.activity_id) {
+        if (this.activity_id > 2) {
             this.curDetailConf = detailConf[this.activity_id - 1];
-        } else if (this.levelid === 3 || this.pageFrom) {
+        } else if (this.resource_scope === 3) {
             [, this.curDetailConf] = detailConf;
         } else {
             [this.curDetailConf] = detailConf;
@@ -600,7 +603,7 @@ export default {
         return {
             title: this.shareDesc,
             imageUrl: `${this.pageData.video_img_url}?x-oss-process=image/resize,m_fill,w_250,h_150`,
-            path: `/pages/work/detail/detail?id=${this.id}&activity_id=${this.activity_id}`,
+            path: `/pages/work/detail/detail?id=${this.id}&activity_id=${this.activity_id}&resource_scope=${this.resource_scope}`,
         };
     },
 };
@@ -613,16 +616,6 @@ export default {
     #poster {
         // position: absolute;
         // left:-999upx;
-    }
-    .h5-full-screen-title {
-        position: fixed;
-        width: 100%;
-        z-index: 10000;
-        color: #fff;
-        padding-top: 20upx;
-        padding-left: 20upx;
-        box-sizing: border-box;
-        top: 0;
     }
     .out-swiper {
         width: 100%;
@@ -711,6 +704,20 @@ export default {
             }
             .close {
                 background: rgb(255, 22, 16);
+            }
+        }
+        &.wuyi {
+            .saveBtn {
+                background: linear-gradient(
+                    180deg,
+                    rgba(219, 78, 14, 1),
+                    rgba(255, 159, 115, 1)
+                );
+                border-radius: 55px;
+                color: #fff;
+            }
+            .close {
+                background: #e76a31;
             }
         }
     }

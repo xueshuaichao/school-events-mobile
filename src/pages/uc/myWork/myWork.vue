@@ -133,15 +133,9 @@ export default {
             );
         },
         toDetail(item) {
-            if (item.activity_id === 0) {
-                uni.navigateTo({
-                    url: `/pages/work/detail/detail?id=${item.id}&from=mywork`,
-                });
-            } else {
-                uni.navigateTo({
-                    url: `/pages/work/detail/detail?id=${item.id}&activity_id=${item.activity_id}`,
-                });
-            }
+            uni.navigateTo({
+                url: `/pages/work/detail/detail?id=${item.id}&activity_id=${item.activity_id}&resource_scope=${item.resource_scope}`,
+            });
         },
         showCause({ memo }) {
             uni.showModal({
@@ -257,7 +251,7 @@ export default {
                 return {
                     title: item.resource_name,
                     imageUrl: item.video_img_url,
-                    path: `/pages/work/detail/detail?id=${item.id}`,
+                    path: `/pages/work/detail/detail?id=${item.id}&activity_id=${item.activity_id}&resource_scope=${item.resource_scope}`,
                 };
             }
             return false;

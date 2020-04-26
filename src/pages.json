@@ -4,20 +4,21 @@
         {
             "path": "pages/tabBar/index/index",
             "style": {
-                "navigationBarTitleText": "大赛首页",
+                "navigationBarTitleText": "首页",
                 "enablePullDownRefresh": true
             }
         },
         {
             "path": "pages/tabBar/list/list",
             "style": {
-                "navigationBarTitleText": "作品展示"
+                "navigationBarTitleText": "作品"
             }
         },
         {
             "path": "pages/tabBar/upload/upload",
             "style": {
-                "navigationBarTitleText": "我要秀才艺"
+                "navigationBarTitleText": "活动",
+                "enablePullDownRefresh": true
             }
         },
         {
@@ -419,7 +420,7 @@
                 "pagePath": "pages/tabBar/index/index",
                 "iconPath": "static/images/tab/index.png",
                 "selectedIconPath": "static/images/tab/index_ac.png",
-                "text": "大赛"
+                "text": "首页"
             },
             {
                 "pagePath": "pages/tabBar/list/list",
@@ -427,15 +428,12 @@
                 "selectedIconPath": "static/images/tab/work_ac.png",
                 "text": "作品"
             },
-            // #ifndef H5
             {
                 "pagePath": "pages/tabBar/upload/upload",
                 "iconPath": "static/images/tab/upload.png",
                 "selectedIconPath": "static/images/tab/upload_ac.png",
                 "text": "活动"
             },
-            // #endif
-
             // {
             //     "pagePath": "pages/tabBar/mall/mall",
             //     "iconPath": "static/images/tab/mall.png",
