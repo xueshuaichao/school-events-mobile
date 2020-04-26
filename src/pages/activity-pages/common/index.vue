@@ -3,7 +3,7 @@
         class="activity-page-index"
         :style="{ 'background-color': publicConfig.mainBgColor }"
     >
-        <official-account />
+        <official-account v-if="!isH5" />
         <view :class="['page-index', { 'stop-scroll': prompt }]">
             <!-- 活动规则 -->
             <rule
@@ -14,7 +14,7 @@
                     titleColor: publicConfig.titleColor
                 }"
                 :name="publicConfig.activityName"
-                @handle-close="handleClose"
+                @close="handleClose"
             />
             <!-- 奖品说明 -->
             <prize-desc
@@ -25,7 +25,7 @@
                     titleColor: publicConfig.titleColor
                 }"
                 :name="publicConfig.activityName"
-                @handle-close="handleClose"
+                @close="handleClose"
             />
             <view class="main-swiper">
                 <view class="banner">
