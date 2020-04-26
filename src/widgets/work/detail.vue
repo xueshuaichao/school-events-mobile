@@ -125,7 +125,7 @@
                 v-if="activityId !== 8"
                 class="intro text-three-line"
             >
-                {{ pageData.introduce || "暂无简介" }}
+                {{ introduce || "暂无简介" }}
             </view>
             <view
                 v-if="activityId === 8"
@@ -133,22 +133,20 @@
             >
                 <text>
                     {{
-                        !showMore &&
-                            pageData.introduce &&
-                            pageData.introduce.length > 50
-                            ? `${pageData.introduce.slice(0, 50)}...`
-                            : pageData.introduce
+                        !showMore && introduce && introduce.length > 50
+                            ? `${introduce.slice(0, 50)}...`
+                            : introduce || "暂无简介"
                     }}
                 </text>
                 <text
-                    v-if="!showMore && pageData.introduce.length > 50"
+                    v-if="!showMore && introduce.length > 50"
                     class="to-open orange"
                     @click="changeClick"
                 >
                     展开
                 </text>
                 <view
-                    v-if="showMore && pageData.introduce.length > 50"
+                    v-if="showMore && introduce.length > 50"
                     class="to-hide orange"
                     @click="changeClick"
                 >
@@ -289,6 +287,7 @@ export default {
             isVideoWaiting: false,
             play_count: 0,
             showMore: false,
+            introduce: this.pageData.introduce || '',
         };
     },
     created() {
