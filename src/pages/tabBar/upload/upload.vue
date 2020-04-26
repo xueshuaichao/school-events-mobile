@@ -9,7 +9,7 @@
             <view class="clearfix">
                 <view class="fl-l">
                     <view class="title">
-                        {{ item.activity_name }}
+                        {{ item.activity_name || "" }}
                     </view>
                     <view class="clearfix">
                         <image
@@ -17,7 +17,9 @@
                             src="/static/images/upload/time.png"
                         />
                         <view class="fl-l time-start-end">
-                            活动日期：{{ item.start_time }}/{{ item.end_time }}
+                            活动日期：{{ item.start_time || "" }}/{{
+                                item.end_time || ""
+                            }}
                         </view>
                     </view>
                 </view>
@@ -27,7 +29,7 @@
                         src="/static/images/upload/fire.png"
                     />
                     <view class="count fl-r">
-                        {{ item.activity_base }}人关注
+                        {{ item.activity_base || 6000 }}人关注
                     </view>
                 </view>
             </view>

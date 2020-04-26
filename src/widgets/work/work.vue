@@ -37,14 +37,16 @@
                     </view>
                     <view class="fl-r">
                         <view class="title">
-                            {{ item.activity_name }}
+                            {{ item.activity_name || "" }}
                         </view>
                         <view class="time">
-                            活动时间： {{ item.start_time }}/{{ item.end_time }}
+                            活动时间：{{ item.start_time || "" }}/{{
+                                item.end_time || ""
+                            }}
                         </view>
                         <view class="clearfix">
                             <text class="fl-l num">
-                                {{ item.activity_base }}人关注
+                                {{ item.activity_base || 6000 }}人关注
                             </text>
                             <view
                                 class="fl-r join-game"
