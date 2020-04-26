@@ -367,9 +367,6 @@ export default {
             return this.total === 0 && this.type === 'myWork';
         },
     },
-    created() {
-        this.initShare();
-    },
     methods: {
         onLogin() {
             this.getData();
@@ -513,7 +510,7 @@ export default {
                 });
             }
             return uni.navigateTo({
-                url: `/pages/read/upload/modify?id=${id}`,
+                url: `/pages/activity-pages/upload/modify?id=${id}&activity_id=${this.filter.activity_id}`,
             });
         },
         onConfirmDelete(item) {
@@ -561,9 +558,11 @@ export default {
             const titleList = this.isH5
                 ? this.publicConfig.shareConfig.h5Title
                 : this.publicConfig.shareConfig.title;
+
             const descList = this.publicConfig.shareConfig.desc;
             const random = Math.floor(Math.random() * titleList.length);
             this.title = titleList[random];
+            console.log(this.publicConfig.shareConfig.title, this.title);
             const desc = descList[random];
 
             share({
@@ -598,6 +597,7 @@ export default {
             this.changeValue = name;
             this.searchWorkData();
         }
+        this.initShare();
     },
     onShareAppMessage(res) {
         if (res.from === 'button') {
