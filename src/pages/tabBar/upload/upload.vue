@@ -70,7 +70,8 @@ export default {
             isH5: true,
             // #endif
             loading: false,
-            list: [
+            list: [],
+            confList: [
                 {
                     id: 8,
                     img:
@@ -122,7 +123,7 @@ export default {
                     console.log(data, '/api/activity/list');
                     this.list = data.list.map((item) => {
                         let obj = item;
-                        this.list.forEach((d) => {
+                        this.confList.forEach((d) => {
                             if (d.id === obj.id) {
                                 obj.start_time = obj.start_time.slice(5, 10);
                                 obj.end_time = obj.end_time.slice(5, 10);

@@ -1,11 +1,5 @@
 {
     "pages": [
-        // {
-        //     "path": "pages/openGame/jingjiupload",
-        //     "style": {
-        //         "navigationBarTitleText": "竞技上传"
-        //     }
-        // },
         //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
         {
             "path": "pages/tabBar/index/index",
@@ -381,7 +375,7 @@
         {
             "path": "pages/openGame/jingjiupload",
             "style": {
-                "navigationBarTitleText": "竞技上传"
+                "navigationBarTitleText": "竞技项目作品上传"
             }
         },
         {

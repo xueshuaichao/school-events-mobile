@@ -396,7 +396,6 @@ export default {
     },
     onLoad() {
         this.getAllActivityStatus();
-        // this.getAllShowActivity();
         this.thirdEntryPrompt();
         this.getData();
         this.getUserInfo();
@@ -539,7 +538,6 @@ export default {
             // api.get('/api/column/list').then(res => {
             //     // 首页不展示第一个大赛动态 tab
             //     res.list.shift();
-
             //     this.newsColumn = res.list;
 
             // this.getArticle(this.newsColumn[0].id);
