@@ -35,7 +35,7 @@
                             "
                         />
                     </view>
-                    <view class="fl-r">
+                    <view class="fl-r ctx">
                         <view class="title">
                             {{ item.activity_name || "" }}
                         </view>
@@ -233,6 +233,9 @@ export default {
                     padding: 2upx 10upx;
                     font-size: 20upx;
                 }
+            }
+            .ctx {
+                min-width: 50%;
             }
             .title {
                 font-size: 26upx;
