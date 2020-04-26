@@ -156,12 +156,14 @@ export default {
                     icon: 'none',
                 });
             }
-            let urlPath = '/pages/upload/modify/modify';
+            let urlPath = `/pages/upload/modify/modify?id=${id}`;
             if (activityId === 6) {
-                urlPath = '/pages/read/upload/modify';
+                urlPath = `/pages/read/upload/modify?id=${id}`;
+            } else if (activityId === 8) {
+                urlPath = `/pages/activity-pages/upload/modify?id=${id}&activity_id=${activityId}`;
             }
             return uni.navigateTo({
-                url: `${urlPath}?id=${id}`,
+                url: urlPath,
             });
         },
         deleteWork(item) {

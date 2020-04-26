@@ -7,7 +7,6 @@
             search-color="#FF9F73"
             :index-config="indexConfig"
             :public-config="publicConfig"
-            :tips-color="activityConfig.tipsColor"
             :fr="fr"
         >
             <template v-slot:rank>
@@ -141,7 +140,6 @@ export default {
             fr: '',
         };
     },
-
     onLoad(params) {
         this.activityId = 8;
         this.publicConfig = this.$store.getters.getPublicConfig(

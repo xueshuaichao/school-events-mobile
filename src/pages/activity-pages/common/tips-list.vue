@@ -64,11 +64,6 @@ export default {
             },
         },
     },
-    computed: {
-        tipsColor() {
-            return this.$store.state.activity.tipsColor;
-        },
-    },
 };
 </script>
 
