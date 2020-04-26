@@ -13,7 +13,6 @@
         <view
             v-else
             class="panel"
-            :class="{ 'no-padding': userId }"
         >
             <view
                 v-if="type === 'myWork'"
@@ -73,7 +72,7 @@
                 </text>
             </view>
             <view
-                v-else-if="!userId"
+                v-else
                 class="search-box"
                 :style="{ 'background-color': publicConfig.mainBgColor }"
             >

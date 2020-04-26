@@ -96,9 +96,13 @@ export default {
         };
     },
     watch: {
-        list(oVal, nVal) {
+        lists() {
             // 监听数组变化
-            console.log(oVal, nVal);
+            const l = this.lists.length;
+            if (l) {
+                // 有图片或图片数量改变时重新初始化
+                this.init();
+            }
         },
     },
     mounted() {
