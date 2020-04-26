@@ -165,15 +165,6 @@
             }
         },
         {
-            "path": "pages/chunjie/detail/detail",
-            "style": {
-                "navigationBarTitleText": "作品详情",
-                "usingComponents": {
-                    "poster": "/wxcomponents/third-party/poster/poster/index"
-                }
-            }
-        },
-        {
             "path": "pages/chunjie/upload/upload",
             "style": {
                 "navigationBarTitleText": "上传作品"
@@ -193,15 +184,6 @@
             "style": {
                 "navigationBarTitleText": "dou说新年好",
                 "softinputNavBar": "none"
-            }
-        },
-        {
-            "path": "pages/chunjiehao/detail/detail",
-            "style": {
-                "navigationBarTitleText": "作品详情",
-                "usingComponents": {
-                    "poster": "/wxcomponents/third-party/poster/poster/index"
-                }
             }
         },
         {
@@ -228,15 +210,6 @@
             "path": "pages/yiqing/index",
             "style": {
                 "navigationBarTitleText": "抗击疫情“艺”起来"
-            }
-        },
-        {
-            "path": "pages/yiqing/detail/detail",
-            "style": {
-                "navigationBarTitleText": "作品详情",
-                "usingComponents": {
-                    "poster": "/wxcomponents/third-party/poster/poster/index"
-                }
             }
         },
         {
@@ -330,12 +303,6 @@
             }
         },
         // #endif
-        {
-            "path": "pages/search/index",
-            "style": {
-                "navigationBarTitleText": "作品展示"
-            }
-        },
         {
             "path": "pages/activities/index",
             "style": {

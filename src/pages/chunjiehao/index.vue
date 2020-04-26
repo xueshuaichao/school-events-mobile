@@ -131,7 +131,7 @@
                                 <view>
                                     <text>二等奖</text>
                                     <image
-                                        src="../../static/images/chunjie/chunjiehao-prize02.png"
+                                        src="http://aitiaozhan.oss-cn-beijing.aliyuncs.com/school-events-mobile/chunjiehao-prize02.png"
                                     />
                                     <text>美的养生壶*2</text>
                                 </view>
@@ -184,7 +184,7 @@
                 </view>
                 <view class="register">
                     <image
-                        src="../../static/images/chunjie/chunjiehao-title.png"
+                        src="http://aitiaozhan.oss-cn-beijing.aliyuncs.com/school-events-mobile/chunjiehao-title.png"
                     />
                 </view>
                 <view class="active-schedule">
@@ -204,7 +204,7 @@
                         <view>
                             <text>二等奖</text>
                             <image
-                                src="../../static/images/chunjie/chunjiehao-prize02.png"
+                                src="http://aitiaozhan.oss-cn-beijing.aliyuncs.com/school-events-mobile/chunjiehao-prize02.png"
                             />
                             <text>美的养生壶*2</text>
                         </view>
@@ -1027,10 +1027,7 @@ body.dialog-open {
 }
 
 .activerulebox {
-    // background: url("../../static/images/chunjie/bg.png") no-repeat;
-    // background-position: 25upx 57upx;
     background-color: rgba(0, 0, 0, 0.8);
-    // background-size: 93% 94%;
     width: 100%;
     height: 100%;
     box-sizing: border-box;
@@ -1052,7 +1049,7 @@ body.dialog-open {
         margin-bottom: 40upx;
     }
     .title-icon {
-        background: url("../../static/images/chunjie/chunjiehao-rule.png")
+        background: url("http://aitiaozhan.oss-cn-beijing.aliyuncs.com/school-events-mobile/chunjiehao-rule.png")
             no-repeat;
         background-size: 100% 100%;
         font-size: 0upx;

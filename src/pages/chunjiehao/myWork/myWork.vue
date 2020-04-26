@@ -137,7 +137,9 @@
                 v-show="searchEmpty"
                 class="empty"
             >
-                <image src="../../../static/images/chunjie/empty01.png" />
+                <image
+                    src="http://aitiaozhan.oss-cn-beijing.aliyuncs.com/school-events-mobile/empty01.png"
+                />
                 <view>搜索不到您要的结果，换个关键词试试吧～</view>
             </view>
             <view

@@ -315,8 +315,8 @@ export default {
             });
         },
         handleTicketMask() {
-            const url = 'pages/yiqing/detail/detail';
-            const scene = `id=${this.id}` || 'id=325';
+            const url = '/pages/work/detail/detail';
+            const scene = `id=${this.id}&activity_id=5` || 'id=325';
             api.post('/api/weixin/getminiqrcode', {
                 path: url,
                 scene,

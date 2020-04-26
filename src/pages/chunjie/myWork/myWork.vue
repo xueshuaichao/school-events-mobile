@@ -511,7 +511,8 @@ export default {
     box-sizing: border-box;
     width: 100%;
     min-height: 100vh;
-    background: url("../../../static/images/chunjie/main_bg.png") repeat-y;
+    background: url("http://aitiaozhan.oss-cn-beijing.aliyuncs.com/school-events-mobile/main_bg.png")
+        repeat-y;
     background-size: contain;
     .search-box {
         overflow: hidden;

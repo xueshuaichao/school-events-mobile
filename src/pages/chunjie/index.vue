@@ -1099,7 +1099,8 @@ body.dialog-open {
 }
 
 .activerulebox {
-    background: url("../../static/images/chunjie/bg.png") no-repeat;
+    background: url("http://aitiaozhan.oss-cn-beijing.aliyuncs.com/school-events-mobile/bg.png")
+        no-repeat;
     background-position: 25upx 57upx;
     background-color: rgba(0, 0, 0, 0.8);
     background-size: 93% 94%;
@@ -1170,7 +1171,8 @@ body.dialog-open {
 .page-index {
     padding-bottom: 20upx;
     display: relative;
-    background: url("../../static/images/chunjie/main_bg.png") repeat-y;
+    background: url("http://aitiaozhan.oss-cn-beijing.aliyuncs.com/school-events-mobile/main_bg.png")
+        repeat-y;
     background-size: contain;
     .main-swiper {
         .active-rule {
