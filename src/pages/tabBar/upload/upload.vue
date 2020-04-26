@@ -3,47 +3,51 @@
         <view
             v-for="item in list"
             :key="item.id"
-            class="item-card"
-            @click="jumpRoute(item.url)"
         >
-            <view class="clearfix">
-                <view class="fl-l">
-                    <view class="title">
-                        {{ item.activity_name || "" }}
+            <view
+                v-if="item.id !== 7 || (item.id === 7 && !isH5)"
+                class="item-card"
+                @click="jumpRoute(item.url)"
+            >
+                <view class="clearfix">
+                    <view class="fl-l">
+                        <view class="title">
+                            {{ item.activity_name || "" }}
+                        </view>
+                        <view class="clearfix">
+                            <image
+                                class="time fl-l"
+                                src="/static/images/upload/time.png"
+                            />
+                            <view class="fl-l time-start-end">
+                                活动日期：{{ item.start_time || "" }}/{{
+                                    item.end_time || ""
+                                }}
+                            </view>
+                        </view>
                     </view>
-                    <view class="clearfix">
+                    <view class="fl-r activity_num">
                         <image
-                            class="time fl-l"
-                            src="/static/images/upload/time.png"
+                            class="fl-l"
+                            src="/static/images/upload/fire.png"
                         />
-                        <view class="fl-l time-start-end">
-                            活动日期：{{ item.start_time || "" }}/{{
-                                item.end_time || ""
-                            }}
+                        <view class="count fl-r">
+                            {{ item.activity_base || 6000 }}人关注
                         </view>
                     </view>
                 </view>
-                <view class="fl-r activity_num">
-                    <image
-                        class="fl-l"
-                        src="/static/images/upload/fire.png"
-                    />
-                    <view class="count fl-r">
-                        {{ item.activity_base || 6000 }}人关注
+                <view class="banner-box">
+                    <view
+                        v-if="item.status === 3"
+                        class="has-end"
+                    >
+                        已结束
                     </view>
+                    <image
+                        class="banner"
+                        :src="item.img"
+                    />
                 </view>
-            </view>
-            <view class="banner-box">
-                <view
-                    v-if="item.status === 3"
-                    class="has-end"
-                >
-                    已结束
-                </view>
-                <image
-                    class="banner"
-                    :src="item.img"
-                />
             </view>
         </view>
     </view>
@@ -62,6 +66,9 @@ export default {
                 page_size: 10,
                 page_num: 1,
             },
+            // #ifdef H5
+            isH5: true,
+            // #endif
             loading: false,
             list: [
                 {
@@ -124,7 +131,6 @@ export default {
                         });
                         return obj;
                     });
-                    console.log(this.list);
                     if (refresh) {
                         uni.stopPullDownRefresh();
                     }

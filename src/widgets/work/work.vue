@@ -20,39 +20,43 @@
                 <view
                     v-for="item in info"
                     :key="item.id"
-                    class="hot-act-card clearfix"
                 >
-                    <view class="img-box fl-l">
-                        <view class="going">
-                            进行中
+                    <view
+                        v-if="item.id !== 7 || (item.id === 7 && !isH5)"
+                        class="hot-act-card clearfix"
+                    >
+                        <view class="img-box fl-l">
+                            <view class="going">
+                                进行中
+                            </view>
+                            <image
+                                class="banner"
+                                :src="
+                                    item.img ||
+                                        'http://aitiaozhan.oss-cn-beijing.aliyuncs.com/school-events-mobile/prize-banner.png'
+                                        | optimizeImage
+                                "
+                            />
                         </view>
-                        <image
-                            class="banner"
-                            :src="
-                                item.img ||
-                                    'http://aitiaozhan.oss-cn-beijing.aliyuncs.com/school-events-mobile/prize-banner.png'
-                                    | optimizeImage
-                            "
-                        />
-                    </view>
-                    <view class="fl-r ctx">
-                        <view class="title">
-                            {{ item.activity_name || "" }}
-                        </view>
-                        <view class="time">
-                            活动时间：{{ item.start_time || "" }}/{{
-                                item.end_time || ""
-                            }}
-                        </view>
-                        <view class="clearfix">
-                            <text class="fl-l num">
-                                {{ item.activity_base || 6000 }}人关注
-                            </text>
-                            <view
-                                class="fl-r join-game"
-                                @click="jumpRoute(item.url)"
-                            >
-                                立即参加
+                        <view class="fl-r ctx">
+                            <view class="title">
+                                {{ item.activity_name || "" }}
+                            </view>
+                            <view class="time">
+                                活动时间：{{ item.start_time || "" }}/{{
+                                    item.end_time || ""
+                                }}
+                            </view>
+                            <view class="clearfix">
+                                <text class="fl-l num">
+                                    {{ item.activity_base || 6000 }}人关注
+                                </text>
+                                <view
+                                    class="fl-r join-game"
+                                    @click="jumpRoute(item.url)"
+                                >
+                                    立即参加
+                                </view>
                             </view>
                         </view>
                     </view>
@@ -124,6 +128,9 @@ export default {
             autoplay: false,
             interval: 2000,
             duration: 500,
+            // #ifdef H5
+            isH5: true,
+            // #endif
         };
     },
     methods: {

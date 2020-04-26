@@ -71,7 +71,7 @@
                             />
                         </navigator>
                     </swiper-item>
-                    <swiper-item>
+                    <swiper-item v-if="!isH5">
                         <navigator
                             url="/pages/openGame/zhibo-list"
                             class="swiper-item"
@@ -566,7 +566,7 @@ export default {
                     });
                     return obj;
                 });
-                console.log(this.hotList, 'hot-------');
+                console.log(this.hotList);
             });
         },
     },
