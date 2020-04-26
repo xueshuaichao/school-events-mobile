@@ -181,24 +181,26 @@ export default {
         }
         .panel-title {
             font-size: 38upx;
-            line-height: 38upx;
+            line-height: 40upx;
             color: #333;
         }
         .link {
             font-size: 24upx;
             color: #666;
-            padding-right: 20px;
+            padding-right: 26upx;
             position: relative;
+            height: 40upx;
             &::before {
                 content: "";
                 position: absolute;
                 right: 4upx;
-                top: 4upx;
+                top: 10upx;
                 width: 14upx;
                 height: 14upx;
                 border-top: 1upx solid #bfbfbf;
                 border-right: 1upx solid #bfbfbf;
                 transform: rotate(45deg);
+                box-sizing: border-box;
             }
         }
 
@@ -218,7 +220,7 @@ export default {
             box-shadow: 0upx 4upx 28upx 0upx rgba(0, 0, 0, 0.06);
             border-radius: 4upx;
             padding: 15upx;
-            width: 100%;
+            // width: 100%;
             font-size: 22upx;
             margin-bottom: 16upx;
             .img-box {
@@ -227,6 +229,7 @@ export default {
                     width: 254upx;
                     height: 160upx;
                     margin-right: 16upx;
+                    border-radius: 4rpx;
                 }
                 .going {
                     position: absolute;
@@ -237,12 +240,13 @@ export default {
                     border: 1upx solid rgba(255, 255, 255, 1);
                     color: #fff;
                     z-index: 1;
-                    padding: 2upx 10upx;
+                    line-height: 32upx;
+                    padding: 0 10upx;
                     font-size: 20upx;
                 }
             }
             .ctx {
-                min-width: 50%;
+                width: 392upx;
             }
             .title {
                 font-size: 26upx;
@@ -251,7 +255,8 @@ export default {
             }
             .time {
                 color: #999;
-                margin-bottom: 26upx;
+                margin-bottom: 16upx;
+                line-height: 34upx;
             }
             .num {
                 color: #ff6555;
