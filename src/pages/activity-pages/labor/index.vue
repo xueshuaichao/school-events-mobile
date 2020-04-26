@@ -190,6 +190,9 @@ export default {
                 thumbnail: `${this.publicConfig.shareConfig.image}?x-oss-process=image/format,png/interlace,1/quality,Q_80/resize,m_pad,h_100`,
             });
         },
+        onReachBottom() {
+            uni.$emit('onReachBottom');
+        },
     },
     onShareAppMessage(res) {
         if (res.from === 'button') {
