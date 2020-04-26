@@ -472,7 +472,7 @@ export default {
         handlePromt() {
             uni.setStorageSync(this.isFirstLogin, true);
             uni.navigateTo({
-                url: '/pages/read/index',
+                url: '/pages/activity-pages/labor/index',
             });
         },
         handleClose() {
