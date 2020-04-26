@@ -344,6 +344,15 @@ export default {
             setId: '',
         };
     },
+    mounted() {
+        uni.$once('onReachBottom', () => {
+            if (this.loadMoreStatus === 'more') {
+                this.filter.page_num = this.filter.page_num + 1;
+                this.loadMoreStatus = 'loading';
+                this.getData('reachBottom');
+            }
+        });
+    },
     created() {
         this.getData();
         this.activityStatus();
@@ -390,8 +399,6 @@ export default {
                     } else {
                         this.loadMoreStatus = 'more';
                     }
-
-                    this.initShare();
                     uni.hideLoading();
                 },
             );
@@ -431,22 +438,15 @@ export default {
             return true;
         },
 
-        onReachBottom() {
-            if (this.loadMoreStatus === 'more') {
-                this.filter.page_num = this.filter.page_num + 1;
-                this.loadMoreStatus = 'loading';
-                this.getData('reachBottom');
-            }
-        },
+        // onReachBottom() {
+
+        // },
         bindconfirm() {
             uni.navigateTo({
                 url: `/pages/activity-pages/mywork/mywork?type=search&name=${this.changeValue.trim()}&activity_id=${
                     this.filter.activity_id
                 }`,
             });
-        },
-        initShare() {
-            // share(this.shareConfig);
         },
         viewDetail({ id }) {
             uni.navigateTo({
@@ -879,7 +879,7 @@ body.dialog-open {
                 left: 218upx;
                 color: #fff;
                 font-size: 22upx;
-                font-style: none;
+                font-style: normal;
             }
         }
         .main-content {

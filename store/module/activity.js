@@ -37,7 +37,8 @@ export default {
                             '悦劳动越光荣，大家一起动起来！',
                             '五一劳动节，脂肪换奖品啦！赶快动起来',
                         ],
-                        image: '',
+                        image:
+                            'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/labor_share.jpg',
                         path: '/pages/activity-pages/labor/index',
                     },
                 },
