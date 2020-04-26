@@ -88,6 +88,7 @@
                             v-for="(item, index) in rank"
                             :key="index"
                             class="rank-item"
+                            @click="jumpSearch(item)"
                         >
                             <image
                                 :src="
@@ -138,6 +139,7 @@ export default {
             historyRankList: [],
             showHistoryRankList: false,
             fr: '',
+            activityId: '',
         };
     },
     onLoad(params) {
@@ -188,6 +190,11 @@ export default {
                 title: this.title,
                 desc,
                 thumbnail: `${this.publicConfig.shareConfig.image}?x-oss-process=image/format,png/interlace,1/quality,Q_80/resize,m_pad,h_100`,
+            });
+        },
+        jumpSearch(item) {
+            uni.navigateTo({
+                url: `/pages/activity-pages/mywork/mywork?type=search&activity_id=${this.activityId}&user_id=${item.user_id}`,
             });
         },
         onReachBottom() {

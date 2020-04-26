@@ -13,6 +13,7 @@
         <view
             v-else
             class="panel"
+            :class="{ 'no-padding': userId }"
         >
             <view
                 v-if="type === 'myWork'"
@@ -72,7 +73,7 @@
                 </text>
             </view>
             <view
-                v-else
+                v-else-if="!userId"
                 class="search-box"
                 :style="{ 'background-color': publicConfig.mainBgColor }"
             >
@@ -128,6 +129,7 @@
                             type="text"
                             confirm-type="search"
                             confirm-hold="true"
+                            :maxlength="13"
                             :placeholder-style="
                                 `color:${publicConfig.placeholderColor}`
                             "
@@ -357,6 +359,7 @@ export default {
             allTotal: 0,
             shareDesc: '',
             title: '',
+            userId: '',
         };
     },
     computed: {
@@ -575,8 +578,13 @@ export default {
     onLoad(query) {
         this.getData();
         const {
-            type, name, status, activity_id: activityId,
+            type,
+            name,
+            status,
+            activity_id: activityId,
+            user_id: userId,
         } = query;
+        this.userId = userId;
         this.type = type;
         if (status) {
             this.tabActiveIndex = Number(status);
@@ -594,6 +602,9 @@ export default {
         } else if (type === 'search') {
             uni.setNavigationBarTitle({ title: this.publicConfig.title });
             this.filter.search = name;
+            if (userId) {
+                this.filter.user_id = userId;
+            }
             this.changeValue = name;
             this.searchWorkData();
         }
@@ -796,7 +807,7 @@ export default {
                 left: 12upx;
             }
             input {
-                width: 293upx;
+                width: 280upx;
                 position: absolute;
                 top: 50%;
                 transform: translateY(-50%);
@@ -816,6 +827,9 @@ export default {
     }
     .panel {
         padding: 96upx 30upx 0;
+        &.no-padding {
+            padding-top: 10upx;
+        }
     }
     .panel .panel-hd {
         border-bottom: none;

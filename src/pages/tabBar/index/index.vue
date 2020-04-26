@@ -361,7 +361,8 @@ export default {
             // #endif
             needBindMobile: false,
             changeValue: '',
-            hotList: [
+            hotList: [],
+            confList: [
                 {
                     id: 8,
                     img:
@@ -555,7 +556,7 @@ export default {
             }).then((data) => {
                 this.hotList = data.list.map((item) => {
                     let obj = item;
-                    this.hotList.forEach((d) => {
+                    this.confList.forEach((d) => {
                         obj.start_time = obj.start_time.slice(0, 10);
                         obj.end_time = obj.end_time.slice(0, 10);
                         if (d.id === obj.id) {
@@ -564,7 +565,6 @@ export default {
                     });
                     return obj;
                 });
-                console.log(this.hotList);
             });
         },
     },
@@ -644,10 +644,10 @@ uni-swiper {
         width: 100%;
         font-size: 24upx;
         overflow: hidden;
-        padding: 20upx 0 20upx 30upx;
+        padding: 20upx 0 14upx 30upx;
         background: #fff;
         box-shadow: 0 0upx 5upx 0 rgba(0, 0, 0, 0.05);
-        margin-bottom: 10upx;
+        // margin-bottom: 10upx;
         input {
             background: #f3f3f3;
             border: none;
@@ -673,25 +673,6 @@ uni-swiper {
             margin-left: 28upx;
         }
     }
-    // .chunjie-entry {
-    //     .close-icon {
-    //         width: 20upx;
-    //         height: 20upx;
-    //         position: absolute;
-    //         top: 0;
-    //         right: 0;
-    //     }
-    //     font-size: 0;
-    //     background: url("http://aitiaozhan.oss-cn-beijing.aliyuncs.com/chunjiehao/suspension.png")
-    //         no-repeat;
-    //     background-size: 100% 100%;
-    //     width: 144upx;
-    //     height: 156upx;
-    //     position: fixed;
-    //     top: 640upx;
-    //     right: 0upx;
-    //     z-index: 999;
-    // }
     .main-swiper {
         padding: 30upx;
 
@@ -703,6 +684,9 @@ uni-swiper {
                     height: 100%;
                 }
             }
+        }
+        .swiper {
+            height: 280upx;
         }
 
         .banner-image {
@@ -726,113 +710,15 @@ uni-swiper {
             .icon-wrap {
                 margin: 0 auto;
                 width: 106upx;
-                height: 70upx;
+                height: 66upx;
                 border-radius: 35upx;
-                margin-bottom: 15upx;
-                // &.red {
-                //     background: linear-gradient(
-                //         180deg,
-                //         rgba(255, 142, 148, 1) 0%,
-                //         rgba(255, 82, 109, 1) 100%
-                //     );
-                //     box-shadow: 0rpx 2rpx 4rpx 0px rgba(255, 134, 153, 1);
-                // }
-
-                // &.light-blue {
-                //     background: linear-gradient(
-                //         180deg,
-                //         rgba(131, 225, 255, 1) 0%,
-                //         rgba(70, 176, 255, 1) 100%
-                //     );
-                //     box-shadow: 0rpx 2rpx 4rpx 0rpx rgba(70, 176, 255, 1);
-                // }
-
-                // &.dark-blue {
-                //     background: linear-gradient(
-                //         180deg,
-                //         rgba(58, 138, 255, 1) 0%,
-                //         rgba(35, 98, 254, 1) 100%
-                //     );
-                //     box-shadow: 0rpx 2rpx 4rpx 0rpx rgba(38, 103, 254, 1);
-                // }
-
-                // &.pink {
-                //     background: linear-gradient(
-                //         180deg,
-                //         rgba(243, 141, 255, 1) 0%,
-                //         rgba(182, 111, 255, 1) 100%
-                //     );
-                //     box-shadow: 0rpx 2rpx 4rpx 0rpx rgba(189, 114, 255, 1);
-                // }
-
-                // &.purple {
-                //     background: rgb(192, 170, 255);
-                //     background: linear-gradient(
-                //         180deg,
-                //         rgba(192, 170, 255, 1) 0%,
-                //         rgba(138, 133, 255, 1) 100%
-                //     );
-                //     box-shadow: 0 2upx 4upx 0 #928bff;
-                // }
-                // &.green {
-                //     background: rgb(124, 239, 145);
-                //     background: linear-gradient(
-                //         180deg,
-                //         rgba(124, 239, 145, 1) 0%,
-                //         rgba(84, 232, 80, 1) 100%
-                //     );
-                //     box-shadow: 0 2upx 4upx 0 #8bffb3;
-                // }
-                // &.yellow {
-                //     background: rgb(255, 205, 58);
-                //     background: linear-gradient(
-                //         180deg,
-                //         rgba(255, 205, 58, 1) 0%,
-                //         rgba(254, 161, 35, 1) 100%
-                //     );
-                //     box-shadow: 0 2upx 4upx 0 #fea525;
-                // }
-                // &.blue {
-                //     background: rgb(141, 197, 255);
-                //     background: linear-gradient(
-                //         180deg,
-                //         rgba(141, 197, 255, 1) 0%,
-                //         rgba(111, 132, 255, 1) 100%
-                //     );
-                //     box-shadow: 0 2upx 4upx 0 #6f84ff;
-                // }
-                // &.orange {
-                //     background: rgb(255, 181, 101);
-                //     background: linear-gradient(
-                //         180deg,
-                //         rgba(255, 181, 101, 1) 0%,
-                //         rgba(254, 96, 51, 1) 100%
-                //     );
-                //     box-shadow: 0 2upx 4upx 0 #fe6033;
-                // }
                 .icon {
-                    top: 15upx;
+                    // top: 15upx;
                     position: relative;
                     margin: auto;
                     width: 56upx;
                     height: 56upx;
                     background-size: 56upx 56upx;
-
-                    // &.icon-intro {
-                    //     background-image: url('/static/images/index/intro.png');
-                    // }
-                    // &.icon-rule {
-                    //     background-image: url('/static/images/index/rule.png');
-                    // }
-                    // &.icon-flow {
-                    //     background-image: url('/static/images/index/flow.png');
-                    // }
-                    // &.icon-time {
-                    //     background-image: url('/static/images/index/time.png');
-                    // }
-                    // &.icon-news {
-                    //     background-image: url('/static/images/index/news.png');
-                    // }
                 }
             }
 
@@ -844,17 +730,5 @@ uni-swiper {
             }
         }
     }
-
-    // .news-list {
-    //     margin-bottom: 40upx;
-
-    //     .news-item {
-    //         font-size: 28upx;
-    //         color: #666;
-    //         line-height: 45upx;
-    //         border-bottom: 1px solid #f0f0f0;
-    //         padding: 25upx 0;
-    //     }
-    // }
 }
 </style>
