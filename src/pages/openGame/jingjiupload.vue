@@ -40,23 +40,7 @@
                     项目名称:
                 </view>
                 <view class="uni-list-cell-db">
-                    <input
-                        v-model="formData.cat_name"
-                        class="uni-input"
-                        placeholder-class="placeholder"
-                        maxlength="30"
-                        disabled
-                        placeholder="请选择项目名称"
-                        @click="hanldecatEvent"
-                    >
                     <picker
-                        ref="ref111"
-                        :value="catIndex"
-                        :range="catData"
-                        :range-key="'cat_name'"
-                        @change="onSelect"
-                    />
-                    <!-- <picker
                         :value="catIndex"
                         :range="catData"
                         :range-key="'cat_name'"
@@ -69,9 +53,8 @@
                             maxlength="30"
                             disabled
                             placeholder="请选择项目名称"
-                            @click="hanldecatEvent"
                         >
-                    </picker> -->
+                    </picker>
                 </view>
             </view>
             <!-- <view class="show-type-input">
@@ -424,18 +407,6 @@ export default {
         },
         openAddres() {
             this.$refs.simpleAddress.open();
-        },
-        hanldecatEvent() {
-            this.$refs.ref111.open();
-            // if (this.catData.length === 0) {
-            //     uni.showToast({
-            //         title: '请选择项目范围',
-            //         icon: 'none',
-            //     });
-            //     return false;
-            // }else{
-            //     return true;
-            // }
         },
         onConfirm(e) {
             console.log(this.formData);
