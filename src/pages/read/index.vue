@@ -955,10 +955,7 @@ body.dialog-open {
 }
 
 .activerulebox {
-    // background: url("../../static/images/chunjie/bg.png") no-repeat;
-    // background-position: 25upx 57upx;
     background-color: rgba(0, 0, 0, 0.8);
-    // background-size: 93% 94%;
     width: 100%;
     height: 100%;
     box-sizing: border-box;

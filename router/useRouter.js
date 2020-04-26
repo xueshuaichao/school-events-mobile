@@ -111,9 +111,6 @@ const routesConfig = {
             path: '/pages/chunjiehao/upload/upload',
         },
         {
-            path: '/pages/chunjie/detail/detail',
-        },
-        {
             path: '/pages/upload/result/result',
         },
         {
@@ -136,9 +133,6 @@ const routesConfig = {
         },
         {
             path: '/pages/yiqing/index',
-        },
-        {
-            path: '/pages/yiqing/detail/detail',
         },
         {
             path: '/pages/yiqing/myWork/myWork',
@@ -164,15 +158,8 @@ const routesConfig = {
         {
             path: '/pages/activity-pages/mywork/mywork',
         },
-
-        {
-            path: '/pages/search/index',
-        },
         {
             path: '/pages/login/login',
-        },
-        {
-            path: '/pages/chunjiehao/detail/detail',
         },
         {
             path: '/pages/address/exchangeRecord',
