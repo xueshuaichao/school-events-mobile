@@ -427,7 +427,7 @@ export default {
                         this.disabled = false;
                         uni.hideLoading();
                         uni.navigateTo({
-                            url: `/pages/activity-pages/upload/result?activity_id=${this.activityId}`,
+                            url: `/pages/activity-pages/upload/result?activity_id=${this.formData.activity_id}`,
                         });
                         this.resetData();
                         this.lock = true;

@@ -121,7 +121,7 @@ export default {
     },
     methods: {
         handleClose() {
-            this.$emit('handleClose');
+            this.$emit('close');
         },
     },
 };
