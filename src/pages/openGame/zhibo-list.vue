@@ -63,6 +63,20 @@ export default {
             // this.activity_num1 = data.activity_num;
         });
     },
+    onShareAppMessage(res) {
+        if (res.from === 'button') {
+            // 来自页面内分享按钮
+            console.log(res.target);
+        }
+        const title = '青少年网络活动大赛';
+        return {
+            title,
+            imageUrl:
+                'http://aitiaozhan.oss-cn-beijing.aliyuncs.com/school-events-mobile/openEvent-banner.png?x-oss-process=image/format,png/interlace,1/quality,Q_80/resize,m_pad,h_100',
+
+            path: '/pages/openGame/zhibo-list',
+        };
+    },
     methods: {
         jumpRoute(url) {
             this.fr = logger.getFr('dshd', {});

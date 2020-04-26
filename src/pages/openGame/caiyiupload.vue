@@ -498,13 +498,12 @@ export default {
             // 来自页面内分享按钮
             console.log(res.target);
         }
-        const titleList = ['我来给你拜新年，表演才艺送祝福'];
-        const title = titleList[Math.floor(Math.random() * titleList.length)];
+        const title = '青少年网络活动大赛';
         return {
             title,
             imageUrl:
-                'http://aitiaozhan.oss-cn-beijing.aliyuncs.com/banner.png',
-            path: '/pages/chunjie/index',
+                'http://aitiaozhan.oss-cn-beijing.aliyuncs.com/school-events-mobile/openEvent-banner.png?x-oss-process=image/format,png/interlace,1/quality,Q_80/resize,m_pad,h_100',
+            path: '/pages/openGame/zhibo-list',
         };
     },
 };

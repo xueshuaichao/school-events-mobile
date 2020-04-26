@@ -1,20 +1,5 @@
 <template>
     <view :class="['page-upload', { 'stop-scroll': prompt }]">
-        <!-- <view class="prompt" v-show="prompt">
-            <view class="prompt-box">
-                <view class="prompt-title">项目规划
-                    <img
-                        class="icon-del"
-                        src="/static/images/zhibo/icon-delet.png"
-                        @click="prompt=false"
-                    >
-                </view>
-                <view class="prompt-content">
-                    <text>{{ rules }}</text>
-                </view>
-                <view class="prompt-btn" @click="prompt=false">我已了解</view>
-            </view>
-        </view> -->
         <view
             class="content-box"
             style="padding-top:114upx"
@@ -27,7 +12,7 @@
                     <text style="color:red">
                         *
                     </text>
-                    项目范围
+                    项目范围:
                 </view>
                 <view class="uni-list-cell-db">
                     <picker
@@ -52,10 +37,26 @@
                     <text style="color:red">
                         *
                     </text>
-                    项目名称
+                    项目名称:
                 </view>
                 <view class="uni-list-cell-db">
+                    <input
+                        v-model="formData.cat_name"
+                        class="uni-input"
+                        placeholder-class="placeholder"
+                        maxlength="30"
+                        disabled
+                        placeholder="请选择项目名称"
+                        @click="hanldecatEvent"
+                    >
                     <picker
+                        ref="ref111"
+                        :value="catIndex"
+                        :range="catData"
+                        :range-key="'cat_name'"
+                        @change="onSelect"
+                    />
+                    <!-- <picker
                         :value="catIndex"
                         :range="catData"
                         :range-key="'cat_name'"
@@ -68,8 +69,9 @@
                             maxlength="30"
                             disabled
                             placeholder="请选择项目名称"
+                            @click="hanldecatEvent"
                         >
-                    </picker>
+                    </picker> -->
                 </view>
             </view>
             <!-- <view class="show-type-input">
@@ -90,7 +92,7 @@
                     <text style="color:red">
                         *
                     </text>
-                    上传视频
+                    上传视频:
                 </view>
                 <view class="uni-list-cell-db">
                     <upload
@@ -106,7 +108,7 @@
                 style="height:100upx"
             >
                 <view class="show-type-text">
-                    视频封面：
+                    视频封面:
                 </view>
                 <view class="uni-list-cell-db">
                     <template>
@@ -124,7 +126,7 @@
                     <text style="color:red">
                         *
                     </text>
-                    成绩
+                    成绩:
                 </view>
                 <view
                     class="uni-list-cell-db"
@@ -144,7 +146,7 @@
             </view>
             <view class="show-type-input">
                 <view class="show-type-text">
-                    指导老师
+                    指导老师:
                 </view>
                 <view class="uni-list-cell-db">
                     <input
@@ -158,7 +160,7 @@
             </view>
             <view class="show-type-input">
                 <view class="show-type-text">
-                    认证官姓名
+                    认证官姓名:
                 </view>
                 <view class="uni-list-cell-db">
                     <input
@@ -184,7 +186,7 @@
                     <text style="color:red">
                         *
                     </text>
-                    地市：
+                    地市:
                 </view>
                 <view class="uni-list-cell-db">
                     <input
@@ -203,7 +205,7 @@
                     <text style="color:red">
                         *
                     </text>
-                    参赛者姓名
+                    参赛者姓名:
                 </view>
                 <view class="uni-list-cell-db">
                     <input
@@ -220,7 +222,7 @@
                     <text style="color:red">
                         *
                     </text>
-                    学校名称：
+                    学校名称:
                 </view>
                 <view class="uni-list-cell-db">
                     <input
@@ -228,7 +230,7 @@
                         class="uni-input"
                         placeholder-class="placeholder"
                         maxlength="30"
-                        placeholder="学校名称："
+                        placeholder="学校名称"
                     >
                 </view>
             </view>
@@ -237,11 +239,11 @@
                     <text style="color:red">
                         *
                     </text>
-                    学 段：
+                    学 段:
                 </view>
                 <view class="uni-list-cell-db">
                     <picker
-                        :value="formData.education_level - 1"
+                        :value="formData.education_level - 2"
                         :range="educationData"
                         @change="onEducationSelect"
                     >
@@ -260,7 +262,7 @@
                     <text style="color:red">
                         *
                     </text>
-                    年 级：
+                    年 级:
                 </view>
                 <view class="uni-list-cell-db">
                     <picker
@@ -318,7 +320,7 @@ export default {
                 resource_scope: '',
                 resource_name: '',
                 cat_id: 16,
-                education_level: 1,
+                education_level: 2,
                 education_name: '',
                 cat_name: '',
                 achievement: '',
@@ -354,7 +356,6 @@ export default {
                 '高三',
             ],
             educationData: [
-                '幼儿园',
                 '小学',
                 '初中',
                 '小学+初中',
@@ -398,6 +399,9 @@ export default {
     },
     onLoad({ type }) {
         this.type = type;
+        uni.setNavigationBarTitle({
+            title: type === 'jingji' ? '竞技项目作品上传' : '吉尼斯项目作品上传',
+        });
     },
     created() {
         this.getUserInfo();
@@ -421,6 +425,18 @@ export default {
         openAddres() {
             this.$refs.simpleAddress.open();
         },
+        hanldecatEvent() {
+            this.$refs.ref111.open();
+            // if (this.catData.length === 0) {
+            //     uni.showToast({
+            //         title: '请选择项目范围',
+            //         icon: 'none',
+            //     });
+            //     return false;
+            // }else{
+            //     return true;
+            // }
+        },
         onConfirm(e) {
             console.log(this.formData);
             console.log(e);
@@ -439,7 +455,7 @@ export default {
                 video_img_url: '',
                 teacher: '',
                 resource_scope: '',
-                education_level: 1,
+                education_level: 2,
                 education_name: '',
                 cat_name: '',
                 achievement: '',
@@ -494,7 +510,6 @@ export default {
         getallcategory(id) {
             return api.get(`/api/works/getallcategory?cid=${id}`).then(
                 (data) => {
-                    console.log(data, 'data888');
                     this.catData = data;
                 },
                 (err) => {
@@ -512,7 +527,7 @@ export default {
             this.formData.grade_name = this.gradeData[e.detail.value];
         },
         onEducationSelect(e) {
-            this.formData.education_level = Number(e.detail.value) + 1;
+            this.formData.education_level = Number(e.detail.value) + 2;
             this.formData.education_name = this.educationData[e.detail.value];
         },
         errTip(title) {
@@ -587,13 +602,12 @@ export default {
             // 来自页面内分享按钮
             console.log(res.target);
         }
-        const titleList = ['我来给你拜新年，表演才艺送祝福'];
-        const title = titleList[Math.floor(Math.random() * titleList.length)];
+        const title = '青少年网络活动大赛';
         return {
             title,
             imageUrl:
-                'http://aitiaozhan.oss-cn-beijing.aliyuncs.com/banner.png',
-            path: '/pages/chunjie/index',
+                'http://aitiaozhan.oss-cn-beijing.aliyuncs.com/school-events-mobile/openEvent-banner.png?x-oss-process=image/format,png/interlace,1/quality,Q_80/resize,m_pad,h_100',
+            path: '/pages/openGame/zhibo-list',
         };
     },
 };
