@@ -2,7 +2,7 @@
     <view class="page-upload">
         <view
             class="item-card"
-            @click="jumpRoute"
+            @click="jumpRoute('/pages/read/index')"
         >
             <image
                 class="banner"
@@ -29,6 +29,35 @@
                 </view>
             </view>
         </view>
+        <view
+            class="item-card"
+            @click="jumpRoute('/pages/openGame/zhibo-list')"
+        >
+            <image
+                class="banner"
+                src="http://aitiaozhan.oss-cn-beijing.aliyuncs.com/school-events-mobile/openEvent-banner2.png"
+            />
+            <view class="top clearfix">
+                <text class="title fl-l">
+                    网络预选赛
+                </text>
+                <text class="count fl-r">
+                    {{ activity_num1 }}人关注
+                </text>
+            </view>
+            <view class="btm clearfix">
+                <image
+                    class="time fl-l"
+                    src="/static/images/upload/time.png"
+                />
+                <view class="fl-l time-start-end">
+                    活动日期：4月20日-6月20日
+                </view>
+                <view class="join-game fl-r">
+                    立即参加
+                </view>
+            </view>
+        </view>
     </view>
 </template>
 
@@ -41,17 +70,18 @@ export default {
         return {
             fr: '',
             activity_num: 8659,
+            activity_num1: 8633,
         };
     },
     methods: {
-        jumpRoute() {
+        jumpRoute(url) {
             this.fr = logger.getFr('dshd', {});
             api.isLogin({
                 fr: this.fr,
             }).then(
                 () => {
                     uni.navigateTo({
-                        url: '/pages/read/index',
+                        url,
                     });
                 },
                 () => uni.showToast({
@@ -66,6 +96,11 @@ export default {
             activity_id: 6,
         }).then((data) => {
             this.activity_num = data.activity_num;
+        });
+        api.post('/api/activity/getactivityfollow', {
+            activity_id: 7,
+        }).then((data) => {
+            this.activity_num1 = data.follow;
         });
     },
 };

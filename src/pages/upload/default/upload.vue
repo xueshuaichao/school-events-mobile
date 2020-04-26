@@ -98,7 +98,6 @@
                     />
                 </template>
             </template>
-
             <view
                 class="btn"
                 @click="upload"
@@ -454,7 +453,6 @@ export default {
     .main {
         padding: 40upx 30upx;
     }
-
     .uni-input {
         height: 88upx;
         box-sizing: border-box;

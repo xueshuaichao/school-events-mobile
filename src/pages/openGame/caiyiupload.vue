@@ -3,43 +3,45 @@
         v-if="!isLoading"
         class="page-upload"
     >
-        <view class="main">
-            <view class="selection">
-                <view class="label">
-                    选择类别
-                </view>
-                <view class="items">
-                    <text
-                        v-for="item in catData"
-                        :key="item.cat_id"
-                        class="item"
-                        :class="{ active: formData.cat_id === item.cat_id }"
-                        @click="onSelectCat(item)"
-                    >
-                        {{ item.name }}
-                    </text>
-                </view>
+        <view
+            class="selection"
+            style="padding-top:114upx"
+        >
+            <view class="label">
+                选择类别
             </view>
-            <view
-                v-if="needTab"
-                class="selection bb-sep"
-            >
-                <view class="label">
-                    表现形式
-                </view>
-                <view class="items">
-                    <text
-                        v-for="(item, k) in tabs"
-                        :key="item.id"
-                        class="item"
-                        :class="{ active: newsTabActiveIndex === k }"
-                        @click="setNewsTabActive(k)"
-                    >
-                        {{ item.column_name }}
-                    </text>
-                </view>
+            <view class="items">
+                <div
+                    v-for="item in catData"
+                    :key="item.cat_id"
+                    class="item"
+                    :class="{ active: formData.cat_id === item.cat_id }"
+                    @click="onSelectCat(item)"
+                >
+                    {{ item.name }}
+                </div>
             </view>
-
+        </view>
+        <view
+            v-show="needTab"
+            class="selection bb-sep"
+        >
+            <view class="label">
+                表现形式
+            </view>
+            <view class="items">
+                <text
+                    v-for="(item, k) in tabs"
+                    :key="item.id"
+                    class="item"
+                    :class="{ active: newsTabActiveIndex === k }"
+                    @click="setNewsTabActive(k)"
+                >
+                    {{ item.column_name }}
+                </text>
+            </view>
+        </view>
+        <view class="selection">
             <view class="uni-form-item uni-column bt-sep">
                 <input
                     v-model="formData.resource_name"
@@ -52,7 +54,6 @@
                     "
                 >
             </view>
-
             <textarea
                 v-model="formData.introduce"
                 class="uni-textarea"
@@ -62,72 +63,141 @@
                         '介绍（不超过80字）'
                 "
             />
-
-            <view class="uni-form-item uni-column">
-                <input
-                    v-model="formData.recommend"
-                    class="uni-input"
-                    placeholder-class="placeholder"
-                    maxlength="30"
-                    placeholder="推荐机构名称(选填)"
-                >
-            </view>
-
-            <view class="uni-form-item uni-column">
-                <input
-                    v-model="formData.teacher"
-                    class="uni-input"
-                    placeholder-class="placeholder"
-                    maxlength="30"
-                    placeholder="指导老师姓名(选填)"
-                >
-            </view>
-
             <upload
                 v-if="uploadMode === 'video'"
                 :type="'video'"
                 @change="updateVideo"
             />
-            <!-- <view
-                v-if="uploadMode === 'image'"
-                class="upload-desc"
-            >
-                拖动图片可调整展示顺序，第一张图片会作为该作品的封面图
-            </view> -->
-            <!-- <upload
+            <upload
                 v-if="uploadMode === 'video'"
                 :type="'image'"
                 :count="1"
                 @change="updateImage"
-            /> -->
-
-            <template v-if="uploadMode === 'image'">
-                <upload
-                    :type="'image'"
-                    :preview="false"
-                    @change="updateImage"
-                />
-                <template v-if="isH5">
-                    <attachment
-                        :can-upload-file="false"
-                        :upload-file-url="uploadFileUrl"
-                        :attachment-list.sync="images"
-                    />
-                </template>
-                <template v-else>
-                    <image-drag-sort
-                        ref="preview"
-                        :list="images"
-                    />
-                </template>
-            </template>
-
-            <view
-                class="btn"
-                @click="upload"
-            >
-                上传
+            />
+        </view>
+        <!-- <view
+            class="content-box"
+            style="margin-top:20upx;padding-top:114upx;"
+            v-if="identity!==4"
+        >
+            <view class="title">
+                参赛人信息
             </view>
+            <view class="show-type-input">
+                <view class="show-type-text">
+                    <text style="color:red">*</text>
+                    地市：
+                </view>
+                <view class="uni-list-cell-db">
+                    <input
+                        v-model="formData.district"
+                        class="uni-input"
+                        placeholder-class="placeholder"
+                        maxlength="30"
+                        disabled
+                        placeholder="请选择所属地区"
+                        @tap="openAddres"
+                    >
+                </view>
+            </view>
+            <view class="show-type-input">
+                <view class="show-type-text">
+                    <text style="color:red">*</text>
+                    参赛者姓名
+                </view>
+                <view class="uni-list-cell-db">
+                    <input
+                        v-model="formData.create_info"
+                        class="uni-input"
+                        placeholder-class="placeholder"
+                        maxlength="30"
+                        placeholder="参赛者姓名"
+                    >
+                </view>
+            </view>
+            <view class="show-type-input">
+                <view class="show-type-text">
+                    <text style="color:red">*</text>
+                    学校名称：
+                </view>
+                <view class="uni-list-cell-db">
+                    <input
+                        v-model="formData.school_name"
+                        class="uni-input"
+                        placeholder-class="placeholder"
+                        maxlength="30"
+                        placeholder="学校名称："
+                    >
+                </view>
+            </view>
+            <view class="show-type-input">
+                <view class="show-type-text">
+                    <text style="color:red">*</text>
+                    学 段：
+                </view>
+                <view class="uni-list-cell-db">
+                    <picker
+                        :value="formData.education_level - 1"
+                        :range="educationData"
+                        @change="onEducationSelect"
+                    >
+                        <input
+                            v-model="formData.education_name"
+                            class="uni-input"
+                            placeholder-class="placeholder"
+                            disabled
+                            placeholder="请选择学段"
+                        >
+                    </picker>
+                </view>
+            </view>
+            <view class="show-type-input">
+                <view class="show-type-text">
+                    <text style="color:red">*</text>
+                    年 级：
+                </view>
+                <view class="uni-list-cell-db">
+                    <picker
+                        :value="formData.grade_id - 1"
+                        :range="gradeData"
+                        @change="onGradeSelect"
+                    >
+                        <input
+                            v-model="formData.grade_name"
+                            class="uni-input"
+                            placeholder-class="placeholder"
+                            disabled
+                            placeholder="请选择年级"
+                        >
+                    </picker>
+                </view>
+            </view>
+        </view> -->
+        <!-- <view class="uni-form-item uni-column">
+            <input
+                v-model="formData.recommend"
+                class="uni-input"
+                placeholder-class="placeholder"
+                maxlength="30"
+                placeholder="推荐机构名称(选填)"
+            >
+        </view> -->
+
+        <!-- <view class="uni-form-item uni-column">
+            <input
+                v-model="formData.teacher"
+                class="uni-input"
+                placeholder-class="placeholder"
+                maxlength="30"
+                placeholder="指导老师姓名(选填)"
+            >
+        </view> -->
+
+        <view
+            class="btn"
+            @click="upload"
+        >
+            上传
         </view>
     </view>
 </template>
@@ -135,15 +205,11 @@
 <script>
 import api from '../../common/api';
 import upload from '../../components/upload/upload.vue';
-import imageDragSort from '../../components/image-drag-sort/index.vue';
-import Attachment from '../../components/third-party/jin-attachment/index.vue';
 import config from '../../common/config';
 
 export default {
     components: {
         upload,
-        imageDragSort,
-        Attachment,
     },
     data() {
         return {
@@ -264,9 +330,7 @@ export default {
                 },
             ],
             title: 'picker',
-            array: ['中国', '美国', '巴西', '日本'],
             index: 0,
-            time: '12:01',
         };
     },
     onLoad() {},
@@ -407,7 +471,7 @@ export default {
             this.disabled = true;
             // check input
             console.log(this.formData);
-            return api.post('/api/activity/add', formData).then(
+            return api.post('/api/user/editwork', formData).then(
                 (res) => {
                     this.resetForm();
                     this.disabled = false;
@@ -448,15 +512,15 @@ export default {
 
 <style lang="less" scoped>
 .page-upload {
-    background: #ff3844;
-    padding: 30rpx;
+    background: #f8f8f8;
+    // padding: 30rpx;
 
-    .main {
-        border-radius: 20rpx;
-        padding: 40upx 30upx;
-        background: #ffd583;
-        color: #c9ac67;
-    }
+    // .main {
+    //     border-radius: 20rpx;
+    //     padding: 40upx 30upx;
+    //     background: #ffd583;
+    //     color: #c9ac67;
+    // }
 
     .uni-input {
         height: 88upx;
@@ -483,12 +547,13 @@ export default {
 
     .uni-input,
     .uni-textarea {
-        // border: 1upx solid #ccc;
-        margin-bottom: 40rpx;
+        border: 1upx solid #ccc;
+        // margin-bottom: 40rpx;
         font-size: 28rpx;
-        background: #ffedc3;
-        border-radius: 12rpx;
-        color: #9d7c2f;
+        margin-bottom: 40upx;
+        // background: #ffedc3;
+        // border-radius: 12rpx;
+        // color: #9d7c2f;
     }
 
     /deep/ .comp-upload {
@@ -496,44 +561,53 @@ export default {
         color: #c9ac67;
 
         .cover-wrap {
-            background: #ffedc3;
+            background: #1166ff;
 
             .icon-desc {
                 color: #c9ac67;
             }
         }
-
         .desc {
-            color: #c9ac67;
+            color: #999999;
+            line-height: 32upx;
+            &.image {
+                line-height: 32upx;
+            }
+        }
+        .normal-text {
+            display: inline-flex;
+            background-color: #1166ff;
+            border-radius: 25upx;
+            padding: 0 29upx;
+            height: 40upx;
+            line-height: 40upx;
+            font-size: 24upx;
+            margin-top: 4upx;
+        }
+        .comp-title {
+            color: #1166ff;
+        }
+        .text-success {
+            color: #fff;
+            line-height: 16upx;
+        }
+        .tips {
+            color: #1166ff;
         }
     }
 
     /deep/ .placeholder {
-        color: #c9ac67;
+        color: #999;
         font-size: 28upx;
     }
 
     .btn {
         width: 100%;
+        background: #1166ff;
         color: #fff;
-        height: 98rpx;
-        border-radius: 49rpx;
-        line-height: 98rpx;
+        height: 98upx;
+        line-height: 98upx;
         text-align: center;
-        margin-top: 168rpx;
-        background: rgb(255, 152, 84);
-        background: linear-gradient(
-            180deg,
-            rgba(255, 152, 84, 1) 0%,
-            rgba(255, 31, 21, 1) 100%
-        );
-        box-shadow: 0 2.8rpx 2.2rpx rgba(255, 31, 21, 0.034),
-            0 6.7rpx 5.3rpx rgba(255, 31, 21, 0.048),
-            0 12.5rpx 10rpx rgba(255, 31, 21, 0.06),
-            0 22.3rpx 17.9rpx rgba(255, 31, 21, 0.072),
-            0 41.8rpx 33.4rpx rgba(255, 31, 21, 0.086),
-            0 100rpx 80rpx rgba(255, 31, 21, 0.12);
-        margin-bottom: 70rpx;
     }
 
     .panel-hd {
@@ -549,10 +623,24 @@ export default {
 
     .selection {
         font-size: 28rpx;
-
+        padding: 30upx;
+        position: relative;
+        margin-bottom: 30upx;
+        background: #fff;
         .label {
-            color: #ff3849;
-            margin-bottom: 15rpx;
+            font-size: 30upx;
+            position: absolute;
+            top: 40upx;
+            left: 45upx;
+            &::after {
+                content: " ";
+                position: absolute;
+                top: 5rpx;
+                left: -9upx;
+                width: 4upx;
+                height: 30upx;
+                background: #1166ff;
+            }
         }
 
         .items {
@@ -560,21 +648,154 @@ export default {
         }
 
         .item {
-            // width: 110rpx;
             padding: 0 24rpx;
-            height: 56rpx;
-            line-height: 56rpx;
-            border: 1px solid #ff3849;
-            border-radius: 28rpx;
+            height: 88rpx;
+            line-height: 88rpx;
+            width: 60upx;
+            border: 1upx solid #1166ff;
             display: inline-block;
-            margin-right: 20rpx;
+            margin-right: 30rpx;
             text-align: center;
-            color: #ff3849;
-            margin-bottom: 20rpx;
+            color: #1166ff;
+            margin-bottom: 30rpx;
 
             &.active {
-                background: #ff3849;
+                background: #1166ff;
                 color: #fff;
+            }
+        }
+    }
+    .content-box {
+        position: relative;
+        padding: 30upx;
+        background: #fff;
+        .show-type-hd {
+            // display: flex;
+            // align-items: center;
+            position: absolute;
+            top: 114upx;
+            left: 30upx;
+            height: 70upx;
+            line-height: 70upx;
+            view {
+                float: left;
+            }
+            .show-type-text {
+                margin-right: 16upx;
+                color: #999;
+                font-size: 28upx;
+                width: 168upx;
+            }
+            .show-type-remark {
+                font-size: 22upx;
+                color: rgba(153, 153, 153, 1);
+            }
+            .show-type-title {
+                margin-right: 30rpx;
+                padding: 0 40rpx;
+                height: 70rpx;
+                line-height: 70rpx;
+                color: #1166ff;
+                border: 1rpx solid #1166ff;
+                display: inline-block;
+                &.active {
+                    background-color: #1166ff;
+                    color: #fff;
+                }
+                &.disable {
+                    background: rgba(255, 255, 255, 1);
+                    border: 1rpx solid rgba(205, 205, 205, 1);
+                    color: #bbbbbb;
+                }
+            }
+        }
+        .show-type-input {
+            margin-bottom: 32upx;
+            height: 70upx;
+            line-height: 70upx;
+            view {
+                float: left;
+            }
+            .show-type-text {
+                margin-right: 16upx;
+                color: #999;
+                font-size: 28upx;
+                line-height: 70upx;
+                width: 168upx;
+            }
+            .uni-list-cell-db {
+                position: relative;
+                width: 499upx;
+                height: 70upx;
+                .rule-btn {
+                    border: 1px solid #1166ff;
+                    color: #1166ff;
+                    width: 272upx;
+                    height: 70upx;
+                    text-align: center;
+                    line-height: 70upx;
+                }
+                .unit-class {
+                    position: absolute;
+                    top: 0upx;
+                    left: 454upx;
+                }
+            }
+            .show-type-title {
+                margin-right: 30rpx;
+                padding: 0 40rpx;
+                height: 70rpx;
+                line-height: 70rpx;
+                color: #1166ff;
+                border: 1rpx solid #1166ff;
+                display: inline-block;
+                &.active {
+                    background-color: #1166ff;
+                    color: #fff;
+                }
+            }
+        }
+        .title {
+            font-size: 30upx;
+            position: absolute;
+            top: 40upx;
+            left: 45upx;
+            &::after {
+                content: " ";
+                position: absolute;
+                top: 5rpx;
+                left: -9upx;
+                width: 4upx;
+                height: 30upx;
+                background: #1166ff;
+            }
+        }
+        .content {
+            font-size: 32upx;
+            font-weight: 500;
+            position: absolute;
+            top: 114upx;
+        }
+        .sign-time {
+            position: absolute;
+            font-size: 24rpx;
+            color: rgba(102, 102, 102, 1);
+            top: 183upx;
+        }
+        .act-time {
+            position: absolute;
+            font-size: 24rpx;
+            color: rgba(102, 102, 102, 1);
+            right: 30upx;
+            top: 183upx;
+            &::before {
+                content: " ";
+                position: absolute;
+                top: 6upx;
+                left: -28upx;
+                width: 1rpx;
+                height: 24rpx;
+                background: rgba(221, 221, 221, 1);
             }
         }
     }

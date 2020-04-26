@@ -9,97 +9,77 @@
             <text class="zhibo-name">
                 {{ item.name }}
             </text>
-            <navigator :url="item.url">
-                <div class="zhibo-time">
-                    立即参加
-                </div>
-            </navigator>
+            <text class="zhibo-intro">
+                {{ item.intro }}
+            </text>
+            <div
+                class="zhibo-btn"
+                @click="jumpRoute(item.url)"
+            >
+                立即参加
+            </div>
         </view>
-        <uni-load-more
-            class="loadMore"
-            :status="loadMoreStatus"
-            :content-text="{
-                contentdown: '上拉显示更多',
-                contentrefresh: '正在加载...',
-                contentnomore: '———— 已经到底了~ ————'
-            }"
-            color="#999999"
-        />
     </view>
 </template>
 
 <script>
-import uniLoadMore from '../../components/uni-load-more/uni-load-more.vue';
 import api from '../../common/api';
+import logger from '../../common/logger';
 
 export default {
-    components: {
-        uniLoadMore,
-    },
+    components: {},
     data() {
         return {
-            loadMoreStatus: 'more',
             list: [
                 {
                     name: '竞技类',
+                    intro: '展示个人和团队的技能与成就',
                     bg:
-                        'http://aitiaozhan.oss-cn-beijing.aliyuncs.com/school-events-mobile/jingji-bg.png',
-                    url: '/pages/openGame/jingjiupload',
+                        'http://aitiaozhan.oss-cn-beijing.aliyuncs.com/school-events-mobile/jingji-bg.png?t=1',
+                    url: '/pages/openGame/jingjiupload?type=jingji',
                 },
                 {
                     name: '才艺类',
+                    intro: '展示才艺和特长的平台',
                     bg:
-                        'http://aitiaozhan.oss-cn-beijing.aliyuncs.com/school-events-mobile/caiyi-bg.png',
-                    url: '/pages/openGame/caiyiupload',
+                        'http://aitiaozhan.oss-cn-beijing.aliyuncs.com/school-events-mobile/caiyi-bg.png?t=1',
+                    // url: '/pages/openGame/caiyiupload',
+                    url: '/pages/upload/default/upload',
                 },
                 {
                     name: '吉尼斯项目',
+                    intro: '提供创造世界纪录的机会和平台',
                     bg:
-                        'http://aitiaozhan.oss-cn-beijing.aliyuncs.com/school-events-mobile/jinisi-bg.png',
-                    url: '/pages/openGame/caiyiupload',
+                        'http://aitiaozhan.oss-cn-beijing.aliyuncs.com/school-events-mobile/jinisi-bg.png?t=1',
+                    url: '/pages/openGame/jingjiupload?type=jinisi',
                 },
             ],
-            filter: {
-                page_num: 1,
-                page_size: 10,
-            },
         };
     },
+    created() {
+        api.post('/api/activity/commitactivityfollow', {
+            activity_id: 7,
+        }).then(() => {
+            // this.activity_num1 = data.activity_num;
+        });
+    },
     methods: {
-        getData(title) {
-            api.get('/api/market/address', this.filter).then(
-                ({ list, total }) => {
-                    this.isLoading = false;
-                    if (title === 'reachBottom') {
-                        this.addressList = this.addressList.concat(list);
-                    } else {
-                        this.addressList = list;
-                    }
-
-                    this.total = total;
-
-                    if (
-                        this.total
-                        <= this.filter.page_num * this.filter.page_size
-                    ) {
-                        this.loadMoreStatus = title === 'reachBottom' ? 'noMore' : 'none';
-                    } else {
-                        this.loadMoreStatus = 'more';
-                    }
+        jumpRoute(url) {
+            this.fr = logger.getFr('dshd', {});
+            api.isLogin({
+                fr: this.fr,
+            }).then(
+                () => {
+                    uni.navigateTo({
+                        url,
+                    });
                 },
+                () => uni.showToast({
+                    icon: 'none',
+                    title: '请先登录',
+                }),
             );
         },
-        onReachBottom() {
-            console.log('到底部了');
-            if (this.loadMoreStatus === 'more') {
-                this.filter.page_num = this.filter.page_num + 1;
-                this.loadMoreStatus = 'loading';
-                this.getData('reachBottom');
-            }
-        },
-    },
-    onLoad() {
-        this.getData();
     },
 };
 </script>
@@ -108,49 +88,43 @@ export default {
 .main {
     width: 100%;
     height: 100vh;
-    // background: #f8f8f8;
-    padding: 26upx 24upx;
+    background: #f8f8f8;
+    padding: 30upx;
     .loadMore {
         width: 100%;
     }
     .main-box {
-        width: 708upx;
-        height: 258upx;
+        width: 690upx;
+        height: 260upx;
         background-size: 100% 100%;
         position: relative;
         margin-top: 22upx;
         .zhibo-name {
             position: absolute;
-            top: 59upx;
-            left: 49upx;
-            font-size: 36upx;
+            top: 40upx;
+            left: 324upx;
+            font-size: 32upx;
             font-weight: 500;
             color: #333333;
         }
-        .zhibo-type {
+        .zhibo-intro {
             position: absolute;
             top: 96upx;
-            left: 58upx;
+            left: 324upx;
             font-size: 24upx;
             color: #666666;
         }
-        .zhibo-date {
+        .zhibo-btn {
             position: absolute;
-            top: 152upx;
-            left: 29upx;
-            font-size: 22upx;
-            color: #999999;
-        }
-        .zhibo-time {
-            position: absolute;
-            top: 139upx;
-            left: 49upx;
+            top: 160upx;
+            left: 324upx;
             font-size: 30upx;
-            color: #fff;
-            width: 200upx;
+            color: #ff6555;
+            width: 148upx;
             height: 60upx;
-            background: rgba(255, 101, 85, 1);
-            border-radius: 30upx;
+            // background: rgba(255, 101, 85, 1);
+            border: 2upx solid rgba(255, 101, 85, 1);
+            // border-radius: 30upx;
             text-align: center;
             line-height: 60upx;
         }
