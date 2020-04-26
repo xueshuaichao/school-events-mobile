@@ -687,6 +687,9 @@ uni-swiper {
                 }
             }
         }
+        .swiper {
+            height: 280upx;
+        }
 
         .banner-image {
             width: 690upx;
