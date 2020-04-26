@@ -138,6 +138,7 @@ export default {
         background-color: #ff7131;
         border: 2upx solid rgba(255, 231, 174, 1);
         border-radius: 30upx;
+        line-height: 1;
     }
     .list-box {
         display: flex;

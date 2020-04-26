@@ -490,7 +490,7 @@ export default {
         viewDetail(item) {
             if (this.tabActiveIndex === 2) {
                 uni.navigateTo({
-                    url: `/pages/work/detail/detail?id=${item.id}&activity_id=6`,
+                    url: `/pages/work/detail/detail?id=${item.id}&activity_id=${this.filter.activity_id}`,
                 });
             }
         },
@@ -607,7 +607,7 @@ export default {
         return {
             title: this.title,
             imageUrl: this.publicConfig.shareConfig.image,
-            path: '/pages/read/index',
+            path: this.publicConfig.homePath,
         };
     },
 };

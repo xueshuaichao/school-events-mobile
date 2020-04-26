@@ -105,7 +105,7 @@ export default {
                                 ],
                             },
                             {
-                                title: '优秀组织',
+                                title: '优秀组织单位',
                                 prizeList: [
                                     {
                                         name: '共5名',
