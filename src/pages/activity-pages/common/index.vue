@@ -219,7 +219,7 @@
                                     contentrefresh: '正在加载...',
                                     contentnomore: '———— 已经到底了~ ————'
                                 }"
-                                color="#fff"
+                                :color="publicConfig.primaryColor"
                             />
                         </view>
                     </view>
