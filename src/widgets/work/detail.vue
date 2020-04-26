@@ -133,7 +133,9 @@
             >
                 <text>
                     {{
-                        !showMore && pageData.introduce.length > 50
+                        !showMore &&
+                            pageData.introduce &&
+                            pageData.introduce.length > 50
                             ? `${pageData.introduce.slice(0, 50)}...`
                             : pageData.introduce
                     }}
