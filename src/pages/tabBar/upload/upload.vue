@@ -74,7 +74,7 @@ export default {
                     id: 7,
                     img:
                         'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/school-events-mobile/openEvent-banner.png',
-                    url: '',
+                    url: '/pages/openGame/zhibo-list',
                 },
                 {
                     id: 6,

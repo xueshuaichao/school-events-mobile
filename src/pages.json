@@ -1,5 +1,11 @@
 {
     "pages": [
+        // {
+        //     "path": "pages/openGame/jingjiupload",
+        //     "style": {
+        //         "navigationBarTitleText": "竞技上传"
+        //     }
+        // },
         //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
         {
             "path": "pages/tabBar/index/index",
@@ -391,6 +397,24 @@
             "path": "pages/uc/reported/reported",
             "style": {
                 "navigationBarTitleText": "上报成绩"
+            }
+        },
+        {
+            "path": "pages/openGame/zhibo-list",
+            "style": {
+                "navigationBarTitleText": "青少年“爱挑战”校园网络赛"
+            }
+        },
+        {
+            "path": "pages/openGame/caiyiupload",
+            "style": {
+                "navigationBarTitleText": "才艺上传"
+            }
+        },
+        {
+            "path": "pages/openGame/jingjiupload",
+            "style": {
+                "navigationBarTitleText": "竞技上传"
             }
         },
         {

@@ -4,13 +4,13 @@
         @click="chooseResource"
     >
         <view
-            v-if="type === 'video'"
+            v-if="type === 'video' && name"
             class="comp-title"
         >
             上传视频
         </view>
         <view
-            v-if="type === 'image'"
+            v-if="type === 'image' && name"
             class="comp-title"
         >
             {{ isVideo ? "上传封面（选填）" : "上传图片" }}
@@ -152,10 +152,13 @@ export default {
         count: {
             type: Number,
             default: 9
+        },
+        name: {
+            type: Boolean,
+            default: true
         }
     },
     data() {
-        console.log(this.preview);
         return {
             src: "",
             tempFilePath: "",
@@ -247,7 +250,6 @@ export default {
                         userKey: utils.getToken()
                     },
                     success: uploadFileRes => {
-                        console.log(uploadFileRes.data);
                         let resp;
                         try {
                             resp = JSON.parse(uploadFileRes.data);
@@ -291,7 +293,6 @@ export default {
                     userKey: utils.getToken()
                 },
                 success: uploadFileRes => {
-                    // console.log(1111, file);
                     let resp;
                     try {
                         resp = JSON.parse(uploadFileRes.data);
@@ -338,7 +339,6 @@ export default {
                                 this.uploadFile(filePath)
                             )
                         ).then(data => {
-                            console.log(res);
                             this.$emit("change", data);
                         });
                         [this.src] = res.tempFilePaths;

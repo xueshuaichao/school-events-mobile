@@ -73,12 +73,12 @@
                     </swiper-item>
                     <swiper-item>
                         <navigator
-                            url="/pages/activity-pages/labor/index"
+                            url="/pages/openGame/zhibo-list"
                             class="swiper-item"
                         >
                             <image
                                 class="banner-image"
-                                src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/school-events-mobile/openEvent-banner.png"
+                                src="http://aitiaozhan.oss-cn-beijing.aliyuncs.com/school-events-mobile/openEvent-banner.png"
                             />
                         </navigator>
                     </swiper-item>
@@ -372,7 +372,7 @@ export default {
                     id: 7,
                     img:
                         'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/h5/aitiaozhan-s-banner.png',
-                    url: '/pages/yiqing/index',
+                    url: '/pages/openGame/zhibo-list',
                 },
                 {
                     id: 6,
