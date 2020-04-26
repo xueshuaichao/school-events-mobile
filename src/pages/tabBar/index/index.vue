@@ -699,7 +699,6 @@ uni-swiper {
 
         uni-swiper {
             height: 280upx;
-
             .swiper-item {
                 img {
                     width: 100%;

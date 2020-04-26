@@ -511,6 +511,11 @@ export default {
                             url: '/pages/read/upload/modify',
                         });
                     }
+                    if (this.activity_id === 8) {
+                        uni.navigateTo({
+                            url: '/pages/activity-pages/upload/modify?activity_id=8',
+                        });
+                    }
                 } else if (status === 1) {
                     uni.showToast({
                         icon: 'none',

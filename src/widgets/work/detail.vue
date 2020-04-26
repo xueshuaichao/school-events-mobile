@@ -103,28 +103,55 @@
                     {{ recordTxts[pageData.record - 1] }}
                 </text>
             </view>
-            <view class="work-name-wrap text-one-line">
+            <view class="work-name-wrap clearfix">
                 <image
-                    class="avatar file"
+                    class="avatar file fl-l"
                     src="/static/images/work/file.png"
                 />
-                <text class="work-name text-one-line">
-                    {{ pageData.resource_name }}
-                </text>
-                <text
-                    v-if="pageData.achievement"
-                    class="deatil-achievement lightyellow"
-                >
-                    成绩：{{ pageData.achievement
-                    }}{{ pageData.achievement_unit }}
-                </text>
+                <view class="fl-l text-two-line">
+                    <text class="work-name">
+                        {{ pageData.resource_name }}
+                    </text>
+                    <text
+                        v-if="pageData.achievement"
+                        class="deatil-achievement lightyellow"
+                    >
+                        成绩：{{ pageData.achievement
+                        }}{{ pageData.achievement_unit }}
+                    </text>
+                </view>
             </view>
             <view
-                class="intro text-three-lines"
-                @click="showMore = !showMore"
+                v-if="activityId !== 8"
+                class="intro text-three-line"
             >
                 {{ pageData.introduce || "暂无简介" }}
-                <!-- <text class="show-more">{{ showMore ? ' 收起' : ' 展开' }}</text> -->
+            </view>
+            <view
+                v-if="activityId === 8"
+                class="intro"
+            >
+                <text>
+                    {{
+                        !showMore && pageData.introduce.length > 50
+                            ? `${pageData.introduce.slice(0, 50)}...`
+                            : pageData.introduce
+                    }}
+                </text>
+                <text
+                    v-if="!showMore && pageData.introduce.length > 50"
+                    class="to-open orange"
+                    @click="changeClick"
+                >
+                    展开
+                </text>
+                <view
+                    v-if="showMore && pageData.introduce.length > 50"
+                    class="to-hide orange"
+                    @click="changeClick"
+                >
+                    收起
+                </view>
             </view>
         </view>
         <view class="fixed-panel">
@@ -314,6 +341,9 @@ export default {
             const isFullScreenMode = e.detail.fullScreen;
             this.isFullScreen = isFullScreenMode;
         },
+        changeClick() {
+            this.showMore = !this.showMore;
+        },
     },
 };
 </script>
@@ -472,6 +502,7 @@ export default {
         margin-bottom: 13rpx;
         font-weight: 600;
         position: relative;
+        vertical-align: super;
     }
     .deatil-achievement {
         margin-left: 10upx;
@@ -480,12 +511,12 @@ export default {
 
     .intro {
         font-size: 25upx;
-        line-height: 44upx;
+        line-height: 35upx;
         position: relative;
     }
     .text-three-lines {
-        max-height: 132upx;
-        overflow-y: auto;
+        // max-height: 132upx;
+        // overflow-y: auto;
         // overflow:hidden;
         // text-overflow:ellipsis;
         // display:-webkit-box;
@@ -493,12 +524,17 @@ export default {
         // -webkit-box-orient:vertical;
     }
     .show-more {
-        position: absolute;
-        right: 0;
-        bottom: 0;
+        // position: absolute;
+        // right: 0;
+        // bottom: 0;
+        // color: #db4e0e;
+    }
+    .orange {
         color: #db4e0e;
     }
-
+    .to-hide {
+        text-align: right;
+    }
     .icon-grail {
         display: inline-block;
         width: 25upx;
@@ -509,6 +545,9 @@ export default {
     }
     .work-name-wrap {
         line-height: 34upx;
+        .text-two-line {
+            width: 90%;
+        }
     }
 }
 .fixed-panel {
