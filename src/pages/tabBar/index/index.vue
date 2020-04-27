@@ -380,13 +380,13 @@ export default {
                     id: 6,
                     img:
                         'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/h5/read-s-banner.png',
-                    url: '/pages/yiqing/index',
+                    url: '/pages/read/index',
                 },
                 {
                     id: 5,
                     img:
                         'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/h5/yiqing-s-banner.png',
-                    url: '/pages/read/index',
+                    url: '/pages/yiqing/index',
                 },
             ],
         };
