@@ -504,10 +504,15 @@ export default {
         font-weight: 600;
         position: relative;
         vertical-align: super;
+        display: inline;
+        word-break: break-all;
     }
     .deatil-achievement {
         margin-left: 10upx;
         font-size: 24upx;
+        font-display: inline;
+        vertical-align: super;
+        word-break: break-all;
     }
 
     .intro {

@@ -76,6 +76,7 @@
                     <prize
                         :name="publicConfig.activityName"
                         :text-color="publicConfig.primaryColor"
+                        :border-color="publicConfig.primaryBgColor"
                         :prize-list="indexConfig.prizes"
                         @handleActiveprize="handleActiveprize"
                     />
@@ -689,7 +690,7 @@ body.dialog-open {
     // width: 312upx;
     height: 44upx;
     // margin-left: 220upx;
-    margin-top: 20upx;
+    margin-top: 35upx;
     color: #138256;
     text-align: center;
 }
@@ -817,8 +818,6 @@ body.dialog-open {
         z-index: 222;
     }
     .close {
-        background: url("https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/read_close.png")
-            no-repeat;
         background-size: 100% 100%;
         width: 62upx;
         height: 62upx;
@@ -858,6 +857,7 @@ body.dialog-open {
             background-repeat: no-repeat;
             background-size: 100% 100%;
             text-align: center;
+            margin-bottom: 12upx;
             .banner-image {
                 width: 100%;
                 height: 100%;
@@ -897,6 +897,7 @@ body.dialog-open {
 
     .menu-list {
         padding: 30upx;
+        padding-top: 35upx;
         padding-bottom: 120upx;
         .search-box {
             overflow: hidden;

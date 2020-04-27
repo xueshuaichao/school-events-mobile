@@ -7,6 +7,7 @@
                 :style="{ 'background-color': theme.bgColor }"
             >
                 <view
+                    v-if="name"
                     class="close"
                     :style="{
                         'background-image': `url(https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/${name}_close.png)`
@@ -14,6 +15,7 @@
                     @click="handleClose"
                 />
                 <view
+                    v-if="name"
                     class="title-icon"
                     :style="{
                         'background-image': `url(https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/${name}_title.png)`
