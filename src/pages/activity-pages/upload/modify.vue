@@ -22,7 +22,7 @@
                     <text
                         v-for="(item, k) in uploadConfig.activityCat"
                         :key="k"
-                        class="item"
+                        class="select-item"
                         :class="{ active: formData.activity_cat === k + 1 }"
                         :style="{
                             'border-color': publicConfig.primaryColor,
@@ -55,7 +55,7 @@
                     <text
                         v-for="(item, k) in uploadConfig.uploadMode"
                         :key="k"
-                        class="item"
+                        class="select-item"
                         :class="{ active: formData.resource_type === k + 1 }"
                         :style="{
                             'border-color': publicConfig.primaryColor,
@@ -122,6 +122,7 @@
                     @change="updateImage"
                 />
                 <image-drag-sort
+                    v-show="images.length"
                     ref="preview"
                     :text-color="publicConfig.primaryColor"
                     :list="images"
@@ -214,7 +215,7 @@ export default {
             publicConfig: {},
             uploadConfig: {},
             newsTabActiveIndex: 0,
-            uploadMode: '',
+            uploadMode: 'video',
             formData: {
                 cat_id: '',
                 activity_id: '',
@@ -266,7 +267,8 @@ export default {
             activityId: this.formData.activity_id,
             page: 'uploadConfig',
         });
-        [this.uploadMode] = [this.uploadConfig.uploadMode[0]];
+        // [this.uploadMode] = [this.uploadConfig.uploadMode[0]];
+
         this.formData.cat_id = this.publicConfig.catId;
         this.formData.resource_type = this.uploadMode === 'video' ? 1 : 2;
         this.theme = {
@@ -340,6 +342,9 @@ export default {
                 data.forEach((item) => {
                     this.$refs.preview.add(item.path);
                 });
+                setTimeout(() => {
+                    this.$refs.preview.init();
+                }, 100);
             }
         },
         getData() {
@@ -643,7 +648,7 @@ export default {
             margin-right: -20rpx;
         }
 
-        .item {
+        .select-item {
             // width: 110rpx;
             padding: 0 44rpx;
             height: 56rpx;

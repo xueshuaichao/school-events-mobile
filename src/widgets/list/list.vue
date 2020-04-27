@@ -44,6 +44,7 @@
             <view
                 class="dropdown animated slideInDown faster"
                 :class="hiddingMenu ? 'slideOutUp' : ''"
+                @click.prevent="toggleMenu"
             >
                 <view
                     v-if="showMenuType === 'category'"
@@ -56,7 +57,7 @@
                                 :class="{
                                     active: filter.cat_id.one_level_id === -1
                                 }"
-                                @click="onSelect('cat_one', -1)"
+                                @click.stop="onSelect('cat_one', -1)"
                             >
                                 全部
                             </view>
@@ -69,7 +70,7 @@
                                         filter.cat_id.one_level_id ===
                                         item.cat_id
                                 }"
-                                @click="onSelect('cat_one', item)"
+                                @click.stop="onSelect('cat_one', item)"
                             >
                                 {{ item.name }}
                             </view>
@@ -89,14 +90,14 @@
                             <view
                                 class="menu-item"
                                 :class="{ active: filter.sort === 1 }"
-                                @click="onSelect('sort', 1)"
+                                @click.stop="onSelect('sort', 1)"
                             >
                                 最热
                             </view>
                             <view
                                 class="menu-item"
                                 :class="{ active: filter.sort === 3 }"
-                                @click="onSelect('sort', 3)"
+                                @click.stop="onSelect('sort', 3)"
                             >
                                 最新
                             </view>
@@ -197,11 +198,11 @@ export default {
             hiddingMenu: false,
 
             categoryData: [],
-            countyData: [],
+            // countyData: [],
             showMenuType: '',
 
             catTwoMenu: [],
-            catThreeMenu: [],
+            // catThreeMenu: [],
 
             tableData: [],
             changeValue: '',
@@ -276,20 +277,20 @@ export default {
                     }
                     break;
                 case 'cat_one':
-                    this.toggleMenu('category');
+                    // this.toggleMenu('category');
                     if (value === -1) {
                         this.filter.cat_id.one_level_id = -1;
-                        this.catTwoMenu = [];
+                        // this.catTwoMenu = [];
                         this.curCategory = '全部';
                     } else {
                         this.filter.cat_id.one_level_id = value.cat_id;
-                        this.catTwoMenu = value.children;
+                        // this.catTwoMenu = value.children;
                         this.curCategory = value.name;
                     }
                     this.toggleMenu('category');
                     this.filter.cat_id.two_level_id = 0;
                     this.filter.cat_id.three_level_id = 0;
-                    this.catThreeMenu = [];
+                    // this.catThreeMenu = [];
                     break;
                 default:
                     break;
@@ -418,7 +419,7 @@ export default {
     .row {
         display: flex;
         height: 100%;
-        background: #fff;
+        background: rgba(0, 0, 0, 0.3);
 
         .col {
             flex: 1;
@@ -435,6 +436,7 @@ export default {
         text-align: center;
         padding-bottom: 20upx;
         padding-top: 10upx;
+        background: #fff;
     }
     .menu-item {
         font-size: 32upx;
