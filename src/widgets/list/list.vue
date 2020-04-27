@@ -437,6 +437,7 @@ export default {
         padding-bottom: 20upx;
         padding-top: 10upx;
         background: #fff;
+        border-radius: 0 0 8upx 8upx;
     }
     .menu-item {
         font-size: 32upx;
