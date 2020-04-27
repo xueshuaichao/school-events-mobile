@@ -198,7 +198,7 @@
                                 驳回原因
                             </text>
                             <text
-                                v-if="Number(tabActiveIndex) !== 2"
+                                v-if="Number(tabActiveIndex) !== 1"
                                 class="btn-item"
                                 :style="{
                                     'background-color':

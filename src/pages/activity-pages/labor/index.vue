@@ -92,7 +92,7 @@
                                         {{ list.user_name }}
                                     </text>
                                     <text class="work-num text-one-line">
-                                        {{ list.works_num }}
+                                        作品{{ list.works_num }}个
                                     </text>
                                 </view>
                             </view>
@@ -320,6 +320,7 @@ export default {
         background-color: #fffbf6;
         color: #db4e0e;
         font-size: 26upx;
+        text-align: center;
     }
     .history-content-box {
         overflow-y: auto;
@@ -338,6 +339,7 @@ export default {
         font-size: 34upx;
         line-height: 1;
         margin-bottom: 30upx;
+        text-align: center;
     }
     .history-item {
         .history-box {
@@ -350,12 +352,18 @@ export default {
             font-size: 26upx;
             line-height: 1;
             margin-bottom: 29upx;
+            text-align: center;
         }
         .text-item {
             display: flex;
             justify-content: space-between;
             padding: 14upx 66upx 8upx 34upx;
             box-sizing: border-box;
+            &:last-of-type {
+                .text-content {
+                    border: 0 none;
+                }
+            }
         }
         .text-content {
             border-bottom: 1upx solid rgba(255, 206, 153, 0.45);
@@ -363,9 +371,9 @@ export default {
             justify-content: space-between;
             line-height: 64upx;
             width: 399upx;
-            &:last-of-type {
-                border: 0 none;
-            }
+            flex: 1;
+            border-bottom: 1upx solid #ffce99;
+            font-size: 24upx;
         }
         .rank-img {
             width: 40upx;
@@ -375,13 +383,13 @@ export default {
         }
         .user-name {
             color: #db4e0e;
-            width: 50%;
+            width: 60%;
             text-align: left;
         }
         .work-num {
             color: #ab3500;
-            width: 50%;
-            text-align: right;
+            width: 114upx;
+            text-align: left;
         }
     }
 }
