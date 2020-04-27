@@ -5,6 +5,7 @@
     >
         <view class="icon-wrap">
             <image
+                v-if="publicConfig.activityName"
                 class="icon icon-success"
                 :src="
                     `https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/${publicConfig.activityName}_success.png`
