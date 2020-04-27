@@ -207,7 +207,7 @@ export default {
         return {
             title: this.title,
             imageUrl: this.publicConfig.shareConfig.image,
-            path: '/pages/read/index',
+            path: '/pages/activity-pages/labor/index',
         };
     },
 };
