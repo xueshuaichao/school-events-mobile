@@ -15,7 +15,7 @@
             </text>
             <image
                 class="prize-img"
-                :style="{ border: `1px solid ${textColor}` }"
+                :style="{ border: `1px solid ${borderColor}` }"
                 :src="
                     `https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/${name}_prize${index +
                         1}.png`
@@ -44,6 +44,10 @@
 export default {
     props: {
         name: {
+            type: String,
+            default: '',
+        },
+        borderColor: {
             type: String,
             default: '',
         },

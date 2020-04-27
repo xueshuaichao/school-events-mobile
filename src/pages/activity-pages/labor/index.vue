@@ -55,6 +55,7 @@
         >
             <view class="history-content">
                 <image
+                    v-if="publicConfig.activityName"
                     class="close"
                     :src="
                         `https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/${publicConfig.activityName}_close.png`
