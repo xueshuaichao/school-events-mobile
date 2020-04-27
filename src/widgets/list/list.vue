@@ -383,7 +383,7 @@ export default {
     white-space: pre-wrap;
     margin-top: 200upx;
     .widget-list-box {
-        padding-top: 40upx;
+        // padding-top: 40upx;
         margin: 0 30upx 14upx 30upx;
         display: flex;
         flex-wrap: wrap;
