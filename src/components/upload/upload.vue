@@ -236,7 +236,8 @@ export default {
             uni.showToast({
                 icon: "loading",
                 title: "上传中",
-                duration: 200000
+                duration: 200000,
+                mask: true
             });
             return new Promise((resolve, reject) => {
                 uni.uploadFile({
@@ -283,7 +284,8 @@ export default {
             uni.showToast({
                 icon: "loading",
                 title: "上传中",
-                duration: 200000
+                duration: 200000,
+                mask: true
             });
             uni.uploadFile({
                 url: `${config.host}/api/file/backendvideoupload`,
