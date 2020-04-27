@@ -249,7 +249,7 @@ export default {
                 width: 392upx;
             }
             .title {
-                font-size: 30upx;
+                font-size: 26upx;
                 color: #323643;
                 font-weight: 600;
                 line-height: 40upx;
