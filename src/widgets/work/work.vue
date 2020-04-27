@@ -211,7 +211,7 @@ export default {
             width: 337upx;
             // height: 300upx;
             // margin-right: 28upx;
-            margin-bottom: 16upx;
+            margin-bottom: 20upx;
             // &:nth-child(2n) {
             //     margin-right: 0;
             // }

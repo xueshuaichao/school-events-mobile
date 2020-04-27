@@ -383,8 +383,8 @@ export default {
     white-space: pre-wrap;
     margin-top: 200upx;
     .widget-list-box {
-        padding-top: 40upx;
-        margin: 0 28upx 14upx 28upx;
+        // padding-top: 40upx;
+        margin: 0 30upx 14upx 30upx;
         display: flex;
         flex-wrap: wrap;
         justify-content: space-between;
@@ -394,22 +394,22 @@ export default {
         width: 337upx;
         height: 294upx;
         // margin-right: 28upx;
-        margin-bottom: 16upx;
+        margin-bottom: 20upx;
     }
     .blank-box {
         margin-top: 350upx;
     }
 }
 .comp-work {
-    margin-right: 30upx;
-    margin-bottom: 40upx;
+    // margin-right: 30upx;
+    // margin-bottom: 40upx;
 }
 
 .dropdown-wrap {
     position: fixed;
     width: 100%;
-    top: calc(180upx);
-    height: calc(100% - 180upx - var(--window-bottom));
+    top: calc(170upx);
+    height: calc(100% - 170upx - var(--window-bottom));
     z-index: 100;
 
     .dropdown {
@@ -434,15 +434,15 @@ export default {
 
     .menu-list {
         text-align: center;
-        padding-bottom: 20upx;
-        padding-top: 10upx;
+        padding: 20upx 0;
+        // padding-top: 10upx;
         background: #fff;
         border-radius: 0 0 8upx 8upx;
     }
     .menu-item {
-        font-size: 32upx;
+        font-size: 28upx;
         color: #666;
-        line-height: 80upx;
+        line-height: 70upx;
 
         &.active {
             color: #1166ff;
@@ -453,14 +453,14 @@ export default {
 .tab-bar-wrap {
     position: fixed;
     top: 0; //calc(var(--window-top));
-    width: 100%;
+    // width: 100%;
     z-index: 1000;
     box-shadow: 0 0 8upx 0 rgba(0, 0, 0, 0.05);
     .search {
-        width: 100%;
+        // width: 100%;
         font-size: 24upx;
         overflow: hidden;
-        padding: 20upx 0 20upx 30upx;
+        padding: 20upx 30upx 0;
         background: #fff;
         box-shadow: 0 0upx 5upx 0 rgba(0, 0, 0, 0.05);
 
@@ -468,7 +468,7 @@ export default {
             background: #f3f3f3;
             border: none;
             border-radius: 30upx;
-            width: 606upx;
+            width: 598upx;
             height: 60upx;
             float: left;
             display: block;
@@ -495,7 +495,7 @@ export default {
         display: flex;
         background: #fff;
         padding: 0 20%;
-        font-size: 30upx;
+        font-size: 32upx;
     }
 
     .tab-item {

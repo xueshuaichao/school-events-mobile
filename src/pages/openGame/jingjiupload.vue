@@ -116,7 +116,7 @@
                     style="width: 437rpx;"
                 >
                     <input
-                        v-model="formData.achievement"
+                        v-model="testInput"
                         class="uni-input"
                         placeholder-class="placeholder"
                         maxlength="30"
@@ -377,6 +377,7 @@ export default {
             catIndex: 0,
             identity: '',
             type: 'jingji',
+            testInput: '',
         };
     },
     onLoad({ type }) {
@@ -384,6 +385,20 @@ export default {
         uni.setNavigationBarTitle({
             title: type === 'jingji' ? '竞技项目作品上传' : '吉尼斯项目作品上传',
         });
+    },
+    watch: {
+        testInput(v) {
+            // if (String(v).indexOf('.') > 0){
+            //     this.$nextTick(() => { //这里
+            //         this.testInput= '';
+            //     });
+            // }
+            this.$nextTick(() => {
+                // 这里
+                this.testInput = String(v).replace(/[^0-9.]/g, '');
+                this.formData.achievement = this.testInput;
+            });
+        },
     },
     created() {
         this.getUserInfo();
@@ -442,6 +457,7 @@ export default {
                 city: '',
                 county: '',
             };
+            this.testInput = '';
         },
         updateVideo(data) {
             console.log(data, 'data121');
