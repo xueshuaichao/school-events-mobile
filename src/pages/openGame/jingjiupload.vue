@@ -116,11 +116,10 @@
                     style="width: 437rpx;"
                 >
                     <input
-                        v-model.number="formData.achievement"
+                        v-model="formData.achievement"
                         class="uni-input"
                         placeholder-class="placeholder"
                         maxlength="30"
-                        type="number"
                         placeholder="成绩"
                     >
                     <text class="unit-class">
