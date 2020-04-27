@@ -79,11 +79,15 @@ export default {
     },
     methods: {
         jumpRoute(url) {
+            uni.showLoading({
+                mask: true,
+            });
             this.fr = logger.getFr('dshd', {});
             api.isLogin({
                 fr: this.fr,
             }).then(
                 () => {
+                    uni.hideLoading();
                     uni.navigateTo({
                         url,
                     });
