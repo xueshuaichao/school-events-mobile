@@ -116,10 +116,11 @@
                     style="width: 437rpx;"
                 >
                     <input
-                        v-model="formData.achievement"
+                        v-model.number="formData.achievement"
                         class="uni-input"
                         placeholder-class="placeholder"
                         maxlength="30"
+                        type="number"
                         placeholder="成绩"
                     >
                     <text class="unit-class">
@@ -323,7 +324,6 @@ export default {
                 city: '',
                 county: '',
             },
-            // rules: '',
             gradeData: [
                 '一年级',
                 '二年级',
@@ -474,9 +474,13 @@ export default {
         },
         onSelect(e) {
             this.catIndex = e.detail.value;
-            this.formData.cat_id = this.catData[e.detail.value].cat_id;
-            this.formData.cat_name = this.catData[e.detail.value].cat_name;
-            this.formData.achievement_unit = this.catData[e.detail.value].unit;
+            if (this.catData.length > 0) {
+                this.formData.cat_id = this.catData[e.detail.value].cat_id;
+                this.formData.cat_name = this.catData[e.detail.value].cat_name;
+                this.formData.achievement_unit = this.catData[
+                    e.detail.value
+                ].unit;
+            }
         },
         getallcategory(id) {
             return api.get(`/api/works/getallcategory?cid=${id}`).then(
@@ -523,22 +527,22 @@ export default {
             if (!formData.video_id) {
                 return this.errTip('请上传视频');
             }
-            if (!formData.achievement) {
+            if (!formData.achievement.trim()) {
                 return this.errTip('请填写成绩');
             }
             if (!formData.county && this.identity !== 4) {
                 return this.errTip('请选择地市');
             }
-            if (!formData.create_info && this.identity !== 4) {
+            if (!formData.create_info.trim() && this.identity !== 4) {
                 return this.errTip('请填写参赛者姓名');
             }
-            if (!formData.school_name && this.identity !== 4) {
+            if (!formData.school_name.trim() && this.identity !== 4) {
                 return this.errTip('请选择学校名称');
             }
-            if (!formData.education_level && this.identity !== 4) {
+            if (!formData.education_name && this.identity !== 4) {
                 return this.errTip('请选择学段');
             }
-            if (!formData.grade_id && this.identity !== 4) {
+            if (!formData.grade_name && this.identity !== 4) {
                 return this.errTip('请选择年级');
             }
 
