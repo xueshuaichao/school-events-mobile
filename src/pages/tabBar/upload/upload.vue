@@ -170,15 +170,16 @@ export default {
         .time {
             width: 22upx;
             height: 22upx;
-            margin-top: 30upx;
+            margin-top: 22upx;
             margin-right: 10upx;
             margin-left: 20upx;
         }
         .title {
-            font-size: 26upx;
+            font-size: 30upx;
             color: #323643;
             margin-left: 20upx;
             font-weight: 600;
+            line-height: 50upx;
         }
         .count {
             color: #ff6555;
@@ -209,7 +210,7 @@ export default {
         .time-start-end {
             font-size: 22upx;
             color: #999;
-            line-height: 80upx;
+            line-height: 66upx;
         }
         .activity_num {
             margin-top: 40upx;

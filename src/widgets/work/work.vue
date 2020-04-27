@@ -249,14 +249,15 @@ export default {
                 width: 392upx;
             }
             .title {
-                font-size: 26upx;
+                font-size: 30upx;
                 color: #323643;
                 font-weight: 600;
+                line-height: 40upx;
             }
             .time {
                 color: #999;
-                margin-bottom: 16upx;
-                line-height: 34upx;
+                margin-bottom: 14upx;
+                line-height: 36upx;
             }
             .num {
                 color: #ff6555;
