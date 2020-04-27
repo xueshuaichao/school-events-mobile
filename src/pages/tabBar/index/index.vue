@@ -370,12 +370,12 @@ export default {
                         'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/h5/wuyi-s-banner.png',
                     url: '/pages/activity-pages/labor/index',
                 },
-                // {
-                //     id: 7,
-                //     img:
-                //         'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/h5/aitiaozhan-s-banner.png',
-                //     url: '/pages/openGame/zhibo-list',
-                // },
+                {
+                    id: 7,
+                    img:
+                        'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/h5/aitiaozhan-s-banner.png',
+                    url: '/pages/openGame/zhibo-list',
+                },
                 {
                     id: 6,
                     img:
