@@ -453,7 +453,7 @@ export default {
         // },
         getNewActivityStatus() {
             // 1未开始，2进行中，3已结束
-            api.post('/api/activity/activitystatus', {
+            api.get('/api/activity/activitystatus', {
                 activity_id: 8,
             }).then((data) => {
                 console.log(data, 'aaaa');
