@@ -116,7 +116,7 @@
                     style="width: 437rpx;"
                 >
                     <input
-                        v-model="testInput"
+                        v-model="achivementInput"
                         class="uni-input"
                         placeholder-class="placeholder"
                         maxlength="30"
@@ -133,7 +133,7 @@
                 </view>
                 <view class="uni-list-cell-db">
                     <input
-                        v-model="formData.teacher"
+                        v-model="teacherInput"
                         class="uni-input"
                         placeholder-class="placeholder"
                         maxlength="30"
@@ -147,7 +147,7 @@
                 </view>
                 <view class="uni-list-cell-db">
                     <input
-                        v-model="formData.attestation_name"
+                        v-model="attestationInput"
                         class="uni-input"
                         placeholder-class="placeholder"
                         maxlength="30"
@@ -192,7 +192,7 @@
                 </view>
                 <view class="uni-list-cell-db">
                     <input
-                        v-model="formData.create_info"
+                        v-model="createInput"
                         class="uni-input"
                         placeholder-class="placeholder"
                         maxlength="30"
@@ -377,7 +377,10 @@ export default {
             catIndex: 0,
             identity: '',
             type: 'jingji',
-            testInput: '',
+            achivementInput: '',
+            teacherInput: '',
+            attestationInput: '',
+            createInput: '',
         };
     },
     onLoad({ type }) {
@@ -387,16 +390,40 @@ export default {
         });
     },
     watch: {
-        testInput(v) {
-            // if (String(v).indexOf('.') > 0){
-            //     this.$nextTick(() => { //这里
-            //         this.testInput= '';
-            //     });
-            // }
+        achivementInput(v) {
             this.$nextTick(() => {
                 // 这里
-                this.testInput = String(v).replace(/[^0-9.]/g, '');
-                this.formData.achievement = this.testInput;
+                const foo = String(v).replace(/[^0-9.]/g, '');
+                if (foo.includes('.') && foo.split('.')[1].length > 4) {
+                    // return false;
+                    this.achivementInput = `${foo.split('.')[0]}.${foo
+                        .split('.')[1]
+                        .substr(0, 4)}`;
+                } else {
+                    this.achivementInput = foo;
+                    this.formData.achievement = this.achivementInput;
+                }
+            });
+        },
+        teacherInput(v) {
+            this.$nextTick(() => {
+                // 这里
+                this.teacherInput = String(v).replace(/\d/g, '');
+                this.formData.teacher = this.teacherInput;
+            });
+        },
+        attestationInput(v) {
+            this.$nextTick(() => {
+                // 这里
+                this.attestationInput = String(v).replace(/\d/g, '');
+                this.formData.attestation_name = this.attestationInput;
+            });
+        },
+        createInput(v) {
+            this.$nextTick(() => {
+                // 这里
+                this.createInput = String(v).replace(/\d/g, '');
+                this.formData.create_info = this.createInput;
             });
         },
     },
@@ -457,7 +484,10 @@ export default {
                 city: '',
                 county: '',
             };
-            this.testInput = '';
+            this.achivementInput = '';
+            this.teacherInput = '';
+            this.attestationInput = '';
+            this.createInput = '';
         },
         updateVideo(data) {
             console.log(data, 'data121');
@@ -542,7 +572,7 @@ export default {
             if (!formData.video_id) {
                 return this.errTip('请上传视频');
             }
-            if (!formData.achievement) {
+            if (!formData.achievement.trim()) {
                 return this.errTip('请填写成绩');
             }
             if (!formData.county && this.identity !== 4) {

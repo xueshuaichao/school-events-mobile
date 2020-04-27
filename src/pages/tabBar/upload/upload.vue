@@ -10,7 +10,7 @@
                 @click="jumpRoute(item.url)"
             >
                 <view class="clearfix">
-                    <view class="fl-l">
+                    <view class="fl-l title-activity">
                         <view class="title">
                             {{ item.activity_name || "" }}
                         </view>
@@ -155,6 +155,9 @@ export default {
 
 <style lang="less" scoped>
 .page-upload {
+    .title-activity {
+        width: 350upx;
+    }
     .item-card {
         width: 670upx;
         margin: 40upx 40upx 56upx;
