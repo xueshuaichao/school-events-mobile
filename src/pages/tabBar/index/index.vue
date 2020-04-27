@@ -396,7 +396,7 @@ export default {
         this.prompt = false;
     },
     onLoad() {
-        this.getAllActivityStatus();
+        this.getNewActivityStatus();
         this.thirdEntryPrompt();
         this.getData();
         this.getUserInfo();
@@ -414,7 +414,7 @@ export default {
             uni.setStorageSync('onShowFrom', '');
             // error
         }
-        // this.getAllActivityStatus();
+        // this.getNewActivityStatus();
     },
     created() {},
     methods: {
@@ -451,9 +451,9 @@ export default {
         // handleCloseSuspension() {
         //     this.isShow = false;
         // },
-        getAllActivityStatus() {
+        getNewActivityStatus() {
             // 1未开始，2进行中，3已结束
-            api.post('/api/activity/getactivitystatus', {
+            api.post('/api/activity/activitystatus', {
                 activity_id: 8,
             }).then((data) => {
                 console.log(data, 'aaaa');
