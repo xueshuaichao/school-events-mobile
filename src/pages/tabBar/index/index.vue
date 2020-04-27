@@ -40,6 +40,7 @@
                 v-model="changeValue"
                 placeholder-class="placeholderStyle"
                 placeholder="请输入作品名称/作者姓名"
+                maxlength="13"
                 @confirm="bindconfirm"
             >
             <text

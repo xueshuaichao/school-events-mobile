@@ -5,6 +5,7 @@
                 <input
                     v-model="filter.keyword"
                     placeholder-class="placeholderStyle"
+                    maxlength="13"
                     placeholder="请输入作品名称/作者姓名"
                     @confirm="bindconfirm"
                 >
