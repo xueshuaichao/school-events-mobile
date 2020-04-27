@@ -116,11 +116,10 @@
                     style="width: 437rpx;"
                 >
                     <input
-                        v-model.number="formData.achievement"
+                        v-model="formData.achievement"
                         class="uni-input"
                         placeholder-class="placeholder"
                         maxlength="30"
-                        type="number"
                         placeholder="成绩"
                     >
                     <text class="unit-class">
@@ -527,7 +526,7 @@ export default {
             if (!formData.video_id) {
                 return this.errTip('请上传视频');
             }
-            if (!formData.achievement.trim()) {
+            if (!formData.achievement) {
                 return this.errTip('请填写成绩');
             }
             if (!formData.county && this.identity !== 4) {
