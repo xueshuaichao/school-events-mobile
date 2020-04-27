@@ -7,6 +7,7 @@
             search-color="#FF9F73"
             :index-config="indexConfig"
             :public-config="publicConfig"
+            :is-stop-scroll="showHistoryRankList"
             :fr="fr"
         >
             <template v-slot:rank>
@@ -23,65 +24,6 @@
                         @click="toggleHistoryRank(true)"
                     >
                         历史榜单
-                    </view>
-                    <view
-                        v-show="showHistoryRankList"
-                        class="history-rank-list"
-                    >
-                        <view class="history-content">
-                            <image
-                                class="close"
-                                :src="
-                                    `https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/${publicConfig.activityName}_close.png`
-                                "
-                                @click="toggleHistoryRank(false)"
-                            />
-                            <view class="title">
-                                历史榜单
-                            </view>
-                            <view class="history-content-box">
-                                <view
-                                    v-for="(item, index) in historyRankList"
-                                    :key="index"
-                                    class="history-item"
-                                >
-                                    <view class="tit">
-                                        第{{ index | changeNum }}周小能手{{
-                                            item.start_time
-                                        }}-{{ item.end_time }}
-                                    </view>
-                                    <view class="history-box">
-                                        <view
-                                            v-for="(list, k) in item.rank_list"
-                                            :key="k"
-                                            class="text-item"
-                                        >
-                                            <image
-                                                class="rank-img"
-                                                :src="
-                                                    `https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/labor_mini_rank_${k}.png`
-                                                "
-                                            />
-                                            <view class="text-content">
-                                                <text
-                                                    class="user-name text-one-line"
-                                                >
-                                                    {{ list.user_name }}
-                                                </text>
-                                                <text
-                                                    class="work-num text-one-line"
-                                                >
-                                                    {{ list.works_num }}
-                                                </text>
-                                            </view>
-                                        </view>
-                                    </view>
-                                </view>
-                            </view>
-                            <view class="tips">
-                                立即参与活动吧！下一个劳动小能手就是你！
-                            </view>
-                        </view>
                     </view>
                     <view class="week-rank-list">
                         <view
@@ -107,6 +49,61 @@
                 </view>
             </template>
         </indexPage>
+        <view
+            v-show="showHistoryRankList"
+            class="history-rank-list"
+        >
+            <view class="history-content">
+                <image
+                    class="close"
+                    :src="
+                        `https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/${publicConfig.activityName}_close.png`
+                    "
+                    @click="toggleHistoryRank(false)"
+                />
+                <view class="title">
+                    历史榜单
+                </view>
+                <view class="history-content-box">
+                    <view
+                        v-for="(item, index) in historyRankList"
+                        :key="index"
+                        class="history-item"
+                    >
+                        <view class="tit">
+                            第{{ index | changeNum }}周小能手{{
+                                item.start_time
+                            }}-{{ item.end_time }}
+                        </view>
+                        <view class="history-box">
+                            <view
+                                v-for="(list, k) in item.rank_list"
+                                :key="k"
+                                class="text-item"
+                            >
+                                <image
+                                    class="rank-img"
+                                    :src="
+                                        `https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/labor_mini_rank_${k}.png`
+                                    "
+                                />
+                                <view class="text-content">
+                                    <text class="user-name text-one-line">
+                                        {{ list.user_name }}
+                                    </text>
+                                    <text class="work-num text-one-line">
+                                        {{ list.works_num }}
+                                    </text>
+                                </view>
+                            </view>
+                        </view>
+                    </view>
+                </view>
+                <view class="tips">
+                    立即参与活动吧！下一个劳动小能手就是你！
+                </view>
+            </view>
+        </view>
     </div>
 </template>
 
@@ -286,105 +283,105 @@ export default {
             font-size: 22upx;
         }
     }
-    .history-rank-list {
-        background-color: rgba(0, 0, 0, 0.8);
-        box-sizing: border-box;
-        position: fixed;
-        top: 0;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        color: #fff;
-        z-index: 999;
+}
+.history-rank-list {
+    background-color: rgba(0, 0, 0, 0.8);
+    box-sizing: border-box;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    color: #fff;
+    z-index: 9999;
 
-        .history-content {
-            background-color: #fffbf6;
+    .history-content {
+        background-color: #fffbf6;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 600rpx;
+        padding: 39rpx 20rpx 23rpx;
+        box-sizing: border-box;
+        padding-right: 20rpx;
+        border-radius: 10upx;
+        .close {
+            width: 62upx;
+            height: 62upx;
+            top: -13upx;
+            right: -12upx;
             position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 600rpx;
-            padding: 39rpx 20rpx 23rpx;
-            box-sizing: border-box;
-            padding-right: 20rpx;
-            border-radius: 10upx;
-            .close {
-                width: 62upx;
-                height: 62upx;
-                top: -13upx;
-                right: -12upx;
-                position: absolute;
-            }
         }
-        .tips {
-            height: 70upx;
-            line-height: 70upx;
-            background-color: #fffbf6;
+    }
+    .tips {
+        height: 70upx;
+        line-height: 70upx;
+        background-color: #fffbf6;
+        color: #db4e0e;
+        font-size: 26upx;
+    }
+    .history-content-box {
+        overflow-y: auto;
+        max-height: 616upx;
+        min-height: 402upx;
+        &::-webkit-scrollbar {
+            width: 2upx;
+        }
+        &::-webkit-scrollbar-thumb {
+            border-radius: 2upx;
+            background-color: #db4e0e;
+        }
+    }
+    .title {
+        color: #db4e0e;
+        font-size: 34upx;
+        line-height: 1;
+        margin-bottom: 30upx;
+    }
+    .history-item {
+        .history-box {
+            border: 2upx solid rgba(255, 206, 153, 1);
+            border-radius: 10upx;
+            margin-bottom: 36upx;
+        }
+        .tit {
             color: #db4e0e;
             font-size: 26upx;
-        }
-        .history-content-box {
-            overflow-y: auto;
-            max-height: 616upx;
-            min-height: 402upx;
-            &::-webkit-scrollbar {
-                width: 2upx;
-            }
-            &::-webkit-scrollbar-thumb {
-                border-radius: 2upx;
-                background-color: #db4e0e;
-            }
-        }
-        .title {
-            color: #db4e0e;
-            font-size: 34upx;
             line-height: 1;
-            margin-bottom: 30upx;
+            margin-bottom: 29upx;
         }
-        .history-item {
-            .history-box {
-                border: 2upx solid rgba(255, 206, 153, 1);
-                border-radius: 10upx;
-                margin-bottom: 36upx;
+        .text-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 14upx 66upx 8upx 34upx;
+            box-sizing: border-box;
+        }
+        .text-content {
+            border-bottom: 1upx solid rgba(255, 206, 153, 0.45);
+            display: flex;
+            justify-content: space-between;
+            line-height: 64upx;
+            width: 399upx;
+            &:last-of-type {
+                border: 0 none;
             }
-            .tit {
-                color: #db4e0e;
-                font-size: 26upx;
-                line-height: 1;
-                margin-bottom: 29upx;
-            }
-            .text-item {
-                display: flex;
-                justify-content: space-between;
-                padding: 14upx 66upx 8upx 34upx;
-                box-sizing: border-box;
-            }
-            .text-content {
-                border-bottom: 1upx solid rgba(255, 206, 153, 0.45);
-                display: flex;
-                justify-content: space-between;
-                line-height: 64upx;
-                width: 399upx;
-                &:last-of-type {
-                    border: 0 none;
-                }
-            }
-            .rank-img {
-                width: 40upx;
-                height: 50upx;
-                margin-right: 20upx;
-                margin-top: 7upx;
-            }
-            .user-name {
-                color: #db4e0e;
-                width: 50%;
-                text-align: left;
-            }
-            .work-num {
-                color: #ab3500;
-                width: 50%;
-                text-align: right;
-            }
+        }
+        .rank-img {
+            width: 40upx;
+            height: 50upx;
+            margin-right: 20upx;
+            margin-top: 7upx;
+        }
+        .user-name {
+            color: #db4e0e;
+            width: 50%;
+            text-align: left;
+        }
+        .work-num {
+            color: #ab3500;
+            width: 50%;
+            text-align: right;
         }
     }
 }

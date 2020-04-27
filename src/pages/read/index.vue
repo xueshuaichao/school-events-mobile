@@ -1110,7 +1110,7 @@ body.dialog-open {
                     left: 12upx;
                 }
                 input {
-                    width: 280upx;
+                    width: 276upx;
                     position: absolute;
                     top: 50%;
                     transform: translateY(-50%);

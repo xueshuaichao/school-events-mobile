@@ -149,7 +149,53 @@ export default {
             this.url = val;
         }
     },
-    mounted() {},
+    mounted() {
+        /*
+        const uploader = new AliyunUpload.Vod({
+            // 阿里账号ID，必须有值 ，值的来源https://help.aliyun.com/knowledge_detail/37196.html
+            userId: "1923859927839944",
+            // 上传到点播的地域， 默认值为'cn-shanghai',//eu-central-1,ap-southeast-1
+            // region:"",
+            // 分片大小默认1M，不能小于100K
+            partSize: 1048576,
+            // 并行上传分片个数，默认5
+            parallel: 5,
+            // 网络原因失败时，重新上传次数，默认为3
+            retryCount: 3,
+            // 网络原因失败时，重新上传间隔时间，默认为2秒
+            retryDuration: 2,
+            // 开始上传
+            onUploadstarted(uploadInfo) {
+                api.post("/cert/createtoken", {
+                    type: "media",
+                    file_name: uploadInfo.file.name
+                }).then(({ data: { result } }) => {
+                    const uploadAuth = result.upload_auth;
+                    const uploadAddress = result.upload_address;
+                    const videoId = result.video_id;
+                    uploader.setUploadAuthAndAddress(
+                        uploadInfo,
+                        uploadAuth,
+                        uploadAddress,
+                        videoId
+                    );
+                });
+            },
+            // 文件上传成功
+            onUploadSucceed(uploadInfo) {},
+            // 文件上传失败
+            onUploadFailed(uploadInfo, code, message) {},
+            // 文件上传进度，单位：字节
+            onUploadProgress(uploadInfo, totalSize, loadedPercent) {},
+            // 上传凭证超时
+            onUploadTokenExpired(uploadInfo) {},
+            // 全部文件上传结束
+            onUploadEnd(uploadInfo) {}
+        });
+
+        this.uploader = uploader;
+        */
+    },
     methods: {
         uploadFile(tempFilePath) {
             this.tempFilePath = tempFilePath;
@@ -182,7 +228,6 @@ export default {
                         userKey: utils.getToken()
                     },
                     success: uploadFileRes => {
-                        console.log(uploadFileRes.data);
                         let resp;
                         try {
                             resp = JSON.parse(uploadFileRes.data);
@@ -226,7 +271,6 @@ export default {
                     userKey: utils.getToken()
                 },
                 success: uploadFileRes => {
-                    // console.log(1111, file);
                     let resp;
                     try {
                         resp = JSON.parse(uploadFileRes.data);
@@ -273,7 +317,6 @@ export default {
                                 this.uploadFile(filePath)
                             )
                         ).then(data => {
-                            console.log(res);
                             this.$emit("change", data);
                         });
                         [this.src] = res.tempFilePaths;
@@ -291,9 +334,21 @@ export default {
                         const filePath = res.tempFilePath;
                         this.src = filePath;
                         return this.uploadVideo(filePath, res);
+                        // console.log(res);
+                        // const fileList = e.target.files;
+                        // this.uploader.cleanList();
                     }
                 });
             }
+
+            // let fn = this.type === 'image' ? uni.chooseImage : uni.chooseVideo;
+
+            // fn({
+            //     success: (res) => {
+            //         this.src = res.tempFilePath;
+            //         this.uploadFile(res.tempFilePath);
+            //     }
+            // });
         }
     }
 };

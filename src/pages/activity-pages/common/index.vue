@@ -4,7 +4,12 @@
         :style="{ 'background-color': publicConfig.mainBgColor }"
     >
         <official-account v-if="!isH5" />
-        <view :class="['page-index', { 'stop-scroll': prompt }]">
+        <view
+            :class="[
+                'page-index',
+                { 'stop-scroll': prompt || prizePrompt || isStopScroll }
+            ]"
+        >
             <!-- 活动规则 -->
             <rule
                 v-if="prompt"
@@ -281,6 +286,10 @@ export default {
         EventCraftCover,
     },
     props: {
+        isStopScroll: {
+            type: Boolean,
+            default: false,
+        },
         indexConfig: {
             type: Object,
             default() {
@@ -346,7 +355,7 @@ export default {
         };
     },
     mounted() {
-        uni.$once('onReachBottom', () => {
+        uni.$on('onReachBottom', () => {
             if (this.loadMoreStatus === 'more') {
                 this.filter.page_num = this.filter.page_num + 1;
                 this.loadMoreStatus = 'loading';
@@ -927,7 +936,7 @@ body.dialog-open {
                     left: 12upx;
                 }
                 input {
-                    width: 280upx;
+                    width: 276upx;
                     position: absolute;
                     top: 50%;
                     transform: translateY(-50%);
