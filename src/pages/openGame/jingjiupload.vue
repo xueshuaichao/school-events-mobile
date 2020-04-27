@@ -527,7 +527,7 @@ export default {
             if (!formData.video_id) {
                 return this.errTip('请上传视频');
             }
-            if (!formData.achievement.trim()) {
+            if (!formData.achievement) {
                 return this.errTip('请填写成绩');
             }
             if (!formData.county && this.identity !== 4) {
