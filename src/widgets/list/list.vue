@@ -419,7 +419,7 @@ export default {
     .row {
         display: flex;
         height: 100%;
-        background: rgba(0, 0, 0, 0.5);
+        background: rgba(0, 0, 0, 0.3);
 
         .col {
             flex: 1;
