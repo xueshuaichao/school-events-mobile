@@ -148,6 +148,7 @@
                                     type="text"
                                     confirm-type="search"
                                     confirm-hold="true"
+                                    maxlength="13"
                                     placeholder="请输入作者姓名或作品名称"
                                     @confirm="bindconfirm"
                                 >
@@ -926,7 +927,7 @@ body.dialog-open {
                     left: 12upx;
                 }
                 input {
-                    width: 293upx;
+                    width: 280upx;
                     position: absolute;
                     top: 50%;
                     transform: translateY(-50%);

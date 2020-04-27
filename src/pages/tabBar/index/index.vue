@@ -656,7 +656,7 @@ uni-swiper {
             height: 60upx;
             float: left;
             display: block;
-            padding-left: 40upx;
+            padding: 0 40upx;
             box-sizing: border-box;
         }
         .placeholderStyle {
