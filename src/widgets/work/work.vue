@@ -22,7 +22,7 @@
                     :key="item.id"
                 >
                     <view
-                        v-if="item.id !== 7"
+                        v-if="item.id !== 7 || (item.id === 7 && !isH5)"
                         class="hot-act-card clearfix"
                     >
                         <view class="img-box fl-l">

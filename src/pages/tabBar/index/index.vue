@@ -72,7 +72,7 @@
                             />
                         </navigator>
                     </swiper-item>
-                    <!-- <swiper-item v-if="!isH5">
+                    <swiper-item v-if="!isH5">
                         <navigator
                             url="/pages/openGame/zhibo-list"
                             class="swiper-item"
@@ -82,7 +82,7 @@
                                 src="http://aitiaozhan.oss-cn-beijing.aliyuncs.com/school-events-mobile/openEvent-banner.png"
                             />
                         </navigator>
-                    </swiper-item> -->
+                    </swiper-item>
                     <swiper-item>
                         <navigator
                             url="/pages/read/index"
