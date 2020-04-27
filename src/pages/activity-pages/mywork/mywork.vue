@@ -378,6 +378,7 @@ export default {
                 (res) => {
                     this.userInfo = res.user_info;
                     this.isLoading = false;
+                    this.initShare();
                 },
                 () => {
                     this.isLoading = false;
@@ -571,6 +572,7 @@ export default {
                 title: this.title,
                 desc,
                 thumbnail: `${this.publicConfig.shareConfig.image}?x-oss-process=image/format,png/interlace,1/quality,Q_80/resize,m_pad,h_100`,
+                url: this.publicConfig.shareConfig.path,
             });
         },
     },
@@ -607,7 +609,6 @@ export default {
             this.changeValue = name;
             this.searchWorkData();
         }
-        this.initShare();
     },
     onShareAppMessage(res) {
         if (res.from === 'button') {

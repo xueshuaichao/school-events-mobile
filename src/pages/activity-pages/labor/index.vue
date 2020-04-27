@@ -151,7 +151,6 @@ export default {
         });
         this.fr = logger.getFr(this.publicConfig.log, params);
         this.loading = true;
-        this.initShare();
     },
     onShow() {},
     created() {
@@ -165,6 +164,7 @@ export default {
                     this.showRank = true;
                 }
                 this.rank = [data[1], data[0], data[2]];
+                this.initShare();
             });
         },
         historyRank() {
@@ -183,7 +183,7 @@ export default {
             const random = Math.floor(Math.random() * titleList.length);
             this.title = titleList[random];
             const desc = descList[random];
-
+            console.log(this.title);
             share({
                 title: this.title,
                 desc,
