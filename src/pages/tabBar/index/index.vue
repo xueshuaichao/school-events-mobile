@@ -40,6 +40,7 @@
                 v-model="changeValue"
                 placeholder-class="placeholderStyle"
                 placeholder="请输入作品名称/作者姓名"
+                maxlength="13"
                 @confirm="bindconfirm"
             >
             <text
@@ -656,7 +657,7 @@ uni-swiper {
             height: 60upx;
             float: left;
             display: block;
-            padding-left: 40upx;
+            padding: 0 40upx;
             box-sizing: border-box;
         }
         .placeholderStyle {

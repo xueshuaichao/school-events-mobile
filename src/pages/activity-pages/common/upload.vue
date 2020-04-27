@@ -135,17 +135,6 @@ export default {
             default: 9
         }
     },
-    onLoad() {
-        // this.fr = logger.getFr('dshd', params);
-        this.activityId = 6;
-        this.publicConfig = this.$store.getters.getPublicConfig(
-            this.activityId
-        );
-        this.uploadConfig = this.$store.getters.getActivityConfig({
-            activityId: this.activityId,
-            page: "uploadConfig"
-        });
-    },
     data() {
         console.log(this.preview);
         return {

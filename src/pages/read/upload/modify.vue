@@ -27,8 +27,8 @@
                     class="uni-input"
                     placeholder-class="placeholder"
                     placeholder-style="color:#A6CBBC"
-                    maxlength="30"
-                    placeholder="视频名称*（不超过30字）"
+                    maxlength="11"
+                    placeholder="视频名称*（不超过11字）"
                 >
             </view>
 

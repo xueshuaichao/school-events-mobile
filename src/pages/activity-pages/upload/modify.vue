@@ -4,6 +4,7 @@
         class="page-upload"
     >
         <view
+            v-if="!needBindMobile"
             class="main"
             :style="{ background: publicConfig.mainBgColor }"
         >
@@ -135,6 +136,65 @@
                 上传
             </view>
         </view>
+        <view
+            v-if="needBindMobile"
+            class="page-bind-mobile"
+        >
+            <div class="tip">
+                上传作品需要绑定手机号，后面也可以用该手机号登录
+            </div>
+
+            <view
+                class="form-item-wrap"
+                :class="{
+                    inValid: accountData.isValid === false
+                }"
+            >
+                <input
+                    v-model="accountData.mobile"
+                    class="form-input"
+                    placeholder-class="placeholder"
+                    maxlength="30"
+                    placeholder="请输入手机号"
+                >
+                <view class="error-tip">
+                    {{ accountData.isValid ? "" : accountData.msg }}
+                </view>
+            </view>
+
+            <view class="form-item-wrap">
+                <input
+                    v-model="accountData.verify_code"
+                    class="form-input"
+                    placeholder-class="placeholder"
+                    maxlength="30"
+                    placeholder="请输入验证码"
+                >
+                <view
+                    v-if="!captcha.isSend"
+                    class="send-captcha"
+                    @click="sendCaptcha"
+                >
+                    获取验证码
+                </view>
+                <view
+                    v-if="captcha.isSend"
+                    class="send-captcha is-send"
+                >
+                    {{ captcha.remain }}S后重新发
+                </view>
+            </view>
+
+            <view class="form-item-wrap">
+                <view
+                    class="btn"
+                    :style="{ background: publicConfig.primaryColor }"
+                    @click="bindMobile"
+                >
+                    确定
+                </view>
+            </view>
+        </view>
     </view>
 </template>
 
@@ -248,11 +308,10 @@ export default {
         resetData() {
             this.formData = {
                 ...this.formData,
-                activity_id: 6,
                 activity_cat: 1,
                 resource_name: '',
                 resource_type:
-                    this.publicConfig.uploadMode[0] === 'video' ? 1 : 2,
+                    this.uploadConfig.uploadMode[0] === 'video' ? 1 : 2,
                 introduce: '',
                 type: 2,
                 video_id: '',
@@ -600,6 +659,62 @@ export default {
             &.active {
                 background: #0f8c64;
                 color: #fff;
+            }
+        }
+    }
+    .page-bind-mobile {
+        .tip {
+            font-size: 26rpx;
+            color: #333;
+            text-align: center;
+            padding-top: 80rpx;
+        }
+
+        .form-item-wrap {
+            padding: 0 65rpx;
+            position: relative;
+
+            .form-input {
+                color: #333;
+                font-size: 30rpx;
+                border-bottom: 1rpx solid #d8d8d8;
+                height: 90rpx;
+                margin-top: 20rpx;
+            }
+
+            &.inValid {
+                .form-input {
+                    border-bottom: 1rpx solid #fa6855;
+                }
+            }
+
+            input::placeholder {
+                color: #666;
+            }
+
+            .error-tip {
+                color: #fa6855;
+                font-size: 26rpx;
+                height: 30rpx;
+                margin-top: 10rpx;
+            }
+
+            .send-captcha {
+                position: absolute;
+                right: 65rpx;
+                color: #1166ff;
+                font-size: 30rpx;
+                bottom: 25rpx;
+                z-index: 100;
+
+                &.is-send {
+                    color: #999;
+                    height: 50rpx;
+                    background: #eeeeee;
+                    padding: 0 10rpx;
+                    font-size: 28rpx;
+                    line-height: 50rpx;
+                }
             }
         }
     }

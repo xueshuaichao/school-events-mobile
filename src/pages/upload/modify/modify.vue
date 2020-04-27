@@ -60,10 +60,10 @@
                     v-model="formData.resource_name"
                     class="uni-input"
                     placeholder-class="placeholder"
-                    maxlength="30"
+                    maxlength="11"
                     :placeholder="
                         (uploadMode === 'video' ? '视频' : '作品') +
-                            '名称*（不超过30字）'
+                            '名称*（不超过11字）'
                     "
                 >
             </view>
@@ -72,9 +72,10 @@
                 v-model="formData.introduce"
                 class="uni-textarea"
                 placeholder-class="placeholder"
+                maxlength="80"
                 :placeholder="
                     (uploadMode === 'video' ? '视频' : '作品') +
-                        '介绍（不超过500字）'
+                        '介绍（不超过80字）'
                 "
             />
             <upload
