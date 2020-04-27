@@ -577,7 +577,6 @@ export default {
         },
     },
     onLoad(query) {
-        this.getData();
         const {
             type,
             name,
@@ -597,7 +596,7 @@ export default {
             page: 'myWorkConfig',
         });
         this.filter.activity_id = activityId;
-
+        this.getData();
         if (type === 'myWork') {
             this.getWorkData();
         } else if (type === 'search') {
