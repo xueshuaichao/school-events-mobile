@@ -192,7 +192,7 @@
             </view>
 
             <view
-                v-if="activityId < 5 && resourceScope > 2"
+                v-if="activityId < 5 && pageData.resource_scope > 2"
                 class="btn primary"
                 @click="joinGame"
             >
@@ -286,10 +286,6 @@ export default {
             default: 0,
         },
         activityId: {
-            type: Number,
-            default: 0,
-        },
-        resourceScope: {
             type: Number,
             default: 0,
         },

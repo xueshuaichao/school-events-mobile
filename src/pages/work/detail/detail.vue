@@ -89,7 +89,6 @@
             :page-data="pageData"
             :like-status="likeStatus"
             :activity-id="activity_id"
-            :resource-scope="resource_scope"
             :is-from-share="isFromShare"
             @doAction="doAction"
         />
@@ -143,6 +142,7 @@ export default {
 
             prompt: false,
             canvasImg: '',
+            // canvasImg2: '',
             showTicketMask: false,
 
             // pageFrom: '',
@@ -150,7 +150,6 @@ export default {
             isActvitity: true,
             activity_id: 0,
             imgAuthBtn: false,
-            resource_scope: 0,
             isFromShare: '',
         };
     },
@@ -218,8 +217,7 @@ export default {
             const pages = getCurrentPages(); // 获取加载的页面
             const currentPage = pages[pages.length - 1]; // 获取当前页面的对象
             const url = currentPage.route || 'pages/work/detail/detail';
-            const scene = `id=${this.id}&activity_id=${this.activity_id}&isFromShare=1&resource_scope=${this.resource_scope}`
-                || 'id=325';
+            const scene = `id=${this.id}&aid=${this.activity_id}&y=1` || 'id=325';
             console.log(url, scene, 'url---scene---');
             api.post('/api/weixin/getminiqrcode', {
                 path: url,
@@ -356,7 +354,7 @@ export default {
         onPosterFail(e) {
             console.log(e, 'fail-------------------');
         },
-        getData() {
+        getData(reget) {
             let url = '/api/works/detail';
             if (this.isActvitity) {
                 url = '/api/activity/detail';
@@ -368,7 +366,9 @@ export default {
                     this.isLoading = false;
                     this.detailId = res.id;
                     this.pageData = res;
-                    this.setGetDetail(res);
+                    if (!reget) {
+                        this.setGetDetail(res);
+                    }
                 },
                 (err) => {
                     uni.showToast({
@@ -385,9 +385,23 @@ export default {
             this.getLikeStatus();
         },
         setGetDetail(res) {
+            if (this.activity_id > 2) {
+                this.curDetailConf = detailConf[this.activity_id - 1];
+            } else if (this.pageData.resource_scope === 3) {
+                [, this.curDetailConf] = detailConf;
+            } else {
+                [this.curDetailConf] = detailConf;
+            }
+
+            this.posterConfig = {
+                ...this.posterConfig,
+                ...this.curDetailConf.posterConfig,
+            };
+
             this.posterConfig.images[1].url = res.video_img_url;
             this.posterConfig.texts[0].text[0].text = res.resource_name;
             this.pageData.video_img_url = res.video_img_url;
+
             this.initShare(res);
 
             if (res.resource_type === 2) {
@@ -416,7 +430,7 @@ export default {
                 () => api.get(url, param).then(
                     () => {
                         this.likeStatus = 1;
-                        this.getData();
+                        this.getData('reget');
                     },
                     (err) => {
                         if (this.isActvitity) {
@@ -557,10 +571,19 @@ export default {
         this.id = utils.getParam(query, 'id');
         this.fr = utils.getParam(query, 'fr') || '';
         this.isFromShare = utils.getParam(query, 'isFromShare') || '';
+        if (!this.isFromShare) {
+            this.isFromShare = utils.getParam(query, 'y') || '';
+        }
 
         this.activity_id = Number(utils.getParam(query, 'activity_id')) || 0;
-        this.resource_scope = Number(utils.getParam(query, 'resource_scope')) || 0;
-        console.log(this.activity_id, 'this.activity_id---');
+        if (!this.activity_id) {
+            this.activity_id = Number(utils.getParam(query, 'aid')) || 0;
+        }
+        console.log(
+            this.activity_id,
+            this.isFromShare,
+            '-----this.activity_id---',
+        );
         // activity_id,  没有7..
         if (!this.activity_id) {
             this.isActvitity = false;
@@ -574,19 +597,6 @@ export default {
         // 获取detail页面的内容
         this.getData();
 
-        // 获取前后两页面的内容。
-        if (this.activity_id > 2) {
-            this.curDetailConf = detailConf[this.activity_id - 1];
-        } else if (this.resource_scope === 3) {
-            [, this.curDetailConf] = detailConf;
-        } else {
-            [this.curDetailConf] = detailConf;
-        }
-        console.log(this.curDetailConf, '1212121212121');
-        this.posterConfig = {
-            ...this.posterConfig,
-            ...this.curDetailConf.posterConfig,
-        };
         // #ifndef H5
         this.poster = this.selectComponent('#poster');
         this.getAuthStatus();
@@ -615,7 +625,7 @@ export default {
         return {
             title: this.shareDesc,
             imageUrl: `${this.pageData.video_img_url}?x-oss-process=image/resize,m_fill,w_250,h_150`,
-            path: `/pages/work/detail/detail?id=${this.id}&activity_id=${this.activity_id}&resource_scope=${this.resource_scope}&isFromShare=1`,
+            path: `/pages/work/detail/detail?id=${this.id}&activity_id=${this.activity_id}&isFromShare=1`,
         };
     },
 };
@@ -811,7 +821,6 @@ export default {
             font-size: 28upx;
         }
     }
-
     /deep/ .uni-video-container {
         .uni-video-cover-duration {
             display: none;
