@@ -236,7 +236,7 @@
                     :style="{ 'background-color': publicConfig.primaryColor }"
                     @click="handleUpload"
                 >
-                    上传作品
+                    {{ status === 2 ? "上传作品" : "活动已结束" }}
                 </view>
             </view>
         </view>

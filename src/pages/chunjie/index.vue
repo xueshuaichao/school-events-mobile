@@ -391,7 +391,7 @@
                     :class="status === 2 ? 'upload' : 'upload-disable'"
                     @click="handleUpload"
                 >
-                    上传作品
+                    {{ status === 2 ? "上传作品" : "活动已结束" }}
                 </view>
             </view>
         </view>
