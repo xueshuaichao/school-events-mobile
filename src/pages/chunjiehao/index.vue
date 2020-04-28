@@ -347,7 +347,7 @@
                     :class="status === 2 ? 'upload' : 'upload-disable'"
                     @click="handleUpload"
                 >
-                    上传作品
+                    {{ status === 2 ? "上传作品" : "活动已结束" }}
                 </view>
             </view>
         </view>
@@ -826,7 +826,7 @@ body.dialog-open {
 }
 .upload-disable {
     position: fixed;
-    bottom: 40upx;
+    bottom: 0upx;
     background: linear-gradient(
         0deg,
         rgba(133, 115, 102, 1),
@@ -839,6 +839,7 @@ body.dialog-open {
     color: #e4ded4;
     font-size: 36upx;
     line-height: 116upx;
+    z-index: 1;
 }
 .cansai-text {
     width: 312upx;
