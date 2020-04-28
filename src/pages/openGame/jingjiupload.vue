@@ -396,9 +396,9 @@ export default {
                 const foo = String(v).replace(/[^0-9.]/g, '');
                 if (foo.includes('.') && foo.split('.')[1].length > 4) {
                     // return false;
-                    this.achivementInput = `${foo.split('.')[0]
-                    }.${
-                        foo.split('.')[1].substr(0, 4)}`;
+                    this.achivementInput = `${foo.split('.')[0]}.${foo
+                        .split('.')[1]
+                        .substr(0, 4)}`;
                 } else {
                     this.achivementInput = foo;
                     this.formData.achievement = this.achivementInput;

@@ -56,7 +56,7 @@ export default {
                             text: ['三等奖', '液晶手写板'],
                         },
                         {
-                            text: ['劳动能手将', '榨汁机'],
+                            text: ['劳动能手奖', '榨汁机'],
                         },
                     ], // 奖品文案
                     prizesDetail: {

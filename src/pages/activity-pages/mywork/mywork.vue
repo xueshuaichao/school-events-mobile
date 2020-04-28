@@ -378,6 +378,7 @@ export default {
                 (res) => {
                     this.userInfo = res.user_info;
                     this.isLoading = false;
+                    this.initShare();
                 },
                 () => {
                     this.isLoading = false;
@@ -571,11 +572,11 @@ export default {
                 title: this.title,
                 desc,
                 thumbnail: `${this.publicConfig.shareConfig.image}?x-oss-process=image/format,png/interlace,1/quality,Q_80/resize,m_pad,h_100`,
+                url: `${window.location.origin}${this.publicConfig.shareConfig.path}`,
             });
         },
     },
     onLoad(query) {
-        this.getData();
         const {
             type,
             name,
@@ -595,7 +596,7 @@ export default {
             page: 'myWorkConfig',
         });
         this.filter.activity_id = activityId;
-
+        this.getData();
         if (type === 'myWork') {
             this.getWorkData();
         } else if (type === 'search') {
@@ -607,7 +608,6 @@ export default {
             this.changeValue = name;
             this.searchWorkData();
         }
-        this.initShare();
     },
     onShareAppMessage(res) {
         if (res.from === 'button') {
