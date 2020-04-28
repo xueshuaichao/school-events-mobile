@@ -212,6 +212,27 @@
                     我要参与
                 </text>
             </view>
+            <view
+                v-if="isFromShare && activityId > 5"
+                class="join-game-read to-activty-index"
+                :class="[
+                    { 'read-index': activityId === 6 },
+                    { 'wuyi-index': activityId === 8 }
+                ]"
+                @click="watchIndex"
+            >
+                <image
+                    class="icon"
+                    :src="
+                        activityId === 6
+                            ? '/static/images/work/laba-read.png'
+                            : '/static/images/work/laba-wuyi.png'
+                    "
+                />
+                <text>
+                    查看活动
+                </text>
+            </view>
         </view>
         <view
             v-if="isPaused && isPlayed"
@@ -271,6 +292,10 @@ export default {
         resourceScope: {
             type: Number,
             default: 0,
+        },
+        isFromShare: {
+            type: String,
+            default: '1',
         },
     },
     data() {
@@ -344,6 +369,15 @@ export default {
         },
         changeClick() {
             this.showMore = !this.showMore;
+        },
+        watchIndex() {
+            let url = '/pages/read/index';
+            if (this.activityId === 8) {
+                url = '/pages/activity-pages/labor/index';
+            }
+            uni.navigateTo({
+                url,
+            });
         },
     },
 };
@@ -520,21 +554,6 @@ export default {
         line-height: 35upx;
         position: relative;
     }
-    .text-three-lines {
-        // max-height: 132upx;
-        // overflow-y: auto;
-        // overflow:hidden;
-        // text-overflow:ellipsis;
-        // display:-webkit-box;
-        // -webkit-line-clamp:3;
-        // -webkit-box-orient:vertical;
-    }
-    .show-more {
-        // position: absolute;
-        // right: 0;
-        // bottom: 0;
-        // color: #db4e0e;
-    }
     .orange {
         color: #db4e0e;
     }
@@ -570,7 +589,7 @@ export default {
         //margin-right: 36rpx;
         text-align: center;
         position: relative;
-        right: -30rpx;
+        // right: -30rpx;
         margin-bottom: 20rpx;
         color: #fff;
 
@@ -609,6 +628,23 @@ export default {
             height: 42rpx;
             margin-right: 10rpx;
             vertical-align: middle;
+        }
+
+        &.to-activty-index {
+            background: #fff;
+            margin-top: 10rpx;
+            .icon {
+                width: 32rpx;
+                height: 30rpx;
+                margin-right: 14rpx;
+                margin-left: 8rpx;
+            }
+            &.wuyi-index {
+                color: #db4e0e;
+            }
+            &.read-index {
+                color: #0f8c64;
+            }
         }
     }
 }
