@@ -212,6 +212,19 @@
                     我要参与
                 </text>
             </view>
+            <view
+                v-if="isFromShare"
+                class="join-game-read wuyi-index"
+                @click="watchIndex"
+            >
+                <image
+                    class="icon"
+                    src="/static/images/work/laba.png"
+                />
+                <text>
+                    查看活动
+                </text>
+            </view>
         </view>
         <view
             v-if="isPaused && isPlayed"
@@ -271,6 +284,10 @@ export default {
         resourceScope: {
             type: Number,
             default: 0,
+        },
+        isFromShare: {
+            type: String,
+            default: '1',
         },
     },
     data() {
@@ -344,6 +361,11 @@ export default {
         },
         changeClick() {
             this.showMore = !this.showMore;
+        },
+        watchIndex() {
+            uni.navigateTo({
+                url: '/pages/activity-pages/labor/index',
+            });
         },
     },
 };
@@ -570,7 +592,7 @@ export default {
         //margin-right: 36rpx;
         text-align: center;
         position: relative;
-        right: -30rpx;
+        // right: -30rpx;
         margin-bottom: 20rpx;
         color: #fff;
 
@@ -609,6 +631,16 @@ export default {
             height: 42rpx;
             margin-right: 10rpx;
             vertical-align: middle;
+        }
+        &.wuyi-index {
+            background: #fff;
+            color: #db4e0e;
+            margin-top: 10rpx;
+            .icon {
+                width: 32rpx;
+                height: 30rpx;
+                margin-right: 4rpx;
+            }
         }
     }
 }

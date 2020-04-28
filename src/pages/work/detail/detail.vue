@@ -90,6 +90,7 @@
             :like-status="likeStatus"
             :activity-id="activity_id"
             :resource-scope="resource_scope"
+            :is-from-share="isFromShare"
             @doAction="doAction"
         />
     </view>
@@ -150,6 +151,7 @@ export default {
             activity_id: 0,
             imgAuthBtn: false,
             resource_scope: 0,
+            isFromShare: '',
         };
     },
     created() {},
@@ -216,7 +218,8 @@ export default {
             const pages = getCurrentPages(); // 获取加载的页面
             const currentPage = pages[pages.length - 1]; // 获取当前页面的对象
             const url = currentPage.route || 'pages/work/detail/detail';
-            const scene = `id=${this.id}&activity_id=${this.activity_id}` || 'id=325';
+            const scene = `id=${this.id}&activity_id=${this.activity_id}&isFromShare=1&resource_scope=${this.resource_scope}`
+                || 'id=325';
             console.log(url, scene, 'url---scene---');
             api.post('/api/weixin/getminiqrcode', {
                 path: url,
@@ -513,7 +516,8 @@ export default {
                     }
                     if (this.activity_id === 8) {
                         uni.navigateTo({
-                            url: '/pages/activity-pages/upload/modify?activity_id=8',
+                            url:
+                                '/pages/activity-pages/upload/modify?activity_id=8',
                         });
                     }
                 } else if (status === 1) {
@@ -550,6 +554,7 @@ export default {
         // this.levelid = Number(utils.getParam(query, 'levelid')) || -1;
         this.id = utils.getParam(query, 'id');
         this.fr = utils.getParam(query, 'fr') || '';
+        this.isFromShare = utils.getParam(query, 'isFromShare') || '';
 
         this.activity_id = Number(utils.getParam(query, 'activity_id')) || 0;
         this.resource_scope = Number(utils.getParam(query, 'resource_scope')) || 0;
@@ -608,7 +613,7 @@ export default {
         return {
             title: this.shareDesc,
             imageUrl: `${this.pageData.video_img_url}?x-oss-process=image/resize,m_fill,w_250,h_150`,
-            path: `/pages/work/detail/detail?id=${this.id}&activity_id=${this.activity_id}&resource_scope=${this.resource_scope}`,
+            path: `/pages/work/detail/detail?id=${this.id}&activity_id=${this.activity_id}&resource_scope=${this.resource_scope}&isFromShare=1`,
         };
     },
 };
