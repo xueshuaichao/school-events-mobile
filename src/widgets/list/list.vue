@@ -187,7 +187,7 @@ export default {
                     three_level_id: 0,
                 },
                 page_num: 1,
-                page_size: 20,
+                page_size: 10,
                 keyword: '',
             },
             total: 0,
@@ -249,8 +249,8 @@ export default {
         // tabbar不需要设置参数，直接从接口得到
         if (this.isFromTabbar) {
             this.filter.cat_id.one_level_id = -1;
-            this.getData();
             this.getTableData();
+            this.getData();
         } else if (
             this.paramsFilter.cat_id.one_level_id > 0
             || this.paramsFilter.keyword
@@ -259,9 +259,8 @@ export default {
             this.filter.cat_id.one_level_id = Number(this.paramsFilter.cat_id.one_level_id) || -1;
             this.filter.keyword = this.paramsFilter.keyword;
             this.filter.sort = Number(this.paramsFilter.sort) || 1;
-
-            this.getData();
             this.getTableData();
+            this.getData();
         }
     },
     methods: {
@@ -321,10 +320,10 @@ export default {
             this.loadMoreStatus = 'more';
 
             api.post('/api/works/list', this.filter).then((res) => {
+                this.isLoading = false;
                 this.tableData = res.list;
                 this.total = res.total;
-                this.isLoading = false;
-                console.log(res);
+                // console.log(res);
                 if (this.total < 20) {
                     this.loadMoreStatus = 'noMore';
                 }
