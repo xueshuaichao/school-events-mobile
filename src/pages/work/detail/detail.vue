@@ -226,9 +226,11 @@ export default {
                 scene,
             }).then(
                 ({ url }) => {
+                    console.log(!!url, 'asasasas');
                     uni.hideLoading();
                     if (url) {
                         this.base64src(url, (res) => {
+                            console.log('url------', res);
                             this.posterConfig.images[2].url = res;
                             this.showTicketMask = true;
                         });

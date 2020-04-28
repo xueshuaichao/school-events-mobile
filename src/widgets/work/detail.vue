@@ -213,13 +213,21 @@
                 </text>
             </view>
             <view
-                v-if="isFromShare"
-                class="join-game-read wuyi-index"
+                v-if="isFromShare && activityId > 5"
+                class="join-game-read to-activty-index"
+                :class="[
+                    { 'read-index': activityId === 6 },
+                    { 'wuyi-index': activityId === 8 }
+                ]"
                 @click="watchIndex"
             >
                 <image
                     class="icon"
-                    src="/static/images/work/laba.png"
+                    :src="
+                        activityId === 6
+                            ? '/static/images/work/laba-read.png'
+                            : '/static/images/work/laba-wuyi.png'
+                    "
                 />
                 <text>
                     查看活动
@@ -363,8 +371,12 @@ export default {
             this.showMore = !this.showMore;
         },
         watchIndex() {
+            let url = '/pages/read/index';
+            if (this.activityId === 8) {
+                url = '/pages/activity-pages/labor/index';
+            }
             uni.navigateTo({
-                url: '/pages/activity-pages/labor/index',
+                url,
             });
         },
     },
@@ -542,21 +554,6 @@ export default {
         line-height: 35upx;
         position: relative;
     }
-    .text-three-lines {
-        // max-height: 132upx;
-        // overflow-y: auto;
-        // overflow:hidden;
-        // text-overflow:ellipsis;
-        // display:-webkit-box;
-        // -webkit-line-clamp:3;
-        // -webkit-box-orient:vertical;
-    }
-    .show-more {
-        // position: absolute;
-        // right: 0;
-        // bottom: 0;
-        // color: #db4e0e;
-    }
     .orange {
         color: #db4e0e;
     }
@@ -632,14 +629,21 @@ export default {
             margin-right: 10rpx;
             vertical-align: middle;
         }
-        &.wuyi-index {
+
+        &.to-activty-index {
             background: #fff;
-            color: #db4e0e;
             margin-top: 10rpx;
             .icon {
                 width: 32rpx;
                 height: 30rpx;
-                margin-right: 4rpx;
+                margin-right: 14rpx;
+                margin-left: 8rpx;
+            }
+            &.wuyi-index {
+                color: #db4e0e;
+            }
+            &.read-index {
+                color: #0f8c64;
             }
         }
     }
