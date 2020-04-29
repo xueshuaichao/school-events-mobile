@@ -416,7 +416,7 @@ export default {
         },
         activityStatus() {
             // 1未开始，2进行中，3已结束
-            api.post('/api/activity/getactivitystatus', {
+            api.get('/api/activity/getactivitystatus', {
                 activity_id: this.filter.activity_id,
             }).then((res) => {
                 this.status = res.status;
