@@ -821,10 +821,5 @@ export default {
             font-size: 28upx;
         }
     }
-    /deep/ .uni-video-container {
-        .uni-video-cover-duration {
-            display: none;
-        }
-    }
 }
 </style>

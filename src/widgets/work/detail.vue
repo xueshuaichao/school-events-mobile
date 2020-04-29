@@ -573,7 +573,7 @@ export default {
 }
 .fixed-panel {
     position: absolute;
-    width: 146rpx;
+    // width: 146rpx;
     right: 0;
     bottom: 80rpx;
     color: #ffde98;
@@ -609,12 +609,11 @@ export default {
     }
     .join-game-read {
         background: #0f8c64;
-        width: 160rpx;
+        width: 150rpx;
         text-align: left;
         padding: 10rpx 20rpx;
         border-radius: 27rpx 0 0 27rpx;
         color: #fff;
-        margin-left: -40rpx;
         line-height: 40rpx;
         &.wuyi {
             background: #db4e0e;
@@ -671,6 +670,14 @@ export default {
     &.primary {
         background: #0096ff;
         color: #fff;
+    }
+}
+.uni-video-cover {
+    position: absolute;
+}
+/deep/ .uni-video-container {
+    .uni-video-cover-duration {
+        display: none;
     }
 }
 </style>
