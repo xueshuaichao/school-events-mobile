@@ -576,7 +576,11 @@ export default {
                 title: this.title,
                 desc,
                 thumbnail: `${this.publicConfig.shareConfig.image}?x-oss-process=image/format,png/interlace,1/quality,Q_80/resize,m_pad,h_100`,
-                url: `${window.location.origin}${this.publicConfig.shareConfig.path}`,
+                url: `${
+                    this.isH5
+                        ? `${window.location.origin}${this.publicConfig.shareConfig.path}`
+                        : ''
+                }`,
             });
         },
     },
