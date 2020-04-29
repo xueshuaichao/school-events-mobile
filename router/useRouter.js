@@ -90,9 +90,6 @@ const routesConfig = {
             component: () => import('@/pages/doc/intro/intro.vue'),
         },
         {
-            path: '/pages/activities/index',
-        },
-        {
             path: '/pages/address/index',
             component: () => import('@/pages/address/index.vue'),
             aliasPath: '/mall/exchange',

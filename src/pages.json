@@ -298,12 +298,6 @@
         },
         // #endif
         {
-            "path": "pages/activities/index",
-            "style": {
-                "navigationBarTitleText": "精彩活动"
-            }
-        },
-        {
             "path": "pages/login/login",
             "style": {
                 "navigationBarTitleText": "登录"
