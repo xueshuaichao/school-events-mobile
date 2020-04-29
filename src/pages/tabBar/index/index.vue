@@ -1,22 +1,30 @@
 <template>
     <view class="page-index">
         <view
-            v-if="prompt"
+            v-if="prompt && status === 2"
             class="cover"
         >
             <image
-                src="http://aitiaozhan.oss-cn-beijing.aliyuncs.com/school-events-mobile/suspension01.png"
-                @click="handleChunjie"
+                src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/h5/suspension-wuyi.png"
             />
-            <image
-                src="../../../static/images/chunjie/third_entry_close.png"
+            <view
+                class="join-btn"
+                @click="handlePromt"
+            >
+                立即参与
+            </view>
+            <view
+                class="close"
                 @click="handleClose"
             />
-            首页弹出框入口
+            <!-- <image
+                src="/static/images/chunjie/third_entry_close.png"
+
+            /> -->
         </view>
-        <navigator
+        <!-- <navigator
             v-if="yiqingshow === 1 && isShow"
-            url="/pages/yiqing/index"
+            url="/pages/read/index"
         >
             <view class="chunjie-entry">
                 <image
@@ -24,15 +32,15 @@
                     class="close-icon"
                     @click.stop="handleCloseSuspension"
                 />
-                右侧悬浮入口
             </view>
-        </navigator>
+        </navigator> -->
         <!-- search -->
         <view class="search">
             <input
                 v-model="changeValue"
                 placeholder-class="placeholderStyle"
                 placeholder="请输入作品名称/作者姓名"
+                maxlength="13"
                 @confirm="bindconfirm"
             >
             <text
@@ -51,10 +59,43 @@
                     :autoplay="autoplay"
                     :interval="interval"
                     :duration="duration"
-                    :circular="circular"
+                    :circular="true"
                 >
+                    <swiper-item>
+                        <navigator
+                            url="/pages/activity-pages/labor/index"
+                            class="swiper-item"
+                        >
+                            <image
+                                class="banner-image"
+                                src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/h5/wuyi-banner.png"
+                            />
+                        </navigator>
+                    </swiper-item>
+                    <swiper-item v-if="!isH5">
+                        <navigator
+                            url="/pages/openGame/zhibo-list"
+                            class="swiper-item"
+                        >
+                            <image
+                                class="banner-image"
+                                src="http://aitiaozhan.oss-cn-beijing.aliyuncs.com/school-events-mobile/openEvent-banner.png?t=1"
+                            />
+                        </navigator>
+                    </swiper-item>
+                    <swiper-item>
+                        <navigator
+                            url="/pages/read/index"
+                            class="swiper-item"
+                        >
+                            <image
+                                class="banner-image"
+                                src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/h5/read-banner.png"
+                            />
+                        </navigator>
+                    </swiper-item>
                     <!-- 疫情入口 -->
-                    <swiper-item v-if="yiqingshow === 1">
+                    <swiper-item>
                         <navigator
                             url="/pages/yiqing/index"
                             class="swiper-item"
@@ -65,7 +106,7 @@
                             />
                         </navigator>
                     </swiper-item>
-                    <swiper-item v-if="show === 1">
+                    <!-- <swiper-item v-if="activitiesStatus[1].show">
                         <navigator
                             url="/pages/chunjie/index"
                             class="swiper-item"
@@ -75,9 +116,9 @@
                                 src="http://aitiaozhan.oss-cn-beijing.aliyuncs.com/banner4.png"
                             />
                         </navigator>
-                    </swiper-item>
+                    </swiper-item> -->
                     <!-- 春节好入口 -->
-                    <swiper-item v-if="chunjiehaoshow === 1">
+                    <!-- <swiper-item v-if="activitiesStatus[0].show">
                         <navigator
                             url="/pages/chunjiehao/index"
                             class="swiper-item"
@@ -87,7 +128,7 @@
                                 src="http://aitiaozhan.oss-cn-beijing.aliyuncs.com/chunjiehao.png"
                             />
                         </navigator>
-                    </swiper-item>
+                    </swiper-item> -->
                     <!-- <swiper-item>
                         <navigator
                             url="/pages/doc/notice/notice"
@@ -201,7 +242,7 @@
                     吉尼斯
                 </text>
             </navigator>
-            <navigator
+            <!-- <navigator
                 url="/pages/activities/index"
                 class="item"
             >
@@ -214,60 +255,29 @@
                 <text class="name">
                     精彩活动
                 </text>
-            </navigator>
+            </navigator> -->
         </view>
-        <!-- menu -->
-        <!-- zhibo-entry -->
-        <!-- <navigator url="/pages/openGame/signUp">
-            <image
-                class="zhibo-entry"
-                src="http://aitiaozhan.oss-cn-beijing.aliyuncs.com/school-events-mobile/zhibo-entry.png"
-            />
-        </navigator> -->
-        <!-- work show -->
         <work
-            :title="'爱挑战网络公开赛'"
-            :info="workData.individual.list"
-            :cat-id="1"
-            :sort="4"
-            :total="
-                workData.individual.total > 10 ? 10 : workData.individual.total
-            "
-        >
-            <template slot="zhibo">
-                <navigator url="/pages/openGame/zhibo-list">
-                    <image
-                        class="zhibo-entry01"
-                        src="http://aitiaozhan.oss-cn-beijing.aliyuncs.com/school-events-mobile/zhibo-entry01.png"
-                    />
-                </navigator>
-            </template>
-        </work>
+            :title="'热门活动'"
+            :more-url="'/pages/tabBar/upload/upload'"
+            :info="hotList"
+            :show-card="false"
+        />
+        <!-- menu -->
         <work
             :title="'爱挑战优秀个人'"
             :more-url="'/pages/work/list/list?cat_id=1'"
             :info="workData.individual.list"
-            :cat-id="1"
-            :sort="4"
-            :total="
-                workData.individual.total > 10 ? 10 : workData.individual.total
-            "
         />
         <work
             :title="'爱挑战优秀团体'"
             :more-url="'/pages/work/list/list?cat_id=2'"
             :info="workData.team.list"
-            :cat-id="2"
-            :sort="4"
-            :total="workData.team.total > 10 ? 10 : workData.team.total"
         />
         <work
             :title="'才艺秀优秀作品'"
             :more-url="'/pages/work/list/list?cat_id=3'"
             :info="workData.talent.list"
-            :cat-id="3"
-            :sort="4"
-            :total="workData.talent.total > 10 ? 10 : workData.talent.total"
         />
 
         <!-- news -->
@@ -318,43 +328,67 @@ export default {
     },
     data() {
         return {
-            background: ['color1', 'color2', 'color3'],
+            // background: ['color1', 'color2', 'color3'],
             indicatorDots: true,
             autoplay: true,
             interval: 5000,
             duration: 500,
-            circular: false,
-            isShow: true,
-            newsTabActiveIndex: 0,
+            // isShow: true,
+            // newsTabActiveIndex: 0,
 
-            menuConf: {
-                intro: {},
-                notice: {},
-                process: {},
-                time: {},
-            },
-            newsColumn: [
-                { id: '1', column_name: '大赛动态', sort_ids: '1,2,3,4,5' },
-                { id: '2', column_name: '新闻资讯', sort_ids: '1,2,3,4,5' },
-                { id: '3', column_name: '最新公告', sort_ids: '2,2,2,2,2' },
-            ],
-            newsData: [],
+            // menuConf: {
+            //     intro: {},
+            //     notice: {},
+            //     process: {},
+            //     time: {},
+            // },
+            // newsColumn: [
+            //     { id: '1', column_name: '大赛动态', sort_ids: '1,2,3,4,5' },
+            //     { id: '2', column_name: '新闻资讯', sort_ids: '1,2,3,4,5' },
+            //     { id: '3', column_name: '最新公告', sort_ids: '2,2,2,2,2' },
+            // ],
+            // newsData: [],
             workData: {
                 individual: { list: [], total: 0 },
                 team: { list: [], total: 0 },
                 talent: { list: [], total: 0 },
             },
             prompt: false,
-            isFirstLogin: 'isFirstLogin4',
-            status: 2,
-            show: 1,
-            chunjiehaoshow: 1,
-            yiqingshow: 1,
+            isFirstLogin: 'hasLaborPromt',
+            status: 1,
+            // show: 1,
             // #ifdef H5
             isH5: true,
             // #endif
             needBindMobile: false,
             changeValue: '',
+            hotList: [],
+            confList: [
+                {
+                    id: 8,
+                    img:
+                        'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/h5/wuyi-s-banner.png',
+                    url: '/pages/activity-pages/labor/index',
+                },
+                {
+                    id: 7,
+                    img:
+                        'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/h5/aitiaozhan-s-banner.png',
+                    url: '/pages/openGame/zhibo-list',
+                },
+                {
+                    id: 6,
+                    img:
+                        'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/h5/read-s-banner.png',
+                    url: '/pages/read/index',
+                },
+                {
+                    id: 5,
+                    img:
+                        'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/h5/yiqing-s-banner.png',
+                    url: '/pages/yiqing/index',
+                },
+            ],
         };
     },
     onHide() {
@@ -362,9 +396,7 @@ export default {
         this.prompt = false;
     },
     onLoad() {
-        this.chunjieStatus();
-        this.chunjiehaoStatus();
-        this.yiqingStatus();
+        this.getNewActivityStatus();
         this.thirdEntryPrompt();
         this.getData();
         this.getUserInfo();
@@ -382,7 +414,7 @@ export default {
             uni.setStorageSync('onShowFrom', '');
             // error
         }
-        // this.chunjieStatus();
+        // this.getNewActivityStatus();
     },
     created() {},
     methods: {
@@ -416,48 +448,32 @@ export default {
                 () => {},
             );
         },
-        handleCloseSuspension() {
-            this.isShow = false;
-        },
-        chunjieStatus() {
+        // handleCloseSuspension() {
+        //     this.isShow = false;
+        // },
+        getNewActivityStatus() {
             // 1未开始，2进行中，3已结束
-            api.post('/api/activity/getactivitystatus', {
-                activity_id: 3,
-            }).then((res) => {
-                // this.status = res.status;
+            api.get('/api/activity/activitystatus', {
+                activity_id: 8,
+            }).then((data) => {
+                console.log(data, 'aaaa');
+                this.status = data.status;
                 // 1显示  0不显示
-                this.show = res.show;
-            });
-        },
-        chunjiehaoStatus() {
-            // 1未开始，2进行中，3已结束
-            api.post('/api/activity/getactivitystatus', {
-                activity_id: 4,
-            }).then((res) => {
-                // 1显示  0不显示
-                this.chunjiehaoshow = res.show;
-            });
-        },
-        yiqingStatus() {
-            // 1未开始，2进行中，3已结束
-            api.post('/api/activity/getactivitystatus', {
-                activity_id: 5,
-            }).then((res) => {
-                this.status = res.status;
-                // 1显示  0不显示
-                this.yiqingshow = res.show;
             });
         },
         thirdEntryPrompt() {
             const isFirstLogin = uni.getStorageSync(this.isFirstLogin);
+            if (uni.getStorageSync('hasReadPromt')) {
+                uni.removeStorageSync('hasReadPromt');
+            }
             if (!isFirstLogin) {
                 this.prompt = true;
             }
         },
-        handleChunjie() {
+        handlePromt() {
             uni.setStorageSync(this.isFirstLogin, true);
             uni.navigateTo({
-                url: '/pages/yiqing/index',
+                url: '/pages/activity-pages/labor/index',
             });
         },
         handleClose() {
@@ -468,11 +484,11 @@ export default {
         //     this.newsTabActiveIndex = index;
         //     this.getArticle(this.newsColumn[index].id);
         // },
-        moreArticle() {
-            uni.navigateTo({
-                url: `/pages/news/list/list?tab=${this.newsTabActiveIndex}`,
-            });
-        },
+        // moreArticle() {
+        //     uni.navigateTo({
+        //         url: `/pages/news/list/list?tab=${this.newsTabActiveIndex}`,
+        //     });
+        // },
         // getArticle(columnId) {
         //     return api
         //         .get('/api/article/list', {
@@ -484,11 +500,11 @@ export default {
         //             this.newsData = res.list;
         //         });
         // },
-        getMenuData() {
-            api.get('/api/index/entry').then((res) => {
-                this.menuConf = res;
-            });
-        },
+        // getMenuData() {
+        //     api.get('/api/index/entry').then((res) => {
+        //         this.menuConf = res;
+        //     });
+        // },
         getWorkList(type, refresh) {
             let catId;
             if (type === 'individual') {
@@ -504,7 +520,7 @@ export default {
                     one_level_id: catId,
                 },
                 sort: 4,
-                page_size: 10,
+                page_size: 6,
             }).then((res) => {
                 if (type === 'individual') {
                     this.workData.individual = res;
@@ -523,15 +539,34 @@ export default {
             // api.get('/api/column/list').then(res => {
             //     // 首页不展示第一个大赛动态 tab
             //     res.list.shift();
-
             //     this.newsColumn = res.list;
 
             // this.getArticle(this.newsColumn[0].id);
             // this.getMenuData();
+            this.getAllShowActivity();
             this.getWorkList('individual');
             this.getWorkList('team');
             this.getWorkList('talent', refresh);
             // })
+        },
+        getAllShowActivity() {
+            api.post('/api/activity/list', {
+                page_size: 4,
+                page_num: 1,
+                status: 2,
+            }).then((data) => {
+                this.hotList = data.list.map((item) => {
+                    let obj = item;
+                    this.confList.forEach((d) => {
+                        obj.start_time = obj.start_time.slice(0, 10);
+                        obj.end_time = obj.end_time.slice(0, 10);
+                        if (d.id === obj.id) {
+                            obj = { ...obj, ...d };
+                        }
+                    });
+                    return obj;
+                });
+            });
         },
     },
     onPullDownRefresh() {
@@ -550,26 +585,50 @@ export default {
     text-align: center;
     font-size: 0;
     image:first-child {
-        width: 591upx;
-        height: 518upx;
-        margin-top: 193upx;
+        width: 558upx;
+        height: 700upx;
         display: block;
-        margin-left: 90upx;
+        margin: 130upx auto 0;
     }
-    image:nth-child(2) {
-        margin-top: 40upx;
-        width: 54upx;
-        height: 54upx;
-        margin-left: 357upx;
-        display: block;
+    .join-btn {
+        width: 420upx;
+        height: 110upx;
+        background: linear-gradient(
+            180deg,
+            rgba(219, 78, 14, 1),
+            rgba(255, 159, 115, 1)
+        );
+        border-radius: 55upx;
+        color: #fff;
+        font-size: 40upx;
+        line-height: 110upx;
+        text-align: center;
+        margin: -50upx auto 50upx;
+        position: relative;
+        z-index: 1;
     }
-    view {
-        position: absolute;
-        top: 680upx;
-        left: 210upx;
-        font-size: 0;
-        width: 360upx;
-        height: 100upx;
+    .close {
+        width: 52upx;
+        height: 52upx;
+        border-radius: 50%;
+        background: #de5416;
+        margin: 0 auto;
+        position: relative;
+        &::before,
+        &::after {
+            position: absolute;
+            content: "";
+            width: 22upx;
+            height: 4upx;
+            left: 15upx;
+            top: 25upx;
+            border-radius: 2upx;
+            background: #fff;
+            transform: rotate(45deg);
+        }
+        &::after {
+            transform: rotate(-45deg);
+        }
     }
 }
 uni-swiper {
@@ -586,10 +645,10 @@ uni-swiper {
         width: 100%;
         font-size: 24upx;
         overflow: hidden;
-        padding: 20upx 0 20upx 30upx;
+        padding: 20upx 0 14upx 30upx;
         background: #fff;
         box-shadow: 0 0upx 5upx 0 rgba(0, 0, 0, 0.05);
-        margin-bottom: 10upx;
+        // margin-bottom: 10upx;
         input {
             background: #f3f3f3;
             border: none;
@@ -598,7 +657,7 @@ uni-swiper {
             height: 60upx;
             float: left;
             display: block;
-            padding-left: 40upx;
+            padding: 0 40upx;
             box-sizing: border-box;
         }
         .placeholderStyle {
@@ -615,31 +674,11 @@ uni-swiper {
             margin-left: 28upx;
         }
     }
-    .chunjie-entry {
-        .close-icon {
-            width: 20upx;
-            height: 20upx;
-            position: absolute;
-            top: 0;
-            right: 0;
-        }
-        font-size: 0;
-        background: url("http://aitiaozhan.oss-cn-beijing.aliyuncs.com/school-events-mobile/suspension.png")
-            no-repeat;
-        background-size: 100% 100%;
-        width: 144upx;
-        height: 156upx;
-        position: fixed;
-        top: 640upx;
-        right: 0upx;
-        z-index: 999;
-    }
     .main-swiper {
         padding: 30upx;
 
         uni-swiper {
             height: 280upx;
-
             .swiper-item {
                 img {
                     width: 100%;
@@ -647,149 +686,49 @@ uni-swiper {
                 }
             }
         }
+        .swiper {
+            height: 280upx;
+        }
 
         .banner-image {
             width: 690upx;
             height: 280upx;
+            border-radius: 16upx;
         }
     }
     .menu-list {
         display: flex;
-        margin-bottom: 40upx;
+        padding-bottom: 16upx;
+        // margin-bottom: 40upx;
+        background: #f6f6f6;
 
         .item {
+            background: #fff;
             flex: 1;
             text-align: center;
+            padding-bottom: 38upx;
 
             .icon-wrap {
                 margin: 0 auto;
                 width: 106upx;
-                height: 70upx;
+                height: 66upx;
                 border-radius: 35upx;
-                margin-bottom: 15upx;
-                &.red {
-                    background: linear-gradient(
-                        180deg,
-                        rgba(255, 142, 148, 1) 0%,
-                        rgba(255, 82, 109, 1) 100%
-                    );
-                    box-shadow: 0rpx 2rpx 4rpx 0px rgba(255, 134, 153, 1);
-                }
-
-                &.light-blue {
-                    background: linear-gradient(
-                        180deg,
-                        rgba(131, 225, 255, 1) 0%,
-                        rgba(70, 176, 255, 1) 100%
-                    );
-                    box-shadow: 0rpx 2rpx 4rpx 0rpx rgba(70, 176, 255, 1);
-                }
-
-                &.dark-blue {
-                    background: linear-gradient(
-                        180deg,
-                        rgba(58, 138, 255, 1) 0%,
-                        rgba(35, 98, 254, 1) 100%
-                    );
-                    box-shadow: 0rpx 2rpx 4rpx 0rpx rgba(38, 103, 254, 1);
-                }
-
-                &.pink {
-                    background: linear-gradient(
-                        180deg,
-                        rgba(243, 141, 255, 1) 0%,
-                        rgba(182, 111, 255, 1) 100%
-                    );
-                    box-shadow: 0rpx 2rpx 4rpx 0rpx rgba(189, 114, 255, 1);
-                }
-
-                &.purple {
-                    background: rgb(192, 170, 255);
-                    background: linear-gradient(
-                        180deg,
-                        rgba(192, 170, 255, 1) 0%,
-                        rgba(138, 133, 255, 1) 100%
-                    );
-                    box-shadow: 0 2upx 4upx 0 #928bff;
-                }
-                &.green {
-                    background: rgb(124, 239, 145);
-                    background: linear-gradient(
-                        180deg,
-                        rgba(124, 239, 145, 1) 0%,
-                        rgba(84, 232, 80, 1) 100%
-                    );
-                    box-shadow: 0 2upx 4upx 0 #8bffb3;
-                }
-                &.yellow {
-                    background: rgb(255, 205, 58);
-                    background: linear-gradient(
-                        180deg,
-                        rgba(255, 205, 58, 1) 0%,
-                        rgba(254, 161, 35, 1) 100%
-                    );
-                    box-shadow: 0 2upx 4upx 0 #fea525;
-                }
-                &.blue {
-                    background: rgb(141, 197, 255);
-                    background: linear-gradient(
-                        180deg,
-                        rgba(141, 197, 255, 1) 0%,
-                        rgba(111, 132, 255, 1) 100%
-                    );
-                    box-shadow: 0 2upx 4upx 0 #6f84ff;
-                }
-                &.orange {
-                    background: rgb(255, 181, 101);
-                    background: linear-gradient(
-                        180deg,
-                        rgba(255, 181, 101, 1) 0%,
-                        rgba(254, 96, 51, 1) 100%
-                    );
-                    box-shadow: 0 2upx 4upx 0 #fe6033;
-                }
                 .icon {
-                    top: 15upx;
+                    // top: 15upx;
                     position: relative;
                     margin: auto;
-                    width: 78upx;
-                    height: 70upx;
-                    background-size: 40upx 40upx;
-
-                    // &.icon-intro {
-                    //     background-image: url('/static/images/index/intro.png');
-                    // }
-                    // &.icon-rule {
-                    //     background-image: url('/static/images/index/rule.png');
-                    // }
-                    // &.icon-flow {
-                    //     background-image: url('/static/images/index/flow.png');
-                    // }
-                    // &.icon-time {
-                    //     background-image: url('/static/images/index/time.png');
-                    // }
-                    // &.icon-news {
-                    //     background-image: url('/static/images/index/news.png');
-                    // }
+                    width: 56upx;
+                    height: 56upx;
+                    background-size: 56upx 56upx;
                 }
             }
 
             .name {
-                font-size: 24upx;
+                font-size: 26upx;
+                line-height: 26upx;
+                font-weight: 600;
                 color: #333;
             }
-        }
-    }
-
-    .news-list {
-        margin-bottom: 40upx;
-
-        .news-item {
-            font-size: 28upx;
-            color: #666;
-            line-height: 45upx;
-            border-bottom: 1px solid #f0f0f0;
-            padding: 25upx 0;
         }
     }
 }

@@ -73,14 +73,14 @@
             </view>
             <view v-if="total > 0">
                 <view
-                    v-for="(item, index) in dataList"
+                    v-for="item in dataList"
                     :key="item.id"
                     class="media-content"
                 >
                     <event-craft-cover
                         :info="item"
                         :bg-color="'f5dca3'"
-                        @click.native="viewDetail(item, index)"
+                        @click.native="viewDetail(item)"
                     />
                     <view
                         v-if="type === 'myWork'"
@@ -137,7 +137,9 @@
                 v-show="searchEmpty"
                 class="empty"
             >
-                <image src="../../../static/images/chunjie/empty01.png" />
+                <image
+                    src="http://aitiaozhan.oss-cn-beijing.aliyuncs.com/school-events-mobile/empty01.png"
+                />
                 <view>搜索不到您要的结果，换个关键词试试吧～</view>
             </view>
             <view
@@ -331,20 +333,15 @@ export default {
             this.tabActiveIndex = i;
             this.getWorkData();
         },
-        viewDetail(item, position) {
+        viewDetail(item) {
             if (this.tabActiveIndex === 2) {
                 if (this.type === 'myWork') {
                     uni.navigateTo({
-                        url: `/pages/chunjiehao/detail/detail?id=${item.id}&fr=${this.fr}&disableslide=1`,
+                        url: `/pages/work/detail/detail?id=${item.id}&fr=${this.fr}&activity_id=4&from=chunjiehao`,
                     });
                 } else {
                     uni.navigateTo({
-                        url: `/pages/chunjiehao/detail/detail?id=${
-                            item.id
-                        }&fr=${this.fr}&total=${
-                            this.total
-                        }&curPosition=${position + 1}&actSort=${this.filter
-                            .sort || ''}&kw=${this.filter.search}`,
+                        url: `/pages/work/detail/detail?id=${item.id}&activity_id=4&from=chunjiehao`,
                     });
                 }
             }
@@ -381,7 +378,7 @@ export default {
         return {
             title,
             imageUrl:
-                'http://aitiaozhan.oss-cn-beijing.aliyuncs.com/chunjiehao-banner.png',
+                'http://aitiaozhan.oss-cn-beijing.aliyuncs.com/h5/chunjiehao-banner.png',
             path: '/pages/chunjiehao/index',
         };
     },

@@ -4,13 +4,13 @@
         @click="chooseResource"
     >
         <view
-            v-if="type === 'video'"
+            v-if="type === 'video' && name"
             class="comp-title"
         >
             上传视频
         </view>
         <view
-            v-if="type === 'image'"
+            v-if="type === 'image' && name"
             class="comp-title"
         >
             {{ isVideo ? "上传封面（选填）" : "上传图片" }}
@@ -35,11 +35,18 @@
                             src="/static/images/comp/upload/video_blue.png"
                         />
                     </template>
-                    <image
-                        v-else
-                        class="icon-success"
-                        :src="`/static/images/comp/upload/success-${theme}.png`"
-                    />
+                    <template v-else>
+                        <image
+                            v-if="theme === 'normal'"
+                            class="icon-success"
+                            :src="`/static/images/comp/upload/success-blue.png`"
+                        />
+                        <image
+                            v-else
+                            class="icon-success"
+                            :src="`/static/images/comp/upload/success.png`"
+                        />
+                    </template>
                     <view
                         v-if="url"
                         class="text-success"
@@ -76,7 +83,7 @@
             >
                 <template v-if="type === 'video'">
                     <view>
-                        不支持大于200的视频
+                        不支持大于200M的视频
                     </view>
                     <view>
                         支持 MP4 等格式
@@ -145,10 +152,13 @@ export default {
         count: {
             type: Number,
             default: 9
+        },
+        name: {
+            type: Boolean,
+            default: true
         }
     },
     data() {
-        console.log(this.preview);
         return {
             src: "",
             tempFilePath: "",
@@ -226,7 +236,8 @@ export default {
             uni.showToast({
                 icon: "loading",
                 title: "上传中",
-                duration: 200000
+                duration: 200000,
+                mask: true
             });
             return new Promise((resolve, reject) => {
                 uni.uploadFile({
@@ -240,7 +251,6 @@ export default {
                         userKey: utils.getToken()
                     },
                     success: uploadFileRes => {
-                        console.log(uploadFileRes.data);
                         let resp;
                         try {
                             resp = JSON.parse(uploadFileRes.data);
@@ -274,7 +284,8 @@ export default {
             uni.showToast({
                 icon: "loading",
                 title: "上传中",
-                duration: 200000
+                duration: 200000,
+                mask: true
             });
             uni.uploadFile({
                 url: `${config.host}/api/file/backendvideoupload`,
@@ -284,7 +295,6 @@ export default {
                     userKey: utils.getToken()
                 },
                 success: uploadFileRes => {
-                    console.log(1111, file);
                     let resp;
                     try {
                         resp = JSON.parse(uploadFileRes.data);
@@ -331,7 +341,6 @@ export default {
                                 this.uploadFile(filePath)
                             )
                         ).then(data => {
-                            console.log(res);
                             this.$emit("change", data);
                         });
                         [this.src] = res.tempFilePaths;

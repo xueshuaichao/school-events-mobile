@@ -37,6 +37,12 @@
                 {{
                     info.resource_name || "爱挑战大赛-首页-1分钟单跳绳(男子组)"
                 }}
+                <text
+                    v-if="info.achievement && mode === 'mini'"
+                    class="achievement"
+                >
+                    | {{ info.achievement }}{{ info.achievement_unit }}
+                </text>
             </view>
 
             <template v-if="mode === 'mini'">
@@ -83,8 +89,8 @@ export default {
     filters: {
         optimizeImage: (val) => {
             let newUrl = '';
-            const width = 330;
-            const height = 187;
+            const width = 305;
+            const height = 173;
             if (val.indexOf('?') !== -1) {
                 newUrl = `${val}&x-oss-process=image/format,png/interlace,1/quality,Q_80/resize,m_pad,h_${height
                     * 2},w_${width * 2}`;
@@ -108,26 +114,6 @@ export default {
             type: Boolean,
             default: true,
         },
-        curPosition: {
-            type: Number,
-            default: 0,
-        },
-        levelid: {
-            type: Number,
-            default: -1,
-        },
-        sort: {
-            type: Number,
-            default: 1,
-        },
-        total: {
-            type: Number,
-            default: 1,
-        },
-        keyword: {
-            type: String,
-            default: '',
-        },
         showTime: {
             type: Boolean,
             default: true,
@@ -149,7 +135,10 @@ export default {
             if (this.info.status === 1) {
                 this.info.play_count = this.info.play_count + 1;
                 uni.navigateTo({
-                    url: `/pages/work/detail/detail?id=${this.info.id}&total=${this.total}&curPosition=${this.curPosition}&sort=${this.sort}&levelid=${this.levelid}&keyword=${this.keyword}query`,
+                    url: `/pages/work/detail/detail?id=${this.info.id}&${
+                        this.query
+                    }&activity_id=${this.info.activity_id
+                        || ''}&resource_scope=${this.info.resource_scope}`,
                 });
             }
         },
@@ -160,14 +149,19 @@ export default {
 <style lang="less">
 .comp-work {
     display: inline-block;
-    width: 330upx;
-    height: 300upx;
-    margin-right: 20upx;
+    width: 337upx;
+    height: 294upx;
+    box-sizing: border-box;
+    &.mode-mini {
+        padding: 16upx;
+        box-shadow: 0upx 4upx 28upx 0upx rgba(0, 0, 0, 0.1);
+        border-radius: 4upx;
+    }
 
     .thumbnail-wrap {
-        width: 330upx;
+        width: 305upx;
         height: 187upx;
-        margin-bottom: 24upx;
+        margin-bottom: 8upx;
         position: relative;
 
         .browse-num {
@@ -187,8 +181,9 @@ export default {
         }
 
         .thumbnail {
-            width: 330upx;
-            height: 187upx;
+            width: 305upx;
+            height: 170upx;
+            border-radius: 4upx;
         }
 
         img {
@@ -202,6 +197,7 @@ export default {
             right: 0;
             top: 0;
             bottom: 0;
+            border-radius: 4upx;
             background: -webkit-gradient(
                 linear,
                 left top,
@@ -233,9 +229,13 @@ export default {
     }
 
     .work-name {
-        font-size: 28upx;
+        font-size: 26upx;
         color: #333;
-        margin-bottom: 16upx;
+        margin-bottom: 10upx;
+        font-weight: 600;
+        .achievement {
+            margin-left: 8upx;
+        }
     }
 
     .work-author {
@@ -245,12 +245,12 @@ export default {
 
         .icon-user {
             display: inline-block;
-            width: 28upx;
-            height: 22upx;
+            width: 21upx;
+            height: 21upx;
             // background: url('/static/images/widgets/work/user.png');
             // background-size: 28upx 22upx;
             // position: relative;
-            top: 4upx;
+            top: 2upx;
             margin-right: 10upx;
         }
 

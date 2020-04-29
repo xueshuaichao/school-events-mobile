@@ -1,6 +1,9 @@
 <template>
     <view class="image-drag-sort">
-        <view class="inner">
+        <view
+            id="inner"
+            class="inner"
+        >
             <movable-area class="movable-area">
                 <view
                     v-for="(item, index) in lists"
@@ -53,6 +56,7 @@
         <view
             v-if="lists.length > 0"
             class="prompt"
+            :style="{ color: textColor }"
         >
             点击预览/删除图片，长按拖拽排序，共{{ lists.length }}张图片
         </view>
@@ -73,6 +77,10 @@ let itemXNun = 0; // 拖拽元素的列数
 export default {
     name: 'ImageDragSort',
     props: {
+        textColor: {
+            type: String,
+            default: '#999',
+        },
         list: {
             type: Array,
             default() {
@@ -91,9 +99,13 @@ export default {
         };
     },
     watch: {
-        list(oVal, nVal) {
+        lists() {
             // 监听数组变化
-            console.log(oVal, nVal);
+            const l = this.lists.length;
+            if (l) {
+                // 有图片或图片数量改变时重新初始化
+                this.init();
+            }
         },
     },
     mounted() {
@@ -110,9 +122,8 @@ export default {
             const wrap = uni
                 .createSelectorQuery()
                 .in(this)
-                .select('.inner');
+                .select('#inner');
             wrap.boundingClientRect((data) => {
-                // console.log(data)
                 wrapW = data.width; // 设置拖拽范围的总宽度
                 wrapH = data.height; // 设置拖拽范围的总高度
                 wrapTop = data.top; // 设置拖拽范围的上边界坐标
@@ -202,6 +213,7 @@ export default {
             if (!this.flag || (this.x === left && this.y === top)) {
                 return;
             }
+
             const { x } = this; // 计算拖拽横向距离
             const { y } = this; // 计算拖拽纵向距离
             const itemNum = this.lists.length - 1; // 拖拽元素的总数量

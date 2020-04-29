@@ -4,20 +4,21 @@
         {
             "path": "pages/tabBar/index/index",
             "style": {
-                "navigationBarTitleText": "大赛首页",
+                "navigationBarTitleText": "首页",
                 "enablePullDownRefresh": true
             }
         },
         {
             "path": "pages/tabBar/list/list",
             "style": {
-                "navigationBarTitleText": "作品展示"
+                "navigationBarTitleText": "作品"
             }
         },
         {
             "path": "pages/tabBar/upload/upload",
             "style": {
-                "navigationBarTitleText": "我要秀才艺"
+                "navigationBarTitleText": "活动",
+                "enablePullDownRefresh": true
             }
         },
         {
@@ -35,7 +36,7 @@
         {
             "path": "pages/tabBar/uc/uc",
             "style": {
-                "navigationBarTitleText": "个人中心",
+                "navigationBarTitleText": "我的",
                 "enablePullDownRefresh": true
             }
         },
@@ -117,6 +118,13 @@
                 "navigationBarTitleText": "上传作品"
             }
         },
+        // 默认上传作品的页面
+        {
+            "path": "pages/upload/default/upload",
+            "style": {
+                "navigationBarTitleText": "上传作品"
+            }
+        },
         // 地址详情
         {
             "path": "pages/address/index",
@@ -151,15 +159,6 @@
             }
         },
         {
-            "path": "pages/chunjie/detail/detail",
-            "style": {
-                "navigationBarTitleText": "作品详情",
-                "usingComponents": {
-                    "poster": "/wxcomponents/third-party/poster/poster/index"
-                }
-            }
-        },
-        {
             "path": "pages/chunjie/upload/upload",
             "style": {
                 "navigationBarTitleText": "上传作品"
@@ -179,15 +178,6 @@
             "style": {
                 "navigationBarTitleText": "dou说新年好",
                 "softinputNavBar": "none"
-            }
-        },
-        {
-            "path": "pages/chunjiehao/detail/detail",
-            "style": {
-                "navigationBarTitleText": "作品详情",
-                "usingComponents": {
-                    "poster": "/wxcomponents/third-party/poster/poster/index"
-                }
             }
         },
         {
@@ -214,15 +204,6 @@
             "path": "pages/yiqing/index",
             "style": {
                 "navigationBarTitleText": "抗击疫情“艺”起来"
-            }
-        },
-        {
-            "path": "pages/yiqing/detail/detail",
-            "style": {
-                "navigationBarTitleText": "作品详情",
-                "usingComponents": {
-                    "poster": "/wxcomponents/third-party/poster/poster/index"
-                }
             }
         },
         {
@@ -259,6 +240,55 @@
             }
         },
         // ============== 疫情end ========================
+
+        {
+            "path": "pages/read/index",
+            "style": {
+                "navigationBarTitleText": "世界读书日"
+            }
+        },
+        {
+            "path": "pages/read/upload/modify",
+            "style": {
+                "navigationBarTitleText": "上传作品"
+            }
+        },
+        {
+            "path": "pages/read/upload/result",
+            "style": {
+                "navigationBarTitleText": "上传结果"
+            }
+        },
+        {
+            "path": "pages/read/myWork/myWork",
+            "style": {
+                "navigationBarTitleText": "我的作品"
+            }
+        },
+        {
+            "path": "pages/activity-pages/labor/index",
+            "style": {
+                "navigationBarTitleText": "青少年动起来"
+            }
+        },
+        {
+            "path": "pages/activity-pages/upload/modify",
+            "style": {
+                "navigationBarTitleText": "青少年动起来"
+            }
+        },
+        {
+            "path": "pages/activity-pages/upload/result",
+            "style": {
+                "navigationBarTitleText": "上传成功"
+            }
+        },
+        {
+            "path": "pages/activity-pages/mywork/mywork",
+            "style": {
+                "navigationBarTitleText": "我的作品"
+            }
+        },
         // #ifdef H5
         {
             "path": "pages/login/login",
@@ -267,12 +297,6 @@
             }
         },
         // #endif
-        {
-            "path": "pages/search/index",
-            "style": {
-                "navigationBarTitleText": "作品展示"
-            }
-        },
         {
             "path": "pages/activities/index",
             "style": {
@@ -337,6 +361,24 @@
             }
         },
         {
+            "path": "pages/openGame/zhibo-list",
+            "style": {
+                "navigationBarTitleText": "青少年“爱挑战”校园网络赛"
+            }
+        },
+        {
+            "path": "pages/openGame/caiyiupload",
+            "style": {
+                "navigationBarTitleText": "才艺上传"
+            }
+        },
+        {
+            "path": "pages/openGame/jingjiupload",
+            "style": {
+                "navigationBarTitleText": "竞技项目作品上传"
+            }
+        },
+        {
             "path": "pages/uc/reported/result",
             "style": {
                 "navigationBarTitleText": "上报成功"
@@ -363,23 +405,20 @@
                 "pagePath": "pages/tabBar/index/index",
                 "iconPath": "static/images/tab/index.png",
                 "selectedIconPath": "static/images/tab/index_ac.png",
-                "text": "大赛首页"
+                "text": "首页"
             },
             {
                 "pagePath": "pages/tabBar/list/list",
                 "iconPath": "static/images/tab/work.png",
                 "selectedIconPath": "static/images/tab/work_ac.png",
-                "text": "作品展示"
+                "text": "作品"
             },
-            // #ifndef H5
             {
                 "pagePath": "pages/tabBar/upload/upload",
                 "iconPath": "static/images/tab/upload.png",
                 "selectedIconPath": "static/images/tab/upload_ac.png",
-                "text": "我要秀才艺"
+                "text": "活动"
             },
-            // #endif
-
             // {
             //     "pagePath": "pages/tabBar/mall/mall",
             //     "iconPath": "static/images/tab/mall.png",
@@ -390,7 +429,7 @@
                 "pagePath": "pages/tabBar/uc/uc",
                 "iconPath": "static/images/tab/uc.png",
                 "selectedIconPath": "static/images/tab/uc_ac.png",
-                "text": "账户中心"
+                "text": "我的"
             }
         ]
     }

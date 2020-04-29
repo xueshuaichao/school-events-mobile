@@ -74,14 +74,14 @@
             </view>
             <view v-if="total > 0">
                 <view
-                    v-for="(item, index) in dataList"
+                    v-for="item in dataList"
                     :key="item.id"
                     class="media-content"
                 >
                     <event-craft-cover
                         :info="item"
                         :bg-color="'f5dca3'"
-                        @click.native="viewDetail(item, index)"
+                        @click.native="viewDetail(item)"
                     />
                     <view
                         v-if="type === 'myWork'"
@@ -337,20 +337,15 @@ export default {
             this.tabActiveIndex = i;
             this.getWorkData();
         },
-        viewDetail(item, position) {
+        viewDetail(item) {
             if (this.tabActiveIndex === 2) {
                 if (this.type === 'myWork') {
                     uni.navigateTo({
-                        url: `/pages/chunjie/detail/detail?id=${item.id}&fr=${this.fr}&disableslide=1`,
+                        url: `/pages/work/detail/detail?id=${item.id}&fr=${this.fr}&activity_id=3&from=chunjie`,
                     });
                 } else {
                     uni.navigateTo({
-                        url: `/pages/chunjie/detail/detail?id=${item.id}&fr=${
-                            this.fr
-                        }&total=${this.total}&curPosition=${position
-                            + 1}&actSort=${this.filter.sort || ''}&kw=${
-                            this.filter.search
-                        }`,
+                        url: `/pages/work/detail/detail?id=${item.id}&fr=${this.fr}&activity_id=3`,
                     });
                 }
             }
@@ -516,7 +511,8 @@ export default {
     box-sizing: border-box;
     width: 100%;
     min-height: 100vh;
-    background: url("../../../static/images/chunjie/main_bg.png") repeat-y;
+    background: url("http://aitiaozhan.oss-cn-beijing.aliyuncs.com/school-events-mobile/main_bg.png")
+        repeat-y;
     background-size: contain;
     .search-box {
         overflow: hidden;

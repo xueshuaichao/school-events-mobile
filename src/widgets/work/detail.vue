@@ -1,8 +1,5 @@
 <template>
-    <view
-        :id="`detail${swiperPage}`"
-        class="swiper-detail-box"
-    >
+    <view class="swiper-detail-box">
         <view
             v-show="isFullScreen && isH5"
             class="h5-full-screen-title text-one-line"
@@ -69,7 +66,7 @@
                     ref="video"
                     class="video"
                     preload
-                    :src="clear ? '' : pageData.video.cloud_path_sd"
+                    :src="pageData.video.cloud_path_sd"
                     :autoplay="!isH5"
                     :controls="true"
                     :loop="true"
@@ -106,20 +103,55 @@
                     {{ recordTxts[pageData.record - 1] }}
                 </text>
             </view>
-            <view class="work-name-wrap text-one-line">
-                <text class="work-name text-one-line">
-                    {{ pageData.resource_name }}
+            <view class="work-name-wrap clearfix">
+                <image
+                    class="avatar file fl-l"
+                    src="/static/images/work/file.png"
+                />
+                <view class="fl-l text-two-line">
+                    <text class="work-name">
+                        {{ pageData.resource_name }}
+                    </text>
+                    <text
+                        v-if="pageData.achievement"
+                        class="deatil-achievement lightyellow"
+                    >
+                        成绩：{{ pageData.achievement
+                        }}{{ pageData.achievement_unit }}
+                    </text>
+                </view>
+            </view>
+            <view
+                v-if="activityId !== 8"
+                class="intro text-three-line"
+            >
+                {{ introduce || "暂无简介" }}
+            </view>
+            <view
+                v-if="activityId === 8"
+                class="intro"
+            >
+                <text>
+                    {{
+                        !showMore && introduce && introduce.length > 50
+                            ? `${introduce.slice(0, 50)}...`
+                            : introduce || "暂无简介"
+                    }}
                 </text>
                 <text
-                    v-if="pageData.achievement"
-                    class="deatil-achievement lightyellow"
+                    v-if="!showMore && introduce.length > 50"
+                    class="to-open orange"
+                    @click="changeClick"
                 >
-                    成绩：{{ pageData.achievement
-                    }}{{ pageData.achievement_unit }}
+                    展开
                 </text>
-            </view>
-            <view class="intro text-three-line">
-                {{ pageData.introduce || "暂无简介" }}
+                <view
+                    v-if="showMore && introduce.length > 50"
+                    class="to-hide orange"
+                    @click="changeClick"
+                >
+                    收起
+                </view>
             </view>
         </view>
         <view class="fixed-panel">
@@ -160,11 +192,25 @@
             </view>
 
             <view
-                v-if="pageData.resource_scope === 3"
+                v-if="activityId < 5 && resourceScope > 2"
                 class="btn primary"
                 @click="joinGame"
             >
                 我要参与
+            </view>
+            <view
+                v-if="activityId > 5"
+                class="join-game-read"
+                :class="[{ wuyi: activityId === 8 }]"
+                @click="joinGame"
+            >
+                <image
+                    class="icon"
+                    src="/static/images/yiqing/detail/like.png"
+                />
+                <text>
+                    我要参与
+                </text>
             </view>
         </view>
         <view
@@ -218,13 +264,13 @@ export default {
             type: Number,
             default: 0,
         },
-        isChangeSlide: {
+        activityId: {
             type: Number,
-            default: 1,
+            default: 0,
         },
-        swiperPage: {
+        resourceScope: {
             type: Number,
-            default: 1,
+            default: 0,
         },
     },
     data() {
@@ -239,24 +285,10 @@ export default {
             isPlayed: false,
             isPaused: false,
             isVideoWaiting: false,
-            clear: false,
-            showVideo: this.swiperPage === this.isChangeSlide,
             play_count: 0,
+            showMore: false,
+            introduce: this.pageData.introduce || '',
         };
-    },
-    watch: {
-        isChangeSlide(val) {
-            console.log(val, '滑动到的页面', this.swiperPage, '当前页面');
-            this.showVideo = this.swiperPage === val;
-            console.log(this.showVideo, '---------show');
-            if (val !== this.swiperPage && this.pageData.resource_type === 1) {
-                // this.$refs.video.pause();
-                this.clear = true;
-            }
-            if (val === this.swiperPage && this.pageData.resource_type === 1) {
-                this.clear = false;
-            }
-        },
     },
     created() {
         this.play_count = this.pageData.play_count;
@@ -280,10 +312,8 @@ export default {
         },
         onPause() {
             this.isPaused = true;
-            console.log('暂停了-------');
         },
         togglePlayStatus() {
-            console.log('--------togglePlayStatus---');
             this.isPaused = false;
             this.$refs.video.play();
         },
@@ -312,6 +342,9 @@ export default {
             const isFullScreenMode = e.detail.fullScreen;
             this.isFullScreen = isFullScreenMode;
         },
+        changeClick() {
+            this.showMore = !this.showMore;
+        },
     },
 };
 </script>
@@ -320,14 +353,27 @@ export default {
 .swiper-detail-box {
     width: 100%;
     height: 100vh;
+    position: relative;
 }
 .yellow {
     color: #ff9b35;
+    text-shadow: 0 1upx 2upx #ff9b35;
+    font-size: 22upx;
 }
 .lightyellow {
     color: #ffd339;
+    text-shadow: 0 1upx 2upx #ffd339;
 }
-
+.h5-full-screen-title {
+    position: fixed;
+    width: 100%;
+    z-index: 10000;
+    color: #fff;
+    padding-top: 20upx;
+    padding-left: 20upx;
+    box-sizing: border-box;
+    top: 0;
+}
 .mp-weixin-full-screen-title {
     position: absolute;
     top: 46upx;
@@ -412,18 +458,23 @@ export default {
 }
 .content {
     position: absolute;
-    bottom: 20upx;
-    width: 480rpx;
-    padding: 30upx;
+    bottom: 80upx;
+    width: 480upx;
+    padding: 30upx 30upx 0;
     color: #fff;
     left: 0;
-    pointer-events: none;
+    // pointer-events: none;
+    z-index: 10;
+    text-shadow: 0 2upx 2upx rgba(0, 0, 0, 0.35);
     .avatar {
         display: inline-block;
-        width: 34rpx;
-        height: 32rpx;
-        margin-right: 16upx;
-        vertical-align: super;
+        width: 32rpx;
+        height: 34rpx;
+        margin-right: 12upx;
+        &.file {
+            width: 34rpx;
+            vertical-align: middle;
+        }
     }
 
     .author-info {
@@ -431,14 +482,14 @@ export default {
             color: #fff;
             font-size: 34upx;
             position: relative;
-            top: -2rpx;
+            line-height: 34upx;
             display: inline-block;
             width: 400rpx;
         }
     }
     .school-and-record {
         font-size: 24upx;
-        margin: -10upx 0 14upx 0;
+        margin: 0 0 24upx 0;
     }
 
     .author-from {
@@ -452,36 +503,68 @@ export default {
         margin-bottom: 13rpx;
         font-weight: 600;
         position: relative;
+        vertical-align: super;
+        display: inline;
+        word-break: break-all;
     }
     .deatil-achievement {
         margin-left: 10upx;
         font-size: 24upx;
+        font-display: inline;
+        vertical-align: super;
+        word-break: break-all;
     }
 
     .intro {
         font-size: 25upx;
-        line-height: 44upx;
-        margin-bottom: 30rpx;
+        line-height: 35upx;
+        position: relative;
     }
-
+    .text-three-lines {
+        // max-height: 132upx;
+        // overflow-y: auto;
+        // overflow:hidden;
+        // text-overflow:ellipsis;
+        // display:-webkit-box;
+        // -webkit-line-clamp:3;
+        // -webkit-box-orient:vertical;
+    }
+    .show-more {
+        // position: absolute;
+        // right: 0;
+        // bottom: 0;
+        // color: #db4e0e;
+    }
+    .orange {
+        color: #db4e0e;
+    }
+    .to-hide {
+        text-align: right;
+    }
     .icon-grail {
         display: inline-block;
-        width: 26upx;
-        height: 22upx;
+        width: 25upx;
+        height: 21upx;
         margin-left: 22upx;
         margin-right: 2upx;
         vertical-align: middle;
+    }
+    .work-name-wrap {
+        line-height: 34upx;
+        .text-two-line {
+            width: 90%;
+        }
     }
 }
 .fixed-panel {
     position: absolute;
     width: 146rpx;
     right: 0;
-    bottom: 20rpx;
+    bottom: 80rpx;
     color: #ffde98;
     font-size: 24rpx;
     text-align: center;
-    z-index: 9999;
+    z-index: 10;
 
     .icon-wrap {
         //margin-right: 36rpx;
@@ -509,6 +592,25 @@ export default {
         padding: 0;
         font-size: 0;
     }
+    .join-game-read {
+        background: #0f8c64;
+        width: 160rpx;
+        text-align: left;
+        padding: 10rpx 20rpx;
+        border-radius: 27rpx 0 0 27rpx;
+        color: #fff;
+        margin-left: -40rpx;
+        line-height: 40rpx;
+        &.wuyi {
+            background: #db4e0e;
+        }
+        .icon {
+            width: 44rpx;
+            height: 42rpx;
+            margin-right: 10rpx;
+            vertical-align: middle;
+        }
+    }
 }
 .btn {
     width: 146rpx;
@@ -520,7 +622,6 @@ export default {
     background: #fff;
     line-height: 56rpx;
     text-align: center;
-    margin-bottom: 30rpx;
     padding: 0;
     position: relative;
     &::before {

@@ -5,6 +5,7 @@
                 <input
                     v-model="filter.keyword"
                     placeholder-class="placeholderStyle"
+                    maxlength="13"
                     placeholder="请输入作品名称/作者姓名"
                     @confirm="bindconfirm"
                 >
@@ -16,24 +17,6 @@
                 </text>
             </view>
             <view class="tab-bar">
-                <!-- <view
-                    class="tab-item"
-                    :class="{
-                        active: showMenu === true && showMenuType === 'address'
-                    }"
-                    @click="toggleMenu('address')"
-                >
-                    <text>学校</text>
-                </view> -->
-                <!-- <view
-                    class="tab-item"
-                    :class="{
-                        active: showMenu === true && showMenuType === 'grade'
-                    }"
-                    @click="toggleMenu('grade')"
-                >
-                    <text>组别</text>
-                </view> -->
                 <view
                     class="tab-item"
                     :class="{
@@ -61,107 +44,8 @@
             <view
                 class="dropdown animated slideInDown faster"
                 :class="hiddingMenu ? 'slideOutUp' : ''"
+                @click.prevent="toggleMenu"
             >
-                <view
-                    v-if="showMenuType === 'address'"
-                    class="row"
-                >
-                    <view class="col">
-                        <scroll-view
-                            class="scroll-view"
-                            scroll-y="true"
-                        >
-                            <view class="menu-list">
-                                <view
-                                    class="menu-item"
-                                    :class="{
-                                        active: filter.address.city_id === 0
-                                    }"
-                                    @click="onSelect('city', 0)"
-                                >
-                                    不限
-                                </view>
-                                <view
-                                    v-for="item in categoryData[0].list"
-                                    :key="item.cityid"
-                                    class="menu-item"
-                                    :class="{
-                                        active:
-                                            filter.address.city_id ===
-                                            item.cityid
-                                    }"
-                                    @click="onSelect('city', item.cityid)"
-                                >
-                                    {{ item.name }}
-                                </view>
-                            </view>
-                        </scroll-view>
-                    </view>
-                    <view class="col sep">
-                        <scroll-view
-                            v-if="countyData.length > 0"
-                            class="scroll-view"
-                            scroll-y="true"
-                        >
-                            <view class="menu-list">
-                                <view
-                                    class="menu-item"
-                                    :class="{
-                                        active: filter.address.county_id === 0
-                                    }"
-                                    @click="onSelect('county', 0)"
-                                >
-                                    不限
-                                </view>
-                                <view
-                                    v-for="item in countyData"
-                                    :key="item.cityid"
-                                    class="menu-item"
-                                    :class="{
-                                        active:
-                                            filter.address.county_id ===
-                                            item.cityid
-                                    }"
-                                    @click="onSelect('county', item.cityid)"
-                                >
-                                    {{ item.name }}
-                                </view>
-                            </view>
-                        </scroll-view>
-                    </view>
-                </view>
-
-                <view
-                    v-if="showMenuType === 'grade'"
-                    class="row"
-                >
-                    <scroll-view
-                        class="scroll-view"
-                        scroll-y="true"
-                    >
-                        <view class="menu-list">
-                            <view
-                                class="menu-item"
-                                :class="{ active: filter.team_id === 0 }"
-                                @click="onSelect('grade', 0)"
-                            >
-                                不限
-                            </view>
-                            <view
-                                v-for="item in categoryData[1].list"
-                                :key="item.id"
-                                class="menu-item"
-                                :class="{
-                                    active: filter.team_id === item.id
-                                }"
-                                @click="onSelect('grade', item.id)"
-                            >
-                                {{ item.name }}
-                            </view>
-                        </view>
-                    </scroll-view>
-                </view>
-
                 <view
                     v-if="showMenuType === 'category'"
                     class="row"
@@ -173,7 +57,7 @@
                                 :class="{
                                     active: filter.cat_id.one_level_id === -1
                                 }"
-                                @click="onSelect('cat_one', -1)"
+                                @click.stop="onSelect('cat_one', -1)"
                             >
                                 全部
                             </view>
@@ -186,70 +70,12 @@
                                         filter.cat_id.one_level_id ===
                                         item.cat_id
                                 }"
-                                @click="onSelect('cat_one', item)"
+                                @click.stop="onSelect('cat_one', item)"
                             >
                                 {{ item.name }}
                             </view>
                         </view>
                     </view>
-                    <!-- <view
-                        v-if="catTwoMenu.length > 0"
-                        class="col sep"
-                    >
-                        <view class="menu-list">
-                            <view
-                                class="menu-item"
-                                :class="{
-                                    active: filter.cat_id.two_level_id === 0
-                                }"
-                                @click="onSelect('cat_two', 0)"
-                            >
-                                全部
-                            </view>
-                            <view
-                                v-for="item in catTwoMenu"
-                                :key="item.cat_id"
-                                class="menu-item"
-                                :class="{
-                                    active:
-                                        filter.cat_id.two_level_id ===
-                                        item.cat_id
-                                }"
-                                @click="onSelect('cat_two', item)"
-                            >
-                                {{ item.name }}
-                            </view>
-                        </view>
-                    </view> -->
-                    <!-- <view
-                        v-if="catThreeMenu.length > 0"
-                        class="col sep"
-                    >
-                        <view class="menu-list">
-                            <view
-                                class="menu-item"
-                                :class="{
-                                    active: filter.cat_id.three_level_id === 0
-                                }"
-                                @click="onSelect('cat_three', 0)"
-                            >
-                                全部
-                            </view>
-                            <view
-                                v-for="item in catThreeMenu"
-                                :key="item.cat_id"
-                                class="menu-item"
-                                :class="{
-                                    active:
-                                        filter.cat_id.three_level_id ===
-                                        item.cat_id
-                                }"
-                                @click="onSelect('cat_three', item)"
-                            >
-                                {{ item.name }}
-                            </view>
-                        </view>
-                    </view> -->
                 </view>
 
                 <view
@@ -261,24 +87,17 @@
                         scroll-y="true"
                     >
                         <view class="menu-list">
-                            <!-- <view
-                                class="menu-item"
-                                :class="{ active: filter.sort === 1 }"
-                                @click="onSelect('sort', 1)"
-                            >
-                                综合排序
-                            </view> -->
                             <view
                                 class="menu-item"
                                 :class="{ active: filter.sort === 1 }"
-                                @click="onSelect('sort', 1)"
+                                @click.stop="onSelect('sort', 1)"
                             >
                                 最热
                             </view>
                             <view
                                 class="menu-item"
                                 :class="{ active: filter.sort === 3 }"
-                                @click="onSelect('sort', 3)"
+                                @click.stop="onSelect('sort', 3)"
                             >
                                 最新
                             </view>
@@ -295,19 +114,11 @@
             <template v-if="tableData.length > 0">
                 <view class="widget-list-box">
                     <view
-                        v-for="(item, index) in tableData"
+                        v-for="item in tableData"
                         :key="item.id"
                         class="work-item"
                     >
-                        <work
-                            :info="item"
-                            :cur-position="index + 1"
-                            :page-size="10"
-                            :levelid="filter.cat_id.one_level_id"
-                            :sort="filter.sort"
-                            :total="total"
-                            :keyword="filter.keyword"
-                        />
+                        <work :info="item" />
                     </view>
                 </view>
                 <uni-load-more :status="loadMoreStatus" />
@@ -376,7 +187,7 @@ export default {
                     three_level_id: 0,
                 },
                 page_num: 1,
-                page_size: 20,
+                page_size: 10,
                 keyword: '',
             },
             total: 0,
@@ -387,11 +198,11 @@ export default {
             hiddingMenu: false,
 
             categoryData: [],
-            countyData: [],
+            // countyData: [],
             showMenuType: '',
 
             catTwoMenu: [],
-            catThreeMenu: [],
+            // catThreeMenu: [],
 
             tableData: [],
             changeValue: '',
@@ -417,6 +228,7 @@ export default {
             }
         },
         isShow() {
+            // 处理点赞以后，页面数据刷新的问题。
             this.showMenu = false;
             try {
                 const value = uni.getStorageSync('onShowFrom');
@@ -437,8 +249,8 @@ export default {
         // tabbar不需要设置参数，直接从接口得到
         if (this.isFromTabbar) {
             this.filter.cat_id.one_level_id = -1;
-            this.getData();
             this.getTableData();
+            this.getData();
         } else if (
             this.paramsFilter.cat_id.one_level_id > 0
             || this.paramsFilter.keyword
@@ -447,34 +259,13 @@ export default {
             this.filter.cat_id.one_level_id = Number(this.paramsFilter.cat_id.one_level_id) || -1;
             this.filter.keyword = this.paramsFilter.keyword;
             this.filter.sort = Number(this.paramsFilter.sort) || 1;
-
-            this.getData();
             this.getTableData();
+            this.getData();
         }
     },
     methods: {
         onSelect(type, value) {
             switch (type) {
-                // 选择市
-                case 'city':
-                    this.filter.address.city_id = value;
-                    this.filter.address.county_id = 0;
-                    if (value === 0) {
-                        this.countyData = [];
-                        this.toggleMenu('address');
-                    } else {
-                        this.getCityData(value);
-                    }
-                    break;
-                // 选择区
-                case 'county':
-                    this.filter.address.county_id = value;
-                    this.toggleMenu('address');
-                    break;
-                case 'grade':
-                    this.filter.team_id = value;
-                    this.toggleMenu('grade');
-                    break;
                 case 'sort':
                     this.filter.sort = value;
                     this.toggleMenu('sort');
@@ -485,47 +276,20 @@ export default {
                     }
                     break;
                 case 'cat_one':
-                    this.toggleMenu('category');
+                    // this.toggleMenu('category');
                     if (value === -1) {
                         this.filter.cat_id.one_level_id = -1;
-                        this.catTwoMenu = [];
+                        // this.catTwoMenu = [];
                         this.curCategory = '全部';
-                        // this.toggleMenu('category');
                     } else {
                         this.filter.cat_id.one_level_id = value.cat_id;
-                        this.catTwoMenu = value.children;
+                        // this.catTwoMenu = value.children;
                         this.curCategory = value.name;
-                        // if (!this.catTwoMenu.length) {
-                        //     this.toggleMenu('category');
-                        // }
                     }
                     this.toggleMenu('category');
                     this.filter.cat_id.two_level_id = 0;
                     this.filter.cat_id.three_level_id = 0;
-                    this.catThreeMenu = [];
-                    break;
-                case 'cat_two':
-                    if (value === 0) {
-                        this.filter.cat_id.two_level_id = 0;
-                        this.catThreeMenu = [];
-                        this.toggleMenu('category');
-                    } else {
-                        this.filter.cat_id.two_level_id = value.cat_id;
-                        this.catThreeMenu = value.children;
-                        if (!this.catThreeMenu.length) {
-                            this.toggleMenu('category');
-                        }
-                    }
-                    this.filter.cat_id.three_level_id = 0;
-                    break;
-                case 'cat_three':
-                    if (value === 0) {
-                        this.filter.cat_id.three_level_id = 0;
-                        this.toggleMenu('category');
-                    } else {
-                        this.filter.cat_id.three_level_id = value.cat_id;
-                    }
-                    this.toggleMenu('category');
+                    // this.catThreeMenu = [];
                     break;
                 default:
                     break;
@@ -547,15 +311,20 @@ export default {
             });
         },
         getTableData() {
+            uni.pageScrollTo({
+                scrollTop: 0,
+                duration: 50,
+            });
             this.filter.page_num = 1;
             this.filter.address.province_id = 0;
+            this.loadMoreStatus = 'more';
 
             api.post('/api/works/list', this.filter).then((res) => {
+                this.isLoading = false;
                 this.tableData = res.list;
                 this.total = res.total;
-                this.isLoading = false;
-                console.log(res);
-                if (this.total < 10) {
+                // console.log(res);
+                if (this.total < 20) {
                     this.loadMoreStatus = 'noMore';
                 }
             });
@@ -565,14 +334,9 @@ export default {
                 this.tableData = this.tableData.concat(res.list);
                 this.total = res.total;
                 this.loadMoreStatus = 'more';
-            });
-        },
-        getCityData(cityid) {
-            api.get('/api/common/citylist', {
-                cityid,
-            }).then((res) => {
-                console.log(res);
-                this.countyData = res;
+                if (this.total <= this.tableData.length) {
+                    this.loadMoreStatus = 'noMore';
+                }
             });
         },
         toggleMenu(type) {
@@ -593,6 +357,9 @@ export default {
             this.getTableData();
         },
         onReachBottoms() {
+            console.log(
+                this.total === this.filter.page_num * this.filter.page_size,
+            );
             if (this.total > this.filter.page_num * this.filter.page_size) {
                 this.filter.page_num = this.filter.page_num + 1;
                 this.loadMoreStatus = 'loading';
@@ -613,35 +380,35 @@ export default {
 
 .main {
     white-space: pre-wrap;
-    margin-top: 180upx;
+    margin-top: 200upx;
     .widget-list-box {
-        padding-top: 40upx;
-        margin: 0 0 14upx 28upx;
+        // padding-top: 40upx;
+        margin: 0 30upx 14upx 30upx;
         display: flex;
         flex-wrap: wrap;
         justify-content: space-between;
     }
     .work-item {
         justify-content: space-between;
-        width: 330upx;
-        height: 300upx;
-        margin-right: 28upx;
-        margin-bottom: 30upx;
+        width: 337upx;
+        height: 294upx;
+        // margin-right: 28upx;
+        margin-bottom: 20upx;
     }
     .blank-box {
         margin-top: 350upx;
     }
 }
 .comp-work {
-    margin-right: 30upx;
-    margin-bottom: 40upx;
+    // margin-right: 30upx;
+    // margin-bottom: 40upx;
 }
 
 .dropdown-wrap {
     position: fixed;
     width: 100%;
-    top: calc(180upx);
-    height: calc(100% - 180upx - var(--window-bottom));
+    top: calc(170upx);
+    height: calc(100% - 170upx - var(--window-bottom));
     z-index: 100;
 
     .dropdown {
@@ -651,16 +418,12 @@ export default {
     .row {
         display: flex;
         height: 100%;
-        background: #fff;
+        background: rgba(0, 0, 0, 0.3);
 
         .col {
             flex: 1;
             text-align: center;
             height: 100%;
-
-            &.sep {
-                border-left: 1px solid #ddd;
-            }
         }
     }
 
@@ -670,13 +433,15 @@ export default {
 
     .menu-list {
         text-align: center;
-        padding-bottom: 20upx;
-        padding-top: 10upx;
+        padding: 20upx 0;
+        // padding-top: 10upx;
+        background: #fff;
+        border-radius: 0 0 8upx 8upx;
     }
     .menu-item {
-        font-size: 32upx;
+        font-size: 28upx;
         color: #666;
-        line-height: 80upx;
+        line-height: 70upx;
 
         &.active {
             color: #1166ff;
@@ -687,14 +452,14 @@ export default {
 .tab-bar-wrap {
     position: fixed;
     top: 0; //calc(var(--window-top));
-    width: 100%;
+    // width: 100%;
     z-index: 1000;
     box-shadow: 0 0 8upx 0 rgba(0, 0, 0, 0.05);
     .search {
-        width: 100%;
+        // width: 100%;
         font-size: 24upx;
         overflow: hidden;
-        padding: 20upx 0 20upx 30upx;
+        padding: 20upx 30upx 0;
         background: #fff;
         box-shadow: 0 0upx 5upx 0 rgba(0, 0, 0, 0.05);
 
@@ -702,7 +467,7 @@ export default {
             background: #f3f3f3;
             border: none;
             border-radius: 30upx;
-            width: 606upx;
+            width: 598upx;
             height: 60upx;
             float: left;
             display: block;
@@ -729,7 +494,7 @@ export default {
         display: flex;
         background: #fff;
         padding: 0 20%;
-        font-size: 30upx;
+        font-size: 32upx;
     }
 
     .tab-item {

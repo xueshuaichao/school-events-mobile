@@ -351,14 +351,14 @@
                     </view>
                     <view class="media-box">
                         <view
-                            v-for="(item, index) in dataList"
+                            v-for="item in dataList"
                             :key="item.id"
                             class="media-content"
                         >
                             <event-craft-cover
                                 :info="item"
                                 :bg-color="'B11A27'"
-                                @click.native="viewDetail(item, index)"
+                                @click.native="viewDetail(item)"
                             />
 
                             <view class="media-name text-one-line">
@@ -391,7 +391,7 @@
                     :class="status === 2 ? 'upload' : 'upload-disable'"
                     @click="handleUpload"
                 >
-                    上传作品
+                    {{ status === 2 ? "上传作品" : "活动已结束" }}
                 </view>
             </view>
         </view>
@@ -600,12 +600,9 @@ export default {
                     'http://aitiaozhan.oss-cn-beijing.aliyuncs.com/banner.png?x-oss-process=image/format,png/interlace,1/quality,Q_80/resize,m_pad,h_100',
             });
         },
-        viewDetail(item, position) {
+        viewDetail(item) {
             uni.navigateTo({
-                url: `/pages/chunjie/detail/detail?id=${item.id}&fr=${
-                    this.fr
-                }&total=${this.total}&curPosition=${position
-                    + 1}&from=3&actSort=${this.filter.sort || ''}`,
+                url: `/pages/work/detail/detail?id=${item.id}&fr=${this.fr}&activity_id=3`,
             });
         },
         toggle(k) {
@@ -1102,7 +1099,8 @@ body.dialog-open {
 }
 
 .activerulebox {
-    background: url("../../static/images/chunjie/bg.png") no-repeat;
+    background: url("http://aitiaozhan.oss-cn-beijing.aliyuncs.com/school-events-mobile/bg.png")
+        no-repeat;
     background-position: 25upx 57upx;
     background-color: rgba(0, 0, 0, 0.8);
     background-size: 93% 94%;
@@ -1173,7 +1171,8 @@ body.dialog-open {
 .page-index {
     padding-bottom: 20upx;
     display: relative;
-    background: url("../../static/images/chunjie/main_bg.png") repeat-y;
+    background: url("http://aitiaozhan.oss-cn-beijing.aliyuncs.com/school-events-mobile/main_bg.png")
+        repeat-y;
     background-size: contain;
     .main-swiper {
         .active-rule {

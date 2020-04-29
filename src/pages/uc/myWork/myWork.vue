@@ -114,6 +114,7 @@ export default {
                 page_num: 1,
                 page_size: 10,
                 status: 1,
+                parent_scope: 2,
             },
             tabActiveIndex: 0,
             workStatics: {},
@@ -133,7 +134,7 @@ export default {
         },
         toDetail(item) {
             uni.navigateTo({
-                url: `/pages/work/detail/detail?id=${item.id}&from=mywork&disableslide=1`,
+                url: `/pages/work/detail/detail?id=${item.id}&activity_id=${item.activity_id}&resource_scope=${item.resource_scope}`,
             });
         },
         showCause({ memo }) {
@@ -143,15 +144,36 @@ export default {
                 showCancel: false,
             });
         },
-        editWork(item) {
-            uni.navigateTo({
-                url: `/pages/upload/modify/modify?id=${item.id}`,
+        editWork({
+            id,
+            activity_id: activityId,
+            activity_status: activityStatus,
+        }) {
+            // activityStatus 1未开始 2进行中  3已过期
+            if (activityStatus === 3) {
+                return uni.showToast({
+                    title: '活动已结束！',
+                    icon: 'none',
+                });
+            }
+            let urlPath = `/pages/upload/modify/modify?id=${id}`;
+            if (activityId === 6) {
+                urlPath = `/pages/read/upload/modify?id=${id}`;
+            } else if (activityId === 8) {
+                urlPath = `/pages/activity-pages/upload/modify?id=${id}&activity_id=${activityId}`;
+            }
+            return uni.navigateTo({
+                url: urlPath,
             });
         },
         deleteWork(item) {
+            let url = '/api/user/delwork';
+            if (item.activity_id) {
+                // 活动
+                url = '/api/activity/del';
+            }
             const index = this.tableData.indexOf(item);
-
-            api.post('/api/user/delwork', {
+            api.post(url, {
                 id: item.id,
             }).then(() => {
                 uni.showToast({
@@ -164,7 +186,6 @@ export default {
             });
         },
         onReachBottom() {
-            console.log('到底部');
             if (this.loadMoreStatus === 'more') {
                 this.filter.page_num = this.filter.page_num + 1;
                 this.loadMoreStatus = 'loading';
@@ -219,10 +240,6 @@ export default {
                         this.deleteWork(item);
                         console.log('用户点击确定');
                     } else if (res.cancel) {
-                        // uni.showToast({
-                        //     title: '删除失败',
-                        //     icon: 'none',
-                        // });
                         console.log('用户点击取消');
                     }
                 },
@@ -236,7 +253,7 @@ export default {
                 return {
                     title: item.resource_name,
                     imageUrl: item.video_img_url,
-                    path: `/pages/work/detail/detail?id=${item.id}`,
+                    path: `/pages/work/detail/detail?id=${item.id}&activity_id=${item.activity_id}&resource_scope=${item.resource_scope}`,
                 };
             }
             return false;

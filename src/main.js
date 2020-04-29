@@ -8,7 +8,7 @@ import Vue from 'vue';
 import RouterMount from '../router/useRouter';
 // #endif
 import routerLink from '../node_modules/uni-simple-router/component/router-link.vue';
-
+import store from '../store';
 import App from './App.vue';
 import share from './common/share';
 import logger from './common/logger';
@@ -21,11 +21,7 @@ const common = {
         // 自定义分享的网址 应该忽略初始化分享，否则会覆盖掉页面级别的分享
 
         // #ifdef H5
-        if (
-            ['/pages/chunjie/index', '/pages/chunjie/detail/detail'].indexOf(
-                location.pathname,
-            ) === -1
-        ) {
+        if (['/pages/chunjie/index'].indexOf(location.pathname) === -1) {
             share();
         }
         // #endif
@@ -64,6 +60,7 @@ App.mpType = 'app';
 
 Vue.mixin(common);
 const app = new Vue({
+    store,
     ...App,
 });
 Vue.component('router-link', routerLink);
