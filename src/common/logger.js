@@ -34,10 +34,7 @@ function onPageView() {
             ]); // 用户id
 
             // 页面采集，url默认为location.href,如需要指定页面url，请使用_gaq.push(['_trackPageview', url]);
-            window._gaq.push([
-                '_trackPageview',
-                location.pathname + location.search,
-            ]);
+            window._gaq.push(['_trackPageview', window.location.href]);
 
             // 事件采集
             // window._gaq.push(['_trackEvent', category, action, label, cnt, amt, content]);

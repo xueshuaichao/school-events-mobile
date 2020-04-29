@@ -330,6 +330,7 @@ export default {
             }
         },
         setTabActive(i) {
+            this.filter.page_num = 1;
             this.tabActiveIndex = i;
             this.getWorkData();
         },
