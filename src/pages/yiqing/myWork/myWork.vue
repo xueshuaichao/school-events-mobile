@@ -355,6 +355,7 @@ export default {
         setTabActive(i) {
             this.filter.page_num = 1;
             this.tabActiveIndex = i;
+            uni.pageScrollTo({ scrollTop: 0, duration: 300 });
             this.getWorkData();
         },
         viewDetail(item) {

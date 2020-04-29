@@ -394,6 +394,7 @@ export default {
             if (this.publicConfig.sort.length) {
                 this.filter.sort = k;
             }
+            uni.pageScrollTo({ scrollTop: 0, duration: 300 });
             this.filter.page_num = 1;
             this.searchWorkData();
         },
@@ -489,6 +490,8 @@ export default {
         setTabActive(i) {
             this.filter.page_num = 1;
             this.tabActiveIndex = i;
+            console.log(111);
+            uni.pageScrollTo({ scrollTop: 0, duration: 300 });
             this.getWorkData();
         },
         viewDetail(item) {
@@ -756,7 +759,7 @@ export default {
     min-height: 100vh;
     background: #a1debe;
     &.login {
-        background-color: #fff;
+        background-color: #fff !important;
     }
     // background-size: contain;
     .search-box {

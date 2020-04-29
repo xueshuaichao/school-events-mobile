@@ -297,6 +297,7 @@ export default {
             this.activeMenuIndex = k;
             this.filter.activity_cat = k;
             this.filter.page_num = 1;
+            uni.pageScrollTo({ scrollTop: 0, duration: 300 });
             this.searchWorkData();
         },
         handleClick() {
@@ -391,6 +392,7 @@ export default {
         setTabActive(i) {
             this.filter.page_num = 1;
             this.tabActiveIndex = i;
+            uni.pageScrollTo({ scrollTop: 0, duration: 300 });
             this.getWorkData();
         },
         viewDetail(item) {
