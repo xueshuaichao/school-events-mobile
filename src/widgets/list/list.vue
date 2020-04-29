@@ -276,20 +276,14 @@ export default {
                     }
                     break;
                 case 'cat_one':
-                    // this.toggleMenu('category');
                     if (value === -1) {
                         this.filter.cat_id.one_level_id = -1;
-                        // this.catTwoMenu = [];
                         this.curCategory = '全部';
                     } else {
                         this.filter.cat_id.one_level_id = value.cat_id;
-                        // this.catTwoMenu = value.children;
                         this.curCategory = value.name;
                     }
                     this.toggleMenu('category');
-                    this.filter.cat_id.two_level_id = 0;
-                    this.filter.cat_id.three_level_id = 0;
-                    // this.catThreeMenu = [];
                     break;
                 default:
                     break;
@@ -324,7 +318,7 @@ export default {
                 this.tableData = res.list;
                 this.total = res.total;
                 // console.log(res);
-                if (this.total < 20) {
+                if (this.total < this.filter.page_size) {
                     this.loadMoreStatus = 'noMore';
                 }
             });
@@ -392,18 +386,12 @@ export default {
         justify-content: space-between;
         width: 337upx;
         height: 294upx;
-        // margin-right: 28upx;
         margin-bottom: 20upx;
     }
     .blank-box {
         margin-top: 350upx;
     }
 }
-.comp-work {
-    // margin-right: 30upx;
-    // margin-bottom: 40upx;
-}
-
 .dropdown-wrap {
     position: fixed;
     width: 100%;
@@ -451,12 +439,10 @@ export default {
 
 .tab-bar-wrap {
     position: fixed;
-    top: 0; //calc(var(--window-top));
-    // width: 100%;
+    top: 0;
     z-index: 1000;
     box-shadow: 0 0 8upx 0 rgba(0, 0, 0, 0.05);
     .search {
-        // width: 100%;
         font-size: 24upx;
         overflow: hidden;
         padding: 20upx 30upx 0;
