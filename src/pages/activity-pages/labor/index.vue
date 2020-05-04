@@ -389,8 +389,8 @@ export default {
         }
         .work-num {
             color: #ab3500;
-            width: 114upx;
-            text-align: left;
+            width: 38%;
+            text-align: right;
         }
     }
 }
