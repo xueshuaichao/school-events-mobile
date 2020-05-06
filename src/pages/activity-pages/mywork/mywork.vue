@@ -612,6 +612,7 @@ export default {
             this.filter.search = name;
             if (userId) {
                 this.filter.user_id = userId;
+                this.filter.week = 1;
             }
             this.changeValue = name;
             this.searchWorkData();
