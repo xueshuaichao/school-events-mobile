@@ -134,6 +134,7 @@ export default {
             );
         },
         setTabActive(index) {
+            this.filter.page_num = 1;
             this.tabActiveIndex = index;
             this.getWorkData();
         },
