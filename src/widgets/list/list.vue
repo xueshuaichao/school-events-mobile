@@ -247,6 +247,9 @@ export default {
     },
     created() {
         // tabbar不需要设置参数，直接从接口得到
+        uni.showLoading({
+            title: '加载中',
+        });
         if (this.isFromTabbar) {
             this.filter.cat_id.one_level_id = -1;
             this.getTableData();
@@ -314,6 +317,7 @@ export default {
             this.loadMoreStatus = 'more';
 
             api.post('/api/works/list', this.filter).then((res) => {
+                uni.hideLoading();
                 this.isLoading = false;
                 this.tableData = res.list;
                 this.total = res.total;
