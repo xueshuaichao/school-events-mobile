@@ -145,7 +145,7 @@ export default {
     }
 
     .tag {
-        width: 150rpx;
+        min-width: 150rpx;
         height: 36rpx;
         background: linear-gradient(
             270deg,
@@ -161,6 +161,7 @@ export default {
         box-sizing: border-box;
         padding-left: 10rpx;
         line-height: 36rpx;
+        padding-right: 4rpx;
     }
     .is-excellect {
         position: absolute;
