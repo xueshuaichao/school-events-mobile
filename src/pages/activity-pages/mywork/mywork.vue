@@ -545,7 +545,14 @@ export default {
             }).then(() => {
                 if (index !== -1) {
                     this.dataList.splice(index, 1);
-                    if (this.dataList.length < this.filter.page_size) {
+                    this.total -= 1;
+                    if (
+                        this.dataList.length <= this.filter.page_size
+                        && this.total >= this.filter.page_size
+                    ) {
+                        if (this.total > this.filter.page_size) {
+                            this.loadMoreStatus = 'noMore';
+                        }
                         this.filter.page_num = 1;
                         this.getWorkData();
                     }

@@ -178,7 +178,11 @@ export default {
             }).then(() => {
                 if (index !== -1) {
                     this.tableData.splice(index, 1);
-                    if (this.tableData.length < this.filter.page_size) {
+                    this.total -= 1;
+                    if (
+                        this.tableData.length <= this.filter.page_size
+                        && this.total >= this.filter.page_size
+                    ) {
                         this.filter.page_num = 1;
                         this.getWorkData();
                     }

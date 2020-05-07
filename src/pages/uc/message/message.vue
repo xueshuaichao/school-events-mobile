@@ -80,6 +80,16 @@
                     </checkbox-group>
                 </template>
             </view>
+            <uni-load-more
+                class="loadMore"
+                :status="loadMoreStatus"
+                :content-text="{
+                    contentdown: '上拉显示更多',
+                    contentrefresh: '正在加载...',
+                    contentnomore: '———— 已经到底了~ ————'
+                }"
+                color="#999"
+            />
         </template>
         <template v-else>
             <blank msg="暂无消息通知" />
@@ -90,10 +100,12 @@
 <script>
 import api from '../../../common/api';
 import blank from '../../../widgets/blank/blank.vue';
+import uniLoadMore from '../../../components/uni-load-more/uni-load-more.vue';
 
 export default {
     components: {
         blank,
+        uniLoadMore,
     },
     data() {
         return {
@@ -104,17 +116,39 @@ export default {
             showDataList: [],
             dataList: [],
             unreadList: [],
+            loadMoreStatus: 'none',
+            filter: {
+                page_num: 1,
+                page_size: 10,
+            },
         };
     },
     methods: {
-        getDataList() {
-            api.get('/api/common/msg', {
-                page_size: 100,
-            }).then((res) => {
-                this.dataList = res.list;
+        onReachBottom() {
+            if (this.loadMoreStatus === 'more') {
+                this.filter.page_num = this.filter.page_num + 1;
+                this.loadMoreStatus = 'loading';
+                this.getDataList('reachBottom');
+            }
+        },
+        getDataList(title) {
+            api.get('/api/common/msg', this.filter).then(({ list, total }) => {
+                if (title === 'reachBottom') {
+                    this.dataList = this.dataList.concat(list);
+                } else {
+                    this.dataList = list;
+                }
                 this.unreadList = this.dataList.filter(v => v.is_read === 0);
                 this.showDataList = this.dataList;
-                console.log(this.unreadList);
+                this.total = total;
+                if (
+                    this.total
+                    <= this.filter.page_num * this.filter.page_size
+                ) {
+                    this.loadMoreStatus = title === 'reachBottom' ? 'noMore' : 'none';
+                } else {
+                    this.loadMoreStatus = 'more';
+                }
             });
         },
         handleMessage(id, type = '') {
@@ -149,6 +183,25 @@ export default {
             this.unreadList = this.showDataList.filter(v => v.is_read === 0);
         },
         showCheckbox(status) {
+            // if (!status) {
+            //     this.showDataList = this.dataList;
+            //     this.showCheckboxPanel = status;
+            // } else {
+            //     api.get('/api/common/msg', {
+            //         ...this.filter,
+            //         is_read: 0,
+            //     }).then(({ total, list }) => {
+            //         if (total === 0) {
+            //             uni.showToast({
+            //                 icon: 'none',
+            //                 title: '暂无未读消息',
+            //             });
+            //         } else {
+            //             this.unreadList = list;
+            //             this.showDataList = this.unreadList;
+            //         }
+            //     });
+            // }
             if (this.unreadList.length === 0) {
                 return uni.showToast({
                     icon: 'none',
@@ -273,6 +326,7 @@ checkbox .wx-checkbox-input.wx-checkbox-input-checked {
         }
     }
     .message-list {
+        min-height: 100vh;
         .message-item {
             position: relative;
             padding: 54upx 40upx 20upx 64upx;

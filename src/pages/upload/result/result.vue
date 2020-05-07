@@ -96,7 +96,7 @@ export default {
         reUpload() {
             if (this.from === 'upload') {
                 uni.switchTab({
-                    url: '/pages/tabBar/upload/upload',
+                    url: '/pages/upload/default/upload',
                 });
             } else if (this.from === 'festival') {
                 uni.reLaunch({
