@@ -7,7 +7,7 @@ console.log(API_ENV);
 
 const HOST = {
     // dev: 'http://aitiaozhan.wdyclass.com:8000',
-    dev: 'http://aitiaozhan.dev.wdyclass.com:8000',
+    dev: 'http://aitiaozhan.dev.wdyclass.com',
     test: 'http://aitiaozhan.test.wdyclass.com',
     online: 'https://aitiaozhan.wdyedu.com',
 };

@@ -444,12 +444,16 @@ export default {
             api.post('/api/activity/del', {
                 id: item.id,
             }).then(() => {
+                if (index !== -1) {
+                    this.dataList.splice(index, 1);
+                    if (this.dataList.length < this.filter.page_size) {
+                        this.filter.page_num = 1;
+                        this.getWorkData();
+                    }
+                }
                 uni.showToast({
                     title: '删除成功',
                 });
-                if (index !== -1) {
-                    this.dataList.splice(index, 1);
-                }
                 if (this.tabActiveIndex === 1) {
                     // 待审核
                     this.allNum.wait -= 1;

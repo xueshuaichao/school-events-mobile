@@ -176,12 +176,16 @@ export default {
             api.post(url, {
                 id: item.id,
             }).then(() => {
+                if (index !== -1) {
+                    this.tableData.splice(index, 1);
+                    if (this.tableData.length < this.filter.page_size) {
+                        this.filter.page_num = 1;
+                        this.getWorkData();
+                    }
+                }
                 uni.showToast({
                     title: '删除成功',
                 });
-                if (index !== -1) {
-                    this.tableData.splice(index, 1);
-                }
                 this.getWorkStatic();
             });
         },
