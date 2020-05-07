@@ -272,6 +272,12 @@
             }
         },
         {
+            "path": "pages/activity-pages/childrens/index",
+            "style": {
+                "navigationBarTitleText": "六一活动"
+            }
+        },
+        {
             "path": "pages/activity-pages/upload/modify",
             "style": {
                 "navigationBarTitleText": "青少年动起来"
