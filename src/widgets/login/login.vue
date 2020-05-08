@@ -629,8 +629,11 @@ export default {
         color: #1166ff;
         font-size: 30rpx;
         margin: 20upx 0;
-        height: 40upx;
+        min-height: 40upx;
         text-align: center;
+        .desc {
+            padding: 14upx 0 23upx;
+        }
     }
 
     .tabs {
@@ -692,7 +695,7 @@ export default {
             }
         }
 
-        input::placeholder {
+        .placeholder {
             color: #d8d8d8;
             font-size: 36upx;
         }
@@ -708,7 +711,7 @@ export default {
             position: absolute;
             right: 0rpx;
             color: #1166ff;
-            font-size: 30rpx;
+            font-size: 36rpx;
             top: 50%;
             margin-top: -22upx;
             z-index: 100;
@@ -756,6 +759,23 @@ export default {
         line-height: 1;
         margin-bottom: 32upx;
         text-align: center;
+        position: relative;
+        &::before,
+        &::after {
+            content: "";
+            height: 1upx;
+            width: 100upx;
+            background-color: #666;
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        &::before {
+            left: 50upx;
+        }
+        &::after {
+            right: 50upx;
+        }
     }
     .wx-login-btn {
         width: 100upx;
