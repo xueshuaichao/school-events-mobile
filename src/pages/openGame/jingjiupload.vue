@@ -119,7 +119,7 @@
                         v-model="achivementInput"
                         class="uni-input"
                         placeholder-class="placeholder"
-                        maxlength="30"
+                        maxlength="10"
                         placeholder="成绩"
                     >
                     <text class="unit-class">
@@ -136,7 +136,7 @@
                         v-model="teacherInput"
                         class="uni-input"
                         placeholder-class="placeholder"
-                        maxlength="30"
+                        maxlength="18"
                         placeholder="指导老师"
                     >
                 </view>
@@ -150,7 +150,7 @@
                         v-model="attestationInput"
                         class="uni-input"
                         placeholder-class="placeholder"
-                        maxlength="30"
+                        maxlength="18"
                         placeholder="认证官姓名"
                     >
                 </view>
@@ -195,7 +195,7 @@
                         v-model="createInput"
                         class="uni-input"
                         placeholder-class="placeholder"
-                        maxlength="30"
+                        maxlength="18"
                         placeholder="参赛者姓名"
                     >
                 </view>

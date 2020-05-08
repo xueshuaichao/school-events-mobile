@@ -19,7 +19,7 @@
                         活动参加方式主要是：学校组织师生快速注册入驻官方平台——选择挑战项目或才艺秀项目——在教师
                         和家长指导下录制微视频上传官方平台——大赛组委会开展评选、认证、表彰。
                         网络预选赛包括“爱挑战”网络竞技赛、吉尼斯网络预选赛和才艺秀网络推优赛。
-                        各学校组织学生参与项目挑战，上报挑战斯网络预选赛和才艺秀网络推优赛。
+                        各学校组织学生参与项目挑战，上报挑战赛网络预选赛和才艺秀网络推优赛。
                     </view>
                 </view>
             </view>
@@ -134,13 +134,13 @@
                                 }}
                             </view>
                             <view class="nameAndSchool">
-                                <view class="name">
+                                <view class="name text-one-line">
                                     <image
                                         src="../../static/images/zhibo/name-icon.png"
                                     />
                                     {{ `${item.create_name}` }}
                                 </view>
-                                <view class="school">
+                                <view class="school text-one-line">
                                     {{ `${item.create_user_class}` }}
                                 </view>
                             </view>
@@ -731,19 +731,26 @@ body.dialog-open {
             margin-bottom: 10upx;
         }
         .nameAndSchool {
-            display: flex;
-            justify-content: space-between;
+            // display: flex;
+            // justify-content: space-between;
             font-size: 22upx;
             color: #999999;
             margin-top: 24rpx;
             margin-bottom: 24rpx;
 
             .name {
+                width: 50%;
+                float: left;
                 image {
                     width: 28upx;
                     height: 22upx;
                     margin-right: 9rpx;
                 }
+            }
+            .school {
+                width: 50%;
+                float: right;
+                text-align: right;
             }
         }
         .vote-num {
