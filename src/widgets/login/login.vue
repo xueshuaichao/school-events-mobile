@@ -6,7 +6,7 @@
                 <!-- 账号密码登录 -->
                 <image
                     class="logo"
-                    src="/static/images/widgets/login/logo.png"
+                    src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/h5/login_logo.png"
                 />
                 <view class="tabs row">
                     <view
@@ -55,13 +55,7 @@
                                     : '请输入手机号'
                             "
                         >
-                        <view class="error-tip">
-                            {{
-                                accountData.isValid ? "" : accountData.msg || ""
-                            }}
-                        </view>
                     </view>
-
                     <view
                         v-if="loginMode === 'password'"
                         class="form-item-wrap"
@@ -124,7 +118,7 @@
                             :class="{ 'h5-btn': isH5 }"
                             @click="login()"
                         >
-                            确定
+                            立即登录
                         </view>
                     </view>
                     <view
@@ -595,7 +589,7 @@ export default {
     }
 }
 .page-bind-mobile {
-    padding: 30rpx 60rpx 0;
+    padding: 0 65upx 0;
     .weixin-login {
         padding-top: 168upx;
         font-size: 36upx;
@@ -634,34 +628,35 @@ export default {
     .login-mode {
         color: #1166ff;
         font-size: 30rpx;
-        margin-top: 50rpx;
-        height: 30rpx;
+        margin: 20upx 0;
+        min-height: 40upx;
         text-align: center;
+        .desc {
+            padding: 14upx 0 23upx;
+        }
     }
 
     .tabs {
-        margin-bottom: 80rpx;
+        margin: 0 auto 28upx;
+        justify-content: space-between;
+        width: 467upx;
 
         .tab {
             color: #999;
-            font-size: 36rpx;
-            padding-bottom: 24rpx;
+            font-size: 36upx;
+            padding-bottom: 8upx;
 
             &.active {
                 color: #1166ff;
-                border-bottom: 4rpx solid #1166ff;
+                border-bottom: 4upx solid #1166ff;
             }
         }
 
         .tab-login {
             text-align: center;
-            width: 200rpx;
-            margin-left: 60rpx;
-            margin-right: 60rpx;
         }
         .tab-register {
             text-align: center;
-            flex: 1;
         }
     }
 
@@ -678,34 +673,36 @@ export default {
 
         .form-input {
             color: #333;
-            font-size: 30rpx;
+            font-size: 36upx;
             border-bottom: 1rpx solid #d8d8d8;
-            height: 90rpx;
-            margin-top: 20rpx;
-            padding-left: 72rpx;
+            height: 130upx;
+            // margin-top: 20rpx;
+            padding-left: 70rpx;
         }
 
         .icon {
             position: absolute;
             width: 34rpx;
             height: 32rpx;
-            left: 20rpx;
-            top: 30rpx;
+            left: 18rpx;
+            top: 50%;
+            margin-top: -16upx;
         }
 
         &.inValid {
             .form-input {
-                border-bottom: 1rpx solid #fa6855;
+                border-bottom: 1rpx solid #d8d8d8;
             }
         }
 
-        input::placeholder {
-            color: #666;
+        .placeholder {
+            color: #d8d8d8;
+            font-size: 36upx;
         }
 
         .error-tip {
             color: #fa6855;
-            font-size: 26rpx;
+            font-size: 24rpx;
             height: 30rpx;
             margin-top: 10rpx;
         }
@@ -714,8 +711,9 @@ export default {
             position: absolute;
             right: 0rpx;
             color: #1166ff;
-            font-size: 30rpx;
-            bottom: 25rpx;
+            font-size: 36rpx;
+            top: 50%;
+            margin-top: -22upx;
             z-index: 100;
 
             &.is-send {
@@ -736,19 +734,19 @@ export default {
         height: 98rpx;
         line-height: 98rpx;
         text-align: center;
-        margin-top: 30rpx;
-        margin-bottom: 56rpx;
+        margin-bottom: 50rpx;
         font-size: 36rpx;
+        border-radius: 4upx;
         &.h5-btn {
             margin-top: 100rpx;
         }
     }
 
     .logo {
-        width: 438rpx;
-        height: 264rpx;
+        width: 316upx;
+        height: 194upx;
         display: block;
-        margin: 30rpx auto 60rpx;
+        margin: 40upx auto 80upx;
     }
 
     .desc {
@@ -758,8 +756,26 @@ export default {
     .wx-login-text {
         color: #666;
         font-size: 32upx;
-        margin-bottom: 30upx;
+        line-height: 1;
+        margin-bottom: 32upx;
         text-align: center;
+        position: relative;
+        &::before,
+        &::after {
+            content: "";
+            height: 1upx;
+            width: 100upx;
+            background-color: #666;
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        &::before {
+            left: 50upx;
+        }
+        &::after {
+            right: 50upx;
+        }
     }
     .wx-login-btn {
         width: 100upx;
