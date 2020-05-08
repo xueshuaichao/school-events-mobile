@@ -11,15 +11,13 @@
         {
             "path": "pages/openGame/myWork/myWork",
             "style": {
-                "navigationBarTitleText": "我的作品",
-                "enablePullDownRefresh": true
+                "navigationBarTitleText": "我的作品"
             }
         },
         {
             "path": "pages/openGame/index",
             "style": {
-                "navigationBarTitleText": "网络预选赛",
-                "enablePullDownRefresh": true
+                "navigationBarTitleText": "网络预选赛"
             }
         },
         {

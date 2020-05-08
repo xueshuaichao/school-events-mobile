@@ -84,22 +84,29 @@
                 <view class="menu-list">
                     <view class="search-box">
                         <button
-                            :class="{
-                                active: activeMenuIndex === 1
-                            }"
-                            @click="toggle(1)"
-                        >
-                            最新
-                        </button>
-                        <button
+                            v-if="jingjiactiveMenuIndex === 3"
                             :class="{
                                 active: activeMenuIndex === 3
                             }"
                             @click="toggle(3)"
                         >
+                            最新
+                        </button>
+                        <button
+                            v-if="jingjiactiveMenuIndex === 3"
+                            :class="{
+                                active: activeMenuIndex === 1
+                            }"
+                            @click="toggle(1)"
+                        >
                             最热
                         </button>
-                        <view class="search">
+                        <view
+                            class="search"
+                            :class="{
+                                searchjinji: jingjiactiveMenuIndex !== 3
+                            }"
+                        >
                             <image
                                 src="../../static/images/zhibo/search.png"
                                 @click="bindconfirm"
@@ -228,7 +235,7 @@ export default {
             fr: '',
             shareDesc: '',
             changeValue: '',
-            activeMenuIndex: 1,
+            activeMenuIndex: 3,
             jingjiactiveMenuIndex: 1,
             loadMoreStatus: 'more',
             prompt: false,
@@ -737,7 +744,7 @@ body.dialog-open {
             color: #999999;
             margin-top: 24rpx;
             margin-bottom: 24rpx;
-
+            overflow: hidden;
             .name {
                 width: 50%;
                 float: left;
@@ -959,6 +966,10 @@ body.dialog-open {
                     left: 22upx;
                     font-size: 28upx;
                     color: #000;
+                }
+                &.searchjinji {
+                    width: 98%;
+                    float: left;
                 }
             }
         }

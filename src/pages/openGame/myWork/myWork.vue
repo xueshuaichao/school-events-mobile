@@ -210,20 +210,20 @@
                                 v-else
                                 class="work-info"
                             >
-                                <view class="media-name">
+                                <view class="media-name text-one-line">
                                     {{ `${item.cat_name}` }} |
                                     {{
                                         `${item.achievement}${item.achievement_unit}`
                                     }}
                                 </view>
                                 <view class="nameAndSchool">
-                                    <view class="name">
+                                    <view class="name text-one-line">
                                         <image
                                             src="../../../static/images/zhibo/name-icon.png"
                                         />
                                         {{ `${item.create_name}` }}
                                     </view>
-                                    <view class="school">
+                                    <view class="school text-one-line">
                                         {{ `${item.create_user_class}` }}
                                     </view>
                                 </view>
@@ -481,17 +481,17 @@ export default {
             this.getWorkData();
         },
         viewDetail(item) {
-            if (this.tabActiveIndex === 1) {
-                if (this.type === 'myWork') {
+            if (this.type === 'myWork') {
+                if (this.tabActiveIndex === 1) {
                     uni.navigateTo({
                         // url: `/pages/work/detail/detail?id=${item.id}&fr=${this.fr}&activity_id=5&from=yiqing`,
                         url: `/pages/work/detail/detail?id=${item.id}&from=openGame`,
                     });
-                } else {
-                    uni.navigateTo({
-                        url: `/pages/work/detail/detail?id=${item.id}`,
-                    });
                 }
+            } else {
+                uni.navigateTo({
+                    url: `/pages/work/detail/detail?id=${item.id}&from=openGame`,
+                });
             }
         },
     },
@@ -535,12 +535,19 @@ export default {
     color: #999999;
     margin-top: 24rpx;
     margin-bottom: 24rpx;
-
+    overflow: hidden;
     .name {
+        width: 50%;
+        float: left;
         image {
             width: 28upx;
             height: 22upx;
             margin-right: 9rpx;
+        }
+        .school {
+            width: 50%;
+            float: right;
+            text-align: right;
         }
     }
 }
