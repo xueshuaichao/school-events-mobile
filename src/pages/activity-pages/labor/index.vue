@@ -11,10 +11,7 @@
             :fr="fr"
         >
             <template v-slot:rank>
-                <view
-                    v-if="showRank"
-                    class="week-rank"
-                >
+                <view class="week-rank">
                     <view class="title">
                         —— 本周劳动能手 ——
                     </view>
@@ -25,7 +22,10 @@
                     >
                         历史榜单
                     </view>
-                    <view class="week-rank-list">
+                    <view
+                        v-if="showRank"
+                        class="week-rank-list"
+                    >
                         <view
                             v-for="(item, index) in rank"
                             :key="index"
@@ -41,10 +41,16 @@
                             <view class="rank-name text-one-line">
                                 {{ item.user_name }}
                             </view>
-                            <view class="work-num">
+                            <view class="work-num text-one-line">
                                 作品{{ item.num }}个
                             </view>
                         </view>
+                    </view>
+                    <view
+                        v-else
+                        class="no-data-text"
+                    >
+                        本周暂无榜单生成，可查看历史榜单纪录哦
                     </view>
                 </view>
             </template>
@@ -222,6 +228,11 @@ export default {
         margin-bottom: 20upx;
         font-size: 34upx;
     }
+    .no-data-text {
+        color: #451600;
+        font-size: 24upx;
+        line-height: 1;
+    }
     .history-rank {
         display: inline-block;
         padding: 12upx 20upx;
@@ -389,8 +400,8 @@ export default {
         }
         .work-num {
             color: #ab3500;
-            width: 114upx;
-            text-align: left;
+            width: 38%;
+            text-align: right;
         }
     }
 }

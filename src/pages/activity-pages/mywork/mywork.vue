@@ -394,6 +394,7 @@ export default {
             if (this.publicConfig.sort.length) {
                 this.filter.sort = k;
             }
+            uni.pageScrollTo({ scrollTop: 0, duration: 300 });
             this.filter.page_num = 1;
             this.searchWorkData();
         },
@@ -489,6 +490,8 @@ export default {
         setTabActive(i) {
             this.filter.page_num = 1;
             this.tabActiveIndex = i;
+            console.log(111);
+            uni.pageScrollTo({ scrollTop: 0, duration: 300 });
             this.getWorkData();
         },
         viewDetail(item) {
@@ -540,12 +543,23 @@ export default {
             api.post('/api/activity/del', {
                 id: item.id,
             }).then(() => {
+                if (index !== -1) {
+                    this.dataList.splice(index, 1);
+                    this.total -= 1;
+                    if (
+                        this.dataList.length <= this.filter.page_size
+                        && this.total >= this.filter.page_size
+                    ) {
+                        if (this.total > this.filter.page_size) {
+                            this.loadMoreStatus = 'noMore';
+                        }
+                        this.filter.page_num = 1;
+                        this.getWorkData();
+                    }
+                }
                 uni.showToast({
                     title: '删除成功',
                 });
-                if (index !== -1) {
-                    this.dataList.splice(index, 1);
-                }
                 if (this.tabActiveIndex === 1) {
                     // 待审核
                     this.allNum.wait -= 1;
@@ -573,7 +587,11 @@ export default {
                 title: this.title,
                 desc,
                 thumbnail: `${this.publicConfig.shareConfig.image}?x-oss-process=image/format,png/interlace,1/quality,Q_80/resize,m_pad,h_100`,
-                url: `${window.location.origin}${this.publicConfig.shareConfig.path}`,
+                url: `${
+                    this.isH5
+                        ? `${window.location.origin}${this.publicConfig.shareConfig.path}`
+                        : ''
+                }`,
             });
         },
     },
@@ -605,6 +623,7 @@ export default {
             this.filter.search = name;
             if (userId) {
                 this.filter.user_id = userId;
+                this.filter.week = 1;
             }
             this.changeValue = name;
             this.searchWorkData();
@@ -756,7 +775,7 @@ export default {
     min-height: 100vh;
     background: #a1debe;
     &.login {
-        background-color: #fff;
+        background-color: #fff !important;
     }
     // background-size: contain;
     .search-box {

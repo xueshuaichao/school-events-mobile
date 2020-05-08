@@ -145,7 +145,7 @@ export default {
     }
 
     .tag {
-        width: 150rpx;
+        min-width: 150rpx;
         height: 36rpx;
         background: linear-gradient(
             270deg,
@@ -160,6 +160,7 @@ export default {
         font-size: 20rpx;
         box-sizing: border-box;
         padding-left: 10rpx;
+        padding-right: 4rpx;
         line-height: 36rpx;
     }
     .is-excellect {

@@ -136,6 +136,7 @@ export default {
         setTabActive(index) {
             this.filter.page_num = 1;
             this.tabActiveIndex = index;
+            uni.pageScrollTo({ scrollTop: 0, duration: 300 });
             this.getWorkData();
         },
         setCanvasImg(id) {

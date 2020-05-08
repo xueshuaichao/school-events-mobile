@@ -297,6 +297,7 @@ export default {
             this.activeMenuIndex = k;
             this.filter.activity_cat = k;
             this.filter.page_num = 1;
+            uni.pageScrollTo({ scrollTop: 0, duration: 300 });
             this.searchWorkData();
         },
         handleClick() {
@@ -391,6 +392,7 @@ export default {
         setTabActive(i) {
             this.filter.page_num = 1;
             this.tabActiveIndex = i;
+            uni.pageScrollTo({ scrollTop: 0, duration: 300 });
             this.getWorkData();
         },
         viewDetail(item) {
@@ -442,12 +444,20 @@ export default {
             api.post('/api/activity/del', {
                 id: item.id,
             }).then(() => {
+                if (index !== -1) {
+                    this.dataList.splice(index, 1);
+                    this.total -= 1;
+                    if (
+                        this.dataList.length <= this.filter.page_size
+                        && this.total >= this.filter.page_size
+                    ) {
+                        this.filter.page_num = 1;
+                        this.getWorkData();
+                    }
+                }
                 uni.showToast({
                     title: '删除成功',
                 });
-                if (index !== -1) {
-                    this.dataList.splice(index, 1);
-                }
                 if (this.tabActiveIndex === 1) {
                     // 待审核
                     this.allNum.wait -= 1;

@@ -313,7 +313,7 @@ export default {
             });
         },
         getData() {
-            api.get('/api/user/info').then(
+            return api.get('/api/user/info').then(
                 (res) => {
                     this.userInfo = res.user_info;
                     this.isLoading = false;
