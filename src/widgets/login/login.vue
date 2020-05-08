@@ -602,8 +602,8 @@ export default {
         line-height: 60upx;
     }
     .weixin-login-btn {
-        width: 100upx;
-        height: 100upx;
+        width: 80upx;
+        height: 80upx;
         margin: 0 auto 30upx;
         background-color: rgba(0, 0, 0, 0);
         border-radius: 0;
@@ -628,16 +628,16 @@ export default {
     .login-mode {
         color: #1166ff;
         font-size: 30rpx;
-        margin: 20upx 0;
+        margin: 10upx 0;
         min-height: 40upx;
         text-align: center;
         .desc {
-            padding: 14upx 0 23upx;
+            padding: 20upx 0 40upx;
         }
     }
 
     .tabs {
-        margin: 0 auto 28upx;
+        margin: 0 auto 14upx;
         justify-content: space-between;
         width: 467upx;
 
@@ -734,7 +734,7 @@ export default {
         height: 98rpx;
         line-height: 98rpx;
         text-align: center;
-        margin-bottom: 50rpx;
+        margin-bottom: 60upx;
         font-size: 36rpx;
         border-radius: 4upx;
         &.h5-btn {
@@ -746,7 +746,7 @@ export default {
         width: 316upx;
         height: 194upx;
         display: block;
-        margin: 40upx auto 80upx;
+        margin: 40upx auto 60upx;
     }
 
     .desc {
@@ -778,8 +778,8 @@ export default {
         }
     }
     .wx-login-btn {
-        width: 100upx;
-        height: 100upx;
+        width: 80upx;
+        height: 80upx;
         margin: 0 auto 40upx;
         display: block;
     }
