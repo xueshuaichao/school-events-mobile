@@ -25,6 +25,10 @@
 <script>
 export default {
     props: {
+        hideIndex: {
+            type: Number,
+            default: -1,
+        },
         imgSize: {
             // 红包大小
             type: Object,
@@ -40,8 +44,10 @@ export default {
             type: Array,
             default() {
                 return [
-                    'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/h5/upload-girl1.png',
-                    'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/h5/upload-girl2.png',
+                    'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/labor_prize1.png',
+                    'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/labor_prize2.png',
+                    'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/labor_prize3.png',
+                    'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/read_prize3.png',
                 ];
             },
         },
@@ -75,6 +81,9 @@ export default {
         };
     },
     watch: {
+        hideIndex() {
+            this.$set(this.packetList[this.hideIndex], 'isShow', false);
+        },
         packetList(val) {
             this.$nextTick(() => {
                 if (val.length) {
@@ -108,6 +117,7 @@ export default {
             const T = setInterval(() => {
                 if (time >= this.time) {
                     clearInterval(T);
+                    this.result();
                 } else {
                     this.setPacketList();
                     time += 1000;
@@ -131,7 +141,10 @@ export default {
             return num;
         },
         handelPacket(index) {
-            this.$set(this.packetList[index], 'isShow', false);
+            this.$emit('handelClick', index);
+        },
+        result() {
+            this.$emit('result');
         },
     },
 };
@@ -144,7 +157,7 @@ export default {
     left: 0;
     right: 0;
     bottom: 0;
-    z-index: 10;
+    z-index: 990;
     background-color: #000;
 }
 .pakcet-item {

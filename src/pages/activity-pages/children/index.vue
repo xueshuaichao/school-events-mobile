@@ -1,6 +1,14 @@
 <template>
     <div class="activity-init-page">
-        <packetRain />
+        <packetRain
+            :time="10000"
+            :speed="{
+                max: 6500,
+                min: 3000
+            }"
+            :hide-index="hideIndex"
+            @handelClick="handelClick"
+        />
         <indexPage
             v-if="loading"
             text-bg-color="#DB4E0E"
@@ -141,7 +149,7 @@ export default {
             showHistoryRankList: false,
             fr: '',
             activityId: '',
-            packetRainLoading: false,
+            hideIndex: -1,
         };
     },
     onLoad(params) {
@@ -160,9 +168,12 @@ export default {
     created() {
         this.getRank();
         this.historyRank();
-        this.packetRainLoading = true;
     },
     methods: {
+        handelClick(index) {
+            console.log(index);
+            this.hideIndex = index;
+        },
         getRank() {
             api.get('/api/activity/laborrank').then((data) => {
                 if (data.length === 3) {
