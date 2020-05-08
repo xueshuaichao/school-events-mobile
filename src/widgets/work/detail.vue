@@ -63,6 +63,7 @@
                     </cover-view>
                 </cover-view>
                 <video
+                    :id="`detail${swiperPage}`"
                     ref="video"
                     class="video"
                     preload
@@ -310,6 +311,14 @@ export default {
             type: String,
             default: '',
         },
+        isChangeSlide: {
+            type: Number,
+            default: 1,
+        },
+        swiperPage: {
+            type: Number,
+            default: 1,
+        },
     },
     data() {
         return {
@@ -328,13 +337,56 @@ export default {
             introduce: this.pageData.introduce || '',
         };
     },
+    watch: {
+        isChangeSlide(val) {
+            if (val !== this.swiperPage && this.pageData.resource_type === 1) {
+                if (this.isH5) {
+                    // h5的暂停方式需要专门处理。
+                    const b = document.querySelector(
+                        `#detail${this.swiperPage} video`,
+                    );
+                    if (b) {
+                        b.pause();
+                    }
+                } else {
+                    this.videoContext.stop();
+                }
+            }
+            if (val === this.swiperPage && this.pageData.resource_type === 1) {
+                this.isPlayed = false;
+                this.videoContext.seek(0);
+
+                if (this.isH5) {
+                    const b = document.querySelector(
+                        `#detail${this.swiperPage} video`,
+                    );
+                    if (b) {
+                        b.pause();
+                    }
+                } else {
+                    this.videoContext.play();
+                }
+            }
+            if (val === this.swiperPage && this.pageData.resource_type === 2) {
+                this.setPlayCount();
+            }
+        },
+    },
     created() {
         this.play_count = this.pageData.play_count;
         if (this.pageData.resource_type === 2) {
             this.play_count += 1;
         }
     },
-    mounted() {},
+    mounted() {
+        this.videoContext = uni.createVideoContext(
+            `detail${this.swiperPage}`,
+            this,
+        );
+        if (!this.isH5 && this.swiperPage === 1) {
+            this.videoContext.play();
+        }
+    },
     methods: {
         panelAction(action) {
             this.$emit('doAction', action);

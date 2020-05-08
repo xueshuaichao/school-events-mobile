@@ -86,14 +86,76 @@
                 />
             </view>
         </template>
-        <detail
-            :page-data="pageData"
-            :like-status="likeStatus"
-            :activity-id="activity_id"
-            :is-from-share="isFromShare"
-            :from="from"
-            @doAction="doAction"
-        />
+        <swiper
+            class="out-swiper"
+            vertical="true"
+            current="1"
+            :indicator-dots="false"
+            circular="true"
+            @change="changeOutSwiper"
+        >
+            <swiper-item
+                id="1"
+                class="pre-swiper"
+            >
+                <detail
+                    :page-data="pageDataOne"
+                    :like-status="likeStatus"
+                    :is-change-slide="currentSwiper"
+                    :swiper-page="0"
+                    :activity-id="activity_id"
+                    :is-from-share="isFromShare"
+                    :from="from"
+                    @doAction="doAction"
+                />
+            </swiper-item>
+            <template>
+                <swiper-item
+                    v-if="disableslide"
+                    class="cur-swiper"
+                    @touchmove.stop="stopTouchMove"
+                >
+                    <detail
+                        :page-data="pageDataTwo"
+                        :like-status="likeStatus"
+                        :is-change-slide="currentSwiper"
+                        :swiper-page="1"
+                        :activity-id="activity_id"
+                        :is-from-share="isFromShare"
+                        :from="from"
+                        @doAction="doAction"
+                    />
+                </swiper-item>
+                <swiper-item
+                    v-else
+                    class="cur-swiper"
+                >
+                    <detail
+                        :page-data="pageDataTwo"
+                        :like-status="likeStatus"
+                        :is-change-slide="currentSwiper"
+                        :swiper-page="1"
+                        :activity-id="activity_id"
+                        :is-from-share="isFromShare"
+                        :from="from"
+                        @doAction="doAction"
+                    />
+                </swiper-item>
+            </template>
+
+            <swiper-item class="next-swiper">
+                <detail
+                    :page-data="pageDataThree"
+                    :like-status="likeStatus"
+                    :is-change-slide="currentSwiper"
+                    :swiper-page="2"
+                    :activity-id="activity_id"
+                    :is-from-share="isFromShare"
+                    :from="from"
+                    @doAction="doAction"
+                />
+            </swiper-item>
+        </swiper>
     </view>
 </template>
 
@@ -154,6 +216,20 @@ export default {
             imgAuthBtn: false,
             isFromShare: '',
             from: '',
+            disableslide: false,
+            pageDataTwo: {},
+            pageDataThree: {},
+            pageDataOne: {},
+
+            prePageParam: {},
+            currentSwiper: 1,
+            outSwiperIncrease: true,
+            levelid: -1,
+            sort: 1,
+            actCat: 0,
+            actSort: '',
+            search: '',
+            keyword: '',
         };
     },
     created() {},
@@ -371,6 +447,7 @@ export default {
                     this.detailId = res.id;
                     this.pageData = res;
                     if (!reget) {
+                        this.pageDataTwo = res;
                         this.setGetDetail(res);
                     }
                 },
@@ -581,6 +658,32 @@ export default {
                 this.toggleLike();
             }
         },
+        stopTouchMove() {
+            //  禁止滑动。
+        },
+        changeOutSwiper(event) {
+            this.currentSwiper = event.detail.current;
+        },
+        getPageMoreDate(paramData) {
+            return api.post('/api/works/list', {
+                ...paramData,
+                cat_id: { one_level_id: 1 },
+                sort: 4,
+                keyword: '',
+            });
+        },
+        getPageSizeInfo(position) {
+            // 设置参数
+            const pageSize = 10;
+            const pageNum = Math.ceil(position / pageSize);
+            const currentPosition = position - pageSize * (pageNum - 1) - 1;
+            return {
+                page_size: pageSize,
+                page_num: pageNum,
+                current_position: currentPosition,
+                type: 2,
+            };
+        },
     },
     onLoad(query) {
         // this.pageFrom = utils.getParam(query, 'from') || '';
@@ -621,7 +724,16 @@ export default {
 
         // 获取detail页面的内容
         this.getData();
-
+        const toPreTarget = 1;
+        const toNewTarget = 3;
+        const paramPre = this.getPageSizeInfo(toPreTarget);
+        const paramNext = this.getPageSizeInfo(toNewTarget);
+        this.getPageMoreDate(paramPre).then((res) => {
+            this.pageDataOne = res;
+        });
+        this.getPageMoreDate(paramNext).then((res) => {
+            this.pageDataThree = res;
+        });
         // #ifndef H5
         this.poster = this.selectComponent('#poster');
         this.getAuthStatus();
