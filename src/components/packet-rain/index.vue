@@ -2,17 +2,21 @@
     <view class="packet-rain">
         <view
             v-for="(item, index) in packetList"
+            v-show="item.isShow"
             :key="index"
             class="pakcet-item"
             :style="{
-                left: `${item.postion}px`
+                left: `${item.postion}px`,
+                width: `${imgSize.width}px`,
+                height: `${imgSize.height}px`,
+                top: `-${imgSize.height + 20}px`
             }"
             :animation="animationData[index]"
         >
             <image
                 class="pakcet-item-img"
                 :src="item.src"
-                @click="handelPacket(item.id)"
+                @click="handelPacket(index)"
             />
         </view>
     </view>
@@ -21,43 +25,37 @@
 <script>
 export default {
     props: {
-        isShow: {
-            type: Boolean,
-            default: false,
-        },
-        listNum: {
-            // 总红包数
-            type: Number,
-            default: 100,
+        imgSize: {
+            // 红包大小
+            type: Object,
+            default() {
+                return {
+                    width: 40,
+                    height: 60,
+                };
+            },
         },
         images: {
             // 红包样式
             type: Array,
             default() {
-                return [];
+                return [
+                    'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/h5/upload-girl1.png',
+                    'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/h5/upload-girl2.png',
+                ];
             },
         },
-        num: {
-            // 每次掉落个数
+        time: {
+            // 持续时间 ms
             type: Number,
-            default: 5,
-        },
-        postion: {
-            // 掉落位置
-            type: Object,
-            default() {
-                return {
-                    max: 5000,
-                    min: 10,
-                };
-            },
+            default: 20000,
         },
         speed: {
             // 掉落速度
             type: Object,
             default() {
                 return {
-                    max: 1000000,
+                    max: 5500,
                     min: 3000,
                 };
             },
@@ -66,30 +64,64 @@ export default {
     data() {
         return {
             packetList: [],
+            isShow: true,
             animationData: [],
+            postion: {
+                // 初始化位置
+                max: 350, // 最右边
+                min: 10, // 最左
+            },
+            windowHeight: 1200,
         };
     },
+    watch: {
+        packetList(val) {
+            this.$nextTick(() => {
+                if (val.length) {
+                    this.animation.translateY(this.windowHeight).step({
+                        duration: this.randomNumBoth(
+                            this.speed.max,
+                            this.speed.min,
+                        ),
+                    });
+                    this.animationData.push(this.animation.export());
+                }
+            });
+        },
+    },
     created() {
-        this.animation = uni.createAnimation({
-            timingFunction: 'ease',
+        this.animation = uni.createAnimation();
+        const that = this;
+        uni.getSystemInfo({
+            success(res) {
+                const { windowWidth, windowHeight } = res;
+                that.postion.max = windowWidth - (that.imgSize.width + 10);
+                that.windowHeight = windowHeight + that.imgSize.height + 20;
+                that.init();
+            },
         });
-        this.init();
-        // this.rotateAndScaleThenTranslate();
     },
     methods: {
         init() {
-            const packetList = [];
-            for (let i = 0; i < this.listNum; i += 1) {
-                packetList.push({
-                    id: i,
-                    src: this.images.length,
-                    rotate: 10,
-                    postion: this.randomNumBoth(500, 10),
-                });
-                this.rotateAndScaleThenTranslate(i);
-            }
-            this.packetList = packetList;
-            // this.$set(this.packetList,packetList)
+            this.setPacketList();
+            let time = 1000;
+            const T = setInterval(() => {
+                if (time >= this.time) {
+                    clearInterval(T);
+                } else {
+                    this.setPacketList();
+                    time += 1000;
+                }
+            }, 1000);
+        },
+        setPacketList() {
+            this.packetList.push({
+                src: this.images[
+                    Math.floor(Math.random() * this.images.length)
+                ],
+                isShow: true,
+                postion: this.randomNumBoth(this.postion.max, this.postion.min),
+            });
         },
         randomNumBoth(max, min = 0) {
             let num = 0;
@@ -98,13 +130,8 @@ export default {
             num = min + Math.round(Rand * Range);
             return num;
         },
-        handelPacket(id) {
-            console.log(id);
-        },
-        rotateAndScaleThenTranslate(index) {
-            this.animation.translateY(600).step({ duration: 1000 });
-            this.animationData[index] = this.animation.export();
-            // console.log(111,this.animation)
+        handelPacket(index) {
+            this.$set(this.packetList[index], 'isShow', false);
         },
     },
 };
@@ -122,9 +149,11 @@ export default {
 }
 .pakcet-item {
     position: absolute;
-    // top: -50upx;
-    width: 20upx;
-    height: 40upx;
-    background-color: #f00;
+    top: -50upx;
+    transform: translateY(-100px);
+}
+.pakcet-item-img {
+    width: 100%;
+    height: 100%;
 }
 </style>

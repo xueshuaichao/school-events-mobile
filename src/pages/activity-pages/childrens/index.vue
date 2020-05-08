@@ -1,6 +1,6 @@
 <template>
     <div class="activity-init-page">
-        <packetRain v-show="packetRainLoading" />
+        <packetRain />
         <indexPage
             v-if="loading"
             text-bg-color="#DB4E0E"
