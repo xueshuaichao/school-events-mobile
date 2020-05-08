@@ -199,9 +199,12 @@
                 我要参与
             </view>
             <view
-                v-if="activityId > 5"
+                v-if="activityId > 5 || from === 'openGame'"
                 class="join-game-read"
-                :class="[{ wuyi: activityId === 8 }]"
+                :class="[
+                    { wuyi: activityId === 8 },
+                    { openGame: from === 'openGame' }
+                ]"
                 @click="joinGame"
             >
                 <image
@@ -210,6 +213,16 @@
                 />
                 <text>
                     我要参与
+                </text>
+            </view>
+            <view
+                v-if="from === 'openGame'"
+                class="join-game-read to-activty-index read-index"
+                :class="[{ openGame1: from === 'openGame' }]"
+                @click="goHome"
+            >
+                <text>
+                    {{ homeText }}
                 </text>
             </view>
             <view
@@ -293,12 +306,16 @@ export default {
             type: String,
             default: '1',
         },
+        from: {
+            type: String,
+            default: '',
+        },
     },
     data() {
         return {
             isFullScreen: false,
             recordTxts: ['校级记录', '市级记录', '省级记录'],
-
+            homeText: '< 返回首页',
             // #ifdef H5
             isH5: true,
             // #endif
@@ -371,6 +388,12 @@ export default {
             if (this.activityId === 8) {
                 url = '/pages/activity-pages/labor/index';
             }
+            uni.navigateTo({
+                url,
+            });
+        },
+        goHome() {
+            const url = '/pages/openGame/index';
             uni.navigateTo({
                 url,
             });
@@ -617,6 +640,12 @@ export default {
         line-height: 40rpx;
         &.wuyi {
             background: #db4e0e;
+        }
+        &.openGame {
+            background: #9f1ff3;
+        }
+        &.openGame1 {
+            color: #9f1ff3 !important;
         }
         .icon {
             width: 44rpx;

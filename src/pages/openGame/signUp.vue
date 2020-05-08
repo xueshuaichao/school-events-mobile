@@ -500,7 +500,7 @@ export default {
                 &::after {
                     content: " ";
                     position: absolute;
-                    top: 5rpx;
+                    top: 7rpx;
                     left: -9upx;
                     width: 4upx;
                     height: 30upx;

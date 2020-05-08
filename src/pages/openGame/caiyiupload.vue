@@ -479,7 +479,7 @@ export default {
                     uni.hideLoading();
                     uni.navigateTo({
                         url:
-                            '/pages/upload/result/result?type=success&from=festival',
+                            '/pages/upload/result/result?type=success&from=openGame',
                     });
                 },
                 (err) => {

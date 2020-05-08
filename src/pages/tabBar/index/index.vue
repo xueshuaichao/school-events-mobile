@@ -74,7 +74,7 @@
                     </swiper-item>
                     <swiper-item v-if="!isH5">
                         <navigator
-                            url="/pages/openGame/zhibo-list"
+                            url="/pages/openGame/index"
                             class="swiper-item"
                         >
                             <image
@@ -374,7 +374,7 @@ export default {
                     id: 7,
                     img:
                         'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/h5/aitiaozhan-s-banner.png',
-                    url: '/pages/openGame/zhibo-list',
+                    url: '/pages/openGame/index',
                 },
                 {
                     id: 6,

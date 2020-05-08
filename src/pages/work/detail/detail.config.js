@@ -377,6 +377,66 @@ const detailConf = [
             ['争当劳动之星，就差你的赞了，快来！'],
         ],
     },
+    // 公开赛海报
+    {
+        posterConfig: {
+            pixelRatio: 3,
+            width: 571,
+            height: 956,
+            debug: false,
+            texts: [
+                {
+                    x: 49,
+                    y: 544,
+                    text: [
+                        {
+                            text: '',
+                            fontSize: 30,
+                            color: '#333',
+                            opacity: 1,
+                            marginRight: 10,
+                            lineHeight: 40,
+                            lineNum: 1,
+                            width: 1210,
+                            textOverflow: 'ellipsis',
+                        },
+                    ],
+                    baseLine: 'middle',
+                },
+            ],
+            images: [
+                {
+                    url:
+                        'http://aitiaozhan.oss-cn-beijing.aliyuncs.com/school-events-mobile/openGame-poster.png',
+                    width: 571,
+                    height: 956,
+                    y: 0,
+                    x: 0,
+                },
+                {
+                    url: '',
+                    width: 457,
+                    height: 259,
+                    y: 242,
+                    x: 50,
+                },
+                {
+                    url: '',
+                    width: 161,
+                    height: 161,
+                    y: 693,
+                    x: 198,
+                },
+            ],
+        },
+        titleList: [
+            [
+                '我的作品《',
+                'resource_name',
+                '》，【我正在参加爱挑战网络预选赛】,快来给我点赞吧！',
+            ],
+        ],
+    },
 ];
 
 export default detailConf;

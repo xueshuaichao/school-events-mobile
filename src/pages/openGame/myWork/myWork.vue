@@ -1,0 +1,912 @@
+<template>
+    <view class="page-my-work">
+        <image
+            class="one"
+            src="../../../static/images/zhibo/star.png"
+        />
+        <image
+            class="two"
+            src="../../../static/images/zhibo/star.png"
+        />
+        <image
+            class="three"
+            src="../../../static/images/zhibo/star.png"
+        />
+        <image
+            class="four"
+            src="../../../static/images/zhibo/star.png"
+        />
+        <!-- identity 用户身份 1=>C端普通用户 ,2=> 教育局员工，3=>学校员工 4 学生 -->
+        <!-- my works -->
+        <view
+            v-if="type === 'myWork'"
+            class="panel"
+        >
+            <view class="panel-hd">
+                <view class="panel-title">
+                    <view
+                        class="jingji-btn"
+                        :class="{ active: tabActiveIndex === 1 }"
+                        @click="setTabActive(1)"
+                    >
+                        已通过({{ allNum.pass || 0 }})
+                    </view>
+                </view>
+                <view class="panel-title">
+                    <view
+                        class="jingji-btn"
+                        :class="{ active: tabActiveIndex === 0 }"
+                        @click="setTabActive(0)"
+                    >
+                        待审核({{ allNum.wait || 0 }})
+                    </view>
+                </view>
+                <view class="panel-title">
+                    <view
+                        class="jingji-btn"
+                        :class="{ active: tabActiveIndex === 2 }"
+                        @click="setTabActive(2)"
+                    >
+                        未通过({{ allNum.no_pass || 0 }})
+                    </view>
+                </view>
+            </view>
+            <view class="content-box">
+                <view
+                    v-if="total > 0"
+                    class="media-box"
+                >
+                    <view
+                        v-for="item in dataList"
+                        :key="item.id"
+                        class="media-content"
+                    >
+                        <event-craft-cover
+                            :info="item"
+                            :bg-color="'006EDE'"
+                            @click.native="viewDetail(item)"
+                        />
+                        <view
+                            v-if="type === 'myWork'"
+                            class="work-info"
+                        >
+                            <view class="media-name text-one-line">
+                                {{ ` ${item.resource_name}` }}
+                            </view>
+                            <view class="media-time">
+                                {{ item.created_at }}
+                            </view>
+                            <view
+                                v-if="tabActiveIndex === 2"
+                                class="reject-reason text-three-line"
+                            >
+                                {{ item.reason || "" }}
+                            </view>
+                        </view>
+                        <view
+                            v-else
+                            class="work-info"
+                        >
+                            <view class="media-name">
+                                {{ `${item.cat_name}` }} |
+                                {{
+                                    `${item.achievement}${item.achievement_unit}`
+                                }}
+                            </view>
+                            <view class="nameAndSchool">
+                                <view class="name">
+                                    {{ `${item.created_at}` }}
+                                </view>
+                            </view>
+                        </view>
+                    </view>
+                    <uni-load-more
+                        class="loadMore"
+                        :status="loadMoreStatus"
+                        :content-text="{
+                            contentdown: '上拉显示更多',
+                            contentrefresh: '正在加载...',
+                            contentnomore: '———— 已经到底了~ ————'
+                        }"
+                        color="#333"
+                    />
+                </view>
+                <view
+                    v-if="type === 'search'"
+                    v-show="searchEmpty"
+                    class="empty"
+                >
+                    <image
+                        src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/yiqing/empty.png"
+                    />
+                    <view>搜索不到您要的结果，换个关键词试试吧～</view>
+                </view>
+                <view
+                    v-show="myWorkEmpty"
+                    class="work-empty"
+                >
+                    <!-- <image
+                        src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/yiqing/work-empty.png"
+                    /> -->
+                    <view>
+                        {{ allTotal === 0 ? "您还没有上传作品" : "暂无作品" }}
+                    </view>
+                    <navigator
+                        v-if="allTotal === 0"
+                        url="/pages/zhibo/zhibo-list"
+                    >
+                        <view class="goUpload">
+                            去上传
+                        </view>
+                    </navigator>
+                </view>
+                <button
+                    class="btn goHome"
+                    @click="goHome"
+                >
+                    {{ text }}
+                </button>
+            </view>
+        </view>
+        <view
+            v-else
+            class="panel-before"
+        >
+            <view class="panel-scroll">
+                <view>
+                    <view class="search-box">
+                        <view class="search">
+                            <image
+                                src="../../../static/images/zhibo/search.png"
+                                @click="bindconfirm"
+                            />
+                            <form action="javascript:return true">
+                                <input
+                                    v-model="changeValue"
+                                    type="text"
+                                    confirm-type="search"
+                                    confirm-hold="true"
+                                    placeholder-style="color:#999"
+                                    placeholder="搜索作者或者作品"
+                                    @confirm="bindconfirm"
+                                >
+                            </form>
+                        </view>
+                    </view>
+                </view>
+                <view class="content-box-search">
+                    <view
+                        v-if="total > 0"
+                        class="media-box"
+                    >
+                        <view
+                            v-for="item in dataList"
+                            :key="item.id"
+                            class="media-content"
+                        >
+                            <event-craft-cover
+                                :info="item"
+                                :bg-color="'006EDE'"
+                                @click.native="viewDetail(item)"
+                            />
+                            <view
+                                v-if="type === 'myWork'"
+                                class="work-info"
+                            >
+                                <view class="media-name text-one-line">
+                                    {{ ` ${item.resource_name}` }}
+                                </view>
+                                <view class="media-time">
+                                    {{ item.created_at }}
+                                </view>
+                                <view
+                                    v-if="tabActiveIndex === 2"
+                                    class="reject-reason text-three-line"
+                                >
+                                    {{ item.reason }}
+                                </view>
+                            </view>
+                            <view
+                                v-else
+                                class="work-info"
+                            >
+                                <view class="media-name">
+                                    {{ `${item.cat_name}` }} |
+                                    {{
+                                        `${item.achievement}${item.achievement_unit}`
+                                    }}
+                                </view>
+                                <view class="nameAndSchool">
+                                    <view class="name">
+                                        <image
+                                            src="../../../static/images/zhibo/name-icon.png"
+                                        />
+                                        {{ `${item.create_name}` }}
+                                    </view>
+                                    <view class="school">
+                                        {{ `${item.create_user_class}` }}
+                                    </view>
+                                </view>
+                                <text class="vote-num">
+                                    {{ item.praise_count }}票
+                                </text>
+                                <view
+                                    class="vote"
+                                    :class="
+                                        item.is_like === 1 ? 'voted' : 'unvote'
+                                    "
+                                    @click="handleVote(item)"
+                                >
+                                    <image
+                                        src="../../../static/images/zhibo/vote.png"
+                                    />
+                                    {{ item.is_like === 1 ? "已赞" : "点赞" }}
+                                </view>
+                            </view>
+                        </view>
+                        <uni-load-more
+                            class="loadMore"
+                            :status="loadMoreStatus"
+                            :content-text="{
+                                contentdown: '上拉显示更多',
+                                contentrefresh: '正在加载...',
+                                contentnomore: '———— 已经到底了~ ————'
+                            }"
+                            color="#333"
+                        />
+                    </view>
+                    <view
+                        v-if="type === 'search'"
+                        v-show="searchEmpty"
+                        class="empty"
+                    >
+                        <image
+                            src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/yiqing/empty.png"
+                        />
+                        <view>搜索不到您要的结果，换个关键词试试吧～</view>
+                    </view>
+                    <view
+                        v-show="myWorkEmpty"
+                        class="work-empty"
+                    >
+                        <!-- <image
+                            src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/yiqing/work-empty.png"
+                        /> -->
+                        <view>
+                            {{
+                                allTotal === 0 ? "您还没有上传作品" : "暂无作品"
+                            }}
+                        </view>
+                        <navigator
+                            v-if="allTotal === 0"
+                            url="/pages/zhibo/zhibo-list"
+                        >
+                            <view class="goUpload">
+                                去上传
+                            </view>
+                        </navigator>
+                    </view>
+                    <button
+                        class="btn goHome"
+                        @click="goHome"
+                    >
+                        {{ text }}
+                    </button>
+                </view>
+            </view>
+        </view>
+    </view>
+</template>
+
+<script>
+// work.vue
+import api from '../../../common/api';
+import uniLoadMore from '../../../components/uni-load-more/uni-load-more.vue';
+import EventCraftCover from '../../../components/event-craft-cover/index.vue';
+import utils from '../../../common/utils';
+
+export default {
+    components: {
+        uniLoadMore,
+        EventCraftCover,
+    },
+    filters: {
+        optimizeImage: (val) => {
+            if (!val) {
+                return '';
+            }
+            let newUrl = '';
+            const width = 335;
+            const height = 225;
+            if (val.indexOf('?') !== -1) {
+                newUrl = `${val}&x-oss-process=image/format,png/interlace,1/quality,Q_80/resize,m_pad,h_${height
+                    * 2},w_${width * 2}`;
+            } else {
+                newUrl = `${val}?x-oss-process=image/format,png/interlace,1/quality,Q_80/resize,m_pad,h_${height
+                    * 2},w_${width * 2}`;
+            }
+            return newUrl;
+        },
+    },
+    data() {
+        return {
+            text: '返回首页',
+            dataList: [],
+            changeValue: '',
+            loadMoreStatus: 'none',
+            mediaIcon: {
+                1: '../../../static/images/chunjie/video-icon.png',
+                2: '../../../static/images/chunjie/img-icon.png',
+            },
+            tabActiveIndex: 1,
+            filter: {
+                page_num: 1,
+                page_size: 10,
+            },
+            total: 1,
+            type: 'myWork',
+            allNum: {},
+            allTotal: 0,
+        };
+    },
+    computed: {
+        searchEmpty() {
+            return this.total === 0 && this.type === 'search';
+        },
+        myWorkEmpty() {
+            return this.total === 0 && this.type === 'myWork';
+        },
+    },
+    methods: {
+        handleVote(item) {
+            if (utils.isOverDate()) {
+                api.isLogin({
+                    fr: this.fr,
+                }).then(() => {
+                    api.post('/api/common/like', {
+                        object_id: item.id,
+                        object_type: 1,
+                        type: 1,
+                    }).then(
+                        () => {
+                            // eslint-disable-next-line no-param-reassign
+                            item.praise_count += 1;
+                            // eslint-disable-next-line no-param-reassign
+                            item.is_like = 1;
+                            uni.showToast({
+                                title: '已点赞',
+                                icon: 'none',
+                            });
+                        },
+                        (res) => {
+                            uni.showToast({
+                                title: res.message,
+                                icon: 'none',
+                            });
+                        },
+                    );
+                });
+            } else {
+                uni.showToast({
+                    title: '活动已结束',
+                    icon: 'none',
+                });
+            }
+        },
+        goHome() {
+            uni.reLaunch({
+                url: '/pages/openGame/index',
+            });
+        },
+        bindconfirm() {
+            const value = this.changeValue.trim();
+            if (!value) {
+                uni.showToast({
+                    title: '请输入搜索内容',
+                    icon: 'none',
+                });
+                return;
+            }
+            this.filter.keyword = value.trim();
+            this.filter.page_num = 1;
+            this.searchWorkData();
+        },
+        getWorkData(title) {
+            return api
+                .post('/api/user/competitionlist', {
+                    ...this.filter,
+                    status: this.tabActiveIndex,
+                })
+                .then(
+                    ({ list, total, all_num: allNum }) => {
+                        if (title === 'reachBottom') {
+                            this.dataList = this.dataList.concat(list);
+                        } else {
+                            this.dataList = list;
+                        }
+                        this.total = total;
+                        this.allNum = allNum;
+                        console.log(allNum, 'allNum');
+                        this.allTotal = allNum.pass + allNum.wait + allNum.no_pass;
+                        if (
+                            this.total
+                            <= this.filter.page_num * this.filter.page_size
+                        ) {
+                            this.loadMoreStatus = title === 'reachBottom' ? 'noMore' : 'none';
+                        } else {
+                            this.loadMoreStatus = 'more';
+                        }
+                    },
+                    () => {},
+                );
+        },
+        searchWorkData(title) {
+            api.post('/api/works/competitionlist', this.filter).then(
+                ({ list, total }) => {
+                    if (title === 'reachBottom') {
+                        this.dataList = this.dataList.concat(list);
+                    } else {
+                        this.dataList = list;
+                    }
+
+                    this.total = total;
+                    if (
+                        this.total
+                        <= this.filter.page_num * this.filter.page_size
+                    ) {
+                        // this.loadMoreStatus = 'noMore';
+                        this.loadMoreStatus = title === 'reachBottom' ? 'noMore' : 'none';
+                    } else {
+                        this.loadMoreStatus = 'more';
+                    }
+                    uni.hideLoading();
+                },
+            );
+        },
+        onReachBottom() {
+            console.log(this.loadMoreStatus, '到底部');
+            if (this.loadMoreStatus === 'more') {
+                this.filter.page_num = this.filter.page_num + 1;
+                this.loadMoreStatus = 'loading';
+                if (this.type === 'myWork') {
+                    this.getWorkData('reachBottom');
+                } else {
+                    this.searchWorkData('reachBottom');
+                }
+            }
+        },
+        setTabActive(i) {
+            this.filter.page_num = 1;
+            this.tabActiveIndex = i;
+            this.getWorkData();
+        },
+        viewDetail(item) {
+            if (this.tabActiveIndex === 1) {
+                if (this.type === 'myWork') {
+                    uni.navigateTo({
+                        // url: `/pages/work/detail/detail?id=${item.id}&fr=${this.fr}&activity_id=5&from=yiqing`,
+                        url: `/pages/work/detail/detail?id=${item.id}&from=openGame`,
+                    });
+                } else {
+                    uni.navigateTo({
+                        url: `/pages/work/detail/detail?id=${item.id}`,
+                    });
+                }
+            }
+        },
+    },
+    onLoad(query) {
+        const { type, name } = query;
+        console.log(type, 'tye');
+        this.type = type;
+        if (type === 'myWork') {
+            this.getWorkData();
+        } else if (type === 'search') {
+            uni.setNavigationBarTitle({ title: '搜索' });
+            this.filter.keyword = name;
+            this.changeValue = name;
+            this.searchWorkData();
+        }
+    },
+    onShareAppMessage(res) {
+        if (res.from === 'button') {
+            // 来自页面内分享按钮
+            console.log(res.target);
+        }
+        const titleList = [
+            '抗击疫情“艺”起来，参与活动为武汉加油！向英雄致敬！',
+        ];
+        const title = titleList[Math.floor(Math.random() * titleList.length)];
+        return {
+            title,
+            imageUrl:
+                'http: //aitiaozhan.oss-cn-beijing.aliyuncs.com/chunjiehao/yiqing-poster01.png',
+            path: '/pages/yiqing/index',
+        };
+    },
+};
+</script>
+
+<style lang="less" scoped>
+.nameAndSchool {
+    display: flex;
+    justify-content: space-between;
+    font-size: 22upx;
+    color: #999999;
+    margin-top: 24rpx;
+    margin-bottom: 24rpx;
+
+    .name {
+        image {
+            width: 28upx;
+            height: 22upx;
+            margin-right: 9rpx;
+        }
+    }
+}
+.vote {
+    float: right;
+    width: 120upx;
+    height: 50upx;
+
+    color: #9f1ff3;
+    font-size: 28upx;
+    text-align: center;
+    line-height: 50upx;
+    position: relative;
+    &.voted {
+        background: #fff;
+        border: 1px solid rgba(159, 31, 243, 1);
+    }
+    &.unvote {
+        background: #f5e7ff;
+        border: 1px solid transparent;
+    }
+    image {
+        position: absolute;
+        top: 14upx;
+        left: 13upx;
+        width: 18rpx;
+        height: 18rpx;
+    }
+}
+.goHome {
+    position: fixed;
+    bottom: 76upx;
+    right: 79upx;
+    color: #333333;
+    font-size: 28upx;
+    width: 223upx;
+    height: 84upx;
+    background: url("../../../static/images/zhibo/openGame-btn.png") no-repeat;
+    background-size: 100% 100%;
+    line-height: 65upx;
+    text-align: center;
+    padding: 0;
+}
+.empty {
+    text-align: center;
+    image {
+        width: 300upx;
+        height: 236upx;
+        margin-top: 174upx;
+    }
+    view {
+        color: #333;
+        font-size: 28upx;
+        // margin-top: 30upx;
+    }
+}
+.work-empty {
+    text-align: center;
+    position: absolute;
+    top: 330rpx;
+    // left: 227rpx;
+    width: 100%;
+    image {
+        width: 300upx;
+        height: 236upx;
+        margin-top: 174upx;
+    }
+    .goUpload {
+        margin-top: 37upx;
+        width: 223upx;
+        height: 84upx;
+        background: url("../../../static/images/zhibo/openGame-btn.png")
+            no-repeat;
+        font-size: 28upx;
+        color: #333;
+        line-height: 65upx;
+        text-align: center;
+        background-size: 100% 100%;
+        margin-left: 223rpx;
+    }
+    view {
+        color: #333;
+        font-size: 28upx;
+        // margin-top: 30upx;
+    }
+}
+.media-box {
+    background: #fff;
+    .media-content {
+        width: 690upx;
+        padding: 21upx;
+        box-sizing: border-box;
+        display: flex;
+        justify-content: space-between;
+        position: relative;
+        margin-bottom: 20upx;
+        border-radius: 20upx;
+        .work {
+            width: 335upx;
+            height: 225upx;
+            border-radius: 20upx;
+        }
+        .media-icon {
+            width: 40upx;
+            height: 40upx;
+            background: rgba(0, 0, 0, 0.6);
+            border-radius: 20upx;
+            text-align: center;
+            line-height: 39upx;
+            // #ifdef H5
+            line-height: 42upx;
+            // #endif
+            position: absolute;
+            top: 175upx;
+            left: 290upx;
+            image {
+                width: 22upx;
+                height: 22upx;
+            }
+        }
+        .work-info {
+            width: 290upx;
+            position: relative;
+            .media-name {
+                width: 100%;
+                font-size: 28upx;
+                margin-bottom: 10upx;
+                color: #333333;
+            }
+            .media-time {
+                color: #999999;
+                font-size: 24upx;
+            }
+            .vote-num {
+                color: #9f1ff3;
+                font-size: 30upx;
+            }
+        }
+    }
+}
+.page-my-work {
+    padding: 30upx;
+    box-sizing: border-box;
+    width: 100%;
+    min-height: 100vh;
+    background: #34349c;
+    .one {
+        position: fixed;
+        top: 51upx;
+        left: 9upx;
+        width: 21upx;
+        height: 22upx;
+    }
+    .two {
+        position: fixed;
+        top: 527upx;
+        left: 7upx;
+        width: 21upx;
+        height: 22upx;
+    }
+    .three {
+        position: fixed;
+        top: 445upx;
+        right: 14upx;
+        width: 21upx;
+        height: 22upx;
+    }
+    .four {
+        position: fixed;
+        bottom: 10upx;
+        right: 62upx;
+        width: 21upx;
+        height: 22upx;
+    }
+    .search-box {
+        overflow: hidden;
+        margin-bottom: 30rpx;
+        button {
+            width: 144upx;
+            height: 68upx;
+            float: left;
+            line-height: 68upx;
+            color: #ffffff;
+            background: transparent;
+            font-size: 30upx;
+            font-weight: 700;
+            border-radius: 34upx;
+            padding: 0;
+            &.active {
+                background: #0084ff;
+                color: #fff;
+            }
+            &::after {
+                border: none;
+            }
+        }
+        .search {
+            // background: #003dd7;
+            width: 624upx;
+            height: 70upx;
+            position: relative;
+            // float: right;
+            border: 1upx solid rgba(84, 8, 68, 1);
+            margin-left: 30upx;
+            margin-top: 40rpx;
+
+            image {
+                width: 40upx;
+                height: 40upx;
+                position: absolute;
+                top: 16upx;
+                right: 22upx;
+            }
+            input {
+                width: 534upx;
+                position: absolute;
+                top: 20upx;
+                // #ifndef H5
+                top: 15upx;
+                // #endif
+                left: 22upx;
+                font-size: 28upx;
+                color: #000;
+            }
+            // .search-button {
+            //     font-size: 24upx;
+            //     color: #fff;
+            //     position: absolute;
+            //     top: 20upx;
+            //     right: 14upx;
+            // }
+        }
+    }
+    .panel-before {
+        position: relative;
+        background: #fff;
+        display: flex;
+        flex-flow: column;
+        min-height: 95vh;
+        border-bottom: 19upx solid #5151c6;
+        // .panel-scroll {
+        //     height: 100%;
+        //     overflow-y: scroll;
+        // }
+    }
+    .panel {
+        min-height: 95vh;
+        display: flex;
+        flex-flow: column;
+        border-bottom: 19upx solid #5151c6;
+    }
+    .panel .panel-hd,
+    .panel-before .panel-hd {
+        border-bottom: none;
+        margin: 0;
+        display: flex;
+        justify-content: space-around;
+        height: 116rpx;
+
+        & .panel-title {
+            padding: 0;
+            background: url("../../../static/images/zhibo/toggleBtn-bg.png")
+                no-repeat;
+            width: 223upx;
+            height: 116upx;
+            background-size: 100% 100%;
+            margin-right: 12upx;
+            float: left;
+            position: relative;
+            .jingji-btn {
+                width: 195upx;
+                height: 64upx;
+                font-size: 32upx;
+                text-align: center;
+                line-height: 64upx;
+                font-weight: 700;
+                color: #000;
+                position: absolute;
+                top: 3upx;
+                left: 3upx;
+                &.active {
+                    background: #9f1ff3;
+                    color: #fff;
+                }
+            }
+        }
+    }
+
+    .content-box {
+        width: 670upx;
+        background: #fff;
+        position: relative;
+        flex: 1;
+        border-bottom: 19upx solid #5151c6;
+    }
+    .content-box-search {
+    }
+    // .content-box::before {
+    //     box-sizing: border-box;
+    //     position: absolute;
+    //     bottom: -19upx;
+    //     content: '';
+    //     left: 0;
+    //     width: 100%;
+    //     height: 19upx;
+    //     background: #5151C6;
+    //     border: 1upx solid #540844;
+    //     transform: skew(45deg);
+    //     transform-origin: right top;
+    // }
+    .content-box::after,
+    .panel-before::after {
+        box-sizing: border-box;
+        position: absolute;
+        top: 0;
+        right: -19upx;
+        content: "";
+        width: 19upx;
+        height: 100%;
+        background: #7c7cde;
+        border: 1upx solid rgba(84, 8, 68, 1);
+        transform: skewY(45deg);
+        transform-origin: left;
+    }
+
+    .work-list {
+        .work-item {
+            // border-bottom: 1upx solid #ddd;
+            padding: 20upx 0 20upx;
+
+            position: relative;
+            background: #fff6e1;
+            margin-bottom: 20rpx;
+        }
+
+        .btns {
+            position: absolute;
+            right: 0;
+            bottom: 10upx;
+
+            .btn {
+                display: inline-block;
+                width: 120upx;
+                height: 60upx;
+                font-size: 26upx;
+                line-height: 60upx;
+                color: #fff;
+                text-align: center;
+                margin-left: 40upx;
+                background: #1166ff;
+            }
+
+            .btn-share {
+                border-radius: 0;
+            }
+        }
+    }
+
+    .blank-wrap {
+        margin-top: 180upx;
+    }
+
+    .reject-reason {
+        color: #999999;
+        font-size: 24rpx;
+        margin-top: 10rpx;
+    }
+}
+</style>

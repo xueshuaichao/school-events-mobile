@@ -40,13 +40,12 @@
                 管理员会尽快审核，请耐心等候！
             </view>
             <text
-                :class="from === 'openGame' ? 'link btn' : 'link btn mr-right'"
+                class="link btn mr-right"
                 @click="reUpload"
             >
                 再次上传作品
             </text>
             <text
-                v-if="from !== 'openGame'"
                 class="link btn blue-bg"
                 @click="goToUc"
             >
@@ -116,6 +115,10 @@ export default {
             } else if (this.from === 'festival') {
                 uni.reLaunch({
                     url: '/pages/chunjie/myWork/myWork?type=myWork',
+                });
+            } else if (this.from === 'openGame') {
+                uni.reLaunch({
+                    url: '/pages/openGame/myWork/myWork?type=myWork',
                 });
             }
         },

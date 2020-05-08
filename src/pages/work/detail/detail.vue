@@ -9,7 +9,8 @@
             :class="[
                 { read: activity_id === 6 },
                 { chunjie: activity_id === 3 || activity_id === 4 },
-                { wuyi: activity_id === 8 }
+                { wuyi: activity_id === 8 },
+                { openGame: from === 'openGame' }
             ]"
         >
             <image
@@ -90,6 +91,7 @@
             :like-status="likeStatus"
             :activity-id="activity_id"
             :is-from-share="isFromShare"
+            :from="from"
             @doAction="doAction"
         />
     </view>
@@ -151,6 +153,7 @@ export default {
             activity_id: 0,
             imgAuthBtn: false,
             isFromShare: '',
+            from: '',
         };
     },
     created() {},
@@ -217,7 +220,8 @@ export default {
             const pages = getCurrentPages(); // 获取加载的页面
             const currentPage = pages[pages.length - 1]; // 获取当前页面的对象
             const url = currentPage.route || 'pages/work/detail/detail';
-            const scene = `id=${this.id}&aid=${this.activity_id}&y=1` || 'id=325';
+            // const scene = `id=${this.id}&aid=${this.activity_id}&y=1` || 'id=325';
+            const scene = `id=${this.id}`;
             console.log(url, scene, 'url---scene---');
             api.post('/api/weixin/getminiqrcode', {
                 path: url,
@@ -385,21 +389,30 @@ export default {
             this.getLikeStatus();
         },
         setGetDetail(res) {
-            if (this.activity_id > 2) {
-                this.curDetailConf = detailConf[this.activity_id - 1];
-            } else if (this.pageData.resource_scope === 3) {
-                [, this.curDetailConf] = detailConf;
-            } else {
-                [this.curDetailConf] = detailConf;
+            if (this.from !== 'openGame') {
+                if (this.activity_id > 2) {
+                    this.curDetailConf = detailConf[this.activity_id - 1];
+                } else if (this.pageData.resource_scope === 3) {
+                    [, this.curDetailConf] = detailConf;
+                } else {
+                    [this.curDetailConf] = detailConf;
+                }
+                this.posterConfig = {
+                    ...this.posterConfig,
+                    ...this.curDetailConf.posterConfig,
+                };
             }
-
-            this.posterConfig = {
-                ...this.posterConfig,
-                ...this.curDetailConf.posterConfig,
-            };
-
+            console.log(
+                this.posterConfig,
+                this.curDetailConf.posterConfig,
+                'this.posterConfig',
+            );
             this.posterConfig.images[1].url = res.video_img_url;
-            this.posterConfig.texts[0].text[0].text = res.resource_name;
+            if (this.from === 'openGame') {
+                this.posterConfig.texts[0].text[0].text = `${res.resource_name}|${res.achievement}${res.achievement_unit}`;
+            } else {
+                this.posterConfig.texts[0].text[0].text = res.resource_name;
+            }
             this.pageData.video_img_url = res.video_img_url;
 
             this.initShare(res);
@@ -507,6 +520,10 @@ export default {
                 () => {
                     if (this.isActvitity) {
                         this.joinActivity();
+                    } else if (this.from === 'openGame') {
+                        uni.navigateTo({
+                            url: '/pages/openGame/zhibo-list',
+                        });
                     } else {
                         uni.navigateTo({
                             url: '/pages/upload/default/upload',
@@ -579,6 +596,14 @@ export default {
         if (!this.activity_id) {
             this.activity_id = Number(utils.getParam(query, 'aid')) || 0;
         }
+        this.from = utils.getParam(query, 'from') || '';
+        console.log(this.from, 'thsi.from');
+        if (this.from === 'openGame') {
+            this.posterConfig = detailConf[8].posterConfig;
+            // eslint-disable-next-line prefer-destructuring
+            this.curDetailConf = detailConf[8];
+        }
+        console.log(this.posterConfig, 'this.posterConfig');
         console.log(
             this.activity_id,
             this.isFromShare,
@@ -701,6 +726,18 @@ export default {
             }
             &:after {
                 transform: rotate(-45deg);
+            }
+        }
+        &.openGame {
+            .saveBtn {
+                background: url("../../../static/images/zhibo/openGame-btn.png");
+                background-size: 100% 100%;
+                border-radius: 0;
+                color: #333;
+                line-height: 80rpx;
+            }
+            .close {
+                background: transparent;
             }
         }
         &.read {

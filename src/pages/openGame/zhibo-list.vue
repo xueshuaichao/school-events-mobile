@@ -108,6 +108,7 @@ export default {
     height: 100vh;
     background: #f8f8f8;
     padding: 30upx;
+    box-sizing: border-box;
     .loadMore {
         width: 100%;
     }
