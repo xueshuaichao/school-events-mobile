@@ -272,7 +272,7 @@
             }
         },
         {
-            "path": "pages/activity-pages/childrens/index",
+            "path": "pages/activity-pages/children/index",
             "style": {
                 "navigationBarTitleText": "六一活动"
             }
