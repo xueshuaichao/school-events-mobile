@@ -181,6 +181,9 @@
                             color="#333"
                         />
                     </view>
+                    <view class="bottom-bg-box">
+                        <view class="bottom-bg" />
+                    </view>
                 </view>
                 <image
                     class="goTop"
@@ -601,7 +604,6 @@ body.dialog-open {
         float: left;
         position: relative;
         .jingji-btn {
-            width: 198upx;
             height: 64upx;
             font-size: 32upx;
             text-align: center;
@@ -612,6 +614,7 @@ body.dialog-open {
             position: absolute;
             top: 3upx;
             left: 3upx;
+            right: 22upx;
         }
         .active {
             background: #9f1ff3;
@@ -790,16 +793,13 @@ body.dialog-open {
         .vote {
             float: right;
             width: 120upx;
-            height: 50upx;
-
             color: #9f1ff3;
             font-size: 22upx;
-            // text-align: center;
+            text-align: center;
             box-sizing: border-box;
-            // padding-left: 50rpx;
-
-            line-height: 50upx;
+            padding: 14upx 0 14upx 24upx;
             position: relative;
+            line-height: 1;
             &.unvote {
                 background: #fff;
                 border: 1px solid rgba(159, 31, 243, 1);
@@ -809,13 +809,12 @@ body.dialog-open {
                 border: 1px solid transparent;
             }
             image {
-                // position: absolute;
-                // top: 50%;
-                // margin-top: -9upx;
-                // left: 20upx;
-                width: 20rpx;
-                height: 20rpx;
-                margin: 0 10rpx 0 25rpx;
+                position: absolute;
+                top: 50%;
+                transform: translateY(-50%);
+                left: 25upx;
+                width: 18upx;
+                height: 18upx;
             }
         }
         .media-icon {
@@ -935,12 +934,12 @@ body.dialog-open {
     .menu-list {
         margin-left: 30upx;
         width: 670upx;
-        margin-bottom: 120upx;
+        margin-bottom: 130upx;
         background: #fff;
         padding: 20px 15px;
         box-sizing: border-box;
         position: relative;
-        border-bottom: 19upx solid #5151c6;
+        // border-bottom: 19upx solid #5151c6;
         .search-box {
             overflow: hidden;
             margin-bottom: 30rpx;
@@ -996,19 +995,23 @@ body.dialog-open {
             }
         }
     }
-    // .menu-list::before {
-    //     box-sizing: border-box;
-    //     position: absolute;
-    //     bottom: -19upx;
-    //     content: '';
-    //     left: 0;
-    //     width: 100%;
-    //     height: 19upx;
-    //     background: #5151C6;
-    //     border: 1upx solid #540844;
-    //     transform: skew(45deg);
-    //     transform-origin: right top;
-    // }
+    .bottom-bg-box {
+        position: absolute;
+        bottom: -16upx;
+        left: 0;
+        height: 16upx;
+        width: 100%;
+        .bottom-bg {
+            width: 100%;
+            height: 100%;
+            background: #5151c6;
+            border: 1upx solid #540844;
+            border-right: 0 none;
+            transform: skew(45deg);
+            transform-origin: right top;
+        }
+    }
+
     .menu-list::after {
         box-sizing: border-box;
         position: absolute;
