@@ -568,6 +568,7 @@ export default {
     position: relative;
     box-sizing: border-box;
     line-height: 1;
+    text-align: center;
     &.unvote {
         background: #fff;
         border: 1px solid rgba(159, 31, 243, 1);
