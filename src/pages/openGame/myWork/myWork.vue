@@ -137,7 +137,7 @@
                     </view>
                     <navigator
                         v-if="allTotal === 0"
-                        url="/pages/zhibo/zhibo-list"
+                        url="/pages/openGame/zhibo-list"
                     >
                         <view class="goUpload">
                             去上传
@@ -292,7 +292,7 @@
                         </view>
                         <navigator
                             v-if="allTotal === 0"
-                            url="/pages/zhibo/zhibo-list"
+                            url="/pages/openGame/zhibo-list"
                         >
                             <view class="goUpload">
                                 去上传
