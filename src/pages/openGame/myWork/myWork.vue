@@ -346,7 +346,7 @@ export default {
                 page_size: 10,
             },
             total: 1,
-            type: 'myWork',
+            type: '',
             allNum: {},
             allTotal: 0,
         };
