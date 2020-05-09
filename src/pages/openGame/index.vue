@@ -978,7 +978,7 @@ body.dialog-open {
                     right: 22upx;
                 }
                 input {
-                    width: 293upx;
+                    width: 310upx;
                     position: absolute;
                     top: 20upx;
                     // #ifndef H5
@@ -991,6 +991,9 @@ body.dialog-open {
                 &.searchjinji {
                     width: 98%;
                     float: left;
+                    input {
+                        width: 490upx;
+                    }
                 }
             }
         }

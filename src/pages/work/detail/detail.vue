@@ -418,12 +418,14 @@ export default {
                 this.curDetailConf.posterConfig,
                 '------this.posterConfig',
             );
-            this.posterConfig.images[1].url = res.video_img_url;
+            this.posterConfig.images[1].url = `${res.video_img_url}?x-oss-process=image/resize,m_pad,w_460,h_300`;
             if (this.from === 'openGame') {
                 this.posterConfig.texts[0].text[0].text = `${
                     res.resource_name
-                }${res.achievement ? '|' : ''}${res.achievement}${
-                    res.achievement_unit
+                }${
+                    res.achievement
+                        ? `|${res.achievement}${res.achievement_unit}`
+                        : ''
                 }`;
             } else {
                 this.posterConfig.texts[0].text[0].text = res.resource_name;
