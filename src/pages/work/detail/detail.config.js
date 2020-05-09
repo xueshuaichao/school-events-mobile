@@ -319,64 +319,6 @@ const detailConf = [
             ['不负好春光，读书正当时！4.23世界读书日，一起读书赢好礼！'],
         ],
     },
-    {},
-    {
-        posterConfig: {
-            width: 570,
-            height: 820,
-            debug: false,
-            texts: [
-                {
-                    x: 60,
-                    y: 583,
-                    text: [
-                        {
-                            text: '',
-                            fontSize: 28,
-                            color: '#DB4E0E',
-                            opacity: 1,
-                            marginRight: 10,
-                            lineHeight: 40,
-                            lineNum: 1,
-                            width: 1210,
-                            textOverflow: 'ellipsis',
-                        },
-                    ],
-                    baseLine: 'middle',
-                },
-            ],
-            images: [
-                {
-                    url:
-                        'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/h5/wuyi-poster.png',
-                    width: 570,
-                    height: 820,
-                    y: 0,
-                    x: 0,
-                },
-                {
-                    url: '',
-                    width: 469,
-                    height: 315,
-                    y: 233,
-                    x: 50,
-                },
-                {
-                    url: '',
-                    width: 142,
-                    height: 142,
-                    y: 645,
-                    x: 400,
-                    borderRadius: 140,
-                },
-            ],
-        },
-        titleList: [
-            ['了解劳动乐趣，感受父母辛劳，一起来欣赏下我的劳作成果吧！'],
-            ['我是劳动小能手，传承勤劳好家风，大家一起动起来！'],
-            ['争当劳动之星，就差你的赞了，快来！'],
-        ],
-    },
     // 公开赛海报
     {
         posterConfig: {
@@ -435,6 +377,63 @@ const detailConf = [
                 'resource_name',
                 '》，【我正在参加爱挑战网络预选赛】,快来给我点赞吧！',
             ],
+        ],
+    },
+    {
+        posterConfig: {
+            width: 570,
+            height: 820,
+            debug: false,
+            texts: [
+                {
+                    x: 60,
+                    y: 583,
+                    text: [
+                        {
+                            text: '',
+                            fontSize: 28,
+                            color: '#DB4E0E',
+                            opacity: 1,
+                            marginRight: 10,
+                            lineHeight: 40,
+                            lineNum: 1,
+                            width: 1210,
+                            textOverflow: 'ellipsis',
+                        },
+                    ],
+                    baseLine: 'middle',
+                },
+            ],
+            images: [
+                {
+                    url:
+                        'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/h5/wuyi-poster.png',
+                    width: 570,
+                    height: 820,
+                    y: 0,
+                    x: 0,
+                },
+                {
+                    url: '',
+                    width: 469,
+                    height: 315,
+                    y: 233,
+                    x: 50,
+                },
+                {
+                    url: '',
+                    width: 142,
+                    height: 142,
+                    y: 645,
+                    x: 400,
+                    borderRadius: 140,
+                },
+            ],
+        },
+        titleList: [
+            ['了解劳动乐趣，感受父母辛劳，一起来欣赏下我的劳作成果吧！'],
+            ['我是劳动小能手，传承勤劳好家风，大家一起动起来！'],
+            ['争当劳动之星，就差你的赞了，快来！'],
         ],
     },
 ];

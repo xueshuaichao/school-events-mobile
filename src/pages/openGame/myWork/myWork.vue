@@ -504,7 +504,9 @@ export default {
         },
     },
     onLoad(query) {
-        const { type, name, status } = query;
+        const {
+            type, name, status, column,
+        } = query;
         console.log(type, 'tye');
         this.type = type;
         if (type === 'myWork') {
@@ -514,6 +516,7 @@ export default {
             this.getWorkData();
         } else if (type === 'search') {
             uni.setNavigationBarTitle({ title: '搜索' });
+            this.filter.column = column;
             this.filter.keyword = name;
             this.changeValue = name;
             this.searchWorkData();
@@ -528,7 +531,7 @@ export default {
         return {
             title,
             imageUrl:
-                'http: //aitiaozhan.oss-cn-beijing.aliyuncs.com/chunjiehao/yiqing-poster01.png?x-oss-process=image/format,png/interlace,1/quality,Q_80/resize,m_pad,h_100',
+                'http://aitiaozhan.oss-cn-beijing.aliyuncs.com/chunjiehao/yiqing-poster01.png?x-oss-process=image/format,png/interlace,1/quality,Q_80/resize,m_pad,h_100',
             path: '/pages/openGame/index',
         };
     },
@@ -599,6 +602,9 @@ export default {
     line-height: 65upx;
     text-align: center;
     padding: 0;
+    &::after {
+        border: none;
+    }
 }
 .empty {
     text-align: center;
