@@ -530,8 +530,7 @@ export default {
         const title = '世界吉尼斯青少年“爱挑战”网络预选赛';
         return {
             title,
-            imageUrl:
-                'http://aitiaozhan.oss-cn-beijing.aliyuncs.com/chunjiehao/yiqing-poster01.png?x-oss-process=image/format,png/interlace,1/quality,Q_80/resize,m_pad,h_100',
+            // imageUrl: 'http://aitiaozhan.oss-cn-beijing.aliyuncs.com/chunjiehao/yiqing-poster01.png?x-oss-process=image/format,png/interlace,1/quality,Q_80/resize,m_pad,h_100',
             path: '/pages/openGame/index',
         };
     },
