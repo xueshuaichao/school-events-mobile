@@ -140,6 +140,20 @@ export default {
         this.type = params.type || 'success';
         this.from = params.from || 'upload';
     },
+    onShareAppMessage(res) {
+        if (res.from === 'button') {
+            // 来自页面内分享按钮
+            console.log(res.target);
+        }
+        const title = '青少年网络活动大赛';
+        return {
+            title,
+            imageUrl:
+                'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/h5/logo-h5.png',
+
+            path: '/pages/tabBar/index/index',
+        };
+    },
 };
 </script>
 
