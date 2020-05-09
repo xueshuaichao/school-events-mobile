@@ -212,20 +212,20 @@
                                 v-else
                                 class="work-info"
                             >
-                                <view class="media-name">
+                                <view class="media-name text-one-line">
                                     {{ `${item.cat_name}` }} |
                                     {{
                                         `${item.achievement}${item.achievement_unit}`
                                     }}
                                 </view>
                                 <view class="nameAndSchool">
-                                    <view class="name">
+                                    <view class="name text-one-line">
                                         <image
                                             src="../../../static/images/zhibo/name-icon.png"
                                         />
                                         {{ `${item.create_name}` }}
                                     </view>
-                                    <view class="school">
+                                    <view class="school text-one-line">
                                         {{ `${item.create_user_class}` }}
                                     </view>
                                 </view>
@@ -483,17 +483,17 @@ export default {
             this.getWorkData();
         },
         viewDetail(item) {
-            if (this.tabActiveIndex === 1) {
-                if (this.type === 'myWork') {
+            if (this.type === 'myWork') {
+                if (this.tabActiveIndex === 1) {
                     uni.navigateTo({
                         // url: `/pages/work/detail/detail?id=${item.id}&fr=${this.fr}&activity_id=5&from=yiqing`,
                         url: `/pages/work/detail/detail?id=${item.id}&from=openGame`,
                     });
-                } else {
-                    uni.navigateTo({
-                        url: `/pages/work/detail/detail?id=${item.id}`,
-                    });
                 }
+            } else {
+                uni.navigateTo({
+                    url: `/pages/work/detail/detail?id=${item.id}&from=openGame`,
+                });
             }
         },
     },
@@ -515,15 +515,12 @@ export default {
             // 来自页面内分享按钮
             console.log(res.target);
         }
-        const titleList = [
-            '抗击疫情“艺”起来，参与活动为武汉加油！向英雄致敬！',
-        ];
-        const title = titleList[Math.floor(Math.random() * titleList.length)];
+        const title = '世界吉尼斯青少年“爱挑战”网络预选赛';
         return {
             title,
             imageUrl:
-                'http: //aitiaozhan.oss-cn-beijing.aliyuncs.com/chunjiehao/yiqing-poster01.png',
-            path: '/pages/yiqing/index',
+                'http: //aitiaozhan.oss-cn-beijing.aliyuncs.com/chunjiehao/yiqing-poster01.png?x-oss-process=image/format,png/interlace,1/quality,Q_80/resize,m_pad,h_100',
+            path: '/pages/openGame/index',
         };
     },
 };
@@ -537,12 +534,19 @@ export default {
     color: #999999;
     margin-top: 24rpx;
     margin-bottom: 24rpx;
-
+    overflow: hidden;
     .name {
+        width: 50%;
+        float: left;
         image {
             width: 28upx;
             height: 22upx;
             margin-right: 9rpx;
+        }
+        .school {
+            width: 50%;
+            float: right;
+            text-align: right;
         }
     }
 }
@@ -552,22 +556,24 @@ export default {
     height: 50upx;
 
     color: #9f1ff3;
-    font-size: 28upx;
+    font-size: 22upx;
     text-align: center;
     line-height: 50upx;
     position: relative;
-    &.voted {
+    box-sizing: border-box;
+    padding-left: 31rpx;
+    &.unvote {
         background: #fff;
         border: 1px solid rgba(159, 31, 243, 1);
     }
-    &.unvote {
+    &.voted {
         background: #f5e7ff;
         border: 1px solid transparent;
     }
     image {
         position: absolute;
         top: 14upx;
-        left: 13upx;
+        left: 20upx;
         width: 18rpx;
         height: 18rpx;
     }
@@ -678,7 +684,10 @@ export default {
             }
             .vote-num {
                 color: #9f1ff3;
-                font-size: 30upx;
+                font-size: 22upx;
+                float: left;
+                height: 50rpx;
+                line-height: 50rpx;
             }
         }
     }

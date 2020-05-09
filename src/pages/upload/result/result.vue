@@ -108,6 +108,7 @@ export default {
             }
         },
         goToUc() {
+            console.log(this.from, 'this.from111');
             if (this.from === 'upload') {
                 uni.navigateTo({
                     url: '/pages/uc/myWork/myWork?type=0',
@@ -123,12 +124,19 @@ export default {
             }
         },
         goHome() {
-            uni.reLaunch({
-                url: '/pages/tabBar/index/index',
-            });
+            if (this.from === 'openGame') {
+                uni.reLaunch({
+                    url: '/pages/openGame/index',
+                });
+            } else {
+                uni.reLaunch({
+                    url: '/pages/tabBar/index/index',
+                });
+            }
         },
     },
     onLoad(params) {
+        console.log(params, 'params222');
         this.type = params.type || 'success';
         this.from = params.from || 'upload';
     },

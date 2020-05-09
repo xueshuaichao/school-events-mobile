@@ -119,7 +119,7 @@
                         v-model="achivementInput"
                         class="uni-input"
                         placeholder-class="placeholder"
-                        maxlength="10"
+                        maxlength="8"
                         placeholder="成绩"
                     >
                     <text class="unit-class">
@@ -398,7 +398,7 @@ export default {
                     // return false;
                     this.achivementInput = `${foo.split('.')[0]}.${foo
                         .split('.')[1]
-                        .substr(0, 4)}`;
+                        .substr(0, 3)}`;
                 } else {
                     this.achivementInput = foo;
                     this.formData.achievement = this.achivementInput;

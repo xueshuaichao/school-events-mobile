@@ -84,22 +84,29 @@
                 <view class="menu-list">
                     <view class="search-box">
                         <button
+                            v-if="jingjiactiveMenuIndex === 3"
                             :class="{
-                                active: activeMenuIndex === 1
+                                active: activeMenuIndex === 3
                             }"
                             @click="toggle(3)"
                         >
                             最新
                         </button>
                         <button
+                            v-if="jingjiactiveMenuIndex === 3"
                             :class="{
-                                active: activeMenuIndex === 3
+                                active: activeMenuIndex === 1
                             }"
                             @click="toggle(1)"
                         >
                             最热
                         </button>
-                        <view class="search">
+                        <view
+                            class="search"
+                            :class="{
+                                searchjinji: jingjiactiveMenuIndex !== 3
+                            }"
+                        >
                             <image
                                 src="../../static/images/zhibo/search.png"
                                 @click="bindconfirm"
@@ -128,9 +135,10 @@
                             />
 
                             <view class="media-name text-one-line">
-                                {{ `${item.cat_name}` }} |
                                 {{
-                                    `${item.achievement}${item.achievement_unit}`
+                                    jingjiactiveMenuIndex === 3
+                                        ? `${item.cat_name} | ${item.name}`
+                                        : `${item.cat_name} | ${item.achievement}${item.achievement_unit}`
                                 }}
                             </view>
                             <view class="nameAndSchool">
@@ -174,7 +182,11 @@
                         />
                     </view>
                 </view>
-
+                <image
+                    class="goTop"
+                    src="../../static/images/zhibo/toTop.png"
+                    @click="handleToTop"
+                />
                 <view
                     class="upload"
                     @click="handleUpload"
@@ -228,7 +240,7 @@ export default {
             fr: '',
             shareDesc: '',
             changeValue: '',
-            activeMenuIndex: 1,
+            activeMenuIndex: 3,
             jingjiactiveMenuIndex: 1,
             loadMoreStatus: 'more',
             prompt: false,
@@ -259,6 +271,12 @@ export default {
         clearInterval(this.setId);
     },
     methods: {
+        handleToTop() {
+            // eslint-disable-next-line no-undef
+            wx.pageScrollTo({
+                scrollTop: 0,
+            });
+        },
         getData(title) {
             api.post('/api/works/competitionlist', this.filter).then(
                 ({ list, total }) => {
@@ -278,7 +296,7 @@ export default {
                         this.loadMoreStatus = 'more';
                     }
 
-                    this.initShare();
+                    // this.initShare();
                     uni.hideLoading();
                 },
             );
@@ -320,22 +338,12 @@ export default {
             });
         },
         initShare() {
-            // const titleList = [
-            //     '鼠年大吉，快来看我的拜年才艺秀！',
-            //     '才艺拜年乐趣多，我来表演你来赞！',
-            //     '我来给你拜新年，表演才艺送祝福！',
-            //     '鼠年春节我精彩，才艺拜年望喜爱！',
-            // ];
-            const titleList = [
-                '抗击疫情“艺”起来，参与活动为武汉加油！向英雄致敬！',
-            ];
-            const title = titleList[Math.floor(Math.random() * titleList.length)];
-            const desc = '快乐过寒假，才艺拜大年！';
+            const title = '世界吉尼斯青少年“爱挑战”网络预选赛';
             this.shareDesc = title;
 
             share({
                 title,
-                desc,
+                path: '/pages/openGame/index',
                 thumbnail:
                     'http: //aitiaozhan.oss-cn-beijing.aliyuncs.com/chunjiehao/yiqing-poster01.png?x-oss-process=image/format,png/interlace,1/quality,Q_80/resize,m_pad,h_100',
             });
@@ -422,13 +430,14 @@ export default {
         },
     },
     onShareAppMessage(res) {
+        console.log(res, 'res111');
         if (res.from === 'button') {
             // 来自页面内分享按钮
             console.log(res.target);
         }
         return {
-            title: this.shareDesc,
-            path: '/pages/yiqing/index',
+            title: '世界吉尼斯青少年“爱挑战”网络预选赛',
+            path: '/pages/openGame/index',
         };
     },
 };
@@ -531,6 +540,14 @@ body.dialog-open {
 
 .loadMore {
     width: 100%;
+}
+.goTop {
+    position: fixed;
+    bottom: 200upx;
+    right: 60upx;
+    width: 104upx;
+    height: 100upx;
+    z-index: 10;
 }
 .upload {
     position: fixed;
@@ -737,7 +754,7 @@ body.dialog-open {
             color: #999999;
             margin-top: 24rpx;
             margin-bottom: 24rpx;
-
+            overflow: hidden;
             .name {
                 width: 50%;
                 float: left;
@@ -755,11 +772,10 @@ body.dialog-open {
         }
         .vote-num {
             color: #9f1ff3;
-            font-size: 30upx;
-            // left:0;
-            // position: absolute;
-            // top: 283upx;
+            font-size: 22upx;
             float: left;
+            height: 50rpx;
+            line-height: 50rpx;
         }
 
         .vote {
@@ -768,22 +784,25 @@ body.dialog-open {
             height: 50upx;
 
             color: #9f1ff3;
-            font-size: 28upx;
-            text-align: center;
+            font-size: 22upx;
+            // text-align: center;
+            box-sizing: border-box;
+            padding-left: 50rpx;
+
             line-height: 50upx;
             position: relative;
-            &.voted {
+            &.unvote {
                 background: #fff;
                 border: 1px solid rgba(159, 31, 243, 1);
             }
-            &.unvote {
+            &.voted {
                 background: #f5e7ff;
                 border: 1px solid transparent;
             }
             image {
                 position: absolute;
                 top: 14upx;
-                left: 13upx;
+                left: 20upx;
                 width: 18rpx;
                 height: 18rpx;
             }
@@ -843,8 +862,6 @@ body.dialog-open {
         line-height: 46upx;
     }
     .close {
-        // background: url("../../static/images/yiqing/close-icon.png") no-repeat;
-        // background-size: 100% 100%;
         width: 62upx;
         height: 62upx;
         top: 12upx;
@@ -959,6 +976,10 @@ body.dialog-open {
                     left: 22upx;
                     font-size: 28upx;
                     color: #000;
+                }
+                &.searchjinji {
+                    width: 98%;
+                    float: left;
                 }
             }
         }

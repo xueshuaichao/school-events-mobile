@@ -43,8 +43,7 @@ export default {
                     intro: '展示才艺和特长的平台',
                     bg:
                         'http://aitiaozhan.oss-cn-beijing.aliyuncs.com/school-events-mobile/caiyi-bg.png?t=1',
-                    // url: '/pages/openGame/caiyiupload',
-                    url: '/pages/upload/default/upload',
+                    url: '/pages/upload/default/upload?type=openGame',
                 },
                 {
                     name: '吉尼斯项目',

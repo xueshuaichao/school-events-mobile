@@ -181,7 +181,7 @@ export default {
     data() {
         return {
             isLoading: true,
-
+            type: '',
             tabs: [
                 { id: '1', column_name: '视频' },
                 { id: '2', column_name: '图片' },
@@ -217,9 +217,11 @@ export default {
             lock: true,
         };
     },
-    onLoad() {},
     created() {
         // this.getData();
+    },
+    onLoad(query) {
+        this.type = query.type;
     },
     onShow() {
         this.getData();
@@ -426,9 +428,18 @@ export default {
                     api.post('/api/user/editwork', formData).then(
                         () => {
                             uni.hideLoading();
-                            uni.navigateTo({
-                                url: '/pages/upload/result/result?type=success',
-                            });
+                            if (this.type) {
+                                uni.navigateTo({
+                                    url:
+                                        '/pages/upload/result/result?type=success&from=openGame',
+                                });
+                            } else {
+                                uni.navigateTo({
+                                    url:
+                                        '/pages/upload/result/result?type=success',
+                                });
+                            }
+
                             this.resetData();
                             this.lock = true;
                         },
