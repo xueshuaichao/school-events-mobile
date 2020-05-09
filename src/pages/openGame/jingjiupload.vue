@@ -626,8 +626,9 @@ export default {
         return {
             title,
             imageUrl:
-                'http://aitiaozhan.oss-cn-beijing.aliyuncs.com/school-events-mobile/openEvent-banner.png?x-oss-process=image/format,png/interlace,1/quality,Q_80/resize,m_pad,h_100',
-            path: '/pages/openGame/zhibo-list',
+                'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/h5/logo-h5.png',
+
+            path: '/pages/tabBar/index/index',
         };
     },
 };
