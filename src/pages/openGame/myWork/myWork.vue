@@ -617,7 +617,6 @@ export default {
         margin-top: 174upx;
     }
     .goUpload {
-        margin-top: 37upx;
         width: 223upx;
         height: 84upx;
         background: url("../../../static/images/zhibo/openGame-btn.png")
@@ -627,7 +626,7 @@ export default {
         line-height: 65upx;
         text-align: center;
         background-size: 100% 100%;
-        margin-left: 223rpx;
+        margin: 37upx auto 0;
     }
     view {
         color: #333;
@@ -762,7 +761,8 @@ export default {
                 width: 40upx;
                 height: 40upx;
                 position: absolute;
-                top: 16upx;
+                top: 50%;
+                margin-top: -20upx;
                 right: 22upx;
             }
             input {

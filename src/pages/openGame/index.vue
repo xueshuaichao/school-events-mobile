@@ -801,10 +801,11 @@ body.dialog-open {
             }
             image {
                 position: absolute;
-                top: 14upx;
+                top: 50%;
+                margin-top: -9upx;
                 left: 20upx;
-                width: 18rpx;
-                height: 18rpx;
+                width: 18upx;
+                height: 18upx;
             }
         }
         .media-icon {
@@ -963,7 +964,8 @@ body.dialog-open {
                     width: 40upx;
                     height: 40upx;
                     position: absolute;
-                    top: 16upx;
+                    top: 50%;
+                    margin-top: -20upx;
                     right: 22upx;
                 }
                 input {
