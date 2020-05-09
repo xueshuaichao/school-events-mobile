@@ -840,7 +840,6 @@ export default {
             float: left;
             position: relative;
             .jingji-btn {
-                width: 195upx;
                 height: 64upx;
                 font-size: 32upx;
                 text-align: center;
@@ -850,6 +849,7 @@ export default {
                 position: absolute;
                 top: 3upx;
                 left: 3upx;
+                right: 22upx;
                 &.active {
                     background: #9f1ff3;
                     color: #fff;
