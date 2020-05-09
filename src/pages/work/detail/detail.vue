@@ -690,15 +690,12 @@ export default {
         // this.levelid = Number(utils.getParam(query, 'levelid')) || -1;
         this.id = utils.getParam(query, 'id');
         this.fr = utils.getParam(query, 'fr') || '';
-        this.isFromShare = utils.getParam(query, 'isFromShare') || '';
-        if (!this.isFromShare) {
-            this.isFromShare = utils.getParam(query, 'y') || '';
-        }
-
-        this.activity_id = Number(utils.getParam(query, 'activity_id')) || 0;
-        if (!this.activity_id) {
-            this.activity_id = Number(utils.getParam(query, 'aid')) || 0;
-        }
+        this.isFromShare = utils.getParam(query, 'isFromShare')
+            || utils.getParam(query, 'y')
+            || '';
+        this.activity_id = Number(utils.getParam(query, 'activity_id'))
+            || Number(utils.getParam(query, 'aid'))
+            || 0;
         this.from = utils.getParam(query, 'from') || '';
         console.log(this.from, 'thsi.from');
         if (this.from === 'openGame') {
