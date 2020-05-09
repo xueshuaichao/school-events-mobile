@@ -574,7 +574,7 @@ export default {
     width: 120upx;
     color: #9f1ff3;
     font-size: 22upx;
-    padding: 14upx 0 14upx 50upx;
+    padding: 14upx 0 14upx 24upx;
     position: relative;
     box-sizing: border-box;
     line-height: 1;
