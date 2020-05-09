@@ -90,11 +90,7 @@
                             class="work-info"
                         >
                             <view class="media-name">
-                                {{
-                                    item.resource_scope === 3
-                                        ? `${item.resource_name}`
-                                        : `${item.cat_name}`
-                                }}
+                                {{ item.cat_name }}
                                 {{
                                     item.achievement
                                         ? `|${item.achievement}${item.achievement_unit}`
@@ -222,7 +218,11 @@
                                 class="work-info"
                             >
                                 <view class="media-name text-one-line">
-                                    {{ `${item.cat_name}` }}
+                                    {{
+                                        item.resource_scope === 3
+                                            ? item.resource_name
+                                            : item.cat_name
+                                    }}
                                     {{
                                         item.achievement
                                             ? `|${item.achievement}${item.achievement_unit}`
