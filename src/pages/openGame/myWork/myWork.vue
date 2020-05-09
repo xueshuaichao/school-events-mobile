@@ -148,6 +148,9 @@
                 >
                     {{ text }}
                 </button>
+                <view class="bottom-bg-box">
+                    <view class="bottom-bg" />
+                </view>
             </view>
         </view>
         <view
@@ -295,6 +298,9 @@
                         {{ text }}
                     </button>
                 </view>
+            </view>
+            <view class="bottom-bg-box">
+                <view class="bottom-bg" />
             </view>
         </view>
     </view>
@@ -556,15 +562,12 @@ export default {
 .vote {
     float: right;
     width: 120upx;
-    height: 50upx;
-
     color: #9f1ff3;
     font-size: 22upx;
-    text-align: center;
-    line-height: 50upx;
+    padding: 14upx 0 14upx 24upx;
     position: relative;
     box-sizing: border-box;
-    padding-left: 31rpx;
+    line-height: 1;
     &.unvote {
         background: #fff;
         border: 1px solid rgba(159, 31, 243, 1);
@@ -576,8 +579,8 @@ export default {
     image {
         position: absolute;
         top: 50%;
-        left: 20upx;
-        margin-top: -9upx;
+        transform: translateY(-50%);
+        left: 25upx;
         width: 18rpx;
         height: 18rpx;
     }
@@ -795,7 +798,7 @@ export default {
         display: flex;
         flex-flow: column;
         min-height: 95vh;
-        border-bottom: 19upx solid #5151c6;
+        // border-bottom: 19upx solid #5151c6;
         // .panel-scroll {
         //     height: 100%;
         //     overflow-y: scroll;
@@ -805,7 +808,7 @@ export default {
         min-height: 95vh;
         display: flex;
         flex-flow: column;
-        border-bottom: 19upx solid #5151c6;
+        // border-bottom: 19upx solid #5151c6;
     }
     .panel .panel-hd,
     .panel-before .panel-hd {
@@ -849,7 +852,7 @@ export default {
         background: #fff;
         position: relative;
         flex: 1;
-        border-bottom: 19upx solid #5151c6;
+        padding-bottom: 20upx;
     }
     .content-box-search {
     }
@@ -879,6 +882,22 @@ export default {
         border: 1upx solid rgba(84, 8, 68, 1);
         transform: skewY(45deg);
         transform-origin: left;
+    }
+    .bottom-bg-box {
+        position: absolute;
+        bottom: -16upx;
+        left: 0;
+        height: 16upx;
+        width: 100%;
+        .bottom-bg {
+            width: 100%;
+            height: 100%;
+            background: #5151c6;
+            border: 1upx solid #540844;
+            border-right: 0 none;
+            transform: skew(45deg);
+            transform-origin: right top;
+        }
     }
 
     .work-list {
