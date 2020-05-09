@@ -13,7 +13,7 @@
                         @click="handleClose"
                     />
                     <view class="title-icon">
-                        <view class="title">
+                        <view class="txt">
                             大赛包括三大项目：竞技类、才艺秀类和吉尼斯项目。
                         </view>
                         <view>
@@ -896,7 +896,7 @@ body.dialog-open {
         overflow-y: auto;
         box-sizing: border-box;
         padding-right: 20upx;
-        .title {
+        .txt {
             font-weight: 600;
         }
     }
