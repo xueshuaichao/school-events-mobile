@@ -255,6 +255,7 @@ export default {
             },
             status: 2,
             setId: '',
+            oldsort: 3,
         };
     },
     created() {
@@ -263,18 +264,18 @@ export default {
     onLoad(params) {
         this.fr = logger.getFr('dsxnh', params);
     },
-    onShow() {},
-    onHide() {
+    onShow() {
         this.changeValue = '';
     },
+    onHide() {},
     onUnload() {
         clearInterval(this.setId);
     },
     methods: {
         handleToTop() {
-            // eslint-disable-next-line no-undef
-            wx.pageScrollTo({
+            uni.pageScrollTo({
                 scrollTop: 0,
+                duration: 600,
             });
         },
         getData(title) {
@@ -334,7 +335,9 @@ export default {
                 return;
             }
             uni.navigateTo({
-                url: `/pages/openGame/myWork/myWork?type=search&name=${this.changeValue.trim()}`,
+                url: `/pages/openGame/myWork/myWork?type=search&name=${this.changeValue.trim()}&column=${
+                    this.filter.column
+                }`,
             });
         },
         initShare() {
@@ -358,6 +361,7 @@ export default {
             uni.showLoading();
             this.activeMenuIndex = k;
             this.filter.sort = k;
+            this.oldsort = k;
             this.filter.page_num = 1;
             this.getData();
         },
@@ -365,6 +369,11 @@ export default {
             uni.showLoading();
             this.jingjiactiveMenuIndex = k;
             this.filter.column = k;
+            if (k < 3) {
+                this.filter.sort = 3;
+            } else {
+                this.filter.sort = this.oldsort;
+            }
             this.filter.page_num = 1;
             this.getData();
         },
