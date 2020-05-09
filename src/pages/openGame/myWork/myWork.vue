@@ -1,21 +1,23 @@
 <template>
     <view class="page-my-work">
-        <image
-            class="one"
-            src="../../../static/images/zhibo/star.png"
-        />
-        <image
-            class="two"
-            src="../../../static/images/zhibo/star.png"
-        />
-        <image
-            class="three"
-            src="../../../static/images/zhibo/star.png"
-        />
-        <image
-            class="four"
-            src="../../../static/images/zhibo/star.png"
-        />
+        <template v-if="type === 'myWork'">
+            <image
+                class="one"
+                src="../../../static/images/zhibo/star.png"
+            />
+            <image
+                class="two"
+                src="../../../static/images/zhibo/star.png"
+            />
+            <image
+                class="three"
+                src="../../../static/images/zhibo/star.png"
+            />
+            <image
+                class="four"
+                src="../../../static/images/zhibo/star.png"
+            />
+        </template>
         <!-- identity 用户身份 1=>C端普通用户 ,2=> 教育局员工，3=>学校员工 4 学生 -->
         <!-- my works -->
         <view

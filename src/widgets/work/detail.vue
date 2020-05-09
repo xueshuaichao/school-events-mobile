@@ -90,18 +90,19 @@
                     {{ pageData.create_name }}
                 </text>
             </view>
-            <view
-                v-if="pageData.record"
-                class="school-and-record"
-            >
+            <view class="school-and-record">
                 <text>{{ pageData.school_name }}</text>
-                <image
-                    class="icon-grail"
-                    :src="`/static/images/work/record-${pageData.record}.png`"
-                />
-                <text class="yellow">
-                    {{ recordTxts[pageData.record - 1] }}
-                </text>
+                <template v-if="pageData.record">
+                    <image
+                        class="icon-grail"
+                        :src="
+                            `/static/images/work/record-${pageData.record}.png`
+                        "
+                    />
+                    <text class="yellow">
+                        {{ recordTxts[pageData.record - 1] }}
+                    </text>
+                </template>
             </view>
             <view class="work-name-wrap clearfix">
                 <image

@@ -87,7 +87,7 @@
                             :class="{
                                 active: activeMenuIndex === 1
                             }"
-                            @click="toggle(1)"
+                            @click="toggle(3)"
                         >
                             最新
                         </button>
@@ -95,7 +95,7 @@
                             :class="{
                                 active: activeMenuIndex === 3
                             }"
-                            @click="toggle(3)"
+                            @click="toggle(1)"
                         >
                             最热
                         </button>
@@ -239,7 +239,7 @@ export default {
                 page_num: 1,
                 page_size: 10,
                 column: 1,
-                sort: 1,
+                sort: 3,
             },
             status: 2,
             setId: '',
