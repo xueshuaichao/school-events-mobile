@@ -93,7 +93,7 @@
                                 {{ `${item.cat_name}` }}
                                 {{
                                     item.achievement
-                                        ? `|$${item.achievement}${item.achievement_unit}`
+                                        ? `|${item.achievement}${item.achievement_unit}`
                                         : ""
                                 }}
                             </view>
@@ -221,7 +221,7 @@
                                     {{ `${item.cat_name}` }}
                                     {{
                                         item.achievement
-                                            ? `|$${item.achievement}${item.achievement_unit}`
+                                            ? `|${item.achievement}${item.achievement_unit}`
                                             : ""
                                     }}
                                 </view>
