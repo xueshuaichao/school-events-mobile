@@ -345,7 +345,7 @@ export default {
                 title,
                 path: '/pages/openGame/index',
                 thumbnail:
-                    'http: //aitiaozhan.oss-cn-beijing.aliyuncs.com/chunjiehao/yiqing-poster01.png?x-oss-process=image/format,png/interlace,1/quality,Q_80/resize,m_pad,h_100',
+                    'http://aitiaozhan.oss-cn-beijing.aliyuncs.com/chunjiehao/yiqing-poster01.png?x-oss-process=image/format,png/interlace,1/quality,Q_80/resize,m_pad,h_100',
             });
         },
         viewDetail(item) {
@@ -787,7 +787,7 @@ body.dialog-open {
             font-size: 22upx;
             // text-align: center;
             box-sizing: border-box;
-            padding-left: 50rpx;
+            // padding-left: 50rpx;
 
             line-height: 50upx;
             position: relative;
@@ -800,12 +800,13 @@ body.dialog-open {
                 border: 1px solid transparent;
             }
             image {
-                position: absolute;
-                top: 50%;
-                margin-top: -9upx;
-                left: 20upx;
-                width: 18upx;
-                height: 18upx;
+                // position: absolute;
+                // top: 50%;
+                // margin-top: -9upx;
+                // left: 20upx;
+                width: 20rpx;
+                height: 20rpx;
+                margin: 0 10rpx 0 25rpx;
             }
         }
         .media-icon {

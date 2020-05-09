@@ -498,10 +498,13 @@ export default {
         },
     },
     onLoad(query) {
-        const { type, name } = query;
+        const { type, name, status } = query;
         console.log(type, 'tye');
         this.type = type;
         if (type === 'myWork') {
+            if (status) {
+                this.tabActiveIndex = Number(status);
+            }
             this.getWorkData();
         } else if (type === 'search') {
             uni.setNavigationBarTitle({ title: '搜索' });

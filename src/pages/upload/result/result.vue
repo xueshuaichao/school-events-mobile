@@ -94,7 +94,7 @@ export default {
     methods: {
         reUpload() {
             if (this.from === 'upload') {
-                uni.switchTab({
+                uni.reLaunch({
                     url: '/pages/upload/default/upload',
                 });
             } else if (this.from === 'festival') {
@@ -119,7 +119,7 @@ export default {
                 });
             } else if (this.from === 'openGame') {
                 uni.reLaunch({
-                    url: '/pages/openGame/myWork/myWork?type=myWork',
+                    url: '/pages/openGame/myWork/myWork?type=myWork&status=0',
                 });
             }
         },

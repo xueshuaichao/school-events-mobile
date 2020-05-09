@@ -526,7 +526,7 @@ export default {
                         });
                     } else {
                         uni.navigateTo({
-                            url: '/pages/upload/default/upload',
+                            url: '/pages/openGame/zhibo-list',
                         });
                     }
                 },
