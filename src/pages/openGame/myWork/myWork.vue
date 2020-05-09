@@ -90,9 +90,11 @@
                             class="work-info"
                         >
                             <view class="media-name">
-                                {{ `${item.cat_name}` }} |
+                                {{ `${item.cat_name}` }}
                                 {{
-                                    `${item.achievement}${item.achievement_unit}`
+                                    item.achievement
+                                        ? `|$${item.achievement}${item.achievement_unit}`
+                                        : ""
                                 }}
                             </view>
                             <view class="nameAndSchool">
@@ -216,9 +218,11 @@
                                 class="work-info"
                             >
                                 <view class="media-name text-one-line">
-                                    {{ `${item.cat_name}` }} |
+                                    {{ `${item.cat_name}` }}
                                     {{
-                                        `${item.achievement}${item.achievement_unit}`
+                                        item.achievement
+                                            ? `|$${item.achievement}${item.achievement_unit}`
+                                            : ""
                                     }}
                                 </view>
                                 <view class="nameAndSchool">
