@@ -572,8 +572,9 @@ export default {
     }
     image {
         position: absolute;
-        top: 14upx;
+        top: 50%;
         left: 20upx;
+        margin-top: -9upx;
         width: 18rpx;
         height: 18rpx;
     }
