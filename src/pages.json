@@ -374,12 +374,6 @@
             }
         },
         {
-            "path": "pages/openGame/caiyiupload",
-            "style": {
-                "navigationBarTitleText": "才艺上传"
-            }
-        },
-        {
             "path": "pages/openGame/jingjiupload",
             "style": {
                 "navigationBarTitleText": "竞技项目作品上传"

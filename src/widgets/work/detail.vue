@@ -192,7 +192,11 @@
             </view>
 
             <view
-                v-if="activityId < 5 && pageData.resource_scope > 2"
+                v-if="
+                    activityId < 5 &&
+                        pageData.resource_scope > 2 &&
+                        from !== 'openGame'
+                "
                 class="btn primary"
                 @click="joinGame"
             >

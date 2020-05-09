@@ -513,15 +513,12 @@ export default {
             // 来自页面内分享按钮
             console.log(res.target);
         }
-        const titleList = [
-            '抗击疫情“艺”起来，参与活动为武汉加油！向英雄致敬！',
-        ];
-        const title = titleList[Math.floor(Math.random() * titleList.length)];
+        const title = '世界吉尼斯青少年“爱挑战”网络预选赛';
         return {
             title,
             imageUrl:
-                'http: //aitiaozhan.oss-cn-beijing.aliyuncs.com/chunjiehao/yiqing-poster01.png',
-            path: '/pages/yiqing/index',
+                'http: //aitiaozhan.oss-cn-beijing.aliyuncs.com/chunjiehao/yiqing-poster01.png?x-oss-process=image/format,png/interlace,1/quality,Q_80/resize,m_pad,h_100',
+            path: '/pages/openGame/index',
         };
     },
 };
@@ -557,22 +554,24 @@ export default {
     height: 50upx;
 
     color: #9f1ff3;
-    font-size: 28upx;
+    font-size: 22upx;
     text-align: center;
     line-height: 50upx;
     position: relative;
-    &.voted {
+    box-sizing: border-box;
+    padding-left: 31rpx;
+    &.unvote {
         background: #fff;
         border: 1px solid rgba(159, 31, 243, 1);
     }
-    &.unvote {
+    &.voted {
         background: #f5e7ff;
         border: 1px solid transparent;
     }
     image {
         position: absolute;
         top: 14upx;
-        left: 13upx;
+        left: 20upx;
         width: 18rpx;
         height: 18rpx;
     }
@@ -683,7 +682,10 @@ export default {
             }
             .vote-num {
                 color: #9f1ff3;
-                font-size: 30upx;
+                font-size: 22upx;
+                float: left;
+                height: 50rpx;
+                line-height: 50rpx;
             }
         }
     }
