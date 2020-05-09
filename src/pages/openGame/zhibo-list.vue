@@ -71,7 +71,7 @@ export default {
         return {
             title,
             imageUrl:
-                'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/h5/aitiaozhan-s-banner.png?x-oss-process=image/format,png/interlace,1/quality,Q_80/resize,m_pad,h_100',
+                'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/h5/aitiaozhan-s-banner.png',
 
             path: '/pages/openGame/zhibo-list',
         };
