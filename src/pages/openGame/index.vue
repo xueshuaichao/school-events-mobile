@@ -215,6 +215,7 @@
                     </view>
                 </view>
                 <image
+                    v-if="showGotop"
                     class="goTop"
                     src="/static/images/zhibo/toTop.png"
                     @click="handleToTop"
@@ -288,11 +289,13 @@ export default {
             status: 2,
             setId: '',
             oldsort: 3,
+            showGotop: false,
         };
     },
     created() {
         this.getData();
     },
+    mounted() {},
     onLoad(params) {
         this.fr = logger.getFr('dsxnh', params);
     },
@@ -309,6 +312,13 @@ export default {
                 scrollTop: 0,
                 duration: 600,
             });
+        },
+        onPageScroll(e) {
+            if (e.scrollTop > 500) {
+                this.showGotop = true;
+            } else if (e.scrollTop <= 50) {
+                this.showGotop = false;
+            }
         },
         getData(title) {
             api.post('/api/works/competitionlist', this.filter).then(
@@ -818,7 +828,7 @@ body.dialog-open {
         }
         .vote-num {
             color: #9f1ff3;
-            font-size: 22upx;
+            font-size: 26upx;
             float: left;
             height: 50rpx;
             line-height: 50rpx;
@@ -828,10 +838,10 @@ body.dialog-open {
             float: right;
             width: 120upx;
             color: #9f1ff3;
-            font-size: 22upx;
+            font-size: 26upx;
             text-align: center;
             box-sizing: border-box;
-            padding: 14upx 0 14upx 24upx;
+            padding: 12upx 0 12upx 24upx;
             position: relative;
             line-height: 1;
             &.unvote {
@@ -846,9 +856,9 @@ body.dialog-open {
                 position: absolute;
                 top: 50%;
                 transform: translateY(-50%);
-                left: 25upx;
-                width: 18upx;
-                height: 18upx;
+                left: 20upx;
+                width: 22upx;
+                height: 22upx;
             }
         }
         .media-icon {
