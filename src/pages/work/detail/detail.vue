@@ -223,8 +223,8 @@ export default {
             const pages = getCurrentPages(); // 获取加载的页面
             const currentPage = pages[pages.length - 1]; // 获取当前页面的对象
             const url = currentPage.route || 'pages/work/detail/detail';
-            // const scene = `id=${this.id}&aid=${this.activity_id}&y=1` || 'id=325';
-            const scene = `id=${this.id}`;
+            const scene = `id=${this.id}&aid=${this.activity_id}&y=1` || 'id=325';
+            // const scene = `id=${this.id}`;
             console.log(url, scene, 'url---scene---');
             api.post('/api/weixin/getminiqrcode', {
                 path: url,
