@@ -21,7 +21,7 @@ const common = {
         // 自定义分享的网址 应该忽略初始化分享，否则会覆盖掉页面级别的分享
 
         // #ifdef H5
-        if (['/pages/chunjie/index'].indexOf(location.pathname) === -1) {
+        if (['/pagesA/chunjie/index'].indexOf(location.pathname) === -1) {
             share();
         }
         // #endif

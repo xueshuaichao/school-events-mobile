@@ -108,7 +108,7 @@
                     </swiper-item>
                     <!-- <swiper-item v-if="activitiesStatus[1].show">
                         <navigator
-                            url="/pages/chunjie/index"
+                            url="/pagesA/chunjie/index"
                             class="swiper-item"
                         >
                             <image
@@ -120,7 +120,7 @@
                     <!-- 春节好入口 -->
                     <!-- <swiper-item v-if="activitiesStatus[0].show">
                         <navigator
-                            url="/pages/chunjiehao/index"
+                            url="/pagesA/chunjiehao/index"
                             class="swiper-item"
                         >
                             <image

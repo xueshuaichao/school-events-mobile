@@ -105,7 +105,7 @@
                 </view>
                 <!-- work show -->
                 <view class="menu-list">
-                    <view class="search-box">
+                    <view class="search-box clearfix">
                         <button
                             v-if="jingjiactiveMenuIndex === 3"
                             :class="{
@@ -124,6 +124,14 @@
                         >
                             最热
                         </button>
+                        <button
+                            v-if="jingjiactiveMenuIndex !== 3"
+                            class="check-rank active"
+                            @click="jumpRankList"
+                        >
+                            <image src="/static/images/zhibo/rank.png" />
+                            查看排行榜
+                        </button>
                         <view
                             class="search"
                             :class="{
@@ -131,7 +139,7 @@
                             }"
                         >
                             <image
-                                src="../../static/images/zhibo/search.png"
+                                src="/static/images/zhibo/search.png"
                                 @click="bindconfirm"
                             />
                             <input
@@ -167,7 +175,7 @@
                             <view class="nameAndSchool">
                                 <view class="name text-one-line">
                                     <image
-                                        src="../../static/images/zhibo/name-icon.png"
+                                        src="/static/images/zhibo/name-icon.png"
                                     />
                                     {{ `${item.create_name}` }}
                                 </view>
@@ -183,9 +191,7 @@
                                 :class="item.is_like === 1 ? 'voted' : 'unvote'"
                                 @click="handleVote(item)"
                             >
-                                <image
-                                    src="../../static/images/zhibo/vote.png"
-                                />
+                                <image src="/static/images/zhibo/vote.png" />
                                 {{ item.is_like === 1 ? "已赞" : "点赞" }}
                             </view>
                         </view>
@@ -210,7 +216,7 @@
                 </view>
                 <image
                     class="goTop"
-                    src="../../static/images/zhibo/toTop.png"
+                    src="/static/images/zhibo/toTop.png"
                     @click="handleToTop"
                 />
                 <view
@@ -462,6 +468,11 @@ export default {
                     icon: 'none',
                 });
             }
+        },
+        jumpRankList() {
+            uni.navigateTo({
+                url: `/pages/openGame/rank?type=${this.jingjiactiveMenuIndex}`,
+            });
         },
     },
     onShareAppMessage(res) {
@@ -974,9 +985,9 @@ body.dialog-open {
             margin-bottom: 30rpx;
             button {
                 width: 83upx;
-                height: 70upx;
+                height: 76upx;
                 float: left;
-                line-height: 70upx;
+                line-height: 76upx;
                 color: #9f1ff3;
                 background: #fff;
                 font-size: 24upx;
@@ -990,6 +1001,20 @@ body.dialog-open {
                 }
                 &::after {
                     border: none;
+                }
+                &.check-rank {
+                    width: 182upx;
+                    position: relative;
+                    padding-left: 30upx;
+                    box-sizing: border-box;
+                    image {
+                        width: 24upx;
+                        height: 24upx;
+                        position: absolute;
+                        top: 50%;
+                        margin-top: -12upx;
+                        left: 14upx;
+                    }
                 }
             }
             .search {
@@ -1016,13 +1041,6 @@ body.dialog-open {
                     left: 22upx;
                     font-size: 28upx;
                     color: #000;
-                }
-                &.searchjinji {
-                    width: 98%;
-                    float: left;
-                    input {
-                        width: 490upx;
-                    }
                 }
             }
         }

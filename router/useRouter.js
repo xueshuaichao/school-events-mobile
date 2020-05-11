@@ -102,10 +102,10 @@ const routesConfig = {
             path: '/pages/address/edit',
         },
         {
-            path: '/pages/chunjie/upload/upload',
+            path: '/pagesA/chunjie/upload/upload',
         },
         {
-            path: '/pages/chunjiehao/upload/upload',
+            path: '/pagesA/chunjiehao/upload/upload',
         },
         {
             path: '/pages/upload/result/result',
@@ -114,19 +114,19 @@ const routesConfig = {
             path: '/pages/upload/modify/modify',
         },
         {
-            path: '/pages/chunjie/myWork/myWork',
+            path: '/pagesA/chunjie/myWork/myWork',
         },
         {
-            path: '/pages/chunjiehao/myWork/myWork',
+            path: '/pagesA/chunjiehao/myWork/myWork',
         },
         {
-            path: '/pages/chunjiehao/upload/result',
+            path: '/pagesA/chunjiehao/upload/result',
         },
         {
-            path: '/pages/chunjie/index',
+            path: '/pagesA/chunjie/index',
         },
         {
-            path: '/pages/chunjiehao/index',
+            path: '/pagesA/chunjiehao/index',
         },
         {
             path: '/pages/yiqing/index',
@@ -218,6 +218,12 @@ const routesConfig = {
         },
         {
             path: '/pages/uc/reported/result',
+        },
+        {
+            path: '/pages/openGame/index',
+        },
+        {
+            path: '/pages/openGame/rank',
         },
         {
             path: '*',
