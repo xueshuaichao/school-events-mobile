@@ -224,7 +224,7 @@ export default {
                 this.filter.cat_id.one_level_id = Number(val.cat_id.one_level_id) || -1;
                 this.filter.keyword = val.keyword;
                 this.filter.sort = Number(val.sort) || 1;
-
+                this.filter.show_type = val.show_type;
                 this.getData();
                 this.getTableData();
             }
@@ -260,10 +260,12 @@ export default {
             this.paramsFilter.cat_id.one_level_id > 0
             || this.paramsFilter.keyword
         ) {
+            // h5
             // h5 与 小程序监听 paramsFilter的值，获取的时间不一样。1.这里为了兼容小程序和h5
             this.filter.cat_id.one_level_id = Number(this.paramsFilter.cat_id.one_level_id) || -1;
             this.filter.keyword = this.paramsFilter.keyword;
             this.filter.sort = Number(this.paramsFilter.sort) || 1;
+            this.filter.show_type = this.paramsFilter.show_type || '';
             this.getTableData();
             this.getData();
         }
@@ -355,8 +357,15 @@ export default {
             }
         },
         bindconfirm() {
-            if (!this.filter.keyword && this.isSearchWord) {
-                this.filter.keyword = this.searchWord;
+            if (this.isSearchWord) {
+                if (!this.filter.keyword) {
+                    this.filter.keyword = this.searchWord;
+                }
+                if (this.filter.keyword === this.searchWord) {
+                    this.filter.fr = 1;
+                } else {
+                    this.filter.fr = '';
+                }
             }
             return this.getTableData();
         },
