@@ -6,7 +6,7 @@
                     v-model="filter.keyword"
                     placeholder-class="placeholderStyle"
                     maxlength="13"
-                    placeholder="请输入作品名称/作者姓名"
+                    :placeholder="searchWord"
                     @confirm="bindconfirm"
                 >
                 <text
@@ -208,6 +208,8 @@ export default {
             changeValue: '',
             curCategory: '全部',
             curSort: '最热',
+            isSearchWord: false, // 是否设置了关键词
+            searchWord: '',
         };
     },
     watch: {
@@ -265,6 +267,7 @@ export default {
             this.getTableData();
             this.getData();
         }
+        this.getSearchWord();
     },
     methods: {
         onSelect(type, value) {
@@ -352,7 +355,10 @@ export default {
             }
         },
         bindconfirm() {
-            this.getTableData();
+            if (!this.filter.keyword && this.isSearchWord) {
+                this.filter.keyword = this.searchWord;
+            }
+            return this.getTableData();
         },
         onReachBottoms() {
             console.log(
@@ -366,6 +372,24 @@ export default {
             } else {
                 this.loadMoreStatus = 'noMore';
             }
+        },
+        getSearchWord() {
+            api.get('/api/works/searchword', {
+                type: 1,
+            }).then(
+                (res) => {
+                    if (res && res.status === 1) {
+                        this.isSearchWord = true;
+                        this.searchWord = res.rec_word;
+                    } else {
+                        this.searchWord = '请输入学校名称/作品名称/作者名称';
+                    }
+                },
+                () => {
+                    this.isSearchWord = false;
+                    this.searchWord = '请输入学校名称/作品名称/作者名称';
+                },
+            );
         },
     },
 };
