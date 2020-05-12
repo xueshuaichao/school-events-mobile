@@ -127,7 +127,7 @@
         {
             "path": "pages/upload/modify/modify",
             "style": {
-                "navigationBarTitleText": "上传作品"
+                "navigationBarTitleText": "作品编辑"
             }
         },
         // 默认上传作品的页面

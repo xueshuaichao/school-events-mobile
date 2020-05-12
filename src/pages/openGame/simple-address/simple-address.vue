@@ -193,6 +193,14 @@ export default {
             default() {
                 return [0, 0, 0];
             }
+        },
+        cityCode: {
+            type: Number,
+            default: 0
+        },
+        countyCode: {
+            type: Number,
+            default: 0
         }
     },
     data() {
@@ -215,13 +223,53 @@ export default {
         },
         pickerValueDefault() {
             this.init();
+        },
+        cityCode() {
+            this.getLabelFromCode();
         }
     },
     created() {
         console.log(provinceData, "provinceData");
         this.init();
+        // this.getLabelFromCode();
     },
     methods: {
+        getLabelFromCode() {
+            console.log("121212", this.cityCode);
+            // 根据编码设置位置
+            if (this.cityCode) {
+                let cityIndex = 0,
+                    cityLabel = "",
+                    countyIndex = 0,
+                    countyLabel = "";
+                cityData[0].forEach((d, index) => {
+                    console.log(
+                        d.value + "00",
+                        this.cityCode,
+                        d.value + "00" === this.cityCode
+                    );
+                    if (d.value + "00" === String(this.cityCode)) {
+                        console.log(d);
+                        cityIndex = index;
+                        cityLabel = d.label;
+                    }
+                });
+                areaData[0][cityIndex].forEach((d, index) => {
+                    if (d.value === String(this.countyCode)) {
+                        console.log(d);
+                        countyIndex = index;
+                        countyLabel = d.label;
+                    }
+                });
+                console.log(cityLabel, ",,", countyLabel);
+                this.$emit("initDistrictLabel", [
+                    cityLabel,
+                    countyLabel,
+                    cityIndex,
+                    countyIndex
+                ]);
+            }
+        },
         init() {
             this.handPickValueDefault(); // 对 pickerValueDefault 做兼容处理
             this.provinceDataList = provinceData;
@@ -230,6 +278,7 @@ export default {
                 areaData[this.pickerValueDefault[0]][
                     this.pickerValueDefault[1]
                 ];
+
             this.pickerValue = this.pickerValueDefault;
         },
         handPickValueDefault() {

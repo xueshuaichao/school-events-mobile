@@ -226,6 +226,15 @@ const routesConfig = {
             path: '/pages/openGame/rank',
         },
         {
+            path: '/pages/openGame/myWork/myWork',
+        },
+        {
+            path: '/pages/openGame/jingjiupload',
+        },
+        {
+            path: '/pages/upload/default/upload',
+        },
+        {
             path: '*',
             name: 'moddle',
             redirect: (to) => {
