@@ -100,13 +100,13 @@ export default {
                     id: 4,
                     img:
                         'http://aitiaozhan.oss-cn-beijing.aliyuncs.com/chunjiehao.png',
-                    url: '/pages/chunjiehao/index',
+                    url: '/pagesA/chunjiehao/index',
                 },
                 {
                     id: 3,
                     img:
                         'http://aitiaozhan.oss-cn-beijing.aliyuncs.com/banner4.png',
-                    url: '/pages/chunjie/index',
+                    url: '/pagesA/chunjie/index',
                 },
             ],
         };

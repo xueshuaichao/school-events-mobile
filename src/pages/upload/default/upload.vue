@@ -215,6 +215,7 @@ export default {
             catData: [],
             index: 0,
             lock: true,
+            id: 0,
         };
     },
     created() {
@@ -222,6 +223,20 @@ export default {
     },
     onLoad(query) {
         this.type = query.type;
+        // this.id = query.id;
+
+        // if (this.id) {
+        //     api.get('/api/works/detail', {id: this.id}).then((data) => {
+        //         this.formData = {...this.formData, ...data};
+        //         if (data.resource_type === 2) {
+        //             this.uploadMode = 'image';
+        //             this.newsTabActiveIndex = 1;
+        //             this.formData.video_img_url = '';
+        //             this.images = data.img;
+        //         }
+        //         this.formDate.resource_id = this.id;
+        //     })
+        // }
     },
     onShow() {
         this.getData();

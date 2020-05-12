@@ -70,12 +70,21 @@
                         />
                         <view
                             v-if="type === 'myWork'"
-                            class="work-info"
+                            class="work-info work-info-mywork"
                         >
                             <view class="media-name text-one-line">
-                                {{ ` ${item.resource_name}` }}
+                                {{
+                                    item.resource_scope === 3
+                                        ? item.resource_name
+                                        : item.cat_name
+                                }}
+                                {{
+                                    item.achievement
+                                        ? `|${item.achievement}${item.achievement_unit}`
+                                        : ""
+                                }}
                             </view>
-                            <view class="media-time">
+                            <view class="media-time media-time-l">
                                 {{ item.created_at }}
                             </view>
                             <view
@@ -83,6 +92,35 @@
                                 class="reject-reason text-three-line"
                             >
                                 {{ item.reason || "" }}
+                            </view>
+                            <view class="btn">
+                                <text
+                                    v-if="Number(tabActiveIndex) === 1"
+                                    class="btn-item"
+                                    @click="viewDetail(item)"
+                                >
+                                    查看
+                                </text>
+                                <text
+                                    v-if="Number(tabActiveIndex) === 2"
+                                    class="btn-item big"
+                                    @click="reason(item)"
+                                >
+                                    驳回原因
+                                </text>
+                                <text
+                                    v-if="Number(tabActiveIndex) === 0"
+                                    class="btn-item"
+                                    @click="modifyItem(item)"
+                                >
+                                    编辑
+                                </text>
+                                <text
+                                    class="btn-item del"
+                                    @click="onConfirmDelete(item)"
+                                >
+                                    删除
+                                </text>
                             </view>
                         </view>
                         <view
@@ -510,6 +548,75 @@ export default {
                 });
             }
         },
+        reason({ reason }) {
+            uni.showModal({
+                title: '驳回原因',
+                content: reason || '暂无内容',
+                showCancel: false,
+            });
+        },
+        modifyItem({ id, resource_scope: resourceScope }) {
+            if (resourceScope === 3) {
+                return uni.navigateTo({
+                    url: `/pages/upload/modify/modify?id=${id}&from=openGame`,
+                });
+            }
+            return uni.navigateTo({
+                url: `/pages/openGame/jingjiupload?id=${id}`,
+            });
+        },
+        onConfirmDelete(item) {
+            uni.showModal({
+                title: '删除提示',
+                content: '作品删除后将无法恢复 \n 确定删除吗？',
+                confirmText: '确定删除',
+                cancelText: '暂不删除',
+                cancelColor: '#1166FF',
+                confirmColor: '#999999',
+                success: (res) => {
+                    if (res.confirm) {
+                        this.deleteItem(item);
+                        console.log('用户点击确定');
+                    } else if (res.cancel) {
+                        console.log('用户点击取消');
+                    }
+                },
+            });
+        },
+        deleteItem(item) {
+            const index = this.dataList.indexOf(item);
+            api.post('/api/works/deleteraceresult', {
+                resource_id: item.id,
+            }).then(() => {
+                if (index !== -1) {
+                    this.dataList.splice(index, 1);
+                    this.total -= 1;
+                    if (
+                        this.dataList.length <= this.filter.page_size
+                        && this.total >= this.filter.page_size
+                    ) {
+                        if (this.total > this.filter.page_size) {
+                            this.loadMoreStatus = 'noMore';
+                        }
+                        this.filter.page_num = 1;
+                        this.getWorkData();
+                    }
+                }
+                uni.showToast({
+                    title: '删除成功',
+                });
+                if (this.tabActiveIndex === 1) {
+                    // 待审核
+                    this.allNum.wait -= 1;
+                } else if (this.tabActiveIndex === 2) {
+                    // 已通过
+                    this.allNum.pass -= 1;
+                } else {
+                    // 未通过
+                    this.allNum.no_pass -= 1;
+                }
+            });
+        },
     },
     onLoad(query) {
         const {
@@ -692,15 +799,22 @@ export default {
         .work-info {
             width: 290upx;
             position: relative;
+            &.work-info-mywork {
+                margin-right: 10upx;
+            }
             .media-name {
                 width: 100%;
                 font-size: 28upx;
                 margin-bottom: 10upx;
                 color: #333333;
+                font-weight: 500;
             }
             .media-time {
                 color: #999999;
                 font-size: 24upx;
+                &.media-time-l {
+                    line-height: 60upx;
+                }
             }
             .vote-num {
                 color: #9f1ff3;
@@ -708,6 +822,32 @@ export default {
                 float: left;
                 height: 50rpx;
                 line-height: 50rpx;
+            }
+            .btn {
+                display: flex;
+                justify-content: space-between;
+                margin-top: 20upx;
+            }
+            .btn-item {
+                flex: 1;
+                margin: 0 5upx;
+                height: 50upx;
+                background: #9f1ff3;
+                font-size: 24upx;
+                color: rgba(255, 255, 255, 1);
+                line-height: 50upx;
+                text-align: center;
+                display: inline-block;
+                border: 2upx solid #9f1ff3;
+                width: 88upx;
+                &.del {
+                    background: #fff;
+                    color: #9f1ff3;
+                }
+                &.big {
+                    flex: none;
+                    width: 127upx;
+                }
             }
         }
     }
