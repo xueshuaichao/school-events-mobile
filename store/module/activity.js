@@ -127,6 +127,132 @@ export default {
                     descMaxLength: 150,
                 },
             },
+            {
+                activityId: 9,
+                publicConfig: {
+                    title: '七彩童年 快乐成长秀风采',
+                    log: 'lyhd',
+                    sort: ['最新', '最热'],
+                    catMenu: [], // 分组
+                    mainBgColor: '#FFCE99',
+                    activityName: 'labor',
+                    activityId: 8,
+                    catId: 20, // 所属分类
+                    time: '4月27日--5月31日',
+                    primaryColor: '#DB4E0E', // 主色调
+                    darkPrimaryColor: '#451600', // 深一些
+                    primaryBgColor: '#FF9F73', // 主要的背景颜色
+                    infoColor: '#AB3500', // 浅一些
+                    titleColor: '#FFE179', // 规则的title
+                    placeholderColor: 'rgba(255,255,255,.6)',
+                    homePath: '/pages/activity-pages/labor/index',
+                    shareConfig: {
+                        title: [
+                            '七彩童年， 快乐成长秀风采！超多奖品等你拿',
+                            '闪亮小童星，成长大舞台！快来看～',
+                            '这个“六一”有点甜，秀才艺，抢“糖果”，赢好礼！',
+                            '六一嗨翻天！快来围观孩子们的才艺show，可以参与抽奖哦～',
+                            '欢乐儿童节！秀出才艺展风采，赢取惊喜好礼！',
+                        ],
+                        h5Title: [
+                            '七彩童年， 快乐成长秀风采！超多奖品等你拿',
+                            '闪亮小童星，成长大舞台！快来看～',
+                            '这个“六一”有点甜，秀才艺，抢“糖果”，赢好礼！',
+                            '六一嗨翻天！快来围观孩子们的才艺show，可以参与抽奖哦～',
+                            '欢乐儿童节！秀出才艺展风采，赢取惊喜好礼！',
+                        ],
+                        desc: [
+                            '七彩童年， 快乐成长秀风采！秀才艺，抢“糖果”，赢好礼',
+                            '五一劳动节，脂肪换奖品啦！赶快动起来',
+                        ],
+                        image:
+                            'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/labor_share.jpg',
+                        path: '/pages/activity-pages/children/index',
+                    },
+                },
+                indexConfig: {
+                    // 活动页
+                    rules: rulesData.rules.filter(v => v.id === 9)[0].text, // 规则文案
+                    prizes: [
+                        {
+                            text: ['一等奖', '小度音响*2'],
+                        },
+                        {
+                            text: ['二等奖', '旅行箱*6'],
+                        },
+                        {
+                            text: ['三等奖', 'AR地球仪*12'],
+                        },
+                        {
+                            text: ['劳动能手奖', '榨汁机'],
+                        },
+                    ], // 奖品文案
+                    prizesDetail: {
+                        text: [
+                            {
+                                title: '奖品兑换说明',
+                                texts: [
+                                    '1.每名参赛选手只有1次人气奖领取机会，如出现同一参赛选手获得不同奖项的情况，则以最高奖项为准。',
+                                    '2.工作人员将于2020年6月23日-6月26日期间电话联系获奖用户所绑定的手机号码，电话无法联系的将视为该用户自动放弃领奖资格。',
+                                    '3.奖品将于2020年6月27日开始通过普通快递陆续寄出。',
+                                    '4.本次活动所有奖品不提供发票、收据，不支持退换，收货时请确认无质量问题后签收。',
+                                    '5.若因用户提供的收货信息有误而未收到奖品，概不补发。',
+                                ],
+                            },
+                        ],
+                        list: [
+                            {
+                                title: '人气奖',
+                                prizeList: [
+                                    {
+                                        name: '一等奖*2名',
+                                        text: '佳能打印机+证书',
+                                    },
+                                    {
+                                        name: '二等奖*6名',
+                                        text: '骆驼帐篷+证书',
+                                    },
+                                    {
+                                        name: '三等奖*12名',
+                                        text: '液晶手写板+证书',
+                                    },
+                                    {
+                                        name: '21名-40名',
+                                        text: '证书',
+                                    },
+                                ],
+                            },
+                            {
+                                title: '幸运奖',
+                                prizeList: [
+                                    {
+                                        name: '每周3名(共5周)',
+                                        text: '榨汁机+证书',
+                                    },
+                                ],
+                            },
+                            {
+                                title: '优秀组织单位',
+                                prizeList: [
+                                    {
+                                        name: '共5名',
+                                        text: '奖杯',
+                                    },
+                                ],
+                            },
+                        ],
+                    },
+                },
+                uploadConfig: {
+                    // 上传作品页
+                    activityCat: [], // 表现形式
+                    uploadMode: ['video', 'image'], // 上传类型 只传1个值时（['video']）不显示表现形式
+                    placeholderNameText: '作品名称（不超过11字）',
+                    placeholderDescText: '劳动心得（不超过150字）',
+                    nameMaxLength: 11,
+                    descMaxLength: 150,
+                },
+            },
         ],
     },
     getters: {

@@ -1,30 +1,42 @@
 <template>
     <view class="packet-rain">
-        <view
-            v-for="(item, index) in packetList"
-            v-show="item.isShow"
-            :key="index"
-            class="pakcet-item"
-            :style="{
-                left: `${item.postion}px`,
-                width: `${imgSize.width}px`,
-                height: `${imgSize.height}px`,
-                top: `-${imgSize.height + 20}px`
-            }"
-            :animation="animationData[index]"
-        >
-            <image
-                class="pakcet-item-img"
-                :src="item.src"
-                @click="handelPacket(index)"
-            />
-        </view>
+        <template v-if="countDownTime">
+            <view class="count-down">
+                <view>倒计时：{{ countDownTime }}</view>
+            </view>
+        </template>
+        <template v-else>
+            <view
+                v-for="(item, index) in packetList"
+                v-show="item.isShow"
+                :key="index"
+                class="pakcet-item"
+                :style="{
+                    left: `${item.postion}px`,
+                    width: `${imgSize.width}px`,
+                    height: `${imgSize.height}px`,
+                    top: `-${imgSize.height + 20}px`
+                }"
+                :animation="animationData[index]"
+            >
+                <image
+                    class="pakcet-item-img"
+                    :src="item.src"
+                    @click="handelPacket(index)"
+                />
+            </view>
+        </template>
     </view>
 </template>
 
 <script>
 export default {
     props: {
+        countDown: {
+            // 倒计时
+            type: Number,
+            default: 0,
+        },
         hideIndex: {
             type: Number,
             default: -1,
@@ -69,6 +81,7 @@ export default {
     },
     data() {
         return {
+            countDownTime: this.countDown,
             packetList: [],
             isShow: true,
             animationData: [],
@@ -99,18 +112,34 @@ export default {
         },
     },
     created() {
-        this.animation = uni.createAnimation();
-        const that = this;
-        uni.getSystemInfo({
-            success(res) {
-                const { windowWidth, windowHeight } = res;
-                that.postion.max = windowWidth - (that.imgSize.width + 10);
-                that.windowHeight = windowHeight + that.imgSize.height + 20;
-                that.init();
-            },
-        });
+        if (this.countDownTime) {
+            this.countDownFn();
+        } else {
+            this.createAnimation();
+        }
     },
     methods: {
+        countDownFn() {
+            const T = setInterval(() => {
+                this.countDownTime -= 1000;
+                if (this.countDownTime === 0) {
+                    clearInterval(T);
+                    this.createAnimation();
+                }
+            }, 1000);
+        },
+        createAnimation() {
+            this.animation = uni.createAnimation();
+            const that = this;
+            uni.getSystemInfo({
+                success(res) {
+                    const { windowWidth, windowHeight } = res;
+                    that.postion.max = windowWidth - (that.imgSize.width + 10);
+                    that.windowHeight = windowHeight + that.imgSize.height + 20;
+                    that.init();
+                },
+            });
+        },
         init() {
             this.setPacketList();
             let time = 1000;
@@ -151,6 +180,16 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.count-down {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 990;
+    background-color: #f00;
+    color: #fff;
+}
 .packet-rain {
     position: fixed;
     top: 0;
