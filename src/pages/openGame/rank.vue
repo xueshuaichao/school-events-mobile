@@ -187,13 +187,13 @@
                         </template>
                     </view>
                     <view class="fl-l rank-name text-one-line">
-                        长长张
+                        {{ item.name }}
                     </view>
                     <view class="class-info fl-l text-one-line">
-                        渭南县第八小学三年级一班
+                        {{ item.school }}
                     </view>
                     <view class="fl-r rank-achieve text-one-line">
-                        212121个
+                        {{ item.achievement }}{{ item.achievement_unit }}
                     </view>
                 </view>
             </template>
