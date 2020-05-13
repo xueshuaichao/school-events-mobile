@@ -6,7 +6,7 @@
         />
         <view>上传成功，请等待审核</view>
         <navigator
-            url="/pages/chunjiehao/myWork/myWork?type=myWork"
+            url="/pagesA/chunjiehao/myWork/myWork?type=myWork"
             class="btn"
         >
             我的作品
@@ -34,7 +34,7 @@ export default {
             title,
             imageUrl:
                 'http://aitiaozhan.oss-cn-beijing.aliyuncs.com/h5/chunjiehao-banner.png',
-            path: '/pages/chunjiehao/index',
+            path: '/pagesA/chunjiehao/index',
         };
     },
 };

@@ -82,7 +82,7 @@ export default {
                     id: 7,
                     img:
                         'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/school-events-mobile/openEvent-banner.png',
-                    url: '/pages/openGame/zhibo-list',
+                    url: '/pages/openGame/index',
                 },
                 {
                     id: 6,
@@ -100,13 +100,13 @@ export default {
                     id: 4,
                     img:
                         'http://aitiaozhan.oss-cn-beijing.aliyuncs.com/chunjiehao.png',
-                    url: '/pages/chunjiehao/index',
+                    url: '/pagesA/chunjiehao/index',
                 },
                 {
                     id: 3,
                     img:
                         'http://aitiaozhan.oss-cn-beijing.aliyuncs.com/banner4.png',
-                    url: '/pages/chunjie/index',
+                    url: '/pagesA/chunjie/index',
                 },
             ],
         };

@@ -7,7 +7,10 @@
             <view class="title">
                 参赛项目信息
             </view>
-            <view class="show-type-input">
+            <view
+                v-if="!id"
+                class="show-type-input"
+            >
                 <view class="show-type-text">
                     <text style="color:red">
                         *
@@ -44,6 +47,7 @@
                         :value="catIndex"
                         :range="catData"
                         :range-key="'cat_name'"
+                        :disabled="id"
                         @change="onSelect"
                     >
                         <input
@@ -119,7 +123,7 @@
                         v-model="achivementInput"
                         class="uni-input"
                         placeholder-class="placeholder"
-                        maxlength="10"
+                        maxlength="8"
                         placeholder="成绩"
                     >
                     <text class="unit-class">
@@ -267,14 +271,17 @@
         <simple-address
             ref="simpleAddress"
             :picker-value-default="formData.districtCode"
+            :city-code="formData.city"
+            :county-code="formData.county"
             theme-color="#007AFF"
             @onConfirm="onConfirm"
+            @initDistrictLabel="initDistrictLabel"
         />
         <view
             class="btn"
             @click="upload"
         >
-            上传
+            {{ id ? "编辑作品" : "上传作品" }}
         </view>
     </view>
 </template>
@@ -381,12 +388,40 @@ export default {
             teacherInput: '',
             attestationInput: '',
             createInput: '',
+            id: 0,
         };
     },
-    onLoad({ type }) {
+    onLoad({ type, id }) {
         this.type = type;
+        this.id = id;
+        if (id) {
+            api.get('/api/works/detail', { id: this.id }).then((data) => {
+                this.formData = { ...this.formData, ...data };
+                this.formData.video_id = data.video.video_id;
+                this.formData.resource_id = id;
+                this.achivementInput = data.achievement;
+                this.teacherInput = data.teacher;
+                this.createInput = data.create_name;
+                this.attestationInput = data.attestation_name;
+
+                this.formData.education_name = this.educationData[
+                    data.education_level - 2
+                ];
+                this.formData.grade_name = this.gradeData[data.grade_id];
+                this.formData.file_size = data.video.file_size;
+                this.formData.file_name = data.video.file_name;
+                this.formData.file_suffix = data.video.file_suffix;
+                console.log(data);
+            });
+        }
+        let txt = '吉尼斯项目作品上传';
+        if (id) {
+            txt = '作品编辑';
+        } else if (type === 'jingji') {
+            txt = '竞技项目作品上传';
+        }
         uni.setNavigationBarTitle({
-            title: type === 'jingji' ? '竞技项目作品上传' : '吉尼斯项目作品上传',
+            title: txt,
         });
     },
     watch: {
@@ -398,7 +433,7 @@ export default {
                     // return false;
                     this.achivementInput = `${foo.split('.')[0]}.${foo
                         .split('.')[1]
-                        .substr(0, 4)}`;
+                        .substr(0, 3)}`;
                 } else {
                     this.achivementInput = foo;
                     this.formData.achievement = this.achivementInput;
@@ -432,6 +467,12 @@ export default {
     },
     onShow() {},
     methods: {
+        initDistrictLabel(arr) {
+            if (!this.formData.district) {
+                this.formData.district = `陕西省${arr[0]}${arr[1]}`;
+                this.formData.districtCode = [0, arr[2], arr[3]];
+            }
+        },
         getUserInfo() {
             api.get('/api/user/info').then(
                 (res) => {
@@ -626,8 +667,9 @@ export default {
         return {
             title,
             imageUrl:
-                'http://aitiaozhan.oss-cn-beijing.aliyuncs.com/school-events-mobile/openEvent-banner.png?x-oss-process=image/format,png/interlace,1/quality,Q_80/resize,m_pad,h_100',
-            path: '/pages/openGame/zhibo-list',
+                'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/h5/logo-h5.png',
+
+            path: '/pages/tabBar/index/index',
         };
     },
 };

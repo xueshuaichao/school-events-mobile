@@ -1,21 +1,23 @@
 <template>
     <view class="page-my-work">
-        <image
-            class="one"
-            src="../../../static/images/zhibo/star.png"
-        />
-        <image
-            class="two"
-            src="../../../static/images/zhibo/star.png"
-        />
-        <image
-            class="three"
-            src="../../../static/images/zhibo/star.png"
-        />
-        <image
-            class="four"
-            src="../../../static/images/zhibo/star.png"
-        />
+        <template v-if="type === 'myWork'">
+            <image
+                class="one"
+                src="../../../static/images/zhibo/star.png"
+            />
+            <image
+                class="two"
+                src="../../../static/images/zhibo/star.png"
+            />
+            <image
+                class="three"
+                src="../../../static/images/zhibo/star.png"
+            />
+            <image
+                class="four"
+                src="../../../static/images/zhibo/star.png"
+            />
+        </template>
         <!-- identity 用户身份 1=>C端普通用户 ,2=> 教育局员工，3=>学校员工 4 学生 -->
         <!-- my works -->
         <view
@@ -68,12 +70,21 @@
                         />
                         <view
                             v-if="type === 'myWork'"
-                            class="work-info"
+                            class="work-info work-info-mywork"
                         >
                             <view class="media-name text-one-line">
-                                {{ ` ${item.resource_name}` }}
+                                {{
+                                    item.resource_scope === 3
+                                        ? item.resource_name
+                                        : item.cat_name
+                                }}
+                                {{
+                                    item.achievement
+                                        ? `|${item.achievement}${item.achievement_unit}`
+                                        : ""
+                                }}
                             </view>
-                            <view class="media-time">
+                            <view class="media-time media-time-l">
                                 {{ item.created_at }}
                             </view>
                             <view
@@ -82,15 +93,46 @@
                             >
                                 {{ item.reason || "" }}
                             </view>
+                            <view class="btn">
+                                <text
+                                    v-if="Number(tabActiveIndex) === 1"
+                                    class="btn-item"
+                                    @click="viewDetail(item)"
+                                >
+                                    查看
+                                </text>
+                                <text
+                                    v-if="Number(tabActiveIndex) === 2"
+                                    class="btn-item big"
+                                    @click="reason(item)"
+                                >
+                                    驳回原因
+                                </text>
+                                <text
+                                    v-if="Number(tabActiveIndex) === 0"
+                                    class="btn-item"
+                                    @click="modifyItem(item)"
+                                >
+                                    编辑
+                                </text>
+                                <text
+                                    class="btn-item del"
+                                    @click="onConfirmDelete(item)"
+                                >
+                                    删除
+                                </text>
+                            </view>
                         </view>
                         <view
                             v-else
                             class="work-info"
                         >
                             <view class="media-name">
-                                {{ `${item.cat_name}` }} |
+                                {{ item.cat_name }}
                                 {{
-                                    `${item.achievement}${item.achievement_unit}`
+                                    item.achievement
+                                        ? `|${item.achievement}${item.achievement_unit}`
+                                        : ""
                                 }}
                             </view>
                             <view class="nameAndSchool">
@@ -133,7 +175,7 @@
                     </view>
                     <navigator
                         v-if="allTotal === 0"
-                        url="/pages/zhibo/zhibo-list"
+                        url="/pages/openGame/zhibo-list"
                     >
                         <view class="goUpload">
                             去上传
@@ -146,6 +188,9 @@
                 >
                     {{ text }}
                 </button>
+                <view class="bottom-bg-box">
+                    <view class="bottom-bg" />
+                </view>
             </view>
         </view>
         <view
@@ -210,20 +255,26 @@
                                 v-else
                                 class="work-info"
                             >
-                                <view class="media-name">
-                                    {{ `${item.cat_name}` }} |
+                                <view class="media-name text-one-line">
                                     {{
-                                        `${item.achievement}${item.achievement_unit}`
+                                        item.resource_scope === 3
+                                            ? item.resource_name
+                                            : item.cat_name
+                                    }}
+                                    {{
+                                        item.achievement
+                                            ? `|${item.achievement}${item.achievement_unit}`
+                                            : ""
                                     }}
                                 </view>
                                 <view class="nameAndSchool">
-                                    <view class="name">
+                                    <view class="name text-one-line">
                                         <image
                                             src="../../../static/images/zhibo/name-icon.png"
                                         />
                                         {{ `${item.create_name}` }}
                                     </view>
-                                    <view class="school">
+                                    <view class="school text-one-line">
                                         {{ `${item.create_user_class}` }}
                                     </view>
                                 </view>
@@ -279,7 +330,7 @@
                         </view>
                         <navigator
                             v-if="allTotal === 0"
-                            url="/pages/zhibo/zhibo-list"
+                            url="/pages/openGame/zhibo-list"
                         >
                             <view class="goUpload">
                                 去上传
@@ -293,6 +344,9 @@
                         {{ text }}
                     </button>
                 </view>
+            </view>
+            <view class="bottom-bg-box">
+                <view class="bottom-bg" />
             </view>
         </view>
     </view>
@@ -344,7 +398,7 @@ export default {
                 page_size: 10,
             },
             total: 1,
-            type: 'myWork',
+            type: '',
             allNum: {},
             allTotal: 0,
         };
@@ -481,28 +535,103 @@ export default {
             this.getWorkData();
         },
         viewDetail(item) {
-            if (this.tabActiveIndex === 1) {
-                if (this.type === 'myWork') {
+            if (this.type === 'myWork') {
+                if (this.tabActiveIndex === 1) {
                     uni.navigateTo({
                         // url: `/pages/work/detail/detail?id=${item.id}&fr=${this.fr}&activity_id=5&from=yiqing`,
                         url: `/pages/work/detail/detail?id=${item.id}&from=openGame`,
                     });
-                } else {
-                    uni.navigateTo({
-                        url: `/pages/work/detail/detail?id=${item.id}`,
-                    });
                 }
+            } else {
+                uni.navigateTo({
+                    url: `/pages/work/detail/detail?id=${item.id}&from=openGame`,
+                });
             }
+        },
+        reason({ reason }) {
+            uni.showModal({
+                title: '驳回原因',
+                content: reason || '暂无内容',
+                showCancel: false,
+            });
+        },
+        modifyItem({ id, resource_scope: resourceScope }) {
+            if (resourceScope === 3) {
+                return uni.navigateTo({
+                    url: `/pages/upload/modify/modify?id=${id}&from=openGame`,
+                });
+            }
+            return uni.navigateTo({
+                url: `/pages/openGame/jingjiupload?id=${id}`,
+            });
+        },
+        onConfirmDelete(item) {
+            uni.showModal({
+                title: '删除提示',
+                content: '作品删除后将无法恢复 \n 确定删除吗？',
+                confirmText: '确定删除',
+                cancelText: '暂不删除',
+                cancelColor: '#1166FF',
+                confirmColor: '#999999',
+                success: (res) => {
+                    if (res.confirm) {
+                        this.deleteItem(item);
+                        console.log('用户点击确定');
+                    } else if (res.cancel) {
+                        console.log('用户点击取消');
+                    }
+                },
+            });
+        },
+        deleteItem(item) {
+            const index = this.dataList.indexOf(item);
+            api.post('/api/works/deleteraceresult', {
+                resource_id: item.id,
+            }).then(() => {
+                if (index !== -1) {
+                    this.dataList.splice(index, 1);
+                    this.total -= 1;
+                    if (
+                        this.dataList.length <= this.filter.page_size
+                        && this.total >= this.filter.page_size
+                    ) {
+                        if (this.total > this.filter.page_size) {
+                            this.loadMoreStatus = 'noMore';
+                        }
+                        this.filter.page_num = 1;
+                        this.getWorkData();
+                    }
+                }
+                uni.showToast({
+                    title: '删除成功',
+                });
+                if (this.tabActiveIndex === 0) {
+                    // 待审核
+                    this.allNum.wait -= 1;
+                } else if (this.tabActiveIndex === 1) {
+                    // 已通过
+                    this.allNum.pass -= 1;
+                } else {
+                    // 未通过
+                    this.allNum.no_pass -= 1;
+                }
+            });
         },
     },
     onLoad(query) {
-        const { type, name } = query;
+        const {
+            type, name, status, column,
+        } = query;
         console.log(type, 'tye');
         this.type = type;
         if (type === 'myWork') {
+            if (status) {
+                this.tabActiveIndex = Number(status);
+            }
             this.getWorkData();
         } else if (type === 'search') {
             uni.setNavigationBarTitle({ title: '搜索' });
+            this.filter.column = column;
             this.filter.keyword = name;
             this.changeValue = name;
             this.searchWorkData();
@@ -513,15 +642,11 @@ export default {
             // 来自页面内分享按钮
             console.log(res.target);
         }
-        const titleList = [
-            '抗击疫情“艺”起来，参与活动为武汉加油！向英雄致敬！',
-        ];
-        const title = titleList[Math.floor(Math.random() * titleList.length)];
+        const title = '世界吉尼斯青少年“爱挑战”网络预选赛';
         return {
             title,
-            imageUrl:
-                'http: //aitiaozhan.oss-cn-beijing.aliyuncs.com/chunjiehao/yiqing-poster01.png',
-            path: '/pages/yiqing/index',
+            // imageUrl: 'http://aitiaozhan.oss-cn-beijing.aliyuncs.com/chunjiehao/yiqing-poster01.png?x-oss-process=image/format,png/interlace,1/quality,Q_80/resize,m_pad,h_100',
+            path: '/pages/openGame/index',
         };
     },
 };
@@ -535,37 +660,45 @@ export default {
     color: #999999;
     margin-top: 24rpx;
     margin-bottom: 24rpx;
-
+    overflow: hidden;
     .name {
+        width: 50%;
+        float: left;
         image {
             width: 28upx;
             height: 22upx;
             margin-right: 9rpx;
+        }
+        .school {
+            width: 50%;
+            float: right;
+            text-align: right;
         }
     }
 }
 .vote {
     float: right;
     width: 120upx;
-    height: 50upx;
-
     color: #9f1ff3;
-    font-size: 28upx;
-    text-align: center;
-    line-height: 50upx;
+    font-size: 22upx;
+    padding: 14upx 0 14upx 24upx;
     position: relative;
-    &.voted {
+    box-sizing: border-box;
+    line-height: 1;
+    text-align: center;
+    &.unvote {
         background: #fff;
         border: 1px solid rgba(159, 31, 243, 1);
     }
-    &.unvote {
+    &.voted {
         background: #f5e7ff;
         border: 1px solid transparent;
     }
     image {
         position: absolute;
-        top: 14upx;
-        left: 13upx;
+        top: 50%;
+        transform: translateY(-50%);
+        left: 25upx;
         width: 18rpx;
         height: 18rpx;
     }
@@ -583,6 +716,9 @@ export default {
     line-height: 65upx;
     text-align: center;
     padding: 0;
+    &::after {
+        border: none;
+    }
 }
 .empty {
     text-align: center;
@@ -609,7 +745,6 @@ export default {
         margin-top: 174upx;
     }
     .goUpload {
-        margin-top: 37upx;
         width: 223upx;
         height: 84upx;
         background: url("../../../static/images/zhibo/openGame-btn.png")
@@ -619,7 +754,7 @@ export default {
         line-height: 65upx;
         text-align: center;
         background-size: 100% 100%;
-        margin-left: 223rpx;
+        margin: 37upx auto 0;
     }
     view {
         color: #333;
@@ -664,19 +799,55 @@ export default {
         .work-info {
             width: 290upx;
             position: relative;
+            &.work-info-mywork {
+                margin-right: 10upx;
+            }
             .media-name {
                 width: 100%;
                 font-size: 28upx;
                 margin-bottom: 10upx;
                 color: #333333;
+                font-weight: 500;
             }
             .media-time {
                 color: #999999;
                 font-size: 24upx;
+                &.media-time-l {
+                    line-height: 60upx;
+                }
             }
             .vote-num {
                 color: #9f1ff3;
-                font-size: 30upx;
+                font-size: 22upx;
+                float: left;
+                height: 50rpx;
+                line-height: 50rpx;
+            }
+            .btn {
+                display: flex;
+                justify-content: space-between;
+                margin-top: 20upx;
+            }
+            .btn-item {
+                flex: 1;
+                margin: 0 5upx;
+                height: 50upx;
+                background: #9f1ff3;
+                font-size: 24upx;
+                color: rgba(255, 255, 255, 1);
+                line-height: 50upx;
+                text-align: center;
+                display: inline-block;
+                border: 2upx solid #9f1ff3;
+                width: 88upx;
+                &.del {
+                    background: #fff;
+                    color: #9f1ff3;
+                }
+                &.big {
+                    flex: none;
+                    width: 127upx;
+                }
             }
         }
     }
@@ -751,7 +922,8 @@ export default {
                 width: 40upx;
                 height: 40upx;
                 position: absolute;
-                top: 16upx;
+                top: 50%;
+                margin-top: -20upx;
                 right: 22upx;
             }
             input {
@@ -780,7 +952,7 @@ export default {
         display: flex;
         flex-flow: column;
         min-height: 95vh;
-        border-bottom: 19upx solid #5151c6;
+        // border-bottom: 19upx solid #5151c6;
         // .panel-scroll {
         //     height: 100%;
         //     overflow-y: scroll;
@@ -790,7 +962,7 @@ export default {
         min-height: 95vh;
         display: flex;
         flex-flow: column;
-        border-bottom: 19upx solid #5151c6;
+        // border-bottom: 19upx solid #5151c6;
     }
     .panel .panel-hd,
     .panel-before .panel-hd {
@@ -811,7 +983,6 @@ export default {
             float: left;
             position: relative;
             .jingji-btn {
-                width: 195upx;
                 height: 64upx;
                 font-size: 32upx;
                 text-align: center;
@@ -821,6 +992,7 @@ export default {
                 position: absolute;
                 top: 3upx;
                 left: 3upx;
+                right: 22upx;
                 &.active {
                     background: #9f1ff3;
                     color: #fff;
@@ -834,7 +1006,7 @@ export default {
         background: #fff;
         position: relative;
         flex: 1;
-        border-bottom: 19upx solid #5151c6;
+        padding-bottom: 20upx;
     }
     .content-box-search {
     }
@@ -864,6 +1036,22 @@ export default {
         border: 1upx solid rgba(84, 8, 68, 1);
         transform: skewY(45deg);
         transform-origin: left;
+    }
+    .bottom-bg-box {
+        position: absolute;
+        bottom: -16upx;
+        left: 0;
+        height: 16upx;
+        width: 100%;
+        .bottom-bg {
+            width: 100%;
+            height: 100%;
+            background: #5151c6;
+            border: 1upx solid #540844;
+            border-right: 0 none;
+            transform: skew(45deg);
+            transform-origin: right top;
+        }
     }
 
     .work-list {

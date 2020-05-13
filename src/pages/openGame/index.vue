@@ -13,13 +13,36 @@
                         @click="handleClose"
                     />
                     <view class="title-icon">
-                        大赛活动参与机制是“线下组织活动、线上展示推优、挑战汇演直播、统一认证表彰”。
-                        各学校按照活动项目要求和技术规范，组织师生在官方平台上传视频进行展示分享和公平竞赛，
-                        在挑战类项目中创造校级、县级、市级、全国纪录和吉尼斯世界纪录，在才艺秀项目中推优评选才艺之星。
-                        活动参加方式主要是：学校组织师生快速注册入驻官方平台——选择挑战项目或才艺秀项目——在教师
-                        和家长指导下录制微视频上传官方平台——大赛组委会开展评选、认证、表彰。
-                        网络预选赛包括“爱挑战”网络竞技赛、吉尼斯网络预选赛和才艺秀网络推优赛。
-                        各学校组织学生参与项目挑战，上报挑战赛网络预选赛和才艺秀网络推优赛。
+                        <view class="txt">
+                            大赛包括三大项目：竞技类、才艺秀类和吉尼斯项目。
+                        </view>
+                        <view>
+                            1．竞技项目。
+                        </view>
+                        <view>
+                            主要为竞技项目，以中小学校（中职学校）为主体组织师生共同展示个人和团队技能与成就，以微视频形式通过“青少年爱挑战创新共享平台”上传展示，
+                            在学校、区域、全省和全国范围进行公开公平竞赛，通过竞争机制和挑战规则创造各级纪录。本届活动设置挑战项目27个，
+                            涵盖学习、运动、生活、艺术、语言等领域，体现德智体美劳全面发展原则。
+                        </view>
+                        <view>
+                            2．才艺秀项目。
+                        </view>
+                        <view>
+                            主要为展示类项目，秉承“才艺大舞台，有才你就来”主题，为广大师生提供展示才艺和特长的平台，学生随时录制各类才艺技能展示视频（如乐器、
+                            舞蹈、演讲、曲艺等）上传至官网平台，也可上传绘画、书法、数字设计作品的电子图片，通过视频点赞量等进行排名推优，推选出一批才艺之星候选人，
+                            最终通过省级现场展示评选省级才艺之星，省上进行表彰颁奖。
+                        </view>
+                        <view>
+                            3．吉尼斯项目。
+                        </view>
+                        <view>
+                            吉尼斯项目由吉尼斯世界纪录（英国）官方审核制定，纳入“爱挑战”活动项目，通过开展吉尼斯世界纪录网络预选赛和线下现场挑战赛，
+                            为青少年学生提供创造世界纪录的机会和平台。本届活动设置吉尼斯挑战项目5项，涵盖团队协作、科技创新、运动技巧、语言技能、空间搭建等领域，
+                            适合广大青少年参与挑战。
+                            吉尼斯项目严格遵照吉尼斯世界纪录（英国）官方规则开展。
+                            由各学校组织学生参与吉尼斯网络预选赛，上报挑战成绩，挑战者可在官网平台获得各级（校级、市级、省级、全国）纪录勋章及网络纪录证书。
+                            各项目的最优秀者将参与吉尼斯世界纪录现场挑战赛，向世界纪录发起挑战。
+                        </view>
                     </view>
                 </view>
             </view>
@@ -82,26 +105,41 @@
                 </view>
                 <!-- work show -->
                 <view class="menu-list">
-                    <view class="search-box">
+                    <view class="search-box clearfix">
                         <button
-                            :class="{
-                                active: activeMenuIndex === 1
-                            }"
-                            @click="toggle(1)"
-                        >
-                            最新
-                        </button>
-                        <button
+                            v-if="jingjiactiveMenuIndex === 3"
                             :class="{
                                 active: activeMenuIndex === 3
                             }"
                             @click="toggle(3)"
                         >
+                            最新
+                        </button>
+                        <button
+                            v-if="jingjiactiveMenuIndex === 3"
+                            :class="{
+                                active: activeMenuIndex === 1
+                            }"
+                            @click="toggle(1)"
+                        >
                             最热
                         </button>
-                        <view class="search">
+                        <button
+                            v-if="jingjiactiveMenuIndex !== 3"
+                            class="check-rank active"
+                            @click="jumpRankList"
+                        >
+                            <image src="/static/images/zhibo/rank.png" />
+                            查看排行榜
+                        </button>
+                        <view
+                            class="search"
+                            :class="{
+                                searchjinji: jingjiactiveMenuIndex !== 3
+                            }"
+                        >
                             <image
-                                src="../../static/images/zhibo/search.png"
+                                src="/static/images/zhibo/search.png"
                                 @click="bindconfirm"
                             />
                             <input
@@ -128,15 +166,16 @@
                             />
 
                             <view class="media-name text-one-line">
-                                {{ `${item.cat_name}` }} |
                                 {{
-                                    `${item.achievement}${item.achievement_unit}`
+                                    jingjiactiveMenuIndex === 3
+                                        ? `${item.cat_name} | ${item.name}`
+                                        : `${item.cat_name} | ${item.achievement}${item.achievement_unit}`
                                 }}
                             </view>
                             <view class="nameAndSchool">
                                 <view class="name text-one-line">
                                     <image
-                                        src="../../static/images/zhibo/name-icon.png"
+                                        src="/static/images/zhibo/name-icon.png"
                                     />
                                     {{ `${item.create_name}` }}
                                 </view>
@@ -152,9 +191,7 @@
                                 :class="item.is_like === 1 ? 'voted' : 'unvote'"
                                 @click="handleVote(item)"
                             >
-                                <image
-                                    src="../../static/images/zhibo/vote.png"
-                                />
+                                <image src="/static/images/zhibo/vote.png" />
                                 {{ item.is_like === 1 ? "已赞" : "点赞" }}
                             </view>
                         </view>
@@ -173,8 +210,16 @@
                             color="#333"
                         />
                     </view>
+                    <view class="bottom-bg-box">
+                        <view class="bottom-bg" />
+                    </view>
                 </view>
-
+                <image
+                    v-if="showGotop"
+                    class="goTop"
+                    src="/static/images/zhibo/toTop.png"
+                    @click="handleToTop"
+                />
                 <view
                     class="upload"
                     @click="handleUpload"
@@ -228,7 +273,7 @@ export default {
             fr: '',
             shareDesc: '',
             changeValue: '',
-            activeMenuIndex: 1,
+            activeMenuIndex: 3,
             jingjiactiveMenuIndex: 1,
             loadMoreStatus: 'more',
             prompt: false,
@@ -239,26 +284,42 @@ export default {
                 page_num: 1,
                 page_size: 10,
                 column: 1,
-                sort: 1,
+                sort: 3,
             },
             status: 2,
             setId: '',
+            oldsort: 3,
+            showGotop: false,
         };
     },
     created() {
         this.getData();
     },
+    mounted() {},
     onLoad(params) {
         this.fr = logger.getFr('dsxnh', params);
     },
-    onShow() {},
-    onHide() {
+    onShow() {
         this.changeValue = '';
     },
+    onHide() {},
     onUnload() {
         clearInterval(this.setId);
     },
     methods: {
+        handleToTop() {
+            uni.pageScrollTo({
+                scrollTop: 0,
+                duration: 600,
+            });
+        },
+        onPageScroll(e) {
+            if (e.scrollTop > 500) {
+                this.showGotop = true;
+            } else if (e.scrollTop <= 50) {
+                this.showGotop = false;
+            }
+        },
         getData(title) {
             api.post('/api/works/competitionlist', this.filter).then(
                 ({ list, total }) => {
@@ -278,7 +339,7 @@ export default {
                         this.loadMoreStatus = 'more';
                     }
 
-                    this.initShare();
+                    // this.initShare();
                     uni.hideLoading();
                 },
             );
@@ -316,28 +377,20 @@ export default {
                 return;
             }
             uni.navigateTo({
-                url: `/pages/openGame/myWork/myWork?type=search&name=${this.changeValue.trim()}`,
+                url: `/pages/openGame/myWork/myWork?type=search&name=${this.changeValue.trim()}&column=${
+                    this.filter.column
+                }`,
             });
         },
         initShare() {
-            // const titleList = [
-            //     '鼠年大吉，快来看我的拜年才艺秀！',
-            //     '才艺拜年乐趣多，我来表演你来赞！',
-            //     '我来给你拜新年，表演才艺送祝福！',
-            //     '鼠年春节我精彩，才艺拜年望喜爱！',
-            // ];
-            const titleList = [
-                '抗击疫情“艺”起来，参与活动为武汉加油！向英雄致敬！',
-            ];
-            const title = titleList[Math.floor(Math.random() * titleList.length)];
-            const desc = '快乐过寒假，才艺拜大年！';
+            const title = '世界吉尼斯青少年“爱挑战”网络预选赛';
             this.shareDesc = title;
 
             share({
                 title,
-                desc,
+                path: '/pages/openGame/index',
                 thumbnail:
-                    'http: //aitiaozhan.oss-cn-beijing.aliyuncs.com/chunjiehao/yiqing-poster01.png?x-oss-process=image/format,png/interlace,1/quality,Q_80/resize,m_pad,h_100',
+                    'http://aitiaozhan.oss-cn-beijing.aliyuncs.com/chunjiehao/yiqing-poster01.png?x-oss-process=image/format,png/interlace,1/quality,Q_80/resize,m_pad,h_100',
             });
         },
         viewDetail(item) {
@@ -350,6 +403,7 @@ export default {
             uni.showLoading();
             this.activeMenuIndex = k;
             this.filter.sort = k;
+            this.oldsort = k;
             this.filter.page_num = 1;
             this.getData();
         },
@@ -357,6 +411,11 @@ export default {
             uni.showLoading();
             this.jingjiactiveMenuIndex = k;
             this.filter.column = k;
+            if (k < 3) {
+                this.filter.sort = 3;
+            } else {
+                this.filter.sort = this.oldsort;
+            }
             this.filter.page_num = 1;
             this.getData();
         },
@@ -420,15 +479,21 @@ export default {
                 });
             }
         },
+        jumpRankList() {
+            uni.navigateTo({
+                url: `/pages/openGame/rank?type=${this.jingjiactiveMenuIndex}`,
+            });
+        },
     },
     onShareAppMessage(res) {
+        console.log(res, 'res111');
         if (res.from === 'button') {
             // 来自页面内分享按钮
             console.log(res.target);
         }
         return {
-            title: this.shareDesc,
-            path: '/pages/yiqing/index',
+            title: '世界吉尼斯青少年“爱挑战”网络预选赛',
+            path: '/pages/openGame/index',
         };
     },
 };
@@ -532,6 +597,14 @@ body.dialog-open {
 .loadMore {
     width: 100%;
 }
+.goTop {
+    position: fixed;
+    bottom: 200upx;
+    right: 60upx;
+    width: 104upx;
+    height: 100upx;
+    z-index: 10;
+}
 .upload {
     position: fixed;
     bottom: 0upx;
@@ -575,7 +648,6 @@ body.dialog-open {
         float: left;
         position: relative;
         .jingji-btn {
-            width: 198upx;
             height: 64upx;
             font-size: 32upx;
             text-align: center;
@@ -586,6 +658,7 @@ body.dialog-open {
             position: absolute;
             top: 3upx;
             left: 3upx;
+            right: 22upx;
         }
         .active {
             background: #9f1ff3;
@@ -737,7 +810,7 @@ body.dialog-open {
             color: #999999;
             margin-top: 24rpx;
             margin-bottom: 24rpx;
-
+            overflow: hidden;
             .name {
                 width: 50%;
                 float: left;
@@ -755,37 +828,37 @@ body.dialog-open {
         }
         .vote-num {
             color: #9f1ff3;
-            font-size: 30upx;
-            // left:0;
-            // position: absolute;
-            // top: 283upx;
+            font-size: 26upx;
             float: left;
+            height: 50rpx;
+            line-height: 50rpx;
         }
 
         .vote {
             float: right;
             width: 120upx;
-            height: 50upx;
-
             color: #9f1ff3;
-            font-size: 28upx;
+            font-size: 26upx;
             text-align: center;
-            line-height: 50upx;
+            box-sizing: border-box;
+            padding: 12upx 0 12upx 24upx;
             position: relative;
-            &.voted {
+            line-height: 1;
+            &.unvote {
                 background: #fff;
                 border: 1px solid rgba(159, 31, 243, 1);
             }
-            &.unvote {
+            &.voted {
                 background: #f5e7ff;
                 border: 1px solid transparent;
             }
             image {
                 position: absolute;
-                top: 14upx;
-                left: 13upx;
-                width: 18rpx;
-                height: 18rpx;
+                top: 50%;
+                transform: translateY(-50%);
+                left: 20upx;
+                width: 22upx;
+                height: 22upx;
             }
         }
         .media-icon {
@@ -833,7 +906,7 @@ body.dialog-open {
     }
     .title-icon {
         font-size: 28upx;
-        width: 550upx;
+        width: 570upx;
         height: 740upx;
         position: absolute;
         top: 193upx;
@@ -841,10 +914,14 @@ body.dialog-open {
         z-index: 222;
         color: #333;
         line-height: 46upx;
+        overflow-y: auto;
+        box-sizing: border-box;
+        padding-right: 20upx;
+        .txt {
+            font-weight: 600;
+        }
     }
     .close {
-        // background: url("../../static/images/yiqing/close-icon.png") no-repeat;
-        // background-size: 100% 100%;
         width: 62upx;
         height: 62upx;
         top: 12upx;
@@ -907,20 +984,20 @@ body.dialog-open {
     .menu-list {
         margin-left: 30upx;
         width: 670upx;
-        margin-bottom: 120upx;
+        margin-bottom: 130upx;
         background: #fff;
         padding: 20px 15px;
         box-sizing: border-box;
         position: relative;
-        border-bottom: 19upx solid #5151c6;
+        // border-bottom: 19upx solid #5151c6;
         .search-box {
             overflow: hidden;
             margin-bottom: 30rpx;
             button {
                 width: 83upx;
-                height: 70upx;
+                height: 76upx;
                 float: left;
-                line-height: 70upx;
+                line-height: 76upx;
                 color: #9f1ff3;
                 background: #fff;
                 font-size: 24upx;
@@ -935,6 +1012,20 @@ body.dialog-open {
                 &::after {
                     border: none;
                 }
+                &.check-rank {
+                    width: 182upx;
+                    position: relative;
+                    padding-left: 30upx;
+                    box-sizing: border-box;
+                    image {
+                        width: 24upx;
+                        height: 24upx;
+                        position: absolute;
+                        top: 50%;
+                        margin-top: -12upx;
+                        left: 14upx;
+                    }
+                }
             }
             .search {
                 width: 408upx;
@@ -946,11 +1037,12 @@ body.dialog-open {
                     width: 40upx;
                     height: 40upx;
                     position: absolute;
-                    top: 16upx;
+                    top: 50%;
+                    margin-top: -20upx;
                     right: 22upx;
                 }
                 input {
-                    width: 293upx;
+                    width: 310upx;
                     position: absolute;
                     top: 20upx;
                     // #ifndef H5
@@ -963,19 +1055,23 @@ body.dialog-open {
             }
         }
     }
-    // .menu-list::before {
-    //     box-sizing: border-box;
-    //     position: absolute;
-    //     bottom: -19upx;
-    //     content: '';
-    //     left: 0;
-    //     width: 100%;
-    //     height: 19upx;
-    //     background: #5151C6;
-    //     border: 1upx solid #540844;
-    //     transform: skew(45deg);
-    //     transform-origin: right top;
-    // }
+    .bottom-bg-box {
+        position: absolute;
+        bottom: -16upx;
+        left: 0;
+        height: 16upx;
+        width: 100%;
+        .bottom-bg {
+            width: 100%;
+            height: 100%;
+            background: #5151c6;
+            border: 1upx solid #540844;
+            border-right: 0 none;
+            transform: skew(45deg);
+            transform-origin: right top;
+        }
+    }
+
     .menu-list::after {
         box-sizing: border-box;
         position: absolute;

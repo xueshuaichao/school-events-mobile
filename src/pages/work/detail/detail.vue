@@ -283,7 +283,10 @@ export default {
             // #ifndef H5
             this.handleTicketMask();
             // #endif
-            if (this.pageData.resource_scope === 3) {
+            if (
+                this.pageData.resource_scope === 3
+                && this.from !== 'openGame'
+            ) {
                 this.posterConfig.images[0].url = 'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/h5/aitiaozhan-poster2.png';
             }
         },
@@ -296,8 +299,8 @@ export default {
             const pages = getCurrentPages(); // 获取加载的页面
             const currentPage = pages[pages.length - 1]; // 获取当前页面的对象
             const url = currentPage.route || 'pages/work/detail/detail';
-            // const scene = `id=${this.id}&aid=${this.activity_id}&y=1` || 'id=325';
-            const scene = `id=${this.id}`;
+            const scene = `id=${this.id}&aid=${this.activity_id}&y=1` || 'id=325';
+            // const scene = `id=${this.id}`;
             console.log(url, scene, 'url---scene---');
             api.post('/api/weixin/getminiqrcode', {
                 path: url,
@@ -478,15 +481,29 @@ export default {
                     ...this.posterConfig,
                     ...this.curDetailConf.posterConfig,
                 };
+            } else {
+                //  中间穿插的
+                // eslint-disable-next-line prefer-destructuring
+                this.curDetailConf = detailConf[6];
+                this.posterConfig = {
+                    ...this.posterConfig,
+                    ...detailConf[6].posterConfig,
+                };
             }
             console.log(
                 this.posterConfig,
                 this.curDetailConf.posterConfig,
-                'this.posterConfig',
+                '------this.posterConfig',
             );
-            this.posterConfig.images[1].url = res.video_img_url;
+            this.posterConfig.images[1].url = `${res.video_img_url}?x-oss-process=image/resize,m_pad,w_460,h_300`;
             if (this.from === 'openGame') {
-                this.posterConfig.texts[0].text[0].text = `${res.resource_name}|${res.achievement}${res.achievement_unit}`;
+                this.posterConfig.texts[0].text[0].text = `${
+                    res.resource_name
+                }${
+                    res.achievement
+                        ? `|${res.achievement}${res.achievement_unit}`
+                        : ''
+                }`;
             } else {
                 this.posterConfig.texts[0].text[0].text = res.resource_name;
             }
@@ -603,7 +620,7 @@ export default {
                         });
                     } else {
                         uni.navigateTo({
-                            url: '/pages/upload/default/upload',
+                            url: '/pages/openGame/zhibo-list',
                         });
                     }
                 },
@@ -698,12 +715,7 @@ export default {
             || 0;
         this.from = utils.getParam(query, 'from') || '';
         console.log(this.from, 'thsi.from');
-        if (this.from === 'openGame') {
-            this.posterConfig = detailConf[8].posterConfig;
-            // eslint-disable-next-line prefer-destructuring
-            this.curDetailConf = detailConf[8];
-        }
-        console.log(this.posterConfig, 'this.posterConfig');
+
         console.log(
             this.activity_id,
             this.isFromShare,

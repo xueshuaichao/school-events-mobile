@@ -94,12 +94,12 @@ export default {
     methods: {
         reUpload() {
             if (this.from === 'upload') {
-                uni.switchTab({
+                uni.reLaunch({
                     url: '/pages/upload/default/upload',
                 });
             } else if (this.from === 'festival') {
                 uni.reLaunch({
-                    url: '/pages/chunjie/upload/upload',
+                    url: '/pagesA/chunjie/upload/upload',
                 });
             } else if (this.from === 'openGame') {
                 uni.reLaunch({
@@ -108,29 +108,51 @@ export default {
             }
         },
         goToUc() {
+            console.log(this.from, 'this.from111');
             if (this.from === 'upload') {
                 uni.navigateTo({
                     url: '/pages/uc/myWork/myWork?type=0',
                 });
             } else if (this.from === 'festival') {
                 uni.reLaunch({
-                    url: '/pages/chunjie/myWork/myWork?type=myWork',
+                    url: '/pagesA/chunjie/myWork/myWork?type=myWork',
                 });
             } else if (this.from === 'openGame') {
                 uni.reLaunch({
-                    url: '/pages/openGame/myWork/myWork?type=myWork',
+                    url: '/pages/openGame/myWork/myWork?type=myWork&status=0',
                 });
             }
         },
         goHome() {
-            uni.reLaunch({
-                url: '/pages/tabBar/index/index',
-            });
+            if (this.from === 'openGame') {
+                uni.reLaunch({
+                    url: '/pages/openGame/index',
+                });
+            } else {
+                uni.reLaunch({
+                    url: '/pages/tabBar/index/index',
+                });
+            }
         },
     },
     onLoad(params) {
+        console.log(params, 'params222');
         this.type = params.type || 'success';
         this.from = params.from || 'upload';
+    },
+    onShareAppMessage(res) {
+        if (res.from === 'button') {
+            // 来自页面内分享按钮
+            console.log(res.target);
+        }
+        const title = '青少年网络活动大赛';
+        return {
+            title,
+            imageUrl:
+                'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/h5/logo-h5.png',
+
+            path: '/pages/tabBar/index/index',
+        };
     },
 };
 </script>
