@@ -109,7 +109,7 @@
                                     驳回原因
                                 </text>
                                 <text
-                                    v-if="Number(tabActiveIndex) === 0"
+                                    v-if="Number(tabActiveIndex) !== 1"
                                     class="btn-item"
                                     @click="modifyItem(item)"
                                 >
@@ -797,10 +797,12 @@ export default {
             }
         }
         .work-info {
-            width: 290upx;
+            width: 308upx;
             position: relative;
             &.work-info-mywork {
-                margin-right: 10upx;
+                margin-right: 0;
+                margin-left: 10upx;
+                width: 316upx;
             }
             .media-name {
                 width: 100%;
@@ -846,7 +848,7 @@ export default {
                 }
                 &.big {
                     flex: none;
-                    width: 127upx;
+                    width: 100upx;
                 }
             }
         }
@@ -952,6 +954,7 @@ export default {
         display: flex;
         flex-flow: column;
         min-height: 95vh;
+        width: 684upx;
         // border-bottom: 19upx solid #5151c6;
         // .panel-scroll {
         //     height: 100%;
@@ -964,15 +967,15 @@ export default {
         flex-flow: column;
         // border-bottom: 19upx solid #5151c6;
     }
-    .panel .panel-hd,
-    .panel-before .panel-hd {
+    .panel .panel-hd {
         border-bottom: none;
         margin: 0;
         display: flex;
         justify-content: space-around;
-        height: 116rpx;
+        height: 116upx;
+        width: 716upx;
 
-        & .panel-title {
+        .panel-title {
             padding: 0;
             background: url("../../../static/images/zhibo/toggleBtn-bg.png")
                 no-repeat;
@@ -1002,7 +1005,8 @@ export default {
     }
 
     .content-box {
-        width: 670upx;
+        // width: 670upx;
+        width: 684upx;
         background: #fff;
         position: relative;
         flex: 1;

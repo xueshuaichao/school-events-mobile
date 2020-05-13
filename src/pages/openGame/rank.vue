@@ -363,7 +363,7 @@ export default {
                     position: absolute;
                     width: 20upx;
                     height: 20upx;
-                    right: 6upx;
+                    right: 10upx;
                     top: 50%;
                     margin-top: -10upx;
                     &::before,
