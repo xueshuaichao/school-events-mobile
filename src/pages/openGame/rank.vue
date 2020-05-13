@@ -5,30 +5,39 @@
             <view class="filter-btn-block">
                 <view
                     :class="
-                        showMenuType === 1 ? 'txt-marker active' : 'txt-marker'
+                        showMenuType === 1 && showMenu
+                            ? 'txt-marker active'
+                            : 'txt-marker'
                     "
                     @click="clickMenu(1)"
                 >
+                    <view class="arror" />
                     {{ filterLabel.cat_label }}
                 </view>
             </view>
             <view class="filter-btn-block">
                 <view
                     :class="
-                        showMenuType === 2 ? 'txt-marker active' : 'txt-marker'
+                        showMenuType === 2 && showMenu
+                            ? 'txt-marker active'
+                            : 'txt-marker'
                     "
                     @click="clickMenu(2)"
                 >
+                    <view class="arror" />
                     {{ filterLabel.education_label }}
                 </view>
             </view>
             <view class="filter-btn-block">
                 <view
                     :class="
-                        showMenuType === 3 ? 'txt-marker active' : 'txt-marker'
+                        showMenuType === 3 && showMenu
+                            ? 'txt-marker active'
+                            : 'txt-marker'
                     "
                     @click="clickMenu(3)"
                 >
+                    <view class="arror" />
                     {{ filterLabel.country_label ? "" : filterLabel.city_label
                     }}{{ filterLabel.country_label }}
                 </view>
@@ -336,7 +345,6 @@ export default {
                 font-size: 32upx;
                 text-align: center;
                 line-height: 64upx;
-                font-weight: 700;
                 color: #000;
                 background: #fff;
                 position: absolute;
@@ -348,10 +356,48 @@ export default {
                 overflow: hidden;
                 position: relative;
                 padding-right: 20upx;
+                box-sizing: border-box;
+                width: 200upx;
+                color: #9f1ff3;
+                .arror {
+                    position: absolute;
+                    width: 20upx;
+                    height: 20upx;
+                    right: 6upx;
+                    top: 50%;
+                    margin-top: -10upx;
+                    &::before,
+                    &::after {
+                        content: "";
+                        position: absolute;
+                        display: block;
+                        width: 15upx;
+                        height: 4upx;
+                        background: #777;
+                        border-radius: 2upx;
+                    }
+                    &::before {
+                        bottom: 8upx;
+                        left: 0;
+                        transform: rotate(-40deg);
+                    }
+                    &::after {
+                        bottom: 8upx;
+                        right: -2upx;
+                        transform: rotate(40deg);
+                    }
+                }
             }
             .active {
                 background: #9f1ff3;
                 color: #fff;
+                .arror {
+                    transform: rotate(180deg);
+                    &::before,
+                    &::after {
+                        background: #fff;
+                    }
+                }
             }
         }
     }
@@ -370,7 +416,7 @@ export default {
         background: rgba(0, 0, 0, 0.3);
         .dropdown {
             border: 2upx solid rgba(84, 8, 68, 1);
-            padding: 20upx 0;
+            // padding: 20upx 0;
             width: 452upx;
             background: #fff;
         }
@@ -384,19 +430,24 @@ export default {
         .dropdown3 {
             margin-left: 292upx;
             width: 404upx;
-            .clos {
-                padding: 0 58upx;
+            .rows {
+                padding: 0;
             }
         }
         .rows {
             overflow-y: auto;
+            padding: 20upx 0;
             .cols-box {
                 max-height: 750upx;
                 overflow-y: auto;
-                margin-bottom: 30upx;
+                margin-bottom: 20upx;
             }
             .cols-box.fl-l {
                 width: 200upx;
+                padding: 20upx 0;
+                .cols {
+                    padding: 0 58upx;
+                }
             }
             .cols-box1 {
                 background: #faf4ff;
@@ -413,6 +464,7 @@ export default {
                 }
             }
         }
+
         .btn {
             width: 160upx;
             height: 70upx;
@@ -426,7 +478,7 @@ export default {
         .btn-primy {
             background: #9f1ff3;
             color: #fff;
-            margin: 20upx 20upx 0;
+            margin: 20upx;
         }
     }
     .content-list {

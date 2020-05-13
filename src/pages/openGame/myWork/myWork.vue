@@ -605,10 +605,10 @@ export default {
                 uni.showToast({
                     title: '删除成功',
                 });
-                if (this.tabActiveIndex === 1) {
+                if (this.tabActiveIndex === 0) {
                     // 待审核
                     this.allNum.wait -= 1;
-                } else if (this.tabActiveIndex === 2) {
+                } else if (this.tabActiveIndex === 1) {
                     // 已通过
                     this.allNum.pass -= 1;
                 } else {
