@@ -393,6 +393,13 @@ export default {
         }
     },
     methods: {
+        setPlayCount() {
+            api.post('/api/works/playcount', {
+                id: this.pageData.id,
+            }).then(() => {
+                this.play_count += 1;
+            });
+        },
         panelAction(action) {
             this.$emit('doAction', action);
         },
@@ -414,10 +421,7 @@ export default {
         },
         onPlay() {
             if (!this.isPlayed) {
-                this.play_count = this.play_count + 1;
-                api.post('/api/works/playcount', {
-                    id: this.pageData.id,
-                });
+                this.setPlayCount();
             }
             this.isVideoWaiting = false;
             this.isPlayed = true;

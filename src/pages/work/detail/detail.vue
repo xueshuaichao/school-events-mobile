@@ -224,12 +224,13 @@ export default {
             prePageParam: {},
             currentSwiper: 1,
             outSwiperIncrease: true,
-            levelid: -1,
-            sort: 1,
-            actCat: 0,
-            actSort: '',
-            search: '',
-            keyword: '',
+            // levelid: -1,
+            // sort: 1,
+            // actCat: 0,
+            // actSort: '',
+            // search: '',
+            // keyword: '',
+            filterObj: {},
         };
     },
     created() {},
@@ -469,6 +470,7 @@ export default {
             this.getLikeStatus();
         },
         setGetDetail(res) {
+            this.activity_id = res.activity_id;
             if (this.from !== 'openGame') {
                 if (this.activity_id > 2) {
                     this.curDetailConf = detailConf[this.activity_id - 1];
@@ -490,11 +492,6 @@ export default {
                     ...detailConf[6].posterConfig,
                 };
             }
-            console.log(
-                this.posterConfig,
-                this.curDetailConf.posterConfig,
-                '------this.posterConfig',
-            );
             this.posterConfig.images[1].url = `${res.video_img_url}?x-oss-process=image/resize,m_pad,w_460,h_300`;
             if (this.from === 'openGame') {
                 this.posterConfig.texts[0].text[0].text = `${
@@ -679,27 +676,192 @@ export default {
             //  禁止滑动。
         },
         changeOutSwiper(event) {
-            this.currentSwiper = event.detail.current;
+            // 判断滑动的方向
+            if (this.currentSwiper > event.detail.current) {
+                this.outSwiperIncrease = false;
+            } else {
+                this.outSwiperIncrease = true;
+            }
+            if (this.currentSwiper === 2 && event.detail.current === 0) {
+                this.outSwiperIncrease = true;
+            }
+            if (this.currentSwiper === 0 && event.detail.current === 2) {
+                this.outSwiperIncrease = false;
+            }
+            // 计算即将请求数据的位置  targetPosition与slideCurPosition，并处理临界值。
+            let objPosition = {};
+            let targetPosition = this.prePageParam.slideCurPosition;
+            if (this.outSwiperIncrease) {
+                targetPosition = this.prePageParam.slideCurPosition + 2;
+                if (
+                    this.prePageParam.slideCurPosition
+                    === this.prePageParam.MaxPosition - 1
+                ) {
+                    this.prePageParam.slideCurPosition += 1;
+                    targetPosition = 1;
+                } else if (
+                    this.prePageParam.slideCurPosition
+                    === this.prePageParam.MaxPosition
+                ) {
+                    this.prePageParam.slideCurPosition = 1;
+                    targetPosition = 2;
+                } else {
+                    this.prePageParam.slideCurPosition += 1;
+                }
+
+                objPosition = this.getPageSizeInfo(targetPosition);
+            } else {
+                targetPosition = this.prePageParam.slideCurPosition - 2;
+
+                if (this.prePageParam.slideCurPosition === 2) {
+                    targetPosition = this.prePageParam.MaxPosition;
+                    this.prePageParam.slideCurPosition -= 1;
+                } else if (this.prePageParam.slideCurPosition === 1) {
+                    this.prePageParam.slideCurPosition = this.prePageParam.MaxPosition;
+                    targetPosition = this.prePageParam.MaxPosition - 1;
+                } else {
+                    this.prePageParam.slideCurPosition -= 1;
+                }
+                objPosition = this.getPageSizeInfo(targetPosition);
+            }
+            this.setSwiperPageData(event, objPosition);
         },
-        getPageMoreDate(paramData) {
+        setSwiperPageData(event, objPosition) {
+            this.getPageMoreDate(objPosition, this.filterObj).then((res) => {
+                // 切换item的时候，修改item.
+                if (res) {
+                    if (this.outSwiperIncrease) {
+                        // 下一个
+                        switch (this.currentSwiper) {
+                            case 0:
+                                this.pageDataThree = res;
+                                break;
+                            case 1:
+                                this.pageDataOne = res;
+                                break;
+                            case 2:
+                                this.pageDataTwo = res;
+                                break;
+                            default:
+                                console.log('1');
+                        }
+                    } else {
+                        switch (this.currentSwiper) {
+                            case 2:
+                                this.pageDataOne = res;
+                                break;
+                            case 1:
+                                this.pageDataThree = res;
+                                break;
+                            case 0:
+                                this.pageDataTwo = res;
+                                break;
+                            default:
+                                console.log('-');
+                        }
+                    }
+                } else {
+                    console.log('没有获取到数据呀。');
+                }
+                this.currentSwiper = event.detail.current;
+            });
+
+            // 使用当前显示的item的pageData,修改导航标题
+            let curPageData = {};
+            switch (event.detail.current) {
+                case 0:
+                    curPageData = this.pageDataOne;
+                    break;
+                case 1:
+                    curPageData = this.pageDataTwo;
+                    break;
+                case 2:
+                    curPageData = this.pageDataThree;
+                    break;
+                default:
+                    console.log('-');
+            }
+
+            this.id = curPageData.id;
+            this.pageData = curPageData;
+            this.setGetDetail(curPageData);
+            this.getLikeStatus();
+        },
+        getPageMoreDate(postionObj, filterObj = {}) {
             return api.post('/api/works/list', {
-                ...paramData,
-                cat_id: { one_level_id: 1 },
-                sort: 4,
-                keyword: '',
+                ...postionObj,
+                ...filterObj,
             });
         },
         getPageSizeInfo(position) {
-            // 设置参数
+            // 获取位置参数
             const pageSize = 10;
             const pageNum = Math.ceil(position / pageSize);
-            const currentPosition = position - pageSize * (pageNum - 1) - 1;
+            const currentPosition = position - pageSize * (pageNum - 1);
+            console.log(position, 'getPageSizeInfo', currentPosition);
             return {
                 page_size: pageSize,
                 page_num: pageNum,
                 current_position: currentPosition,
-                type: 2,
+                list_type: 2,
             };
+        },
+        initOtherSwiperData() {
+            const params = this.$store.getters.getWorkParams;
+            // eslint-disable-next-line no-undef
+            const {
+                total, curposition, sort, cat_id: catId, keyword,
+            } = params;
+            this.filterObj = {
+                sort,
+                cat_id: catId,
+                keyword,
+            };
+            if (total === 1) {
+                this.disableslide = true;
+            }
+            // 获取前后两页面的内容。
+            if (!this.disableslide && total > 1) {
+                this.prePageParam.initPosition = curposition;
+                this.prePageParam.slideCurPosition = curposition; // 第一次进来的位置
+                this.prePageParam.MaxPosition = total;
+
+                let toPreTarget = curposition;
+                let toNewTarget = curposition;
+                if (curposition === 0) {
+                    toPreTarget = total;
+                    toNewTarget += 1;
+                } else if (curposition === total) {
+                    toNewTarget = 1;
+                    toPreTarget -= 1;
+                } else {
+                    toPreTarget -= 1;
+                    toNewTarget += 1;
+                }
+                const paramPre = this.getPageSizeInfo(toPreTarget);
+                const paramNext = this.getPageSizeInfo(toNewTarget);
+                this.getPageMoreDate(paramPre, this.filterObj).then((res) => {
+                    this.pageDataOne = res;
+                });
+                this.getPageMoreDate(paramNext, this.filterObj).then((res) => {
+                    this.pageDataThree = res;
+                });
+                try {
+                    const value = uni.getStorageSync('hasPromtSlide');
+                    if (!value) {
+                        uni.setStorageSync('hasPromtSlide', 'true');
+                        uni.showToast({
+                            title: '上下滑动可以切换喔～',
+                            duration: 3000,
+                            position: 'top',
+                            mask: true,
+                            icon: 'none',
+                        });
+                    }
+                } catch (e) {
+                    // error
+                }
+            }
         },
     },
     onLoad(query) {
@@ -714,7 +876,6 @@ export default {
             || Number(utils.getParam(query, 'aid'))
             || 0;
         this.from = utils.getParam(query, 'from') || '';
-        console.log(this.from, 'thsi.from');
 
         console.log(
             this.activity_id,
@@ -733,16 +894,7 @@ export default {
 
         // 获取detail页面的内容
         this.getData();
-        const toPreTarget = 1;
-        const toNewTarget = 3;
-        const paramPre = this.getPageSizeInfo(toPreTarget);
-        const paramNext = this.getPageSizeInfo(toNewTarget);
-        this.getPageMoreDate(paramPre).then((res) => {
-            this.pageDataOne = res;
-        });
-        this.getPageMoreDate(paramNext).then((res) => {
-            this.pageDataThree = res;
-        });
+        this.initOtherSwiperData();
         // #ifndef H5
         this.poster = this.selectComponent('#poster');
         this.getAuthStatus();

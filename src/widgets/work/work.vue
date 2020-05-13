@@ -65,13 +65,21 @@
                 class="index-panel-bd"
             >
                 <view
-                    v-for="item in info"
+                    v-for="(item, index) in info"
                     :key="item.id"
                     class="scroll-view-item"
                 >
                     <work
                         :info="item"
                         class="item"
+                        :filter="{
+                            cat_id: {
+                                one_level_id: cat_id,
+                                two_level_id: 0,
+                                three_level_id: 0
+                            }
+                        }"
+                        :position="{ curposition: index, total: info.length }"
                     />
                 </view>
             </view>
@@ -117,6 +125,10 @@ export default {
         showCard: {
             type: Boolean,
             default: true,
+        },
+        catId: {
+            type: Number,
+            default: 1,
         },
     },
 

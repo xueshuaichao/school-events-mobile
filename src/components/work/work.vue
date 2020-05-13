@@ -126,6 +126,14 @@ export default {
             type: String,
             default: '',
         },
+        filter: {
+            type: Object,
+            default: () => {},
+        },
+        position: {
+            type: Object,
+            default: () => {},
+        },
     },
     data() {
         return {};
@@ -134,11 +142,14 @@ export default {
         goDetail() {
             if (this.info.status === 1) {
                 this.info.play_count = this.info.play_count + 1;
+                this.$store.commit('setFilterData', {
+                    ...this.filter,
+                    ...this.position,
+                });
                 uni.navigateTo({
                     url: `/pages/work/detail/detail?id=${this.info.id}&${
                         this.query
-                    }&activity_id=${this.info.activity_id
-                        || ''}&resource_scope=${this.info.resource_scope}`,
+                    }&activity_id=${this.info.activity_id || ''}`,
                 });
             }
         },
