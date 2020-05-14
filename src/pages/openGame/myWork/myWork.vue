@@ -540,7 +540,7 @@ export default {
                 || this.type !== 'myWork'
             ) {
                 let from = 'openGame';
-                if (this.type === 'mywork') {
+                if (this.type === 'myWork') {
                     from = 'myworkOpenGame';
                 }
                 this.$store.commit('setFilterData', {

@@ -398,7 +398,7 @@ export default {
         viewDetail(item, index) {
             if (this.tabActiveIndex === 2) {
                 let from = 'Acitivity';
-                if (this.type === 'mywork') {
+                if (this.type === 'myWork') {
                     from = 'myworkAcitivity';
                 }
                 this.$store.commit('setFilterData', {

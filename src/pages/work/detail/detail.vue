@@ -802,15 +802,15 @@ export default {
             let url = '/api/works/list';
 
             // const methods = 'post';
-            if (from === 'mywork') {
+            if (from === 'myworkAcitivity') {
                 url = '/api/activity/userresource';
             }
 
             if (from === 'Acitivity') {
                 url = '/api/activity/resourcelist';
             }
-            if (from === 'myworkAcitivity') {
-                url = ' /api/user/worklist';
+            if (from === 'mywork') {
+                url = '/api/user/worklist';
                 // methods = 'get'
             }
 
