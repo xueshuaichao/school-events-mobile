@@ -1,5 +1,8 @@
 <template>
-    <view class="rank-page">
+    <view
+        class="rank-page"
+        :class="{ 'stop-scroll': showMenu }"
+    >
         <!--筛选条件-->
         <view class="filter-wrap">
             <view class="filter-btn-block">
@@ -38,8 +41,8 @@
                     @click="clickMenu(3)"
                 >
                     <view class="arror" />
-                    {{ filterLabel.country_label ? "" : filterLabel.city_label
-                    }}{{ filterLabel.country_label }}
+                    {{ filterLabel.county_label ? "" : filterLabel.city_label
+                    }}{{ filterLabel.county_label }}
                 </view>
             </view>
         </view>
@@ -103,7 +106,9 @@
                             v-for="(item, index) in cityData[0]"
                             :key="item.value"
                             class="cols"
-                            :class="{ active: item.value === filter.city_id }"
+                            :class="{
+                                active: item.value + '00' === filter.city_id
+                            }"
                             @click.stop="selCity(item, index)"
                         >
                             {{ item.label }}
@@ -113,7 +118,7 @@
                         <view
                             v-if="curCityIndex !== -1"
                             class="cols"
-                            :class="{ active: filter.country_id === 0 }"
+                            :class="{ active: filter.county_id === 0 }"
                             @click="selArea"
                         >
                             全部
@@ -123,7 +128,7 @@
                             :key="item.value"
                             class="cols"
                             :class="{
-                                active: item.value === filter.country_id
+                                active: item.value === filter.county_id
                             }"
                             @click.stop="selArea(item)"
                         >
@@ -137,13 +142,13 @@
                 >
                     <view
                         class="fl-r btn btn-primy"
-                        @click="getData"
+                        @click="confirm"
                     >
                         确定
                     </view>
                     <view
                         class="fl-r btn"
-                        @click="showMenu = false"
+                        @click="cancel"
                     >
                         取消
                     </view>
@@ -230,14 +235,18 @@ export default {
             filter: {
                 city_id: 0,
                 education_level: 2,
-                country_id: 0,
+                county_id: 0,
                 cat_id: 0
             },
             filterLabel: {
                 cat_label: "",
                 education_label: "小学",
                 city_label: "",
-                country_label: "全部"
+                county_label: "全部",
+                old_city_id: 0,
+                old_city_label: "",
+                old_county_id: 0,
+                old_county_label: "全部"
             },
             loading: false
         };
@@ -257,26 +266,26 @@ export default {
         selCity(item, index) {
             if (!item.label) {
                 this.filter.city_id = 0;
-                this.filter.country_id = 0;
+                this.filter.county_id = 0;
                 this.curCityIndex = -1;
                 this.filterLabel.city_label = "全部";
-                this.filterLabel.country_label = "";
+                this.filterLabel.county_label = "";
             } else {
                 if (this.filter.city_id !== item.value) {
-                    this.filter.country_id = 0;
+                    this.filter.county_id = 0;
                 }
-                this.filter.city_id = item.value;
+                this.filter.city_id = item.value + "00";
                 this.curCityIndex = index;
                 this.filterLabel.city_label = item.label;
-                this.filterLabel.country_label = "";
+                this.filterLabel.county_label = "";
             }
         },
         selArea(item) {
-            this.filterLabel.country_label = item.label;
+            this.filterLabel.county_label = item.label;
             if (!item.label) {
-                this.filter.country_id = 0;
+                this.filter.county_id = 0;
             } else {
-                this.filter.country_id = item.value;
+                this.filter.county_id = item.value;
             }
         },
         clickMenu(type) {
@@ -299,6 +308,21 @@ export default {
         },
         clickWrap() {
             console.log("wqqw");
+        },
+        confirm() {
+            this.filterLabel.old_county_id = this.filter.county_id;
+            this.filterLabel.old_county_label = this.filterLabel.county_label;
+            this.filterLabel.old_city_id = this.filter.city_id;
+            this.filterLabel.old_city_label = this.filterLabel.city_label;
+            this.getData();
+        },
+        cancel() {
+            this.filter.county_id = this.filterLabel.old_county_id;
+            this.filterLabel.county_label = this.filterLabel.old_county_label;
+            this.filter.city_id = this.filterLabel.old_city_id;
+            this.filterLabel.city_label = this.filterLabel.old_city_label;
+            console.log(this.filterLabel, "cancel-----");
+            this.showMenu = false;
         }
     },
     onLoad(query) {
@@ -564,5 +588,13 @@ export default {
             }
         }
     }
+}
+.stop-scroll {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
 }
 </style>

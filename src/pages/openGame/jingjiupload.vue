@@ -400,9 +400,9 @@ export default {
                 this.formData.video_id = data.video.video_id;
                 this.formData.resource_id = id;
                 this.achivementInput = data.achievement;
-                this.teacherInput = data.teacher;
+                this.teacherInput = data.teacher || '';
                 this.createInput = data.create_name;
-                this.attestationInput = data.attestation_name;
+                this.attestationInput = data.attestation_name || '';
 
                 this.formData.education_name = this.educationData[
                     data.education_level - 2
