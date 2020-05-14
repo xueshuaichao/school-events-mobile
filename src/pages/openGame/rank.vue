@@ -64,7 +64,10 @@
                     v-if="showMenuType === 1"
                     class="rows"
                 >
-                    <view class="cols-box">
+                    <scroll-view
+                        scroll-y="true"
+                        class="cols-box"
+                    >
                         <view
                             v-for="item in projectList"
                             :key="item.cat_id"
@@ -74,7 +77,7 @@
                         >
                             {{ item.cat_name }}
                         </view>
-                    </view>
+                    </scroll-view>
                 </view>
                 <view
                     v-if="showMenuType === 2"
@@ -94,7 +97,10 @@
                     v-if="showMenuType === 3"
                     class="rows clearfix"
                 >
-                    <view class="cols-box cols-box1 fl-l">
+                    <scroll-view
+                        scroll-y="true"
+                        class="cols-box cols-box1 fl-l"
+                    >
                         <view
                             class="cols"
                             :class="{ active: filter.city_id === 0 }"
@@ -113,8 +119,11 @@
                         >
                             {{ item.label }}
                         </view>
-                    </view>
-                    <view class="cols-box fl-l">
+                    </scroll-view>
+                    <scroll-view
+                        scroll-y="true"
+                        class="cols-box fl-l"
+                    >
                         <view
                             v-if="curCityIndex !== -1"
                             class="cols"
@@ -134,7 +143,7 @@
                         >
                             {{ item.label }}
                         </view>
-                    </view>
+                    </scroll-view>
                 </view>
                 <view
                     v-if="showMenuType === 3"
@@ -462,7 +471,7 @@ export default {
             padding: 20upx 0;
             .cols-box {
                 max-height: 780upx;
-                overflow-y: auto;
+                // overflow-y: auto;
                 margin-bottom: 20upx;
             }
             .cols-box.fl-l {
