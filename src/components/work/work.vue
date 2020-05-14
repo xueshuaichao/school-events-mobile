@@ -143,8 +143,8 @@ export default {
             if (this.info.status === 1) {
                 this.info.play_count = this.info.play_count + 1;
                 this.$store.commit('setFilterData', {
-                    ...this.filter,
-                    ...this.position,
+                    filter: this.filter,
+                    position: this.position,
                 });
                 uni.navigateTo({
                     url: `/pages/work/detail/detail?id=${this.info.id}&${

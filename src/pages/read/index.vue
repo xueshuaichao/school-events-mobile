@@ -545,10 +545,12 @@ export default {
         },
         viewDetail({ id }, index) {
             this.$store.commit('setFilterData', {
-                total: this.total,
-                curposition: index,
-                from: 'Acitivity',
-                ...this.filter,
+                position: {
+                    total: this.total,
+                    curposition: index,
+                    from: 'Acitivity',
+                },
+                filter: this.filter,
             });
             uni.navigateTo({
                 url: `/pages/work/detail/detail?id=${id}&activity_id=6`,

@@ -77,7 +77,8 @@
                                 one_level_id: catId,
                                 two_level_id: 0,
                                 three_level_id: 0
-                            }
+                            },
+                            sort: 4
                         }"
                         :position="{ curposition: index, total: info.length }"
                     />

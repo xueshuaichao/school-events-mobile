@@ -115,7 +115,7 @@
                             <text
                                 v-if="Number(tabActiveIndex) === 2"
                                 class="btn-item"
-                                @click="viewDetail(item)"
+                                @click="viewDetail(item, index)"
                             >
                                 查看
                             </text>
@@ -395,8 +395,20 @@ export default {
             uni.pageScrollTo({ scrollTop: 0, duration: 300 });
             this.getWorkData();
         },
-        viewDetail(item) {
+        viewDetail(item, index) {
             if (this.tabActiveIndex === 2) {
+                let from = 'Acitivity';
+                if (this.type === 'mywork') {
+                    from = 'myworkAcitivity';
+                }
+                this.$store.commit('setFilterData', {
+                    filter: this.filter,
+                    position: {
+                        total: this.total,
+                        curposition: index,
+                        from,
+                    },
+                });
                 uni.navigateTo({
                     url: `/pages/work/detail/detail?id=${item.id}&activity_id=6`,
                 });

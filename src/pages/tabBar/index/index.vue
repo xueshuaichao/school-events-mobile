@@ -268,19 +268,19 @@
             :title="'爱挑战优秀个人'"
             :more-url="'/pages/work/list/list?cat_id=1'"
             :info="workData.individual.list"
-            cat_id="1"
+            :cat-id="1"
         />
         <work
             :title="'爱挑战优秀团体'"
             :more-url="'/pages/work/list/list?cat_id=2'"
             :info="workData.team.list"
-            cat_id="2"
+            :cat-id="2"
         />
         <work
             :title="'才艺秀优秀作品'"
             :more-url="'/pages/work/list/list?cat_id=3'"
             :info="workData.talent.list"
-            cat_id="3"
+            :cat-id="3"
         />
 
         <!-- news -->

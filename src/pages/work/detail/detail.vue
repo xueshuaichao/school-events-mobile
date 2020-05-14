@@ -211,7 +211,7 @@ export default {
 
             // pageFrom: '',
             curDetailConf: detailConf[0],
-            isActvitity: true,
+            // isActvitity: true,
             activity_id: 0,
             imgAuthBtn: false,
             isFromShare: '',
@@ -231,6 +231,7 @@ export default {
             // search: '',
             // keyword: '',
             filterObj: {},
+            apiFrom: '',
         };
     },
     created() {},
@@ -440,7 +441,7 @@ export default {
         },
         getData(reget) {
             let url = '/api/works/detail';
-            if (this.isActvitity) {
+            if (this.activity_id) {
                 url = '/api/activity/detail';
             }
             api.get(url, {
@@ -522,7 +523,7 @@ export default {
                 object_type: 1,
                 type: 1,
             };
-            if (this.isActvitity) {
+            if (this.activity_id) {
                 url = '/api/activity/vote';
                 param = {
                     id: this.id,
@@ -537,7 +538,7 @@ export default {
                         this.getData('reget');
                     },
                     (err) => {
-                        if (this.isActvitity) {
+                        if (this.activity_id) {
                             uni.showToast({
                                 icon: 'none',
                                 title: err.message,
@@ -562,7 +563,7 @@ export default {
                 object_type: 1,
                 object_id: this.id,
             };
-            if (this.isActvitity) {
+            if (this.activity_id) {
                 url = '/api/activity/getuserthumb';
                 param = {
                     id: this.id,
@@ -609,7 +610,7 @@ export default {
                 fr: this.fr,
             }).then(
                 () => {
-                    if (this.isActvitity) {
+                    if (this.activity_id) {
                         this.joinActivity();
                     } else if (this.from === 'openGame') {
                         uni.navigateTo({
@@ -690,44 +691,54 @@ export default {
             }
             // 计算即将请求数据的位置  targetPosition与slideCurPosition，并处理临界值。
             let objPosition = {};
-            let targetPosition = this.prePageParam.slideCurPosition;
+            const oldSlideCurPosition = this.prePageParam.slideCurPosition;
+            let newSlideCurPosition = oldSlideCurPosition;
+            let targetPosition = oldSlideCurPosition;
+
             if (this.outSwiperIncrease) {
-                targetPosition = this.prePageParam.slideCurPosition + 2;
-                if (
-                    this.prePageParam.slideCurPosition
-                    === this.prePageParam.MaxPosition - 1
-                ) {
-                    this.prePageParam.slideCurPosition += 1;
+                if (oldSlideCurPosition === this.prePageParam.MaxPosition - 2) {
+                    newSlideCurPosition += 1;
                     targetPosition = 1;
                 } else if (
-                    this.prePageParam.slideCurPosition
-                    === this.prePageParam.MaxPosition
+                    oldSlideCurPosition
+                    === this.prePageParam.MaxPosition - 1
                 ) {
-                    this.prePageParam.slideCurPosition = 1;
+                    newSlideCurPosition = 1;
                     targetPosition = 2;
                 } else {
-                    this.prePageParam.slideCurPosition += 1;
+                    newSlideCurPosition += 1;
+                    targetPosition = oldSlideCurPosition + 2;
                 }
-
-                objPosition = this.getPageSizeInfo(targetPosition);
+            } else if (oldSlideCurPosition === 1) {
+                targetPosition = this.prePageParam.MaxPosition - 1;
+                newSlideCurPosition -= 1;
+            } else if (oldSlideCurPosition === 0) {
+                targetPosition = this.prePageParam.MaxPosition - 2;
+                newSlideCurPosition = this.prePageParam.MaxPosition - 1;
             } else {
-                targetPosition = this.prePageParam.slideCurPosition - 2;
-
-                if (this.prePageParam.slideCurPosition === 2) {
-                    targetPosition = this.prePageParam.MaxPosition;
-                    this.prePageParam.slideCurPosition -= 1;
-                } else if (this.prePageParam.slideCurPosition === 1) {
-                    this.prePageParam.slideCurPosition = this.prePageParam.MaxPosition;
-                    targetPosition = this.prePageParam.MaxPosition - 1;
-                } else {
-                    this.prePageParam.slideCurPosition -= 1;
-                }
-                objPosition = this.getPageSizeInfo(targetPosition);
+                newSlideCurPosition -= 1;
+                targetPosition = oldSlideCurPosition - 2;
             }
+            console.log(
+                'old',
+                oldSlideCurPosition,
+                'new',
+                newSlideCurPosition,
+                'target--',
+                targetPosition,
+                'max---',
+                this.prePageParam.MaxPosition,
+            );
+            this.prePageParam.slideCurPosition = newSlideCurPosition;
+            objPosition = this.getPageSizeInfo(targetPosition);
             this.setSwiperPageData(event, objPosition);
         },
         setSwiperPageData(event, objPosition) {
-            this.getPageMoreDate(objPosition, this.filterObj).then((res) => {
+            this.getPageMoreDate(
+                objPosition,
+                this.filterObj,
+                this.apiFrom,
+            ).then((res) => {
                 // 切换item的时候，修改item.
                 if (res) {
                     if (this.outSwiperIncrease) {
@@ -787,26 +798,26 @@ export default {
             this.setGetDetail(curPageData);
             this.getLikeStatus();
         },
-        getPageMoreDate(postionObj, filterObj = {}) {
+        getPageMoreDate(postionObj, filterObj = {}, from = '') {
             let url = '/api/works/list';
 
             // const methods = 'post';
-            if (filterObj.from === 'mywork') {
+            if (from === 'mywork') {
                 url = '/api/activity/userresource';
             }
 
-            if (filterObj.from === 'Acitivity') {
+            if (from === 'Acitivity') {
                 url = '/api/activity/resourcelist';
             }
-            if (filterObj.from === 'myworkAcitivity') {
+            if (from === 'myworkAcitivity') {
                 url = ' /api/user/worklist';
                 // methods = 'get'
             }
 
-            if (filterObj.from === 'openGame') {
+            if (from === 'openGame') {
                 url = '/api/works/competitionlist';
             }
-            if (filterObj.from === 'myworkOpenGame') {
+            if (from === 'myworkOpenGame') {
                 url = '/api/user/competitionlist';
             }
 
@@ -818,9 +829,9 @@ export default {
         getPageSizeInfo(position) {
             // 获取位置参数
             const pageSize = 10;
-            const pageNum = Math.ceil(position / pageSize);
+            const pageNum = Math.floor((position + 10) / pageSize);
             const currentPosition = position - pageSize * (pageNum - 1);
-            console.log(position, 'getPageSizeInfo', currentPosition);
+            console.log(currentPosition, position);
             return {
                 page_size: pageSize,
                 page_num: pageNum,
@@ -830,42 +841,11 @@ export default {
         },
         initOtherSwiperData() {
             const params = this.$store.getters.getWorkParams;
-            const { total } = params;
-            const { curposition } = params;
-            console.log(params, params.from, 'getFilter---');
-            if (!params.from) {
-                const { sort, keyword, cat_id: catId } = params;
-                this.filterObj = {
-                    sort,
-                    keyword,
-                    cat_id: catId,
-                };
-                console.log(total, '22getFilter---');
-            }
-            // if (params.from === 'mywork') {
-            // }
-            // if (params.from === 'myworkAcitivity') {
-            // }
-            if (params.from === 'Acitivity') {
-                const {
-                    sort,
-                    search,
-                    activity_cat: activityCat,
-                    activity_id: activityId,
-                } = params;
-                this.filterObj = {
-                    sort,
-                    search,
-                    activity_cat: activityCat,
-                    activity_id: activityId,
-                    from: 'Acitivity',
-                };
-            }
-            // if (params.from === 'myworkOpenGame') {
-            // }
-            // if (params.from === 'openGame') {
-            // }
-            console.log(total, 'getFilter---');
+            const { position, filter } = params;
+            console.log(position);
+            const { curposition, total, from } = position;
+            this.filterObj = filter;
+            this.apiFrom = from || '';
 
             if (total === 1) {
                 this.disableslide = true;
@@ -879,9 +859,9 @@ export default {
                 let toPreTarget = curposition;
                 let toNewTarget = curposition;
                 if (curposition === 0) {
-                    toPreTarget = total;
+                    toPreTarget = total - 1;
                     toNewTarget += 1;
-                } else if (curposition === total) {
+                } else if (curposition + 1 === total) {
                     toNewTarget = 1;
                     toPreTarget -= 1;
                 } else {
@@ -891,10 +871,18 @@ export default {
 
                 const paramPre = this.getPageSizeInfo(toPreTarget);
                 const paramNext = this.getPageSizeInfo(toNewTarget);
-                this.getPageMoreDate(paramPre, this.filterObj).then((res) => {
+                this.getPageMoreDate(
+                    paramPre,
+                    this.filterObj,
+                    this.apiFrom,
+                ).then((res) => {
                     this.pageDataOne = res;
                 });
-                this.getPageMoreDate(paramNext, this.filterObj).then((res) => {
+                this.getPageMoreDate(
+                    paramNext,
+                    this.filterObj,
+                    this.apiFrom,
+                ).then((res) => {
                     this.pageDataThree = res;
                 });
                 try {
@@ -934,9 +922,7 @@ export default {
             '-----this.activity_id---',
         );
         // activity_id,  没有7..
-        if (!this.activity_id) {
-            this.isActvitity = false;
-        } else {
+        if (this.activity_id) {
             // wyhd 五一活动
             const arr = ['xchd', 'dsxnh', 'dsxnh', 'dshd', '', 'wyhd'];
             const type = arr[this.activity_id - 3];
