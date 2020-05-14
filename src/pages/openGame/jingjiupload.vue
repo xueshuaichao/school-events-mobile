@@ -407,7 +407,7 @@ export default {
                 this.formData.education_name = this.educationData[
                     data.education_level - 2
                 ];
-                this.formData.grade_name = this.gradeData[data.grade_id];
+                this.formData.grade_name = this.gradeData[data.grade_id - 1];
                 this.formData.file_size = data.video.file_size;
                 this.formData.file_name = data.video.file_name;
                 this.formData.file_suffix = data.video.file_suffix;
