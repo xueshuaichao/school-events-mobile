@@ -459,10 +459,9 @@ export default {
             }
         }
         .rows {
-            overflow-y: auto;
             padding: 20upx 0;
             .cols-box {
-                max-height: 750upx;
+                max-height: 780upx;
                 overflow-y: auto;
                 margin-bottom: 20upx;
             }
