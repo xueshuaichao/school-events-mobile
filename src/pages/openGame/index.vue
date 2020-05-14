@@ -132,12 +132,7 @@
                             <image src="/static/images/zhibo/rank.png" />
                             查看排行榜
                         </button>
-                        <view
-                            class="search"
-                            :class="{
-                                searchjinji: jingjiactiveMenuIndex !== 3
-                            }"
-                        >
+                        <view class="search">
                             <image
                                 src="/static/images/zhibo/search.png"
                                 @click="bindconfirm"
@@ -1028,7 +1023,7 @@ body.dialog-open {
                 }
             }
             .search {
-                width: 408upx;
+                width: 400upx;
                 height: 70upx;
                 position: relative;
                 float: right;
