@@ -788,7 +788,29 @@ export default {
             this.getLikeStatus();
         },
         getPageMoreDate(postionObj, filterObj = {}) {
-            return api.post('/api/works/list', {
+            let url = '/api/works/list';
+
+            // const methods = 'post';
+            if (filterObj.from === 'mywork') {
+                url = '/api/activity/userresource';
+            }
+
+            if (filterObj.from === 'Acitivity') {
+                url = '/api/activity/resourcelist';
+            }
+            if (filterObj.from === 'myworkAcitivity') {
+                url = ' /api/user/worklist';
+                // methods = 'get'
+            }
+
+            if (filterObj.from === 'openGame') {
+                url = '/api/works/competitionlist';
+            }
+            if (filterObj.from === 'myworkOpenGame') {
+                url = '/api/user/competitionlist';
+            }
+
+            return api.post(url, {
                 ...postionObj,
                 ...filterObj,
             });
@@ -808,15 +830,43 @@ export default {
         },
         initOtherSwiperData() {
             const params = this.$store.getters.getWorkParams;
-            // eslint-disable-next-line no-undef
-            const {
-                total, curposition, sort, cat_id: catId, keyword,
-            } = params;
-            this.filterObj = {
-                sort,
-                cat_id: catId,
-                keyword,
-            };
+            const { total } = params;
+            const { curposition } = params;
+            console.log(params, params.from, 'getFilter---');
+            if (!params.from) {
+                const { sort, keyword, cat_id: catId } = params;
+                this.filterObj = {
+                    sort,
+                    keyword,
+                    cat_id: catId,
+                };
+                console.log(total, '22getFilter---');
+            }
+            // if (params.from === 'mywork') {
+            // }
+            // if (params.from === 'myworkAcitivity') {
+            // }
+            if (params.from === 'Acitivity') {
+                const {
+                    sort,
+                    search,
+                    activity_cat: activityCat,
+                    activity_id: activityId,
+                } = params;
+                this.filterObj = {
+                    sort,
+                    search,
+                    activity_cat: activityCat,
+                    activity_id: activityId,
+                    from: 'Acitivity',
+                };
+            }
+            // if (params.from === 'myworkOpenGame') {
+            // }
+            // if (params.from === 'openGame') {
+            // }
+            console.log(total, 'getFilter---');
+
             if (total === 1) {
                 this.disableslide = true;
             }
@@ -838,6 +888,7 @@ export default {
                     toPreTarget -= 1;
                     toNewTarget += 1;
                 }
+
                 const paramPre = this.getPageSizeInfo(toPreTarget);
                 const paramNext = this.getPageSizeInfo(toNewTarget);
                 this.getPageMoreDate(paramPre, this.filterObj).then((res) => {

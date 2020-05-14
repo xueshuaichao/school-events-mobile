@@ -213,14 +213,14 @@
                         </view>
                         <view class="media-box">
                             <view
-                                v-for="item in dataList"
+                                v-for="(item, index) in dataList"
                                 :key="item.id"
                                 class="media-content"
                             >
                                 <event-craft-cover
                                     :info="item"
                                     :bg-color="'11CD95'"
-                                    @click.native="viewDetail(item)"
+                                    @click.native="viewDetail(item, index)"
                                 />
 
                                 <view class="media-name text-one-line">
@@ -543,7 +543,13 @@ export default {
                     'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/read_share.png?x-oss-process=image/format,png/interlace,1/quality,Q_80/resize,m_pad,h_100',
             });
         },
-        viewDetail({ id }) {
+        viewDetail({ id }, index) {
+            this.$store.commit('setFilterData', {
+                total: this.total,
+                curposition: index,
+                from: 'Acitivity',
+                ...this.filter,
+            });
             uni.navigateTo({
                 url: `/pages/work/detail/detail?id=${id}&activity_id=6`,
             });
