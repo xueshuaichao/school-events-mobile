@@ -41,8 +41,11 @@
                     @click="clickMenu(3)"
                 >
                     <view class="arror" />
-                    {{ filterLabel.county_label ? "" : filterLabel.city_label
-                    }}{{ filterLabel.county_label }}
+                    {{
+                        filterLabel.county_label
+                            ? filterLabel.county_label
+                            : filterLabel.city_label
+                    }}
                 </view>
             </view>
         </view>
@@ -66,6 +69,7 @@
                 >
                     <scroll-view
                         scroll-y="true"
+                        :style="{ height: '780upx' }"
                         class="cols-box"
                     >
                         <view
@@ -97,10 +101,7 @@
                     v-if="showMenuType === 3"
                     class="rows clearfix"
                 >
-                    <scroll-view
-                        scroll-y="true"
-                        class="cols-box cols-box1 fl-l"
-                    >
+                    <view class="cols-box cols-box1 fl-l">
                         <view
                             class="cols"
                             :class="{ active: filter.city_id === 0 }"
@@ -119,16 +120,17 @@
                         >
                             {{ item.label }}
                         </view>
-                    </scroll-view>
+                    </view>
                     <scroll-view
                         scroll-y="true"
+                        :style="{ height: '780upx' }"
                         class="cols-box fl-l"
                     >
                         <view
                             v-if="curCityIndex !== -1"
                             class="cols"
                             :class="{ active: filter.county_id === 0 }"
-                            @click="selArea"
+                            @click.stop="selArea"
                         >
                             全部
                         </view>
@@ -290,10 +292,11 @@ export default {
             }
         },
         selArea(item) {
-            this.filterLabel.county_label = item.label;
             if (!item.label) {
                 this.filter.county_id = 0;
+                this.filterLabel.county_label = "";
             } else {
+                this.filterLabel.county_label = item.label;
                 this.filter.county_id = item.value;
             }
         },
