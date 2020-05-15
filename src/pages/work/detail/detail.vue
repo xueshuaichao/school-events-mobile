@@ -798,7 +798,7 @@ export default {
             this.setGetDetail(curPageData);
             this.getLikeStatus();
         },
-        getPageMoreDate(postionObj, filterObj = {}, url = '/api/works/list') {
+        getPageMoreDate(postionObj, filterObj = {}, url) {
             return api.post(url, {
                 ...postionObj,
                 ...filterObj,
@@ -823,7 +823,7 @@ export default {
             console.log(position);
             const { curposition, total, from } = position;
             this.filterObj = filter;
-            this.apiFrom = from || '';
+            this.apiFrom = from || '/api/works/list';
 
             if (total === 1) {
                 this.disableslide = true;
