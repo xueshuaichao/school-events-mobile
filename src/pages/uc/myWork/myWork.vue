@@ -137,7 +137,7 @@ export default {
                 position: {
                     total: this.total,
                     curposition: index,
-                    from: 'mywork',
+                    from: '/api/user/worklist',
                 },
                 filter: this.filter,
             });

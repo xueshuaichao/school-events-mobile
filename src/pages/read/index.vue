@@ -548,7 +548,7 @@ export default {
                 position: {
                     total: this.total,
                     curposition: index,
-                    from: 'Acitivity',
+                    from: '/api/activity/resourcelist',
                 },
                 filter: this.filter,
             });

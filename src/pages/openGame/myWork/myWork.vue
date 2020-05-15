@@ -539,9 +539,9 @@ export default {
                 (this.type === 'myWork' && this.tabActiveIndex === 1)
                 || this.type !== 'myWork'
             ) {
-                let from = 'openGame';
+                let from = '/api/works/competitionlist';
                 if (this.type === 'myWork') {
-                    from = 'myworkOpenGame';
+                    from = '/api/user/competitionlist';
                 }
                 this.$store.commit('setFilterData', {
                     filter: this.filter,

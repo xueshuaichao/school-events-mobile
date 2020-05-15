@@ -798,29 +798,7 @@ export default {
             this.setGetDetail(curPageData);
             this.getLikeStatus();
         },
-        getPageMoreDate(postionObj, filterObj = {}, from = '') {
-            let url = '/api/works/list';
-
-            // const methods = 'post';
-            if (from === 'myworkAcitivity') {
-                url = '/api/activity/userresource';
-            }
-
-            if (from === 'Acitivity') {
-                url = '/api/activity/resourcelist';
-            }
-            if (from === 'mywork') {
-                url = '/api/user/worklist';
-                // methods = 'get'
-            }
-
-            if (from === 'openGame') {
-                url = '/api/works/competitionlist';
-            }
-            if (from === 'myworkOpenGame') {
-                url = '/api/user/competitionlist';
-            }
-
+        getPageMoreDate(postionObj, filterObj = {}, url = '/api/works/list') {
             return api.post(url, {
                 ...postionObj,
                 ...filterObj,
@@ -904,8 +882,6 @@ export default {
         },
     },
     onLoad(query) {
-        // this.pageFrom = utils.getParam(query, 'from') || '';
-        // this.levelid = Number(utils.getParam(query, 'levelid')) || -1;
         this.id = utils.getParam(query, 'id');
         this.fr = utils.getParam(query, 'fr') || '';
         this.isFromShare = utils.getParam(query, 'isFromShare')

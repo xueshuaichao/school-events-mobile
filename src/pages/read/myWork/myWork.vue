@@ -397,9 +397,9 @@ export default {
         },
         viewDetail(item, index) {
             if (this.tabActiveIndex === 2) {
-                let from = 'Acitivity';
+                let from = '/api/activity/resourcelist';
                 if (this.type === 'myWork') {
-                    from = 'myworkAcitivity';
+                    from = '/api/activity/userresource';
                 }
                 this.$store.commit('setFilterData', {
                     filter: this.filter,

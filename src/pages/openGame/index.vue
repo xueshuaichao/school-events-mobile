@@ -398,7 +398,7 @@ export default {
                 position: {
                     total: this.total,
                     curposition: index,
-                    from: 'openGame',
+                    api: '/api/works/competitionlist',
                 },
                 filter: this.filter,
             });
