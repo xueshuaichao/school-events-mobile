@@ -2,10 +2,13 @@
     <view class="packet-rain">
         <template v-if="countDownTime">
             <view class="count-down">
-                <view>倒计时：{{ countDownTime }}</view>
+                <view>倒计时：{{ countDownTime }}s</view>
             </view>
         </template>
         <template v-else>
+            <!-- <view class="game-time">
+                游戏时间<text>{{ gameTime/1000 }}</text>
+            </view> -->
             <view
                 v-for="(item, index) in packetList"
                 v-show="item.isShow"
@@ -22,8 +25,14 @@
                 <image
                     class="pakcet-item-img"
                     :src="item.src"
-                    @click="handelPacket(index)"
+                    @click="handelPacket(item, index)"
                 />
+                <view
+                    v-if="item.isShowNum"
+                    class="packet-num"
+                >
+                    +{{ item.num }}
+                </view>
             </view>
         </template>
     </view>
@@ -32,6 +41,11 @@
 <script>
 export default {
     props: {
+        num: {
+            // 每次掉落最多
+            type: Number,
+            default: 6,
+        },
         countDown: {
             // 倒计时
             type: Number,
@@ -73,8 +87,8 @@ export default {
             type: Object,
             default() {
                 return {
-                    max: 5500,
-                    min: 3000,
+                    max: 3500,
+                    min: 2000,
                 };
             },
         },
@@ -82,8 +96,8 @@ export default {
     data() {
         return {
             countDownTime: this.countDown,
+            gameTime: this.time,
             packetList: [],
-            isShow: true,
             animationData: [],
             postion: {
                 // 初始化位置
@@ -91,23 +105,33 @@ export default {
                 min: 10, // 最左
             },
             windowHeight: 1200,
+            packetNum: 0,
+            packetNumSum: 0,
         };
     },
     watch: {
         hideIndex() {
-            this.$set(this.packetList[this.hideIndex], 'isShow', false);
+            this.$set(this.packetList[this.hideIndex], 'isShowNum', true);
+            setTimeout(() => {
+                this.$set(this.packetList[this.hideIndex], 'isShow', false);
+            }, 300);
         },
         packetList(val) {
             this.$nextTick(() => {
-                if (val.length) {
-                    this.animation.translateY(this.windowHeight).step({
-                        duration: this.randomNumBoth(
-                            this.speed.max,
-                            this.speed.min,
-                        ),
-                    });
-                    this.animationData.push(this.animation.export());
-                }
+                setTimeout(() => {
+                    if (val.length) {
+                        for (let i = 0; i < this.maxNum; i += 1) {
+                            this.animation.translateY(this.windowHeight).step({
+                                duration: this.randomNumBoth(
+                                    this.speed.max,
+                                    this.speed.min,
+                                ),
+                            });
+                            this.animationData.push(this.animation.export());
+                        }
+                    }
+                    this.gameTime -= 100;
+                }, 200);
             });
         },
     },
@@ -141,35 +165,37 @@ export default {
             });
         },
         init() {
-            this.setPacketList();
-            let time = 1000;
+            this.maxNum = this.randomNumBoth(1, this.num);
             const T = setInterval(() => {
-                if (time >= this.time) {
+                if (this.gameTime === 0) {
                     clearInterval(T);
                     this.result();
                 } else {
+                    this.maxNum = this.randomNumBoth(this.num, 1);
                     this.setPacketList();
-                    time += 1000;
                 }
-            }, 1000);
+            }, 400);
         },
         setPacketList() {
-            this.packetList.push({
-                src: this.images[
-                    Math.floor(Math.random() * this.images.length)
-                ],
-                isShow: true,
-                postion: this.randomNumBoth(this.postion.max, this.postion.min),
-            });
+            for (let i = 0; i < this.maxNum; i += 1) {
+                this.packetList.push({
+                    src: this.images[
+                        Math.floor(Math.random() * this.images.length)
+                    ],
+                    num: this.randomNumBoth(10, 1),
+                    isShowNum: false,
+                    isShow: true,
+                    postion: this.randomNumBoth(
+                        this.postion.max,
+                        this.postion.min,
+                    ),
+                });
+            }
         },
         randomNumBoth(max, min = 0) {
-            let num = 0;
-            const Range = max - min;
-            const Rand = Math.random();
-            num = min + Math.round(Rand * Range);
-            return num;
+            return parseInt(Math.random() * (max - min + 1) + min, 10);
         },
-        handelPacket(index) {
+        handelPacket(item, index) {
             this.$emit('handelClick', index);
         },
         result() {
@@ -197,7 +223,12 @@ export default {
     right: 0;
     bottom: 0;
     z-index: 990;
-    background-color: #000;
+    background-color: rgba(0, 0, 0, 0.79);
+}
+.game-time {
+    color: #fff;
+    text-align: center;
+    font-size: 40upx;
 }
 .pakcet-item {
     position: absolute;
@@ -207,5 +238,14 @@ export default {
 .pakcet-item-img {
     width: 100%;
     height: 100%;
+}
+.packet-num {
+    color: #fff;
+    font-size: 80upx;
+    position: absolute;
+    top: 50%;
+    color: #f00;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 </style>

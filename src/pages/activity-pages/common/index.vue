@@ -1,6 +1,6 @@
 <template>
     <view
-        class="activity-page-index"
+        :class="`activity-page-index ${className}`"
         :style="{ 'background-color': publicConfig.mainBgColor }"
     >
         <official-account v-if="!isH5" />
@@ -72,14 +72,16 @@
                     </template>
                 </view>
                 <view class="main-content">
-                    <!-- 奖品 -->
-                    <prize
-                        :name="publicConfig.activityName"
-                        :text-color="publicConfig.primaryColor"
-                        :border-color="publicConfig.primaryBgColor"
-                        :prize-list="indexConfig.prizes"
-                        @handleActiveprize="handleActiveprize"
-                    />
+                    <slot name="prize">
+                        <!-- 奖品 -->
+                        <prize
+                            :name="publicConfig.activityName"
+                            :text-color="publicConfig.primaryColor"
+                            :border-color="publicConfig.primaryBgColor"
+                            :prize-list="indexConfig.prizes"
+                            @handleActiveprize="handleActiveprize"
+                        />
+                    </slot>
                     <slot name="rank" />
                     <!-- 跑马灯 -->
                     <tipsList
@@ -89,14 +91,14 @@
                             bgColor: publicConfig.primaryBgColor
                         }"
                     />
-                    <view
-                        class="cansai-text"
-                        :style="{ color: publicConfig.primaryColor }"
-                    >
-                        —— 活动作品 ——
-                    </view>
                     <!-- work show -->
                     <view class="menu-list">
+                        <view
+                            class="cansai-text"
+                            :style="{ color: publicConfig.primaryColor }"
+                        >
+                            —— 活动作品 ——
+                        </view>
                         <view class="search-box">
                             <button
                                 v-for="(item, index) in publicConfig.catMenu"
@@ -255,22 +257,6 @@ import EventCraftCover from '../../../components/event-craft-cover/index.vue';
 
 export default {
     filters: {
-        optimizeImage: (val) => {
-            if (!val) {
-                return '';
-            }
-            let newUrl = '';
-            const width = 335;
-            const height = 225;
-            if (val.indexOf('?') !== -1) {
-                newUrl = `${val}&x-oss-process=image/format,png/interlace,1/quality,Q_80/resize,m_pad,h_${height
-                    * 2},w_${width * 2}`;
-            } else {
-                newUrl = `${val}?x-oss-process=image/format,png/interlace,1/quality,Q_80/resize,m_pad,h_${height
-                    * 2},w_${width * 2}`;
-            }
-            return newUrl;
-        },
         plusXing: (val) => {
             if (val.length === 11) {
                 return `${val.substr(0, 3)}****${val.substr(7)}`;
@@ -287,6 +273,10 @@ export default {
         EventCraftCover,
     },
     props: {
+        className: {
+            type: String,
+            default: '',
+        },
         isStopScroll: {
             type: Boolean,
             default: false,
@@ -423,30 +413,30 @@ export default {
             });
         },
         handleUpload() {
-            if (this.isH5) {
-                return uni.showToast({
-                    title: '请在UP爱挑战小程序上传作品',
-                    icon: 'none',
+            // if (this.isH5) {
+            //     return uni.showToast({
+            //         title: '请在UP爱挑战小程序上传作品',
+            //         icon: 'none',
+            //     });
+            // }
+            // if (this.status === 2) {
+            api.isLogin({
+                fr: this.fr,
+            }).then(() => {
+                uni.navigateTo({
+                    url: `/pages/activity-pages/upload/modify?activity_id=${this.filter.activity_id}`,
                 });
-            }
-            if (this.status === 2) {
-                api.isLogin({
-                    fr: this.fr,
-                }).then(() => {
-                    uni.navigateTo({
-                        url: `/pages/activity-pages/upload/modify?activity_id=${this.filter.activity_id}`,
-                    });
-                });
-            } else {
-                uni.showToast({
-                    title:
-                        this.status === 1
-                            ? '活动未开始，敬请期待'
-                            : '活动已结束',
-                    icon: 'none',
-                });
-            }
-            return true;
+            });
+            // } else {
+            //     uni.showToast({
+            //         title:
+            //             this.status === 1
+            //                 ? '活动未开始，敬请期待'
+            //                 : '活动已结束',
+            //         icon: 'none',
+            //     });
+            // }
+            // return true;
         },
 
         // onReachBottom() {
@@ -979,5 +969,68 @@ body.dialog-open {
     width: 100%;
     height: 100%;
     overflow: hidden;
+}
+.children-index {
+    .main-content {
+        padding: 0 30upx;
+    }
+    .page-index .menu-list {
+        box-sizing: border-box;
+        padding-top: 77upx;
+        background-color: #fff;
+        border-radius: 50upx;
+        margin-bottom: 120upx;
+        padding-bottom: 100upx;
+        box-shadow: inset 0 0px 24upx 0px rgba(182, 146, 255, 1);
+        position: relative;
+        .cansai-text {
+            position: absolute;
+            top: -140upx;
+            left: 50%;
+            transform: translateX(-50%);
+            border-radius: 48upx;
+            background-color: #ff78a5;
+            box-shadow: inset 0px 0px 24px 0px rgba(255, 255, 255, 1);
+            position: relative;
+            display: inline-block;
+            text-indent: -9999px;
+            width: 230upx;
+            height: 74upx;
+            &::before {
+                content: "";
+                position: absolute;
+                left: 13upx;
+                top: 12upx;
+                width: 25upx;
+                height: 27upx;
+                background-image: url(https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/children_bt_b.png);
+                background-size: 100% 100%;
+            }
+            &::after {
+                content: "活动作品";
+                position: absolute;
+                left: 50%;
+                top: 50%;
+                transform: translate(-50%, -50%);
+                text-indent: 0;
+                width: 100%;
+                color: #fff;
+            }
+        }
+    }
+
+    .media-box .media-content {
+        width: 305upx !important;
+    }
+    .event-craft-cover .video {
+        width: 305upx;
+        height: 172upx;
+    }
+    .page-section-spacing {
+        height: 60upx !important;
+        line-height: 60upx !important;
+        box-shadow: 0px 0px 11px 0px rgba(255, 255, 255, 1);
+        border-radius: 48upx;
+    }
 }
 </style>

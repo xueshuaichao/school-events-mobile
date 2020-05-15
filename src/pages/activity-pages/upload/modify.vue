@@ -260,9 +260,16 @@ export default {
             uni.setNavigationBarTitle({ title: '编辑作品' });
             this.getItemData();
         }
+        const uploadColorConfig = this.$store.getters.getUploadColorConfig(
+            this.formData.activity_id,
+        );
         this.publicConfig = this.$store.getters.getPublicConfig(
             this.formData.activity_id,
         );
+        this.publicConfig = {
+            ...this.publicConfig,
+            ...uploadColorConfig,
+        };
         this.uploadConfig = this.$store.getters.getActivityConfig({
             activityId: this.formData.activity_id,
             page: 'uploadConfig',

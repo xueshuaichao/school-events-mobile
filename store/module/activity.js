@@ -126,6 +126,9 @@ export default {
                     nameMaxLength: 11,
                     descMaxLength: 150,
                 },
+                myWorkColorConfig: {},
+                indexColorConfig: {},
+                uploadColorConfig: {},
             },
             {
                 activityId: 9,
@@ -134,15 +137,15 @@ export default {
                     log: 'lyhd',
                     sort: ['最新', '最热'],
                     catMenu: [], // 分组
-                    mainBgColor: '#FFCE99',
-                    activityName: 'labor',
+                    mainBgColor: '#EBE1FF',
+                    activityName: 'children',
                     activityId: 8,
                     catId: 20, // 所属分类
                     time: '4月27日--5月31日',
-                    primaryColor: '#DB4E0E', // 主色调
-                    darkPrimaryColor: '#451600', // 深一些
-                    primaryBgColor: '#FF9F73', // 主要的背景颜色
-                    infoColor: '#AB3500', // 浅一些
+                    primaryColor: '#BB77FF', // 主色调
+                    darkPrimaryColor: '#C790FF', // 深一些 （按钮的颜色）
+                    primaryBgColor: '#DCC0FF', // 主要的背景颜色 （图片背景）
+                    infoColor: '#333333', // 浅一些
                     titleColor: '#FFE179', // 规则的title
                     placeholderColor: 'rgba(255,255,255,.6)',
                     homePath: '/pages/activity-pages/labor/index',
@@ -175,16 +178,35 @@ export default {
                     rules: rulesData.rules.filter(v => v.id === 9)[0].text, // 规则文案
                     prizes: [
                         {
-                            text: ['一等奖', '小度音响*2'],
+                            title: '人气作品奖',
+                            item: [
+                                {
+                                    text: ['一等奖', '小度音响*2'],
+                                },
+                                {
+                                    text: ['二等奖', '旅行箱*6'],
+                                },
+                                {
+                                    text: ['三等奖', 'AR地球仪*12'],
+                                },
+                            ],
                         },
                         {
-                            text: ['二等奖', '旅行箱*6'],
-                        },
-                        {
-                            text: ['三等奖', 'AR地球仪*12'],
-                        },
-                        {
-                            text: ['劳动能手奖', '榨汁机'],
+                            title: '糖果幸运奖',
+                            item: [
+                                {
+                                    text: ['', '航拍无人机'],
+                                },
+                                {
+                                    text: ['', '多功能棋盘'],
+                                },
+                                {
+                                    text: ['', '水彩笔套装'],
+                                },
+                                {
+                                    text: ['', '水彩笔套装'],
+                                },
+                            ],
                         },
                     ], // 奖品文案
                     prizesDetail: {
@@ -252,6 +274,15 @@ export default {
                     nameMaxLength: 11,
                     descMaxLength: 150,
                 },
+                myWorkColorConfig: {},
+                indexColorConfig: {},
+                uploadColorConfig: {
+                    mainBgColor: '#fff',
+                    primaryColor: '#BB77FF', // 主色调
+                    darkPrimaryColor: '#C790FF', // 深一些 （按钮的颜色）
+                    primaryBgColor: '#DCC0FF', // 主要的背景颜色 （图片背景）
+                    infoColor: '#333333', // 浅一些
+                },
             },
         ],
     },
@@ -260,6 +291,9 @@ export default {
         // eslint-disable-next-line max-len
         getPublicConfig: state => activityId => state.activities.filter(v => v.activityId === Number(activityId))[0]
             .publicConfig,
+        // eslint-disable-next-line max-len
+        getUploadColorConfig: state => activityId => state.activities.filter(v => v.activityId === Number(activityId))[0]
+            .uploadColorConfig,
         // 获取各个页面配置 包括：活动页、我的作品、上传页、上传结果页
         // eslint-disable-next-line max-len
         getActivityConfig: state => ({ activityId, page }) => state.activities.filter(

@@ -1,119 +1,86 @@
 <template>
     <div class="activity-init-page">
         <packetRain
-            :time="10000"
+            :time="20000"
             :speed="{
-                max: 6500,
-                min: 3000
+                max: 3500,
+                min: 1500
             }"
             :hide-index="hideIndex"
             @handelClick="handelClick"
         />
         <indexPage
             v-if="loading"
-            text-bg-color="#DB4E0E"
-            btn-color="#04a875"
-            search-color="#FF9F73"
             :index-config="indexConfig"
             :public-config="publicConfig"
-            :is-stop-scroll="showHistoryRankList"
+            :is-stop-scroll="false"
+            class-name="children-index"
             :fr="fr"
         >
-            <template v-slot:rank>
-                <view
-                    v-if="showRank"
-                    class="week-rank"
-                >
-                    <view class="title">
-                        —— 本周劳动能手 ——
-                    </view>
+            <template v-slot:prize>
+                <view class="prize-box">
                     <view
-                        v-if="historyRankList.length"
-                        class="history-rank"
-                        @click="toggleHistoryRank(true)"
+                        v-for="(prize, list) in indexConfig.prizes"
+                        :key="list"
+                        class="prize-list"
                     >
-                        历史榜单
-                    </view>
-                    <view class="week-rank-list">
+                        <view class="prize-list-title">
+                            <view class="title-text children-btn">
+                                {{ prize.title }}
+                            </view>
+                            <view class="handel-text">
+                                <text @click="prizeList(list)">
+                                    {{
+                                        list === 0 ? "奖项设置说明" : "幸运榜单"
+                                    }}
+                                </text>
+                            </view>
+                        </view>
                         <view
-                            v-for="(item, index) in rank"
-                            :key="index"
-                            class="rank-item"
-                            @click="jumpSearch(item)"
+                            :class="`prize-list-item prize-list-item-${list}`"
                         >
-                            <image
-                                :src="
-                                    `https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/labor_rank-${index +
-                                        1}.png`
-                                "
-                            />
-                            <view class="rank-name text-one-line">
-                                {{ item.user_name }}
-                            </view>
-                            <view class="work-num">
-                                作品{{ item.num }}个
-                            </view>
-                        </view>
-                    </view>
-                </view>
-            </template>
-        </indexPage>
-        <view
-            v-show="showHistoryRankList"
-            class="history-rank-list"
-        >
-            <view class="history-content">
-                <image
-                    v-if="publicConfig.activityName"
-                    class="close"
-                    :src="
-                        `https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/${publicConfig.activityName}_close.png`
-                    "
-                    @click="toggleHistoryRank(false)"
-                />
-                <view class="title">
-                    历史榜单
-                </view>
-                <view class="history-content-box">
-                    <view
-                        v-for="(item, index) in historyRankList"
-                        :key="index"
-                        class="history-item"
-                    >
-                        <view class="tit">
-                            第{{ index | changeNum }}周小能手{{
-                                item.start_time
-                            }}-{{ item.end_time }}
-                        </view>
-                        <view class="history-box">
                             <view
-                                v-for="(list, k) in item.rank_list"
+                                v-for="(item, k) in prize.item"
                                 :key="k"
-                                class="text-item"
+                                class="prize-item"
                             >
-                                <image
-                                    class="rank-img"
-                                    :src="
-                                        `https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/labor_mini_rank_${k}.png`
-                                    "
-                                />
-                                <view class="text-content">
-                                    <text class="user-name text-one-line">
-                                        {{ list.user_name }}
+                                <view class="prize-img">
+                                    <image
+                                        :src="
+                                            `https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/children_prize_${list}_${k}.png`
+                                        "
+                                    />
+                                </view>
+                                <view class="pirze-text">
+                                    <text
+                                        v-if="item.text[0]"
+                                        class="pirze-rank"
+                                    >
+                                        {{ item.text[0] }}
                                     </text>
-                                    <text class="work-num text-one-line">
-                                        作品{{ list.works_num }}个
-                                    </text>
+                                    <view>{{ item.text[1] }}</view>
                                 </view>
                             </view>
                         </view>
                     </view>
+                    <view class="prize-handel-item">
+                        <view
+                            class="btn"
+                            @click="getPrizeNum"
+                        >
+                            获取抽奖机会
+                        </view>
+                        <view
+                            class="btn"
+                            @click="getPrizeLise"
+                        >
+                            我的中奖
+                        </view>
+                    </view>
                 </view>
-                <view class="tips">
-                    立即参与活动吧！下一个劳动小能手就是你！
-                </view>
-            </view>
-        </view>
+            </template>
+            <template v-slot:rank />
+        </indexPage>
     </div>
 </template>
 
@@ -122,7 +89,7 @@ import packetRain from '../../../components/packet-rain/index.vue';
 import indexPage from '../common/index.vue';
 import share from '../../../common/share';
 import logger from '../../../common/logger';
-import api from '../../../common/api';
+// import api from '../../../common/api';
 
 export default {
     components: {
@@ -143,17 +110,13 @@ export default {
             loading: false,
             publicConfig: {},
             indexConfig: {},
-            showRank: false,
-            rank: [],
-            historyRankList: [],
-            showHistoryRankList: false,
             fr: '',
             activityId: '',
             hideIndex: -1,
         };
     },
     onLoad(params) {
-        this.activityId = 8;
+        this.activityId = 9;
         this.publicConfig = this.$store.getters.getPublicConfig(
             this.activityId,
         );
@@ -166,31 +129,14 @@ export default {
     },
     onShow() {},
     created() {
-        this.getRank();
-        this.historyRank();
+        // this.getRank();
+        // this.historyRank();
     },
     methods: {
         handelClick(index) {
-            console.log(index);
             this.hideIndex = index;
         },
-        getRank() {
-            api.get('/api/activity/laborrank').then((data) => {
-                if (data.length === 3) {
-                    this.showRank = true;
-                }
-                this.rank = [data[1], data[0], data[2]];
-                this.initShare();
-            });
-        },
-        historyRank() {
-            api.get('/api/activity/laborranklist').then((data) => {
-                this.historyRankList = data;
-            });
-        },
-        toggleHistoryRank(status) {
-            this.showHistoryRankList = status;
-        },
+
         initShare() {
             const titleList = this.isH5
                 ? this.publicConfig.shareConfig.h5Title
@@ -198,7 +144,7 @@ export default {
             const descList = this.publicConfig.shareConfig.desc;
             const random = Math.floor(Math.random() * titleList.length);
             this.title = titleList[random];
-            const desc = descList[random];
+            const desc = descList[0];
             console.log(this.title);
             share({
                 title: this.title,
@@ -214,6 +160,15 @@ export default {
         onReachBottom() {
             uni.$emit('onReachBottom');
         },
+        prizeList(type) {
+            if (type === 1) {
+                console.log(1);
+            } else {
+                console.log(2);
+            }
+        },
+        getPrizeNum() {},
+        getPrizeLise() {},
     },
     onShareAppMessage(res) {
         if (res.from === 'button') {
@@ -229,7 +184,169 @@ export default {
 };
 </script>
 
-<style lang="less" scoped>
+<style lang="less">
+.activity-init-page {
+    .children-btn {
+        padding: 0 40upx;
+        line-height: 74upx;
+        color: #fff;
+        border-radius: 48upx;
+        background-color: #ff78a5;
+        box-shadow: inset 0px 0px 24px 0px rgba(255, 255, 255, 1);
+        position: relative;
+        font-size: 32upx;
+        &::before {
+            content: "";
+            position: absolute;
+            left: 13upx;
+            top: 12upx;
+            width: 25upx;
+            height: 27upx;
+            background-image: url(https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/children_bt_b.png);
+            background-size: 100% 100%;
+        }
+    }
+    .prize-box {
+        box-shadow: inset 0 0px 24upx 0px rgba(182, 146, 255, 1);
+        background-color: #fff;
+        margin: -120upx 0upx 40upx;
+        border-radius: 50upx;
+        padding: 0 20upx 48upx;
+        .prize-list {
+            border-bottom: 2upx #c790ff dashed;
+            &:nth-of-type(2) {
+                border-bottom: 0 none;
+            }
+        }
+        .prize-list-title {
+            display: flex;
+            justify-content: space-between;
+            padding: 40upx 10upx 39upx 30upx;
+            .title-text {
+                &::after {
+                    content: "";
+                    position: absolute;
+                    right: -30upx;
+                    top: 5upx;
+                    width: 70upx;
+                    height: 60upx;
+                    background-image: url(https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/children_bt_a.png);
+                    background-size: 100% 100%;
+                }
+            }
+            .handel-text {
+                color: #bb77ff;
+                font-size: 24upx;
+                font-weight: 500;
+                position: relative;
+                top: 10upx;
+                min-width: 166upx;
+                text-align: center;
+                &::after {
+                    content: "";
+                    position: absolute;
+                    left: 50%;
+                    transform: translateX(-50%);
+                    bottom: 0upx;
+                    width: 166upx;
+                    height: 42upx;
+                    background-image: url(https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/children_flag.png);
+                    background-size: 100% 100%;
+                }
+            }
+        }
+        .prize-list-item {
+            display: flex;
+            justify-content: space-between;
+
+            .prize-item {
+                border: 4upx solid #c790ff;
+                border-bottom: 0 none;
+                border-radius: 7upx;
+                box-sizing: border-box;
+                position: relative;
+                image {
+                    width: 132upx;
+                    height: 120upx;
+                }
+            }
+            .pirze-text {
+                position: absolute;
+                left: -8upx;
+                right: -8upx;
+                bottom: 0upx;
+                background-color: #c790ff;
+                border-radius: 0 0 10upx 10upx;
+                font-size: 20upx;
+                text-align: center;
+                color: #fff;
+                padding-top: 4upx;
+                padding-bottom: 2upx;
+                min-height: 36upx;
+                &::before {
+                    content: "";
+                    position: absolute;
+                    top: -14upx;
+                    left: 0;
+                    right: 0;
+                    height: 17upx;
+                    background-image: url(https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/children_prize_bg.png);
+                    background-position: top center;
+                    background-size: 100% 100%;
+                }
+                .pirze-rank {
+                    line-height: 26upx;
+                    padding: 0 11upx;
+                    background-color: #ffe79c;
+                    color: #bb77ff;
+                    display: inline-block;
+                    border-radius: 16upx;
+                }
+            }
+            &.prize-list-item-0 {
+                padding: 0 50upx 50upx;
+                .prize-item {
+                    width: 153upx;
+                    height: 188upx;
+                    padding: 3upx 6upx 0;
+                }
+            }
+            &.prize-list-item-1 {
+                .pirze-text {
+                    line-height: 36upx;
+                }
+                .prize-item {
+                    width: 144upx;
+                    height: 164upx;
+                    padding: 3upx 2upx;
+                }
+            }
+        }
+        .prize-handel-item {
+            display: flex;
+            justify-content: space-between;
+            margin: 48upx 31upx 0;
+            .btn {
+                height: 158upx;
+                font-size: 28upx;
+                font-weight: 500;
+                color: #333;
+                line-height: 173upx;
+                background-position: center center;
+                background-size: 100% 100%;
+                text-align: center;
+                &:nth-of-type(1) {
+                    width: 274upx;
+                    background-image: url(https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/children_btn-prize_0.png);
+                }
+                &:nth-of-type(2) {
+                    width: 234upx;
+                    background-image: url(https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/children_btn-prize_1.png);
+                }
+            }
+        }
+    }
+}
 .week-rank {
     margin: 30upx 0 40upx;
     text-align: center;

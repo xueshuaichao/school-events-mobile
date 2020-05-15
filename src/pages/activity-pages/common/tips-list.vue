@@ -70,31 +70,34 @@ export default {
 <style lang="less" scoped>
 // 跑马灯
 .page-section-spacing {
-    width: 710upx;
+    width: 100%;
     height: 46upx;
     background: #05af7c;
     border-radius: 23upx;
     padding: 0 20upx;
     font-size: 24rpx;
     box-sizing: border-box;
-    margin-left: 20rpx;
+    margin: 0 auto;
     line-height: 46rpx;
     margin-top: 20rpx;
     .swiper {
         width: 100%;
         height: 100%;
         .swiper-item {
+            position: relative;
+            height: 100%;
+            padding-left: 82upx;
             image {
-                float: left;
-                width: 37upx;
+                position: absolute;
+                left: 30upx;
+                width: 31upx;
                 height: 26upx;
-                margin-right: 9upx;
-                // vertical-align: middle;
-                margin-top: 11rpx;
+                top: 50%;
+                transform: translateY(-50%);
             }
             .swiper-info {
                 float: left;
-                width: 560upx;
+                width: 80%;
                 white-space: nowrap;
                 text-overflow: ellipsis;
                 overflow: hidden;
