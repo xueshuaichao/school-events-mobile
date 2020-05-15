@@ -53,7 +53,7 @@
         <view
             v-if="showMenu"
             class="dropdown-wrap clearfix"
-            @click.prevent="showMenu = false"
+            @click.prevent="cancel"
         >
             <view
                 class="dropdown"
@@ -67,11 +67,7 @@
                     v-if="showMenuType === 1"
                     class="rows"
                 >
-                    <scroll-view
-                        scroll-y="true"
-                        :style="{ height: '780upx' }"
-                        class="cols-box"
-                    >
+                    <view class="cols-box">
                         <view
                             v-for="item in projectList"
                             :key="item.cat_id"
@@ -81,7 +77,7 @@
                         >
                             {{ item.cat_name }}
                         </view>
-                    </scroll-view>
+                    </view>
                 </view>
                 <view
                     v-if="showMenuType === 2"
@@ -123,8 +119,8 @@
                     </view>
                     <scroll-view
                         scroll-y="true"
-                        :style="{ height: '780upx' }"
-                        class="cols-box fl-l"
+                        :style="{ height: '780rpx' }"
+                        class="fl-l"
                     >
                         <view
                             v-if="curCityIndex !== -1"
@@ -228,7 +224,6 @@
 import cityData from "./simple-address/city-data/city";
 import areaData from "./simple-address/city-data/area";
 import api from "../../common/api";
-console.log(cityData, areaData, "------");
 export default {
     data() {
         return {
@@ -309,7 +304,6 @@ export default {
             }
         },
         getData() {
-            console.log(this.filter);
             this.showMenu = false;
             this.loading = false;
             api.post("/api/works/resourcerank", this.filter).then(data => {
@@ -347,6 +341,16 @@ export default {
                 this.getData();
             }
         );
+    },
+    onShareAppMessage(res) {
+        if (res.from === "button") {
+            // 来自页面内分享按钮
+            console.log(res.target);
+        }
+        return {
+            title: "世界吉尼斯青少年“爱挑战”网络预选赛",
+            path: "/pages/openGame/index"
+        };
     }
 };
 </script>
@@ -474,10 +478,10 @@ export default {
             padding: 20upx 0;
             .cols-box {
                 max-height: 780upx;
-                // overflow-y: auto;
+                overflow-y: auto;
                 margin-bottom: 20upx;
             }
-            .cols-box.fl-l {
+            .fl-l {
                 width: 200upx;
                 padding: 20upx 0;
                 .cols {
