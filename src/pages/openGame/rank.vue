@@ -1,5 +1,8 @@
 <template>
-    <view class="rank-page">
+    <view
+        class="rank-page"
+        :class="{ 'stop-scroll': showMenu }"
+    >
         <!--筛选条件-->
         <view class="filter-wrap">
             <view class="filter-btn-block">
@@ -38,8 +41,11 @@
                     @click="clickMenu(3)"
                 >
                     <view class="arror" />
-                    {{ filterLabel.country_label ? "" : filterLabel.city_label
-                    }}{{ filterLabel.country_label }}
+                    {{
+                        filterLabel.county_label
+                            ? filterLabel.county_label
+                            : filterLabel.city_label
+                    }}
                 </view>
             </view>
         </view>
@@ -47,7 +53,7 @@
         <view
             v-if="showMenu"
             class="dropdown-wrap clearfix"
-            @click.prevent="showMenu = false"
+            @click.prevent="cancel"
         >
             <view
                 class="dropdown"
@@ -103,18 +109,24 @@
                             v-for="(item, index) in cityData[0]"
                             :key="item.value"
                             class="cols"
-                            :class="{ active: item.value === filter.city_id }"
+                            :class="{
+                                active: item.value + '00' === filter.city_id
+                            }"
                             @click.stop="selCity(item, index)"
                         >
                             {{ item.label }}
                         </view>
                     </view>
-                    <view class="cols-box fl-l">
+                    <scroll-view
+                        scroll-y="true"
+                        :style="{ height: '780rpx' }"
+                        class="fl-l"
+                    >
                         <view
                             v-if="curCityIndex !== -1"
                             class="cols"
-                            :class="{ active: filter.country_id === 0 }"
-                            @click="selArea"
+                            :class="{ active: filter.county_id === 0 }"
+                            @click.stop="selArea"
                         >
                             全部
                         </view>
@@ -123,13 +135,13 @@
                             :key="item.value"
                             class="cols"
                             :class="{
-                                active: item.value === filter.country_id
+                                active: item.value === filter.county_id
                             }"
                             @click.stop="selArea(item)"
                         >
                             {{ item.label }}
                         </view>
-                    </view>
+                    </scroll-view>
                 </view>
                 <view
                     v-if="showMenuType === 3"
@@ -137,13 +149,13 @@
                 >
                     <view
                         class="fl-r btn btn-primy"
-                        @click="getData"
+                        @click="confirm"
                     >
                         确定
                     </view>
                     <view
                         class="fl-r btn"
-                        @click="showMenu = false"
+                        @click="cancel"
                     >
                         取消
                     </view>
@@ -212,7 +224,6 @@
 import cityData from "./simple-address/city-data/city";
 import areaData from "./simple-address/city-data/area";
 import api from "../../common/api";
-console.log(cityData, areaData, "------");
 export default {
     data() {
         return {
@@ -230,14 +241,18 @@ export default {
             filter: {
                 city_id: 0,
                 education_level: 2,
-                country_id: 0,
+                county_id: 0,
                 cat_id: 0
             },
             filterLabel: {
                 cat_label: "",
                 education_label: "小学",
                 city_label: "",
-                country_label: "全部"
+                county_label: "全部",
+                old_city_id: 0,
+                old_city_label: "",
+                old_county_id: 0,
+                old_county_label: "全部"
             },
             loading: false
         };
@@ -257,26 +272,27 @@ export default {
         selCity(item, index) {
             if (!item.label) {
                 this.filter.city_id = 0;
-                this.filter.country_id = 0;
+                this.filter.county_id = 0;
                 this.curCityIndex = -1;
                 this.filterLabel.city_label = "全部";
-                this.filterLabel.country_label = "";
+                this.filterLabel.county_label = "";
             } else {
                 if (this.filter.city_id !== item.value) {
-                    this.filter.country_id = 0;
+                    this.filter.county_id = 0;
                 }
-                this.filter.city_id = item.value;
+                this.filter.city_id = item.value + "00";
                 this.curCityIndex = index;
                 this.filterLabel.city_label = item.label;
-                this.filterLabel.country_label = "";
+                this.filterLabel.county_label = "";
             }
         },
         selArea(item) {
-            this.filterLabel.country_label = item.label;
             if (!item.label) {
-                this.filter.country_id = 0;
+                this.filter.county_id = 0;
+                this.filterLabel.county_label = "";
             } else {
-                this.filter.country_id = item.value;
+                this.filterLabel.county_label = item.label;
+                this.filter.county_id = item.value;
             }
         },
         clickMenu(type) {
@@ -288,7 +304,6 @@ export default {
             }
         },
         getData() {
-            console.log(this.filter);
             this.showMenu = false;
             this.loading = false;
             api.post("/api/works/resourcerank", this.filter).then(data => {
@@ -299,6 +314,21 @@ export default {
         },
         clickWrap() {
             console.log("wqqw");
+        },
+        confirm() {
+            this.filterLabel.old_county_id = this.filter.county_id;
+            this.filterLabel.old_county_label = this.filterLabel.county_label;
+            this.filterLabel.old_city_id = this.filter.city_id;
+            this.filterLabel.old_city_label = this.filterLabel.city_label;
+            this.getData();
+        },
+        cancel() {
+            this.filter.county_id = this.filterLabel.old_county_id;
+            this.filterLabel.county_label = this.filterLabel.old_county_label;
+            this.filter.city_id = this.filterLabel.old_city_id;
+            this.filterLabel.city_label = this.filterLabel.old_city_label;
+            console.log(this.filterLabel, "cancel-----");
+            this.showMenu = false;
         }
     },
     onLoad(query) {
@@ -311,6 +341,16 @@ export default {
                 this.getData();
             }
         );
+    },
+    onShareAppMessage(res) {
+        if (res.from === "button") {
+            // 来自页面内分享按钮
+            console.log(res.target);
+        }
+        return {
+            title: "世界吉尼斯青少年“爱挑战”网络预选赛",
+            path: "/pages/openGame/index"
+        };
     }
 };
 </script>
@@ -363,7 +403,7 @@ export default {
                     position: absolute;
                     width: 20upx;
                     height: 20upx;
-                    right: 6upx;
+                    right: 10upx;
                     top: 50%;
                     margin-top: -10upx;
                     &::before,
@@ -435,14 +475,13 @@ export default {
             }
         }
         .rows {
-            overflow-y: auto;
             padding: 20upx 0;
             .cols-box {
-                max-height: 750upx;
+                max-height: 780upx;
                 overflow-y: auto;
                 margin-bottom: 20upx;
             }
-            .cols-box.fl-l {
+            .fl-l {
                 width: 200upx;
                 padding: 20upx 0;
                 .cols {
@@ -564,5 +603,13 @@ export default {
             }
         }
     }
+}
+.stop-scroll {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
 }
 </style>

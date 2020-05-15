@@ -282,15 +282,16 @@ export default {
             this.showShareMask = true;
             // #endif
 
-            // #ifndef H5
-            this.handleTicketMask();
-            // #endif
             if (
                 this.pageData.resource_scope === 3
                 && this.from !== 'openGame'
             ) {
                 this.posterConfig.images[0].url = 'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/h5/aitiaozhan-poster2.png';
             }
+
+            // #ifndef H5
+            this.handleTicketMask();
+            // #endif
         },
         // 生成二维码，并弹出mask
         handleTicketMask() {

@@ -400,14 +400,14 @@ export default {
                 this.formData.video_id = data.video.video_id;
                 this.formData.resource_id = id;
                 this.achivementInput = data.achievement;
-                this.teacherInput = data.teacher;
+                this.teacherInput = data.teacher || '';
                 this.createInput = data.create_name;
-                this.attestationInput = data.attestation_name;
+                this.attestationInput = data.attestation_name || '';
 
                 this.formData.education_name = this.educationData[
                     data.education_level - 2
                 ];
-                this.formData.grade_name = this.gradeData[data.grade_id];
+                this.formData.grade_name = this.gradeData[data.grade_id - 1];
                 this.formData.file_size = data.video.file_size;
                 this.formData.file_name = data.video.file_name;
                 this.formData.file_suffix = data.video.file_suffix;
