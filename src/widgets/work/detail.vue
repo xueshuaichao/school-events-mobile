@@ -127,7 +127,7 @@
                 v-if="activityId !== 8"
                 class="intro text-three-line"
             >
-                {{ introduce || "暂无简介" }}
+                {{ introduce }}
             </view>
             <view
                 v-if="activityId === 8"
@@ -137,7 +137,7 @@
                     {{
                         !showMore && introduce && introduce.length > 50
                             ? `${introduce.slice(0, 50)}...`
-                            : introduce || "暂无简介"
+                            : introduce
                     }}
                 </text>
                 <text
@@ -154,6 +154,12 @@
                 >
                     收起
                 </view>
+            </view>
+            <view
+                class="cat-name"
+                @click="jumpLabelList"
+            >
+                {{ pageData.cat_name ? `#${pageData.cat_name}#` : "" }}
             </view>
         </view>
         <view class="fixed-panel">
@@ -340,6 +346,7 @@ export default {
             play_count: 0,
             showMore: false,
             introduce: this.pageData.introduce || '',
+            catName: this.pageData.cat_name,
         };
     },
     watch: {
@@ -382,6 +389,7 @@ export default {
         if (this.pageData.resource_type === 2) {
             this.play_count += 1;
         }
+        console.log(this.pageData);
     },
     mounted() {
         this.videoContext = uni.createVideoContext(
@@ -455,6 +463,18 @@ export default {
         },
         goHome() {
             const url = '/pages/openGame/index';
+            uni.navigateTo({
+                url,
+            });
+        },
+        jumpLabelList() {
+            // 标签列表
+            const {
+                resource_scope: resourceScope,
+                cat_id: catId,
+                cat_name: catName,
+            } = this.pageData;
+            const url = `/pages/work/label/list?cat_id=${resourceScope},${catId}&cat_name=${catName}`;
             uni.navigateTo({
                 url,
             });
@@ -633,6 +653,11 @@ export default {
         font-size: 25upx;
         line-height: 35upx;
         position: relative;
+    }
+    .cat-name {
+        font-size: 24upx;
+        color: #ff584b;
+        margin-top: 18upx;
     }
     .orange {
         color: #db4e0e;

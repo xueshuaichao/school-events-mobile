@@ -39,7 +39,7 @@
             <input
                 v-model="changeValue"
                 placeholder-class="placeholderStyle"
-                placeholder="请输入作品名称/作者姓名"
+                :placeholder="searchWord"
                 maxlength="13"
                 @confirm="bindconfirm"
             >
@@ -392,6 +392,8 @@ export default {
                     url: '/pages/yiqing/index',
                 },
             ],
+            isSearchWord: false, // 是否设置了关键词
+            searchWord: '',
         };
     },
     onHide() {
@@ -403,6 +405,7 @@ export default {
         this.thirdEntryPrompt();
         this.getData();
         this.getUserInfo();
+        this.getSearchWord();
     },
     onShow() {
         // 页面从详情过来的，则，需要刷新一下页面数据，点赞量会变化。
@@ -423,14 +426,19 @@ export default {
     methods: {
         bindconfirm() {
             if (!this.changeValue.trim()) {
-                uni.showToast({
-                    title: '请输入搜索内容',
-                    icon: 'none',
-                });
-                return;
+                if (this.isSearchWord) {
+                    this.changeValue = this.searchWord;
+                } else {
+                    return uni.showToast({
+                        title: '请输入搜索内容',
+                        icon: 'none',
+                    });
+                }
             }
-            uni.navigateTo({
-                url: `/pages/work/list/list?keyword=${this.changeValue.trim()}`,
+            // fr 统计关键字是
+            const showType = this.changeValue === this.searchWord ? 1 : '';
+            return uni.navigateTo({
+                url: `/pages/work/list/list?keyword=${this.changeValue.trim()}&show_type=${showType}`,
             });
         },
         getUserInfo() {
@@ -570,6 +578,24 @@ export default {
                     return obj;
                 });
             });
+        },
+        getSearchWord() {
+            api.get('/api/works/searchword', {
+                type: 1,
+            }).then(
+                (res) => {
+                    if (res && res.status === 1) {
+                        this.isSearchWord = true;
+                        this.searchWord = res.rec_word;
+                    } else {
+                        this.searchWord = '请输入学校名称/作品名称/作者名称';
+                    }
+                },
+                () => {
+                    this.isSearchWord = false;
+                    this.searchWord = '请输入学校名称/作品名称/作者名称';
+                },
+            );
         },
     },
     onPullDownRefresh() {

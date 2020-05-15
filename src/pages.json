@@ -112,6 +112,12 @@
             }
         },
         {
+            "path": "pages/work/label/list",
+            "style": {
+                "navigationBarTitleText": "列表"
+            }
+        },
+        {
             "path": "pages/uc/myWork/myWork",
             "style": {
                 "navigationBarTitleText": "我的作品"

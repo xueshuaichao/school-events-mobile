@@ -193,6 +193,9 @@ const routesConfig = {
             component: () => import('@/pages/work/detail/detail.vue'),
         },
         {
+            path: '/pages/work/label/list',
+        },
+        {
             path: '/pages/uc/setting/setting',
         },
         {

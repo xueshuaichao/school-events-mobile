@@ -28,7 +28,6 @@ export default {
             filter: {
                 keyword: '',
                 sort: 1,
-
                 cat_id: {
                     one_level_id: -1,
                 },

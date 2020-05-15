@@ -6,7 +6,7 @@
                     v-model="filter.keyword"
                     placeholder-class="placeholderStyle"
                     maxlength="13"
-                    placeholder="请输入作品名称/作者姓名"
+                    :placeholder="searchWord"
                     @confirm="bindconfirm"
                 >
                 <text
@@ -212,6 +212,8 @@ export default {
             changeValue: '',
             curCategory: '全部',
             curSort: '最热',
+            isSearchWord: false, // 是否设置了关键词
+            searchWord: '',
         };
     },
     watch: {
@@ -226,7 +228,7 @@ export default {
                 this.filter.cat_id.one_level_id = Number(val.cat_id.one_level_id) || -1;
                 this.filter.keyword = val.keyword;
                 this.filter.sort = Number(val.sort) || 1;
-
+                this.filter.show_type = val.show_type;
                 this.getData();
                 this.getTableData();
             }
@@ -262,13 +264,16 @@ export default {
             this.paramsFilter.cat_id.one_level_id > 0
             || this.paramsFilter.keyword
         ) {
+            // h5
             // h5 与 小程序监听 paramsFilter的值，获取的时间不一样。1.这里为了兼容小程序和h5
             this.filter.cat_id.one_level_id = Number(this.paramsFilter.cat_id.one_level_id) || -1;
             this.filter.keyword = this.paramsFilter.keyword;
             this.filter.sort = Number(this.paramsFilter.sort) || 1;
+            this.filter.show_type = this.paramsFilter.show_type || '';
             this.getTableData();
             this.getData();
         }
+        this.getSearchWord();
     },
     methods: {
         onSelect(type, value) {
@@ -356,7 +361,17 @@ export default {
             }
         },
         bindconfirm() {
-            this.getTableData();
+            if (this.isSearchWord) {
+                if (!this.filter.keyword) {
+                    this.filter.keyword = this.searchWord;
+                }
+                if (this.filter.keyword === this.searchWord) {
+                    this.filter.fr = 1;
+                } else {
+                    this.filter.fr = '';
+                }
+            }
+            return this.getTableData();
         },
         onReachBottoms() {
             console.log(
@@ -370,6 +385,24 @@ export default {
             } else {
                 this.loadMoreStatus = 'noMore';
             }
+        },
+        getSearchWord() {
+            api.get('/api/works/searchword', {
+                type: 1,
+            }).then(
+                (res) => {
+                    if (res && res.status === 1) {
+                        this.isSearchWord = true;
+                        this.searchWord = res.rec_word;
+                    } else {
+                        this.searchWord = '请输入学校名称/作品名称/作者名称';
+                    }
+                },
+                () => {
+                    this.isSearchWord = false;
+                    this.searchWord = '请输入学校名称/作品名称/作者名称';
+                },
+            );
         },
     },
 };
