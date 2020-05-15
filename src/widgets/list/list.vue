@@ -121,7 +121,8 @@
                         <work
                             :info="item"
                             :filter="filter"
-                            :position="{ curposition: index, total: total }"
+                            :curposition="index"
+                            :total="total"
                         />
                     </view>
                 </view>

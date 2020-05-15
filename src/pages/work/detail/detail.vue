@@ -285,6 +285,7 @@ export default {
             if (
                 this.pageData.resource_scope === 3
                 && this.from !== 'openGame'
+                && !this.activity_id
             ) {
                 this.posterConfig.images[0].url = 'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/h5/aitiaozhan-poster2.png';
             }
@@ -472,7 +473,14 @@ export default {
             this.getLikeStatus();
         },
         setGetDetail(res) {
-            this.activity_id = res.activity_id;
+            if (
+                this.apiFrom === '/api/user/worklist'
+                || this.apiFrom === '/api/works/list'
+            ) {
+                this.activity_id = res.activity_id;
+            }
+            this.id = this.activity_id ? res.related_id : res.id;
+
             if (this.from !== 'openGame') {
                 if (this.activity_id > 2) {
                     this.curDetailConf = detailConf[this.activity_id - 1];
@@ -656,9 +664,6 @@ export default {
                         icon: 'none',
                         title: '活动已结束',
                     });
-                    // uni.navigateTo({
-                    //     url: '/pages/upload/default/upload',
-                    // });
                 }
             });
         },
@@ -793,8 +798,7 @@ export default {
                 default:
                     console.log('-');
             }
-
-            this.id = curPageData.id;
+            console.log('-----change00000');
             this.pageData = curPageData;
             this.setGetDetail(curPageData);
             this.getLikeStatus();
@@ -807,16 +811,18 @@ export default {
         },
         getPageSizeInfo(position) {
             // 获取位置参数
-            const pageSize = 10;
-            const pageNum = Math.floor((position + 10) / pageSize);
-            const currentPosition = position - pageSize * (pageNum - 1);
-            console.log(currentPosition, position);
-            return {
-                page_size: pageSize,
-                page_num: pageNum,
-                current_position: currentPosition,
+            // const pageSize = 10;
+            // const pageNum = Math.floor((position + 10) / pageSize);
+            // const currentPosition = position - pageSize * (pageNum - 1);
+
+            const obj = {
+                // page_size: pageSize,
+                // page_num: pageNum,
+                current_position: position,
                 list_type: 2,
             };
+            console.log(obj, position);
+            return obj;
         },
         initOtherSwiperData() {
             const params = this.$store.getters.getWorkParams;
@@ -827,6 +833,9 @@ export default {
             this.apiFrom = from || '/api/works/list';
 
             if (total === 1) {
+                this.disableslide = true;
+            }
+            if (this.isFromShare) {
                 this.disableslide = true;
             }
             // 获取前后两页面的内容。

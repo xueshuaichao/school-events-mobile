@@ -80,7 +80,8 @@
                             },
                             sort: 4
                         }"
-                        :position="{ curposition: index, total: info.length }"
+                        :curposition="index"
+                        :total="info.length"
                     />
                 </view>
             </view>

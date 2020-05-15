@@ -393,7 +393,7 @@ export default {
                 position: {
                     total: this.total,
                     curposition: index,
-                    api: '/api/works/competitionlist',
+                    from: '/api/works/competitionlist',
                 },
                 filter: this.filter,
             });

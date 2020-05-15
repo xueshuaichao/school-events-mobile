@@ -134,6 +134,14 @@ export default {
             type: Object,
             default: () => {},
         },
+        curposition: {
+            type: Number,
+            default: 0,
+        },
+        total: {
+            type: Number,
+            default: 1,
+        },
     },
     data() {
         return {};
@@ -141,10 +149,14 @@ export default {
     methods: {
         goDetail() {
             if (this.info.status === 1) {
+                console.log(this.position);
                 this.info.play_count = this.info.play_count + 1;
                 this.$store.commit('setFilterData', {
                     filter: this.filter,
-                    position: this.position,
+                    position: {
+                        curposition: this.curposition,
+                        total: this.total,
+                    },
                 });
                 uni.navigateTo({
                     url: `/pages/work/detail/detail?id=${this.info.id}&${

@@ -68,7 +68,7 @@
                     class="video"
                     preload
                     :src="pageData.video.cloud_path_sd"
-                    :autoplay="!isH5"
+                    :autoplay="false"
                     :controls="true"
                     :loop="true"
                     :poster="pageData.video_img_url"
@@ -195,7 +195,7 @@
                         class="icon"
                         src="/static/images/yiqing/detail/view.png"
                     />
-                    <view> {{ play_count }} </view>
+                    <view> {{ play_count || 0 }} </view>
                 </view>
             </view>
 
@@ -339,7 +339,7 @@ export default {
             // #ifdef H5
             isH5: true,
             // #endif
-            isAutoPlay: true,
+            canAutoPlay: false,
             isPlayed: false,
             isPaused: false,
             isVideoWaiting: false,
@@ -689,6 +689,7 @@ export default {
     font-size: 24rpx;
     text-align: center;
     z-index: 10;
+    min-width: 100upx;
 
     .icon-wrap {
         //margin-right: 36rpx;
