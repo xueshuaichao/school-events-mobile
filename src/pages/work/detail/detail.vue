@@ -203,15 +203,11 @@ export default {
             shareDesc: '',
             fr: '',
             posterConfig: detailConf[0].posterConfig,
-
             prompt: false,
             canvasImg: '',
-            // canvasImg2: '',
-            showTicketMask: false,
 
-            // pageFrom: '',
+            showTicketMask: false,
             curDetailConf: detailConf[0],
-            // isActvitity: true,
             activity_id: 0,
             imgAuthBtn: false,
             isFromShare: '',
@@ -224,12 +220,6 @@ export default {
             prePageParam: {},
             currentSwiper: 1,
             outSwiperIncrease: true,
-            // levelid: -1,
-            // sort: 1,
-            // actCat: 0,
-            // actSort: '',
-            // search: '',
-            // keyword: '',
             filterObj: {},
             apiFrom: '',
         };
@@ -289,7 +279,11 @@ export default {
             ) {
                 this.posterConfig.images[0].url = 'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/h5/aitiaozhan-poster2.png';
             }
-
+            console.log(
+                this.activity_id,
+                this.pageData.resource_scope,
+                '---handleCanvass',
+            );
             // #ifndef H5
             this.handleTicketMask();
             // #endif
@@ -303,7 +297,9 @@ export default {
             const pages = getCurrentPages(); // 获取加载的页面
             const currentPage = pages[pages.length - 1]; // 获取当前页面的对象
             const url = currentPage.route || 'pages/work/detail/detail';
-            const scene = `id=${this.id}&aid=${this.activity_id}&y=1` || 'id=325';
+            const scene = `id=${this.id}&aid=${this.activity_id}&y=${
+                this.from === 'openGame' ? '2' : '1'
+            }` || 'id=325';
             // const scene = `id=${this.id}`;
             console.log(url, scene, 'url---scene---');
             api.post('/api/weixin/getminiqrcode', {
@@ -361,7 +357,6 @@ export default {
 
         onPosterSuccess(e) {
             const { detail } = e;
-            console.log(1111, e);
             this.canvasImg = detail;
             this.showTicketMask = false;
             this.prompt = true;
@@ -477,9 +472,11 @@ export default {
                 this.apiFrom === '/api/user/worklist'
                 || this.apiFrom === '/api/works/list'
             ) {
-                this.activity_id = res.activity_id;
+                this.activity_id = res.activity_id || 0;
             }
-            this.id = this.activity_id ? res.related_id : res.id;
+            this.id = res.id;
+
+            console.log(this.activity_id, '---setGetDetail----');
 
             if (this.from !== 'openGame') {
                 if (this.activity_id > 2) {
@@ -517,13 +514,6 @@ export default {
             this.pageData.video_img_url = res.video_img_url;
 
             this.initShare(res);
-
-            if (res.resource_type === 2) {
-                // 说明是图片，计算播放量
-                api.post('/api/works/playcount', {
-                    id: res.id,
-                });
-            }
         },
         toggleLike() {
             let url = '/api/common/like';
@@ -544,7 +534,7 @@ export default {
                 () => api.get(url, param).then(
                     () => {
                         this.likeStatus = 1;
-                        this.getData('reget');
+                        // this.getData('reget');
                     },
                     (err) => {
                         if (this.activity_id) {
@@ -583,9 +573,9 @@ export default {
                 this.likeStatus = res.status ? 1 : 0;
             });
         },
-        html5VideoAutoAdjust() {
-            document.querySelector('.uni-video-type-fullscreen').style = '';
-        },
+        // html5VideoAutoAdjust() {
+        //     document.querySelector('.uni-video-type-fullscreen').style = '';
+        // },
         initShare(res) {
             const { titleList } = this.curDetailConf;
             let title = titleList[Math.floor(Math.random() * titleList.length)];
@@ -702,7 +692,19 @@ export default {
             let targetPosition = oldSlideCurPosition;
 
             if (this.outSwiperIncrease) {
-                if (oldSlideCurPosition === this.prePageParam.MaxPosition - 2) {
+                if (this.prePageParam.MaxPosition === 2) {
+                    if (oldSlideCurPosition === 1) {
+                        targetPosition = 1;
+                        newSlideCurPosition = 0;
+                    }
+                    if (oldSlideCurPosition === 0) {
+                        targetPosition = 0;
+                        newSlideCurPosition = 1;
+                    }
+                } else if (
+                    oldSlideCurPosition
+                    === this.prePageParam.MaxPosition - 2
+                ) {
                     newSlideCurPosition += 1;
                     targetPosition = 1;
                 } else if (
@@ -725,6 +727,7 @@ export default {
                 newSlideCurPosition -= 1;
                 targetPosition = oldSlideCurPosition - 2;
             }
+
             console.log(
                 'old',
                 oldSlideCurPosition,
@@ -804,9 +807,14 @@ export default {
             this.getLikeStatus();
         },
         getPageMoreDate(postionObj, filterObj = {}, url) {
+            const obj = filterObj;
+            if (Object.prototype.hasOwnProperty.call(obj, 'page_size')) {
+                delete obj.page_size;
+                delete obj.page_num;
+            }
             return api.post(url, {
+                ...obj,
                 ...postionObj,
-                ...filterObj,
             });
         },
         getPageSizeInfo(position) {
@@ -827,25 +835,23 @@ export default {
         initOtherSwiperData() {
             const params = this.$store.getters.getWorkParams;
             const { position, filter } = params;
-            console.log(position);
+            console.log(position, 'init----data--siwper');
             const { curposition, total, from } = position;
             this.filterObj = filter;
             this.apiFrom = from || '/api/works/list';
 
-            if (total === 1) {
-                this.disableslide = true;
-            }
-            if (this.isFromShare) {
+            if (total < 2 || this.isFromShare) {
                 this.disableslide = true;
             }
             // 获取前后两页面的内容。
-            if (!this.disableslide && total > 1) {
+            if (!this.disableslide) {
                 this.prePageParam.initPosition = curposition;
                 this.prePageParam.slideCurPosition = curposition; // 第一次进来的位置
                 this.prePageParam.MaxPosition = total;
 
                 let toPreTarget = curposition;
                 let toNewTarget = curposition;
+
                 if (curposition === 0) {
                     toPreTarget = total - 1;
                     toNewTarget += 1;
@@ -855,6 +861,16 @@ export default {
                 } else {
                     toPreTarget -= 1;
                     toNewTarget += 1;
+                }
+                if (total === 2) {
+                    if (curposition === 0) {
+                        toPreTarget = 1;
+                        toNewTarget = 1;
+                    }
+                    if (curposition === 1) {
+                        toPreTarget = 0;
+                        toNewTarget = 0;
+                    }
                 }
 
                 const paramPre = this.getPageSizeInfo(toPreTarget);
@@ -901,6 +917,9 @@ export default {
             || Number(utils.getParam(query, 'aid'))
             || 0;
         this.from = utils.getParam(query, 'from') || '';
+        if (this.isFromShare === '2') {
+            this.from = 'openGame';
+        }
 
         console.log(
             this.activity_id,
@@ -925,17 +944,18 @@ export default {
 
         // hack for html5 video size notwoking
         // #ifdef H5
-        window.removeEventListener(
-            'orientationchange',
-            this.html5VideoAutoAdjust,
-        );
-        window.addEventListener('orientationchange', this.html5VideoAutoAdjust);
+        // window.removeEventListener(
+        //     'orientationchange',
+        //     this.html5VideoAutoAdjust,
+        // );
+        // window.addEventListener('orientationchange', this.html5VideoAutoAdjust);
         // #endif
     },
     onHide() {
         // this.isPaused = true;
     },
     onShow() {
+        // 返回列表，刷新作品页，首页的点赞
         uni.setStorageSync('onShowFrom', 'detail');
     },
     onShareAppMessage(res) {
@@ -946,7 +966,7 @@ export default {
         return {
             title: this.shareDesc,
             imageUrl: `${this.pageData.video_img_url}?x-oss-process=image/resize,m_fill,w_250,h_150`,
-            path: `/pages/work/detail/detail?id=${this.id}&activity_id=${this.activity_id}&isFromShare=1`,
+            path: `/pages/work/detail/detail?id=${this.id}&activity_id=${this.activity_id}&isFromShare=1&from=${this.from}`,
         };
     },
 };

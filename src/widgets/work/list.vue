@@ -7,11 +7,16 @@
             <template v-if="tableData.length > 0">
                 <view class="widget-list-box">
                     <view
-                        v-for="item in tableData"
+                        v-for="(item, index) in tableData"
                         :key="item.id"
                         class="work-item"
                     >
-                        <work :info="item" />
+                        <work
+                            :info="item"
+                            :filter="filter"
+                            :curposition="index"
+                            :total="total"
+                        />
                     </view>
                 </view>
                 <uni-load-more :status="loadMoreStatus" />

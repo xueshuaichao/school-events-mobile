@@ -106,64 +106,6 @@
                             />
                         </navigator>
                     </swiper-item>
-                    <!-- <swiper-item v-if="activitiesStatus[1].show">
-                        <navigator
-                            url="/pagesA/chunjie/index"
-                            class="swiper-item"
-                        >
-                            <image
-                                class="banner-image"
-                                src="http://aitiaozhan.oss-cn-beijing.aliyuncs.com/banner4.png"
-                            />
-                        </navigator>
-                    </swiper-item> -->
-                    <!-- 春节好入口 -->
-                    <!-- <swiper-item v-if="activitiesStatus[0].show">
-                        <navigator
-                            url="/pagesA/chunjiehao/index"
-                            class="swiper-item"
-                        >
-                            <image
-                                class="banner-image"
-                                src="http://aitiaozhan.oss-cn-beijing.aliyuncs.com/chunjiehao.png"
-                            />
-                        </navigator>
-                    </swiper-item> -->
-                    <!-- <swiper-item>
-                        <navigator
-                            url="/pages/doc/notice/notice"
-                            class="swiper-item"
-                        >
-                            <image
-                                class="banner-image"
-                                src="http://aitiaozhan.oss-cn-beijing.aliyuncs.com/banner0.jpg"
-                            />
-                        </navigator>
-                    </swiper-item>
-                    <swiper-item>
-                        <view class="swiper-item">
-                            <image
-                                class="banner-image"
-                                src="http://aitiaozhan.oss-cn-beijing.aliyuncs.com/banner1.jpg"
-                            />
-                        </view>
-                    </swiper-item>
-                    <swiper-item>
-                        <view class="swiper-item">
-                            <image
-                                class="banner-image"
-                                src="http://aitiaozhan.oss-cn-beijing.aliyuncs.com/banner2.jpg"
-                            />
-                        </view>
-                    </swiper-item>
-                    <swiper-item>
-                        <view class="swiper-item">
-                            <image
-                                class="banner-image"
-                                src="http://aitiaozhan.oss-cn-beijing.aliyuncs.com/banner3.jpg"
-                            />
-                        </view>
-                    </swiper-item> -->
                 </swiper>
             </view>
         </view>
@@ -242,20 +184,6 @@
                     吉尼斯
                 </text>
             </navigator>
-            <!-- <navigator
-                url="/pages/activities/index"
-                class="item"
-            >
-                <view class="icon-wrap">
-                    <image
-                        class="icon"
-                        src="/static/images/index/0005.png"
-                    />
-                </view>
-                <text class="name">
-                    精彩活动
-                </text>
-            </navigator> -->
         </view>
         <work
             :title="'热门活动'"
@@ -282,40 +210,6 @@
             :info="workData.talent.list"
             :cat-id="3"
         />
-
-        <!-- news -->
-        <!-- <view class="panel">
-            <view class="panel-hd">
-                <text
-                    v-for="(item, k) in newsColumn"
-                    :key="item.id"
-                    class="panel-title"
-                    :class="{ active: newsTabActiveIndex === k }"
-                    @click="setNewsTabActive(k)"
-                >
-                    {{ item.column_name }}
-                </text>
-
-                <view
-                    class="link"
-                    @click="moreArticle"
-                >
-                    更多 >
-                </view>
-            </view>
-            <view class="panel-bd news-list">
-                <navigator
-                    v-for="item in newsData"
-                    :key="item.id"
-                    class="news-item"
-                    :url="`/pages/news/detail/detail?id=${item.id}`"
-                >
-                    <text class="text-two-line">
-                        · {{ item.title }}
-                    </text>
-                </navigator>
-            </view>
-        </view> -->
     </view>
 </template>
 
@@ -336,21 +230,6 @@ export default {
             autoplay: true,
             interval: 5000,
             duration: 500,
-            // isShow: true,
-            // newsTabActiveIndex: 0,
-
-            // menuConf: {
-            //     intro: {},
-            //     notice: {},
-            //     process: {},
-            //     time: {},
-            // },
-            // newsColumn: [
-            //     { id: '1', column_name: '大赛动态', sort_ids: '1,2,3,4,5' },
-            //     { id: '2', column_name: '新闻资讯', sort_ids: '1,2,3,4,5' },
-            //     { id: '3', column_name: '最新公告', sort_ids: '2,2,2,2,2' },
-            // ],
-            // newsData: [],
             workData: {
                 individual: { list: [], total: 0 },
                 team: { list: [], total: 0 },

@@ -84,7 +84,7 @@
         <view class="content">
             <view class="author-info">
                 <image
-                    class="avatar"
+                    class="avatar-top"
                     src="/static/images/work/avatar.png"
                 />
                 <text class="author-name text-one-line">
@@ -177,7 +177,7 @@
                                 : '/static/images/yiqing/detail/like-ac.png'
                         "
                     />
-                    <view> {{ pageData.praise_count }} </view>
+                    <view> {{ praise_count || 0 }} </view>
                 </view>
 
                 <view
@@ -195,7 +195,7 @@
                         class="icon"
                         src="/static/images/yiqing/detail/view.png"
                     />
-                    <view> {{ play_count || 0 }} </view>
+                    <view> {{ play_count || 1 }} </view>
                 </view>
             </view>
 
@@ -238,7 +238,7 @@
                 </text>
             </view>
             <view
-                v-if="isFromShare && activityId > 5"
+                v-if="isFromShare === '1' && activityId > 5"
                 class="join-game-read to-activty-index"
                 :class="[
                     { 'read-index': activityId === 6 },
@@ -271,7 +271,7 @@
             </view>
         </view>
         <view
-            v-if="isVideoWaiting"
+            v-if="isVideoWaiting && pageData.resource_type === 1"
             class="uni-video-cover"
             style="pointer-events: none;color: #fff"
         >
@@ -343,10 +343,12 @@ export default {
             isPlayed: false,
             isPaused: false,
             isVideoWaiting: false,
-            play_count: 0,
+            play_count: 1,
             showMore: false,
             introduce: this.pageData.introduce || '',
             catName: this.pageData.cat_name,
+            praise_count: this.pageData.praise_count || 0,
+            toggleLikeObj: {},
         };
     },
     watch: {
@@ -383,13 +385,26 @@ export default {
                 this.setPlayCount();
             }
         },
+        likeStatus(newVal, oldVal) {
+            if (newVal && !oldVal && !this.toggleLikeObj[this.pageData.id]) {
+                this.praise_count += 1;
+                this.toggleLikeObj[this.pageData.id] = 1;
+            }
+        },
+        pageData(val) {
+            if (val) {
+                this.praise_count = this.pageData.praise_count || 0;
+                this.introduce = this.pageData.introduce || '';
+                this.catName = this.pageData.cat_name || '';
+                this.play_count = this.pageData.play_count;
+            }
+        },
     },
     created() {
         this.play_count = this.pageData.play_count;
         if (this.pageData.resource_type === 2) {
             this.play_count += 1;
         }
-        console.log(this.pageData);
     },
     mounted() {
         this.videoContext = uni.createVideoContext(
@@ -399,17 +414,25 @@ export default {
         if (!this.isH5 && this.swiperPage === 1) {
             this.videoContext.play();
         }
+        // hack for html5 video size notwoking
+        // #ifdef H5
+        window.removeEventListener(
+            'orientationchange',
+            this.html5VideoAutoAdjust,
+        );
+        window.addEventListener('orientationchange', this.html5VideoAutoAdjust);
+        // #endif
     },
     methods: {
+        html5VideoAutoAdjust() {
+            document.querySelector('.uni-video-type-fullscreen').style = '';
+        },
         setPlayCount() {
             api.post('/api/works/playcount', {
                 id: this.pageData.id,
             }).then(() => {
                 this.play_count += 1;
             });
-        },
-        panelAction(action) {
-            this.$emit('doAction', action);
         },
         handleCanvass() {
             this.$emit('doAction', 'handleCanvass');
@@ -600,18 +623,26 @@ export default {
     // pointer-events: none;
     z-index: 10;
     text-shadow: 0 2upx 2upx rgba(0, 0, 0, 0.35);
-    .avatar {
+    .file {
         display: inline-block;
-        width: 32rpx;
         height: 34rpx;
         margin-right: 12upx;
-        &.file {
-            width: 34rpx;
-            vertical-align: middle;
-        }
+        width: 34rpx;
+        vertical-align: middle;
     }
 
     .author-info {
+        padding-left: 44rpx;
+        position: relative;
+        height: 34rpx;
+        .avatar-top {
+            position: absolute;
+            left: 0;
+            top: 50%;
+            width: 32rpx;
+            height: 34rpx;
+            margin-top: -17rpx;
+        }
         .author-name {
             color: #fff;
             font-size: 34upx;
