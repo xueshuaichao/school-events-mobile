@@ -54,6 +54,7 @@
             v-if="showMenu"
             class="dropdown-wrap clearfix"
             @click.prevent="cancel"
+            @touchmove.stop.prevent="moveHandle"
         >
             <view
                 class="dropdown"
@@ -118,7 +119,7 @@
                         </view>
                     </view>
                     <scroll-view
-                        scroll-y="true"
+                        scroll-y
                         :style="{ height: '780rpx' }"
                         class="fl-l"
                     >
@@ -329,7 +330,8 @@ export default {
             this.filterLabel.city_label = this.filterLabel.old_city_label;
             console.log(this.filterLabel, "cancel-----");
             this.showMenu = false;
-        }
+        },
+        moveHandle() {}
     },
     onLoad(query) {
         const { type } = query;
