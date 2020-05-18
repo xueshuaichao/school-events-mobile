@@ -361,6 +361,8 @@ export default {
                     );
                     if (b) {
                         b.pause();
+                        this.isPaused = true;
+                        this.isPlayed = true;
                     }
                 } else {
                     this.videoContext.stop();
@@ -376,6 +378,8 @@ export default {
                     );
                     if (b) {
                         b.pause();
+                        this.isPaused = true;
+                        this.isPlayed = true;
                     }
                 } else {
                     this.videoContext.play();
