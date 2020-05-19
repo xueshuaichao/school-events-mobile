@@ -711,8 +711,8 @@ export default {
                     oldSlideCurPosition
                     === this.prePageParam.MaxPosition - 1
                 ) {
-                    newSlideCurPosition = 1;
-                    targetPosition = 2;
+                    newSlideCurPosition = 0;
+                    targetPosition = 1;
                 } else {
                     newSlideCurPosition += 1;
                     targetPosition = oldSlideCurPosition + 2;
@@ -856,7 +856,7 @@ export default {
                     toPreTarget = total - 1;
                     toNewTarget += 1;
                 } else if (curposition + 1 === total) {
-                    toNewTarget = 1;
+                    toNewTarget = 0;
                     toPreTarget -= 1;
                 } else {
                     toPreTarget -= 1;
