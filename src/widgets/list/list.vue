@@ -377,9 +377,9 @@ export default {
                     this.filter.keyword = this.searchWord;
                 }
                 if (this.filter.keyword === this.searchWord) {
-                    this.filter.fr = 1;
+                    this.filter.show_type = 1;
                 } else {
-                    this.filter.fr = '';
+                    this.filter.show_type = '';
                 }
             }
             return this.getTableData();
@@ -406,6 +406,7 @@ export default {
                         this.isSearchWord = true;
                         this.searchWord = res.rec_word;
                     } else {
+                        this.isSearchWord = false;
                         this.searchWord = '请输入学校名称/作品名称/作者名称';
                     }
                 },
