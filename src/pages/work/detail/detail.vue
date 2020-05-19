@@ -706,7 +706,7 @@ export default {
                     === this.prePageParam.MaxPosition - 2
                 ) {
                     newSlideCurPosition += 1;
-                    targetPosition = 1;
+                    targetPosition = 0;
                 } else if (
                     oldSlideCurPosition
                     === this.prePageParam.MaxPosition - 1
