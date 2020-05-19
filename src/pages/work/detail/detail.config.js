@@ -436,6 +436,59 @@ const detailConf = [
             ['争当劳动之星，就差你的赞了，快来！'],
         ],
     },
+    {
+        posterConfig: {
+            width: 540,
+            height: 782,
+            debug: false,
+            texts: [
+                {
+                    x: 60,
+                    y: 583,
+                    text: [
+                        {
+                            text: '',
+                            fontSize: 28,
+                            color: '#333',
+                            opacity: 1,
+                            marginRight: 10,
+                            lineHeight: 40,
+                            lineNum: 1,
+                            width: 1210,
+                            textOverflow: 'ellipsis',
+                        },
+                    ],
+                    baseLine: 'middle',
+                },
+            ],
+            images: [
+                {
+                    url:
+                        'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/h5/liuyi-poster.png',
+                    width: 540,
+                    height: 782,
+                    y: 0,
+                    x: 0,
+                },
+                {
+                    url: '',
+                    width: 469,
+                    height: 315,
+                    y: 233,
+                    x: 50,
+                },
+                {
+                    url: '',
+                    width: 130,
+                    height: 130,
+                    y: 616,
+                    x: 374,
+                    borderRadius: 10,
+                },
+            ],
+        },
+        titleList: [['欢乐六一']],
+    },
 ];
 
 export default detailConf;
