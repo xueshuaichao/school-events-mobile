@@ -68,7 +68,10 @@
                     v-if="showMenuType === 1"
                     class="rows"
                 >
-                    <view class="cols-box">
+                    <scroll-view
+                        scroll-y
+                        class="cols-box"
+                    >
                         <view
                             v-for="item in projectList"
                             :key="item.cat_id"
@@ -78,7 +81,7 @@
                         >
                             {{ item.cat_name }}
                         </view>
-                    </view>
+                    </scroll-view>
                 </view>
                 <view
                     v-if="showMenuType === 2"

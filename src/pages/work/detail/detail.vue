@@ -835,7 +835,7 @@ export default {
         initOtherSwiperData() {
             const params = this.$store.getters.getWorkParams;
             const { position, filter } = params;
-            console.log(position, 'init----data--siwper');
+
             const { curposition, total, from } = position;
             this.filterObj = filter;
             this.apiFrom = from || '/api/works/list';
@@ -843,6 +843,7 @@ export default {
             if (total < 2 || this.isFromShare) {
                 this.disableslide = true;
             }
+            console.log(position, this.disableslide, 'init----data--siwper');
             // 获取前后两页面的内容。
             if (!this.disableslide) {
                 this.prePageParam.initPosition = curposition;

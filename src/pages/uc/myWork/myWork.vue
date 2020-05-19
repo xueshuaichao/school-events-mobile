@@ -41,8 +41,8 @@
                         :info="item"
                         :mode="'single'"
                         :show-class="false"
-                        :filter="filter"
-                        :total="total"
+                        :from="'/api/user/worklist'"
+                        @click.native="toDetail(item, index)"
                     />
                     <view class="btns">
                         <button
@@ -135,17 +135,19 @@ export default {
             );
         },
         toDetail(item, index) {
-            this.$store.commit('setFilterData', {
-                position: {
-                    total: this.total,
-                    curposition: index,
-                    from: '/api/user/worklist',
-                },
-                filter: this.filter,
-            });
-            uni.navigateTo({
-                url: `/pages/work/detail/detail?id=${item.id}&activity_id=${item.activity_id}`,
-            });
+            if (this.filter.status === 1) {
+                this.$store.commit('setFilterData', {
+                    position: {
+                        total: this.total,
+                        curposition: index,
+                        from: '/api/user/worklist',
+                    },
+                    filter: this.filter,
+                });
+                uni.navigateTo({
+                    url: `/pages/work/detail/detail?id=${item.id}&activity_id=${item.activity_id}`,
+                });
+            }
         },
         showCause({ memo }) {
             uni.showModal({

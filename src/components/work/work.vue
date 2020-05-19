@@ -130,10 +130,6 @@ export default {
             type: Object,
             default: () => {},
         },
-        position: {
-            type: Object,
-            default: () => {},
-        },
         curposition: {
             type: Number,
             default: 0,
@@ -142,6 +138,10 @@ export default {
             type: Number,
             default: 1,
         },
+        from: {
+            type: String,
+            default: '',
+        },
     },
     data() {
         return {};
@@ -149,13 +149,13 @@ export default {
     methods: {
         goDetail() {
             if (this.info.status === 1) {
-                console.log(this.position);
                 this.info.play_count = this.info.play_count + 1;
                 this.$store.commit('setFilterData', {
                     filter: this.filter,
                     position: {
                         curposition: this.curposition,
                         total: this.total,
+                        from: this.from,
                     },
                 });
                 uni.navigateTo({
