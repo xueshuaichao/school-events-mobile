@@ -171,6 +171,10 @@ export default {
             type: Boolean,
             default: true,
         },
+        canRefresh: {
+            type: Boolean,
+            default: false,
+        },
     },
 
     data() {
@@ -250,6 +254,12 @@ export default {
                 // error
                 uni.setStorageSync('onShowFrom', '');
             }
+        },
+        canRefresh() {
+            uni.stopPullDownRefresh();
+            this.getData();
+            this.getTableData();
+            this.getSearchWord();
         },
     },
     created() {

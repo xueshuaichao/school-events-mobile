@@ -41,6 +41,8 @@
                         :info="item"
                         :mode="'single'"
                         :show-class="false"
+                        :filter="filter"
+                        :total="total"
                     />
                     <view class="btns">
                         <button

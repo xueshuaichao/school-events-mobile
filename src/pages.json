@@ -23,7 +23,8 @@
         {
             "path": "pages/tabBar/list/list",
             "style": {
-                "navigationBarTitleText": "作品"
+                "navigationBarTitleText": "作品",
+                "enablePullDownRefresh": true
             }
         },
         {

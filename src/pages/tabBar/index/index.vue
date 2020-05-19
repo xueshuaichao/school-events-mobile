@@ -479,6 +479,7 @@ export default {
     },
     onPullDownRefresh() {
         this.getData('refresh');
+        this.getSearchWord();
     },
 };
 </script>
