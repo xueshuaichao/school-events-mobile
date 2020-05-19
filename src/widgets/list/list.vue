@@ -233,7 +233,7 @@ export default {
                 this.filter.cat_id.one_level_id = Number(val.cat_id.one_level_id) || -1;
                 this.filter.keyword = val.keyword;
                 this.filter.sort = Number(val.sort) || 1;
-                this.filter.show_type = val.show_type;
+                this.filter.show_type = val.show_type || '';
                 this.getData();
                 this.getTableData();
             }
