@@ -1,6 +1,6 @@
 <template>
     <view
-        :class="`activity-page-index ${className}`"
+        :class="['activity-page-index', className]"
         :style="{ 'background-color': publicConfig.mainBgColor }"
     >
         <official-account v-if="!isH5" />
@@ -11,16 +11,20 @@
             ]"
         >
             <!-- 活动规则 -->
-            <rule
+
+            <maskBox
                 v-if="prompt"
                 :rules="indexConfig.rules"
+                type="rule"
                 :theme="{
-                    bgColor: publicConfig.primaryBgColor,
+                    bgColor:
+                        indexConfig.maskBgColor || publicConfig.primaryBgColor,
                     titleColor: publicConfig.titleColor
                 }"
                 :name="publicConfig.activityName"
                 @close="handleClose"
             />
+
             <!-- 奖品说明 -->
             <prize-desc
                 v-if="prizePrompt"
@@ -247,7 +251,7 @@
 
 <script>
 import api from '../../../common/api';
-import rule from './rule.vue';
+import maskBox from './mask.vue';
 import prizeDesc from './prize-desc.vue';
 import prize from './prize.vue';
 import tipsList from './tips-list.vue';
@@ -266,7 +270,7 @@ export default {
     },
     components: {
         uniLoadMore,
-        rule,
+        maskBox,
         prizeDesc,
         prize,
         tipsList,
@@ -969,68 +973,5 @@ body.dialog-open {
     width: 100%;
     height: 100%;
     overflow: hidden;
-}
-.children-index {
-    .main-content {
-        padding: 0 30upx;
-    }
-    .page-index .menu-list {
-        box-sizing: border-box;
-        padding-top: 77upx;
-        background-color: #fff;
-        border-radius: 50upx;
-        margin-bottom: 120upx;
-        padding-bottom: 100upx;
-        box-shadow: inset 0 0px 24upx 0px rgba(182, 146, 255, 1);
-        position: relative;
-        .cansai-text {
-            position: absolute;
-            top: -140upx;
-            left: 50%;
-            transform: translateX(-50%);
-            border-radius: 48upx;
-            background-color: #ff78a5;
-            box-shadow: inset 0px 0px 24px 0px rgba(255, 255, 255, 1);
-            position: relative;
-            display: inline-block;
-            text-indent: -9999px;
-            width: 230upx;
-            height: 74upx;
-            &::before {
-                content: "";
-                position: absolute;
-                left: 13upx;
-                top: 12upx;
-                width: 25upx;
-                height: 27upx;
-                background-image: url(https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/children_bt_b.png);
-                background-size: 100% 100%;
-            }
-            &::after {
-                content: "活动作品";
-                position: absolute;
-                left: 50%;
-                top: 50%;
-                transform: translate(-50%, -50%);
-                text-indent: 0;
-                width: 100%;
-                color: #fff;
-            }
-        }
-    }
-
-    .media-box .media-content {
-        width: 305upx !important;
-    }
-    .event-craft-cover .video {
-        width: 305upx;
-        height: 172upx;
-    }
-    .page-section-spacing {
-        height: 60upx !important;
-        line-height: 60upx !important;
-        box-shadow: 0px 0px 11px 0px rgba(255, 255, 255, 1);
-        border-radius: 48upx;
-    }
 }
 </style>

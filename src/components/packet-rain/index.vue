@@ -70,10 +70,25 @@ export default {
             type: Array,
             default() {
                 return [
-                    'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/labor_prize1.png',
-                    'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/labor_prize2.png',
-                    'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/labor_prize3.png',
-                    'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/read_prize3.png',
+                    'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/candy1.png',
+                    'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/candy2.png',
+                    'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/candy3.png',
+                    'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/candy4.png',
+                    'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/candy5.png',
+                    'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/candy6.png',
+                    'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/candy7.png',
+                    'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/candy8.png',
+                    'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/candy9.png',
+                    'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/candy10.png',
+                    'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/candy11.png',
+                    'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/candy12.png',
+                    'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/candy13.png',
+                    'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/candy14.png',
+                    'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/candy15.png',
+                    'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/candy16.png',
+                    'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/candy17.png',
+                    'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/candy18.png',
+                    'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/candy19.png',
                 ];
             },
         },
@@ -87,7 +102,7 @@ export default {
             type: Object,
             default() {
                 return {
-                    max: 3500,
+                    max: 3000,
                     min: 2000,
                 };
             },

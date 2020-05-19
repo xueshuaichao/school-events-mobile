@@ -1,6 +1,6 @@
 <template>
     <div class="activity-init-page">
-        <packetRain
+        <!-- <packetRain
             :time="20000"
             :speed="{
                 max: 3500,
@@ -8,7 +8,7 @@
             }"
             :hide-index="hideIndex"
             @handelClick="handelClick"
-        />
+        /> -->
         <indexPage
             v-if="loading"
             :index-config="indexConfig"
@@ -37,7 +37,10 @@
                             </view>
                         </view>
                         <view
-                            :class="`prize-list-item prize-list-item-${list}`"
+                            :class="[
+                                'prize-list-item',
+                                `prize-list-item-${list}`
+                            ]"
                         >
                             <view
                                 v-for="(item, k) in prize.item"
@@ -81,11 +84,22 @@
             </template>
             <template v-slot:rank />
         </indexPage>
+        <maskBox
+            v-if="prompt && publicConfig.activityId === 9"
+            :rules="indexConfig.rules"
+            type="rule"
+            :theme="{
+                bgColor: indexConfig.maskBgColor || publicConfig.primaryBgColor,
+                titleColor: publicConfig.titleColor
+            }"
+            :name="publicConfig.activityName"
+            @close="handleClose"
+        />
     </div>
 </template>
 
 <script>
-import packetRain from '../../../components/packet-rain/index.vue';
+// import packetRain from '../../../components/packet-rain/index.vue';
 import indexPage from '../common/index.vue';
 import share from '../../../common/share';
 import logger from '../../../common/logger';
@@ -94,7 +108,7 @@ import logger from '../../../common/logger';
 export default {
     components: {
         indexPage,
-        packetRain,
+        // packetRain,
     },
     filters: {
         changeNum(value) {
@@ -113,6 +127,7 @@ export default {
             fr: '',
             activityId: '',
             hideIndex: -1,
+            title: '',
         };
     },
     onLoad(params) {
@@ -120,10 +135,17 @@ export default {
         this.publicConfig = this.$store.getters.getPublicConfig(
             this.activityId,
         );
-        this.indexConfig = this.$store.getters.getActivityConfig({
-            activityId: this.activityId,
-            page: 'indexConfig',
-        });
+        this.indexConfig = {
+            ...this.$store.getters.getActivityConfig({
+                activityId: this.activityId,
+                page: 'indexConfig',
+            }),
+            ...this.$store.getters.getColorConfig({
+                activityId: this.activityId,
+                page: 'indexColorConfig',
+            }),
+        };
+        console.log(this.indexConfig);
         this.fr = logger.getFr(this.publicConfig.log, params);
         this.loading = true;
     },
@@ -163,8 +185,11 @@ export default {
         prizeList(type) {
             if (type === 1) {
                 console.log(1);
+                this.title = '奖品设置说明';
+                this.type = 'prize';
             } else {
-                console.log(2);
+                this.title = '幸运榜单';
+                this.type = 'lucky';
             }
         },
         getPrizeNum() {},
@@ -186,13 +211,99 @@ export default {
 
 <style lang="less">
 .activity-init-page {
+    .children-index {
+        background-color: #f00;
+        .main-content {
+            padding: 0 30upx;
+        }
+        .page-index .menu-list {
+            box-sizing: border-box;
+            padding-top: 77upx;
+            background-color: #fff;
+            border-radius: 50upx;
+            margin-bottom: 120upx;
+            padding-bottom: 100upx;
+            box-shadow: inset 0 0px 24upx 0px rgba(182, 146, 255, 1);
+            position: relative;
+            &::before {
+                content: "";
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 142upx;
+                height: 75upx;
+                background-image: url(https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/children_flag1.png);
+                background-size: 100% 100%;
+            }
+            .cansai-text {
+                position: absolute;
+                top: -66upx;
+                left: 50%;
+                transform: translateX(-50%);
+                border-radius: 48upx;
+                background-color: #ff78a5;
+                box-shadow: inset 0px 0px 24px 0px rgba(255, 255, 255, 1);
+                display: inline-block;
+                text-indent: -9999px;
+                width: 230upx;
+                height: 74upx;
+                &::before {
+                    content: "";
+                    position: absolute;
+                    left: 13upx;
+                    top: 12upx;
+                    width: 25upx;
+                    height: 27upx;
+                    background-image: url(https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/children_bt_b.png);
+                    background-size: 100% 100%;
+                }
+                &::after {
+                    content: "活动作品";
+                    position: absolute;
+                    left: 50%;
+                    top: 50%;
+                    transform: translate(-50%, -50%);
+                    text-indent: 0;
+                    width: 100%;
+                    color: #fff;
+                }
+            }
+        }
+        .page-index .menu-list .search-box button {
+            width: 96upx;
+            height: 70upx;
+            border: 1upx solid #bb77ff;
+            box-sizing: border-box;
+            font-size: 26upx;
+            &:first-of-type {
+                margin-right: 12upx;
+            }
+        }
+        .page-index .menu-list .search-box .search {
+            width: 412upx;
+        }
+        .media-box .media-content {
+            width: 305upx !important;
+        }
+        .event-craft-cover .video {
+            width: 305upx;
+            height: 172upx;
+        }
+        .page-section-spacing {
+            height: 60upx !important;
+            line-height: 60upx !important;
+            box-shadow: 0px 0px 11px 0px rgba(255, 255, 255, 1);
+            border-radius: 48upx;
+            margin-bottom: 50upx;
+        }
+    }
     .children-btn {
         padding: 0 40upx;
         line-height: 74upx;
         color: #fff;
         border-radius: 48upx;
         background-color: #ff78a5;
-        box-shadow: inset 0px 0px 24px 0px rgba(255, 255, 255, 1);
+        box-shadow: inset 0px 0px 24upx 0px rgba(255, 255, 255, 1);
         position: relative;
         font-size: 32upx;
         &::before {

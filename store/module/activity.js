@@ -139,14 +139,14 @@ export default {
                     catMenu: [], // 分组
                     mainBgColor: '#EBE1FF',
                     activityName: 'children',
-                    activityId: 8,
+                    activityId: 9,
                     catId: 20, // 所属分类
                     time: '4月27日--5月31日',
                     primaryColor: '#BB77FF', // 主色调
                     darkPrimaryColor: '#C790FF', // 深一些 （按钮的颜色）
                     primaryBgColor: '#DCC0FF', // 主要的背景颜色 （图片背景）
                     infoColor: '#333333', // 浅一些
-                    titleColor: '#FFE179', // 规则的title
+                    titleColor: '#666', // 规则的title
                     placeholderColor: 'rgba(255,255,255,.6)',
                     homePath: '/pages/activity-pages/labor/index',
                     shareConfig: {
@@ -275,13 +275,18 @@ export default {
                     descMaxLength: 150,
                 },
                 myWorkColorConfig: {},
-                indexColorConfig: {},
+                indexColorConfig: {
+                    maskBgColor: '#fff',
+                },
                 uploadColorConfig: {
                     mainBgColor: '#fff',
-                    primaryColor: '#BB77FF', // 主色调
-                    darkPrimaryColor: '#C790FF', // 深一些 （按钮的颜色）
-                    primaryBgColor: '#DCC0FF', // 主要的背景颜色 （图片背景）
-                    infoColor: '#333333', // 浅一些
+                    primaryColor: '#C790FF', // 主色调
+                    tipsColor: '#999', // 提示文字
+                    titleColor: '#333',
+                    placeholderColor: '#999',
+                    inputBgColor: '#fff',
+                    inputColor: '#333',
+                    inputBorderColor: '#C790FF',
                 },
             },
         ],
@@ -292,8 +297,9 @@ export default {
         getPublicConfig: state => activityId => state.activities.filter(v => v.activityId === Number(activityId))[0]
             .publicConfig,
         // eslint-disable-next-line max-len
-        getUploadColorConfig: state => activityId => state.activities.filter(v => v.activityId === Number(activityId))[0]
-            .uploadColorConfig,
+        getColorConfig: state => ({ activityId, page }) => state.activities.filter(
+            v => v.activityId === Number(activityId),
+        )[0][page],
         // 获取各个页面配置 包括：活动页、我的作品、上传页、上传结果页
         // eslint-disable-next-line max-len
         getActivityConfig: state => ({ activityId, page }) => state.activities.filter(

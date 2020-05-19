@@ -14,7 +14,10 @@
             >
                 <view
                     class="label"
-                    :style="{ color: publicConfig.primaryColor }"
+                    :style="{
+                        color:
+                            publicConfig.titleColor || publicConfig.primaryColor
+                    }"
                 >
                     选择组别
                 </view>
@@ -47,7 +50,10 @@
             >
                 <view
                     class="label"
-                    :style="{ color: publicConfig.primaryColor }"
+                    :style="{
+                        color:
+                            publicConfig.titleColor || publicConfig.primaryColor
+                    }"
                 >
                     表现形式
                 </view>
@@ -84,7 +90,14 @@
                         `color:${publicConfig.placeholderColor}`
                     "
                     :maxlength="uploadConfig.nameMaxLength"
-                    :style="{ background: publicConfig.primaryBgColor }"
+                    :style="{
+                        background:
+                            publicConfig.inputBgColor ||
+                            publicConfig.primaryBgColor,
+                        'border-color':
+                            publicConfig.inputBorderColor || 'transparent',
+                        color: publicConfig.inputColor || '#fff'
+                    }"
                     :placeholder="uploadConfig.placeholderNameText"
                 >
             </view>
@@ -94,7 +107,14 @@
                 class="uni-textarea"
                 placeholder-class="placeholder"
                 :placeholder-style="`color:${publicConfig.placeholderColor}`"
-                :style="{ background: publicConfig.primaryBgColor }"
+                :style="{
+                    background:
+                        publicConfig.inputBgColor ||
+                        publicConfig.primaryBgColor,
+                    'border-color':
+                        publicConfig.inputBorderColor || 'transparent',
+                    color: publicConfig.inputColor
+                }"
                 :maxlength="uploadConfig.descMaxLength"
                 :placeholder="uploadConfig.placeholderDescText"
             />
@@ -260,14 +280,12 @@ export default {
             uni.setNavigationBarTitle({ title: '编辑作品' });
             this.getItemData();
         }
-        const uploadColorConfig = this.$store.getters.getUploadColorConfig(
-            this.formData.activity_id,
-        );
-        this.publicConfig = this.$store.getters.getPublicConfig(
-            this.formData.activity_id,
-        );
+        const uploadColorConfig = this.$store.getters.getColorConfig({
+            activityId: this.formData.activity_id,
+            page: 'uploadColorConfig',
+        });
         this.publicConfig = {
-            ...this.publicConfig,
+            ...this.$store.getters.getPublicConfig(this.formData.activity_id),
             ...uploadColorConfig,
         };
         this.uploadConfig = this.$store.getters.getActivityConfig({
@@ -280,6 +298,8 @@ export default {
         this.formData.resource_type = this.uploadMode === 'video' ? 1 : 2;
         this.theme = {
             primaryColor: this.publicConfig.primaryColor,
+            textColor: this.publicConfig.titleColor,
+            tipsColor: this.publicConfig.tipsColor,
             bgColor: this.publicConfig.primaryBgColor,
         };
     },
@@ -565,15 +585,17 @@ export default {
     .bt-sep {
         margin-top: 40rpx;
     }
-
     .uni-input,
     .uni-textarea {
-        // border: 1upx solid #ccc;
+        border: 1upx solid transparent;
         margin-bottom: 40rpx;
         font-size: 28rpx;
         background: #0f8c64;
-        border-radius: 12rpx;
+        border-radius: 24upx;
         color: #fff;
+    }
+    .uni-input {
+        border-radius: 40upx;
     }
 
     /deep/ .comp-upload {
@@ -582,6 +604,7 @@ export default {
 
         .cover-wrap {
             background: #0f8c64;
+            border-radius: 12upx;
 
             .icon-desc {
                 color: #0f8c64;
@@ -657,7 +680,7 @@ export default {
 
         .select-item {
             // width: 110rpx;
-            padding: 0 44rpx;
+            padding: 0 57rpx;
             height: 56rpx;
             line-height: 56rpx;
             border: 1px solid #0f8c64;
