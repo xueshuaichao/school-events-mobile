@@ -1,8 +1,5 @@
 <template>
-    <view
-        class="swiper-detail-box"
-        @click="clickWrap"
-    >
+    <view class="swiper-detail-box">
         <view
             v-show="isFullScreen && isH5"
             class="h5-full-screen-title text-one-line"
@@ -467,11 +464,6 @@ export default {
         },
         showMessage() {
             this.$emit('doAction', 'showMessage');
-        },
-        clickWrap() {
-            if (this.showDrawer) {
-                this.$emit('doAction', 'showMessage');
-            }
         },
         onPause() {
             this.isPaused = true;
