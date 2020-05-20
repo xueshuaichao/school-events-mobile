@@ -168,14 +168,14 @@
                         </view>
                         <view class="media-box">
                             <view
-                                v-for="item in dataList"
+                                v-for="(item, index) in dataList"
                                 :key="item.id"
                                 class="media-content"
                             >
                                 <event-craft-cover
                                     :info="item"
                                     :bg-color="publicConfig.primaryBgColor"
-                                    @click.native="viewDetail(item)"
+                                    @click.native="viewDetail(item, index)"
                                 />
 
                                 <view
@@ -459,7 +459,15 @@ export default {
                 }`,
             });
         },
-        viewDetail({ id }) {
+        viewDetail({ id }, index) {
+            this.$store.commit('setFilterData', {
+                position: {
+                    total: this.total,
+                    curposition: index,
+                    from: '/api/activity/resourcelist',
+                },
+                filter: this.filter,
+            });
             uni.navigateTo({
                 url: `/pages/work/detail/detail?id=${id}&activity_id=${this.filter.activity_id}`,
             });

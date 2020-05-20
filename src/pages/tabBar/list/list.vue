@@ -6,6 +6,7 @@
             :has-page-params="hasPageParams"
             :is-show="isShow"
             :is-from-tabbar="true"
+            :can-refresh="canRefresh"
             @changeBottom="changeBottom"
         />
     </view>
@@ -28,11 +29,11 @@ export default {
             filter: {
                 keyword: '',
                 sort: 1,
-
                 cat_id: {
                     one_level_id: -1,
                 },
             },
+            canRefresh: false,
         };
     },
     created() {},
@@ -47,6 +48,9 @@ export default {
 
     onShow() {
         this.isShow = !this.isShow;
+    },
+    onPullDownRefresh() {
+        this.canRefresh = !this.canRefresh;
     },
 };
 </script>

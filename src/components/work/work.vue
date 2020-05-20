@@ -126,6 +126,22 @@ export default {
             type: String,
             default: '',
         },
+        filter: {
+            type: Object,
+            default: () => {},
+        },
+        curposition: {
+            type: Number,
+            default: 0,
+        },
+        total: {
+            type: Number,
+            default: 1,
+        },
+        from: {
+            type: String,
+            default: '',
+        },
     },
     data() {
         return {};
@@ -134,11 +150,18 @@ export default {
         goDetail() {
             if (this.info.status === 1) {
                 this.info.play_count = this.info.play_count + 1;
+                this.$store.commit('setFilterData', {
+                    filter: this.filter,
+                    position: {
+                        curposition: this.curposition,
+                        total: this.total,
+                        from: this.from,
+                    },
+                });
                 uni.navigateTo({
                     url: `/pages/work/detail/detail?id=${this.info.id}&${
                         this.query
-                    }&activity_id=${this.info.activity_id
-                        || ''}&resource_scope=${this.info.resource_scope}`,
+                    }&activity_id=${this.info.activity_id || ''}`,
                 });
             }
         },

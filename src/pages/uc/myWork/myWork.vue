@@ -33,7 +33,7 @@
         <view class="work-list">
             <template v-if="tableData.length">
                 <view
-                    v-for="item in tableData"
+                    v-for="(item, index) in tableData"
                     :key="item.id"
                     class="work-item"
                 >
@@ -41,12 +41,14 @@
                         :info="item"
                         :mode="'single'"
                         :show-class="false"
+                        :from="'/api/user/worklist'"
+                        @click.native="toDetail(item, index)"
                     />
                     <view class="btns">
                         <button
                             v-if="item.status === 1"
                             class="btn"
-                            @click="toDetail(item)"
+                            @click="toDetail(item, index)"
                         >
                             查看
                         </button>
@@ -132,10 +134,20 @@ export default {
                 () => {},
             );
         },
-        toDetail(item) {
-            uni.navigateTo({
-                url: `/pages/work/detail/detail?id=${item.id}&activity_id=${item.activity_id}&resource_scope=${item.resource_scope}`,
-            });
+        toDetail(item, index) {
+            if (this.filter.status === 1) {
+                this.$store.commit('setFilterData', {
+                    position: {
+                        total: this.total,
+                        curposition: index,
+                        from: '/api/user/worklist',
+                    },
+                    filter: this.filter,
+                });
+                uni.navigateTo({
+                    url: `/pages/work/detail/detail?id=${item.id}&activity_id=${item.activity_id}`,
+                });
+            }
         },
         showCause({ memo }) {
             uni.showModal({
@@ -263,7 +275,7 @@ export default {
                 return {
                     title: item.resource_name,
                     imageUrl: item.video_img_url,
-                    path: `/pages/work/detail/detail?id=${item.id}&activity_id=${item.activity_id}&resource_scope=${item.resource_scope}`,
+                    path: `/pages/work/detail/detail?id=${item.id}&activity_id=${item.activity_id}`,
                 };
             }
             return false;

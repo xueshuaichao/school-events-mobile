@@ -1,40 +1,39 @@
 <template>
-    <view class="page-work-box-list">
+    <!-- 标签列表 -->
+    <view v-if="loading">
         <list
             :is-reach-btm="isReachBtm"
             :params-filter="filter"
-            :has-page-params="hasPageParams"
             :is-show="isShow"
-            :is-from-tabbar="false"
+            :is-from-tabbar="true"
             @changeBottom="changeBottom"
         />
     </view>
 </template>
-
 <script>
-import list from '../../../widgets/list/list.vue';
+import list from '../../../widgets/work/list.vue';
 
 export default {
     components: {
         list,
     },
-
     data() {
         return {
+            loading: false,
             isReachBtm: false,
-            hasPageParams: false,
+            isShow: false,
             filter: {
-                keyword: '',
-                sort: 1,
                 cat_id: {
                     one_level_id: 0,
+                    two_level_id: 0,
+                    three_level_id: 0,
+                    four_level_id: 0,
                 },
-                from: '/list/list',
+                page_size: 10,
+                page_num: 1,
             },
-            isShow: false,
         };
     },
-    created() {},
     methods: {
         changeBottom() {
             this.isReachBtm = !this.isReachBtm;
@@ -44,17 +43,12 @@ export default {
         this.isReachBtm = !this.isReachBtm;
     },
     onLoad(params) {
-        const id = params.cat_id || -1;
-        this.filter.keyword = params.keyword || '';
-        this.filter.cat_id.one_level_id = id;
-        this.filter.show_type = params.show_type;
-        const title = '作品展示';
-        this.hasPageParams = true;
-        uni.setNavigationBarTitle({
-            title,
-        });
-    },
-    onShow() {
+        const catId = params.cat_id.split(',');
+        const catName = params.cat_name || '列表';
+        this.$set(this.filter.cat_id, 'one_level_id', catId[0]);
+        this.$set(this.filter.cat_id, 'four_level_id', catId[1]);
+        uni.setNavigationBarTitle({ title: catName });
+        this.loading = true;
         this.isShow = !this.isShow;
     },
 };

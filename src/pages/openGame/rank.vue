@@ -54,6 +54,7 @@
             v-if="showMenu"
             class="dropdown-wrap clearfix"
             @click.prevent="cancel"
+            @touchmove.stop.prevent="moveHandle"
         >
             <view
                 class="dropdown"
@@ -67,7 +68,10 @@
                     v-if="showMenuType === 1"
                     class="rows"
                 >
-                    <view class="cols-box">
+                    <scroll-view
+                        scroll-y
+                        class="cols-box"
+                    >
                         <view
                             v-for="item in projectList"
                             :key="item.cat_id"
@@ -77,7 +81,7 @@
                         >
                             {{ item.cat_name }}
                         </view>
-                    </view>
+                    </scroll-view>
                 </view>
                 <view
                     v-if="showMenuType === 2"
@@ -118,7 +122,7 @@
                         </view>
                     </view>
                     <scroll-view
-                        scroll-y="true"
+                        scroll-y
                         :style="{ height: '780rpx' }"
                         class="fl-l"
                     >
@@ -329,7 +333,8 @@ export default {
             this.filterLabel.city_label = this.filterLabel.old_city_label;
             console.log(this.filterLabel, "cancel-----");
             this.showMenu = false;
-        }
+        },
+        moveHandle() {}
     },
     onLoad(query) {
         const { type } = query;

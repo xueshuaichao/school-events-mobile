@@ -182,7 +182,7 @@
                                     'background-color':
                                         publicConfig.primaryBgColor
                                 }"
-                                @click="viewDetail(item)"
+                                @click="viewDetail(item, index)"
                             >
                                 查看
                             </text>
@@ -494,8 +494,20 @@ export default {
             uni.pageScrollTo({ scrollTop: 0, duration: 300 });
             this.getWorkData();
         },
-        viewDetail(item) {
+        viewDetail(item, index) {
             if (this.tabActiveIndex === 2) {
+                let from = '/api/activity/resourcelist';
+                if (this.type === 'myWork') {
+                    from = '/api/activity/userresource';
+                }
+                this.$store.commit('setFilterData', {
+                    filter: this.filter,
+                    position: {
+                        total: this.total,
+                        curposition: index,
+                        from,
+                    },
+                });
                 uni.navigateTo({
                     url: `/pages/work/detail/detail?id=${item.id}&activity_id=8`,
                 });

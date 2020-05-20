@@ -66,11 +66,12 @@
                     </cover-view>
                 </cover-view>
                 <video
+                    :id="`detail${swiperPage}`"
                     ref="video"
                     class="video"
                     preload
                     :src="pageData.video.cloud_path_sd"
-                    :autoplay="!isH5"
+                    :autoplay="false"
                     :controls="true"
                     :loop="true"
                     :poster="pageData.video_img_url"
@@ -86,7 +87,7 @@
         <view class="content">
             <view class="author-info">
                 <image
-                    class="avatar"
+                    class="avatar-top"
                     src="/static/images/work/avatar.png"
                 />
                 <text class="author-name text-one-line">
@@ -129,7 +130,7 @@
                 v-if="activityId !== 8"
                 class="intro text-three-line"
             >
-                {{ introduce || "暂无简介" }}
+                {{ introduce }}
             </view>
             <view
                 v-if="activityId === 8"
@@ -139,7 +140,7 @@
                     {{
                         !showMore && introduce && introduce.length > 50
                             ? `${introduce.slice(0, 50)}...`
-                            : introduce || "暂无简介"
+                            : introduce
                     }}
                 </text>
                 <text
@@ -157,6 +158,12 @@
                     收起
                 </view>
             </view>
+            <view
+                class="cat-name"
+                @click="jumpLabelList"
+            >
+                {{ pageData.cat_name ? `#${pageData.cat_name}#` : "" }}
+            </view>
         </view>
         <view class="fixed-panel">
             <view class="icon-wrap">
@@ -173,7 +180,7 @@
                                 : '/static/images/yiqing/detail/like-ac.png'
                         "
                     />
-                    <view> {{ pageData.praise_count }} </view>
+                    <view> {{ praise_count || 0 }} </view>
                 </view>
 
                 <view
@@ -191,7 +198,7 @@
                         class="icon"
                         src="/static/images/yiqing/detail/view.png"
                     />
-                    <view> {{ play_count }} </view>
+                    <view> {{ play_count || 1 }} </view>
                 </view>
                 <view
                     class="item"
@@ -244,7 +251,7 @@
                 </text>
             </view>
             <view
-                v-if="isFromShare && activityId > 5"
+                v-if="isFromShare === '1' && activityId > 5"
                 class="join-game-read to-activty-index"
                 :class="[
                     { 'read-index': activityId === 6 },
@@ -277,7 +284,7 @@
             </view>
         </view>
         <view
-            v-if="isVideoWaiting"
+            v-if="isVideoWaiting && pageData.resource_type === 1"
             class="uni-video-cover"
             style="pointer-events: none;color: #fff"
         >
@@ -332,6 +339,14 @@ export default {
             type: Boolean,
             default: false,
         },
+        isChangeSlide: {
+            type: Number,
+            default: 1,
+        },
+        swiperPage: {
+            type: Number,
+            default: 1,
+        },
     },
     data() {
         return {
@@ -341,15 +356,71 @@ export default {
             // #ifdef H5
             isH5: true,
             // #endif
-            isAutoPlay: true,
+            canAutoPlay: false,
             isPlayed: false,
             isPaused: false,
             isVideoWaiting: false,
-            play_count: 0,
+            play_count: 1,
             showMore: false,
             introduce: this.pageData.introduce || '',
             total: 10,
+            catName: this.pageData.cat_name,
+            praise_count: this.pageData.praise_count || 0,
+            toggleLikeObj: {},
         };
+    },
+    watch: {
+        isChangeSlide(val) {
+            if (val !== this.swiperPage && this.pageData.resource_type === 1) {
+                if (this.isH5) {
+                    // h5的暂停方式需要专门处理。
+                    const b = document.querySelector(
+                        `#detail${this.swiperPage} video`,
+                    );
+                    if (b) {
+                        b.pause();
+                        this.isPaused = true;
+                        this.isPlayed = true;
+                    }
+                } else {
+                    this.videoContext.stop();
+                }
+            }
+            if (val === this.swiperPage && this.pageData.resource_type === 1) {
+                this.isPlayed = false;
+                this.videoContext.seek(0);
+
+                if (this.isH5) {
+                    const b = document.querySelector(
+                        `#detail${this.swiperPage} video`,
+                    );
+                    if (b) {
+                        b.pause();
+                        this.isPaused = true;
+                        this.isPlayed = true;
+                    }
+                } else {
+                    this.videoContext.play();
+                }
+            }
+            if (val === this.swiperPage && this.pageData.resource_type === 2) {
+                this.setPlayCount();
+            }
+        },
+        likeStatus(newVal, oldVal) {
+            if (newVal && !oldVal && !this.toggleLikeObj[this.pageData.id]) {
+                this.praise_count += 1;
+                this.toggleLikeObj[this.pageData.id] = 1;
+            }
+        },
+        pageData(val) {
+            if (val) {
+                this.praise_count = this.pageData.praise_count || 0;
+                this.introduce = this.pageData.introduce || '';
+                this.catName = this.pageData.cat_name || '';
+                this.play_count = this.pageData.play_count;
+            }
+        },
     },
     created() {
         this.play_count = this.pageData.play_count;
@@ -357,10 +428,33 @@ export default {
             this.play_count += 1;
         }
     },
-    mounted() {},
+    mounted() {
+        this.videoContext = uni.createVideoContext(
+            `detail${this.swiperPage}`,
+            this,
+        );
+        if (!this.isH5 && this.swiperPage === 1) {
+            this.videoContext.play();
+        }
+        // hack for html5 video size notwoking
+        // #ifdef H5
+        window.removeEventListener(
+            'orientationchange',
+            this.html5VideoAutoAdjust,
+        );
+        window.addEventListener('orientationchange', this.html5VideoAutoAdjust);
+        // #endif
+    },
     methods: {
-        panelAction(action) {
-            this.$emit('doAction', action);
+        html5VideoAutoAdjust() {
+            document.querySelector('.uni-video-type-fullscreen').style = '';
+        },
+        setPlayCount() {
+            api.post('/api/works/playcount', {
+                id: this.pageData.id,
+            }).then(() => {
+                this.play_count += 1;
+            });
         },
         handleCanvass() {
             this.$emit('doAction', 'handleCanvass');
@@ -388,10 +482,7 @@ export default {
         },
         onPlay() {
             if (!this.isPlayed) {
-                this.play_count = this.play_count + 1;
-                api.post('/api/works/playcount', {
-                    id: this.pageData.id,
-                });
+                this.setPlayCount();
             }
             this.isVideoWaiting = false;
             this.isPlayed = true;
@@ -425,6 +516,18 @@ export default {
         },
         goHome() {
             const url = '/pages/openGame/index';
+            uni.navigateTo({
+                url,
+            });
+        },
+        jumpLabelList() {
+            // 标签列表
+            const {
+                resource_scope: resourceScope,
+                cat_id: catId,
+                cat_name: catName,
+            } = this.pageData;
+            const url = `/pages/work/label/list?cat_id=${resourceScope},${catId}&cat_name=${catName}`;
             uni.navigateTo({
                 url,
             });
@@ -550,18 +653,26 @@ export default {
     // pointer-events: none;
     z-index: 10;
     text-shadow: 0 2upx 2upx rgba(0, 0, 0, 0.35);
-    .avatar {
+    .file {
         display: inline-block;
-        width: 32rpx;
         height: 34rpx;
         margin-right: 12upx;
-        &.file {
-            width: 34rpx;
-            vertical-align: middle;
-        }
+        width: 34rpx;
+        vertical-align: middle;
     }
 
     .author-info {
+        padding-left: 44rpx;
+        position: relative;
+        height: 34rpx;
+        .avatar-top {
+            position: absolute;
+            left: 0;
+            top: 50%;
+            width: 32rpx;
+            height: 34rpx;
+            margin-top: -17rpx;
+        }
         .author-name {
             color: #fff;
             font-size: 34upx;
@@ -604,6 +715,11 @@ export default {
         line-height: 35upx;
         position: relative;
     }
+    .cat-name {
+        font-size: 24upx;
+        color: #ff584b;
+        margin-top: 18upx;
+    }
     .orange {
         color: #db4e0e;
     }
@@ -634,6 +750,7 @@ export default {
     font-size: 24rpx;
     text-align: center;
     z-index: 10;
+    min-width: 100upx;
 
     .icon-wrap {
         //margin-right: 36rpx;

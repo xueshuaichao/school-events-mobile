@@ -59,14 +59,14 @@
                     class="media-box"
                 >
                     <view
-                        v-for="item in dataList"
+                        v-for="(item, index) in dataList"
                         :key="item.id"
                         class="media-content"
                     >
                         <event-craft-cover
                             :info="item"
                             :bg-color="'006EDE'"
-                            @click.native="viewDetail(item)"
+                            @click.native="viewDetail(item, index)"
                         />
                         <view
                             v-if="type === 'myWork'"
@@ -97,7 +97,7 @@
                                 <text
                                     v-if="Number(tabActiveIndex) === 1"
                                     class="btn-item"
-                                    @click="viewDetail(item)"
+                                    @click="viewDetail(item, index)"
                                 >
                                     查看
                                 </text>
@@ -225,14 +225,14 @@
                         class="media-box"
                     >
                         <view
-                            v-for="item in dataList"
+                            v-for="(item, index) in dataList"
                             :key="item.id"
                             class="media-content"
                         >
                             <event-craft-cover
                                 :info="item"
                                 :bg-color="'006EDE'"
-                                @click.native="viewDetail(item)"
+                                @click.native="viewDetail(item, index)"
                             />
                             <view
                                 v-if="type === 'myWork'"
@@ -534,15 +534,23 @@ export default {
             this.tabActiveIndex = i;
             this.getWorkData();
         },
-        viewDetail(item) {
-            if (this.type === 'myWork') {
-                if (this.tabActiveIndex === 1) {
-                    uni.navigateTo({
-                        // url: `/pages/work/detail/detail?id=${item.id}&fr=${this.fr}&activity_id=5&from=yiqing`,
-                        url: `/pages/work/detail/detail?id=${item.id}&from=openGame`,
-                    });
+        viewDetail(item, index) {
+            if (
+                (this.type === 'myWork' && this.tabActiveIndex === 1)
+                || this.type !== 'myWork'
+            ) {
+                let from = '/api/works/competitionlist';
+                if (this.type === 'myWork') {
+                    from = '/api/user/competitionlist';
                 }
-            } else {
+                this.$store.commit('setFilterData', {
+                    filter: this.filter,
+                    position: {
+                        total: this.total,
+                        curposition: index,
+                        from,
+                    },
+                });
                 uni.navigateTo({
                     url: `/pages/work/detail/detail?id=${item.id}&from=openGame`,
                 });

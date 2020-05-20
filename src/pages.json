@@ -23,7 +23,8 @@
         {
             "path": "pages/tabBar/list/list",
             "style": {
-                "navigationBarTitleText": "作品"
+                "navigationBarTitleText": "作品",
+                "enablePullDownRefresh": true
             }
         },
         {
@@ -109,6 +110,12 @@
                 "usingComponents": {
                     "poster": "/wxcomponents/third-party/poster/poster/index"
                 }
+            }
+        },
+        {
+            "path": "pages/work/label/list",
+            "style": {
+                "navigationBarTitleText": "列表"
             }
         },
         {
