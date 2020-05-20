@@ -807,7 +807,7 @@ export default {
             this.getLikeStatus();
         },
         getPageMoreDate(postionObj, filterObj = {}, url) {
-            const obj = filterObj;
+            const obj = JSON.parse(JSON.stringify(filterObj));
             if (Object.prototype.hasOwnProperty.call(obj, 'page_size')) {
                 delete obj.page_size;
                 delete obj.page_num;
