@@ -812,6 +812,10 @@ export default {
                 delete obj.page_size;
                 delete obj.page_num;
             }
+            if (Object.prototype.hasOwnProperty.call(obj, 'show_type')) {
+                delete obj.show_type;
+            }
+
             return api.post(url, {
                 ...obj,
                 ...postionObj,
