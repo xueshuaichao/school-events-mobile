@@ -2,7 +2,6 @@
     <view
         v-if="!isLoading"
         class="page-work-detail"
-        @click.stop.prevent="stopPrevent"
     >
         <view
             v-if="prompt"
@@ -93,6 +92,7 @@
             :activity-id="activity_id"
             :is-from-share="isFromShare"
             :from="from"
+            :show-drawer="showDrawer"
             @doAction="doAction"
         />
         <drawer :show="showDrawer" />
@@ -608,9 +608,6 @@ export default {
                 console.log(action, '12121212action');
                 this.showDrawer = !this.showDrawer;
             }
-        },
-        stopPrevent() {
-            // this.showDrawer=false
         },
     },
     onLoad(query) {

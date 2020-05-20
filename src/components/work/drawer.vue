@@ -3,13 +3,15 @@
         class="topic-drawer"
         :animation="animationData"
     >
-        <cover-view
-            v-for="(item, index) in list"
-            :key="index"
-            class="item"
-        >
-            {{ item }}
-        </cover-view>
+        <scroll-view class="scroll-context">
+            <view
+                v-for="(item, index) in list"
+                :key="index"
+                class="item"
+            >
+                {{ item }}
+            </view>
+        </scroll-view>
     </cover-view>
 </template>
 <script>
@@ -22,7 +24,7 @@ export default {
     },
     data() {
         return {
-            list: [1, 2, 3, 4, 5, 5, 6],
+            list: [1, 2, 3, 4, 5, 5, 6, 5, 7, 8, 8, 8, 8],
             animationData: {},
             animation: {},
         };
@@ -48,11 +50,11 @@ export default {
     },
     methods: {
         showing() {
-            this.animation.bottom('15%').step({ duration: 500 });
+            this.animation.bottom('0').step({ duration: 300 });
             this.animationData = this.animation.export();
         },
         hide() {
-            this.animation.bottom('-60%').step({ duration: 500 });
+            this.animation.bottom('-60%').step({ duration: 300 });
             this.animationData = this.animation.export();
         },
     },
@@ -68,5 +70,10 @@ export default {
     background: #fff;
     border-radius: 16rpx 16rpx 0 0;
     z-index: 100;
+
+    .scroll-context {
+        height: 100%;
+        overflow-y: auto;
+    }
 }
 </style>

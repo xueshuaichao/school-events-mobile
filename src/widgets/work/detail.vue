@@ -195,7 +195,7 @@
                 </view>
                 <view
                     class="item"
-                    @click="showMessage"
+                    @click.stop="showMessage"
                 >
                     <image
                         class="icon"
@@ -328,6 +328,10 @@ export default {
             type: String,
             default: '',
         },
+        showDrawer: {
+            type: Boolean,
+            default: false,
+        },
     },
     data() {
         return {
@@ -371,7 +375,9 @@ export default {
             this.$emit('doAction', 'showMessage');
         },
         clickWrap() {
-            this.$emit('doAction', 'showMessage');
+            if (this.showDrawer) {
+                this.$emit('doAction', 'showMessage');
+            }
         },
         onPause() {
             this.isPaused = true;
