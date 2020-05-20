@@ -1,114 +1,186 @@
 <template>
     <div class="activity-init-page">
-        <!-- <packetRain
-            :time="20000"
+        <!-- 右侧随屏 -->
+        <view
+            class="right-fixed"
+            @click="showLottery(true)"
+        >
+            <image
+                src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/children_right.png"
+            />
+            <view
+                v-if="lotteryNum.lottery_num > 0"
+                class="text"
+            >
+                X{{ lotteryNum.lottery_num }}
+            </view>
+        </view>
+        <!-- 开始抽奖弹窗 -->
+        <view
+            v-if="showLotteryPanel"
+            class="lottery-panel"
+        >
+            <view class="lottery-panel-box">
+                <image
+                    class="lottery-panel-img"
+                    src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/children_lottery.png"
+                />
+                <view
+                    class="children-btn join-lottery"
+                    @click="startLottery"
+                >
+                    立即参与
+                </view>
+                <image
+                    class="close"
+                    src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/children_close.png"
+                    @click="closeLotteryPanel"
+                />
+            </view>
+        </view>
+        <!-- 红包雨 -->
+        <packetRain
+            v-if="showPacketRain"
+            :time="10000"
             :speed="{
                 max: 3500,
                 min: 1500
             }"
+            :count-down="5000"
             :hide-index="hideIndex"
             @handelClick="handelClick"
-        /> -->
-        <indexPage
-            v-if="loading"
-            :index-config="indexConfig"
-            :public-config="publicConfig"
-            :is-stop-scroll="false"
-            class-name="children-index"
-            :fr="fr"
-        >
-            <template v-slot:prize>
-                <view class="prize-box">
-                    <view
-                        v-for="(prize, list) in indexConfig.prizes"
-                        :key="list"
-                        class="prize-list"
-                    >
-                        <view class="prize-list-title">
-                            <view class="title-text children-btn">
-                                {{ prize.title }}
-                            </view>
-                            <view class="handel-text">
-                                <text @click="prizeList(list)">
-                                    {{
-                                        list === 0 ? "奖项设置说明" : "幸运榜单"
-                                    }}
-                                </text>
-                            </view>
-                        </view>
+        />
+        <view>
+            <indexPage
+                v-if="loading"
+                :index-config="indexConfig"
+                :public-config="publicConfig"
+                :is-stop-scroll="false"
+                class-name="children-index"
+                :fr="fr"
+            >
+                <template v-slot:prize>
+                    <view class="prize-box">
                         <view
-                            :class="[
-                                'prize-list-item',
-                                `prize-list-item-${list}`
-                            ]"
+                            v-for="(prize, list) in indexConfig.prizes"
+                            :key="list"
+                            class="prize-list"
                         >
-                            <view
-                                v-for="(item, k) in prize.item"
-                                :key="k"
-                                class="prize-item"
-                            >
-                                <view class="prize-img">
-                                    <image
-                                        :src="
-                                            `https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/children_prize_${list}_${k}.png`
-                                        "
-                                    />
+                            <view class="prize-list-title">
+                                <view class="title-text children-btn">
+                                    {{ prize.title }}
                                 </view>
-                                <view class="pirze-text">
-                                    <text
-                                        v-if="item.text[0]"
-                                        class="pirze-rank"
-                                    >
-                                        {{ item.text[0] }}
+                                <view class="handel-text">
+                                    <text @click="prizeList(list + 1)">
+                                        {{
+                                            list === 0
+                                                ? "奖项设置说明"
+                                                : "幸运榜单"
+                                        }}
                                     </text>
-                                    <view>{{ item.text[1] }}</view>
+                                </view>
+                            </view>
+                            <view
+                                :class="[
+                                    'prize-list-item',
+                                    `prize-list-item-${list}`
+                                ]"
+                            >
+                                <view
+                                    v-for="(item, k) in prize.item"
+                                    :key="k"
+                                    class="prize-item"
+                                >
+                                    <view class="prize-img">
+                                        <image
+                                            :src="
+                                                `https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/children_prize_${list}_${k}.png`
+                                            "
+                                        />
+                                    </view>
+                                    <view class="pirze-text">
+                                        <text
+                                            v-if="item.text[0]"
+                                            class="pirze-rank"
+                                        >
+                                            {{ item.text[0] }}
+                                        </text>
+                                        <view>{{ item.text[1] }}</view>
+                                    </view>
                                 </view>
                             </view>
                         </view>
-                    </view>
-                    <view class="prize-handel-item">
-                        <view
-                            class="btn"
-                            @click="getPrizeNum"
-                        >
-                            获取抽奖机会
+                        <view class="prize-handel-item">
+                            <view
+                                class="btn"
+                                @click="getPrizeNum"
+                            >
+                                获取抽奖机会
+                            </view>
+                            <view
+                                class="btn"
+                                @click="getPrizeLise"
+                            >
+                                我的中奖
+                            </view>
                         </view>
-                        <view
-                            class="btn"
-                            @click="getPrizeLise"
-                        >
-                            我的中奖
-                        </view>
                     </view>
-                </view>
-            </template>
-            <template v-slot:rank />
-        </indexPage>
+                </template>
+                <template v-slot:rank />
+            </indexPage>
+        </view>
+        <!-- 规则 中奖说明 中奖榜单 -->
         <maskBox
-            v-if="prompt && publicConfig.activityId === 9"
-            :rules="indexConfig.rules"
-            type="rule"
+            v-if="maskPrompt"
+            class="mask"
+            :type="type"
+            :title="title"
             :theme="{
-                bgColor: indexConfig.maskBgColor || publicConfig.primaryBgColor,
+                bgColor:
+                    publicConfig.maskBgColor || publicConfig.primaryBgColor,
                 titleColor: publicConfig.titleColor
             }"
             :name="publicConfig.activityName"
+            :lucky-list="luckyList"
+            :lottery-num="lotteryNum"
+            :show-qr-code="type === 1"
             @close="handleClose"
+            @getLuckyList="getLuckyList"
+            @getNewLotteryNum="getNewLotteryNum"
         />
+        <view
+            v-if="showOpenLotteryPanel"
+            class="lottery-panel open-lottery"
+        >
+            <view class="lottery-panel-box">
+                <image
+                    class="lottery-panel-img"
+                    src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/children_lottery.png"
+                />
+                <view
+                    class="children-btn join-lottery"
+                    @click="openLottery"
+                >
+                    点击开奖
+                </view>
+            </view>
+        </view>
     </div>
 </template>
 
 <script>
-// import packetRain from '../../../components/packet-rain/index.vue';
+import packetRain from '../../../components/packet-rain/index.vue';
 import indexPage from '../common/index.vue';
 import share from '../../../common/share';
 import logger from '../../../common/logger';
-// import api from '../../../common/api';
+import maskBox from '../common/mask.vue';
+import api from '../../../common/api';
 
 export default {
     components: {
         indexPage,
-        // packetRain,
+        packetRain,
+        maskBox,
     },
     filters: {
         changeNum(value) {
@@ -121,13 +193,27 @@ export default {
             // #ifdef H5
             isH5: true,
             // #endif
+            status: 2,
             loading: false,
             publicConfig: {},
             indexConfig: {},
             fr: '',
             activityId: '',
             hideIndex: -1,
+            maskPrompt: false,
+            type: '',
             title: '',
+            luckyFilter: {
+                page_size: 10,
+                page_num: 1,
+            },
+            luckyList: {},
+            lotteryNum: {
+                type: ['每日登录', '点赞5个作品', '发布1个作品'],
+            },
+            showPacketRain: false, // 显示红包雨
+            showLotteryPanel: false, // 显示抽奖弹框
+            showOpenLotteryPanel: false, // 开奖
         };
     },
     onLoad(params) {
@@ -145,20 +231,165 @@ export default {
                 page: 'indexColorConfig',
             }),
         };
-        console.log(this.indexConfig);
         this.fr = logger.getFr(this.publicConfig.log, params);
         this.loading = true;
+        this.activityStatus();
     },
-    onShow() {},
+    onShow() {
+        this.getLotteryNum();
+    },
     created() {
-        // this.getRank();
-        // this.historyRank();
+        this.getLuckyList();
+        this.showLottery();
     },
     methods: {
+        activityStatus() {
+            // 1未开始，2进行中，3已结束
+            api.get('/api/activity/activitystatus', {
+                activity_id: this.activityId,
+            }).then((res) => {
+                this.status = res.status;
+            });
+        },
+        isLogin() {
+            api.isLogin({
+                fr: this.fr,
+            }).then(() => {
+                this.showLotteryPanel = false;
+                this.showLotteryPanel = true;
+            });
+        },
+        handleClose() {
+            this.maskPrompt = false;
+        },
         handelClick(index) {
             this.hideIndex = index;
         },
+        getLuckyList(num = 0) {
+            this.luckyFilter.page_num = num;
+            this.luckyList = {
+                list: [
+                    {
+                        user_name: '34343',
+                        draw: 'xxx',
+                    },
+                    {
+                        user_name: '34343',
+                        draw: 'xxx',
+                    },
+                    {
+                        user_name: '34343',
+                        draw: 'xxx',
+                    },
+                ],
+                total: 3,
+            };
+        },
+        getLotteryNum() {
+            api.get('/api/activity/getuserlotterynum').then(
+                (res) => {
+                    this.lotteryNum = {
+                        ...this.lotteryNum,
+                        ...res,
+                    };
+                },
+                () => {
+                    // 未登录时 抽奖次数显为3
+                    this.$set(this.lotteryNum, 'lottery_num', 3);
+                },
+            );
+        },
+        startLottery() {
+            // 参与抽奖 消耗次数
+            api.isLogin({
+                fr: this.fr,
+            }).then(() => {
+                if (this.lotteryNum.lottery_num > 0) {
+                    api.get('/api/activity/usedrawnum').then(() => {
+                        this.showPacketRain = true;
+                        this.showLotteryPanel = false;
+                    });
+                } else if (
+                    this.lotteryNum.vote_num >= 5
+                    && this.lotteryNum.add_activity > 0
+                    && this.lotteryNum.login > 0
+                ) {
+                    uni.showToast({
+                        title: '今日已无抽奖机会，明日再来吧',
+                        duration: 2000,
+                    });
+                } else {
+                    this.showLotteryPanel = false;
+                    this.getPrizeNum();
+                }
+            });
+        },
+        showLottery(type = false) {
+            // 显示抽奖弹框
+            // type-true 右侧悬浮按钮点击触发
+            if (type) {
+                if (this.status === 2) {
+                    this.showLotteryPanel = true;
+                } else {
+                    uni.showToast({
+                        title:
+                            this.status === 1
+                                ? '活动未开始，敬请期待'
+                                : '活动已结束',
+                        icon: 'none',
+                    });
+                }
+            } else {
+                api.get('/api/activity/firstlogin').then(
+                    (res) => {
+                        if (res === 0) {
+                            this.showLotteryPanel = true;
+                        }
+                    },
+                    () => {
+                        this.showLotteryPanel = true;
+                    },
+                );
+            }
+        },
+        closeLotteryPanel() {
+            this.showLotteryPanel = false;
+        },
+        openLottery() {
+            // 开奖
+            api.get('/api/activity/luckydraw').then((res) => {
+                console.log(res);
+            });
+        },
+        getNewLotteryNum({ index, type }) {
+            if (type) {
+                return false;
+            }
+            switch (index) {
+                case 0:
+                    api.isLogin({
+                        fr: this.fr,
+                    });
+                    break;
+                case 1:
+                    uni.pageScrollTo({
+                        scrollTop: 830,
+                        duration: 300,
+                    });
+                    break;
+                default:
+                    api.isLogin({
+                        fr: this.fr,
+                    }).then(() => {
+                        uni.navigateTo({
+                            url: `/pages/activity-pages/upload/modify?activity_id=${this.activityId}`,
+                        });
+                    });
+                    break;
+            }
 
+            return true;
+        },
         initShare() {
             const titleList = this.isH5
                 ? this.publicConfig.shareConfig.h5Title
@@ -183,17 +414,19 @@ export default {
             uni.$emit('onReachBottom');
         },
         prizeList(type) {
-            if (type === 1) {
-                console.log(1);
-                this.title = '奖品设置说明';
-                this.type = 'prize';
-            } else {
-                this.title = '幸运榜单';
-                this.type = 'lucky';
-            }
+            const title = type === 1 ? '奖品设置说明' : '幸运榜单';
+            this.showMask(title, type);
         },
-        getPrizeNum() {},
+        getPrizeNum() {
+            this.showMask('获取抽奖机会', 3);
+        },
         getPrizeLise() {},
+        showMask(title, type) {
+            // type 1-奖品设置 2-幸运榜单 3-获取抽奖机会
+            this.title = title;
+            this.type = type;
+            this.maskPrompt = true;
+        },
     },
     onShareAppMessage(res) {
         if (res.from === 'button') {
@@ -211,6 +444,77 @@ export default {
 
 <style lang="less">
 .activity-init-page {
+    position: relative;
+    .right-fixed {
+        position: fixed;
+        right: 0;
+        top: 577upx;
+        width: 229upx;
+        height: 180upx;
+        z-index: 1000;
+        image {
+            width: 100%;
+            height: 100%;
+        }
+        .text {
+            position: absolute;
+            width: 100upx;
+            height: 90upx;
+            left: 20upx;
+            top: 20upx;
+            text-align: center;
+            line-height: 90upx;
+            font-size: 38upx;
+            color: #fff;
+            font-weight: bold;
+        }
+    }
+    .lottery-panel {
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        top: 0;
+        z-index: 1001;
+        background-color: rgba(0, 0, 0, 0.79);
+        &.oppen-lottery {
+            .lottery-panel-img {
+                width: 540upx;
+                height: 527upx;
+            }
+        }
+        .lottery-panel-box {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        .join-lottery {
+            background-color: #c790ff;
+            line-height: 98upx;
+            text-align: center;
+            margin-top: 26upx;
+        }
+        .close {
+            width: 63upx;
+            height: 63upx;
+            margin: 38upx auto 0;
+            display: block;
+        }
+        .lottery-panel-img {
+            width: 541upx;
+            height: 720upx;
+            margin: 0 auto;
+        }
+    }
+    .mask {
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        top: 0;
+        z-index: 999;
+    }
     .children-index {
         background-color: #f00;
         .main-content {

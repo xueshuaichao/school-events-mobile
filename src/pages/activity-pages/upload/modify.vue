@@ -8,6 +8,43 @@
             class="main"
             :style="{ background: publicConfig.mainBgColor }"
         >
+            <view class="uni-list-cell-db">
+                <picker
+                    :value="index"
+                    :range="catData"
+                    :range-key="'name'"
+                    @change="onSelect"
+                >
+                    <view
+                        v-if="!formData.cat_id"
+                        class="uni-input placeholder fake-input"
+                        :style="{
+                            background:
+                                publicConfig.inputBgColor ||
+                                publicConfig.primaryBgColor,
+                            'border-color':
+                                publicConfig.inputBorderColor || 'transparent',
+                            color: publicConfig.placeholderColor || '#fff'
+                        }"
+                    >
+                        选择分类
+                    </view>
+                    <view
+                        v-if="formData.cat_id"
+                        class="uni-input fake-input"
+                        :style="{
+                            background:
+                                publicConfig.inputBgColor ||
+                                publicConfig.primaryBgColor,
+                            'border-color':
+                                publicConfig.inputBorderColor || 'transparent',
+                            color: publicConfig.inputColor || '#fff'
+                        }"
+                    >
+                        {{ catData[index].name }}
+                    </view>
+                </picker>
+            </view>
             <view
                 v-if="uploadConfig.activityCat.length"
                 class="selection bb-sep"
@@ -375,6 +412,11 @@ export default {
             }
         },
         getData() {
+            api.get('/api/works/childcat', {
+                cat_id: 3,
+            }).then((res) => {
+                this.catData = res;
+            });
             api.get('/api/user/info').then(
                 (res) => {
                     this.needBindMobile = res.user_info && res.user_info.is_bind_mobile === 0;
@@ -425,6 +467,12 @@ export default {
                     title: err.message,
                 }),
             );
+        },
+        onSelect(e) {
+            this.index = e.detail.value;
+            const catId = this.catData[this.index].cat_id;
+            this.formData.cat_id = catId;
+            console.log(this.formData);
         },
         errTip(title) {
             uni.showToast({

@@ -140,7 +140,7 @@ export default {
                     mainBgColor: '#EBE1FF',
                     activityName: 'children',
                     activityId: 9,
-                    catId: 20, // 所属分类
+                    catId: '', // 所属分类
                     time: '4月27日--5月31日',
                     primaryColor: '#BB77FF', // 主色调
                     darkPrimaryColor: '#C790FF', // 深一些 （按钮的颜色）
@@ -274,7 +274,9 @@ export default {
                     nameMaxLength: 11,
                     descMaxLength: 150,
                 },
-                myWorkColorConfig: {},
+                myWorkColorConfig: {
+                    primaryColor: '#C790FF', // 主色调
+                },
                 indexColorConfig: {
                     maskBgColor: '#fff',
                 },

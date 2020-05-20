@@ -410,7 +410,7 @@ export default {
         },
         activityStatus() {
             // 1未开始，2进行中，3已结束
-            api.get('/api/activity/getactivitystatus', {
+            api.get('/api/activity/activitystatus', {
                 activity_id: this.filter.activity_id,
             }).then((res) => {
                 this.status = res.status;
@@ -770,75 +770,6 @@ body.dialog-open {
         color: #0f8c64;
         width: 100%;
         line-height: 253upx;
-    }
-}
-
-.activerulebox {
-    background-color: rgba(0, 0, 0, 0.8);
-    width: 100%;
-    height: 100%;
-    box-sizing: border-box;
-    position: fixed;
-    color: #fff;
-    z-index: 999;
-    font-size: 24upx;
-    &:first-child {
-        font-size: 28upx;
-    }
-    .title {
-        font-size: 28upx;
-        color: #ffde6d;
-        font-weight: bold;
-        margin-bottom: 17upx;
-    }
-
-    .text {
-        margin-bottom: 40upx;
-        font-weight: 300;
-        font-size: 28upx;
-    }
-    .title-icon {
-        background: url("https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/read_title.png")
-            no-repeat;
-        background-size: 100% 100%;
-        font-size: 0upx;
-        width: 303upx;
-        height: 90upx;
-        position: absolute;
-        top: -43upx;
-        left: 190upx;
-        text-align: center;
-        line-height: 69upx;
-        z-index: 222;
-    }
-    .close {
-        background-size: 100% 100%;
-        width: 62upx;
-        height: 62upx;
-        top: -13upx;
-        right: -12upx;
-        position: absolute;
-    }
-    .active-content {
-        background-color: #04a875;
-        position: absolute;
-        top: 62upx;
-        left: 35upx;
-        height: 92%;
-        width: 678upx;
-        padding: 76upx 30upx 38upx;
-        box-sizing: border-box;
-        padding-right: 20upx;
-        border-radius: 46rpx;
-        .active-rule-box {
-            width: 100%;
-            overflow-y: scroll;
-            max-height: 100%;
-            overflow-x: hidden;
-        }
-        .size {
-            font-size: 28upx;
-        }
     }
 }
 

@@ -24,7 +24,7 @@
                     {{ title }}
                 </view>
                 <view class="active-rule-box">
-                    <template v-if="type === 'rule'">
+                    <template v-if="type === 0">
                         <view
                             v-for="(ruleItem, index) in rules"
                             :key="index"
@@ -59,18 +59,123 @@
                             </view>
                         </view>
                     </template>
-                    <template v-else-if="type === 'prize'">
+                    <template v-else-if="type === 1">
                         <view>奖品说明</view>
                     </template>
-                    <template v-else-if="type === 'list'">
-                        <view>
-                            幸运榜单
+                    <template v-else-if="type === 2">
+                        <scroll-view
+                            class="lucky-list"
+                            scroll-y="true"
+                            @scrolltolower="getLuckList"
+                        >
+                            <view
+                                v-for="(lucky, index) in luckyListArr"
+                                :key="lucky.id"
+                                class="item"
+                            >
+                                <text>{{ luckyTotal[index] }}.</text>
+                                <text>用户4343434</text>
+                                <text>抽中了</text>
+                                <text>小度音响</text>
+                            </view>
+                        </scroll-view>
+                    </template>
+                    <template v-else-if="type === 3">
+                        <view class="lottery-num">
+                            <view class="lottery-title">
+                                完成<text>每日任务</text>，获取更多<text>
+                                    抽奖机会
+                                </text>
+                            </view>
+                            <view class="lottery-item-box">
+                                <view
+                                    v-for="(lottery, index) in lotteryNum.type"
+                                    :key="index"
+                                    class="item"
+                                >
+                                    <text class="item-type">
+                                        {{ lottery }}
+                                    </text>
+                                    <text class="item-text">
+                                        获取一次抽奖机会
+                                    </text>
+                                    <view class="item-btn-box">
+                                        <template v-if="index === 0">
+                                            <text
+                                                class="chidren-btn item-btn"
+                                                :class="{
+                                                    cur: lotteryNum.login > 0
+                                                }"
+                                                @click="
+                                                    getLotteryNum(
+                                                        index,
+                                                        lotteryNum.login > 0
+                                                    )
+                                                "
+                                            >
+                                                {{
+                                                    lotteryNum.login > 0
+                                                        ? "已完成"
+                                                        : "去完成"
+                                                }}
+                                            </text>
+                                        </template>
+                                        <template v-else-if="index === 1">
+                                            <text
+                                                class="chidren-btn item-btn"
+                                                :class="{
+                                                    cur:
+                                                        lotteryNum.vote_num >= 5
+                                                }"
+                                                @click="
+                                                    getLotteryNum(
+                                                        index,
+                                                        lotteryNum.vote_num >= 5
+                                                    )
+                                                "
+                                            >
+                                                {{
+                                                    lotteryNum.vote_num >= 5
+                                                        ? "已完成"
+                                                        : "去完成"
+                                                }}
+                                            </text>
+                                        </template>
+                                        <template v-else-if="index === 2">
+                                            <text
+                                                class="chidren-btn item-btn"
+                                                :class="{
+                                                    cur:
+                                                        lotteryNum.add_activity >
+                                                        0
+                                                }"
+                                                @click="
+                                                    getLotteryNum(
+                                                        index,
+                                                        lotteryNum.add_activity >
+                                                            0
+                                                    )
+                                                "
+                                            >
+                                                {{
+                                                    lotteryNum.add_activity > 0
+                                                        ? "已完成"
+                                                        : "去完成"
+                                                }}
+                                            </text>
+                                        </template>
+                                    </view>
+                                </view>
+                            </view>
+                            <view class="tips">
+                                快去赢得抽奖机会吧！
+                            </view>
                         </view>
                     </template>
-                    <template v-else-if="type === 'draw'">
-                        <view>抽奖次数</view>
-                    </template>
-                    <view class="qr-wrap">
+                    <view
+                        v-if="showQrCode"
+                        class="qr-wrap"
+                    >
                         <image
                             class="qr-code"
                             src="http://aitiaozhan.oss-cn-beijing.aliyuncs.com/chunjiehao/qrcode.jpg"
@@ -94,10 +199,16 @@ export default {
                 return [];
             },
         },
-        luckList: {
-            type: Array,
+        luckyList: {
+            type: Object,
             default() {
-                return [];
+                return {};
+            },
+        },
+        lotteryNum: {
+            type: Object,
+            default() {
+                return {};
             },
         },
         prizeList: {
@@ -121,18 +232,62 @@ export default {
             default: '标题',
         },
         type: {
-            type: String,
+            type: Number,
+            default: 0,
+        },
+        showQrCode: {
+            type: Boolean,
+            default: true,
+        },
+    },
+    data() {
+        return {
+            luckyListArr: this.luckyList.list || [],
+            luckyTotal: this.luckyList.total || 0,
+            luckyNum: 0,
+            lotteryType: this.lotteryNum.type || [],
+        };
+    },
+    watch: {
+        luckyList: {
+            handler(val) {
+                console.log(val);
+                const list = [];
+                for (let i = 1; i < val.total + 1; i += 1) {
+                    list.push(i);
+                }
+                this.luckyTotal = list.reverse();
+                this.luckyListArr = val.list;
+            },
+            deep: true,
+            immediate: true,
         },
     },
     methods: {
         handleClose() {
             this.$emit('close');
         },
+        getLuckyList() {
+            this.$emit('getLuckyList', (this.luckyNum += 1));
+        },
+        getLotteryNum(index, type) {
+            this.$emit('getNewLotteryNum', {
+                index,
+                type,
+            });
+        },
     },
 };
 </script>
 
 <style lang="less" scoped>
+.activity-rule-page {
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    position: fixed;
+    z-index: 999;
+}
 .activerulebox {
     background-color: rgba(0, 0, 0, 0.8);
     width: 100%;
@@ -216,11 +371,34 @@ export default {
         }
     }
     &.mask-children {
+        .chidren-btn {
+            color: #fff;
+            border-radius: 48upx;
+            background-color: #ff78a5;
+            box-shadow: inset 0px 0px 24upx 0px rgba(255, 255, 255, 1);
+            position: relative;
+            font-size: 28upx;
+            display: inline-block;
+            &::before {
+                content: "";
+                position: absolute;
+                left: 10upx;
+                top: 10upx;
+                width: 21upx;
+                height: 22upx;
+                background-image: url(https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/children_bt_b.png);
+                background-size: 21upx 21upx;
+                background-repeat: no-repeat;
+            }
+        }
         .active-content {
             box-shadow: inset 0px 0px 24upx 0px rgba(182, 146, 255, 0.57);
             border-radius: 50upx;
             padding-bottom: 250upx;
-            // background-image: url() ;
+            background-image: url(https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/children_mask_footer.png);
+            background-repeat: no-repeat;
+            background-size: 100% 248upx;
+            background-position: bottom center;
         }
         .title,
         .text {
@@ -284,6 +462,63 @@ export default {
             right: 50%;
             transform: translateX(50%);
             top: auto;
+        }
+
+        .lucky-list {
+            color: #999;
+        }
+        .lottery-num {
+            .tips {
+                text-align: center;
+                color: #bb77ff;
+                font-size: 32upx;
+                font-weight: bold;
+            }
+            .lottery-title {
+                font-size: 28upx;
+                color: #333;
+                text-align: center;
+                line-height: 39upx;
+                margin-bottom: 30upx;
+                & > text {
+                    color: #b692ff;
+                    font-size: 32upx;
+                    font-weight: bold;
+                }
+            }
+            .lottery-item-box {
+                .item {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    box-shadow: inset 0px 0px 17upx 0px rgba(182, 146, 255, 1);
+                    border-radius: 20upx;
+                    height: 120upx;
+                    margin-bottom: 30upx;
+                    padding: 0 30upx;
+                }
+            }
+            .item-type {
+                font-weight: bold;
+                color: #333;
+                font-size: 28upx;
+            }
+            .item-text {
+                color: #666;
+                font-size: 26upx;
+            }
+            .item-btn {
+                background-color: #c790ff;
+                padding: 0 42upx;
+                line-height: 74upx;
+                margin-bottom: 0;
+                font-size: 32upx;
+                &.cur {
+                    background: rgba(199, 144, 255, 0.35);
+                    box-shadow: inset 0px 0px 0px 0px rgba(255, 255, 255, 0.35);
+                    color: #d5abff;
+                }
+            }
         }
     }
 }

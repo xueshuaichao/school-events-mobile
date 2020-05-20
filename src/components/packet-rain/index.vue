@@ -1,39 +1,49 @@
 <template>
     <view class="packet-rain">
-        <template v-if="countDownTime">
-            <view class="count-down">
-                <view>倒计时：{{ countDownTime }}s</view>
-            </view>
-        </template>
-        <template v-else>
-            <!-- <view class="game-time">
-                游戏时间<text>{{ gameTime/1000 }}</text>
-            </view> -->
-            <view
-                v-for="(item, index) in packetList"
-                v-show="item.isShow"
-                :key="index"
-                class="pakcet-item"
-                :style="{
-                    left: `${item.postion}px`,
-                    width: `${imgSize.width}px`,
-                    height: `${imgSize.height}px`,
-                    top: `-${imgSize.height + 20}px`
-                }"
-                :animation="animationData[index]"
-            >
-                <image
-                    class="pakcet-item-img"
-                    :src="item.src"
-                    @click="handelPacket(item, index)"
-                />
-                <view
-                    v-if="item.isShowNum"
-                    class="packet-num"
-                >
-                    +{{ item.num }}
+        <template v-if="!isEnd">
+            <view class="get-packet-num-sum">
+                <view class="num-box">
+                    已抢糖果
+                    <text class="num">
+                        {{ packetNumSum }}
+                    </text>个
                 </view>
             </view>
+            <template v-if="countDownTime">
+                <view class="count-down">
+                    <view>倒计时：{{ countDownTime }}s</view>
+                </view>
+            </template>
+            <template v-else>
+                <view class="game-time">
+                    游戏时间<text>{{ gameTime / 1000 }}</text>
+                </view>
+                <view
+                    v-for="(item, index) in packetList"
+                    v-show="item.isShow"
+                    :key="index"
+                    class="pakcet-item"
+                    :style="{
+                        left: `${item.postion}px`,
+                        width: `${imgSize.width}px`,
+                        height: `${imgSize.height}px`,
+                        top: `-${imgSize.height + 20}px`
+                    }"
+                    :animation="animationData[index]"
+                >
+                    <image
+                        class="pakcet-item-img"
+                        :src="item.src"
+                        @click="handelPacket(item, index)"
+                    />
+                    <view
+                        v-if="item.isShowNum"
+                        class="packet-num"
+                    >
+                        +{{ item.num }}
+                    </view>
+                </view>
+            </template>
         </template>
     </view>
 </template>
@@ -60,8 +70,8 @@ export default {
             type: Object,
             default() {
                 return {
-                    width: 40,
-                    height: 60,
+                    width: 80,
+                    height: 80,
                 };
             },
         },
@@ -120,8 +130,8 @@ export default {
                 min: 10, // 最左
             },
             windowHeight: 1200,
-            packetNum: 0,
             packetNumSum: 0,
+            isEnd: false,
         };
     },
     watch: {
@@ -145,7 +155,7 @@ export default {
                             this.animationData.push(this.animation.export());
                         }
                     }
-                    this.gameTime -= 100;
+                    this.gameTime -= 500;
                 }, 200);
             });
         },
@@ -184,12 +194,15 @@ export default {
             const T = setInterval(() => {
                 if (this.gameTime === 0) {
                     clearInterval(T);
-                    this.result();
+                    setTimeout(() => {
+                        this.isEnd = true;
+                        this.result();
+                    }, this.speed.max);
                 } else {
                     this.maxNum = this.randomNumBoth(this.num, 1);
                     this.setPacketList();
                 }
-            }, 400);
+            }, 500);
         },
         setPacketList() {
             for (let i = 0; i < this.maxNum; i += 1) {
@@ -211,6 +224,7 @@ export default {
             return parseInt(Math.random() * (max - min + 1) + min, 10);
         },
         handelPacket(item, index) {
+            this.packetNumSum += item.num;
             this.$emit('handelClick', index);
         },
         result() {
@@ -237,8 +251,29 @@ export default {
     left: 0;
     right: 0;
     bottom: 0;
-    z-index: 990;
+    z-index: 1002;
     background-color: rgba(0, 0, 0, 0.79);
+}
+.get-packet-num-sum {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 179upx;
+    z-index: 1003;
+    text-align: center;
+    color: #fff;
+    background-color: #f00;
+    .num-box {
+        font-size: 35upx;
+    }
+    .num {
+        font-size: 60upx;
+        min-width: 155upx;
+        text-align: center;
+        display: inline-block;
+        text-shadow: 0px 2upx 4upx rgba(150, 47, 255, 1);
+    }
 }
 .game-time {
     color: #fff;
