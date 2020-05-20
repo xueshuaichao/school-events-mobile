@@ -1,5 +1,8 @@
 <template>
-    <view class="swiper-detail-box">
+    <view
+        class="swiper-detail-box"
+        @click="clickWrap"
+    >
         <view
             v-show="isFullScreen && isH5"
             class="h5-full-screen-title text-one-line"
@@ -190,6 +193,16 @@
                     />
                     <view> {{ play_count }} </view>
                 </view>
+                <view
+                    class="item"
+                    @click="showMessage"
+                >
+                    <image
+                        class="icon"
+                        src="/static/images/yiqing/detail/message.png"
+                    />
+                    <view>{{ total }}</view>
+                </view>
             </view>
 
             <view
@@ -331,6 +344,7 @@ export default {
             play_count: 0,
             showMore: false,
             introduce: this.pageData.introduce || '',
+            total: 10,
         };
     },
     created() {
@@ -352,6 +366,12 @@ export default {
         },
         joinGame() {
             this.$emit('doAction', 'joinGame');
+        },
+        showMessage() {
+            this.$emit('doAction', 'showMessage');
+        },
+        clickWrap() {
+            this.$emit('doAction', 'showMessage');
         },
         onPause() {
             this.isPaused = true;

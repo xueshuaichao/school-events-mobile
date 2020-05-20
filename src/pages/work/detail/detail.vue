@@ -2,6 +2,7 @@
     <view
         v-if="!isLoading"
         class="page-work-detail"
+        @click.stop.prevent="stopPrevent"
     >
         <view
             v-if="prompt"
@@ -94,7 +95,7 @@
             :from="from"
             @doAction="doAction"
         />
-        <drawer />
+        <drawer :show="showDrawer" />
     </view>
 </template>
 
@@ -157,6 +158,7 @@ export default {
             imgAuthBtn: false,
             isFromShare: '',
             from: '',
+            showDrawer: false,
         };
     },
     created() {},
@@ -601,6 +603,14 @@ export default {
             if (action === 'toggleLike') {
                 this.toggleLike();
             }
+            if (action === 'showMessage') {
+                // this.showDrawer = true;
+                console.log(action, '12121212action');
+                this.showDrawer = !this.showDrawer;
+            }
+        },
+        stopPrevent() {
+            // this.showDrawer=false
         },
     },
     onLoad(query) {

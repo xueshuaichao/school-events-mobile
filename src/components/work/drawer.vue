@@ -1,16 +1,16 @@
 <template>
-    <view
+    <cover-view
         class="topic-drawer"
         :animation="animationData"
     >
-        <view
+        <cover-view
             v-for="(item, index) in list"
             :key="index"
             class="item"
         >
             {{ item }}
-        </view>
-    </view>
+        </cover-view>
+    </cover-view>
 </template>
 <script>
 export default {
@@ -29,6 +29,7 @@ export default {
     },
     watch: {
         show(val) {
+            console.log('111111', val);
             if (val) {
                 this.showing();
             } else {
@@ -39,7 +40,7 @@ export default {
     created() {
         const animation = uni.createAnimation({
             duration: 1000,
-            timingFunction: 'ease',
+            timingFunction: 'linear',
             delay: 0,
         });
         this.animation = animation;
@@ -47,11 +48,11 @@ export default {
     },
     methods: {
         showing() {
-            this.animation.translateY(400).step({ duration: 1000 });
+            this.animation.bottom('15%').step({ duration: 500 });
             this.animationData = this.animation.export();
         },
         hide() {
-            this.animation.translateY(100).step({ duration: 1000 });
+            this.animation.bottom('-60%').step({ duration: 500 });
             this.animationData = this.animation.export();
         },
     },
@@ -60,9 +61,12 @@ export default {
 <style scoped lang="less">
 .topic-drawer {
     width: 100%;
-    height: 450rpx;
+    height: 60vh;
     position: absolute;
     left: 0;
-    bottom: 0;
+    bottom: -60vh;
+    background: #fff;
+    border-radius: 16rpx 16rpx 0 0;
+    z-index: 100;
 }
 </style>
