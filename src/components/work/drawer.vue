@@ -2,16 +2,39 @@
     <view
         class="topic-drawer"
         :animation="animationData"
-    />
+    >
+        <view
+            v-for="(item, index) in list"
+            :key="index"
+            class="item"
+        >
+            {{ item }}
+        </view>
+    </view>
 </template>
 <script>
 export default {
+    props: {
+        show: {
+            type: Boolean,
+            default: false,
+        },
+    },
     data() {
         return {
             list: [1, 2, 3, 4, 5, 5, 6],
             animationData: {},
             animation: {},
         };
+    },
+    watch: {
+        show(val) {
+            if (val) {
+                this.showing();
+            } else {
+                this.hide();
+            }
+        },
     },
     created() {
         const animation = uni.createAnimation({
@@ -23,7 +46,7 @@ export default {
         this.animationData = this.animation.export();
     },
     methods: {
-        show() {
+        showing() {
             this.animation.translateY(400).step({ duration: 1000 });
             this.animationData = this.animation.export();
         },
@@ -34,9 +57,12 @@ export default {
     },
 };
 </script>
-<style scoped>
+<style scoped lang="less">
 .topic-drawer {
     width: 100%;
-    height: 400upx;
+    height: 450rpx;
+    position: absolute;
+    left: 0;
+    bottom: 0;
 }
 </style>

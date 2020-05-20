@@ -94,6 +94,7 @@
             :from="from"
             @doAction="doAction"
         />
+        <drawer />
     </view>
 </template>
 
@@ -104,6 +105,7 @@ import share from '../../../common/share';
 import logger from '../../../common/logger';
 import detail from '../../../widgets/work/detail.vue';
 import detailConf from './detail.config';
+import drawer from '../../../components/work/drawer.vue';
 // 上下滑动的功能的拆解
 // 使用Swiper组件，把页面的主要内容，当作独立的部分，迁移到../../../widgets/work/detail.vue。
 // 页面滑动的时候，确定下当前显示的数据，用来做转发，二维码的数据
@@ -114,6 +116,7 @@ import detailConf from './detail.config';
 export default {
     components: {
         detail,
+        drawer,
     },
     data() {
         return {
