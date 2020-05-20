@@ -691,7 +691,7 @@ export default {
     }
     .cat-name {
         font-size: 24upx;
-        color: #ff584b;
+        color: #fff;
         margin-top: 18upx;
     }
     .orange {
