@@ -408,10 +408,10 @@ export default {
             } else {
                 //  中间穿插的
                 // eslint-disable-next-line prefer-destructuring
-                this.curDetailConf = detailConf[6];
+                this.curDetailConf = detailConf[8];
                 this.posterConfig = {
                     ...this.posterConfig,
-                    ...detailConf[6].posterConfig,
+                    ...detailConf[8].posterConfig,
                 };
             }
             console.log(
@@ -425,7 +425,7 @@ export default {
                     res.resource_name
                 }${
                     res.achievement
-                        ? `|${res.achievement}${res.achievement_unit}`
+                        ? `|${res.achievement}${res.achievement_unit}lallalallallalalalalalalallalallalallalalalalla`
                         : ''
                 }`;
             } else {

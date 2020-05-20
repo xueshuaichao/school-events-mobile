@@ -443,8 +443,8 @@ const detailConf = [
             debug: false,
             texts: [
                 {
-                    x: 60,
-                    y: 583,
+                    x: 76,
+                    y: 520,
                     text: [
                         {
                             text: '',
@@ -472,17 +472,17 @@ const detailConf = [
                 },
                 {
                     url: '',
-                    width: 469,
-                    height: 315,
-                    y: 233,
-                    x: 50,
+                    width: 380,
+                    height: 244,
+                    y: 244,
+                    x: 60,
                 },
                 {
                     url: '',
-                    width: 130,
-                    height: 130,
-                    y: 616,
-                    x: 374,
+                    width: 128,
+                    height: 128,
+                    y: 618,
+                    x: 376,
                     borderRadius: 10,
                 },
             ],
