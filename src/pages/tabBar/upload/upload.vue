@@ -81,7 +81,7 @@ export default {
                 {
                     id: 7,
                     img:
-                        'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/school-events-mobile/openEvent-banner.png',
+                        'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/h5/opengame-banner.png',
                     url: '/pages/openGame/index',
                 },
                 {

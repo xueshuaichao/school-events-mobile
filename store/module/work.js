@@ -1,6 +1,13 @@
 export default {
     state: {
-        workParams: {},
+        workParams: {
+            position: {
+                curposition: 0,
+                total: 1,
+                from: '',
+            },
+            filter: {},
+        },
     },
     getters: {
         // eslint-disable-next-line max-len
