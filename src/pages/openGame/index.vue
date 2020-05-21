@@ -69,7 +69,7 @@
                         我的作品
                     </view>
                     <text class="active-time">
-                        活动时间：2020年4月30-7月20日
+                        活动时间：2020年5月20-7月20日
                     </text>
                 </view>
                 <view class="cansai-text">
