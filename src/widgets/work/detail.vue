@@ -180,24 +180,6 @@
                     />
                     <view> {{ praise_count || 0 }} </view>
                 </view>
-
-                <view
-                    class="item"
-                    @click="handleCanvass"
-                >
-                    <image
-                        class="icon"
-                        src="/static/images/yiqing/detail/share.png"
-                    />
-                </view>
-
-                <view class="item">
-                    <image
-                        class="icon"
-                        src="/static/images/yiqing/detail/view.png"
-                    />
-                    <view> {{ play_count || 1 }} </view>
-                </view>
                 <view
                     class="item"
                     @click.stop="showMessage"
@@ -208,6 +190,23 @@
                     />
                     <view>{{ total }}</view>
                 </view>
+                <view
+                    class="item"
+                    @click="handleCanvass"
+                >
+                    <image
+                        class="icon"
+                        src="/static/images/yiqing/detail/share.png"
+                    />
+                </view>
+
+                <!-- <view class="item">
+                    <image
+                        class="icon"
+                        src="/static/images/yiqing/detail/view.png"
+                    />
+                    <view> {{ play_count || 1 }} </view>
+                </view> -->
             </view>
 
             <view
@@ -358,7 +357,7 @@ export default {
             isPlayed: false,
             isPaused: false,
             isVideoWaiting: false,
-            play_count: 1,
+            // play_count: 1,
             showMore: false,
             introduce: this.pageData.introduce || '',
             total: 10,
@@ -416,15 +415,15 @@ export default {
                 this.praise_count = this.pageData.praise_count || 0;
                 this.introduce = this.pageData.introduce || '';
                 this.catName = this.pageData.cat_name || '';
-                this.play_count = this.pageData.play_count;
+                // this.play_count = this.pageData.play_count;
             }
         },
     },
     created() {
-        this.play_count = this.pageData.play_count;
-        if (this.pageData.resource_type === 2) {
-            this.play_count += 1;
-        }
+        // this.play_count = this.pageData.play_count;
+        // if (this.pageData.resource_type === 2) {
+        //     this.play_count += 1;
+        // }
     },
     mounted() {
         this.videoContext = uni.createVideoContext(
@@ -451,7 +450,7 @@ export default {
             api.post('/api/works/playcount', {
                 id: this.pageData.id,
             }).then(() => {
-                this.play_count += 1;
+                // this.play_count += 1;
             });
         },
         handleCanvass() {
