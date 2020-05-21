@@ -157,9 +157,10 @@
             </view>
             <view
                 class="cat-name"
+                :class="{ cur: pageData.cat_name }"
                 @click="jumpLabelList"
             >
-                {{ pageData.cat_name ? `#${pageData.cat_name}#` : "" }}
+                {{ pageData.cat_name ? `#${pageData.cat_name}` : "" }}
             </view>
         </view>
         <view class="fixed-panel">
@@ -691,8 +692,15 @@ export default {
     }
     .cat-name {
         font-size: 24upx;
-        color: #ff584b;
+        color: #fff;
         margin-top: 18upx;
+        line-height: 42upx;
+        display: inline-block;
+        padding: 0 11upx;
+        border-radius: 8upx;
+        &.cur {
+            border: 1px solid rgba(255, 255, 255, 0.7);
+        }
     }
     .orange {
         color: #db4e0e;
