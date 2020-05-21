@@ -82,14 +82,14 @@
             </template>
         </view>
         <view class="content">
-            <view class="author-info">
+            <view class="author-info clearfix">
                 <image
-                    class="avatar-top"
+                    class="avatar-top fl-l"
                     src="/static/images/work/avatar.png"
                 />
-                <text class="author-name text-one-line">
+                <view class="author-name text-one-line fl-l">
                     {{ pageData.create_name }}
-                </text>
+                </view>
             </view>
             <view class="school-and-record">
                 <text>{{ pageData.school_name }}</text>
@@ -118,7 +118,7 @@
                         v-if="pageData.achievement"
                         class="deatil-achievement lightyellow"
                     >
-                        成绩：{{ pageData.achievement
+                        成绩:{{ pageData.achievement
                         }}{{ pageData.achievement_unit }}
                     </text>
                 </view>
@@ -629,27 +629,27 @@ export default {
     text-shadow: 0 2upx 2upx rgba(0, 0, 0, 0.35);
     .file {
         display: inline-block;
-        height: 34rpx;
+        height: 24rpx;
         margin-right: 12upx;
-        width: 34rpx;
-        vertical-align: middle;
+        width: 24rpx;
+        // vertical-align: middle;
     }
 
     .author-info {
-        padding-left: 44rpx;
+        padding-left: 32rpx;
         position: relative;
         height: 34rpx;
         .avatar-top {
             position: absolute;
             left: 0;
             top: 50%;
-            width: 32rpx;
-            height: 34rpx;
-            margin-top: -17rpx;
+            width: 24rpx;
+            height: 24rpx;
+            margin-top: -12rpx;
         }
         .author-name {
             color: #fff;
-            font-size: 34upx;
+            font-size: 28upx;
             position: relative;
             line-height: 34upx;
             display: inline-block;
@@ -658,7 +658,7 @@ export default {
     }
     .school-and-record {
         font-size: 24upx;
-        margin: 0 0 24upx 0;
+        margin: 6upx 0 24upx 0;
     }
 
     .author-from {
@@ -679,7 +679,7 @@ export default {
     .deatil-achievement {
         margin-left: 10upx;
         font-size: 24upx;
-        font-display: inline;
+        display: inline;
         vertical-align: super;
         word-break: break-all;
     }
@@ -709,7 +709,7 @@ export default {
         vertical-align: middle;
     }
     .work-name-wrap {
-        line-height: 34upx;
+        line-height: 24upx;
         .text-two-line {
             width: 90%;
         }
@@ -736,6 +736,8 @@ export default {
 
         .item {
             margin-bottom: 10rpx;
+            margin-left: 50rpx;
+            min-width: 120rpx;
         }
     }
 
