@@ -162,6 +162,7 @@ export default {
         padding-left: 10rpx;
         padding-right: 4rpx;
         line-height: 36rpx;
+        padding-right: 4rpx;
     }
     .is-excellect {
         position: absolute;

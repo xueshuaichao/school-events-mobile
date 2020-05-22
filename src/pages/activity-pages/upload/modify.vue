@@ -8,13 +8,53 @@
             class="main"
             :style="{ background: publicConfig.mainBgColor }"
         >
+            <view class="uni-list-cell-db">
+                <picker
+                    :value="index"
+                    :range="catData"
+                    :range-key="'name'"
+                    @change="onSelect"
+                >
+                    <view
+                        v-if="!formData.cat_id"
+                        class="uni-input placeholder fake-input"
+                        :style="{
+                            background:
+                                publicConfig.inputBgColor ||
+                                publicConfig.primaryBgColor,
+                            'border-color':
+                                publicConfig.inputBorderColor || 'transparent',
+                            color: publicConfig.placeholderColor || '#fff'
+                        }"
+                    >
+                        选择分类
+                    </view>
+                    <view
+                        v-if="formData.cat_id"
+                        class="uni-input fake-input"
+                        :style="{
+                            background:
+                                publicConfig.inputBgColor ||
+                                publicConfig.primaryBgColor,
+                            'border-color':
+                                publicConfig.inputBorderColor || 'transparent',
+                            color: publicConfig.inputColor || '#fff'
+                        }"
+                    >
+                        {{ catData[index].name }}
+                    </view>
+                </picker>
+            </view>
             <view
                 v-if="uploadConfig.activityCat.length"
                 class="selection bb-sep"
             >
                 <view
                     class="label"
-                    :style="{ color: publicConfig.primaryColor }"
+                    :style="{
+                        color:
+                            publicConfig.titleColor || publicConfig.primaryColor
+                    }"
                 >
                     选择组别
                 </view>
@@ -47,7 +87,10 @@
             >
                 <view
                     class="label"
-                    :style="{ color: publicConfig.primaryColor }"
+                    :style="{
+                        color:
+                            publicConfig.titleColor || publicConfig.primaryColor
+                    }"
                 >
                     表现形式
                 </view>
@@ -84,7 +127,14 @@
                         `color:${publicConfig.placeholderColor}`
                     "
                     :maxlength="uploadConfig.nameMaxLength"
-                    :style="{ background: publicConfig.primaryBgColor }"
+                    :style="{
+                        background:
+                            publicConfig.inputBgColor ||
+                            publicConfig.primaryBgColor,
+                        'border-color':
+                            publicConfig.inputBorderColor || 'transparent',
+                        color: publicConfig.inputColor || '#fff'
+                    }"
                     :placeholder="uploadConfig.placeholderNameText"
                 >
             </view>
@@ -94,7 +144,14 @@
                 class="uni-textarea"
                 placeholder-class="placeholder"
                 :placeholder-style="`color:${publicConfig.placeholderColor}`"
-                :style="{ background: publicConfig.primaryBgColor }"
+                :style="{
+                    background:
+                        publicConfig.inputBgColor ||
+                        publicConfig.primaryBgColor,
+                    'border-color':
+                        publicConfig.inputBorderColor || 'transparent',
+                    color: publicConfig.inputColor
+                }"
                 :maxlength="uploadConfig.descMaxLength"
                 :placeholder="uploadConfig.placeholderDescText"
             />
@@ -260,9 +317,14 @@ export default {
             uni.setNavigationBarTitle({ title: '编辑作品' });
             this.getItemData();
         }
-        this.publicConfig = this.$store.getters.getPublicConfig(
-            this.formData.activity_id,
-        );
+        const uploadColorConfig = this.$store.getters.getColorConfig({
+            activityId: this.formData.activity_id,
+            page: 'uploadColorConfig',
+        });
+        this.publicConfig = {
+            ...this.$store.getters.getPublicConfig(this.formData.activity_id),
+            ...uploadColorConfig,
+        };
         this.uploadConfig = this.$store.getters.getActivityConfig({
             activityId: this.formData.activity_id,
             page: 'uploadConfig',
@@ -273,6 +335,8 @@ export default {
         this.formData.resource_type = this.uploadMode === 'video' ? 1 : 2;
         this.theme = {
             primaryColor: this.publicConfig.primaryColor,
+            textColor: this.publicConfig.titleColor,
+            tipsColor: this.publicConfig.tipsColor,
             bgColor: this.publicConfig.primaryBgColor,
         };
     },
@@ -348,6 +412,11 @@ export default {
             }
         },
         getData() {
+            api.get('/api/works/childcat', {
+                cat_id: 3,
+            }).then((res) => {
+                this.catData = res;
+            });
             api.get('/api/user/info').then(
                 (res) => {
                     this.needBindMobile = res.user_info && res.user_info.is_bind_mobile === 0;
@@ -398,6 +467,12 @@ export default {
                     title: err.message,
                 }),
             );
+        },
+        onSelect(e) {
+            this.index = e.detail.value;
+            const catId = this.catData[this.index].cat_id;
+            this.formData.cat_id = catId;
+            console.log(this.formData);
         },
         errTip(title) {
             uni.showToast({
@@ -559,15 +634,17 @@ export default {
     .bt-sep {
         margin-top: 40rpx;
     }
-
     .uni-input,
     .uni-textarea {
-        // border: 1upx solid #ccc;
+        border: 1upx solid transparent;
         margin-bottom: 40rpx;
         font-size: 28rpx;
         background: #0f8c64;
-        border-radius: 12rpx;
+        border-radius: 24upx;
         color: #fff;
+    }
+    .uni-input {
+        border-radius: 40upx;
     }
 
     /deep/ .comp-upload {
@@ -576,6 +653,7 @@ export default {
 
         .cover-wrap {
             background: #0f8c64;
+            border-radius: 12upx;
 
             .icon-desc {
                 color: #0f8c64;
@@ -651,7 +729,7 @@ export default {
 
         .select-item {
             // width: 110rpx;
-            padding: 0 44rpx;
+            padding: 0 57rpx;
             height: 56rpx;
             line-height: 56rpx;
             border: 1px solid #0f8c64;

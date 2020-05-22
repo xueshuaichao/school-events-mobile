@@ -1,6 +1,6 @@
 <template>
     <view
-        class="activity-page-index"
+        :class="['activity-page-index', className]"
         :style="{ 'background-color': publicConfig.mainBgColor }"
     >
         <official-account v-if="!isH5" />
@@ -11,16 +11,20 @@
             ]"
         >
             <!-- 活动规则 -->
-            <rule
+
+            <maskBox
                 v-if="prompt"
                 :rules="indexConfig.rules"
+                type="rule"
                 :theme="{
-                    bgColor: publicConfig.primaryBgColor,
+                    bgColor:
+                        indexConfig.maskBgColor || publicConfig.primaryBgColor,
                     titleColor: publicConfig.titleColor
                 }"
                 :name="publicConfig.activityName"
                 @close="handleClose"
             />
+
             <!-- 奖品说明 -->
             <prize-desc
                 v-if="prizePrompt"
@@ -72,14 +76,16 @@
                     </template>
                 </view>
                 <view class="main-content">
-                    <!-- 奖品 -->
-                    <prize
-                        :name="publicConfig.activityName"
-                        :text-color="publicConfig.primaryColor"
-                        :border-color="publicConfig.primaryBgColor"
-                        :prize-list="indexConfig.prizes"
-                        @handleActiveprize="handleActiveprize"
-                    />
+                    <slot name="prize">
+                        <!-- 奖品 -->
+                        <prize
+                            :name="publicConfig.activityName"
+                            :text-color="publicConfig.primaryColor"
+                            :border-color="publicConfig.primaryBgColor"
+                            :prize-list="indexConfig.prizes"
+                            @handleActiveprize="handleActiveprize"
+                        />
+                    </slot>
                     <slot name="rank" />
                     <!-- 跑马灯 -->
                     <tipsList
@@ -89,14 +95,14 @@
                             bgColor: publicConfig.primaryBgColor
                         }"
                     />
-                    <view
-                        class="cansai-text"
-                        :style="{ color: publicConfig.primaryColor }"
-                    >
-                        —— 活动作品 ——
-                    </view>
                     <!-- work show -->
                     <view class="menu-list">
+                        <view
+                            class="cansai-text"
+                            :style="{ color: publicConfig.primaryColor }"
+                        >
+                            —— 活动作品 ——
+                        </view>
                         <view class="search-box">
                             <button
                                 v-for="(item, index) in publicConfig.catMenu"
@@ -245,7 +251,7 @@
 
 <script>
 import api from '../../../common/api';
-import rule from './rule.vue';
+import maskBox from './mask.vue';
 import prizeDesc from './prize-desc.vue';
 import prize from './prize.vue';
 import tipsList from './tips-list.vue';
@@ -255,22 +261,6 @@ import EventCraftCover from '../../../components/event-craft-cover/index.vue';
 
 export default {
     filters: {
-        optimizeImage: (val) => {
-            if (!val) {
-                return '';
-            }
-            let newUrl = '';
-            const width = 335;
-            const height = 225;
-            if (val.indexOf('?') !== -1) {
-                newUrl = `${val}&x-oss-process=image/format,png/interlace,1/quality,Q_80/resize,m_pad,h_${height
-                    * 2},w_${width * 2}`;
-            } else {
-                newUrl = `${val}?x-oss-process=image/format,png/interlace,1/quality,Q_80/resize,m_pad,h_${height
-                    * 2},w_${width * 2}`;
-            }
-            return newUrl;
-        },
         plusXing: (val) => {
             if (val.length === 11) {
                 return `${val.substr(0, 3)}****${val.substr(7)}`;
@@ -280,13 +270,17 @@ export default {
     },
     components: {
         uniLoadMore,
-        rule,
+        maskBox,
         prizeDesc,
         prize,
         tipsList,
         EventCraftCover,
     },
     props: {
+        className: {
+            type: String,
+            default: '',
+        },
         isStopScroll: {
             type: Boolean,
             default: false,
@@ -416,37 +410,37 @@ export default {
         },
         activityStatus() {
             // 1未开始，2进行中，3已结束
-            api.get('/api/activity/getactivitystatus', {
+            api.get('/api/activity/activitystatus', {
                 activity_id: this.filter.activity_id,
             }).then((res) => {
                 this.status = res.status;
             });
         },
         handleUpload() {
-            if (this.isH5) {
-                return uni.showToast({
-                    title: '请在UP爱挑战小程序上传作品',
-                    icon: 'none',
+            // if (this.isH5) {
+            //     return uni.showToast({
+            //         title: '请在UP爱挑战小程序上传作品',
+            //         icon: 'none',
+            //     });
+            // }
+            // if (this.status === 2) {
+            api.isLogin({
+                fr: this.fr,
+            }).then(() => {
+                uni.navigateTo({
+                    url: `/pages/activity-pages/upload/modify?activity_id=${this.filter.activity_id}`,
                 });
-            }
-            if (this.status === 2) {
-                api.isLogin({
-                    fr: this.fr,
-                }).then(() => {
-                    uni.navigateTo({
-                        url: `/pages/activity-pages/upload/modify?activity_id=${this.filter.activity_id}`,
-                    });
-                });
-            } else {
-                uni.showToast({
-                    title:
-                        this.status === 1
-                            ? '活动未开始，敬请期待'
-                            : '活动已结束',
-                    icon: 'none',
-                });
-            }
-            return true;
+            });
+            // } else {
+            //     uni.showToast({
+            //         title:
+            //             this.status === 1
+            //                 ? '活动未开始，敬请期待'
+            //                 : '活动已结束',
+            //         icon: 'none',
+            //     });
+            // }
+            // return true;
         },
 
         // onReachBottom() {
@@ -784,75 +778,6 @@ body.dialog-open {
         color: #0f8c64;
         width: 100%;
         line-height: 253upx;
-    }
-}
-
-.activerulebox {
-    background-color: rgba(0, 0, 0, 0.8);
-    width: 100%;
-    height: 100%;
-    box-sizing: border-box;
-    position: fixed;
-    color: #fff;
-    z-index: 999;
-    font-size: 24upx;
-    &:first-child {
-        font-size: 28upx;
-    }
-    .title {
-        font-size: 28upx;
-        color: #ffde6d;
-        font-weight: bold;
-        margin-bottom: 17upx;
-    }
-
-    .text {
-        margin-bottom: 40upx;
-        font-weight: 300;
-        font-size: 28upx;
-    }
-    .title-icon {
-        background: url("https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/read_title.png")
-            no-repeat;
-        background-size: 100% 100%;
-        font-size: 0upx;
-        width: 303upx;
-        height: 90upx;
-        position: absolute;
-        top: -43upx;
-        left: 190upx;
-        text-align: center;
-        line-height: 69upx;
-        z-index: 222;
-    }
-    .close {
-        background-size: 100% 100%;
-        width: 62upx;
-        height: 62upx;
-        top: -13upx;
-        right: -12upx;
-        position: absolute;
-    }
-    .active-content {
-        background-color: #04a875;
-        position: absolute;
-        top: 62upx;
-        left: 35upx;
-        height: 92%;
-        width: 678upx;
-        padding: 76upx 30upx 38upx;
-        box-sizing: border-box;
-        padding-right: 20upx;
-        border-radius: 46rpx;
-        .active-rule-box {
-            width: 100%;
-            overflow-y: scroll;
-            max-height: 100%;
-            overflow-x: hidden;
-        }
-        .size {
-            font-size: 28upx;
-        }
     }
 }
 

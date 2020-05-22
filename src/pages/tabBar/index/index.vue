@@ -63,6 +63,17 @@
                 >
                     <swiper-item>
                         <navigator
+                            url="/pages/activity-pages/children/index"
+                            class="swiper-item"
+                        >
+                            <image
+                                class="banner-image"
+                                src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/h5/liuyi-banner.png"
+                            />
+                        </navigator>
+                    </swiper-item>
+                    <swiper-item>
+                        <navigator
                             url="/pages/activity-pages/labor/index"
                             class="swiper-item"
                         >
@@ -250,7 +261,7 @@ export default {
                     id: 9,
                     img:
                         'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/h5/liuyi-s-banner.png',
-                    url: '/pages/activity-pages/labor/index',
+                    url: '/pages/activity-pages/children/index',
                 },
                 {
                     id: 8,

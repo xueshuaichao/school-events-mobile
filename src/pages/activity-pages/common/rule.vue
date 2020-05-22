@@ -39,7 +39,21 @@
                                 v-for="(textItem, k) in ruleItem.texts"
                                 :key="k"
                             >
-                                {{ textItem }}
+                                <template v-if="textItem.title">
+                                    <view class="tit">
+                                        {{ textItem.title }}
+                                    </view>
+                                    <view
+                                        v-for="(list, i) in textItem.list"
+                                        :key="i"
+                                        class="rule-list"
+                                    >
+                                        {{ list }}
+                                    </view>
+                                </template>
+                                <template v-else>
+                                    {{ textItem }}
+                                </template>
                             </view>
                         </view>
                     </view>

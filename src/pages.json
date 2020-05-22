@@ -243,6 +243,12 @@
             }
         },
         {
+            "path": "pages/activity-pages/children/index",
+            "style": {
+                "navigationBarTitleText": "红包雨"
+            }
+        },
+        {
             "path": "pages/activity-pages/upload/modify",
             "style": {
                 "navigationBarTitleText": "青少年动起来"

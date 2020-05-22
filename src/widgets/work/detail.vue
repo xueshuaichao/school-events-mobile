@@ -199,14 +199,6 @@
                         src="/static/images/yiqing/detail/share.png"
                     />
                 </view>
-
-                <!-- <view class="item">
-                    <image
-                        class="icon"
-                        src="/static/images/yiqing/detail/view.png"
-                    />
-                    <view> {{ play_count || 1 }} </view>
-                </view> -->
             </view>
 
             <view
@@ -239,31 +231,19 @@
                 </text>
             </view>
             <view
-                v-if="from === 'openGame'"
-                class="join-game-read to-activty-index read-index"
-                :class="[{ openGame1: from === 'openGame' }]"
-                @click="goHome"
-            >
-                <text>
-                    {{ homeText }}
-                </text>
-            </view>
-            <view
-                v-if="isFromShare === '1' && activityId > 5"
+                v-if="isFromShare && (activityId > 5 || from === 'openGame')"
                 class="join-game-read to-activty-index"
                 :class="[
                     { 'read-index': activityId === 6 },
-                    { 'wuyi-index': activityId === 8 }
+                    { 'wuyi-index': activityId === 8 },
+                    { 'liuyi-index': activityId === 9 },
+                    { openGame1: from === 'openGame' }
                 ]"
                 @click="watchIndex"
             >
                 <image
                     class="icon"
-                    :src="
-                        activityId === 6
-                            ? '/static/images/work/laba-read.png'
-                            : '/static/images/work/laba-wuyi.png'
-                    "
+                    :src="labaPath"
                 />
                 <text>
                     查看活动
@@ -354,7 +334,6 @@ export default {
         return {
             isFullScreen: false,
             recordTxts: ['校级记录', '市级记录', '省级记录'],
-            homeText: '< 返回首页',
             // #ifdef H5
             isH5: true,
             // #endif
@@ -370,6 +349,15 @@ export default {
             praise_count: this.pageData.praise_count || 0,
             toggleLikeObj: {},
         };
+    },
+    computed: {
+        labaPath() {
+            let id = this.activityId;
+            if (this.from === 'openGame') {
+                id = 7;
+            }
+            return `/static/images/work/laba-${id}.png`;
+        },
     },
     watch: {
         isChangeSlide(val) {
@@ -507,12 +495,12 @@ export default {
             if (this.activityId === 8) {
                 url = '/pages/activity-pages/labor/index';
             }
-            uni.navigateTo({
-                url,
-            });
-        },
-        goHome() {
-            const url = '/pages/openGame/index';
+            if (this.activityId === 9) {
+                url = '/pages/activity-pages/children/index';
+            }
+            if (this.from === 'openGame') {
+                url = '/pages/openGame/index';
+            }
             uni.navigateTo({
                 url,
             });
@@ -796,14 +784,12 @@ export default {
             background: #db4e0e;
         }
         &.liuyi {
-            background: #9f1ff3;
+            background: #c790ff;
         }
         &.openGame {
             background: #9f1ff3;
         }
-        &.openGame1 {
-            color: #9f1ff3 !important;
-        }
+
         .icon {
             width: 44rpx;
             height: 42rpx;
@@ -825,6 +811,12 @@ export default {
             }
             &.read-index {
                 color: #0f8c64;
+            }
+            &.liuyi-index {
+                color: #c790ff;
+            }
+            &.openGame1 {
+                color: #9f1ff3 !important;
             }
         }
     }

@@ -6,14 +6,14 @@
         <view
             v-if="type === 'video'"
             class="comp-title"
-            :style="{ color: theme.primaryColor }"
+            :style="{ color: theme.textColor }"
         >
             上传视频
         </view>
         <view
             v-if="type === 'image'"
             class="comp-title"
-            :style="{ color: theme.primaryColor }"
+            :style="{ color: theme.textColor }"
         >
             {{ isVideo ? "上传封面（选填）" : "上传图片" }}
         </view>
@@ -56,7 +56,7 @@
             </view>
             <view
                 class="desc"
-                :style="{ color: theme.primaryColor }"
+                :style="{ color: theme.tipsColor }"
                 :class="{ image: type === 'image' }"
             >
                 <template v-if="type === 'video'">
@@ -94,7 +94,7 @@
         <view
             v-if="type === 'image' && isVideo"
             class="tips"
-            :style="{ color: theme.primaryColor }"
+            :style="{ color: theme.tipsColor }"
         >
             系统为您自动截取视频内容作为封面，可更换
         </view>

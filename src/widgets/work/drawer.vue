@@ -336,7 +336,7 @@ export default {
             }
             .item {
                 margin: 20rpx 0;
-                padding-right: 30rpx;
+                padding-right: 20rpx;
                 .img-box {
                     width: 72rpx;
                     height: 72rpx;
@@ -363,7 +363,7 @@ export default {
                 .right {
                     font-size: 24rpx;
                     color: #8d9199;
-                    line-height: 32rpx;
+                    line-height: 36rpx;
                 }
             }
         }

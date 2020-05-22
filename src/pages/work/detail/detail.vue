@@ -11,7 +11,7 @@
                 { chunjie: activity_id === 3 || activity_id === 4 },
                 { wuyi: activity_id === 8 },
                 { openGame: from === 'openGame' },
-                { liuyi: activity_id === 9 || from === 'openGame' }
+                { liuyi: activity_id === 9 }
             ]"
         >
             <image
@@ -633,10 +633,6 @@ export default {
                 () => {
                     if (this.activity_id) {
                         this.joinActivity();
-                    } else if (this.from === 'openGame') {
-                        uni.navigateTo({
-                            url: '/pages/openGame/zhibo-list',
-                        });
                     } else {
                         uni.navigateTo({
                             url: '/pages/openGame/zhibo-list',
@@ -659,11 +655,9 @@ export default {
                         uni.navigateTo({
                             url: '/pages/read/upload/modify',
                         });
-                    }
-                    if (this.activity_id === 8) {
+                    } else {
                         uni.navigateTo({
-                            url:
-                                '/pages/activity-pages/upload/modify?activity_id=8',
+                            url: `/pages/activity-pages/upload/modify?activity_id=${this.activity_id}`,
                         });
                     }
                 } else if (status === 1) {
