@@ -188,7 +188,7 @@
                         class="icon"
                         src="/static/images/yiqing/detail/message.png"
                     />
-                    <view>{{ total }}</view>
+                    <view>{{ commentTotal }}</view>
                 </view>
                 <view
                     class="item"
@@ -225,7 +225,8 @@
                 class="join-game-read"
                 :class="[
                     { wuyi: activityId === 8 },
-                    { openGame: from === 'openGame' }
+                    { openGame: from === 'openGame' },
+                    { liuyi: activityId === 9 }
                 ]"
                 @click="joinGame"
             >
@@ -343,6 +344,10 @@ export default {
         swiperPage: {
             type: Number,
             default: 1,
+        },
+        commentTotal: {
+            type: Number,
+            default: 0,
         },
     },
     data() {
@@ -789,6 +794,9 @@ export default {
         line-height: 40rpx;
         &.wuyi {
             background: #db4e0e;
+        }
+        &.liuyi {
+            background: #9f1ff3;
         }
         &.openGame {
             background: #9f1ff3;

@@ -5,7 +5,7 @@
             class="cover"
         >
             <image
-                src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/h5/suspension-wuyi.png"
+                src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/h5/suspension-liuyi.png"
             />
             <view
                 class="join-btn"
@@ -236,7 +236,7 @@ export default {
                 talent: { list: [], total: 0 },
             },
             prompt: false,
-            isFirstLogin: 'hasLaborPromt',
+            isFirstLogin: 'hasLiuyiPromt',
             status: 1,
             // show: 1,
             // #ifdef H5
@@ -246,6 +246,12 @@ export default {
             changeValue: '',
             hotList: [],
             confList: [
+                {
+                    id: 9,
+                    img:
+                        'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/h5/liuyi-s-banner.png',
+                    url: '/pages/activity-pages/labor/index',
+                },
                 {
                     id: 8,
                     img:
@@ -344,7 +350,7 @@ export default {
         getNewActivityStatus() {
             // 1未开始，2进行中，3已结束
             api.get('/api/activity/activitystatus', {
-                activity_id: 8,
+                activity_id: 9,
             }).then((data) => {
                 console.log(data, 'aaaa');
                 this.status = data.status;
@@ -355,6 +361,9 @@ export default {
             const isFirstLogin = uni.getStorageSync(this.isFirstLogin);
             if (uni.getStorageSync('hasReadPromt')) {
                 uni.removeStorageSync('hasReadPromt');
+            }
+            if (uni.getStorageSync('hasLaborPromt')) {
+                uni.removeStorageSync('hasLaborPromt');
             }
             if (!isFirstLogin) {
                 this.prompt = true;
@@ -456,6 +465,7 @@ export default {
                     });
                     return obj;
                 });
+                console.log(this.hotList, 'dasdasdasdadsasdadasd');
             });
         },
         getSearchWord() {
@@ -500,37 +510,37 @@ export default {
         margin: 130upx auto 0;
     }
     .join-btn {
-        width: 420upx;
-        height: 110upx;
-        background: linear-gradient(
-            180deg,
-            rgba(219, 78, 14, 1),
-            rgba(255, 159, 115, 1)
-        );
-        border-radius: 55upx;
+        width: 540upx;
+        height: 98upx;
+        margin: 30upx auto 50upx;
+
+        border-radius: 50upx;
         color: #fff;
         font-size: 40upx;
-        line-height: 110upx;
+        line-height: 98upx;
         text-align: center;
-        margin: -50upx auto 50upx;
-        position: relative;
-        z-index: 1;
+        background-color: #c790ff;
+        background-image: url(../../../static/images/work/querter-circle.png);
+        background-repeat: no-repeat;
+        background-position: 12rpx 12rpx;
+        background-size: 34rpx 36rpx;
+        box-shadow: 0 0 24rpx 0 rgba(255, 255, 255, 1) inset;
     }
     .close {
-        width: 52upx;
-        height: 52upx;
+        width: 62upx;
+        height: 62upx;
         border-radius: 50%;
-        background: #de5416;
         margin: 0 auto;
         position: relative;
+        border: 2upx solid #fff;
         &::before,
         &::after {
             position: absolute;
             content: "";
-            width: 22upx;
+            width: 34upx;
             height: 4upx;
-            left: 15upx;
-            top: 25upx;
+            left: 14upx;
+            top: 28upx;
             border-radius: 2upx;
             background: #fff;
             transform: rotate(45deg);

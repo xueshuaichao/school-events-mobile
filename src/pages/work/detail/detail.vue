@@ -10,7 +10,8 @@
                 { read: activity_id === 6 },
                 { chunjie: activity_id === 3 || activity_id === 4 },
                 { wuyi: activity_id === 8 },
-                { openGame: from === 'openGame' }
+                { openGame: from === 'openGame' },
+                { liuyi: activity_id === 9 || from === 'openGame' }
             ]"
         >
             <image
@@ -107,6 +108,7 @@
                     :is-from-share="isFromShare"
                     :from="from"
                     :show-drawer="showDrawer"
+                    :comment-total="commentTotal"
                     @doAction="doAction"
                 />
             </swiper-item>
@@ -125,6 +127,7 @@
                         :is-from-share="isFromShare"
                         :from="from"
                         :show-drawer="showDrawer"
+                        :comment-total="commentTotal"
                         @doAction="doAction"
                     />
                 </swiper-item>
@@ -141,6 +144,7 @@
                         :is-from-share="isFromShare"
                         :from="from"
                         :show-drawer="showDrawer"
+                        :comment-total="commentTotal"
                         @doAction="doAction"
                     />
                 </swiper-item>
@@ -156,6 +160,7 @@
                     :is-from-share="isFromShare"
                     :from="from"
                     :show-drawer="showDrawer"
+                    :comment-total="commentTotal"
                     @doAction="doAction"
                 />
             </swiper-item>
@@ -164,6 +169,7 @@
             :show="showDrawer"
             :page-data="pageData"
             @doAction="doAction"
+            @getcommentTotal="getcommentTotal"
         />
     </view>
 </template>
@@ -234,10 +240,14 @@ export default {
             outSwiperIncrease: true,
             filterObj: {},
             apiFrom: '',
+            commentTotal: 0,
         };
     },
     created() {},
     methods: {
+        getcommentTotal(val) {
+            this.commentTotal = val;
+        },
         getAuthStatus() {
             const that = this;
             // eslint-disable-next-line no-undef
@@ -505,10 +515,10 @@ export default {
             } else {
                 //  中间穿插的
                 // eslint-disable-next-line prefer-destructuring
-                this.curDetailConf = detailConf[8];
+                this.curDetailConf = detailConf[6];
                 this.posterConfig = {
                     ...this.posterConfig,
-                    ...detailConf[8].posterConfig,
+                    ...detailConf[6].posterConfig,
                 };
             }
             this.posterConfig.images[1].url = `${res.video_img_url}?x-oss-process=image/resize,m_pad,w_460,h_300`;
@@ -1110,11 +1120,26 @@ export default {
                     rgba(219, 78, 14, 1),
                     rgba(255, 159, 115, 1)
                 );
-                border-radius: 55px;
+                border-radius: 55rpx;
                 color: #fff;
             }
             .close {
                 background: #e76a31;
+            }
+        }
+        &.liuyi {
+            .saveBtn {
+                color: #fff;
+                background-color: #c790ff;
+                background-image: url(../../../static/images/work/querter-circle.png);
+                background-repeat: no-repeat;
+                background-position: 12rpx 12rpx;
+                background-size: 34rpx 36rpx;
+                box-shadow: 0 0 24rpx 0 rgba(255, 255, 255, 1) inset;
+            }
+            .close {
+                background: transparent;
+                border: 2rpx solid #fff;
             }
         }
     }

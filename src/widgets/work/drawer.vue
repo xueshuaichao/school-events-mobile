@@ -1,52 +1,101 @@
 <template>
-    <cover-view
+    <view
         v-if="showDraw"
         class="topic-drawer-box"
         @click="clickWrap"
     >
         <view
+            v-if="showKeybord"
+            class="marker"
+            :style="{ height: markerheight + 'px' }"
+        />
+        <view
             class="topic-drawer"
             :animation="animationData"
             @click.stop.prevent="clickNull"
         >
-            <view> {{ total }} 条评论 </view>
+            <view
+                class="close"
+                @click="clickWrap"
+            />
+            <view class="all-num">
+                {{ total }} 条评论
+            </view>
             <scroll-view
                 scroll-y
-                :style="{ height: drawerHeight - 100 + 'px' }"
+                :style="{ height: drawerHeight + 'px' }"
                 class="scroll-context"
-                refresher-enabled="true"
-                :refresher-triggered="triggered"
-                :refresher-threshold="100"
-                @refresherpulling="onPulling"
-                @refresherrefresh="onRefresh"
-                @refresherrestore="onRestore"
-                @refresherabort="onAbort"
+                @scrolltoupper="toUpper"
+                @scrolltolower="toLower"
             >
                 <view
-                    v-if="loading && !lists.length"
+                    v-if="loading && !list.length"
                     class="no-data"
                 >
                     暂无评论，快来留下你的精彩评论吧～
                 </view>
-                <view
-                    v-for="(item, index) in lists"
-                    :key="index"
-                    class="item"
-                >
-                    {{ item }}
-                </view>
+                <template v-if="loading && list.length">
+                    <view
+                        v-for="(item, index) in list"
+                        :key="index"
+                        class="item clearfix"
+                    >
+                        <view class="img-box fl-l">
+                            <image :src="item.user_info.avatar_url" />
+                        </view>
+                        <view class="center fl-l">
+                            <view class="name">
+                                {{ item.user_info.name }}
+                            </view>
+                            <view class="content">
+                                {{ item.content }}
+                            </view>
+                        </view>
+                        <view class="right fl-r">
+                            {{ item.created_at }}
+                        </view>
+                    </view>
+                </template>
             </scroll-view>
-            <view class="message-add">
-                <input
-                    v-model="changeVal"
-                    type="text"
-                    placeholder="写评论"
-                    maxlength="40"
-                    @confirm="bindconfirm"
+            <view
+                class="message-add clearfix"
+                :class="{ absolute: showKeybord }"
+                :style="{ top: (showKeybord ? inputTop : 0) + 'px' }"
+            >
+                <view class="add-ctx fl-l">
+                    <image
+                        src="/static/images/work/write.png"
+                        class="write-icon"
+                        @click="bindconfirm"
+                    />
+                    <!-- <view
+                        v-if="!showKeybord"
+                        class="transparent"
+                        @click="changeInput"
+                    >
+                        写评论
+                    </view> -->
+                    <input
+                        v-model="changeVal"
+                        type="text"
+                        placeholder="写评论"
+                        maxlength="40"
+                        :adjust-position="false"
+                        @blur="blur"
+                        @focus="onFoucs"
+                        @confirm="bindconfirm"
+                    >
+                </view>
+                <view
+                    v-if="showKeybord"
+                    class="fabu fl-r"
+                    @click="bindconfirm"
                 >
+                    发布
+                </view>
             </view>
         </view>
-    </cover-view>
+    </view>
 </template>
 <script>
 import api from '../../common/api';
@@ -64,7 +113,6 @@ export default {
     },
     data() {
         return {
-            lists: [1, 2, 3, 4, 5, 5, 6, 5, 7, 8, 8, 8, 8, 21, 121, 121],
             animationData: {},
             animation: {},
             showDraw: false,
@@ -80,7 +128,13 @@ export default {
             total: 0,
             list: [],
             loading: false,
-            triggered: false,
+            isH5: false,
+            showKeybord: false,
+            inputTop: 300,
+            pix: 1,
+            isFocus: false,
+            markerheight: 100,
+            screenHeight: 0,
         };
     },
     watch: {
@@ -93,7 +147,7 @@ export default {
                 this.hide();
                 setTimeout(() => {
                     that.showDraw = false;
-                }, 500);
+                }, 300);
             }
         },
         pageData() {
@@ -105,6 +159,9 @@ export default {
         },
     },
     created() {
+        // #ifdef H5
+        this.isH5 = true;
+        // #endif
         const animation = uni.createAnimation({
             duration: 1000,
             timingFunction: 'linear',
@@ -116,7 +173,10 @@ export default {
         const that = this;
         uni.getSystemInfo({
             success(res) {
-                that.drawerHeight = res.screenHeight * 0.6;
+                that.pix = res.screenWidth / 750;
+                that.screenHeight = res.screenHeight;
+                that.drawerHeight = res.screenHeight * 0.66
+                    - that.pix * (that.isH5 ? 210 : 300);
             },
             fail() {
                 that.drawerHeight = 320;
@@ -124,19 +184,28 @@ export default {
         });
 
         this.getList();
-
-        this.freshing2 = false;
-        setTimeout(() => {
-            this.triggered = true;
-        }, 1000);
     },
     methods: {
+        changeInput() {
+            this.isFocus = true;
+            this.showKeybord = true;
+        },
+        onFoucs(e) {
+            this.showKeybord = true;
+            console.log(e.detail.height, 'onFoucs----');
+            this.inputTop = e.detail.height - this.drawerHeight + this.pix * 100;
+            this.markerheight = this.screenHeight - e.detail.height - this.pix * 260;
+        },
+        blur() {
+            this.showKeybord = false;
+            this.isFocus = false;
+        },
         showing() {
             this.animation.bottom('0').step({ duration: 300 });
             this.animationData = this.animation.export();
         },
         hide() {
-            this.animation.bottom('-60%').step({ duration: 300 });
+            this.animation.bottom('-66').step({ duration: 300 });
             this.animationData = this.animation.export();
         },
         clickWrap() {
@@ -148,19 +217,27 @@ export default {
                 ({ list, total }) => {
                     this.loading = true;
                     this.total = total;
+                    this.$emit('getcommentTotal', total);
+                    let List = list;
+                    List = List.map((d) => {
+                        const D = d;
+                        D.created_at = D.created_at.slice(5, 16);
+                        return D;
+                    });
                     if (this.filter.page_num === 1) {
-                        this.list = list;
+                        this.list = List;
                     } else {
-                        this.list = this.list.concat(list);
+                        this.list = this.list.concat(List);
                     }
                 },
             );
         },
         bindconfirm() {
+            this.showKeybord = false;
             if (this.changeVal.trim()) {
                 api.post('/api/comment/add', {
                     content: this.changeVal.trim(),
-                    topic_type: 1,
+                    topic_type: 3,
                     topic_id: this.pageData.id,
                     comment_type: 1,
                 }).then(() => {
@@ -168,27 +245,22 @@ export default {
                         title: '已提交',
                         icon: 'none',
                     });
+                    this.loading = false;
+                    this.changeVal = '';
+                    this.filter.page_num = 1;
                     this.getList();
                 });
             }
         },
-        onPulling(e) {
-            console.log('onpulling', e);
+        toUpper() {
+            this.filter.page_num = 1;
+            this.getList();
         },
-        onRefresh() {
-            if (this.freshing2) return;
-            this.freshing2 = true;
-            setTimeout(() => {
-                this.triggered = false;
-                this.freshing2 = false;
-            }, 3000);
-        },
-        onRestore() {
-            this.triggered = 'restore'; // 需要重置
-            console.log('onRestore');
-        },
-        onAbort() {
-            console.log('onAbort');
+        toLower() {
+            if (this.filter.page_num * this.filter.page_size < this.total) {
+                this.filter.page_num += 1;
+                this.getList();
+            }
         },
     },
 };
@@ -197,19 +269,65 @@ export default {
 .topic-drawer-box {
     width: 100%;
     height: 100vh;
-    position: fixed;
+    position: absolute;
     left: 0;
     top: 0;
-    .topic-drawer {
-        width: 100%;
-        height: 60vh;
+    .marker {
         position: absolute;
-        bottom: -60vh;
+        top: 0;
+        background: rgba(0, 0, 0, 0.5);
+        left: 0;
+        width: 100%;
+        z-index: 101;
+    }
+    .topic-drawer {
+        padding: 30rpx 0;
+        height: 66vh;
+        width: 100%;
+        box-sizing: border-box;
+        position: absolute;
+        bottom: -66vh;
         background: #fff;
         border-radius: 16rpx 16rpx 0 0;
         z-index: 100;
+        .close {
+            position: absolute;
+            right: 52rpx;
+            top: 20rpx;
+            width: 40rpx;
+            height: 40rpx;
+        }
+        .close::before,
+        .close::after {
+            content: "";
+            display: block;
+            position: absolute;
+            width: 40rpx;
+            height: 5rpx;
+            background: #b0b5bf;
+            border-radius: 3rpx;
+        }
+        .close::before {
+            transform: rotate(45deg);
+            right: 0;
+            top: 20rpx;
+        }
+        .close::after {
+            transform: rotate(-45deg);
+            right: 0;
+            top: 20rpx;
+        }
+        .all-num {
+            text-align: center;
+            color: #b0b5bf;
+            font-size: 28rpx;
+            line-height: 40rpx;
+        }
 
         .scroll-context {
+            margin-top: 20rpx;
+            padding: 20rpx 30rpx;
+            box-sizing: border-box;
             .no-data {
                 font-size: 28rpx;
                 line-height: 300rpx;
@@ -217,7 +335,90 @@ export default {
                 text-align: center;
             }
             .item {
-                height: 100rpx;
+                margin: 20rpx 0;
+                padding-right: 30rpx;
+                .img-box {
+                    width: 72rpx;
+                    height: 72rpx;
+                    margin-right: 30rpx;
+                    image {
+                        width: 100%;
+                        height: 100%;
+                    }
+                }
+                .name {
+                    color: #303133;
+                    font-size: 30rpx;
+                    line-height: 38rpx;
+                    font-weight: 500;
+                }
+                .content {
+                    font-size: 28rpx;
+                    word-break: break-all;
+                    color: #5e6166;
+                    line-height: 40rpx;
+                    width: 368rpx;
+                }
+
+                .right {
+                    font-size: 24rpx;
+                    color: #8d9199;
+                    line-height: 32rpx;
+                }
+            }
+        }
+
+        .message-add {
+            padding: 0 30rpx;
+            margin: 20upx 0;
+            position: relative;
+            top: 0;
+            background: #fff;
+            .add-ctx {
+                background: #f0f0f2;
+                border-radius: 40rpx;
+                height: 80rpx;
+                position: relative;
+                width: 690rpx;
+                .transparent {
+                    background: transparent;
+                    position: absolute;
+                    left: 0;
+                    top: 0;
+                    width: 100%;
+                    height: 100%;
+                    z-index: 1;
+                }
+            }
+
+            .fabu {
+                color: #2f3033;
+                font-size: 28rpx;
+                line-height: 80rpx;
+            }
+
+            input {
+                height: 100%;
+                border: none;
+                width: 100%;
+                padding-left: 70rpx;
+                box-sizing: border-box;
+            }
+            &.absolute {
+                position: absolute;
+                margin-bottom: 20rpx;
+                left: 30rpx;
+                .add-ctx {
+                    width: 580rpx;
+                }
+            }
+            .write-icon {
+                width: 48rpx;
+                height: 48rpx;
+                position: absolute;
+                left: 20rpx;
+                top: 50%;
+                margin-top: -24rpx;
             }
         }
     }
