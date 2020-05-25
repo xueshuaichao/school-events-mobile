@@ -181,7 +181,7 @@ export default {
     data() {
         return {
             isLoading: true,
-
+            type: '',
             tabs: [
                 { id: '1', column_name: '视频' },
                 { id: '2', column_name: '图片' },
@@ -215,11 +215,28 @@ export default {
             catData: [],
             index: 0,
             lock: true,
+            id: 0,
         };
     },
-    onLoad() {},
     created() {
         // this.getData();
+    },
+    onLoad(query) {
+        this.type = query.type;
+        // this.id = query.id;
+
+        // if (this.id) {
+        //     api.get('/api/works/detail', {id: this.id}).then((data) => {
+        //         this.formData = {...this.formData, ...data};
+        //         if (data.resource_type === 2) {
+        //             this.uploadMode = 'image';
+        //             this.newsTabActiveIndex = 1;
+        //             this.formData.video_img_url = '';
+        //             this.images = data.img;
+        //         }
+        //         this.formDate.resource_id = this.id;
+        //     })
+        // }
     },
     onShow() {
         this.getData();
@@ -426,9 +443,18 @@ export default {
                     api.post('/api/user/editwork', formData).then(
                         () => {
                             uni.hideLoading();
-                            uni.navigateTo({
-                                url: '/pages/upload/result/result?type=success',
-                            });
+                            if (this.type) {
+                                uni.navigateTo({
+                                    url:
+                                        '/pages/upload/result/result?type=success&from=openGame',
+                                });
+                            } else {
+                                uni.navigateTo({
+                                    url:
+                                        '/pages/upload/result/result?type=success',
+                                });
+                            }
+
                             this.resetData();
                             this.lock = true;
                         },
@@ -445,6 +471,20 @@ export default {
             }
             return true;
         },
+    },
+    onShareAppMessage(res) {
+        if (res.from === 'button') {
+            // 来自页面内分享按钮
+            console.log(res.target);
+        }
+        const title = '青少年网络活动大赛';
+        return {
+            title,
+            imageUrl:
+                'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/h5/logo-h5.png',
+
+            path: '/pages/tabBar/index/index',
+        };
     },
 };
 </script>

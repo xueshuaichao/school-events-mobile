@@ -214,6 +214,7 @@ export default {
             needBindMobile: false,
             catData: [],
             index: 0,
+            from: '',
         };
     },
     created() {
@@ -316,7 +317,7 @@ export default {
                 (res) => {
                     console.log(res);
                     uni.navigateTo({
-                        url: '/pages/upload/result/result?type=success',
+                        url: `/pages/upload/result/result?type=success&from=${this.from}`,
                     });
                 },
                 err => uni.showToast({
@@ -330,7 +331,9 @@ export default {
         },
     },
     onLoad(params) {
+        console.log(params);
         this.id = params.id;
+        this.from = params.from || '';
         this.getData();
     },
 };

@@ -41,7 +41,7 @@
                     <template v-if="!isH5">
                         <navigator
                             v-if="type === 'challenge'"
-                            url="/pages/doc/detail/detail?id=rule"
+                            url="/pages/openGame/jingjiupload?type=jingji"
                             open-type="redirect"
                         >
                             <view class="btn">

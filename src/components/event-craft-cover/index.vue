@@ -160,6 +160,7 @@ export default {
         font-size: 20rpx;
         box-sizing: border-box;
         padding-left: 10rpx;
+        padding-right: 4rpx;
         line-height: 36rpx;
         padding-right: 4rpx;
     }

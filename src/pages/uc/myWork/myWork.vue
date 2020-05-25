@@ -33,7 +33,7 @@
         <view class="work-list">
             <template v-if="tableData.length">
                 <view
-                    v-for="item in tableData"
+                    v-for="(item, index) in tableData"
                     :key="item.id"
                     class="work-item"
                 >
@@ -41,12 +41,14 @@
                         :info="item"
                         :mode="'single'"
                         :show-class="false"
+                        :from="'/api/user/worklist'"
+                        @click.native="toDetail(item, index)"
                     />
                     <view class="btns">
                         <button
                             v-if="item.status === 1"
                             class="btn"
-                            @click="toDetail(item)"
+                            @click="toDetail(item, index)"
                         >
                             查看
                         </button>
@@ -124,7 +126,7 @@ export default {
     },
     methods: {
         getWorkStatic() {
-            api.get('/api/user/workstatics').then(
+            api.get('/api/user/workstatics', { parent_scope: 2 }).then(
                 (res) => {
                     // this.workStatics = res[0];
                     [this.workStatics] = res;
@@ -132,10 +134,20 @@ export default {
                 () => {},
             );
         },
-        toDetail(item) {
-            uni.navigateTo({
-                url: `/pages/work/detail/detail?id=${item.id}&activity_id=${item.activity_id}&resource_scope=${item.resource_scope}`,
-            });
+        toDetail(item, index) {
+            if (this.filter.status === 1) {
+                this.$store.commit('setFilterData', {
+                    position: {
+                        total: this.total,
+                        curposition: index,
+                        from: '/api/user/worklist',
+                    },
+                    filter: this.filter,
+                });
+                uni.navigateTo({
+                    url: `/pages/work/detail/detail?id=${item.id}&activity_id=${item.activity_id}`,
+                });
+            }
         },
         showCause({ memo }) {
             uni.showModal({
@@ -176,12 +188,20 @@ export default {
             api.post(url, {
                 id: item.id,
             }).then(() => {
+                if (index !== -1) {
+                    this.tableData.splice(index, 1);
+                    this.total -= 1;
+                    if (
+                        this.tableData.length <= this.filter.page_size
+                        && this.total >= this.filter.page_size
+                    ) {
+                        this.filter.page_num = 1;
+                        this.getWorkData();
+                    }
+                }
                 uni.showToast({
                     title: '删除成功',
                 });
-                if (index !== -1) {
-                    this.tableData.splice(index, 1);
-                }
                 this.getWorkStatic();
             });
         },
@@ -255,7 +275,7 @@ export default {
                 return {
                     title: item.resource_name,
                     imageUrl: item.video_img_url,
-                    path: `/pages/work/detail/detail?id=${item.id}&activity_id=${item.activity_id}&resource_scope=${item.resource_scope}`,
+                    path: `/pages/work/detail/detail?id=${item.id}&activity_id=${item.activity_id}`,
                 };
             }
             return false;

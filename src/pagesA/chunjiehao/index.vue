@@ -307,14 +307,14 @@
                     </view>
                     <view class="media-box">
                         <view
-                            v-for="item in dataList"
+                            v-for="(item, index) in dataList"
                             :key="item.id"
                             class="media-content"
                         >
                             <event-craft-cover
                                 :info="item"
                                 :bg-color="'B11A27'"
-                                @click.native="viewDetail(item)"
+                                @click.native="viewDetail(item, index)"
                             />
 
                             <view class="media-name text-one-line">
@@ -511,7 +511,7 @@ export default {
                     fr: this.fr,
                 }).then(() => {
                     uni.navigateTo({
-                        url: '/pages/chunjiehao/upload/upload',
+                        url: '/pagesA/chunjiehao/upload/upload',
                     });
                 });
             } else {
@@ -541,7 +541,7 @@ export default {
                 return;
             }
             uni.navigateTo({
-                url: `/pages/chunjiehao/myWork/myWork?type=search&name=${this.changeValue.trim()}`,
+                url: `/pagesA/chunjiehao/myWork/myWork?type=search&name=${this.changeValue.trim()}`,
             });
         },
         initShare() {
@@ -569,9 +569,17 @@ export default {
                     'http://aitiaozhan.oss-cn-beijing.aliyuncs.com/h5/chunjiehao-banner.png?x-oss-process=image/format,png/interlace,1/quality,Q_80/resize,m_pad,h_100',
             });
         },
-        viewDetail(item) {
+        viewDetail({ id }, index) {
+            this.$store.commit('setFilterData', {
+                filter: this.filter,
+                position: {
+                    total: this.total,
+                    curposition: index,
+                    from: '/api/activity/resourcelist',
+                },
+            });
             uni.navigateTo({
-                url: `/pages/work/detail/detail?id=${item.id}&fr=${this.fr}&activity_id=4`,
+                url: `/pages/work/detail/detail?id=${id}&activity_id=4`,
             });
         },
         toggle(k) {
@@ -589,7 +597,7 @@ export default {
                 fr: this.fr,
             }).then(() => {
                 uni.navigateTo({
-                    url: '/pages/chunjiehao/myWork/myWork?type=myWork',
+                    url: '/pagesA/chunjiehao/myWork/myWork?type=myWork',
                 });
             });
         },
@@ -649,7 +657,7 @@ export default {
         return {
             title: this.shareDesc,
             // imageUrl: '/static/images/index/banner.png',
-            path: '/pages/chunjiehao/index',
+            path: '/pagesA/chunjiehao/index',
         };
     },
 };

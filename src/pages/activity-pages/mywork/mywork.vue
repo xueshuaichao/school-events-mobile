@@ -454,8 +454,20 @@ export default {
             uni.pageScrollTo({ scrollTop: 0, duration: 300 });
             this.getWorkData();
         },
-        viewDetail(item) {
+        viewDetail(item, index) {
             if (this.tabActiveIndex === 2) {
+                let from = '/api/activity/resourcelist';
+                if (this.type === 'myWork') {
+                    from = '/api/activity/userresource';
+                }
+                this.$store.commit('setFilterData', {
+                    filter: this.filter,
+                    position: {
+                        total: this.total,
+                        curposition: index,
+                        from,
+                    },
+                });
                 uni.navigateTo({
                     url: `/pages/work/detail/detail?id=${item.id}&activity_id=8`,
                 });
@@ -503,12 +515,23 @@ export default {
             api.post('/api/activity/del', {
                 id: item.id,
             }).then(() => {
+                if (index !== -1) {
+                    this.dataList.splice(index, 1);
+                    this.total -= 1;
+                    if (
+                        this.dataList.length <= this.filter.page_size
+                        && this.total >= this.filter.page_size
+                    ) {
+                        if (this.total > this.filter.page_size) {
+                            this.loadMoreStatus = 'noMore';
+                        }
+                        this.filter.page_num = 1;
+                        this.getWorkData();
+                    }
+                }
                 uni.showToast({
                     title: '删除成功',
                 });
-                if (index !== -1) {
-                    this.dataList.splice(index, 1);
-                }
                 if (this.tabActiveIndex === 1) {
                     // 待审核
                     this.allNum.wait -= 1;

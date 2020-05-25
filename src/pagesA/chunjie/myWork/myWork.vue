@@ -74,14 +74,14 @@
             </view>
             <view v-if="total > 0">
                 <view
-                    v-for="item in dataList"
+                    v-for="(item, index) in dataList"
                     :key="item.id"
                     class="media-content"
                 >
                     <event-craft-cover
                         :info="item"
                         :bg-color="'f5dca3'"
-                        @click.native="viewDetail(item)"
+                        @click.native="viewDetail(item, index)"
                     />
                     <view
                         v-if="type === 'myWork'"
@@ -156,7 +156,7 @@
                 </view>
                 <navigator
                     v-if="allTotal === 0"
-                    url="/pages/chunjie/upload/upload"
+                    url="/pagesA/chunjie/upload/upload"
                 >
                     <view class="goUpload">
                         去上传
@@ -236,7 +236,7 @@ export default {
     methods: {
         goHome() {
             uni.reLaunch({
-                url: '/pages/chunjie/index',
+                url: '/pagesA/chunjie/index',
             });
         },
         toggle(k) {
@@ -339,17 +339,23 @@ export default {
             uni.pageScrollTo({ scrollTop: 0, duration: 300 });
             this.getWorkData();
         },
-        viewDetail(item) {
+        viewDetail({ id }, index) {
             if (this.tabActiveIndex === 2) {
+                let from = '/api/activity/resourcelist';
                 if (this.type === 'myWork') {
-                    uni.navigateTo({
-                        url: `/pages/work/detail/detail?id=${item.id}&fr=${this.fr}&activity_id=3&from=chunjie`,
-                    });
-                } else {
-                    uni.navigateTo({
-                        url: `/pages/work/detail/detail?id=${item.id}&fr=${this.fr}&activity_id=3`,
-                    });
+                    from = '/api/activity/userresource';
                 }
+                this.$store.commit('setFilterData', {
+                    filter: this.filter,
+                    position: {
+                        total: this.total,
+                        curposition: index,
+                        from,
+                    },
+                });
+                uni.navigateTo({
+                    url: `/pages/work/detail/detail?id=${id}&activity_id=3`,
+                });
             }
         },
     },
@@ -378,7 +384,7 @@ export default {
             title,
             imageUrl:
                 'http://aitiaozhan.oss-cn-beijing.aliyuncs.com/banner.png',
-            path: '/pages/chunjie/index',
+            path: '/pagesA/chunjie/index',
         };
     },
 };

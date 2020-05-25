@@ -71,7 +71,14 @@ export default {
             // #endif
             loading: false,
             list: [],
+            total: 0,
             confList: [
+                {
+                    id: 9,
+                    img:
+                        'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/h5/liuyi-banner.png',
+                    url: '/pages/activity-pages/children/index',
+                },
                 {
                     id: 8,
                     img:
@@ -81,8 +88,8 @@ export default {
                 {
                     id: 7,
                     img:
-                        'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/school-events-mobile/openEvent-banner.png',
-                    url: '/pages/openGame/zhibo-list',
+                        'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/h5/opengame-banner.png',
+                    url: '/pages/openGame/index',
                 },
                 {
                     id: 6,
@@ -100,13 +107,13 @@ export default {
                     id: 4,
                     img:
                         'http://aitiaozhan.oss-cn-beijing.aliyuncs.com/chunjiehao.png',
-                    url: '/pages/chunjiehao/index',
+                    url: '/pagesA/chunjiehao/index',
                 },
                 {
                     id: 3,
                     img:
                         'http://aitiaozhan.oss-cn-beijing.aliyuncs.com/banner4.png',
-                    url: '/pages/chunjie/index',
+                    url: '/pagesA/chunjie/index',
                 },
             ],
         };
@@ -119,15 +126,16 @@ export default {
         },
         getData(refresh) {
             api.post('/api/activity/list', this.filter).then(
-                (data) => {
-                    console.log(data, '/api/activity/list');
-                    this.list = data.list.map((item) => {
+                ({ list, total }) => {
+                    this.total = total;
+                    this.list = this.confList.map((item) => {
                         let obj = item;
-                        this.confList.forEach((d) => {
-                            if (d.id === obj.id) {
-                                obj.start_time = obj.start_time.slice(5, 10);
-                                obj.end_time = obj.end_time.slice(5, 10);
-                                obj = { ...obj, ...d };
+                        list.forEach((d) => {
+                            const D = d;
+                            if (D.id === obj.id) {
+                                D.start_time = D.start_time.slice(5, 10);
+                                D.end_time = D.end_time.slice(5, 10);
+                                obj = { ...obj, ...D };
                             }
                         });
                         return obj;
@@ -149,6 +157,13 @@ export default {
     },
     onPullDownRefresh() {
         this.getData('refresh');
+    },
+    onReachBottom() {
+        console.log('bottom------');
+        if (this.total > this.filter.page_size * this.filter.page_num) {
+            this.filter.page_num += 1;
+            this.getData();
+        }
     },
 };
 </script>

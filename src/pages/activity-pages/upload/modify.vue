@@ -478,6 +478,7 @@ export default {
                 } else {
                     formData.resource_type = 2;
                     if (!formData.resource_name) {
+                        this.lock = true;
                         return this.errTip('请输入作品名称');
                     }
                     formData.img = this.$refs.preview.dump();

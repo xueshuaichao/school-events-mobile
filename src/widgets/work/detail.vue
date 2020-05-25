@@ -63,11 +63,12 @@
                     </cover-view>
                 </cover-view>
                 <video
+                    :id="`detail${swiperPage}`"
                     ref="video"
                     class="video"
                     preload
                     :src="pageData.video.cloud_path_sd"
-                    :autoplay="!isH5"
+                    :autoplay="false"
                     :controls="true"
                     :loop="true"
                     :poster="pageData.video_img_url"
@@ -81,27 +82,28 @@
             </template>
         </view>
         <view class="content">
-            <view class="author-info">
+            <view class="author-info clearfix">
                 <image
-                    class="avatar"
+                    class="avatar-top fl-l"
                     src="/static/images/work/avatar.png"
                 />
-                <text class="author-name text-one-line">
+                <view class="author-name text-one-line fl-l">
                     {{ pageData.create_name }}
-                </text>
+                </view>
             </view>
-            <view
-                v-if="pageData.record"
-                class="school-and-record"
-            >
+            <view class="school-and-record">
                 <text>{{ pageData.school_name }}</text>
-                <image
-                    class="icon-grail"
-                    :src="`/static/images/work/record-${pageData.record}.png`"
-                />
-                <text class="yellow">
-                    {{ recordTxts[pageData.record - 1] }}
-                </text>
+                <template v-if="pageData.record">
+                    <image
+                        class="icon-grail"
+                        :src="
+                            `/static/images/work/record-${pageData.record}.png`
+                        "
+                    />
+                    <text class="yellow">
+                        {{ recordTxts[pageData.record - 1] }}
+                    </text>
+                </template>
             </view>
             <view class="work-name-wrap clearfix">
                 <image
@@ -116,7 +118,7 @@
                         v-if="pageData.achievement"
                         class="deatil-achievement lightyellow"
                     >
-                        成绩：{{ pageData.achievement
+                        成绩:{{ pageData.achievement
                         }}{{ pageData.achievement_unit }}
                     </text>
                 </view>
@@ -125,7 +127,7 @@
                 v-if="activityId !== 8"
                 class="intro text-three-line"
             >
-                {{ introduce || "暂无简介" }}
+                {{ introduce }}
             </view>
             <view
                 v-if="activityId === 8"
@@ -135,7 +137,7 @@
                     {{
                         !showMore && introduce && introduce.length > 50
                             ? `${introduce.slice(0, 50)}...`
-                            : introduce || "暂无简介"
+                            : introduce
                     }}
                 </text>
                 <text
@@ -153,6 +155,13 @@
                     收起
                 </view>
             </view>
+            <view
+                class="cat-name"
+                :class="{ cur: pageData.cat_name }"
+                @click="jumpLabelList"
+            >
+                {{ pageData.cat_name ? `#${pageData.cat_name}` : "" }}
+            </view>
         </view>
         <view class="fixed-panel">
             <view class="icon-wrap">
@@ -169,9 +178,18 @@
                                 : '/static/images/yiqing/detail/like-ac.png'
                         "
                     />
-                    <view> {{ pageData.praise_count }} </view>
+                    <view> {{ praise_count || 0 }} </view>
                 </view>
-
+                <view
+                    class="item"
+                    @click.stop="showMessage"
+                >
+                    <image
+                        class="icon"
+                        src="/static/images/yiqing/detail/message.png"
+                    />
+                    <view>{{ commentTotal }}</view>
+                </view>
                 <view
                     class="item"
                     @click="handleCanvass"
@@ -181,27 +199,27 @@
                         src="/static/images/yiqing/detail/share.png"
                     />
                 </view>
-
-                <view class="item">
-                    <image
-                        class="icon"
-                        src="/static/images/yiqing/detail/view.png"
-                    />
-                    <view> {{ play_count }} </view>
-                </view>
             </view>
 
             <view
-                v-if="activityId < 5 && pageData.resource_scope > 2"
+                v-if="
+                    activityId < 5 &&
+                        pageData.resource_scope > 2 &&
+                        from !== 'openGame'
+                "
                 class="btn primary"
                 @click="joinGame"
             >
                 我要参与
             </view>
             <view
-                v-if="activityId > 5"
+                v-if="activityId > 5 || from === 'openGame'"
                 class="join-game-read"
-                :class="[{ wuyi: activityId === 8 }]"
+                :class="[
+                    { wuyi: activityId === 8 },
+                    { openGame: from === 'openGame' },
+                    { liuyi: activityId === 9 }
+                ]"
                 @click="joinGame"
             >
                 <image
@@ -213,21 +231,19 @@
                 </text>
             </view>
             <view
-                v-if="isFromShare && activityId > 5"
+                v-if="isFromShare && (activityId > 5 || from === 'openGame')"
                 class="join-game-read to-activty-index"
                 :class="[
                     { 'read-index': activityId === 6 },
-                    { 'wuyi-index': activityId === 8 }
+                    { 'wuyi-index': activityId === 8 },
+                    { 'liuyi-index': activityId === 9 },
+                    { openGame1: from === 'openGame' }
                 ]"
                 @click="watchIndex"
             >
                 <image
                     class="icon"
-                    :src="
-                        activityId === 6
-                            ? '/static/images/work/laba-read.png'
-                            : '/static/images/work/laba-wuyi.png'
-                    "
+                    :src="labaPath"
                 />
                 <text>
                     查看活动
@@ -246,7 +262,7 @@
             </view>
         </view>
         <view
-            v-if="isVideoWaiting"
+            v-if="isVideoWaiting && pageData.resource_type === 1"
             class="uni-video-cover"
             style="pointer-events: none;color: #fff"
         >
@@ -293,34 +309,142 @@ export default {
             type: String,
             default: '1',
         },
+        from: {
+            type: String,
+            default: '',
+        },
+        showDrawer: {
+            type: Boolean,
+            default: false,
+        },
+        isChangeSlide: {
+            type: Number,
+            default: 1,
+        },
+        swiperPage: {
+            type: Number,
+            default: 1,
+        },
+        commentTotal: {
+            type: Number,
+            default: 0,
+        },
     },
     data() {
         return {
             isFullScreen: false,
             recordTxts: ['校级记录', '市级记录', '省级记录'],
-
             // #ifdef H5
             isH5: true,
             // #endif
-            isAutoPlay: true,
+            canAutoPlay: false,
             isPlayed: false,
             isPaused: false,
             isVideoWaiting: false,
-            play_count: 0,
+            // play_count: 1,
             showMore: false,
             introduce: this.pageData.introduce || '',
+            total: 10,
+            catName: this.pageData.cat_name,
+            praise_count: this.pageData.praise_count || 0,
+            toggleLikeObj: {},
         };
     },
-    created() {
-        this.play_count = this.pageData.play_count;
-        if (this.pageData.resource_type === 2) {
-            this.play_count += 1;
-        }
+    computed: {
+        labaPath() {
+            let id = this.activityId;
+            if (this.from === 'openGame') {
+                id = 7;
+            }
+            return `/static/images/work/laba-${id}.png`;
+        },
     },
-    mounted() {},
+    watch: {
+        isChangeSlide(val) {
+            if (val !== this.swiperPage && this.pageData.resource_type === 1) {
+                if (this.isH5) {
+                    // h5的暂停方式需要专门处理。
+                    const b = document.querySelector(
+                        `#detail${this.swiperPage} video`,
+                    );
+                    if (b) {
+                        b.pause();
+                        this.isPaused = true;
+                        this.isPlayed = true;
+                    }
+                } else {
+                    this.videoContext.stop();
+                }
+            }
+            if (val === this.swiperPage && this.pageData.resource_type === 1) {
+                this.isPlayed = false;
+                this.videoContext.seek(0);
+
+                if (this.isH5) {
+                    const b = document.querySelector(
+                        `#detail${this.swiperPage} video`,
+                    );
+                    if (b) {
+                        b.pause();
+                        this.isPaused = true;
+                        this.isPlayed = true;
+                    }
+                } else {
+                    this.videoContext.play();
+                }
+            }
+            if (val === this.swiperPage && this.pageData.resource_type === 2) {
+                this.setPlayCount();
+            }
+        },
+        likeStatus(newVal, oldVal) {
+            if (newVal && !oldVal && !this.toggleLikeObj[this.pageData.id]) {
+                this.praise_count += 1;
+                this.toggleLikeObj[this.pageData.id] = 1;
+            }
+        },
+        pageData(val) {
+            if (val) {
+                this.praise_count = this.pageData.praise_count || 0;
+                this.introduce = this.pageData.introduce || '';
+                this.catName = this.pageData.cat_name || '';
+                // this.play_count = this.pageData.play_count;
+            }
+        },
+    },
+    created() {
+        // this.play_count = this.pageData.play_count;
+        // if (this.pageData.resource_type === 2) {
+        //     this.play_count += 1;
+        // }
+    },
+    mounted() {
+        this.videoContext = uni.createVideoContext(
+            `detail${this.swiperPage}`,
+            this,
+        );
+        if (!this.isH5 && this.swiperPage === 1) {
+            this.videoContext.play();
+        }
+        // hack for html5 video size notwoking
+        // #ifdef H5
+        window.removeEventListener(
+            'orientationchange',
+            this.html5VideoAutoAdjust,
+        );
+        window.addEventListener('orientationchange', this.html5VideoAutoAdjust);
+        // #endif
+    },
     methods: {
-        panelAction(action) {
-            this.$emit('doAction', action);
+        html5VideoAutoAdjust() {
+            document.querySelector('.uni-video-type-fullscreen').style = '';
+        },
+        setPlayCount() {
+            api.post('/api/works/playcount', {
+                id: this.pageData.id,
+            }).then(() => {
+                // this.play_count += 1;
+            });
         },
         handleCanvass() {
             this.$emit('doAction', 'handleCanvass');
@@ -331,6 +455,9 @@ export default {
         joinGame() {
             this.$emit('doAction', 'joinGame');
         },
+        showMessage() {
+            this.$emit('doAction', 'showMessage');
+        },
         onPause() {
             this.isPaused = true;
         },
@@ -340,10 +467,7 @@ export default {
         },
         onPlay() {
             if (!this.isPlayed) {
-                this.play_count = this.play_count + 1;
-                api.post('/api/works/playcount', {
-                    id: this.pageData.id,
-                });
+                this.setPlayCount();
             }
             this.isVideoWaiting = false;
             this.isPlayed = true;
@@ -371,6 +495,24 @@ export default {
             if (this.activityId === 8) {
                 url = '/pages/activity-pages/labor/index';
             }
+            if (this.activityId === 9) {
+                url = '/pages/activity-pages/children/index';
+            }
+            if (this.from === 'openGame') {
+                url = '/pages/openGame/index';
+            }
+            uni.navigateTo({
+                url,
+            });
+        },
+        jumpLabelList() {
+            // 标签列表
+            const {
+                resource_scope: resourceScope,
+                cat_id: catId,
+                cat_name: catName,
+            } = this.pageData;
+            const url = `/pages/work/label/list?cat_id=${resourceScope},${catId}&cat_name=${catName}`;
             uni.navigateTo({
                 url,
             });
@@ -496,21 +638,29 @@ export default {
     // pointer-events: none;
     z-index: 10;
     text-shadow: 0 2upx 2upx rgba(0, 0, 0, 0.35);
-    .avatar {
+    .file {
         display: inline-block;
-        width: 32rpx;
-        height: 34rpx;
+        height: 24rpx;
         margin-right: 12upx;
-        &.file {
-            width: 34rpx;
-            vertical-align: middle;
-        }
+        width: 24rpx;
+        // vertical-align: middle;
     }
 
     .author-info {
+        padding-left: 32rpx;
+        position: relative;
+        height: 34rpx;
+        .avatar-top {
+            position: absolute;
+            left: 0;
+            top: 50%;
+            width: 24rpx;
+            height: 24rpx;
+            margin-top: -12rpx;
+        }
         .author-name {
             color: #fff;
-            font-size: 34upx;
+            font-size: 28upx;
             position: relative;
             line-height: 34upx;
             display: inline-block;
@@ -519,7 +669,7 @@ export default {
     }
     .school-and-record {
         font-size: 24upx;
-        margin: 0 0 24upx 0;
+        margin: 6upx 0 24upx 0;
     }
 
     .author-from {
@@ -540,7 +690,7 @@ export default {
     .deatil-achievement {
         margin-left: 10upx;
         font-size: 24upx;
-        font-display: inline;
+        display: inline;
         vertical-align: super;
         word-break: break-all;
     }
@@ -549,6 +699,18 @@ export default {
         font-size: 25upx;
         line-height: 35upx;
         position: relative;
+    }
+    .cat-name {
+        font-size: 24upx;
+        color: #fff;
+        margin-top: 18upx;
+        line-height: 42upx;
+        display: inline-block;
+        padding: 0 11upx;
+        border-radius: 8upx;
+        &.cur {
+            border: 1px solid rgba(255, 255, 255, 0.7);
+        }
     }
     .orange {
         color: #db4e0e;
@@ -565,7 +727,7 @@ export default {
         vertical-align: middle;
     }
     .work-name-wrap {
-        line-height: 34upx;
+        line-height: 24upx;
         .text-two-line {
             width: 90%;
         }
@@ -580,6 +742,7 @@ export default {
     font-size: 24rpx;
     text-align: center;
     z-index: 10;
+    min-width: 100upx;
 
     .icon-wrap {
         //margin-right: 36rpx;
@@ -591,6 +754,8 @@ export default {
 
         .item {
             margin-bottom: 10rpx;
+            margin-left: 50rpx;
+            min-width: 120rpx;
         }
     }
 
@@ -618,6 +783,13 @@ export default {
         &.wuyi {
             background: #db4e0e;
         }
+        &.liuyi {
+            background: #c790ff;
+        }
+        &.openGame {
+            background: #9f1ff3;
+        }
+
         .icon {
             width: 44rpx;
             height: 42rpx;
@@ -639,6 +811,12 @@ export default {
             }
             &.read-index {
                 color: #0f8c64;
+            }
+            &.liuyi-index {
+                color: #c790ff;
+            }
+            &.openGame1 {
+                color: #9f1ff3 !important;
             }
         }
     }

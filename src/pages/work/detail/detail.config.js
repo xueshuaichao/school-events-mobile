@@ -438,23 +438,23 @@ const detailConf = [
     },
     {
         posterConfig: {
-            width: 540,
-            height: 782,
+            width: 624,
+            height: 920,
             debug: false,
             texts: [
                 {
-                    x: 60,
-                    y: 583,
+                    x: 119,
+                    y: 620,
                     text: [
                         {
                             text: '',
                             fontSize: 28,
-                            color: '#DB4E0E',
+                            color: '#333',
                             opacity: 1,
                             marginRight: 10,
                             lineHeight: 40,
                             lineNum: 1,
-                            width: 1210,
+                            width: 1100,
                             textOverflow: 'ellipsis',
                         },
                     ],
@@ -465,29 +465,30 @@ const detailConf = [
                 {
                     url:
                         'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/h5/liuyi-poster.png',
-                    width: 570,
-                    height: 820,
+                    width: 624,
+                    height: 920,
                     y: 0,
                     x: 0,
                 },
                 {
                     url: '',
-                    width: 469,
-                    height: 315,
-                    y: 233,
-                    x: 50,
+                    width: 386,
+                    height: 218,
+                    y: 371,
+                    x: 119,
+                    borderRadius: 20,
                 },
                 {
                     url: '',
-                    width: 142,
-                    height: 142,
-                    y: 645,
-                    x: 400,
-                    borderRadius: 140,
+                    width: 94,
+                    height: 94,
+                    y: 724,
+                    x: 488,
+                    borderRadius: 50,
                 },
             ],
         },
-        titleList: [['']],
+        titleList: [['欢乐六一']],
     },
 ];
 

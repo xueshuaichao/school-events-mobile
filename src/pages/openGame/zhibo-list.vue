@@ -43,8 +43,7 @@ export default {
                     intro: '展示才艺和特长的平台',
                     bg:
                         'http://aitiaozhan.oss-cn-beijing.aliyuncs.com/school-events-mobile/caiyi-bg.png?t=1',
-                    // url: '/pages/openGame/caiyiupload',
-                    url: '/pages/upload/default/upload',
+                    url: '/pages/upload/default/upload?type=openGame',
                 },
                 {
                     name: '吉尼斯项目',
@@ -72,9 +71,9 @@ export default {
         return {
             title,
             imageUrl:
-                'http://aitiaozhan.oss-cn-beijing.aliyuncs.com/school-events-mobile/openEvent-banner.png?x-oss-process=image/format,png/interlace,1/quality,Q_80/resize,m_pad,h_100',
+                'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/h5/logo-h5.png',
 
-            path: '/pages/openGame/zhibo-list',
+            path: '/pages/tabBar/index/index',
         };
     },
     methods: {
@@ -108,6 +107,7 @@ export default {
     height: 100vh;
     background: #f8f8f8;
     padding: 30upx;
+    box-sizing: border-box;
     .loadMore {
         width: 100%;
     }

@@ -58,8 +58,33 @@ function getParam(params, name) {
     return params[name];
 }
 
+// 获取当前日期
+function isOverDate() {
+    const myDate = new Date();
+    let myArray = '';
+    myArray += myDate.getFullYear();
+    myArray
+        += myDate.getMonth() + 1 > 9
+            ? myDate.getMonth() + 1
+            : `0${myDate.getMonth() + 1}`;
+    myArray += myDate.getDate() > 9 ? myDate.getDate() : `0${myDate.getDate()}`;
+    myArray
+        += myDate.getHours() > 9 ? myDate.getHours() : `0${myDate.getHours()}`;
+    myArray
+        += myDate.getMinutes() > 9
+            ? myDate.getMinutes()
+            : `0${myDate.getMinutes()}`;
+    myArray
+        += myDate.getSeconds() > 9
+            ? myDate.getSeconds()
+            : `0${myDate.getSeconds()}`;
+    console.log(parseFloat(myArray));
+    return 20200530235959 - parseFloat(myArray) > 0;
+}
+
 export default {
     getToken,
     store,
     getParam,
+    isOverDate,
 };
