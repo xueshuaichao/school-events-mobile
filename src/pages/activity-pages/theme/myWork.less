@@ -16,7 +16,7 @@
     .empty view {
         color: #db4e0e;
     }
-    /deep/ .goHome {
+    .goHome {
         color: #db4e0e !important;
         &::before {
             border-top: 1rpx solid #db4e0e;
@@ -60,16 +60,15 @@
     .empty view {
         color: #666;
     }
-    /deep/ .event-craft-cover .tag {
+    .event-craft-cover .tag {
         background: #ffe79c;
         color: #bb77ff;
     }
-    /deep/ .goHome {
+    .goHome {
         color: #c790ff !important;
         &::before {
-            content: "";
-            border-top: 1rpx solid #c790ff;
-            border-right: 1rpx solid #c790ff;
+            border-top: 1rpx solid #c790ff!important;
+            border-right: 1rpx solid #c790ff!important;
         }
     }
 }
