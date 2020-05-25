@@ -4,13 +4,6 @@
         :style="{ color: textColor }"
         @click="goHome"
     >
-        <image
-            class="arr-left"
-            :src="
-                `https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/${name}_home.png`
-            "
-            mode=""
-        />
         返回首页
     </button>
 </template>
@@ -50,14 +43,19 @@ export default {
     width: 166upx;
     height: 54upx;
     background: #fff;
-    border-radius: 27upx 0 0 27upx;
+    border-radius: 100upx 0 0 100upx;
     line-height: 54upx;
-    text-align: center;
-    padding: 0;
-    .arr-left {
-        width: 12upx;
-        height: 21upx;
-        margin-right: 10upx;
+    text-align: right;
+    padding-right: 20upx;
+    &::before {
+        content: "";
+        position: absolute;
+        left: 26rpx;
+        top: 20rpx;
+        width: 14rpx;
+        height: 14rpx;
+        transform: rotate(-135deg);
+        box-sizing: border-box;
     }
 }
 </style>

@@ -1,18 +1,23 @@
 <template>
-    <div class="activity-init-page">
+    <div :class="['activity-init-page', { 'stop-scroll': maskPrompt }]">
         <!-- 右侧随屏 -->
         <view
             class="right-fixed"
             @click="showLottery(true)"
         >
-            <image
-                src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/children_right.png"
-            />
-            <view
-                v-if="lotteryNum.lottery_num > 0"
-                class="text"
-            >
-                X{{ lotteryNum.lottery_num }}
+            <view class="animation-box">
+                <view class="tips">
+                    收集糖果赢大奖
+                </view>
+                <image
+                    src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/children_right.png"
+                />
+                <view
+                    v-if="lotteryNum.lottery_num > 0 && status === 2"
+                    class="text"
+                >
+                    X{{ lotteryNum.lottery_num }}
+                </view>
             </view>
         </view>
         <!-- 开始抽奖弹窗 -->
@@ -44,19 +49,113 @@
             :time="10000"
             :speed="{
                 max: 3500,
-                min: 1500
+                min: 2000
             }"
             :count-down="5000"
             :hide-index="hideIndex"
             @handelClick="handelClick"
+            @result="packetResult"
         />
+        <!-- 中奖海报 -->
+        <template>
+            <template>
+                <poster
+                    v-if="!isH5 && showPoster"
+                    id="poster"
+                    :config="posterCommonConfig"
+                    :hide-loading="true"
+                    @success="onPosterSuccess"
+                    @fail="onPosterFail"
+                />
+                <canvas
+                    v-else-if="isH5"
+                    class="canvas pro"
+                    style="width: 538px; height: 760px;"
+                    canvas-id="firstCanvas"
+                />
+            </template>
+            <view
+                v-if="showPosterMask"
+                class="poster-img-mask"
+            >
+                <template v-if="myPrizeList">
+                    <view class="prize-btn children-btn">
+                        我的中奖
+                    </view>
+                </template>
+                <template v-else>
+                    <view
+                        v-if="posterWin"
+                        class="tips"
+                    >
+                        恭喜您！抽中<text>{{ lotteryDetail }}</text>1个
+                    </view>
+                    <view
+                        v-else
+                        class="tips"
+                    >
+                        未中奖！别气馁，每天都有机会哦～
+                    </view>
+                </template>
+
+                <view
+                    v-if="canvasImg"
+                    class="canvas-img"
+                >
+                    <image :src="canvasImg" />
+                </view>
+                <template v-if="isH5">
+                    <view class="children-btn btn">
+                        长按图片保存到本地
+                    </view>
+                </template>
+                <template v-else>
+                    <template v-if="!imgAuthBtn">
+                        <view
+                            class="children-btn btn"
+                            @click="handleSave"
+                        >
+                            保存图片
+                        </view>
+                    </template>
+                    <template v-else>
+                        <button
+                            open-type="openSetting"
+                            class="children-btn btn"
+                            @opensetting="checkImgAuthFun"
+                        >
+                            授权相册并保存到本地
+                        </button>
+                    </template>
+                </template>
+                <view class="text-item-box">
+                    <view
+                        v-if="lotteryNum.vote_num < 5"
+                        class="text-item"
+                    >
+                        今日点赞5个作品，抽奖次数<text>+1</text>
+                    </view>
+                    <view
+                        v-if="lotteryNum.add_activity < 1"
+                        class="text-item"
+                    >
+                        今日上传1个作品，抽奖次数<text>+1</text>
+                    </view>
+                </view>
+                <image
+                    class="close"
+                    src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/children_close.png"
+                    @click="closePoster"
+                />
+            </view>
+        </template>
         <view>
             <indexPage
                 v-if="loading"
                 :index-config="indexConfig"
                 :public-config="publicConfig"
                 :is-stop-scroll="false"
-                class-name="children-index"
+                class-name="children-page"
                 :fr="fr"
             >
                 <template v-slot:prize>
@@ -118,8 +217,16 @@
                                 获取抽奖机会
                             </view>
                             <view
+                                v-if="isH5"
                                 class="btn"
-                                @click="getPrizeLise"
+                                @click="h5CreatePoster(2)"
+                            >
+                                我的中奖
+                            </view>
+                            <view
+                                v-else
+                                class="btn"
+                                @click="createPoster(2)"
                             >
                                 我的中奖
                             </view>
@@ -134,13 +241,14 @@
             v-if="maskPrompt"
             class="mask"
             :type="type"
-            :title="title"
+            :title="maskTitle"
             :theme="{
                 bgColor:
                     publicConfig.maskBgColor || publicConfig.primaryBgColor,
                 titleColor: publicConfig.titleColor
             }"
             :name="publicConfig.activityName"
+            :prize-list="indexConfig.prizes"
             :lucky-list="luckyList"
             :lottery-num="lotteryNum"
             :show-qr-code="type === 1"
@@ -155,11 +263,22 @@
             <view class="lottery-panel-box">
                 <image
                     class="lottery-panel-img"
-                    src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/children_lottery.png"
+                    src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/children_lottery_open.png"
                 />
+                <view class="packet-num">
+                    恭喜您抢到<text>{{ packetNum }}</text>颗糖果
+                </view>
                 <view
+                    v-if="isH5"
                     class="children-btn join-lottery"
-                    @click="openLottery"
+                    @click="h5CreatePoster(1)"
+                >
+                    点击开奖
+                </view>
+                <view
+                    v-else
+                    class="children-btn join-lottery"
+                    @click="createPoster(1)"
                 >
                     点击开奖
                 </view>
@@ -182,14 +301,9 @@ export default {
         packetRain,
         maskBox,
     },
-    filters: {
-        changeNum(value) {
-            const dayArr = ['一', '二', '三', '四', '五'];
-            return dayArr[value];
-        },
-    },
     data() {
         return {
+            showPoster: false, // 由于中奖和位中奖config有差异 需要等配置文件修改后初始化海报组件
             // #ifdef H5
             isH5: true,
             // #endif
@@ -202,45 +316,119 @@ export default {
             hideIndex: -1,
             maskPrompt: false,
             type: '',
-            title: '',
+            maskTitle: '',
             luckyFilter: {
-                page_size: 10,
+                page_size: 20,
                 page_num: 1,
             },
-            luckyList: {},
+            luckyList: {
+                list: [],
+                total: 0,
+            },
             lotteryNum: {
                 type: ['每日登录', '点赞5个作品', '发布1个作品'],
             },
             showPacketRain: false, // 显示红包雨
-            showLotteryPanel: false, // 显示抽奖弹框
-            showOpenLotteryPanel: false, // 开奖
+            showLotteryPanel: false, // 显示抽奖弹框 false-隐藏 登录后每天只显示一次
+            showOpenLotteryPanel: false, // 开奖 false-隐藏
+            myPrizeList: false,
+            packetNum: 0,
+            lotteryDetail: '',
+            poster: null,
+            imgAuthBtn: false,
+            startCreateCanvas: true,
+            showPosterMask: false,
+            canvasImg: '',
+            posterCommonConfig: {
+                pixelRatio: 2,
+                width: 538,
+                height: 760,
+                debug: false,
+                images: [],
+            },
+            posterWin: true,
+            posterFailConfig: {
+                images: [
+                    {
+                        url: '',
+                        width: 538,
+                        height: 760,
+                        y: 0,
+                        x: 0,
+                        borderRadius: 1,
+                    },
+                    {
+                        url: '',
+                        width: 126,
+                        height: 126,
+                        y: 602,
+                        x: 79,
+                        borderRadius: 100,
+                    },
+                ],
+            },
+            posterSuccessConfig: {
+                images: [
+                    {
+                        url:
+                            'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/children_poster.png?x-oss-process=image/format,jpg/interlace,1/quality,Q_70/resize,m_pad,w_538,h_760',
+                        width: 538,
+                        height: 760,
+                        y: 0,
+                        x: 0,
+                        borderRadius: 1,
+                    },
+                    {
+                        url: '',
+                        width: 362,
+                        height: 190,
+                        y: 356,
+                        x: 88,
+                    },
+                    {
+                        url: '',
+                        width: 260,
+                        height: 34,
+                        y: 655,
+                        x: 140,
+                    },
+                    {
+                        url: '',
+                        width: 86,
+                        height: 86,
+                        y: 581,
+                        x: 417,
+                        borderRadius: 100,
+                    },
+                ],
+            },
         };
     },
     onLoad(params) {
         this.activityId = 9;
-        this.publicConfig = this.$store.getters.getPublicConfig(
-            this.activityId,
-        );
-        this.indexConfig = {
-            ...this.$store.getters.getActivityConfig({
-                activityId: this.activityId,
-                page: 'indexConfig',
-            }),
+        this.publicConfig = {
+            ...this.$store.getters.getPublicConfig(this.activityId),
             ...this.$store.getters.getColorConfig({
                 activityId: this.activityId,
                 page: 'indexColorConfig',
             }),
         };
+        this.indexConfig = this.$store.getters.getActivityConfig({
+            activityId: this.activityId,
+            page: 'indexConfig',
+        });
         this.fr = logger.getFr(this.publicConfig.log, params);
         this.loading = true;
         this.activityStatus();
+        this.initShare();
+        this.getAuthStatus();
     },
     onShow() {
         this.getLotteryNum();
     },
     created() {
-        this.getLuckyList();
         this.showLottery();
+        this.ctx = uni.createCanvasContext('firstCanvas');
     },
     methods: {
         activityStatus() {
@@ -265,25 +453,38 @@ export default {
         handelClick(index) {
             this.hideIndex = index;
         },
-        getLuckyList(num = 0) {
+        packetResult(num) {
+            this.packetNum = num;
+            this.showPacketRain = false;
+            if (num === 0) {
+                const index = Math.floor(Math.random() * 4);
+                this.posterFailConfig.images[0].url = `https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/children_poster_fail_${index}.png`;
+                this.posterFailConfig.images[1].url = `https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/activity_code_${this.activityId}.png`;
+                this.posterCommonConfig = {
+                    ...this.posterCommonConfig,
+                    ...this.posterFailConfig,
+                };
+                this.showPoster = true; // 需等海报报配置修改后才能生成
+                api.get('/api/activity/usedrawnum').then(() => {
+                    if (this.isH5) {
+                        this.h5CreatePoster(1, false);
+                    } else {
+                        this.createPoster(1, false);
+                    }
+                });
+            } else {
+                this.showOpenLotteryPanel = true;
+            }
+        },
+        getLuckyList(num = 1) {
             this.luckyFilter.page_num = num;
-            this.luckyList = {
-                list: [
-                    {
-                        user_name: '34343',
-                        draw: 'xxx',
-                    },
-                    {
-                        user_name: '34343',
-                        draw: 'xxx',
-                    },
-                    {
-                        user_name: '34343',
-                        draw: 'xxx',
-                    },
-                ],
-                total: 3,
-            };
+            if (num === 1) {
+                this.luckyList.list = [];
+            }
+            api.get('/api/activity/drawlist', this.luckyFilter).then((res) => {
+                this.luckyList.list = this.luckyList.list.concat(res.list);
+                this.luckyList.total = res.total;
+            });
         },
         getLotteryNum() {
             api.get('/api/activity/getuserlotterynum').then(
@@ -301,28 +502,40 @@ export default {
         },
         startLottery() {
             // 参与抽奖 消耗次数
-            api.isLogin({
-                fr: this.fr,
-            }).then(() => {
-                if (this.lotteryNum.lottery_num > 0) {
-                    api.get('/api/activity/usedrawnum').then(() => {
-                        this.showPacketRain = true;
+            if (!this.lock) {
+                this.lock = true;
+                api.isLogin({
+                    fr: this.fr,
+                }).then(() => {
+                    if (this.lotteryNum.lottery_num > 0) {
+                        api.get('/api/activity/usedrawnum').then(
+                            () => {
+                                this.lock = false;
+                                this.showPacketRain = true;
+                                this.showLotteryPanel = false;
+                                this.lotteryNum.lottery_num -= 1;
+                            },
+                            () => {
+                                this.lock = false;
+                            },
+                        );
+                    } else if (
+                        this.lotteryNum.vote_num >= 5
+                        && this.lotteryNum.add_activity > 0
+                        && this.lotteryNum.login > 0
+                    ) {
+                        uni.showToast({
+                            title: '今日已无抽奖机会，明日再来吧',
+                            duration: 2000,
+                        });
+                        this.lock = false;
+                    } else {
                         this.showLotteryPanel = false;
-                    });
-                } else if (
-                    this.lotteryNum.vote_num >= 5
-                    && this.lotteryNum.add_activity > 0
-                    && this.lotteryNum.login > 0
-                ) {
-                    uni.showToast({
-                        title: '今日已无抽奖机会，明日再来吧',
-                        duration: 2000,
-                    });
-                } else {
-                    this.showLotteryPanel = false;
-                    this.getPrizeNum();
-                }
-            });
+                        this.getPrizeNum();
+                        this.lock = false;
+                    }
+                });
+            }
         },
         showLottery(type = false) {
             // 显示抽奖弹框
@@ -355,11 +568,285 @@ export default {
         closeLotteryPanel() {
             this.showLotteryPanel = false;
         },
-        openLottery() {
-            // 开奖
-            api.get('/api/activity/luckydraw').then((res) => {
-                console.log(res);
+        openLottery(type, status) {
+            // 开奖 我的中奖
+            const url = type === 1 ? '/api/activity/luckydraw' : '/api/activity/mydraw';
+            this.myPrizeList = type !== 1;
+            return api.get(url, status ? {} : { draw: 0 }).then(
+                (res) => {
+                    if (type === 1) {
+                        return this.winDrawImage(res);
+                    }
+                    if (res.draw) {
+                        return this.winDrawImage(res);
+                    }
+                    return this.loseDrawImage();
+                },
+                () => this.loseDrawImage(),
+            );
+        },
+        h5WinDrawImage(config) {
+            // h5 中奖海报
+            const wxGetImageInfo = this.promisify(uni.getImageInfo);
+            Promise.all([
+                wxGetImageInfo({
+                    src: config.images[0].url, // 背景图片
+                }),
+                wxGetImageInfo({
+                    src: config.images[1].url,
+                }),
+                wxGetImageInfo({
+                    src: config.images[2].url,
+                }),
+                wxGetImageInfo({
+                    src: config.images[3].url,
+                }),
+            ]).then((res) => {
+                const ctx = uni.createCanvasContext('firstCanvas');
+                ctx.drawImage(res[0].path, 0, 0, 538, 760);
+                ctx.drawImage(res[1].path, 88, 356, 362, 190);
+                ctx.drawImage(res[2].path, 140, 566, 260, 34);
+                ctx.drawImage(res[3].path, 417, 591, 86, 86);
+                ctx.draw();
+                setTimeout(() => {
+                    this.saveCanvas();
+                }, 200);
             });
+        },
+        h5LoseDrawImage(config) {
+            // h5 未中奖海报
+            const wxGetImageInfo = this.promisify(uni.getImageInfo);
+            Promise.all([
+                wxGetImageInfo({
+                    src: config.images[0].url, // 背景图片
+                }),
+                wxGetImageInfo({
+                    src: config.images[1].url,
+                }),
+            ]).then((res) => {
+                this.ctx.drawImage(res[0].path, 0, 0, 538, 760);
+                this.ctx.drawImage(res[1].path, 79, 602, 126, 126);
+                this.ctx.draw(
+                    false,
+                    setTimeout(() => {
+                        // 需要异步 不然画不出来
+                        this.saveCanvas();
+                    }, 500),
+                );
+            });
+        },
+        winDrawImage(res) {
+            this.lotteryDetail = res.draw;
+            this.posterSuccessConfig.images[1].url = `https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/children_poster_${res.id}.png`;
+            this.posterSuccessConfig.images[2].url = `https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/children_poster_t${res.id}.png`;
+            this.posterSuccessConfig.images[3].url = `https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/activity_code_${this.activityId}.png`;
+            return {
+                config: this.posterSuccessConfig,
+                status: true,
+            };
+        },
+        loseDrawImage() {
+            const index = Math.floor(Math.random() * 4);
+            this.posterFailConfig.images[0].url = `https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/children_poster_fail_${index}.png`;
+            this.posterFailConfig.images[1].url = `https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/activity_code_${this.activityId}.png`;
+            this.posterWin = false;
+            return {
+                config: this.posterFailConfig,
+                status: false,
+            };
+        },
+        createPoster(type = 1, status) {
+            if (!this.lock) {
+                this.lock = true;
+                uni.showLoading({
+                    title: type === 1 ? '正在开奖' : '请稍等',
+                });
+                this.openLottery(type, status).then(({ config }) => {
+                    this.posterCommonConfig = {
+                        ...this.posterCommonConfig,
+                        ...config,
+                    };
+                    // 需等画报配置修改后才能生成
+                    this.showPoster = true;
+                    this.$nextTick(() => {
+                        this.poster = this.selectComponent('#poster');
+                        this.poster.onCreate(this.posterCommonConfig);
+                        this.lock = true;
+                    });
+                });
+            }
+        },
+        h5CreatePoster(type = 1, status) {
+            // type 1-开奖 2-我的中奖
+            api.isLogin({
+                fr: this.fr,
+            }).then(() => {
+                this.openLottery(type, status).then(({ config, status }) => {
+                    this.posterWin = status;
+                    if (status) {
+                        // 中奖
+                        this.h5WinDrawImage(config);
+                    } else {
+                        // 未中奖
+                        this.h5LoseDrawImage(config);
+                    }
+                });
+            });
+        },
+        promisify: api => (options, ...params) => new Promise((resolve, reject) => {
+            const extras = {
+                success: resolve,
+                fail: reject,
+            };
+            api({ ...options, ...extras }, ...params);
+        }),
+        saveCanvas() {
+            const that = this;
+            uni.canvasToTempFilePath({
+                // 把画布转化成临时文件
+                x: 0,
+                y: 0,
+                width: 538, // 截取的画布的宽
+                height: 760, // 截取的画布的高
+                destWidth: 538, // 保存成的画布宽度
+                destHeight: 760, // 保存成的画布高度
+                fileType: 'png', // 保存成的文件类型
+                quality: 1, // 图片质量
+                canvasId: 'firstCanvas', // 画布ID
+                success(res) {
+                    that.startCreateCanvas = false;
+                    that.showPosterMask = true;
+                    that.canvasImg = res.tempFilePath;
+                },
+                fail() {
+                    uni.showToast({
+                        title: '保存失败，稍后再试',
+                        duration: 2000,
+                        icon: 'none',
+                    });
+                    uni.hideLoading();
+                },
+            });
+        },
+
+        getAuthStatus() {
+            const that = this;
+            // eslint-disable-next-line no-undef
+            wx.getSetting({
+                // 获取设置
+                success(res) {
+                    if (res.authSetting['scope.writePhotosAlbum'] === false) {
+                        // 说明未授权
+                        that.imgAuthBtn = true;
+                    } else {
+                        that.imgAuthBtn = false;
+                    }
+                },
+            });
+        },
+        onPosterSuccess({ detail }) {
+            this.startCreateCanvas = false;
+            this.showPosterMask = true;
+            this.canvasImg = detail;
+            this.showOpenLotteryPanel = false;
+            this.lock = false;
+            uni.hideLoading();
+        },
+        onPosterFail(err) {
+            uni.hideLoading();
+            this.lock = false;
+            console.log(111, err);
+        },
+        handleSave() {
+            uni.showLoading({ mask: true, title: '保存中' });
+            const that = this;
+            // 图片保存到本地
+            // eslint-disable-next-line no-undef
+            wx.saveImageToPhotosAlbum({
+                filePath: this.canvasImg,
+                success() {
+                    uni.hideLoading();
+                    that.prompt = false;
+                    that.showTicketMask = true;
+                    uni.showToast({
+                        title: '保存成功',
+                        icon: 'success',
+                        duration: 2000,
+                    });
+                },
+                fail(err) {
+                    uni.hideLoading();
+                    if (
+                        err.errMsg
+                            === 'saveImageToPhotosAlbum:fail:auth denied'
+                        || err.errMsg === 'saveImageToPhotosAlbum:fail auth deny'
+                    ) {
+                        // 这边微信做过调整，必须要在按钮中触发，因此需要在弹框回调中进行调用
+                        console.log('开始授权');
+                        // eslint-disable-next-line no-undef
+                        wx.openSetting({
+                            success(settingdata) {
+                                console.log('settingdata', settingdata);
+                                if (
+                                    settingdata.authSetting[
+                                        'scope.writePhotosAlbum'
+                                    ]
+                                ) {
+                                    // eslint-disable-next-line no-undef
+                                    wx.showModal({
+                                        title: '提示',
+                                        content:
+                                            '获取权限成功,再次点击图片即可保存',
+                                        showCancel: false,
+                                    });
+                                } else {
+                                    // eslint-disable-next-line no-undef
+                                    wx.showModal({
+                                        title: '提示',
+                                        content:
+                                            '获取权限失败，将无法保存到相册哦~',
+                                        showCancel: false,
+                                    });
+                                }
+                            },
+                            fail(failData) {
+                                console.log('failData', failData);
+                            },
+                            complete(finishData) {
+                                console.log('finishData', finishData);
+                            },
+                        });
+                    }
+                },
+            });
+        },
+        closePoster() {
+            // 关闭抽奖结果
+            this.showPosterMask = false;
+        },
+        checkImgAuthFun(res) {
+            // 二次以上检验是否授权图片
+            const that = this;
+            if (!res.detail.authSetting['scope.writePhotosAlbum']) {
+                // 二次以上授权, 如果未授权
+                // eslint-disable-next-line no-undef
+                wx.showToast({
+                    title: '授权失败',
+                    icon: 'none',
+                });
+            } else {
+                // eslint-disable-next-line no-undef
+                wx.showToast({
+                    title: '授权成功',
+                    icon: 'none',
+                    success() {
+                        uni.showLoading({
+                            mask: true,
+                        });
+                        that.handleSave();
+                    },
+                });
+            }
         },
         getNewLotteryNum({ index, type }) {
             if (type) {
@@ -372,6 +859,7 @@ export default {
                     });
                     break;
                 case 1:
+                    this.maskPrompt = false;
                     uni.pageScrollTo({
                         scrollTop: 830,
                         duration: 300,
@@ -381,6 +869,7 @@ export default {
                     api.isLogin({
                         fr: this.fr,
                     }).then(() => {
+                        this.maskPrompt = false;
                         uni.navigateTo({
                             url: `/pages/activity-pages/upload/modify?activity_id=${this.activityId}`,
                         });
@@ -398,7 +887,6 @@ export default {
             const random = Math.floor(Math.random() * titleList.length);
             this.title = titleList[random];
             const desc = descList[0];
-            console.log(this.title);
             share({
                 title: this.title,
                 desc,
@@ -415,15 +903,17 @@ export default {
         },
         prizeList(type) {
             const title = type === 1 ? '奖品设置说明' : '幸运榜单';
+            if (type === 2) {
+                this.getLuckyList();
+            }
             this.showMask(title, type);
         },
         getPrizeNum() {
             this.showMask('获取抽奖机会', 3);
         },
-        getPrizeLise() {},
         showMask(title, type) {
             // type 1-奖品设置 2-幸运榜单 3-获取抽奖机会
-            this.title = title;
+            this.maskTitle = title;
             this.type = type;
             this.maskPrompt = true;
         },
@@ -433,25 +923,80 @@ export default {
             // 来自页面内分享按钮
             console.log(res.target);
         }
+        console.log(this.title);
         return {
             title: this.title,
             imageUrl: this.publicConfig.shareConfig.image,
-            path: '/pages/activity-pages/labor/index',
+            path: this.publicConfig.shareConfig.path,
         };
     },
 };
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
+.canvas.pro {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    transform: translate3d(-9999rpx, 0, 0);
+}
+.stop-scroll {
+    position: fixed !important;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
 .activity-init-page {
+    .fixed-input {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 100upx;
+        z-index: 10000;
+        background-color: #f00;
+    }
     position: relative;
+    @keyframes mymove {
+        0% {
+            transform: scale(1); /*开始为原始大小*/
+        }
+        25% {
+            transform: scale(1.15); /*放大1.1倍*/
+            // margin-right: 26upx;
+        }
+        50% {
+            transform: scale(1);
+        }
+        75% {
+            transform: scale(1.15);
+            // margin-right: 26upx;
+        }
+    }
     .right-fixed {
         position: fixed;
-        right: 0;
+        right: 0upx;
         top: 577upx;
-        width: 229upx;
-        height: 180upx;
-        z-index: 1000;
+        z-index: 999;
+        .tips {
+            position: absolute;
+            top: 50%;
+            right: 18upx;
+            font-size: 26upx;
+            margin-top: -26upx;
+            color: #fff;
+            width: 110upx;
+            text-align: right;
+            z-index: 1;
+        }
+        .animation-box {
+            width: 244upx;
+            height: 180upx;
+            position: relative;
+            animation: mymove 2s infinite;
+        }
         image {
             width: 100%;
             height: 100%;
@@ -477,10 +1022,27 @@ export default {
         top: 0;
         z-index: 1001;
         background-color: rgba(0, 0, 0, 0.79);
-        &.oppen-lottery {
+        &.open-lottery {
             .lottery-panel-img {
                 width: 540upx;
                 height: 527upx;
+            }
+            .packet-num {
+                font-size: 32upx;
+                text-align: center;
+                color: #bb77ff;
+                position: absolute;
+                top: 82upx;
+                left: 50%;
+                transform: translateX(-50%);
+                width: 100%;
+                line-height: 66upx;
+                & > text {
+                    font-size: 60upx;
+                    display: inline-block;
+                    margin: 0 14upx;
+                    vertical-align: middle;
+                }
             }
         }
         .lottery-panel-box {
@@ -514,92 +1076,6 @@ export default {
         bottom: 0;
         top: 0;
         z-index: 999;
-    }
-    .children-index {
-        background-color: #f00;
-        .main-content {
-            padding: 0 30upx;
-        }
-        .page-index .menu-list {
-            box-sizing: border-box;
-            padding-top: 77upx;
-            background-color: #fff;
-            border-radius: 50upx;
-            margin-bottom: 120upx;
-            padding-bottom: 100upx;
-            box-shadow: inset 0 0px 24upx 0px rgba(182, 146, 255, 1);
-            position: relative;
-            &::before {
-                content: "";
-                position: absolute;
-                left: 0;
-                top: 0;
-                width: 142upx;
-                height: 75upx;
-                background-image: url(https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/children_flag1.png);
-                background-size: 100% 100%;
-            }
-            .cansai-text {
-                position: absolute;
-                top: -66upx;
-                left: 50%;
-                transform: translateX(-50%);
-                border-radius: 48upx;
-                background-color: #ff78a5;
-                box-shadow: inset 0px 0px 24px 0px rgba(255, 255, 255, 1);
-                display: inline-block;
-                text-indent: -9999px;
-                width: 230upx;
-                height: 74upx;
-                &::before {
-                    content: "";
-                    position: absolute;
-                    left: 13upx;
-                    top: 12upx;
-                    width: 25upx;
-                    height: 27upx;
-                    background-image: url(https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/children_bt_b.png);
-                    background-size: 100% 100%;
-                }
-                &::after {
-                    content: "活动作品";
-                    position: absolute;
-                    left: 50%;
-                    top: 50%;
-                    transform: translate(-50%, -50%);
-                    text-indent: 0;
-                    width: 100%;
-                    color: #fff;
-                }
-            }
-        }
-        .page-index .menu-list .search-box button {
-            width: 96upx;
-            height: 70upx;
-            border: 1upx solid #bb77ff;
-            box-sizing: border-box;
-            font-size: 26upx;
-            &:first-of-type {
-                margin-right: 12upx;
-            }
-        }
-        .page-index .menu-list .search-box .search {
-            width: 412upx;
-        }
-        .media-box .media-content {
-            width: 305upx !important;
-        }
-        .event-craft-cover .video {
-            width: 305upx;
-            height: 172upx;
-        }
-        .page-section-spacing {
-            height: 60upx !important;
-            line-height: 60upx !important;
-            box-shadow: 0px 0px 11px 0px rgba(255, 255, 255, 1);
-            border-radius: 48upx;
-            margin-bottom: 50upx;
-        }
     }
     .children-btn {
         padding: 0 40upx;
@@ -761,185 +1237,73 @@ export default {
             }
         }
     }
-}
-.week-rank {
-    margin: 30upx 0 40upx;
-    text-align: center;
-    .title {
-        color: #db4e0e;
-        margin-bottom: 20upx;
-        font-size: 34upx;
-    }
-    .history-rank {
-        display: inline-block;
-        padding: 12upx 20upx;
-        color: #fff;
-        background-color: #db4e0e;
-        border-radius: 28upx;
-        margin-bottom: 20upx;
-        font-size: 24upx;
-    }
-    .week-rank-list {
-        margin: 0 85upx;
-        display: flex;
-        align-items: flex-end;
-        justify-content: center;
-        .rank-item {
-            background-color: #fffbf6;
-            border-radius: 10upx 10upx 0px 0px;
-            box-shadow: inset -16upx 47upx 0 #ffce99;
-            box-shadow: inset 0px 0upx 50upx 0px rgba(255, 206, 153, 0.46);
-            padding: 20upx 10upx 0;
-            box-sizing: border-box;
-            & > image {
-                margin: 0 auto;
-            }
-            &:nth-of-type(1) {
-                height: 200upx;
-                width: 180upx;
-                & > image {
-                    width: 70upx;
-                    height: 86upx;
-                    margin-bottom: 18upx;
-                }
-            }
-            &:nth-of-type(2) {
-                height: 220upx;
-                width: 220upx;
-                & > image {
-                    width: 80upx;
-                    height: 99upx;
-                    margin-bottom: 25upx;
-                }
-            }
-            &:nth-of-type(3) {
-                height: 180upx;
-                width: 180upx;
-                & > image {
-                    width: 60upx;
-                    height: 74upx;
-                    margin-bottom: 10upx;
-                }
-            }
-        }
-        .rank-name {
-            color: #db4e0e;
-            font-size: 24upx;
-            line-height: 1;
-        }
-        .work-num {
-            color: #ab3500;
-            font-size: 22upx;
-        }
-    }
-}
-.history-rank-list {
-    background-color: rgba(0, 0, 0, 0.8);
-    box-sizing: border-box;
-    position: fixed;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    color: #fff;
-    z-index: 9999;
-
-    .history-content {
-        background-color: #fffbf6;
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        width: 600rpx;
-        padding: 39rpx 20rpx 23rpx;
+    .poster-img-mask {
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        padding: 0 63upx 0;
         box-sizing: border-box;
-        padding-right: 20rpx;
-        border-radius: 10upx;
-        .close {
-            width: 62upx;
-            height: 62upx;
-            top: -13upx;
-            right: -12upx;
-            position: absolute;
-        }
-    }
-    .tips {
-        height: 70upx;
-        line-height: 70upx;
-        background-color: #fffbf6;
-        color: #db4e0e;
-        font-size: 26upx;
+        background-color: rgba(0, 0, 0, 0.79);
         text-align: center;
-    }
-    .history-content-box {
-        overflow-y: auto;
-        max-height: 616upx;
-        min-height: 402upx;
-        &::-webkit-scrollbar {
-            width: 2upx;
+        z-index: 1003;
+        .prize-btn {
+            background-color: #ff78a5;
+            display: inline-block;
+            margin: 18upx auto 16upx;
+            padding: 0 50upx;
         }
-        &::-webkit-scrollbar-thumb {
-            border-radius: 2upx;
-            background-color: #db4e0e;
+        .tips {
+            font-size: 30upx;
+            color: #fff;
+            line-height: 108upx;
+            height: 108upx;
+            & > text {
+                color: #bb77ff;
+                font-size: 40upx;
+                display: inline-block;
+                margin: 0 10upx;
+                font-weight: bold;
+            }
         }
-    }
-    .title {
-        color: #db4e0e;
-        font-size: 34upx;
-        line-height: 1;
-        margin-bottom: 30upx;
-        text-align: center;
-    }
-    .history-item {
-        .history-box {
-            border: 2upx solid rgba(255, 206, 153, 1);
-            border-radius: 10upx;
-            margin-bottom: 36upx;
+        .canvas-img {
+            width: 538upx;
+            height: 760upx;
+            margin: 0 auto 30upx;
+            image {
+                width: 100%;
+                height: 100%;
+            }
         }
-        .tit {
-            color: #db4e0e;
-            font-size: 26upx;
-            line-height: 1;
-            margin-bottom: 29upx;
-            text-align: center;
+        .btn {
+            background-color: #c790ff;
+            line-height: 98upx;
+            width: 540upx;
+            box-sizing: border-box;
+            margin: 0 auto;
+        }
+        .text-item-box {
+            min-height: 60upx;
         }
         .text-item {
-            display: flex;
-            justify-content: space-between;
-            padding: 14upx 66upx 8upx 34upx;
-            box-sizing: border-box;
-            &:last-of-type {
-                .text-content {
-                    border: 0 none;
-                }
+            font-size: 26upx;
+            line-height: 60upx;
+            color: #fff;
+            & > text {
+                color: #bb77ff;
+                font-size: 34upx;
+                vertical-align: middle;
             }
         }
-        .text-content {
-            border-bottom: 1upx solid rgba(255, 206, 153, 0.45);
-            display: flex;
-            justify-content: space-between;
-            line-height: 64upx;
-            width: 399upx;
-            flex: 1;
-            border-bottom: 1upx solid #ffce99;
-            font-size: 24upx;
-        }
-        .rank-img {
-            width: 40upx;
-            height: 50upx;
-            margin-right: 20upx;
-            margin-top: 7upx;
-        }
-        .user-name {
-            color: #db4e0e;
-            width: 60%;
-            text-align: left;
-        }
-        .work-num {
-            color: #ab3500;
-            width: 38%;
-            text-align: right;
+
+        .close {
+            display: block;
+            margin: 0 auto;
+            width: 63upx;
+            height: 63upx;
         }
     }
 }
+@import "../theme/index.less";
 </style>

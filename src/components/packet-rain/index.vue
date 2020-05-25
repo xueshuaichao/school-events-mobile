@@ -11,7 +11,12 @@
             </view>
             <template v-if="countDownTime">
                 <view class="count-down">
-                    <view>倒计时：{{ countDownTime }}s</view>
+                    <view class="count-down-num">
+                        {{ countDownTime / 1000 }}
+                    </view>
+                    <view class="count-down-tips">
+                        在糖果雨中收集越多糖果，<br>越容易赢得大奖哦
+                    </view>
                 </view>
             </template>
             <template v-else>
@@ -54,7 +59,7 @@ export default {
         num: {
             // 每次掉落最多
             type: Number,
-            default: 6,
+            default: 4,
         },
         countDown: {
             // 倒计时
@@ -155,7 +160,6 @@ export default {
                             this.animationData.push(this.animation.export());
                         }
                     }
-                    this.gameTime -= 500;
                 }, 200);
             });
         },
@@ -191,21 +195,28 @@ export default {
         },
         init() {
             this.maxNum = this.randomNumBoth(1, this.num);
+            this.setPacketList();
             const T = setInterval(() => {
+                this.maxNum = this.randomNumBoth(this.num, 1);
+                this.setPacketList();
+            }, 400);
+            const TIME = setInterval(() => {
+                this.gameTime -= 1000;
                 if (this.gameTime === 0) {
                     clearInterval(T);
+                    clearInterval(TIME);
                     setTimeout(() => {
                         this.isEnd = true;
                         this.result();
                     }, this.speed.max);
-                } else {
-                    this.maxNum = this.randomNumBoth(this.num, 1);
-                    this.setPacketList();
                 }
-            }, 500);
+            }, 1000);
         },
         setPacketList() {
+            let postionMax = this.postion.max;
+            const postionMin = this.postion.min;
             for (let i = 0; i < this.maxNum; i += 1) {
+                const postion = this.randomNumBoth(postionMax, postionMin);
                 this.packetList.push({
                     src: this.images[
                         Math.floor(Math.random() * this.images.length)
@@ -213,11 +224,13 @@ export default {
                     num: this.randomNumBoth(10, 1),
                     isShowNum: false,
                     isShow: true,
-                    postion: this.randomNumBoth(
-                        this.postion.max,
-                        this.postion.min,
-                    ),
+                    postion,
                 });
+                if (postion > this.postion.max / 2) {
+                    postionMax = this.postion.max / 2;
+                } else {
+                    postionMax = this.postion.max;
+                }
             }
         },
         randomNumBoth(max, min = 0) {
@@ -228,7 +241,7 @@ export default {
             this.$emit('handelClick', index);
         },
         result() {
-            this.$emit('result');
+            this.$emit('result', this.packetNumSum);
         },
     },
 };
@@ -242,8 +255,18 @@ export default {
     right: 0;
     bottom: 0;
     z-index: 990;
-    background-color: #f00;
+    background-color: rgba(0, 0, 0, 0.79);
     color: #fff;
+    text-align: center;
+    .count-down-num {
+        margin-top: 175upx;
+        font-size: 120upx;
+        color: #bb77ff;
+    }
+    .count-down-tips {
+        font-size: 32upx;
+        line-height: 60upx;
+    }
 }
 .packet-rain {
     position: fixed;
@@ -263,9 +286,12 @@ export default {
     z-index: 1003;
     text-align: center;
     color: #fff;
-    background-color: #f00;
+    background-image: url("https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/children_packet_footer.png");
+    background-size: 100% 100%;
     .num-box {
         font-size: 35upx;
+        line-height: 220upx;
+        padding-left: 10upx;
     }
     .num {
         font-size: 60upx;
@@ -294,8 +320,16 @@ export default {
     font-size: 80upx;
     position: absolute;
     top: 50%;
-    color: #f00;
+    color: #ff559f;
     left: 50%;
+    width: 239upx;
+    height: 246upx;
+    line-height: 246upx;
     transform: translate(-50%, -50%);
+    text-align: center;
+    background-image: url(https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/packet_num_bg.png);
+    background-position: center center;
+    background-size: 100% 100%;
+    z-index: 10;
 }
 </style>

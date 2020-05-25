@@ -16,10 +16,10 @@ export default {
                     catId: 20, // 所属分类
                     time: '4月27日--5月31日',
                     primaryColor: '#DB4E0E', // 主色调
-                    darkPrimaryColor: '#451600', // 深一些
+                    // darkPrimaryColor: '#451600', // 深一些
                     primaryBgColor: '#FF9F73', // 主要的背景颜色
-                    infoColor: '#AB3500', // 浅一些
-                    titleColor: '#FFE179', // 规则的title
+                    // infoColor: '#AB3500', // 浅一些
+                    // titleColor: '#FFE179', // 规则的title
                     placeholderColor: 'rgba(255,255,255,.6)',
                     homePath: '/pages/activity-pages/labor/index',
                     shareConfig: {
@@ -121,7 +121,7 @@ export default {
                     // 上传作品页
                     activityCat: [], // 表现形式
                     uploadMode: ['video', 'image'], // 上传类型 只传1个值时（['video']）不显示表现形式
-                    placeholderNameText: '作品名称（不超过11字）',
+                    placeholderNameText: '*作品名称（不超过11字）',
                     placeholderDescText: '劳动心得（不超过150字）',
                     nameMaxLength: 11,
                     descMaxLength: 150,
@@ -146,9 +146,9 @@ export default {
                     darkPrimaryColor: '#C790FF', // 深一些 （按钮的颜色）
                     primaryBgColor: '#DCC0FF', // 主要的背景颜色 （图片背景）
                     infoColor: '#333333', // 浅一些
-                    titleColor: '#666', // 规则的title
+                    ruleTitleColor: '#666', // 规则的title
                     placeholderColor: 'rgba(255,255,255,.6)',
-                    homePath: '/pages/activity-pages/labor/index',
+                    homePath: '/pages/activity-pages/children/index',
                     shareConfig: {
                         title: [
                             '七彩童年， 快乐成长秀风采！超多奖品等你拿',
@@ -166,10 +166,9 @@ export default {
                         ],
                         desc: [
                             '七彩童年， 快乐成长秀风采！秀才艺，抢“糖果”，赢好礼',
-                            '五一劳动节，脂肪换奖品啦！赶快动起来',
                         ],
                         image:
-                            'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/labor_share.jpg',
+                            'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/children_share.png',
                         path: '/pages/activity-pages/children/index',
                     },
                 },
@@ -179,6 +178,8 @@ export default {
                     prizes: [
                         {
                             title: '人气作品奖',
+                            text:
+                                '截至2020年6月20日23:59，参赛作品点赞数前20名可获得如下奖品：',
                             item: [
                                 {
                                     text: ['一等奖', '小度音响*2'],
@@ -193,6 +194,7 @@ export default {
                         },
                         {
                             title: '糖果幸运奖',
+                            text: '参与糖果雨抽奖活动，即有机会获得如下奖品：',
                             item: [
                                 {
                                     text: ['', '航拍无人机'],
@@ -201,10 +203,10 @@ export default {
                                     text: ['', '多功能棋盘'],
                                 },
                                 {
-                                    text: ['', '水彩笔套装'],
+                                    text: ['', '水彩笔套装36色'],
                                 },
                                 {
-                                    text: ['', '水彩笔套装'],
+                                    text: ['', '小米书包'],
                                 },
                             ],
                         },
@@ -269,26 +271,27 @@ export default {
                     // 上传作品页
                     activityCat: [], // 表现形式
                     uploadMode: ['video', 'image'], // 上传类型 只传1个值时（['video']）不显示表现形式
-                    placeholderNameText: '作品名称（不超过11字）',
+                    placeholderNameText: '*作品名称（不超过11字）',
                     placeholderDescText: '劳动心得（不超过150字）',
                     nameMaxLength: 11,
                     descMaxLength: 150,
                 },
                 myWorkColorConfig: {
-                    primaryColor: '#C790FF', // 主色调
+                    // primaryColor: '#C790FF', // 主色调
                 },
                 indexColorConfig: {
                     maskBgColor: '#fff',
+                    placeholderColor: '#999',
                 },
                 uploadColorConfig: {
                     mainBgColor: '#fff',
-                    primaryColor: '#C790FF', // 主色调
-                    tipsColor: '#999', // 提示文字
-                    titleColor: '#333',
+                    // primaryColor: '#C790FF', // 主色调
+                    // tipsColor: '#999', // 提示文字
+                    // titleColor: '#333',
                     placeholderColor: '#999',
-                    inputBgColor: '#fff',
-                    inputColor: '#333',
-                    inputBorderColor: '#C790FF',
+                    // inputBgColor: '#fff',
+                    // inputColor: '#333',
+                    // inputBorderColor: '#C790FF',
                 },
             },
         ],

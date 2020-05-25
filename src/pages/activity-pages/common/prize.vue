@@ -73,7 +73,6 @@ export default {
 <style lang="less" scoped>
 .prize {
     height: 242upx;
-    width: 725upz;
     margin: 0 12upx;
     background-image: url("https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/read_prize.png");
     background-repeat: no-repeat;

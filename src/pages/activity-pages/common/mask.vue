@@ -25,58 +25,141 @@
                 </view>
                 <view class="active-rule-box">
                     <template v-if="type === 0">
-                        <view
-                            v-for="(ruleItem, index) in rules"
-                            :key="index"
-                        >
+                        <view class="rule-list-box">
                             <view
-                                class="title"
-                                :style="{ color: theme.titleColor }"
+                                v-for="(ruleItem, index) in rules"
+                                :key="index"
                             >
-                                {{ ruleItem.title }}
-                            </view>
-                            <view class="text">
                                 <view
-                                    v-for="(textItem, k) in ruleItem.texts"
-                                    :key="k"
+                                    class="title"
+                                    :style="{ color: theme.titleColor }"
                                 >
-                                    <template v-if="textItem.title">
-                                        <view class="tit">
-                                            {{ textItem.title }}
-                                        </view>
-                                        <view
-                                            v-for="(list, i) in textItem.list"
-                                            :key="i"
-                                            class="rule-list"
-                                        >
-                                            {{ list }}
-                                        </view>
-                                    </template>
-                                    <template v-else>
-                                        {{ textItem }}
-                                    </template>
+                                    {{ ruleItem.title }}
+                                </view>
+                                <view class="text">
+                                    <view
+                                        v-for="(textItem, k) in ruleItem.texts"
+                                        :key="k"
+                                    >
+                                        <template v-if="textItem.title">
+                                            <view class="tit">
+                                                {{ textItem.title }}
+                                            </view>
+                                            <view
+                                                v-for="(list,
+                                                        i) in textItem.list"
+                                                :key="i"
+                                                class="rule-list"
+                                            >
+                                                {{ list }}
+                                            </view>
+                                        </template>
+                                        <template v-else>
+                                            {{ textItem }}
+                                        </template>
+                                    </view>
                                 </view>
                             </view>
                         </view>
                     </template>
                     <template v-else-if="type === 1">
-                        <view>奖品说明</view>
+                        <view class="prize-box">
+                            <view
+                                v-for="(prize, list) in prizeList"
+                                :key="list"
+                                class="prize-list"
+                            >
+                                <view class="prize-list-title">
+                                    <view class="title-text children-btn">
+                                        {{ prize.title }}
+                                    </view>
+                                </view>
+                                <view class="desc">
+                                    {{ prize.text }}
+                                </view>
+                                <view
+                                    :class="[
+                                        'prize-list-item',
+                                        `prize-list-item-${list}`
+                                    ]"
+                                >
+                                    <view
+                                        v-for="(item, k) in prize.item"
+                                        :key="k"
+                                        class="prize-item"
+                                    >
+                                        <view class="prize-img">
+                                            <image
+                                                :src="
+                                                    `https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/children_prize_${list}_${k}.png`
+                                                "
+                                            />
+                                        </view>
+                                        <view class="pirze-text">
+                                            <text
+                                                v-if="item.text[0]"
+                                                class="pirze-rank"
+                                            >
+                                                {{ item.text[0] }}
+                                            </text>
+                                            <view>{{ item.text[1] }}</view>
+                                        </view>
+                                    </view>
+                                </view>
+                                <view
+                                    v-if="list === 1"
+                                    class="tips"
+                                >
+                                    （图片仅供参考，奖品以实物为准）
+                                </view>
+                            </view>
+                            <view class="prize-text-box">
+                                <view class="title">
+                                    奖品领取说明
+                                </view>
+                                <view class="text-item">
+                                    1.每名参赛选手只有1次人气奖领取机会，如出现同一参赛选手获得不同奖项的情况，则以最高奖项为准。
+                                </view>
+                                <view class="text-item">
+                                    2.工作人员将于2020年6月23日-6月26日期间电话联系获奖用户所绑定的手机号码，电话无法联系的将视为该用户自动放弃领奖资格。
+                                </view>
+                                <view class="text-item">
+                                    3.奖品将于2020年6月27日开始通过普通快递陆续寄出。
+                                </view>
+                                <view class="text-item">
+                                    4.本次活动所有奖品不提供发票、收据，不支持退换，收货时请确认无质量问题后签收。
+                                </view>
+                                <view class="text-item">
+                                    5.若因用户提供的收货信息有误而未收到奖品，概不补发。
+                                </view>
+                            </view>
+                        </view>
                     </template>
                     <template v-else-if="type === 2">
                         <scroll-view
                             class="lucky-list"
-                            scroll-y="true"
-                            @scrolltolower="getLuckList"
+                            :scroll-y="true"
+                            style="height: 400px"
+                            :refresher-threshold="20"
+                            @scrolltolower="getLuckyList"
                         >
                             <view
                                 v-for="(lucky, index) in luckyListArr"
                                 :key="lucky.id"
                                 class="item"
                             >
-                                <text>{{ luckyTotal[index] }}.</text>
-                                <text>用户4343434</text>
+                                <text
+                                    class="index-text"
+                                >
+                                    {{ luckyTotal[index] }}.
+                                </text>
+                                <text class="text">
+                                    用户{{ lucky.user_name }}
+                                </text>
                                 <text>抽中了</text>
-                                <text>小度音响</text>
+                                <text class="text">
+                                    {{ lucky.draw }}
+                                </text>
                             </view>
                         </scroll-view>
                     </template>
@@ -181,7 +264,7 @@
                             src="http://aitiaozhan.oss-cn-beijing.aliyuncs.com/chunjiehao/qrcode.jpg"
                         />
                         <view class="text">
-                            关注“UP青少年爱挑战”公众号，了解更多活动信息
+                            关注“UP青少年爱挑战”公众号，了解更多信息。
                         </view>
                     </view>
                 </view>
@@ -243,17 +326,16 @@ export default {
     data() {
         return {
             luckyListArr: this.luckyList.list || [],
-            luckyTotal: this.luckyList.total || 0,
-            luckyNum: 0,
+            luckyTotal: this.luckyList.list.lenght || 0,
+            luckyNum: 1,
             lotteryType: this.lotteryNum.type || [],
         };
     },
     watch: {
         luckyList: {
             handler(val) {
-                console.log(val);
                 const list = [];
-                for (let i = 1; i < val.total + 1; i += 1) {
+                for (let i = 1; i < val.list.length + 1; i += 1) {
                     list.push(i);
                 }
                 this.luckyTotal = list.reverse();
@@ -268,6 +350,7 @@ export default {
             this.$emit('close');
         },
         getLuckyList() {
+            console.log(111);
             this.$emit('getLuckyList', (this.luckyNum += 1));
         },
         getLotteryNum(index, type) {
@@ -371,6 +454,20 @@ export default {
         }
     }
     &.mask-children {
+        z-index: 1002;
+        .active-content {
+            position: relative;
+            &::before {
+                content: "";
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 78px;
+                height: 41px;
+                background-image: url(https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/children_flag1.png);
+                background-size: 100% 100%;
+            }
+        }
         .chidren-btn {
             color: #fff;
             border-radius: 48upx;
@@ -400,19 +497,7 @@ export default {
             background-size: 100% 248upx;
             background-position: bottom center;
         }
-        .title,
-        .text {
-            display: inline-block;
-            font-size: 28upx;
-        }
-        .title {
-            font-weight: normal;
-        }
-        .text {
-            color: #333;
-            font-weight: bold;
-            margin-bottom: 2upx;
-        }
+
         .tit,
         .title-icon {
             padding: 0upx 40upx;
@@ -455,7 +540,7 @@ export default {
         }
         .active-content {
             bottom: 96upx;
-            height: auto;
+            max-height: 1000upx;
         }
         .close {
             bottom: -75upx;
@@ -463,9 +548,220 @@ export default {
             transform: translateX(50%);
             top: auto;
         }
+        .rule-list-box {
+            .title,
+            .text {
+                display: inline-block;
+                font-size: 28upx;
+            }
+            .title {
+                font-weight: normal;
+            }
+            .text {
+                color: #333;
+                font-weight: bold;
+                margin-bottom: 2upx;
+            }
+        }
+        .prize-box {
+            box-shadow: inset 0 0px 24upx 0px rgba(182, 146, 255, 1);
+            background-color: #fff;
+            margin: -120upx 0upx 40upx;
+            border-radius: 50upx;
+            padding: 0 20upx 48upx;
+            .prize-list {
+                border-bottom: 2upx #c790ff dashed;
+                &:nth-of-type(2) {
+                    border-bottom: 0 none;
+                }
+            }
+            .prize-list-title {
+                display: flex;
+                justify-content: space-between;
+                padding: 40upx 10upx 39upx 30upx;
 
+                .title-text {
+                    padding: 11upx 38upx;
+                    color: #fff;
+                    border-radius: 48upx;
+                    background-color: #ff78a5;
+                    box-shadow: inset 0px 0px 24upx 0px rgba(255, 255, 255, 1);
+                    position: relative;
+                    font-size: 32upx;
+                }
+                .handel-text {
+                    color: #bb77ff;
+                    font-size: 24upx;
+                    font-weight: 500;
+                    position: relative;
+                    top: 10upx;
+                    min-width: 166upx;
+                    text-align: center;
+                    &::after {
+                        content: "";
+                        position: absolute;
+                        left: 50%;
+                        transform: translateX(-50%);
+                        bottom: 0upx;
+                        width: 166upx;
+                        height: 42upx;
+                        background-image: url(https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/children_flag.png);
+                        background-size: 100% 100%;
+                    }
+                }
+            }
+            .prize-list-item {
+                display: flex;
+                justify-content: space-between;
+
+                .prize-item {
+                    border: 4upx solid #c790ff;
+                    border-bottom: 0 none;
+                    border-radius: 7upx;
+                    box-sizing: border-box;
+                    position: relative;
+                    image {
+                        width: 132upx;
+                        height: 120upx;
+                    }
+                }
+                .pirze-text {
+                    position: absolute;
+                    left: -8upx;
+                    right: -8upx;
+                    bottom: 0upx;
+                    background-color: #c790ff;
+                    border-radius: 0 0 10upx 10upx;
+                    font-size: 20upx;
+                    text-align: center;
+                    color: #fff;
+                    padding-top: 4upx;
+                    padding-bottom: 2upx;
+                    min-height: 36upx;
+                    &::before {
+                        content: "";
+                        position: absolute;
+                        top: -14upx;
+                        left: 0;
+                        right: 0;
+                        height: 17upx;
+                        background-image: url(https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/children_prize_bg.png);
+                        background-position: top center;
+                        background-size: 100% 100%;
+                    }
+                    .pirze-rank {
+                        line-height: 26upx;
+                        padding: 0 11upx;
+                        background-color: #ffe79c;
+                        color: #bb77ff;
+                        display: inline-block;
+                        border-radius: 16upx;
+                    }
+                }
+                &.prize-list-item-0 {
+                    padding: 0 50upx 50upx;
+                    .prize-item {
+                        width: 153upx;
+                        height: 188upx;
+                        padding: 3upx 6upx 0;
+                    }
+                }
+                &.prize-list-item-1 {
+                    .pirze-text {
+                        line-height: 36upx;
+                    }
+                    .prize-item {
+                        width: 144upx;
+                        height: 164upx;
+                        padding: 3upx 2upx;
+                    }
+                }
+            }
+            .prize-handel-item {
+                display: flex;
+                justify-content: space-between;
+                margin: 48upx 31upx 0;
+                .btn {
+                    height: 158upx;
+                    font-size: 28upx;
+                    font-weight: 500;
+                    color: #333;
+                    line-height: 173upx;
+                    background-position: center center;
+                    background-size: 100% 100%;
+                    text-align: center;
+                    &:nth-of-type(1) {
+                        width: 274upx;
+                        background-image: url(https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/children_btn-prize_0.png);
+                    }
+                    &:nth-of-type(2) {
+                        width: 234upx;
+                        background-image: url(https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/children_btn-prize_1.png);
+                    }
+                }
+            }
+        }
+        .prize-box {
+            padding: 0;
+            box-shadow: none;
+            margin: 0;
+            border-radius: 0;
+            .prize-list {
+                margin-bottom: 39upx;
+                &:nth-of-type(2) {
+                    border-bottom: 2upx #c790ff dashed;
+                }
+            }
+            .prize-list-title {
+                padding: 0 20upx 20upx;
+            }
+            .desc {
+                color: #666;
+                font-size: 28upx;
+                margin-bottom: 34upx;
+                padding: 0 20upx;
+            }
+            .prize-list-item {
+                &.prize-list-item-0 {
+                    padding: 0 20upx 40upx;
+                }
+            }
+            .tips {
+                color: #999;
+                font-size: 24upx;
+                text-align: center;
+                margin: 30upx 0 40upx;
+            }
+            .prize-text-box {
+                padding: 0 20upx;
+                .title {
+                    color: #333;
+                    font-size: 32upx;
+                    line-height: 37upx;
+                    margin-bottom: 20upx;
+                }
+                .text-item {
+                    color: #666;
+                    font-size: 26upx;
+                    line-height: 42upx;
+                }
+            }
+        }
         .lucky-list {
             color: #999;
+            .item {
+                padding: 16upx 0;
+                font-size: 30upx;
+            }
+            .text {
+                color: #bb77ff;
+                margin: 0;
+                font-weight: normal;
+            }
+            .index-text {
+                min-width: 56upx;
+                display: inline-block;
+            }
         }
         .lottery-num {
             .tips {
@@ -518,6 +814,24 @@ export default {
                     box-shadow: inset 0px 0px 0px 0px rgba(255, 255, 255, 0.35);
                     color: #d5abff;
                 }
+            }
+        }
+        .qr-wrap {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            .qr-code {
+                width: 220rpx;
+                height: 220rpx;
+                border-radius: 15rpx;
+                margin: 26upx 20upx 0 0;
+            }
+            .text {
+                color: #666;
+                line-height: 40upx;
+                width: 283upx;
+                font-size: 24rpx;
+                font-weight: normal;
             }
         }
     }

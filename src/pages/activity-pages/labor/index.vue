@@ -8,6 +8,7 @@
             :index-config="indexConfig"
             :public-config="publicConfig"
             :is-stop-scroll="showHistoryRankList"
+            class-name="labor-page"
             :fr="fr"
         >
             <template v-slot:rank>
@@ -394,4 +395,5 @@ export default {
         }
     }
 }
+@import "../theme/index.less";
 </style>

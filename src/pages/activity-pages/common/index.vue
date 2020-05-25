@@ -15,10 +15,11 @@
             <maskBox
                 v-if="prompt"
                 :rules="indexConfig.rules"
-                type="rule"
+                :type="0"
+                title="活动规则"
                 :theme="{
                     bgColor:
-                        indexConfig.maskBgColor || publicConfig.primaryBgColor,
+                        publicConfig.maskBgColor || publicConfig.primaryBgColor,
                     titleColor: publicConfig.titleColor
                 }"
                 :name="publicConfig.activityName"
@@ -41,7 +42,6 @@
                     <view>
                         <image
                             class="banner-image"
-                            style="height:914upx"
                             :src="
                                 `https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/${publicConfig.activityName}_main.jpg`
                             "
@@ -50,27 +50,18 @@
 
                     <view
                         class="active-rule"
-                        :style="{
-                            'background-color': publicConfig.primaryColor
-                        }"
                         @click="handleActiverule"
                     >
                         活动规则
                     </view>
                     <view
                         class="menu-title"
-                        :style="{
-                            'background-color': publicConfig.primaryColor
-                        }"
                         @click="handleMywork"
                     >
                         我的作品
                     </view>
                     <template v-show="publicConfig.time !== ''">
-                        <i
-                            class="active-time"
-                            :style="{ color: publicConfig.primaryColor }"
-                        >
+                        <i class="active-time">
                             活动时间：{{ publicConfig.time }}
                         </i>
                     </template>
@@ -89,33 +80,22 @@
                     <slot name="rank" />
                     <!-- 跑马灯 -->
                     <tipsList
+                        :text="
+                            `${filter.activity_id === 9 ? '抽中了' : '发布了'}`
+                        "
                         :crousel-list="crouselList"
-                        :theme="{
-                            mainColor: publicConfig.primaryColor,
-                            bgColor: publicConfig.primaryBgColor
-                        }"
                     />
                     <!-- work show -->
                     <view class="menu-list">
-                        <view
-                            class="cansai-text"
-                            :style="{ color: publicConfig.primaryColor }"
-                        >
+                        <view class="cansai-text">
                             —— 活动作品 ——
                         </view>
                         <view class="search-box">
                             <button
                                 v-for="(item, index) in publicConfig.catMenu"
                                 :key="index"
-                                :style="{
-                                    'background-color':
-                                        filter.activity_cat === index + 1
-                                            ? publicConfig.primaryColor
-                                            : '',
-                                    color:
-                                        filter.activity_cat === index + 1
-                                            ? '#fff'
-                                            : publicConfig.darkPrimaryColor
+                                :class="{
+                                    active: filter.activity_cat === index + 1
                                 }"
                                 @click="toggle(index + 1)"
                             >
@@ -124,29 +104,16 @@
                             <button
                                 v-for="(item, index) in publicConfig.sort"
                                 :key="index"
-                                :style="{
-                                    'background-color':
+                                :class="{
+                                    active:
                                         filter.sort ===
                                         (index === 0 ? 'new' : 'hot')
-                                            ? publicConfig.primaryColor
-                                            : '',
-                                    color:
-                                        filter.sort ===
-                                        (index === 0 ? 'new' : 'hot')
-                                            ? '#fff'
-                                            : publicConfig.darkPrimaryColor
                                 }"
                                 @click="toggle(index === 0 ? 'new' : 'hot')"
                             >
                                 {{ item }}
                             </button>
-                            <view
-                                class="search"
-                                :style="{
-                                    'background-color':
-                                        publicConfig.primaryBgColor
-                                }"
-                            >
+                            <view class="search">
                                 <image
                                     :src="
                                         `https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/${publicConfig.activityName}_search.png`
@@ -184,28 +151,14 @@
                                     @click.native="viewDetail(item)"
                                 />
 
-                                <view
-                                    class="media-name text-one-line"
-                                    :style="{
-                                        color: publicConfig.infoColor
-                                    }"
-                                >
+                                <view class="media-name text-one-line">
                                     {{ `${item.resource_name}` }}
                                 </view>
-                                <text
-                                    class="vote-num"
-                                    :style="{
-                                        color: publicConfig.darkPrimaryColor
-                                    }"
-                                >
+                                <text class="vote-num">
                                     {{ item.ticket }}赞
                                 </text>
                                 <view
                                     class="vote"
-                                    :style="{
-                                        'background-color':
-                                            publicConfig.primaryColor
-                                    }"
                                     @click="handleVote(item)"
                                 >
                                     <image
@@ -218,9 +171,6 @@
                             <view
                                 v-if="dataList.length === 0"
                                 class="media-fill"
-                                :style="{
-                                    color: publicConfig.primaryColor
-                                }"
                             >
                                 暂无数据～
                             </view>
@@ -239,7 +189,6 @@
                 </view>
                 <view
                     :class="status === 2 || isH5 ? 'upload' : 'upload-disable'"
-                    :style="{ 'background-color': publicConfig.primaryColor }"
                     @click="handleUpload"
                 >
                     {{ status === 2 ? "上传作品" : "活动已结束" }}
@@ -378,13 +327,23 @@ export default {
             }, 1000 * 60 * 5);
         },
         postCrouselList() {
-            api.post('/api/activity/resourcelist', {
-                activity_id: this.filter.activity_id,
-                page_num: 1,
-                page_size: 10,
-            }).then(({ list }) => {
-                this.crouselList = list;
-            });
+            if (this.filter.activity_id === 9) {
+                // 六一活动显示 中奖信息
+                api.post('/api/activity/drawlist', {
+                    page_num: 1,
+                    page_size: 10,
+                }).then(({ list }) => {
+                    this.crouselList = list;
+                });
+            } else {
+                api.post('/api/activity/resourcelist', {
+                    activity_id: this.filter.activity_id,
+                    page_num: 1,
+                    page_size: 10,
+                }).then(({ list }) => {
+                    this.crouselList = list;
+                });
+            }
         },
         getData(title) {
             api.post('/api/activity/resourcelist', this.filter).then(
@@ -417,30 +376,30 @@ export default {
             });
         },
         handleUpload() {
-            // if (this.isH5) {
-            //     return uni.showToast({
-            //         title: '请在UP爱挑战小程序上传作品',
-            //         icon: 'none',
-            //     });
-            // }
-            // if (this.status === 2) {
-            api.isLogin({
-                fr: this.fr,
-            }).then(() => {
-                uni.navigateTo({
-                    url: `/pages/activity-pages/upload/modify?activity_id=${this.filter.activity_id}`,
+            if (this.isH5) {
+                return uni.showToast({
+                    title: '请在UP爱挑战小程序上传作品',
+                    icon: 'none',
                 });
-            });
-            // } else {
-            //     uni.showToast({
-            //         title:
-            //             this.status === 1
-            //                 ? '活动未开始，敬请期待'
-            //                 : '活动已结束',
-            //         icon: 'none',
-            //     });
-            // }
-            // return true;
+            }
+            if (this.status === 2) {
+                api.isLogin({
+                    fr: this.fr,
+                }).then(() => {
+                    uni.navigateTo({
+                        url: `/pages/activity-pages/upload/modify?activity_id=${this.filter.activity_id}`,
+                    });
+                });
+            } else {
+                uni.showToast({
+                    title:
+                        this.status === 1
+                            ? '活动未开始，敬请期待'
+                            : '活动已结束',
+                    icon: 'none',
+                });
+            }
+            return true;
         },
 
         // onReachBottom() {
@@ -731,6 +690,7 @@ body.dialog-open {
             color: #08402f;
             font-size: 30upx;
             float: left;
+            margin-top: 8upx;
         }
         .like-icon {
             width: 27upx;

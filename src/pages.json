@@ -274,13 +274,16 @@
         {
             "path": "pages/activity-pages/children/index",
             "style": {
-                "navigationBarTitleText": "红包雨"
+                "navigationBarTitleText": "红包雨",
+                "usingComponents": {
+                    "poster": "/wxcomponents/third-party/poster/poster/index"
+                }
             }
         },
         {
             "path": "pages/activity-pages/upload/modify",
             "style": {
-                "navigationBarTitleText": "青少年动起来"
+                "navigationBarTitleText": "上传作品"
             }
         },
         {

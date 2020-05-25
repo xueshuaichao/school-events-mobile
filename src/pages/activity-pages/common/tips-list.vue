@@ -2,7 +2,6 @@
     <view
         v-if="crouselList.length > 0"
         class="page-section-spacing"
-        :style="{ 'background-color': theme.bgColor }"
     >
         <swiper
             class="swiper"
@@ -22,15 +21,13 @@
                 <view class="swiper-item">
                     <image src="/static/images/yiqing/horn.png" />
                     <view class="swiper-info">
-                        <text :style="{ color: theme.mainColor }">
-                            用户{{ item.user_name | plusXing }}
-                        </text>
-                        <text>发布了</text>
-                        <text :style="{ color: theme.mainColor }">
+                        <text> 用户{{ item.user_name | plusXing }} </text>
+                        <text>{{ text }}</text>
+                        <text v-if="item.cat_name">
                             #{{ item.cat_name }}#
                         </text>
-                        <text :style="{ color: theme.mainColor }">
-                            {{ item.resource_name }}
+                        <text>
+                            {{ item.resource_name || item.draw }}
                         </text>
                     </view>
                     <text>刚刚</text>
@@ -51,16 +48,14 @@ export default {
         },
     },
     props: {
+        text: {
+            type: String,
+            default: '发布了',
+        },
         crouselList: {
             type: Array,
             default() {
                 return [];
-            },
-        },
-        theme: {
-            type: Object,
-            default() {
-                return {};
             },
         },
     },
