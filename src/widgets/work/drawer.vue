@@ -68,13 +68,6 @@
                         class="write-icon"
                         @click="bindconfirm"
                     />
-                    <!-- <view
-                        v-if="!showKeybord"
-                        class="transparent"
-                        @click="changeInput"
-                    >
-                        写评论
-                    </view> -->
                     <input
                         v-model="changeVal"
                         type="text"
@@ -186,15 +179,13 @@ export default {
         this.getList();
     },
     methods: {
-        changeInput() {
-            this.isFocus = true;
-            this.showKeybord = true;
-        },
         onFoucs(e) {
-            this.showKeybord = true;
-            console.log(e.detail.height, 'onFoucs----');
-            this.inputTop = e.detail.height - this.drawerHeight + this.pix * 100;
-            this.markerheight = this.screenHeight - e.detail.height - this.pix * 260;
+            if (!this.isH5) {
+                this.showKeybord = true;
+                console.log(e.detail.height, 'onFoucs----');
+                this.inputTop = e.detail.height - this.drawerHeight + this.pix * 100;
+                this.markerheight = this.screenHeight - e.detail.height - this.pix * 260;
+            }
         },
         blur() {
             this.showKeybord = false;
