@@ -50,6 +50,7 @@
             <view
                 v-if="addNum === 1"
                 class="add-img"
+                @click="jumpHome"
             >
                 <image
                     src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/children_add.png"
@@ -103,6 +104,11 @@ export default {
         getLotteryNum() {
             api.get('/api/activity/getuserlotterynum').then((res) => {
                 this.addNum = Number(res.add_activity);
+            });
+        },
+        jumpHome() {
+            uni.reLaunch({
+                url: '/pages/activity-pages/children/index',
             });
         },
     },

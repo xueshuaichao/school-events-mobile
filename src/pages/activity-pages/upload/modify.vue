@@ -9,7 +9,10 @@
                 class="main"
                 :style="{ background: publicConfig.mainBgColor }"
             >
-                <view class="uni-list-cell-db">
+                <view
+                    v-if="publicConfig.showAllCat"
+                    class="uni-list-cell-db"
+                >
                     <picker
                         :value="index"
                         :range="catData"

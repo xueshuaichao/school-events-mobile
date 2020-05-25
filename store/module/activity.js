@@ -14,6 +14,7 @@ export default {
                     activityName: 'labor',
                     activityId: 8,
                     catId: 20, // 所属分类
+                    showAllCat: false,
                     time: '4月27日--5月31日',
                     primaryColor: '#DB4E0E', // 主色调
                     // darkPrimaryColor: '#451600', // 深一些
@@ -141,7 +142,8 @@ export default {
                     activityName: 'children',
                     activityId: 9,
                     catId: '', // 所属分类
-                    time: '4月27日--5月31日',
+                    showAllCat: true,
+                    time: '5月29日--6月20日',
                     primaryColor: '#BB77FF', // 主色调
                     darkPrimaryColor: '#C790FF', // 深一些 （按钮的颜色）
                     primaryBgColor: '#DCC0FF', // 主要的背景颜色 （图片背景）

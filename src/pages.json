@@ -274,7 +274,7 @@
         {
             "path": "pages/activity-pages/children/index",
             "style": {
-                "navigationBarTitleText": "红包雨",
+                "navigationBarTitleText": "七彩童年，快乐成长秀风采",
                 "usingComponents": {
                     "poster": "/wxcomponents/third-party/poster/poster/index"
                 }
