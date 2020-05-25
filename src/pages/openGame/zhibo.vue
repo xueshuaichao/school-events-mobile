@@ -3,7 +3,8 @@
         <!-- <Icon class="success-icon" type="checkmark-circled" color="#3BCC70" size="60px"></Icon> -->
         <video
             class="video"
-            src="http://prdsecurelive.ainemo.com/prdnemo/2c94982b71364816017195a0650c4ee0.m3u8?auth_key=5e139ba69e2109b383410b579e000e90-1587461400-ee51cfabfb9d43fd9d0e9674675c14b0-"
+            src="http://prdsecurelive.ainemo.com/prdnemo/2c949711723d1f1701724ad73ffd427f.flv?auth_key=c75d5485de0d3c52cdfd1b35bbd5c07f-1590487217-fef0ef6cfa6d44e496cfc8f8562c469e-"
+            @error="error"
         />
     </view>
 </template>
@@ -15,6 +16,9 @@ export default {
             uni.reLaunch({
                 url: '/pages/tabBar/index/index',
             });
+        },
+        error(e) {
+            console.log(e.target.errMsg);
         },
     },
 };
@@ -29,7 +33,7 @@ export default {
 
     .video {
         width: 750upx;
-        height: 640upx;
+        height: 100vh;
     }
 }
 </style>

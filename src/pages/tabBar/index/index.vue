@@ -196,6 +196,15 @@
                 </text>
             </navigator>
         </view>
+        <navigator
+            v-if="!isH5"
+            url="/pages/openGame/zhibo"
+        >
+            <image
+                class="zhibo-entry"
+                src="http://aitiaozhan.oss-cn-beijing.aliyuncs.com/school-events-mobile/zhibo-entry01.png"
+            />
+        </navigator>
         <work
             :title="'热门活动'"
             :more-url="'/pages/tabBar/upload/upload'"
@@ -566,7 +575,9 @@ uni-swiper {
         height: 100%;
     }
 }
-
+.zhibo-entry {
+    width: 100%;
+}
 .page-index {
     padding-bottom: 20upx;
     position: relative;

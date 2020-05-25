@@ -351,6 +351,12 @@
             }
         },
         {
+            "path": "pages/openGame/zhibo",
+            "style": {
+                "navigationBarTitleText": "直播"
+            }
+        },
+        {
             "path": "pages/uc/reported/result",
             "style": {
                 "navigationBarTitleText": "上报成功"
