@@ -146,7 +146,7 @@
                             <view
                                 v-for="(lucky, index) in luckyListArr"
                                 :key="lucky.id"
-                                class="item"
+                                class="item text-one-line"
                             >
                                 <text class="index-text">
                                     {{ luckyTotal[index] }}.

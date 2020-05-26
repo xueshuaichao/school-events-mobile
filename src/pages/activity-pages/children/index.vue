@@ -39,7 +39,7 @@
                     class="children-btn join-lottery"
                     @click="startLottery"
                 >
-                    立即参与
+                    马上开始
                 </view>
                 <image
                     class="close"
@@ -577,13 +577,16 @@ export default {
             this.myPrizeList = type !== 1;
             return api.get(url, status ? {} : { draw: 0 }).then(
                 (res) => {
-                    // 减掉抽奖机会
-                    if (type === 1) {
-                        api.get('/api/activity/usedrawnum');
+                    // 我的中奖 如果用户没有抽过奖 显示立即参与
+                    if (type === 2 && Array.isArray(res) && res.length === 0) {
+                        this.showLotteryPanel = true;
+                        return true;
                     }
                     if (res.status) {
+                        // 中奖了
                         return this.winDrawImage(res);
                     }
+                    // 没中奖
                     return this.loseDrawImage(res);
                 },
                 (err) => {
@@ -671,44 +674,67 @@ export default {
         createPoster(type = 1, status) {
             if (!this.lock) {
                 this.lock = true;
-                uni.showLoading({
-                    title: type === 1 ? '正在开奖' : '请稍等',
-                });
-                this.openLottery(type, status).then(({ config }) => {
-                    if (config) {
-                        this.posterCommonConfig = {
-                            ...this.posterCommonConfig,
-                            ...config,
-                        };
-                        // 需等画报配置修改后才能生成
-                        this.showPoster = true;
-                        this.$nextTick(() => {
-                            this.poster = this.selectComponent('#poster');
-                            this.poster.onCreate(this.posterCommonConfig);
-                            this.lock = true;
+                api.isLogin({
+                    fr: this.fr,
+                }).then(
+                    () => {
+                        this.openLottery(type, status).then(({ config }) => {
+                            this.lock = false;
+                            if (config) {
+                                uni.showLoading({
+                                    title: type === 1 ? '正在开奖' : '请稍等',
+                                });
+                                this.posterCommonConfig = {
+                                    ...this.posterCommonConfig,
+                                    ...config,
+                                };
+                                // 需等画报配置修改后才能生成
+                                this.showPoster = true;
+                                this.$nextTick(() => {
+                                    this.poster = this.selectComponent(
+                                        '#poster',
+                                    );
+                                    this.poster.onCreate(
+                                        this.posterCommonConfig,
+                                    );
+                                });
+                            }
                         });
-                    }
-                });
+                    },
+                    () => {
+                        this.lock = false;
+                    },
+                );
             }
         },
         h5CreatePoster(type = 1, status) {
             // type 1-开奖 2-我的中奖
             api.isLogin({
                 fr: this.fr,
-            }).then(() => {
-                this.openLottery(type, status).then(({ config, status }) => {
-                    if (config) {
-                        this.posterWin = status;
-                        if (status) {
-                            // 中奖
-                            this.h5WinDrawImage(config);
-                        } else {
-                            // 未中奖
-                            this.h5LoseDrawImage(config);
-                        }
-                    }
-                });
-            });
+            }).then(
+                () => {
+                    this.openLottery(type, status).then(
+                        ({ config, status }) => {
+                            if (config) {
+                                uni.showLoading({
+                                    title: type === 1 ? '正在开奖' : '请稍等',
+                                });
+                                this.posterWin = status;
+                                if (status) {
+                                    // 中奖
+                                    this.h5WinDrawImage(config);
+                                } else {
+                                    // 未中奖
+                                    this.h5LoseDrawImage(config);
+                                }
+                            }
+                        },
+                    );
+                },
+                () => {
+                    this.lock = false;
+                },
+            );
         },
         promisify: api => (options, ...params) => new Promise((resolve, reject) => {
             const extras = {
@@ -734,14 +760,15 @@ export default {
                     that.startCreateCanvas = false;
                     that.showPosterMask = true;
                     that.canvasImg = res.tempFilePath;
+                    uni.hideLoading();
                 },
                 fail() {
+                    uni.hideLoading();
                     uni.showToast({
                         title: '保存失败，稍后再试',
                         duration: 2000,
                         icon: 'none',
                     });
-                    uni.hideLoading();
                 },
             });
         },
