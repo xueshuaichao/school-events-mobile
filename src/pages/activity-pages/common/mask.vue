@@ -3,7 +3,13 @@
         <!-- 规则 -->
         <view :class="['activerulebox', `mask-${name}`]">
             <view
-                class="active-content"
+                :class="[
+                    'active-content',
+                    `active-content-${type}`,
+                    type === 2 && luckyAllTotal === 0
+                        ? 'active-content-lucky'
+                        : ''
+                ]"
                 :style="{ 'background-color': theme.bgColor }"
             >
                 <view
@@ -136,7 +142,15 @@
                         </view>
                     </template>
                     <template v-else-if="type === 2">
+                        <view
+                            v-if="luckyAllTotal === 0"
+                            class="lucky-none"
+                        >
+                            <view>幸运奖就等你了，</view>
+                            快来抽奖吧！
+                        </view>
                         <scroll-view
+                            v-else
                             class="lucky-list"
                             :scroll-y="true"
                             style="height: 400px"
@@ -325,6 +339,7 @@ export default {
         return {
             luckyListArr: this.luckyList.list || [],
             luckyTotal: this.luckyList.list.lenght || 0,
+            luckyAllTotal: -1,
             luckyNum: 1,
             lotteryType: this.lotteryNum.type || [],
         };
@@ -338,6 +353,7 @@ export default {
                 }
                 this.luckyTotal = list.reverse();
                 this.luckyListArr = val.list;
+                this.luckyAllTotal = val.total;
             },
             deep: true,
             immediate: true,
@@ -402,7 +418,8 @@ export default {
         height: 90upx;
         position: absolute;
         top: -43upx;
-        left: 190upx;
+        left: 50%;
+        transform: translateX(-50%);
         text-align: center;
         line-height: 69upx;
         z-index: 222;
@@ -455,6 +472,18 @@ export default {
         z-index: 1002;
         .active-content {
             position: relative;
+            &.active-content-0 {
+            }
+            &.active-content-1 {
+            }
+            &.active-content-lucky {
+                margin: 223upx auto 0;
+                width: 540upx;
+                height: 526upx;
+                padding-bottom: 312upx;
+                background-image: url(https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/children_mask_footer_mini.png);
+            }
+
             &::before {
                 content: "";
                 position: absolute;
@@ -746,6 +775,16 @@ export default {
                     font-size: 26upx;
                     line-height: 42upx;
                 }
+            }
+        }
+        .lucky-none {
+            font-size: 32upx;
+            text-align: center;
+            color: #bb77ff;
+            font-weight: bold;
+            line-height: 62upx;
+            & > view {
+                font-size: 30upx;
             }
         }
         .lucky-list {
