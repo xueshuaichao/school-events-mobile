@@ -672,6 +672,7 @@ export default {
             };
         },
         createPoster(type = 1, status) {
+            this.getAuthStatus();
             if (!this.lock) {
                 this.lock = true;
                 api.isLogin({
@@ -779,12 +780,14 @@ export default {
             wx.getSetting({
                 // 获取设置
                 success(res) {
+                    console.log(res);
                     if (res.authSetting['scope.writePhotosAlbum'] === false) {
                         // 说明未授权
                         that.imgAuthBtn = true;
                     } else {
                         that.imgAuthBtn = false;
                     }
+                    console.log(that.imgAuthBtn);
                 },
             });
         },
@@ -854,6 +857,7 @@ export default {
                                 }
                             },
                             fail(failData) {
+                                that.imgAuthBtn = true;
                                 console.log('failData', failData);
                             },
                             complete(finishData) {
