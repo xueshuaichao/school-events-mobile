@@ -992,7 +992,14 @@ export default {
             }
         },
         getPrizeNum() {
-            this.showMask({ title: '获取抽奖机会', type: 3 });
+            if (this.status === 1) {
+                this.showMask({ title: '获取抽奖机会', type: 3 });
+            } else {
+                uni.showToast({
+                    title: this.status === 3 ? '活动已结束' : '活动未开始',
+                    icon: 'none',
+                });
+            }
         },
         showMask({ title, type }) {
             // type 1-奖品设置 2-幸运榜单 3-获取抽奖机会
