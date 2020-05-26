@@ -163,7 +163,9 @@
                                 >
                                     <image
                                         class="like-icon"
-                                        src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/read_like_icon.png"
+                                        :src="
+                                            `https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/${publicConfig.activityName}_like_icon.png`
+                                        "
                                     />
                                     点赞
                                 </view>
