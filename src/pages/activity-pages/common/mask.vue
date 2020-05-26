@@ -860,11 +860,13 @@ export default {
             display: flex;
             justify-content: center;
             align-items: center;
+            margin-top: 26upx;
             .qr-code {
                 width: 220rpx;
                 height: 220rpx;
                 border-radius: 15rpx;
-                margin: 26upx 20upx 0 0;
+                margin: 0 20upx 0 0;
+                border: 1px solid rgba(182, 146, 255, 1);
             }
             .text {
                 color: #666;
@@ -872,6 +874,7 @@ export default {
                 width: 283upx;
                 font-size: 24rpx;
                 font-weight: normal;
+                margin-bottom: 0;
             }
         }
     }

@@ -163,7 +163,7 @@
                 class-name="children-page"
                 :fr="fr"
                 @showMask="showMask"
-                @voteCallBack="getLotteryNum"
+                @voteCallBack="voteCallBack"
             >
                 <template v-slot:prize>
                     <view class="prize-box">
@@ -258,7 +258,7 @@
             :prize-list="indexConfig.prizes"
             :lucky-list="luckyList"
             :lottery-num="lotteryNum"
-            :show-qr-code="type === 1"
+            :show-qr-code="type === 1 || type === 0"
             :rules="indexConfig.rules"
             @close="handleClose"
             @getLuckyList="getLuckyList"
@@ -324,7 +324,7 @@ export default {
             activityId: '',
             hideIndex: -1,
             maskPrompt: false,
-            type: '',
+            type: 0,
             maskTitle: '',
             luckyFilter: {
                 page_size: 20,
@@ -527,6 +527,16 @@ export default {
                 },
             );
         },
+        voteCallBack() {
+            api.get('/api/activity/getuserlotterynum').then((res) => {
+                if (res.vote_num === 5) {
+                    uni.showToast({
+                        title: '恭喜你获得一次免费的抽奖资格，快来抽奖吧',
+                        icon: 'none',
+                    });
+                }
+            });
+        },
         startLottery() {
             // 参与抽奖 消耗次数
             if (!this.lock) {
@@ -547,7 +557,7 @@ export default {
                         ) {
                             uni.showToast({
                                 title: '今日已无抽奖机会，明日再来吧',
-                                duration: 2000,
+                                icon: 'none',
                             });
                             this.lock = false;
                         } else {
@@ -614,6 +624,7 @@ export default {
                 (err) => {
                     uni.showToast({
                         title: err.message,
+                        icon: 'none',
                     });
                 },
             );
@@ -987,6 +998,7 @@ export default {
             // type 1-奖品设置 2-幸运榜单 3-获取抽奖机会
             this.maskTitle = title;
             this.type = type;
+            console.log(type);
             this.maskPrompt = true;
         },
     },
