@@ -618,6 +618,16 @@ export default {
                     box-shadow: inset 0px 0px 24upx 0px rgba(255, 255, 255, 1);
                     position: relative;
                     font-size: 32upx;
+                    &::after {
+                        content: "";
+                        position: absolute;
+                        right: -30rpx;
+                        top: 5rpx;
+                        width: 70rpx;
+                        height: 60rpx;
+                        background-image: url(https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/children_bt_a.png);
+                        background-size: 100% 100%;
+                    }
                 }
                 .handel-text {
                     color: #bb77ff;
@@ -689,7 +699,7 @@ export default {
                     }
                 }
                 &.prize-list-item-0 {
-                    padding: 0 50upx 50upx;
+                    padding: 0 56upx 50upx;
                     .prize-item {
                         width: 153upx;
                         height: 188upx;
