@@ -11,7 +11,7 @@
                 titleColor: publicConfig.titleColor
             }"
             :name="publicConfig.activityName"
-            :show-qr-code="type === 1"
+            :show-qr-code="type === 0"
             :rules="indexConfig.rules"
             @close="handleClose"
         />
