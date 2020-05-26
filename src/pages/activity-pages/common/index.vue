@@ -10,22 +10,6 @@
                 { 'stop-scroll': prompt || prizePrompt || isStopScroll }
             ]"
         >
-            <!-- 活动规则 -->
-
-            <maskBox
-                v-if="prompt"
-                :rules="indexConfig.rules"
-                :type="0"
-                title="活动规则"
-                :theme="{
-                    bgColor:
-                        publicConfig.maskBgColor || publicConfig.primaryBgColor,
-                    titleColor: publicConfig.titleColor
-                }"
-                :name="publicConfig.activityName"
-                @close="handleClose"
-            />
-
             <!-- 奖品说明 -->
             <prize-desc
                 v-if="prizePrompt"
@@ -202,7 +186,6 @@
 
 <script>
 import api from '../../../common/api';
-import maskBox from './mask.vue';
 import prizeDesc from './prize-desc.vue';
 import prize from './prize.vue';
 import tipsList from './tips-list.vue';
@@ -221,7 +204,6 @@ export default {
     },
     components: {
         uniLoadMore,
-        maskBox,
         prizeDesc,
         prize,
         tipsList,
@@ -439,7 +421,8 @@ export default {
             this.getData();
         },
         handleActiverule() {
-            this.prompt = true;
+            // this.prompt = true;
+            this.$emit('showMask', { title: '活动规则', type: 0 });
         },
         handleActiveprize() {
             this.prizePrompt = true;

@@ -1,5 +1,20 @@
 <template>
     <div class="activity-init-page">
+        <maskBox
+            v-if="maskPrompt"
+            class="mask"
+            :type="type"
+            :title="maskTitle"
+            :theme="{
+                bgColor:
+                    publicConfig.maskBgColor || publicConfig.primaryBgColor,
+                titleColor: publicConfig.titleColor
+            }"
+            :name="publicConfig.activityName"
+            :show-qr-code="type === 1"
+            :rules="indexConfig.rules"
+            @close="handleClose"
+        />
         <indexPage
             v-if="loading"
             text-bg-color="#DB4E0E"
@@ -10,6 +25,7 @@
             :is-stop-scroll="showHistoryRankList"
             class-name="labor-page"
             :fr="fr"
+            @showMask="showMask"
         >
             <template v-slot:rank>
                 <view class="week-rank">
@@ -117,6 +133,7 @@
 
 <script>
 import indexPage from '../common/index.vue';
+import maskBox from '../common/mask.vue';
 import share from '../../../common/share';
 import logger from '../../../common/logger';
 import api from '../../../common/api';
@@ -124,6 +141,7 @@ import api from '../../../common/api';
 export default {
     components: {
         indexPage,
+        maskBox,
     },
     filters: {
         changeNum(value) {
@@ -145,6 +163,9 @@ export default {
             showHistoryRankList: false,
             fr: '',
             activityId: '',
+            maskPrompt: false,
+            maskTitle: '',
+            type: 0,
         };
     },
     onLoad(params) {
@@ -165,6 +186,15 @@ export default {
         this.historyRank();
     },
     methods: {
+        showMask({ title, type }) {
+            console.log(111);
+            this.maskTitle = title;
+            this.type = type;
+            this.maskPrompt = true;
+        },
+        handleClose() {
+            this.maskPrompt = false;
+        },
         getRank() {
             api.get('/api/activity/laborrank').then((data) => {
                 if (data.length === 3) {

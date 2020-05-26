@@ -162,6 +162,7 @@
                 :is-stop-scroll="false"
                 class-name="children-page"
                 :fr="fr"
+                @showMask="showMask"
                 @voteCallBack="getLotteryNum"
             >
                 <template v-slot:prize>
@@ -258,6 +259,7 @@
             :lucky-list="luckyList"
             :lottery-num="lotteryNum"
             :show-qr-code="type === 1"
+            :rules="indexConfig.rules"
             @close="handleClose"
             @getLuckyList="getLuckyList"
             @getNewLotteryNum="getNewLotteryNum"
@@ -330,7 +332,7 @@ export default {
             },
             luckyList: {
                 list: [],
-                total: 0,
+                total: -1,
             },
             lotteryNum: {
                 type: ['每日登录', '点赞5个作品', '发布1个作品'],
@@ -433,11 +435,28 @@ export default {
     onShow() {
         this.getLotteryNum();
     },
+    onUnload() {
+        if (this.showPacketRain) {
+            this.luckyDraw();
+            this.showPacketRain = false;
+        }
+    },
     created() {
         this.showLottery();
         this.ctx = uni.createCanvasContext('firstCanvas');
     },
     methods: {
+        luckyDraw() {
+            // 中途退出 消耗次数
+            api.get('/api/activity/luckydraw', {
+                draw: 0,
+            }).then((res) => {
+                api.get('/api/activity/updrawlist', {
+                    cover_id: 2,
+                    id: res.id,
+                });
+            });
+        },
         activityStatus() {
             // 1未开始，2进行中，3已结束
             api.get('/api/activity/activitystatus', {
@@ -489,6 +508,9 @@ export default {
             api.get('/api/activity/drawlist', this.luckyFilter).then((res) => {
                 this.luckyList.list = this.luckyList.list.concat(res.list);
                 this.luckyList.total = res.total;
+                if (this.luckyFilter.page_num === 1) {
+                    this.showMask({ title: '幸运榜单', type: 2 });
+                }
             });
         },
         getLotteryNum() {
@@ -952,16 +974,16 @@ export default {
             uni.$emit('onReachBottom');
         },
         prizeList(type) {
-            const title = type === 1 ? '奖品设置说明' : '幸运榜单';
-            if (type === 2) {
+            if (type === 1) {
+                this.showMask({ title: '奖品设置说明', type });
+            } else {
                 this.getLuckyList();
             }
-            this.showMask(title, type);
         },
         getPrizeNum() {
-            this.showMask('获取抽奖机会', 3);
+            this.showMask({ title: '获取抽奖机会', type: 3 });
         },
-        showMask(title, type) {
+        showMask({ title, type }) {
             // type 1-奖品设置 2-幸运榜单 3-获取抽奖机会
             this.maskTitle = title;
             this.type = type;
@@ -1014,36 +1036,36 @@ export default {
             transform: scale(1); /*开始为原始大小*/
         }
         25% {
-            transform: scale(1.15); /*放大1.1倍*/
+            transform: scale(1.04); /*放大1.1倍*/
             // margin-right: 26upx;
         }
         50% {
             transform: scale(1);
         }
         75% {
-            transform: scale(1.15);
+            transform: scale(1.04);
             // margin-right: 26upx;
         }
     }
     .right-fixed {
         position: fixed;
         right: 0upx;
-        top: 577upx;
+        bottom: 228upx;
         z-index: 999;
         .tips {
             position: absolute;
             top: 50%;
-            right: 18upx;
-            font-size: 26upx;
+            right: 10upx;
+            font-size: 22upx;
             margin-top: -26upx;
             color: #fff;
-            width: 110upx;
+            width: 88upx;
             text-align: right;
             z-index: 1;
         }
         .animation-box {
-            width: 244upx;
-            height: 180upx;
+            width: 196upx;
+            height: 144upx;
             position: relative;
             animation: mymove 2s infinite;
         }
@@ -1053,13 +1075,13 @@ export default {
         }
         .text {
             position: absolute;
-            width: 100upx;
-            height: 90upx;
-            left: 20upx;
-            top: 20upx;
+            width: 80upx;
+            height: 72upx;
+            left: 16upx;
+            top: 16upx;
             text-align: center;
-            line-height: 90upx;
-            font-size: 38upx;
+            line-height: 72upx;
+            font-size: 34upx;
             color: #fff;
             font-weight: bold;
         }
@@ -1270,12 +1292,13 @@ export default {
             .btn {
                 height: 158upx;
                 font-size: 28upx;
-                font-weight: 500;
+                font-weight: 600;
                 color: #333;
-                line-height: 173upx;
+                line-height: 176upx;
                 background-position: center center;
                 background-size: 100% 100%;
                 text-align: center;
+                font-weight: bold;
                 &:nth-of-type(1) {
                     width: 274upx;
                     background-image: url(https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/children_btn-prize_0.png);

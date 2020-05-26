@@ -137,6 +137,9 @@ export default {
             windowHeight: 1200,
             packetNumSum: 0,
             isEnd: false,
+            countT: null,
+            T: null,
+            Time: null,
         };
     },
     watch: {
@@ -164,6 +167,12 @@ export default {
             });
         },
     },
+    beforeDestroy() {
+        console.log(11111434343);
+        clearInterval(this.countT);
+        clearInterval(this.T);
+        clearInterval(this.Time);
+    },
     created() {
         if (this.countDownTime) {
             this.countDownFn();
@@ -173,10 +182,10 @@ export default {
     },
     methods: {
         countDownFn() {
-            const T = setInterval(() => {
+            this.countT = setInterval(() => {
                 this.countDownTime -= 1000;
                 if (this.countDownTime === 0) {
-                    clearInterval(T);
+                    clearInterval(this.countT);
                     this.createAnimation();
                 }
             }, 1000);
@@ -196,15 +205,15 @@ export default {
         init() {
             this.maxNum = this.randomNumBoth(1, this.num);
             this.setPacketList();
-            const T = setInterval(() => {
+            this.T = setInterval(() => {
                 this.maxNum = this.randomNumBoth(this.num, 1);
                 this.setPacketList();
             }, 400);
-            const TIME = setInterval(() => {
+            this.Time = setInterval(() => {
                 this.gameTime -= 1000;
                 if (this.gameTime === 0) {
-                    clearInterval(T);
-                    clearInterval(TIME);
+                    clearInterval(this.T);
+                    clearInterval(this.Time);
                     setTimeout(() => {
                         this.isEnd = true;
                         this.result();
