@@ -438,18 +438,18 @@ const detailConf = [
     },
     {
         posterConfig: {
-            width: 624,
-            height: 920,
+            width: 600,
+            height: 775,
             debug: false,
             texts: [
                 {
-                    x: 119,
-                    y: 620,
+                    x: 89,
+                    y: 552,
                     text: [
                         {
                             text: '',
                             fontSize: 28,
-                            color: '#333',
+                            color: '#fff',
                             opacity: 1,
                             marginRight: 10,
                             lineHeight: 40,
@@ -464,27 +464,27 @@ const detailConf = [
             images: [
                 {
                     url:
-                        'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/h5/liuyi-poster.png',
-                    width: 624,
-                    height: 920,
+                        'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/h5/liuyi-poster2.png',
+                    width: 600,
+                    height: 775,
                     y: 0,
                     x: 0,
                 },
                 {
                     url: '',
-                    width: 386,
-                    height: 218,
-                    y: 371,
-                    x: 119,
+                    width: 455,
+                    height: 257,
+                    y: 262,
+                    x: 63,
                     borderRadius: 20,
                 },
                 {
                     url: '',
-                    width: 94,
-                    height: 94,
-                    y: 724,
-                    x: 488,
-                    borderRadius: 50,
+                    width: 90,
+                    height: 90,
+                    y: 624,
+                    x: 422,
+                    borderRadius: 46,
                 },
             ],
         },
