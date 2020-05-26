@@ -568,7 +568,7 @@ export default {
         closeLotteryPanel() {
             this.showLotteryPanel = false;
         },
-        openLottery(type, status) {
+        openLottery(type, status = true) {
             // 开奖 我的中奖
             const url = type === 1 ? '/api/activity/luckydraw' : '/api/activity/mydraw';
             this.myPrizeList = type !== 1;

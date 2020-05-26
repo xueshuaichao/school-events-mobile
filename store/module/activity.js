@@ -181,7 +181,7 @@ export default {
                         {
                             title: '人气作品奖',
                             text:
-                                '截至2020年6月20日23:59，参赛作品点赞数前20名可获得如下奖品：',
+                                '截至2020年6月20日23:59:59，单个参赛作品获得点赞数前20名的参赛者可获得如下奖品：',
                             item: [
                                 {
                                     text: ['一等奖', '小度音响*2'],
@@ -274,9 +274,9 @@ export default {
                     activityCat: [], // 表现形式
                     uploadMode: ['video', 'image'], // 上传类型 只传1个值时（['video']）不显示表现形式
                     placeholderNameText: '*作品名称（不超过11字）',
-                    placeholderDescText: '劳动心得（不超过150字）',
+                    placeholderDescText: '视频介绍(不超过80个字符)',
                     nameMaxLength: 11,
-                    descMaxLength: 150,
+                    descMaxLength: 80,
                 },
                 myWorkColorConfig: {
                     // primaryColor: '#C790FF', // 主色调

@@ -121,10 +121,10 @@
                                     1.每名参赛选手只有1次人气奖领取机会，如出现同一参赛选手获得不同奖项的情况，则以最高奖项为准。
                                 </view>
                                 <view class="text-item">
-                                    2.工作人员将于2020年6月23日-6月26日期间电话联系获奖用户所绑定的手机号码，电话无法联系的将视为该用户自动放弃领奖资格。
+                                    2.工作人员将于2020年6月24日-6月30日期间电话联系获奖用户所绑定的手机号码，电话无法联系的将视为该用户自动放弃领奖资格。
                                 </view>
                                 <view class="text-item">
-                                    3.奖品将于2020年6月27日开始通过普通快递陆续寄出。
+                                    3.奖品将于2020年6月30日开始通过普通快递陆续寄出。
                                 </view>
                                 <view class="text-item">
                                     4.本次活动所有奖品不提供发票、收据，不支持退换，收货时请确认无质量问题后签收。
@@ -148,9 +148,7 @@
                                 :key="lucky.id"
                                 class="item"
                             >
-                                <text
-                                    class="index-text"
-                                >
+                                <text class="index-text">
                                     {{ luckyTotal[index] }}.
                                 </text>
                                 <text class="text">
@@ -549,6 +547,9 @@ export default {
             top: auto;
         }
         .rule-list-box {
+            .title {
+                color: #333;
+            }
             .title,
             .text {
                 display: inline-block;
