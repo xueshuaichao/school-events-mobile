@@ -839,11 +839,19 @@ export default {
             if (typeof filter.page_size === 'undefined') {
                 // h5页面刷新，禁止滑动。
                 this.disableslide = true;
+                if (filter.sort) {
+                    this.disableslide = false;
+                }
             }
             if (total < 2 || this.isFromShare) {
                 this.disableslide = true;
             }
-            console.log(position, this.disableslide, 'init----data--siwper');
+            console.log(
+                position,
+                filter,
+                this.disableslide,
+                'init----data--siwper',
+            );
             // 获取前后两页面的内容。
             if (!this.disableslide) {
                 this.prePageParam.initPosition = curposition;
