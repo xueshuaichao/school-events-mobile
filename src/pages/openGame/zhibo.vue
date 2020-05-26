@@ -3,7 +3,7 @@
         <!-- <Icon class="success-icon" type="checkmark-circled" color="#3BCC70" size="60px"></Icon> -->
         <video
             class="video"
-            src="http://prdsecurelive.ainemo.com/prdnemo/2c949a29723d273c01724bb492cc3f8d.m3u8?auth_key=1c332100acad35b0946103819039d949-1590559200-eafc6ab0c4124a1dba68c87294fa4c51-"
+            src="http://prdsecurelive.ainemo.com/prdnemo/2c94982b723d252601724f8672594c46.m3u8?auth_key=a48e18e75d30760e6bdbca4a0981b319-1590580500-3bf4eb722f8345a5a1f84611dbdcdd47-"
             @error="error"
         />
     </view>
@@ -13,7 +13,7 @@
 export default {
     mounted() {
         console.log(
-            'http://prdsecurelive.ainemo.com/prdnemo/2c949a29723d273c01724bb492cc3f8d.m3u8?auth_key=1c332100acad35b0946103819039d949-1590559200-eafc6ab0c4124a1dba68c87294fa4c51-',
+            'http://prdsecurelive.ainemo.com/prdnemo/2c94982b723d252601724f8672594c46.m3u8?auth_key=a48e18e75d30760e6bdbca4a0981b319-1590580500-3bf4eb722f8345a5a1f84611dbdcdd47-',
             'url',
         );
     },
