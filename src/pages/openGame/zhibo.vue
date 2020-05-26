@@ -3,7 +3,7 @@
         <!-- <Icon class="success-icon" type="checkmark-circled" color="#3BCC70" size="60px"></Icon> -->
         <video
             class="video"
-            src="http://prdsecurelive.ainemo.com/prdnemo/2c949a29723d273c01724bb492cc3f8d.flv?auth_key=b9d901b908c48cae7d82a9d1298e23ce-1590559200-f86085360118473483d601689da2681e-"
+            src="http://prdsecurelive.ainemo.com/prdnemo/2c949a29723d273c01724bb492cc3f8d.m3u8?auth_key=1c332100acad35b0946103819039d949-1590559200-eafc6ab0c4124a1dba68c87294fa4c51-"
             @error="error"
         />
     </view>
@@ -11,6 +11,12 @@
 
 <script>
 export default {
+    mounted() {
+        console.log(
+            'http://prdsecurelive.ainemo.com/prdnemo/2c949a29723d273c01724bb492cc3f8d.m3u8?auth_key=1c332100acad35b0946103819039d949-1590559200-eafc6ab0c4124a1dba68c87294fa4c51-',
+            'url',
+        );
+    },
     methods: {
         handleBack() {
             uni.reLaunch({
