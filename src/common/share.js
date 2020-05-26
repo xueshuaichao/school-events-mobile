@@ -145,6 +145,10 @@ function h5InitShare(customShareConfig) {
 
     if (!customShareConfig) {
         params = defaultParams;
+    } else if (customShareConfig.url) {
+        // 作品详情切换id
+        params = customShareConfig;
+        params.url = `${location.origin}//${location.pathname}${params.url}`;
     } else {
         params = Object.assign(defaultParams, customShareConfig);
     }

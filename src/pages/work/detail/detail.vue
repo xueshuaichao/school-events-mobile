@@ -586,10 +586,14 @@ export default {
             });
             const desc = `${res.resource_name}-${res.create_name}`;
             this.shareDesc = title;
+            const scene = `id=${this.id}&aid=${this.activity_id}&y=${
+                this.from === 'openGame' ? '2' : '1'
+            }` || 'id=325';
             share({
                 title,
                 desc,
                 thumbnail: res.video_img_url,
+                url: scene,
             });
             uni.setNavigationBarTitle({
                 title: res.resource_name || '',
@@ -819,27 +823,23 @@ export default {
         },
         getPageSizeInfo(position) {
             // 获取位置参数
-            // const pageSize = 10;
-            // const pageNum = Math.floor((position + 10) / pageSize);
-            // const currentPosition = position - pageSize * (pageNum - 1);
-
             const obj = {
-                // page_size: pageSize,
-                // page_num: pageNum,
                 current_position: position,
                 list_type: 2,
             };
-            console.log(obj, position);
             return obj;
         },
         initOtherSwiperData() {
             const params = this.$store.getters.getWorkParams;
             const { position, filter } = params;
-
             const { curposition, total, from } = position;
             this.filterObj = filter;
             this.apiFrom = from || '/api/works/list';
 
+            if (typeof filter.page_size === 'undefined') {
+                // h5页面刷新，禁止滑动。
+                this.disableslide = true;
+            }
             if (total < 2 || this.isFromShare) {
                 this.disableslide = true;
             }
@@ -947,6 +947,8 @@ export default {
     },
     onHide() {
         // this.isPaused = true;
+        console.log('hidiiing--------');
+        this.removeStorageSync();
     },
     onShow() {
         // 返回列表，刷新作品页，首页的点赞

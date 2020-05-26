@@ -41,7 +41,12 @@
                         class="item clearfix"
                     >
                         <view class="img-box fl-l">
-                            <image :src="item.user_info.avatar_url" />
+                            <image
+                                :src="
+                                    item.user_info.avatar_url ||
+                                        '/static/images/uc/avatar.png'
+                                "
+                            />
                         </view>
                         <view class="center fl-l">
                             <view class="name">
@@ -170,10 +175,9 @@ export default {
         const that = this;
         uni.getSystemInfo({
             success(res) {
-                console.log(res, 'res.screenWidth-------');
                 that.pix = res.screenWidth / 750;
                 that.screenHeight = res.windowHeight;
-                that.drawerHeight = res.windowHeight * 0.74 - that.pix * 210;
+                that.drawerHeight = res.windowHeight * 0.74 - that.pix * 220;
             },
             fail() {
                 that.drawerHeight = 320;
@@ -187,15 +191,8 @@ export default {
             if (!this.isH5) {
                 this.showKeybord = true;
                 e.detail.height = e.detail.height || 180;
-                this.inputTop = this.drawerHeight - e.detail.height + this.pix * 110;
-                this.markerheight = this.screenHeight - e.detail.height - this.pix * 110;
-                console.log(
-                    e.detail.height,
-                    this.pix,
-                    'onFoucs----',
-                    this.inputTop,
-                    this.markerheight,
-                );
+                this.inputTop = this.screenHeight * 0.74 - e.detail.height - this.pix * 120;
+                this.markerheight = this.screenHeight - e.detail.height - this.pix * 120;
             }
         },
         blur() {
@@ -237,12 +234,13 @@ export default {
         bindconfirm() {
             this.showKeybord = false;
             if (this.changeVal.trim()) {
+                const content = this.changeVal.trim();
                 api.isLogin({
                     fr: this.fr,
                 }).then(
                     () => {
                         api.post('/api/comment/add', {
-                            content: this.changeVal.trim(),
+                            content,
                             topic_type: 3,
                             topic_id: this.pageData.id,
                             comment_type: 1,
@@ -252,7 +250,7 @@ export default {
                                 icon: 'none',
                             });
                             this.loading = false;
-                            this.changeVal = '';
+                            // this.changeVal = '';
                             this.filter.page_num = 1;
                             this.getList();
                         });
@@ -262,6 +260,7 @@ export default {
                         title: '请先登录',
                     }),
                 );
+                this.changeVal = '';
             }
         },
         toUpper() {
@@ -382,7 +381,6 @@ export default {
 
         .message-add {
             padding: 0 30rpx;
-            margin: 20upx 0;
             position: relative;
             top: 0;
             background: #fff;
@@ -419,8 +417,8 @@ export default {
             }
             &.absolute {
                 position: absolute;
-                margin-bottom: 20rpx;
                 left: 30rpx;
+                padding: 30rpx;
                 .add-ctx {
                     width: 560rpx;
                 }
