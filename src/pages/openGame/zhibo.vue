@@ -11,6 +11,12 @@
 
 <script>
 export default {
+    mounted() {
+        console.log(
+            'http://prdsecurelive.ainemo.com/prdnemo/2c949a29723d273c01724bb492cc3f8d.flv?auth_key=b9d901b908c48cae7d82a9d1298e23ce-1590559200-f86085360118473483d601689da2681e-',
+            'url',
+        );
+    },
     methods: {
         handleBack() {
             uni.reLaunch({
