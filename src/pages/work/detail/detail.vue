@@ -168,6 +168,7 @@
         <drawer
             :show="showDrawer"
             :page-data="pageData"
+            :fr="fr"
             @doAction="doAction"
             @getcommentTotal="getcommentTotal"
         />
@@ -955,7 +956,7 @@ export default {
         // activity_id,  没有7..
         if (this.activity_id) {
             // wyhd 五一活动
-            const arr = ['xchd', 'dsxnh', 'dsxnh', 'dshd', '', 'wyhd'];
+            const arr = ['xchd', 'dsxnh', 'dsxnh', 'dshd', '', 'wyhd', 'lyhd'];
             const type = arr[this.activity_id - 3];
             this.fr = logger.getFr(type, {});
         }

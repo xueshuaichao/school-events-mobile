@@ -103,6 +103,10 @@ export default {
             type: Object,
             default: () => {},
         },
+        fr: {
+            type: String,
+            default: '',
+        },
     },
     data() {
         return {
@@ -226,6 +230,9 @@ export default {
         bindconfirm() {
             this.showKeybord = false;
             if (this.changeVal.trim()) {
+                // api.isLogin({
+                //     fr: this.fr,
+                // }).then()
                 api.post('/api/comment/add', {
                     content: this.changeVal.trim(),
                     topic_type: 3,
