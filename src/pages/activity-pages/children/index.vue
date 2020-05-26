@@ -1,5 +1,10 @@
 <template>
-    <div :class="['activity-init-page', { 'stop-scroll': maskPrompt }]">
+    <div
+        :class="[
+            'activity-init-page',
+            { 'stop-scroll': maskPrompt || showPacketRain }
+        ]"
+    >
         <!-- 右侧随屏 -->
         <view
             class="right-fixed"
@@ -157,6 +162,7 @@
                 :is-stop-scroll="false"
                 class-name="children-page"
                 :fr="fr"
+                @voteCallBack="getLotteryNum"
             >
                 <template v-slot:prize>
                     <view class="prize-box">
@@ -308,6 +314,7 @@ export default {
             isH5: true,
             // #endif
             status: 2,
+            lock: false,
             loading: false,
             publicConfig: {},
             indexConfig: {},
@@ -465,13 +472,11 @@ export default {
                     ...this.posterFailConfig,
                 };
                 this.showPoster = true; // 需等海报报配置修改后才能生成
-                api.get('/api/activity/usedrawnum').then(() => {
-                    if (this.isH5) {
-                        this.h5CreatePoster(1, false);
-                    } else {
-                        this.createPoster(1, false);
-                    }
-                });
+                if (this.isH5) {
+                    this.h5CreatePoster(1, false);
+                } else {
+                    this.createPoster(1, false);
+                }
             } else {
                 this.showOpenLotteryPanel = true;
             }
@@ -506,35 +511,33 @@ export default {
                 this.lock = true;
                 api.isLogin({
                     fr: this.fr,
-                }).then(() => {
-                    if (this.lotteryNum.lottery_num > 0) {
-                        api.get('/api/activity/usedrawnum').then(
-                            () => {
-                                this.lock = false;
-                                this.showPacketRain = true;
-                                this.showLotteryPanel = false;
-                                this.lotteryNum.lottery_num -= 1;
-                            },
-                            () => {
-                                this.lock = false;
-                            },
-                        );
-                    } else if (
-                        this.lotteryNum.vote_num >= 5
-                        && this.lotteryNum.add_activity > 0
-                        && this.lotteryNum.login > 0
-                    ) {
-                        uni.showToast({
-                            title: '今日已无抽奖机会，明日再来吧',
-                            duration: 2000,
-                        });
+                }).then(
+                    () => {
+                        if (this.lotteryNum.lottery_num > 0) {
+                            this.lock = false;
+                            this.showPacketRain = true;
+                            this.showLotteryPanel = false;
+                            this.lotteryNum.lottery_num -= 1;
+                        } else if (
+                            this.lotteryNum.vote_num >= 5
+                            && this.lotteryNum.add_activity > 0
+                            && this.lotteryNum.login > 0
+                        ) {
+                            uni.showToast({
+                                title: '今日已无抽奖机会，明日再来吧',
+                                duration: 2000,
+                            });
+                            this.lock = false;
+                        } else {
+                            this.showLotteryPanel = false;
+                            this.getPrizeNum();
+                            this.lock = false;
+                        }
+                    },
+                    () => {
                         this.lock = false;
-                    } else {
-                        this.showLotteryPanel = false;
-                        this.getPrizeNum();
-                        this.lock = false;
-                    }
-                });
+                    },
+                );
             }
         },
         showLottery(type = false) {
@@ -574,15 +577,20 @@ export default {
             this.myPrizeList = type !== 1;
             return api.get(url, status ? {} : { draw: 0 }).then(
                 (res) => {
+                    // 减掉抽奖机会
                     if (type === 1) {
+                        api.get('/api/activity/usedrawnum');
+                    }
+                    if (res.status) {
                         return this.winDrawImage(res);
                     }
-                    if (res.draw) {
-                        return this.winDrawImage(res);
-                    }
-                    return this.loseDrawImage();
+                    return this.loseDrawImage(res);
                 },
-                () => this.loseDrawImage(),
+                (err) => {
+                    uni.showToast({
+                        title: err.message,
+                    });
+                },
             );
         },
         h5WinDrawImage(config) {
@@ -645,11 +653,16 @@ export default {
                 status: true,
             };
         },
-        loseDrawImage() {
-            const index = Math.floor(Math.random() * 4);
+        loseDrawImage(res) {
+            const index = res.cover_id || Math.floor(Math.random() * 4);
             this.posterFailConfig.images[0].url = `https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/children_poster_fail_${index}.png`;
             this.posterFailConfig.images[1].url = `https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/activity_code_${this.activityId}.png`;
             this.posterWin = false;
+            // 抽奖失败 记录海报
+            api.get('/api/activity/updrawlist', {
+                cover_id: index,
+                id: res.id,
+            });
             return {
                 config: this.posterFailConfig,
                 status: false,
@@ -662,17 +675,19 @@ export default {
                     title: type === 1 ? '正在开奖' : '请稍等',
                 });
                 this.openLottery(type, status).then(({ config }) => {
-                    this.posterCommonConfig = {
-                        ...this.posterCommonConfig,
-                        ...config,
-                    };
-                    // 需等画报配置修改后才能生成
-                    this.showPoster = true;
-                    this.$nextTick(() => {
-                        this.poster = this.selectComponent('#poster');
-                        this.poster.onCreate(this.posterCommonConfig);
-                        this.lock = true;
-                    });
+                    if (config) {
+                        this.posterCommonConfig = {
+                            ...this.posterCommonConfig,
+                            ...config,
+                        };
+                        // 需等画报配置修改后才能生成
+                        this.showPoster = true;
+                        this.$nextTick(() => {
+                            this.poster = this.selectComponent('#poster');
+                            this.poster.onCreate(this.posterCommonConfig);
+                            this.lock = true;
+                        });
+                    }
                 });
             }
         },
@@ -682,13 +697,15 @@ export default {
                 fr: this.fr,
             }).then(() => {
                 this.openLottery(type, status).then(({ config, status }) => {
-                    this.posterWin = status;
-                    if (status) {
-                        // 中奖
-                        this.h5WinDrawImage(config);
-                    } else {
-                        // 未中奖
-                        this.h5LoseDrawImage(config);
+                    if (config) {
+                        this.posterWin = status;
+                        if (status) {
+                            // 中奖
+                            this.h5WinDrawImage(config);
+                        } else {
+                            // 未中奖
+                            this.h5LoseDrawImage(config);
+                        }
                     }
                 });
             });
@@ -860,9 +877,11 @@ export default {
                     break;
                 case 1:
                     this.maskPrompt = false;
-                    uni.pageScrollTo({
-                        scrollTop: 830,
-                        duration: 300,
+                    this.$nextTick(() => {
+                        uni.pageScrollTo({
+                            selector: '.activity-init-page >>> .menu-list',
+                            duration: 300,
+                        });
                     });
                     break;
                 default:

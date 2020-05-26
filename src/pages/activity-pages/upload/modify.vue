@@ -86,17 +86,24 @@
                         :placeholder="uploadConfig.placeholderNameText"
                     >
                 </view>
+                <view class="textarea-view">
+                    <text class="max-length">
+                        {{ formData.introduce.length || 0 }}/{{
+                            uploadConfig.descMaxLength
+                        }}
+                    </text>
 
-                <textarea
-                    v-model="formData.introduce"
-                    class="uni-textarea"
-                    placeholder-class="placeholder"
-                    :placeholder-style="
-                        `color:${publicConfig.placeholderColor}`
-                    "
-                    :maxlength="uploadConfig.descMaxLength"
-                    :placeholder="uploadConfig.placeholderDescText"
-                />
+                    <textarea
+                        v-model="formData.introduce"
+                        class="uni-textarea"
+                        placeholder-class="placeholder"
+                        :placeholder-style="
+                            `color:${publicConfig.placeholderColor}`
+                        "
+                        :maxlength="uploadConfig.descMaxLength"
+                        :placeholder="uploadConfig.placeholderDescText"
+                    />
+                </view>
                 <template v-if="uploadMode === 'video'">
                     <upload
                         :type="'video'"
@@ -552,10 +559,20 @@ export default {
         padding-left: 24upx;
         padding-top: 0;
     }
-
+    .textarea-view {
+        position: relative;
+        .max-length {
+            position: absolute;
+            bottom: 10upx;
+            right: 10upx;
+            z-index: 1;
+            color: #cdcdcd;
+            font-size: 24upx;
+        }
+    }
     .uni-textarea {
         height: 160upx;
-        padding: 30upx 20upx;
+        padding: 30upx 20upx 38upx;
         width: 100%;
         box-sizing: border-box;
         line-height: 42upx;

@@ -474,6 +474,7 @@ export default {
                 }).then(() => {
                     api.post('/api/activity/vote', {
                         id: item.id,
+                        activity_id: this.filter.activity_id,
                     }).then(
                         () => {
                             // eslint-disable-next-line no-param-reassign
@@ -484,6 +485,7 @@ export default {
                                 title: '已点赞',
                                 icon: 'none',
                             });
+                            this.$emit('voteCallBack');
                         },
                         (res) => {
                             uni.showToast({
