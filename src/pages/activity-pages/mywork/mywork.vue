@@ -153,7 +153,7 @@
                                 <text
                                     v-if="Number(tabActiveIndex) === 2"
                                     class="btn-item"
-                                    @click="viewDetail(item)"
+                                    @click="viewDetail(item, index)"
                                 >
                                     查看
                                 </text>
@@ -469,7 +469,7 @@ export default {
                     },
                 });
                 uni.navigateTo({
-                    url: `/pages/work/detail/detail?id=${item.id}&activity_id=8`,
+                    url: `/pages/work/detail/detail?id=${item.id}&activity_id=${this.filter.activity_id}`,
                 });
             }
         },

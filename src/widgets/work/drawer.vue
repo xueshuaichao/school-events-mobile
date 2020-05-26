@@ -41,7 +41,12 @@
                         class="item clearfix"
                     >
                         <view class="img-box fl-l">
-                            <image :src="item.user_info.avatar_url" />
+                            <image
+                                :src="
+                                    item.user_info.avatar_url ||
+                                        '/static/images/uc/avatar.png'
+                                "
+                            />
                         </view>
                         <view class="center fl-l">
                             <view class="name">
