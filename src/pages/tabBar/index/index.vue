@@ -325,7 +325,6 @@ export default {
             uni.setStorageSync('onShowFrom', '');
             // error
         }
-        // this.getNewActivityStatus();
     },
     created() {},
     methods: {
@@ -364,9 +363,6 @@ export default {
                 () => {},
             );
         },
-        // handleCloseSuspension() {
-        //     this.isShow = false;
-        // },
         getNewActivityStatus() {
             // 1未开始，2进行中，3已结束
             api.get('/api/activity/activitystatus', {
@@ -391,39 +387,15 @@ export default {
         },
         handlePromt() {
             uni.setStorageSync(this.isFirstLogin, true);
+            this.prompt = false;
             uni.navigateTo({
-                url: '/pages/activity-pages/labor/index',
+                url: '/pages/activity-pages/children/index',
             });
         },
         handleClose() {
             this.prompt = false;
             uni.setStorageSync(this.isFirstLogin, true);
         },
-        // setNewsTabActive(index) {
-        //     this.newsTabActiveIndex = index;
-        //     this.getArticle(this.newsColumn[index].id);
-        // },
-        // moreArticle() {
-        //     uni.navigateTo({
-        //         url: `/pages/news/list/list?tab=${this.newsTabActiveIndex}`,
-        //     });
-        // },
-        // getArticle(columnId) {
-        //     return api
-        //         .get('/api/article/list', {
-        //             column: columnId,
-        //             page_num: 1,
-        //             page_size: 5,
-        //         })
-        //         .then((res) => {
-        //             this.newsData = res.list;
-        //         });
-        // },
-        // getMenuData() {
-        //     api.get('/api/index/entry').then((res) => {
-        //         this.menuConf = res;
-        //     });
-        // },
         getWorkList(type, refresh) {
             let catId;
             if (type === 'individual') {
@@ -455,18 +427,10 @@ export default {
         },
 
         getData(refresh) {
-            // api.get('/api/column/list').then(res => {
-            //     // 首页不展示第一个大赛动态 tab
-            //     res.list.shift();
-            //     this.newsColumn = res.list;
-
-            // this.getArticle(this.newsColumn[0].id);
-            // this.getMenuData();
             this.getAllShowActivity();
             this.getWorkList('individual');
             this.getWorkList('team');
             this.getWorkList('talent', refresh);
-            // })
         },
         getAllShowActivity() {
             api.post('/api/activity/list', {
@@ -485,7 +449,6 @@ export default {
                     });
                     return obj;
                 });
-                console.log(this.hotList, 'dasdasdasdadsasdadasd');
             });
         },
         getSearchWord() {

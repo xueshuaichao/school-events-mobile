@@ -127,7 +127,7 @@ export default {
             loading: false,
             isH5: false,
             showKeybord: false,
-            inputTop: 300,
+            inputTop: 100,
             pix: 1,
             isFocus: false,
             markerheight: 100,
@@ -170,10 +170,10 @@ export default {
         const that = this;
         uni.getSystemInfo({
             success(res) {
+                console.log(res, 'res.screenWidth-------');
                 that.pix = res.screenWidth / 750;
-                that.screenHeight = res.screenHeight;
-                that.drawerHeight = res.screenHeight * 0.66
-                    - that.pix * (that.isH5 ? 210 : 300);
+                that.screenHeight = res.windowHeight;
+                that.drawerHeight = res.windowHeight * 0.74 - that.pix * 210;
             },
             fail() {
                 that.drawerHeight = 320;
@@ -186,9 +186,16 @@ export default {
         onFoucs(e) {
             if (!this.isH5) {
                 this.showKeybord = true;
-                console.log(e.detail.height, 'onFoucs----');
-                this.inputTop = e.detail.height - this.drawerHeight + this.pix * 100;
-                this.markerheight = this.screenHeight - e.detail.height - this.pix * 260;
+                e.detail.height = e.detail.height || 180;
+                this.inputTop = this.drawerHeight - e.detail.height + this.pix * 110;
+                this.markerheight = this.screenHeight - e.detail.height - this.pix * 110;
+                console.log(
+                    e.detail.height,
+                    this.pix,
+                    'onFoucs----',
+                    this.inputTop,
+                    this.markerheight,
+                );
             }
         },
         blur() {
@@ -200,7 +207,7 @@ export default {
             this.animationData = this.animation.export();
         },
         hide() {
-            this.animation.bottom('-66').step({ duration: 300 });
+            this.animation.bottom('-74%').step({ duration: 300 });
             this.animationData = this.animation.export();
         },
         clickWrap() {
@@ -230,24 +237,31 @@ export default {
         bindconfirm() {
             this.showKeybord = false;
             if (this.changeVal.trim()) {
-                // api.isLogin({
-                //     fr: this.fr,
-                // }).then()
-                api.post('/api/comment/add', {
-                    content: this.changeVal.trim(),
-                    topic_type: 3,
-                    topic_id: this.pageData.id,
-                    comment_type: 1,
-                }).then(() => {
-                    uni.showToast({
-                        title: '已提交',
+                api.isLogin({
+                    fr: this.fr,
+                }).then(
+                    () => {
+                        api.post('/api/comment/add', {
+                            content: this.changeVal.trim(),
+                            topic_type: 3,
+                            topic_id: this.pageData.id,
+                            comment_type: 1,
+                        }).then(() => {
+                            uni.showToast({
+                                title: '已提交',
+                                icon: 'none',
+                            });
+                            this.loading = false;
+                            this.changeVal = '';
+                            this.filter.page_num = 1;
+                            this.getList();
+                        });
+                    },
+                    () => uni.showToast({
                         icon: 'none',
-                    });
-                    this.loading = false;
-                    this.changeVal = '';
-                    this.filter.page_num = 1;
-                    this.getList();
-                });
+                        title: '请先登录',
+                    }),
+                );
             }
         },
         toUpper() {
@@ -280,11 +294,11 @@ export default {
     }
     .topic-drawer {
         padding: 30rpx 0;
-        height: 66vh;
+        height: 74vh;
         width: 100%;
         box-sizing: border-box;
         position: absolute;
-        bottom: -66vh;
+        bottom: -74vh;
         background: #fff;
         border-radius: 16rpx 16rpx 0 0;
         z-index: 100;
@@ -393,6 +407,7 @@ export default {
                 color: #2f3033;
                 font-size: 28rpx;
                 line-height: 80rpx;
+                margin-left: 14rpx;
             }
 
             input {
@@ -407,7 +422,7 @@ export default {
                 margin-bottom: 20rpx;
                 left: 30rpx;
                 .add-ctx {
-                    width: 580rpx;
+                    width: 560rpx;
                 }
             }
             .write-icon {

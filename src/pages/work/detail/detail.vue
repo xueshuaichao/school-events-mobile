@@ -207,16 +207,11 @@ export default {
                 video_img_url: '',
             },
             likeStatus: 0,
-            // isPlayed: false,
-            // isPaused: false,
-            // isVideoWaiting: false,
             showShareMask: false,
 
             // #ifdef H5
             isH5: true,
             // #endif
-
-            // isFullScreen: false,
 
             shareDesc: '',
             fr: '',
@@ -413,42 +408,6 @@ export default {
                             title: '保存失败请授权',
                             icon: 'none',
                         });
-
-                        // 这边微信做过调整，必须要在按钮中触发，因此需要在弹框回调中进行调用
-                        // console.log('开始授权');
-                        // eslint-disable-next-line no-undef
-                        // wx.openSetting({
-                        //     success(settingdata) {
-                        //         console.log('settingdata', settingdata);
-                        //         if (
-                        //             settingdata.authSetting[
-                        //                 'scope.writePhotosAlbum'
-                        //             ]
-                        //         ) {
-                        //             // eslint-disable-next-line no-undef
-                        //             wx.showModal({
-                        //                 title: '提示',
-                        //                 content:
-                        //                     '获取权限成功,再次点击图片即可保存',
-                        //                 showCancel: false,
-                        //             });
-                        //         } else {
-                        //             // eslint-disable-next-line no-undef
-                        //             wx.showModal({
-                        //                 title: '提示',
-                        //                 content:
-                        //                     '获取权限失败，将无法保存到相册哦~',
-                        //                 showCancel: false,
-                        //             });
-                        //         }
-                        //     },
-                        //     fail(failData) {
-                        //         console.log('failData', failData);
-                        //     },
-                        //     complete(finishData) {
-                        //         console.log('finishData', finishData);
-                        //     },
-                        // });
                     }
                 },
             });
@@ -499,6 +458,22 @@ export default {
             }
             this.id = res.id;
 
+            // activity_id,  没有7..
+            if (this.activity_id) {
+                // wyhd 五一活动
+                const arr = [
+                    'xchd',
+                    'dsxnh',
+                    'dsxnh',
+                    'dshd',
+                    '',
+                    'wyhd',
+                    'lyhd',
+                ];
+                const type = arr[this.activity_id - 3];
+                this.fr = logger.getFr(type, {});
+            }
+
             console.log(this.activity_id, '---setGetDetail----');
 
             if (this.from !== 'openGame') {
@@ -528,7 +503,7 @@ export default {
                     res.resource_name
                 }${
                     res.achievement
-                        ? `|${res.achievement}${res.achievement_unit}lallalallallalalalalalalallalallalallalalalalla`
+                        ? `|${res.achievement}${res.achievement_unit}`
                         : ''
                 }`;
             } else {
@@ -823,7 +798,6 @@ export default {
                 default:
                     console.log('-');
             }
-            console.log('-----change00000');
             this.pageData = curPageData;
             this.setGetDetail(curPageData);
             this.getLikeStatus();
@@ -953,13 +927,6 @@ export default {
             this.isFromShare,
             '-----this.activity_id---',
         );
-        // activity_id,  没有7..
-        if (this.activity_id) {
-            // wyhd 五一活动
-            const arr = ['xchd', 'dsxnh', 'dsxnh', 'dshd', '', 'wyhd', 'lyhd'];
-            const type = arr[this.activity_id - 3];
-            this.fr = logger.getFr(type, {});
-        }
 
         // 获取detail页面的内容
         this.getData();
