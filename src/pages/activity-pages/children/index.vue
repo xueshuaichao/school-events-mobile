@@ -450,6 +450,11 @@ export default {
             // 中途退出 消耗次数
             api.get('/api/activity/luckydraw', {
                 draw: 0,
+            }).then((res) => {
+                api.get('/api/activity/updrawlist', {
+                    cover_id: 2,
+                    id: res.id,
+                });
             });
         },
         activityStatus() {
