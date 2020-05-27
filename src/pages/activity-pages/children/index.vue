@@ -794,7 +794,8 @@ export default {
                     that.canvasImg = res.tempFilePath;
                     uni.hideLoading();
                 },
-                fail() {
+                fail(res) {
+                    console.log(res);
                     uni.hideLoading();
                     uni.showToast({
                         title: '生成失败，稍后再试',
