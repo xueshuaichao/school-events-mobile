@@ -524,6 +524,7 @@ export default {
                 url = '/api/activity/vote';
                 param = {
                     id: this.id,
+                    activity_id: this.activity_id,
                 };
             }
             api.isLogin({
@@ -532,7 +533,9 @@ export default {
                 () => api.get(url, param).then(
                     () => {
                         this.likeStatus = 1;
-                        this.getUserLotteryNum();
+                        if (this.activity_id === 9) {
+                            this.getUserLotteryNum();
+                        }
                         // this.getData('reget');
                     },
                     (err) => {
