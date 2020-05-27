@@ -74,9 +74,9 @@
                 />
                 <canvas
                     v-if="isH5"
+                    id="firstCanvas"
                     class="canvas pro"
                     style="width: 538px; height: 760px;"
-                    canvas-id="firstCanvas"
                 />
             </template>
             <view
@@ -646,15 +646,44 @@ export default {
                 }),
             ]).then((res) => {
                 const ctx = uni.createCanvasContext('firstCanvas');
-                ctx.drawImage(res[0].path, 0, 0, 538, 760);
-                ctx.drawImage(res[1].path, 88, 356, 362, 190);
-                ctx.drawImage(res[2].path, 140, 566, 260, 34);
-                ctx.drawImage(res[3].path, 417, 591, 86, 86);
-                ctx.draw(true, () => {
-                    setTimeout(() => {
-                        this.saveCanvas();
-                    }, 500);
+
+                Promise.all([
+                    this.setImgDataUrl(res[1].path).then((url) => {
+                        ctx.drawImage(url, 0, 0, 538, 760);
+                    }),
+                    this.setImgDataUrl(res[1].path).then((url) => {
+                        ctx.drawImage(url, 88, 356, 362, 190);
+                    }),
+                    this.setImgDataUrl(res[2].path).then((url) => {
+                        ctx.drawImage(url, 140, 566, 260, 34);
+                    }),
+                    this.setImgDataUrl(res[3].path).then((url) => {
+                        ctx.drawImage(url, 417, 591, 86, 86);
+                    }),
+                ]).then(() => {
+                    ctx.draw(true, () => {
+                        setTimeout(() => {
+                            this.saveCanvas();
+                        }, 500);
+                    });
                 });
+                // ctx.drawImage( 0, 0, 538, 760);
+                // ctx.drawImage(this.setImgDataUrl(res[1].path), 88, 356, 362, 190);
+                // ctx.drawImage(this.setImgDataUrl(res[2].path).path, 140, 566, 260, 34);
+                // ctx.drawImage(this.setImgDataUrl(res[3].path).path, 417, 591, 86, 86);
+            });
+        },
+        setImgDataUrl(imgUrl) {
+            const canvas = document.querySelector('#firstCanvas canvas');
+            console.log(canvas);
+            const ctx = canvas.getContext('2d');
+            const img = new Image();
+
+            img.src = imgUrl;
+            img.setAttribute('crossOrigin', 'anonymous');
+            return new Promise((resolve) => {
+                ctx.drawImage(img, 0, 0);
+                resolve(canvas.toDataUrl());
             });
         },
         h5LoseDrawImage(config) {
@@ -668,15 +697,27 @@ export default {
                     src: config.images[1].url,
                 }),
             ]).then((res) => {
-                this.ctx.drawImage(res[0].path, 0, 0, 538, 760);
-                this.ctx.drawImage(res[1].path, 79, 602, 126, 126);
-                this.ctx.draw(
-                    true,
-                    setTimeout(() => {
-                        // 需要异步 不然画不出来
-                        this.saveCanvas();
-                    }, 500),
-                );
+                console.log(res);
+                const ctx = uni.createCanvasContext('firstCanvas');
+                Promise.all([
+                    this.setImgDataUrl(res[0].path).then((url) => {
+                        ctx.drawImage(url, 0, 0, 538, 760);
+                    }),
+                    this.setImgDataUrl(res[1].path).then((url) => {
+                        ctx.drawImage(url, 88, 356, 362, 190);
+                    }),
+                ]).then(() => {
+                    this.ctx.draw(
+                        true,
+                        setTimeout(() => {
+                            // 需要异步 不然画不出来
+                            this.saveCanvas();
+                        }, 500),
+                    );
+                });
+
+                // this.ctx.drawImage(res[0].path, 0, 0, 538, 760);
+                // this.ctx.drawImage(res[1].path, 79, 602, 126, 126);
             });
         },
         winDrawImage(res) {
