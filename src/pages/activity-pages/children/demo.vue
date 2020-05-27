@@ -432,7 +432,6 @@ export default {
         this.loading = true;
         this.activityStatus();
         this.getAuthStatus();
-        this.getLotteryNum();
         this.showLottery();
         this.ctx = uni.createCanvasContext('firstCanvas');
     },

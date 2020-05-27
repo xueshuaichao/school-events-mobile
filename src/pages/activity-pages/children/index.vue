@@ -400,7 +400,7 @@ export default {
                         url: '',
                         width: 260,
                         height: 34,
-                        y: 655,
+                        y: 566,
                         x: 140,
                     },
                     {
@@ -414,6 +414,9 @@ export default {
                 ],
             },
         };
+    },
+    onShow() {
+        this.getLotteryNum();
     },
     onLoad(params) {
         this.activityId = 9;
@@ -435,7 +438,7 @@ export default {
         if (!this.isH5) {
             this.getAuthStatus();
         }
-        this.getLotteryNum();
+        // this.getLotteryNum();
     },
     onUnload() {
         if (this.showPacketRain) {
@@ -646,7 +649,6 @@ export default {
                 }),
             ]).then((res) => {
                 const ctx = uni.createCanvasContext('firstCanvas');
-
                 ctx.drawImage(res[0].path, 0, 0, 538, 760);
                 ctx.drawImage(res[1].path, 88, 356, 362, 190);
                 ctx.drawImage(res[2].path, 140, 566, 260, 34);
@@ -675,16 +677,30 @@ export default {
                     true,
                     setTimeout(() => {
                         // 需要异步 不然画不出来
-                        alert(1111);
                         this.saveCanvas();
                     }, 500),
                 );
             });
         },
         winDrawImage(res) {
-            this.lotteryDetail = res.draw;
-            this.posterSuccessConfig.images[1].url = `http://aitiaozhan.dev.wdyclass.com/images/children_poster_${res.draw}.png`;
-            this.posterSuccessConfig.images[2].url = `http://aitiaozhan.dev.wdyclass.com/images/children_poster_t${res.draw}.png`;
+            const drawDetail = [
+                '航拍无人机',
+                '多功能棋盘',
+                '水彩笔套装',
+                '小米书包',
+            ];
+            let index = res.draw;
+            // 由于后端将中奖排序写错 需将3、4调换
+            if (res.draw === 3) {
+                index = 4;
+            } else if (res.draw === 4) {
+                index = 3;
+            }
+            this.lotteryDetail = drawDetail[index - 1];
+            this.posterSuccessConfig.images[1].url = `http://aitiaozhan.dev.wdyclass.com/images/children_poster_${index
+                - 1}.png`;
+            this.posterSuccessConfig.images[2].url = `http://aitiaozhan.dev.wdyclass.com/images/children_poster_t${index
+                - 1}.png`;
             this.posterSuccessConfig.images[3].url = `http://aitiaozhan.dev.wdyclass.com/images/activity_code_${this.activityId}.png`;
             return {
                 config: this.posterSuccessConfig,
@@ -694,7 +710,7 @@ export default {
         loseDrawImage(res) {
             const index = res.cover_id || Math.floor(Math.random() * 4);
             this.posterFailConfig.images[0].url = `http://aitiaozhan.dev.wdyclass.com/images/children_poster_fail_${index}.png`;
-            this.posterFailConfig.images[1].url = `http://aitiaozhan.dev.wdyclass.com/images/children_poster_fail_${index}.png`;
+            this.posterFailConfig.images[1].url = `http://aitiaozhan.dev.wdyclass.com/images/activity_code_${this.activityId}.png`;
             this.posterWin = false;
             // 抽奖失败 记录海报
             api.get('/api/activity/updrawlist', {
