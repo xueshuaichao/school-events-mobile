@@ -491,11 +491,13 @@ export default {
                     ...this.posterFailConfig,
                 };
                 this.showPoster = true; // 需等海报报配置修改后才能生成
-                if (this.isH5) {
-                    this.h5CreatePoster(1, false);
-                } else {
-                    this.createPoster(1, false);
-                }
+                this.$nextTick(() => {
+                    if (this.isH5) {
+                        this.h5CreatePoster(1, false);
+                    } else {
+                        this.createPoster(1, false);
+                    }
+                });
             } else {
                 this.showOpenLotteryPanel = true;
             }
