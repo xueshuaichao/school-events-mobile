@@ -696,21 +696,25 @@ export default {
             } else if (res.draw === 4) {
                 index = 3;
             }
+            const imgPath = this.isH5
+                ? 'http://aitiaozhan.dev.wdyclass.com/images'
+                : 'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx';
             this.lotteryDetail = drawDetail[index - 1];
-            this.posterSuccessConfig.images[1].url = `http://aitiaozhan.dev.wdyclass.com/images/children_poster_${index
-                - 1}.png`;
-            this.posterSuccessConfig.images[2].url = `http://aitiaozhan.dev.wdyclass.com/images/children_poster_t${index
-                - 1}.png`;
-            this.posterSuccessConfig.images[3].url = `http://aitiaozhan.dev.wdyclass.com/images/activity_code_${this.activityId}.png`;
+            this.posterSuccessConfig.images[1].url = `${imgPath}/children_poster_${index}.png`;
+            this.posterSuccessConfig.images[2].url = `${imgPath}/children_poster_t${index}.png`;
+            this.posterSuccessConfig.images[3].url = `${imgPath}/activity_code_${this.activityId}.png`;
             return {
                 config: this.posterSuccessConfig,
                 status: true,
             };
         },
         loseDrawImage(res) {
+            const imgPath = this.isH5
+                ? 'http://aitiaozhan.dev.wdyclass.com/images'
+                : 'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx';
             const index = res.cover_id || Math.floor(Math.random() * 4);
-            this.posterFailConfig.images[0].url = `http://aitiaozhan.dev.wdyclass.com/images/children_poster_fail_${index}.png`;
-            this.posterFailConfig.images[1].url = `http://aitiaozhan.dev.wdyclass.com/images/activity_code_${this.activityId}.png`;
+            this.posterFailConfig.images[0].url = `${imgPath}/children_poster_fail_${index}.png`;
+            this.posterFailConfig.images[1].url = `${imgPath}/activity_code_${this.activityId}.png`;
             this.posterWin = false;
             // 抽奖失败 记录海报
             api.get('/api/activity/updrawlist', {
@@ -1371,7 +1375,7 @@ export default {
             left: 0;
             right: 0;
             top: 50%;
-            transform: translateY(-55%);
+            transform: translateY(-50%);
         }
         .prize-btn {
             background-color: #ff78a5;
