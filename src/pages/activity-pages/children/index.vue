@@ -1075,7 +1075,7 @@ export default {
         right: 0upx;
         top: 50%;
         margin-top: -36upx;
-        z-index: 999;
+        z-index: 10;
         .tips {
             position: absolute;
             top: 50%;
@@ -1116,7 +1116,7 @@ export default {
         right: 0;
         bottom: 0;
         top: 0;
-        z-index: 1001;
+        z-index: 11;
         background-color: rgba(0, 0, 0, 0.79);
         &.open-lottery {
             .lottery-panel-img {
@@ -1344,7 +1344,7 @@ export default {
         box-sizing: border-box;
         background-color: rgba(0, 0, 0, 0.79);
         text-align: center;
-        z-index: 1003;
+        z-index: 13;
         .poster-img-mask-box {
             position: absolute;
             left: 0;
