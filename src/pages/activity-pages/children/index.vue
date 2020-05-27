@@ -83,75 +83,77 @@
                 v-if="showPosterMask"
                 class="poster-img-mask"
             >
-                <template v-if="myPrizeList">
-                    <view class="prize-btn children-btn">
-                        我的中奖
-                    </view>
-                </template>
-                <template v-else>
-                    <view
-                        v-if="posterWin"
-                        class="tips"
-                    >
-                        恭喜您！抽中<text>{{ lotteryDetail }}</text>1个
-                    </view>
-                    <view
-                        v-else
-                        class="tips"
-                    >
-                        未中奖！别气馁，每天都有机会哦～
-                    </view>
-                </template>
-
-                <view
-                    v-if="canvasImg"
-                    class="canvas-img"
-                >
-                    <image :src="canvasImg" />
-                </view>
-                <template v-if="isH5">
-                    <view class="children-btn btn">
-                        长按图片保存到本地
-                    </view>
-                </template>
-                <template v-else>
-                    <template v-if="!imgAuthBtn">
-                        <view
-                            class="children-btn btn"
-                            @click="handleSave"
-                        >
-                            保存图片
+                <view class="poster-img-mask-box">
+                    <template v-if="myPrizeList">
+                        <view class="prize-btn children-btn">
+                            我的中奖
                         </view>
                     </template>
                     <template v-else>
-                        <button
-                            open-type="openSetting"
-                            class="children-btn btn"
-                            @opensetting="checkImgAuthFun"
+                        <view
+                            v-if="posterWin"
+                            class="tips"
                         >
-                            授权相册并保存到本地
-                        </button>
+                            恭喜您！抽中<text>{{ lotteryDetail }}</text>1个
+                        </view>
+                        <view
+                            v-else
+                            class="tips"
+                        >
+                            未中奖！别气馁，每天都有机会哦～
+                        </view>
                     </template>
-                </template>
-                <view class="text-item-box">
+
                     <view
-                        v-if="lotteryNum.vote_num < 5"
-                        class="text-item"
+                        v-if="canvasImg"
+                        class="canvas-img"
                     >
-                        今日点赞5个作品，抽奖次数<text>+1</text>
+                        <image :src="canvasImg" />
                     </view>
-                    <view
-                        v-if="lotteryNum.add_activity < 1"
-                        class="text-item"
-                    >
-                        今日上传1个作品，抽奖次数<text>+1</text>
+                    <template v-if="isH5">
+                        <view class="children-btn btn">
+                            长按图片保存到本地
+                        </view>
+                    </template>
+                    <template v-else>
+                        <template v-if="!imgAuthBtn">
+                            <view
+                                class="children-btn btn"
+                                @click="handleSave"
+                            >
+                                保存图片
+                            </view>
+                        </template>
+                        <template v-else>
+                            <button
+                                open-type="openSetting"
+                                class="children-btn btn"
+                                @opensetting="checkImgAuthFun"
+                            >
+                                授权相册并保存到本地
+                            </button>
+                        </template>
+                    </template>
+                    <view class="text-item-box">
+                        <view
+                            v-if="lotteryNum.vote_num < 5"
+                            class="text-item"
+                        >
+                            今日点赞5个作品，抽奖次数<text>+1</text>
+                        </view>
+                        <view
+                            v-if="lotteryNum.add_activity < 1"
+                            class="text-item"
+                        >
+                            今日上传1个作品，抽奖次数<text>+1</text>
+                        </view>
                     </view>
+                    <image
+                        class="close"
+                        src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/children_close.png"
+                        @click="closePoster"
+                    />
                 </view>
-                <image
-                    class="close"
-                    src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/children_close.png"
-                    @click="closePoster"
-                />
             </view>
         </template>
         <view>
@@ -1343,6 +1345,13 @@ export default {
         background-color: rgba(0, 0, 0, 0.79);
         text-align: center;
         z-index: 1003;
+        .poster-img-mask-box {
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 50%;
+            transform: translateY(-55%);
+        }
         .prize-btn {
             background-color: #ff78a5;
             display: inline-block;
