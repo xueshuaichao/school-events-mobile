@@ -430,7 +430,9 @@ export default {
         this.loading = true;
         this.activityStatus();
         this.initShare();
-        this.getAuthStatus();
+        if (!this.isH5) {
+            this.getAuthStatus();
+        }
         this.getLotteryNum();
     },
     onUnload() {
@@ -947,9 +949,16 @@ export default {
                         fr: this.fr,
                     }).then(() => {
                         this.maskPrompt = false;
-                        uni.navigateTo({
-                            url: `/pages/activity-pages/upload/modify?activity_id=${this.activityId}`,
-                        });
+                        if (this.isH5) {
+                            uni.showToast({
+                                title: '请在UP爱挑战小程序上传作品',
+                                icon: 'none',
+                            });
+                        } else {
+                            uni.navigateTo({
+                                url: `/pages/activity-pages/upload/modify?activity_id=${this.activityId}`,
+                            });
+                        }
                     });
                     break;
             }
