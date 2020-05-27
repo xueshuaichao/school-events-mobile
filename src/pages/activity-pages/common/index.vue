@@ -690,18 +690,23 @@ body.dialog-open {
         .like-icon {
             width: 27upx;
             height: 27upx;
-            margin-right: 5upx;
+            position: absolute;
+            top: 50%;
+            left: 22upx;
+            transform: translateY(-50%);
         }
         .vote {
             float: right;
-            width: 170upx;
+            width: 130upx;
             height: 60upx;
             background: #0f8c64;
             border-radius: 30upx;
             color: rgba(255, 255, 255, 1);
             font-size: 28upx;
-            text-align: center;
             line-height: 60upx;
+            position: relative;
+            padding-left: 56upx;
+            box-sizing: border-box;
         }
         .media-icon {
             width: 40upx;

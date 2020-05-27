@@ -529,11 +529,15 @@ export default {
         },
         voteCallBack() {
             api.get('/api/activity/getuserlotterynum').then((res) => {
-                if (res.vote_num === 5) {
+                if (res.vote_num === '5') {
                     uni.showToast({
                         title: '恭喜你获得一次免费的抽奖资格，快来抽奖吧',
                         icon: 'none',
                     });
+                    this.lotteryNum = {
+                        ...this.lotteryNum,
+                        ...res,
+                    };
                 }
             });
         },
@@ -992,7 +996,7 @@ export default {
             }
         },
         getPrizeNum() {
-            if (this.status === 1) {
+            if (this.status === 2) {
                 this.showMask({ title: '获取抽奖机会', type: 3 });
             } else {
                 uni.showToast({
@@ -1069,7 +1073,8 @@ export default {
     .right-fixed {
         position: fixed;
         right: 0upx;
-        bottom: 228upx;
+        top: 50%;
+        margin-top: -36upx;
         z-index: 999;
         .tips {
             position: absolute;

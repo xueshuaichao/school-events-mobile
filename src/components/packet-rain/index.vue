@@ -147,7 +147,7 @@ export default {
             this.$set(this.packetList[this.hideIndex], 'isShowNum', true);
             setTimeout(() => {
                 this.$set(this.packetList[this.hideIndex], 'isShow', false);
-            }, 300);
+            }, 400);
         },
         packetList(val) {
             this.$nextTick(() => {
