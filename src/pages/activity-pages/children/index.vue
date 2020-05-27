@@ -649,10 +649,11 @@ export default {
                 ctx.drawImage(res[1].path, 88, 356, 362, 190);
                 ctx.drawImage(res[2].path, 140, 566, 260, 34);
                 ctx.drawImage(res[3].path, 417, 591, 86, 86);
-                ctx.draw();
-                setTimeout(() => {
-                    this.saveCanvas();
-                }, 200);
+                ctx.draw(false, () => {
+                    setTimeout(() => {
+                        this.saveCanvas();
+                    }, 200);
+                });
             });
         },
         h5LoseDrawImage(config) {
