@@ -17,23 +17,7 @@
                 class="close"
                 @click="handleClose"
             />
-            <!-- <image
-                src="/static/images/chunjie/third_entry_close.png"
-
-            /> -->
         </view>
-        <!-- <navigator
-            v-if="yiqingshow === 1 && isShow"
-            url="/pages/read/index"
-        >
-            <view class="chunjie-entry">
-                <image
-                    src="/static/images/yiqing/close.png"
-                    class="close-icon"
-                    @click.stop="handleCloseSuspension"
-                />
-            </view>
-        </navigator> -->
         <!-- search -->
         <view class="search">
             <input
@@ -91,29 +75,6 @@
                             <image
                                 class="banner-image"
                                 src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/h5/opengame-banner.png"
-                            />
-                        </navigator>
-                    </swiper-item>
-                    <swiper-item>
-                        <navigator
-                            url="/pages/read/index"
-                            class="swiper-item"
-                        >
-                            <image
-                                class="banner-image"
-                                src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/h5/read-banner.png"
-                            />
-                        </navigator>
-                    </swiper-item>
-                    <!-- 疫情入口 -->
-                    <swiper-item>
-                        <navigator
-                            url="/pages/yiqing/index"
-                            class="swiper-item"
-                        >
-                            <image
-                                class="banner-image"
-                                src="http://aitiaozhan.oss-cn-beijing.aliyuncs.com/school-events-mobile/prize-banner.png"
                             />
                         </navigator>
                     </swiper-item>
