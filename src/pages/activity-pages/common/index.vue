@@ -685,14 +685,14 @@ body.dialog-open {
             color: #08402f;
             font-size: 30upx;
             float: left;
-            margin-top: 8upx;
+            margin-top: 10upx;
         }
         .like-icon {
             width: 27upx;
             height: 27upx;
             position: absolute;
             top: 50%;
-            left: 22upx;
+            left: 20upx;
             transform: translateY(-50%);
         }
         .vote {
@@ -705,7 +705,7 @@ body.dialog-open {
             font-size: 28upx;
             line-height: 60upx;
             position: relative;
-            padding-left: 56upx;
+            padding-left: 52upx;
             box-sizing: border-box;
         }
         .media-icon {

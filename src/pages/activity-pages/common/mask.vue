@@ -13,6 +13,12 @@
                 :style="{ 'background-color': theme.bgColor }"
             >
                 <view
+                    v-if="type === 0 && name === 'children'"
+                    class="rule-tips"
+                >
+                    本次活动最终解释权在法律允许的范围内归活动举办方所有。
+                </view>
+                <view
                     v-if="name"
                     class="close"
                     :style="{
@@ -471,7 +477,17 @@ export default {
     &.mask-children {
         z-index: 1002;
         .active-content {
-            position: relative;
+            position: absolute;
+            top: 50%;
+            transform: translateY(-55%);
+            .rule-tips {
+                position: absolute;
+                text-align: center;
+                bottom: 21upx;
+                left: 0;
+                right: 0;
+                font-size: 20upx;
+            }
             &.active-content-0 {
             }
             &.active-content-1 {

@@ -397,7 +397,7 @@ export default {
     right: -19rpx;
     top: -19rpx;
     display: inline-block;
-    width: 38rpx;
-    height: 38rpx;
+    width: 48rpx;
+    height: 48rpx;
 }
 </style>

@@ -64,16 +64,8 @@
         <!-- 中奖海报 -->
         <template>
             <template>
-                <poster
-                    v-if="!isH5 && showPoster"
-                    id="poster"
-                    :config="posterCommonConfig"
-                    :hide-loading="true"
-                    @success="onPosterSuccess"
-                    @fail="onPosterFail"
-                />
                 <canvas
-                    v-else-if="isH5"
+                    v-if="isH5"
                     class="canvas pro"
                     style="width: 538px; height: 760px;"
                     canvas-id="firstCanvas"
@@ -151,7 +143,7 @@
                     <image
                         class="close"
                         src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/children_close.png"
-                        @click="closePoster"
+                        @click="onHidePoster"
                     />
                 </view>
             </view>
@@ -300,7 +292,6 @@
 <script>
 import packetRain from '../../../components/packet-rain/index.vue';
 import indexPage from '../common/index.vue';
-import share from '../../../common/share';
 import logger from '../../../common/logger';
 import maskBox from '../common/mask.vue';
 import api from '../../../common/api';
@@ -310,6 +301,12 @@ export default {
         indexPage,
         packetRain,
         maskBox,
+    },
+    props: {
+        activityId: {
+            type: Number,
+            default: 9,
+        },
     },
     data() {
         return {
@@ -322,8 +319,7 @@ export default {
             loading: false,
             publicConfig: {},
             indexConfig: {},
-            fr: '',
-            activityId: '',
+            fr: 'lyhd',
             hideIndex: -1,
             maskPrompt: false,
             type: 0,
@@ -347,9 +343,9 @@ export default {
             lotteryDetail: '',
             poster: null,
             imgAuthBtn: false,
-            startCreateCanvas: true,
             showPosterMask: false,
             canvasImg: '',
+            posterWin: true,
             posterCommonConfig: {
                 pixelRatio: 2,
                 width: 538,
@@ -357,7 +353,6 @@ export default {
                 debug: false,
                 images: [],
             },
-            posterWin: true,
             posterFailConfig: {
                 images: [
                     {
@@ -415,8 +410,13 @@ export default {
             },
         };
     },
-    onLoad(params) {
-        this.activityId = 9;
+    onUnload() {
+        if (this.showPacketRain) {
+            this.luckyDraw();
+            this.showPacketRain = false;
+        }
+    },
+    created() {
         this.publicConfig = {
             ...this.$store.getters.getPublicConfig(this.activityId),
             ...this.$store.getters.getColorConfig({
@@ -428,26 +428,21 @@ export default {
             activityId: this.activityId,
             page: 'indexConfig',
         });
-        this.fr = logger.getFr(this.publicConfig.log, params);
+        this.fr = logger.getFr(this.publicConfig.log, {});
         this.loading = true;
         this.activityStatus();
-        this.initShare();
-        if (!this.isH5) {
-            this.getAuthStatus();
-        }
+        this.getAuthStatus();
         this.getLotteryNum();
-    },
-    onUnload() {
-        if (this.showPacketRain) {
-            this.luckyDraw();
-            this.showPacketRain = false;
-        }
-    },
-    created() {
         this.showLottery();
         this.ctx = uni.createCanvasContext('firstCanvas');
     },
     methods: {
+        unload() {
+            if (this.showPacketRain) {
+                this.luckyDraw();
+                this.showPacketRain = false;
+            }
+        },
         luckyDraw() {
             // 中途退出 消耗次数
             api.get('/api/activity/luckydraw', {
@@ -491,7 +486,7 @@ export default {
                     this.createPoster(1, false);
                 }
             } else {
-                this.showOpenLotteryPanel = true;
+                this.onShowOpenLotteryPanel();
             }
         },
         getLuckyList(num = 1) {
@@ -649,11 +644,10 @@ export default {
                 ctx.drawImage(res[1].path, 88, 356, 362, 190);
                 ctx.drawImage(res[2].path, 140, 566, 260, 34);
                 ctx.drawImage(res[3].path, 417, 591, 86, 86);
-                ctx.draw(false, () => {
-                    setTimeout(() => {
-                        this.saveCanvas();
-                    }, 200);
-                });
+                ctx.draw();
+                setTimeout(() => {
+                    this.saveCanvas();
+                }, 200);
             });
         },
         h5LoseDrawImage(config) {
@@ -721,16 +715,20 @@ export default {
                                     ...this.posterCommonConfig,
                                     ...config,
                                 };
-                                // 需等画报配置修改后才能生成
-                                this.showPoster = true;
-                                this.$nextTick(() => {
-                                    this.poster = this.selectComponent(
-                                        '#poster',
-                                    );
-                                    this.poster.onCreate(
-                                        this.posterCommonConfig,
-                                    );
-                                });
+                                this.$emit(
+                                    'createPoster',
+                                    this.posterCommonConfig,
+                                );
+                                // // 需等画报配置修改后才能生成
+                                // this.showPoster = true;
+                                // this.$nextTick(() => {
+                                //     this.poster = this.selectComponent(
+                                //         '#poster',
+                                //     );
+                                //     this.poster.onCreate(
+                                //         this.posterCommonConfig,
+                                //     );
+                                // });
                             }
                         });
                     },
@@ -790,8 +788,7 @@ export default {
                 quality: 1, // 图片质量
                 canvasId: 'firstCanvas', // 画布ID
                 success(res) {
-                    that.startCreateCanvas = false;
-                    that.showPosterMask = true;
+                    that.onShowPosterMask();
                     that.canvasImg = res.tempFilePath;
                     uni.hideLoading();
                 },
@@ -823,11 +820,10 @@ export default {
                 },
             });
         },
-        onPosterSuccess({ detail }) {
-            this.startCreateCanvas = false;
-            this.showPosterMask = true;
-            this.canvasImg = detail;
-            this.showOpenLotteryPanel = false;
+        onPosterSuccess(canvasImg) {
+            this.canvasImg = canvasImg;
+            this.onHideOpenLotteryPanel();
+            this.onShowPosterMask();
             this.lock = false;
             uni.hideLoading();
         },
@@ -835,6 +831,12 @@ export default {
             uni.hideLoading();
             this.lock = false;
             console.log(111, err);
+        },
+        onShowOpenLotteryPanel() {
+            this.showOpenLotteryPanel = true;
+        },
+        onHideOpenLotteryPanel() {
+            this.showOpenLotteryPanel = false;
         },
         handleSave() {
             uni.showLoading({ mask: true, title: '保存中' });
@@ -900,9 +902,13 @@ export default {
                 },
             });
         },
-        closePoster() {
+        onHidePoster() {
             // 关闭抽奖结果
             this.showPosterMask = false;
+        },
+        onShowPosterMask() {
+            // 显示中奖结果
+            this.showPosterMask = true;
         },
         checkImgAuthFun(res) {
             // 二次以上检验是否授权图片
@@ -929,6 +935,7 @@ export default {
             }
         },
         getNewLotteryNum({ index, type }) {
+            console.log(index, type);
             if (type) {
                 return false;
             }
@@ -952,35 +959,14 @@ export default {
                         fr: this.fr,
                     }).then(() => {
                         this.maskPrompt = false;
-                        if (this.isH5) {
-                            uni.showToast({
-                                title: '请在UP爱挑战小程序上传作品',
-                                icon: 'none',
-                            });
-                        } else {
-                            uni.navigateTo({
-                                url: `/pages/activity-pages/upload/modify?activity_id=${this.activityId}`,
-                            });
-                        }
+                        uni.navigateTo({
+                            url: `/pages/activity-pages/upload/modify?activity_id=${this.activityId}`,
+                        });
                     });
                     break;
             }
 
             return true;
-        },
-        initShare() {
-            const titleList = this.isH5
-                ? this.publicConfig.shareConfig.h5Title
-                : this.publicConfig.shareConfig.title;
-            const descList = this.publicConfig.shareConfig.desc;
-            const random = Math.floor(Math.random() * titleList.length);
-            this.title = titleList[random];
-            const desc = descList[0];
-            share({
-                title: this.title,
-                desc,
-                thumbnail: `${this.publicConfig.shareConfig.image}?x-oss-process=image/format,png/interlace,1/quality,Q_80/resize,m_pad,h_100`,
-            });
         },
         jumpSearch(item) {
             uni.navigateTo({
@@ -1076,7 +1062,7 @@ export default {
         right: 0upx;
         top: 50%;
         margin-top: -36upx;
-        z-index: 10;
+        z-index: 999;
         .tips {
             position: absolute;
             top: 50%;
@@ -1117,7 +1103,7 @@ export default {
         right: 0;
         bottom: 0;
         top: 0;
-        z-index: 11;
+        z-index: 1001;
         background-color: rgba(0, 0, 0, 0.79);
         &.open-lottery {
             .lottery-panel-img {
@@ -1345,7 +1331,7 @@ export default {
         box-sizing: border-box;
         background-color: rgba(0, 0, 0, 0.79);
         text-align: center;
-        z-index: 13;
+        z-index: 1003;
         .poster-img-mask-box {
             position: absolute;
             left: 0;
@@ -1410,5 +1396,4 @@ export default {
         }
     }
 }
-@import "../theme/index.less";
 </style>

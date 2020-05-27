@@ -264,7 +264,6 @@ export default {
     right: 0;
     bottom: 0;
     z-index: 990;
-    background-color: rgba(0, 0, 0, 0.79);
     color: #fff;
     text-align: center;
     .count-down-num {

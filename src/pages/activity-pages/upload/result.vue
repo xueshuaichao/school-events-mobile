@@ -186,11 +186,28 @@ export default {
     .mt {
         margin-top: 40rpx;
     }
+    @keyframes mymove {
+        0% {
+            transform: scale(1); /*开始为原始大小*/
+        }
+        25% {
+            transform: scale(1.04); /*放大1.1倍*/
+            // margin-right: 26upx;
+        }
+        50% {
+            transform: scale(1);
+        }
+        75% {
+            transform: scale(1.04);
+            // margin-right: 26upx;
+        }
+    }
     .add-img {
         width: 322upx;
         height: 133upx;
         display: block;
         margin: 30upx auto 0;
+        animation: mymove 2s infinite;
         & > image {
             width: 100%;
             height: 100%;
