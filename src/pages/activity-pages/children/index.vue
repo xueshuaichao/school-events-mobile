@@ -73,7 +73,7 @@
                     @fail="onPosterFail"
                 />
                 <canvas
-                    v-else-if="isH5"
+                    v-if="isH5"
                     class="canvas pro"
                     style="width: 538px; height: 760px;"
                     canvas-id="firstCanvas"
@@ -446,6 +446,7 @@ export default {
     created() {
         this.showLottery();
         this.ctx = uni.createCanvasContext('firstCanvas');
+        console.log(this.ctx);
     },
     methods: {
         luckyDraw() {
@@ -649,10 +650,10 @@ export default {
                 ctx.drawImage(res[1].path, 88, 356, 362, 190);
                 ctx.drawImage(res[2].path, 140, 566, 260, 34);
                 ctx.drawImage(res[3].path, 417, 591, 86, 86);
-                ctx.draw(false, () => {
+                ctx.draw(true, () => {
                     setTimeout(() => {
                         this.saveCanvas();
-                    }, 200);
+                    }, 500);
                 });
             });
         },
@@ -670,7 +671,7 @@ export default {
                 this.ctx.drawImage(res[0].path, 0, 0, 538, 760);
                 this.ctx.drawImage(res[1].path, 79, 602, 126, 126);
                 this.ctx.draw(
-                    false,
+                    true,
                     setTimeout(() => {
                         // 需要异步 不然画不出来
                         this.saveCanvas();
@@ -784,9 +785,7 @@ export default {
                 y: 0,
                 width: 538, // 截取的画布的宽
                 height: 760, // 截取的画布的高
-                destWidth: 538, // 保存成的画布宽度
-                destHeight: 760, // 保存成的画布高度
-                fileType: 'png', // 保存成的文件类型
+                fileType: 'jpg', // 保存成的文件类型
                 quality: 1, // 图片质量
                 canvasId: 'firstCanvas', // 画布ID
                 success(res) {
@@ -798,7 +797,7 @@ export default {
                 fail() {
                     uni.hideLoading();
                     uni.showToast({
-                        title: '保存失败，稍后再试',
+                        title: '生成失败，稍后再试',
                         duration: 2000,
                         icon: 'none',
                     });
