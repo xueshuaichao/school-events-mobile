@@ -174,10 +174,23 @@
                     </view>
                 </view>
                 <view
-                    :class="status === 2 || isH5 ? 'upload' : 'upload-disable'"
+                    :class="
+                        status === 2 || status === 1 || isH5
+                            ? 'upload'
+                            : 'upload-disable'
+                    "
                     @click="handleUpload"
                 >
-                    {{ status === 2 ? "上传作品" : "活动已结束" }}
+                    <!-- // 1未开始，2进行中，3已结束 -->
+                    <template v-if="status === 1">
+                        活动未开始
+                    </template>
+                    <template v-else-if="status === 2">
+                        上传作品
+                    </template>
+                    <template v-else>
+                        活动已结束
+                    </template>
                 </view>
             </view>
         </view>
