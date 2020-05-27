@@ -532,6 +532,7 @@ export default {
                 () => api.get(url, param).then(
                     () => {
                         this.likeStatus = 1;
+                        this.getUserLotteryNum();
                         // this.getData('reget');
                     },
                     (err) => {
@@ -914,6 +915,16 @@ export default {
                     // error
                 }
             }
+        },
+        getUserLotteryNum() {
+            api.get('/api/activity/getuserlotterynum').then((res) => {
+                if (res.vote_num === '5') {
+                    uni.showToast({
+                        title: '恭喜你获得一次免费的抽奖资格，快来抽奖吧',
+                        icon: 'none',
+                    });
+                }
+            });
         },
     },
     onLoad(query) {

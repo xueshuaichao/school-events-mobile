@@ -45,7 +45,7 @@
                     </view>
                     <image
                         class="banner"
-                        :src="item.img"
+                        :src="item.mini_h5_img"
                     />
                 </view>
             </view>
@@ -120,26 +120,37 @@ export default {
     },
     methods: {
         jumpRoute(url) {
-            uni.navigateTo({
-                url,
-            });
+            if (!url) {
+                uni.showToast({
+                    title: '正在为您准备精彩活动',
+                    icon: 'none',
+                });
+            } else {
+                uni.navigateTo({
+                    url,
+                });
+            }
         },
         getData(refresh) {
             api.post('/api/activity/list', this.filter).then(
                 ({ list, total }) => {
                     this.total = total;
-                    this.list = this.confList.map((item) => {
+                    const lists = list.map((item) => {
                         let obj = item;
-                        list.forEach((d) => {
-                            const D = d;
-                            if (D.id === obj.id) {
-                                D.start_time = D.start_time.slice(5, 10);
-                                D.end_time = D.end_time.slice(5, 10);
-                                obj = { ...obj, ...D };
+                        obj.start_time = obj.start_time.slice(5, 10);
+                        obj.end_time = obj.end_time.slice(5, 10);
+                        this.confList.forEach((d) => {
+                            if (d.id === obj.id) {
+                                obj = { ...obj, ...d };
                             }
                         });
                         return obj;
                     });
+                    if (this.filter.page_num === 1) {
+                        this.list = lists;
+                    } else {
+                        this.list = this.list.concat(lists);
+                    }
                     if (refresh) {
                         uni.stopPullDownRefresh();
                     }
@@ -156,10 +167,10 @@ export default {
         this.getData();
     },
     onPullDownRefresh() {
-        this.getData('refresh');
+        this.filter.page_num = 1;
+        this.getData('fresh');
     },
     onReachBottom() {
-        console.log('bottom------');
         if (this.total > this.filter.page_size * this.filter.page_num) {
             this.filter.page_num += 1;
             this.getData();
