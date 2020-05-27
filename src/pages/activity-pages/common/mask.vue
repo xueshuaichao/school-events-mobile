@@ -555,6 +555,18 @@ export default {
             line-height: 42upx;
             font-size: 26upx;
             margin-bottom: 20upx;
+            text-indent: 12upx;
+            position: relative;
+            &::before {
+                content: "";
+                position: absolute;
+                left: 0;
+                top: 16upx;
+                border-radius: 50%;
+                width: 8upx;
+                height: 8upx;
+                background-color: #666;
+            }
         }
         .title-icon {
             position: absolute;
