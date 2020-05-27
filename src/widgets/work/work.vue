@@ -32,11 +32,7 @@
                             </view>
                             <image
                                 class="banner"
-                                :src="
-                                    item.img ||
-                                        'http://aitiaozhan.oss-cn-beijing.aliyuncs.com/school-events-mobile/prize-banner.png'
-                                        | optimizeImage
-                                "
+                                :src="item.mini_h5_hot_img | optimizeImage"
                             />
                         </view>
                         <view class="fl-r ctx">
@@ -98,6 +94,7 @@ export default {
     },
     filters: {
         optimizeImage: (val) => {
+            if (!val) return '';
             let newUrl = '';
             const width = 254;
             const height = 160;
@@ -148,9 +145,16 @@ export default {
     methods: {
         // scroll() {},
         jumpRoute(url) {
-            uni.navigateTo({
-                url,
-            });
+            if (!url) {
+                uni.showToast({
+                    title: '正在为您准备精彩活动',
+                    icon: 'none',
+                });
+            } else {
+                uni.navigateTo({
+                    url,
+                });
+            }
         },
         openTab() {
             // console.log(this.moreUrl);

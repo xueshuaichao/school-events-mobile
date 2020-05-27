@@ -329,7 +329,6 @@ export default {
             api.get('/api/activity/activitystatus', {
                 activity_id: 9,
             }).then((data) => {
-                console.log(data, 'aaaa');
                 this.status = data.status;
                 // 1显示  0不显示
             });
@@ -388,19 +387,16 @@ export default {
         },
 
         getData(refresh) {
-            this.getAllShowActivity();
+            this.getHotActivity();
             this.getWorkList('individual');
             this.getWorkList('team');
             this.getWorkList('talent', refresh);
         },
-        getAllShowActivity() {
-            api.post('/api/activity/list', {
-                page_size: 4,
-                page_num: 1,
-                status: 2,
-            }).then((data) => {
-                this.hotList = data.list.map((item) => {
+        getHotActivity() {
+            api.get('/api/activity/hotactivity').then((data) => {
+                this.hotList = data.map((item) => {
                     let obj = item;
+                    console.log(obj);
                     this.confList.forEach((d) => {
                         obj.start_time = obj.start_time.slice(0, 10);
                         obj.end_time = obj.end_time.slice(0, 10);
