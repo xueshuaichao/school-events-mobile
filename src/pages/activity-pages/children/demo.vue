@@ -64,16 +64,8 @@
         <!-- 中奖海报 -->
         <template>
             <template>
-                <poster
-                    v-if="!isH5 && showPoster"
-                    id="poster"
-                    :config="posterCommonConfig"
-                    :hide-loading="true"
-                    @success="onPosterSuccess"
-                    @fail="onPosterFail"
-                />
                 <canvas
-                    v-else-if="isH5"
+                    v-if="isH5"
                     class="canvas pro"
                     style="width: 538px; height: 760px;"
                     canvas-id="firstCanvas"
@@ -83,75 +75,77 @@
                 v-if="showPosterMask"
                 class="poster-img-mask"
             >
-                <template v-if="myPrizeList">
-                    <view class="prize-btn children-btn">
-                        我的中奖
-                    </view>
-                </template>
-                <template v-else>
-                    <view
-                        v-if="posterWin"
-                        class="tips"
-                    >
-                        恭喜您！抽中<text>{{ lotteryDetail }}</text>1个
-                    </view>
-                    <view
-                        v-else
-                        class="tips"
-                    >
-                        未中奖！别气馁，每天都有机会哦～
-                    </view>
-                </template>
-
-                <view
-                    v-if="canvasImg"
-                    class="canvas-img"
-                >
-                    <image :src="canvasImg" />
-                </view>
-                <template v-if="isH5">
-                    <view class="children-btn btn">
-                        长按图片保存到本地
-                    </view>
-                </template>
-                <template v-else>
-                    <template v-if="!imgAuthBtn">
-                        <view
-                            class="children-btn btn"
-                            @click="handleSave"
-                        >
-                            保存图片
+                <view class="poster-img-mask-box">
+                    <template v-if="myPrizeList">
+                        <view class="prize-btn children-btn">
+                            我的中奖
                         </view>
                     </template>
                     <template v-else>
-                        <button
-                            open-type="openSetting"
-                            class="children-btn btn"
-                            @opensetting="checkImgAuthFun"
+                        <view
+                            v-if="posterWin"
+                            class="tips"
                         >
-                            授权相册并保存到本地
-                        </button>
+                            恭喜您！抽中<text>{{ lotteryDetail }}</text>1个
+                        </view>
+                        <view
+                            v-else
+                            class="tips"
+                        >
+                            未中奖！别气馁，每天都有机会哦～
+                        </view>
                     </template>
-                </template>
-                <view class="text-item-box">
+
                     <view
-                        v-if="lotteryNum.vote_num < 5"
-                        class="text-item"
+                        v-if="canvasImg"
+                        class="canvas-img"
                     >
-                        今日点赞5个作品，抽奖次数<text>+1</text>
+                        <image :src="canvasImg" />
                     </view>
-                    <view
-                        v-if="lotteryNum.add_activity < 1"
-                        class="text-item"
-                    >
-                        今日上传1个作品，抽奖次数<text>+1</text>
+                    <template v-if="isH5">
+                        <view class="children-btn btn">
+                            长按图片保存到本地
+                        </view>
+                    </template>
+                    <template v-else>
+                        <template v-if="!imgAuthBtn">
+                            <view
+                                class="children-btn btn"
+                                @click="handleSave"
+                            >
+                                保存图片
+                            </view>
+                        </template>
+                        <template v-else>
+                            <button
+                                open-type="openSetting"
+                                class="children-btn btn"
+                                @opensetting="checkImgAuthFun"
+                            >
+                                授权相册并保存到本地
+                            </button>
+                        </template>
+                    </template>
+                    <view class="text-item-box">
+                        <view
+                            v-if="lotteryNum.vote_num < 5"
+                            class="text-item"
+                        >
+                            今日点赞5个作品，抽奖次数<text>+1</text>
+                        </view>
+                        <view
+                            v-if="lotteryNum.add_activity < 1"
+                            class="text-item"
+                        >
+                            今日上传1个作品，抽奖次数<text>+1</text>
+                        </view>
                     </view>
+                    <image
+                        class="close"
+                        src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/children_close.png"
+                        @click="onHidePoster"
+                    />
                 </view>
-                <image
-                    class="close"
-                    src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/children_close.png"
-                    @click="closePoster"
-                />
             </view>
         </template>
         <view>
@@ -298,7 +292,6 @@
 <script>
 import packetRain from '../../../components/packet-rain/index.vue';
 import indexPage from '../common/index.vue';
-import share from '../../../common/share';
 import logger from '../../../common/logger';
 import maskBox from '../common/mask.vue';
 import api from '../../../common/api';
@@ -308,6 +301,12 @@ export default {
         indexPage,
         packetRain,
         maskBox,
+    },
+    props: {
+        activityId: {
+            type: Number,
+            default: 9,
+        },
     },
     data() {
         return {
@@ -320,8 +319,7 @@ export default {
             loading: false,
             publicConfig: {},
             indexConfig: {},
-            fr: '',
-            activityId: '',
+            fr: 'lyhd',
             hideIndex: -1,
             maskPrompt: false,
             type: 0,
@@ -345,9 +343,9 @@ export default {
             lotteryDetail: '',
             poster: null,
             imgAuthBtn: false,
-            startCreateCanvas: true,
             showPosterMask: false,
             canvasImg: '',
+            posterWin: true,
             posterCommonConfig: {
                 pixelRatio: 2,
                 width: 538,
@@ -355,7 +353,6 @@ export default {
                 debug: false,
                 images: [],
             },
-            posterWin: true,
             posterFailConfig: {
                 images: [
                     {
@@ -413,8 +410,13 @@ export default {
             },
         };
     },
-    onLoad(params) {
-        this.activityId = 9;
+    onUnload() {
+        if (this.showPacketRain) {
+            this.luckyDraw();
+            this.showPacketRain = false;
+        }
+    },
+    created() {
         this.publicConfig = {
             ...this.$store.getters.getPublicConfig(this.activityId),
             ...this.$store.getters.getColorConfig({
@@ -426,24 +428,21 @@ export default {
             activityId: this.activityId,
             page: 'indexConfig',
         });
-        this.fr = logger.getFr(this.publicConfig.log, params);
+        this.fr = logger.getFr(this.publicConfig.log, {});
         this.loading = true;
         this.activityStatus();
-        this.initShare();
         this.getAuthStatus();
         this.getLotteryNum();
-    },
-    onUnload() {
-        if (this.showPacketRain) {
-            this.luckyDraw();
-            this.showPacketRain = false;
-        }
-    },
-    created() {
         this.showLottery();
         this.ctx = uni.createCanvasContext('firstCanvas');
     },
     methods: {
+        unload() {
+            if (this.showPacketRain) {
+                this.luckyDraw();
+                this.showPacketRain = false;
+            }
+        },
         luckyDraw() {
             // 中途退出 消耗次数
             api.get('/api/activity/luckydraw', {
@@ -487,7 +486,7 @@ export default {
                     this.createPoster(1, false);
                 }
             } else {
-                this.showOpenLotteryPanel = true;
+                this.onShowOpenLotteryPanel();
             }
         },
         getLuckyList(num = 1) {
@@ -716,16 +715,20 @@ export default {
                                     ...this.posterCommonConfig,
                                     ...config,
                                 };
-                                // 需等画报配置修改后才能生成
-                                this.showPoster = true;
-                                this.$nextTick(() => {
-                                    this.poster = this.selectComponent(
-                                        '#poster',
-                                    );
-                                    this.poster.onCreate(
-                                        this.posterCommonConfig,
-                                    );
-                                });
+                                this.$emit(
+                                    'createPoster',
+                                    this.posterCommonConfig,
+                                );
+                                // // 需等画报配置修改后才能生成
+                                // this.showPoster = true;
+                                // this.$nextTick(() => {
+                                //     this.poster = this.selectComponent(
+                                //         '#poster',
+                                //     );
+                                //     this.poster.onCreate(
+                                //         this.posterCommonConfig,
+                                //     );
+                                // });
                             }
                         });
                     },
@@ -785,8 +788,7 @@ export default {
                 quality: 1, // 图片质量
                 canvasId: 'firstCanvas', // 画布ID
                 success(res) {
-                    that.startCreateCanvas = false;
-                    that.showPosterMask = true;
+                    that.onShowPosterMask();
                     that.canvasImg = res.tempFilePath;
                     uni.hideLoading();
                 },
@@ -818,11 +820,10 @@ export default {
                 },
             });
         },
-        onPosterSuccess({ detail }) {
-            this.startCreateCanvas = false;
-            this.showPosterMask = true;
-            this.canvasImg = detail;
-            this.showOpenLotteryPanel = false;
+        onPosterSuccess(canvasImg) {
+            this.canvasImg = canvasImg;
+            this.onHideOpenLotteryPanel();
+            this.onShowPosterMask();
             this.lock = false;
             uni.hideLoading();
         },
@@ -830,6 +831,12 @@ export default {
             uni.hideLoading();
             this.lock = false;
             console.log(111, err);
+        },
+        onShowOpenLotteryPanel() {
+            this.showOpenLotteryPanel = true;
+        },
+        onHideOpenLotteryPanel() {
+            this.showOpenLotteryPanel = false;
         },
         handleSave() {
             uni.showLoading({ mask: true, title: '保存中' });
@@ -895,9 +902,13 @@ export default {
                 },
             });
         },
-        closePoster() {
+        onHidePoster() {
             // 关闭抽奖结果
             this.showPosterMask = false;
+        },
+        onShowPosterMask() {
+            // 显示中奖结果
+            this.showPosterMask = true;
         },
         checkImgAuthFun(res) {
             // 二次以上检验是否授权图片
@@ -924,6 +935,7 @@ export default {
             }
         },
         getNewLotteryNum({ index, type }) {
+            console.log(index, type);
             if (type) {
                 return false;
             }
@@ -955,20 +967,6 @@ export default {
             }
 
             return true;
-        },
-        initShare() {
-            const titleList = this.isH5
-                ? this.publicConfig.shareConfig.h5Title
-                : this.publicConfig.shareConfig.title;
-            const descList = this.publicConfig.shareConfig.desc;
-            const random = Math.floor(Math.random() * titleList.length);
-            this.title = titleList[random];
-            const desc = descList[0];
-            share({
-                title: this.title,
-                desc,
-                thumbnail: `${this.publicConfig.shareConfig.image}?x-oss-process=image/format,png/interlace,1/quality,Q_80/resize,m_pad,h_100`,
-            });
         },
         jumpSearch(item) {
             uni.navigateTo({
@@ -1334,6 +1332,13 @@ export default {
         background-color: rgba(0, 0, 0, 0.79);
         text-align: center;
         z-index: 1003;
+        .poster-img-mask-box {
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 50%;
+            transform: translateY(-500%);
+        }
         .prize-btn {
             background-color: #ff78a5;
             display: inline-block;
@@ -1391,5 +1396,4 @@ export default {
         }
     }
 }
-@import "../theme/index.less";
 </style>

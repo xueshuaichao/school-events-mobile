@@ -685,7 +685,7 @@ body.dialog-open {
             color: #08402f;
             font-size: 30upx;
             float: left;
-            margin-top: 8upx;
+            margin-top: 10upx;
         }
         .like-icon {
             width: 27upx;

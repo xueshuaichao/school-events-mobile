@@ -237,6 +237,15 @@
             }
         },
         {
+            "path": "pages/activity-pages/index",
+            "style": {
+                "navigationBarTitleText": "我的活动",
+                "usingComponents": {
+                    "poster": "/wxcomponents/third-party/poster/poster/index"
+                }
+            }
+        },
+        {
             "path": "pages/activity-pages/labor/index",
             "style": {
                 "navigationBarTitleText": "青少年动起来"
