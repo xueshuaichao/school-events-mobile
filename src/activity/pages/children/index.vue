@@ -417,7 +417,7 @@ export default {
                         url: '',
                         width: 86,
                         height: 86,
-                        y: 581,
+                        y: 591,
                         x: 417,
                         borderRadius: 100,
                     },
@@ -832,7 +832,7 @@ export default {
                                     ...this.posterCommonConfig,
                                     ...config,
                                 };
-                                console.log(111, status, config);
+                                console.log(111, this.posterCommonConfig);
                                 // 需等画报配置修改后才能生成
                                 this.showPoster = true;
                                 this.$nextTick(() => {
