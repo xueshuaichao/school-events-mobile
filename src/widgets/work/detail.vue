@@ -397,8 +397,8 @@ export default {
                 this.setPlayCount();
             }
         },
-        likeStatus(newVal, oldVal) {
-            if (newVal && !oldVal && !this.toggleLikeObj[this.pageData.id]) {
+        likeStatus(newVal) {
+            if (newVal && !this.toggleLikeObj[this.pageData.id]) {
                 this.praise_count += 1;
                 this.toggleLikeObj[this.pageData.id] = 1;
             }
@@ -408,16 +408,11 @@ export default {
                 this.praise_count = this.pageData.praise_count || 0;
                 this.introduce = this.pageData.introduce || '';
                 this.catName = this.pageData.cat_name || '';
-                // this.play_count = this.pageData.play_count;
+                this.play_count = this.pageData.play_count;
             }
         },
     },
-    created() {
-        // this.play_count = this.pageData.play_count;
-        // if (this.pageData.resource_type === 2) {
-        //     this.play_count += 1;
-        // }
-    },
+    created() {},
     mounted() {
         this.videoContext = uni.createVideoContext(
             `detail${this.swiperPage}`,
