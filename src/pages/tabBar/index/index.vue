@@ -401,7 +401,7 @@ export default {
                     if (obj.activity_base > 999999999) {
                         obj.activity_base_c = '99999W+';
                     } else {
-                        obj.activity_base_c = obj.activity_base > 10000
+                        obj.activity_base_c = obj.activity_base > 100000
                             ? `${Math.floor(obj.activity_base / 10000)}W+`
                             : `${obj.activity_base}人`;
                     }
