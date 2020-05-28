@@ -196,6 +196,7 @@ export default {
             }
         },
         blur() {
+            this.changeVal = '';
             this.showKeybord = false;
             this.isFocus = false;
         },
