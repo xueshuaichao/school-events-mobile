@@ -196,6 +196,7 @@ export default {
             }
         },
         blur() {
+            this.changeVal = '';
             this.showKeybord = false;
             this.isFocus = false;
         },
@@ -260,6 +261,8 @@ export default {
                         title: '请先登录',
                     }),
                 );
+                this.changeVal = '';
+            } else {
                 this.changeVal = '';
             }
         },

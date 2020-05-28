@@ -110,7 +110,7 @@
                     class="avatar file fl-l"
                     src="/static/images/work/file.png"
                 />
-                <view class="fl-l text-two-line">
+                <view class="fl-l text-two-lines">
                     <text class="work-name">
                         {{ pageData.resource_name }}
                     </text>
@@ -728,7 +728,7 @@ export default {
     .work-name-wrap {
         padding-top: 2upx;
         line-height: 24upx;
-        .text-two-line {
+        .text-two-lines {
             width: 90%;
         }
     }
