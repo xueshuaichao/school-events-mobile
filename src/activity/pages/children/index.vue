@@ -361,7 +361,7 @@ export default {
             showPosterMask: false,
             canvasImg: '',
             posterCommonConfig: {
-                pixelRatio: 3,
+                pixelRatio: 1,
                 width: 538,
                 height: 760,
                 debug: false,
@@ -553,6 +553,15 @@ export default {
         },
         startLottery() {
             // 参与抽奖 消耗次数
+            if (this.status !== 2) {
+                return uni.showToast({
+                    title:
+                        this.status === 1
+                            ? '活动未开始，敬请期待'
+                            : '活动已结束',
+                    icon: 'none',
+                });
+            }
             if (!this.lock) {
                 this.lock = true;
                 api.isLogin({
@@ -596,6 +605,7 @@ export default {
                     },
                 );
             }
+            return true;
         },
         startActive() {
             if (!this.lock) {
@@ -1149,6 +1159,10 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.canvas {
+    width: 538rpx;
+    height: 760rpx;
+}
 .canvas.pro {
     position: absolute;
     bottom: 0;
