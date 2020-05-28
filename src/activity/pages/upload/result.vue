@@ -93,12 +93,12 @@ export default {
     methods: {
         reUpload() {
             uni.reLaunch({
-                url: `/pages/activity-pages/upload/modify?activity_id=${this.activityId}`,
+                url: `/activity/pages/upload/modify?activity_id=${this.activityId}`,
             });
         },
         goToUc() {
             uni.reLaunch({
-                url: `/pages/activity-pages/mywork/mywork?status=1&type=myWork&activity_id=${this.activityId}`,
+                url: `/activity/pages/mywork/mywork?status=1&type=myWork&activity_id=${this.activityId}`,
             });
         },
         getLotteryNum() {

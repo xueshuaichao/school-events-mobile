@@ -472,7 +472,8 @@ export default {
                     /(^\s*)|(\s*$)/g,
                     '',
                 );
-                if (!formData.cat_id) {
+                console.log(111, formData.cat_id);
+                if (formData.cat_id === '') {
                     this.lock = true;
                     return this.errTip('请选择分类');
                 }
@@ -511,7 +512,7 @@ export default {
                         this.disabled = false;
                         uni.hideLoading();
                         uni.navigateTo({
-                            url: `/pages/activity-pages/upload/result?activity_id=${this.formData.activity_id}`,
+                            url: `/activity/pages/upload/result?activity_id=${this.formData.activity_id}`,
                         });
                         this.resetData();
                         this.lock = true;
