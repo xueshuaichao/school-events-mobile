@@ -7,7 +7,7 @@
             <view
                 v-if="item.id !== 7 || (item.id === 7 && !isH5)"
                 class="item-card"
-                @click="jumpRoute(item.url)"
+                @click="jumpRoute(item)"
             >
                 <view class="clearfix">
                     <view class="fl-l title-activity">
@@ -32,7 +32,7 @@
                             src="/static/images/upload/fire.png"
                         />
                         <view class="count fl-r">
-                            {{ item.activity_base || 6000 }}人关注
+                            {{ item.activity_base_c || 6000 }}关注
                         </view>
                     </view>
                 </view>
@@ -119,15 +119,20 @@ export default {
         };
     },
     methods: {
-        jumpRoute(url) {
-            if (!url) {
+        jumpRoute(item) {
+            if (!item.url) {
                 uni.showToast({
                     title: '正在为您准备精彩活动',
                     icon: 'none',
                 });
+            } else if (item.status === 1) {
+                uni.showToast({
+                    title: '活动尚未开始，敬请启期待',
+                    icon: 'none',
+                });
             } else {
                 uni.navigateTo({
-                    url,
+                    url: item.url,
                 });
             }
         },
@@ -139,6 +144,10 @@ export default {
                         let obj = item;
                         obj.start_time = obj.start_time.slice(5, 10);
                         obj.end_time = obj.end_time.slice(5, 10);
+                        obj.activity_base_c = obj.activity_base > 10000
+                            ? `${Math.floor(obj.activity_base / 10000)}W+`
+                            : `${obj.activity_base}人`;
+
                         this.confList.forEach((d) => {
                             if (d.id === obj.id) {
                                 obj = { ...obj, ...d };
