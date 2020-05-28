@@ -96,7 +96,7 @@
                             v-if="posterWin"
                             :class="['tips', { cur: myPrizeList }]"
                         >
-                            恭喜您！抽中<text>{{ lotteryDetail }}</text>1个
+                            恭喜您！抽中<text>{{ lotteryDetail.name }}</text>1{{ lotteryDetail.unit ? "个" : "套" }}
                         </view>
                         <view
                             v-else
@@ -352,7 +352,7 @@ export default {
             showOpenLotteryPanel: false, // 开奖 false-隐藏
             myPrizeList: false,
             packetNum: 0,
-            lotteryDetail: '',
+            lotteryDetail: {},
             poster: null,
             imgAuthBtn: false,
             showPosterMask: false,
@@ -751,10 +751,19 @@ export default {
         },
         winDrawImage(res) {
             const drawDetail = [
-                '航拍无人机',
-                '多功能棋盘',
-                '水彩笔套装',
-                '小米书包',
+                {
+                    name: '航拍无人机',
+                },
+                {
+                    name: '多功能棋盘',
+                    unit: '套',
+                },
+                {
+                    name: '水彩笔套装',
+                },
+                {
+                    name: '小米书包',
+                },
             ];
             let index = res.draw;
             // 由于后端将中奖排序写错 需将3、4调换
