@@ -39,7 +39,7 @@
                     <image
                         class="pakcet-item-img"
                         :src="item.src"
-                        @click="handelPacket(item, index)"
+                        @touchstart="handelPacket(item, index)"
                     />
                     <view
                         v-if="item.isShowNum"

@@ -347,7 +347,6 @@ export default {
             lotteryDetail: '',
             poster: null,
             imgAuthBtn: false,
-            startCreateCanvas: true,
             showPosterMask: false,
             canvasImg: '',
             posterCommonConfig: {
@@ -801,7 +800,6 @@ export default {
         }),
         saveCanvas() {
             const that = this;
-            console.log(434343434);
             uni.canvasToTempFilePath({
                 // 把画布转化成临时文件
                 x: 0,
@@ -812,14 +810,14 @@ export default {
                 quality: 1, // 图片质量
                 canvasId: 'firstCanvas', // 画布ID
                 success(res) {
-                    console.log(2222, res);
-                    that.startCreateCanvas = false;
+                    that.showOpenLotteryPanel = false;
                     that.showPosterMask = true;
                     that.canvasImg = res.tempFilePath;
                     uni.hideLoading();
                 },
                 fail(res) {
-                    console.log(11111, res);
+                    console.log(res);
+                    that.showOpenLotteryPanel = false;
                     uni.hideLoading();
                     uni.showToast({
                         title: '生成失败，稍后再试',
@@ -848,7 +846,6 @@ export default {
             });
         },
         onPosterSuccess({ detail }) {
-            this.startCreateCanvas = false;
             this.showPosterMask = true;
             this.canvasImg = detail;
             this.showOpenLotteryPanel = false;
