@@ -2,7 +2,6 @@
     <view
         v-if="!isLoading"
         :class="[`${publicConfig.activityName}-page`]"
-        class="page-read-work"
     >
         <view
             class="page-read-work"
