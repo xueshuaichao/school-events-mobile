@@ -125,7 +125,7 @@ export default {
                 page_size: 10,
                 topic_type: 3,
                 // comment_type: 1,
-                topic_id: this.pageData.id,
+                topic_id: this.pageData.resource_id,
             },
             total: 0,
             list: [],
@@ -154,7 +154,7 @@ export default {
         },
         pageData() {
             // 作品切换。
-            this.filter.topic_id = this.pageData.id;
+            this.filter.topic_id = this.pageData.resource_id;
             this.filter.page_num = 1;
             this.loading = false;
             this.getList();
@@ -242,7 +242,7 @@ export default {
                         api.post('/api/comment/add', {
                             content,
                             topic_type: 3,
-                            topic_id: this.pageData.id,
+                            topic_id: this.pageData.resource_id,
                             comment_type: 1,
                         }).then(() => {
                             uni.showToast({
