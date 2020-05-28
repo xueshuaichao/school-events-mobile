@@ -157,7 +157,7 @@
                 </text>
             </navigator>
         </view>
-        <navigator
+        <!-- <navigator
             v-if="!isH5"
             url="/pages/openGame/zhibo"
         >
@@ -165,7 +165,7 @@
                 class="zhibo-entry"
                 src="http://aitiaozhan.oss-cn-beijing.aliyuncs.com/school-events-mobile/zhibo-entry01.png"
             />
-        </navigator>
+        </navigator> -->
         <work
             :title="'热门活动'"
             :more-url="'/pages/tabBar/upload/upload'"

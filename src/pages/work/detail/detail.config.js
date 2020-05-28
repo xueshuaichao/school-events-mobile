@@ -484,7 +484,7 @@ const detailConf = [
                     height: 90,
                     y: 624,
                     x: 422,
-                    borderRadius: 46,
+                    borderRadius: 80,
                 },
             ],
         },
