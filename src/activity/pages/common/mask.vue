@@ -506,8 +506,9 @@ export default {
         z-index: 1002;
         .active-content {
             position: absolute;
+            left: 50%;
             top: 50%;
-            transform: translateY(-55%);
+            transform: translate(-50%, -55%);
             .rule-tips {
                 position: absolute;
                 text-align: center;
@@ -521,7 +522,6 @@ export default {
             &.active-content-1 {
             }
             &.active-content-lucky {
-                margin: 223upx auto 0;
                 width: 540upx;
                 height: 526upx;
                 padding-bottom: 312upx;

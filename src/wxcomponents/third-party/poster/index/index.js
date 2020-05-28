@@ -644,7 +644,7 @@ Component({
 
                         const res = wx.getSystemInfoSync();
                         const { platform } = res;
-                        let time = 0;
+                        let time = 300;
                         if (platform === "android") {
                             // 在安卓平台，经测试发现如果海报过于复杂在转换时需要做延时，要不然样式会错乱
                             time = 300;
