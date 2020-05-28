@@ -21,7 +21,7 @@
             </template>
             <template v-else>
                 <view class="game-time">
-                    游戏时间<text>{{ gameTime / 1000 }}</text>
+                    游戏时间<text>{{ gameTime / 1000 }}s</text>
                 </view>
                 <view
                     v-for="(item, index) in packetList"
@@ -312,7 +312,12 @@ export default {
 .game-time {
     color: #fff;
     text-align: center;
-    font-size: 40upx;
+    font-size: 30upx;
+    line-height: 96upx;
+    & > text {
+        color: #bb77ff;
+        font-size: 40upx;
+    }
 }
 .pakcet-item {
     position: absolute;

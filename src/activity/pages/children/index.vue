@@ -180,6 +180,12 @@
                                 <view class="title-text children-btn">
                                     {{ prize.title }}
                                 </view>
+                                <text
+                                    v-if="list === 1"
+                                    class="tips"
+                                >
+                                    (奖品共100份)
+                                </text>
                                 <view class="handel-text">
                                     <text @click="prizeList(list + 1)">
                                         {{
@@ -1293,6 +1299,11 @@ export default {
             display: flex;
             justify-content: space-between;
             padding: 40upx 10upx 39upx 30upx;
+            .tips {
+                font-size: 20upx;
+                color: #bb77ff;
+                line-height: 74rpx;
+            }
             .title-text {
                 &::after {
                     content: "";

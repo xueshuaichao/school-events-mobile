@@ -194,13 +194,11 @@
                             @scrolltolower="getLuckyList"
                         >
                             <view
-                                v-for="(lucky, index) in luckyListArr"
+                                v-for="lucky in luckyListArr"
                                 :key="lucky.id"
                                 class="item text-one-line"
                             >
-                                <text class="index-text">
-                                    {{ luckyTotal[index] }}.
-                                </text>
+                                <text class="index-text" />
                                 <text class="text">
                                     {{ lucky.user_name }}
                                 </text>
@@ -874,8 +872,9 @@ export default {
         .lucky-list {
             color: #999;
             .item {
-                padding: 16upx 0;
+                padding: 16upx 0 16upx 30upx;
                 font-size: 30upx;
+                position: relative;
             }
             .text {
                 color: #bb77ff;
@@ -883,8 +882,15 @@ export default {
                 font-weight: normal;
             }
             .index-text {
-                min-width: 56upx;
+                width: 10upx;
+                height: 10upx;
+                border-radius: 50%;
                 display: inline-block;
+                background-color: #aaaaaa;
+                position: absolute;
+                left: 0;
+                top: 50%;
+                margin-top: -5upx;
             }
         }
         .lottery-num {
