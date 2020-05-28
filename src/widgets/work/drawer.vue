@@ -352,9 +352,12 @@ export default {
                     width: 72rpx;
                     height: 72rpx;
                     margin-right: 30rpx;
+                    border-radius: 50%;
+                    background: #333;
                     image {
                         width: 100%;
                         height: 100%;
+                        border-radius: 50%;
                     }
                 }
                 .name {
