@@ -353,8 +353,9 @@ export default {
                     height: 72rpx;
                     margin-right: 30rpx;
                     image {
-                        width: 100%;
-                        height: 100%;
+                        width: 72rpx;
+                        height: 72rpx;
+                        border-radius: 50%;
                     }
                 }
                 .name {
