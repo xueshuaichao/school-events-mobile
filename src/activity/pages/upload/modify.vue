@@ -472,6 +472,10 @@ export default {
                     /(^\s*)|(\s*$)/g,
                     '',
                 );
+                if (!formData.cat_id) {
+                    this.lock = true;
+                    return this.errTip('请选择分类');
+                }
                 if (this.uploadMode === 'video') {
                     formData.resource_type = 1;
                     if (!formData.resource_name) {

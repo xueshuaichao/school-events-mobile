@@ -96,7 +96,7 @@
                             v-if="posterWin"
                             :class="['tips', { cur: myPrizeList }]"
                         >
-                            恭喜您！抽中<text>{{ lotteryDetail.name }}</text>1{{ lotteryDetail.unit ? "个" : "套" }}
+                            恭喜您！抽中<text>{{ lotteryDetail.name }}</text>1{{ lotteryDetail.unit ? "套" : "个" }}
                         </view>
                         <view
                             v-else
@@ -110,7 +110,10 @@
                         v-if="canvasImg"
                         class="canvas-img"
                     >
-                        <image :src="canvasImg" />
+                        <image
+                            class="image"
+                            :src="canvasImg"
+                        />
                     </view>
                     <template v-if="isH5">
                         <view class="children-btn btn">
@@ -1461,7 +1464,7 @@ export default {
         box-sizing: border-box;
         background-color: rgba(0, 0, 0, 0.79);
         text-align: center;
-        z-index: 13;
+        z-index: 50;
         .poster-img-mask-box {
             position: absolute;
             left: 0;
@@ -1496,9 +1499,10 @@ export default {
             width: 538upx;
             height: 760upx;
             margin: 0 auto 30upx;
-            image {
+            .image {
                 width: 100%;
                 height: 100%;
+                -webkit-touch-callout: default;
             }
         }
         .btn {
