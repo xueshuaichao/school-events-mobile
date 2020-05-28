@@ -970,7 +970,6 @@ export default {
     onHide() {
         // this.isPaused = true;
         console.log('hidiiing--------');
-        this.removeStorageSync();
     },
     onShow() {
         // 返回列表，刷新作品页，首页的点赞

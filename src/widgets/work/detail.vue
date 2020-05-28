@@ -398,7 +398,11 @@ export default {
             }
         },
         likeStatus(newVal) {
-            if (newVal && !this.toggleLikeObj[this.pageData.id]) {
+            if (
+                newVal
+                && !this.toggleLikeObj[this.pageData.id]
+                && this.swiperPage === this.isChangeSlide
+            ) {
                 this.praise_count += 1;
                 this.toggleLikeObj[this.pageData.id] = 1;
             }
