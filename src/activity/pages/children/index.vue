@@ -87,7 +87,7 @@
                 <view class="poster-img-mask-box">
                     <template>
                         <view
-                            v-f="myPrizeList"
+                            v-if="myPrizeList"
                             class="prize-btn children-btn"
                         >
                             我的中奖
