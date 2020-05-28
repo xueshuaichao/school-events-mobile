@@ -10,7 +10,8 @@
                 { read: activity_id === 6 },
                 { chunjie: activity_id === 3 || activity_id === 4 },
                 { wuyi: activity_id === 8 },
-                { openGame: from === 'openGame' }
+                { openGame: from === 'openGame' },
+                { liuyi: activity_id === 9 }
             ]"
         >
             <image
@@ -106,6 +107,8 @@
                     :activity-id="activity_id"
                     :is-from-share="isFromShare"
                     :from="from"
+                    :show-drawer="showDrawer"
+                    :comment-total="commentTotal"
                     @doAction="doAction"
                 />
             </swiper-item>
@@ -123,6 +126,8 @@
                         :activity-id="activity_id"
                         :is-from-share="isFromShare"
                         :from="from"
+                        :show-drawer="showDrawer"
+                        :comment-total="commentTotal"
                         @doAction="doAction"
                     />
                 </swiper-item>
@@ -138,6 +143,8 @@
                         :activity-id="activity_id"
                         :is-from-share="isFromShare"
                         :from="from"
+                        :show-drawer="showDrawer"
+                        :comment-total="commentTotal"
                         @doAction="doAction"
                     />
                 </swiper-item>
@@ -152,10 +159,19 @@
                     :activity-id="activity_id"
                     :is-from-share="isFromShare"
                     :from="from"
+                    :show-drawer="showDrawer"
+                    :comment-total="commentTotal"
                     @doAction="doAction"
                 />
             </swiper-item>
         </swiper>
+        <drawer
+            :show="showDrawer"
+            :page-data="pageData"
+            :fr="fr"
+            @doAction="doAction"
+            @getcommentTotal="getcommentTotal"
+        />
     </view>
 </template>
 
@@ -166,6 +182,7 @@ import share from '../../../common/share';
 import logger from '../../../common/logger';
 import detail from '../../../widgets/work/detail.vue';
 import detailConf from './detail.config';
+import drawer from '../../../widgets/work/drawer.vue';
 // 上下滑动的功能的拆解
 // 使用Swiper组件，把页面的主要内容，当作独立的部分，迁移到../../../widgets/work/detail.vue。
 // 页面滑动的时候，确定下当前显示的数据，用来做转发，二维码的数据
@@ -176,6 +193,7 @@ import detailConf from './detail.config';
 export default {
     components: {
         detail,
+        drawer,
     },
     data() {
         return {
@@ -189,16 +207,11 @@ export default {
                 video_img_url: '',
             },
             likeStatus: 0,
-            // isPlayed: false,
-            // isPaused: false,
-            // isVideoWaiting: false,
             showShareMask: false,
 
             // #ifdef H5
             isH5: true,
             // #endif
-
-            // isFullScreen: false,
 
             shareDesc: '',
             fr: '',
@@ -212,6 +225,7 @@ export default {
             imgAuthBtn: false,
             isFromShare: '',
             from: '',
+            showDrawer: false,
             disableslide: false,
             pageDataTwo: {},
             pageDataThree: {},
@@ -222,10 +236,14 @@ export default {
             outSwiperIncrease: true,
             filterObj: {},
             apiFrom: '',
+            commentTotal: 0,
         };
     },
     created() {},
     methods: {
+        getcommentTotal(val) {
+            this.commentTotal = val;
+        },
         getAuthStatus() {
             const that = this;
             // eslint-disable-next-line no-undef
@@ -390,42 +408,6 @@ export default {
                             title: '保存失败请授权',
                             icon: 'none',
                         });
-
-                        // 这边微信做过调整，必须要在按钮中触发，因此需要在弹框回调中进行调用
-                        // console.log('开始授权');
-                        // eslint-disable-next-line no-undef
-                        // wx.openSetting({
-                        //     success(settingdata) {
-                        //         console.log('settingdata', settingdata);
-                        //         if (
-                        //             settingdata.authSetting[
-                        //                 'scope.writePhotosAlbum'
-                        //             ]
-                        //         ) {
-                        //             // eslint-disable-next-line no-undef
-                        //             wx.showModal({
-                        //                 title: '提示',
-                        //                 content:
-                        //                     '获取权限成功,再次点击图片即可保存',
-                        //                 showCancel: false,
-                        //             });
-                        //         } else {
-                        //             // eslint-disable-next-line no-undef
-                        //             wx.showModal({
-                        //                 title: '提示',
-                        //                 content:
-                        //                     '获取权限失败，将无法保存到相册哦~',
-                        //                 showCancel: false,
-                        //             });
-                        //         }
-                        //     },
-                        //     fail(failData) {
-                        //         console.log('failData', failData);
-                        //     },
-                        //     complete(finishData) {
-                        //         console.log('finishData', finishData);
-                        //     },
-                        // });
                     }
                 },
             });
@@ -475,6 +457,22 @@ export default {
                 this.activity_id = res.activity_id || 0;
             }
             this.id = res.id;
+
+            // activity_id,  没有7..
+            if (this.activity_id) {
+                // wyhd 五一活动
+                const arr = [
+                    'xchd',
+                    'dsxnh',
+                    'dsxnh',
+                    'dshd',
+                    '',
+                    'wyhd',
+                    'lyhd',
+                ];
+                const type = arr[this.activity_id - 3];
+                this.fr = logger.getFr(type, {});
+            }
 
             console.log(this.activity_id, '---setGetDetail----');
 
@@ -526,6 +524,7 @@ export default {
                 url = '/api/activity/vote';
                 param = {
                     id: this.id,
+                    activity_id: this.activity_id,
                 };
             }
             api.isLogin({
@@ -534,6 +533,9 @@ export default {
                 () => api.get(url, param).then(
                     () => {
                         this.likeStatus = 1;
+                        if (this.activity_id === 9) {
+                            this.getUserLotteryNum();
+                        }
                         // this.getData('reget');
                     },
                     (err) => {
@@ -588,10 +590,14 @@ export default {
             });
             const desc = `${res.resource_name}-${res.create_name}`;
             this.shareDesc = title;
+            const scene = `id=${this.id}&aid=${this.activity_id}&y=${
+                this.from === 'openGame' ? '2' : '1'
+            }` || 'id=325';
             share({
                 title,
                 desc,
                 thumbnail: res.video_img_url,
+                url: scene,
             });
             uni.setNavigationBarTitle({
                 title: res.resource_name || '',
@@ -611,10 +617,6 @@ export default {
                 () => {
                     if (this.activity_id) {
                         this.joinActivity();
-                    } else if (this.from === 'openGame') {
-                        uni.navigateTo({
-                            url: '/pages/openGame/zhibo-list',
-                        });
                     } else {
                         uni.navigateTo({
                             url: '/pages/openGame/zhibo-list',
@@ -637,11 +639,9 @@ export default {
                         uni.navigateTo({
                             url: '/pages/read/upload/modify',
                         });
-                    }
-                    if (this.activity_id === 8) {
+                    } else {
                         uni.navigateTo({
-                            url:
-                                '/pages/activity-pages/upload/modify?activity_id=8',
+                            url: `/pages/activity-pages/upload/modify?activity_id=${this.activity_id}`,
                         });
                     }
                 } else if (status === 1) {
@@ -667,6 +667,11 @@ export default {
 
             if (action === 'toggleLike') {
                 this.toggleLike();
+            }
+            if (action === 'showMessage') {
+                // this.showDrawer = true;
+                console.log(action, '12121212action');
+                this.showDrawer = !this.showDrawer;
             }
         },
         stopTouchMove() {
@@ -801,7 +806,6 @@ export default {
                 default:
                     console.log('-');
             }
-            console.log('-----change00000');
             this.pageData = curPageData;
             this.setGetDetail(curPageData);
             this.getLikeStatus();
@@ -823,31 +827,35 @@ export default {
         },
         getPageSizeInfo(position) {
             // 获取位置参数
-            // const pageSize = 10;
-            // const pageNum = Math.floor((position + 10) / pageSize);
-            // const currentPosition = position - pageSize * (pageNum - 1);
-
             const obj = {
-                // page_size: pageSize,
-                // page_num: pageNum,
                 current_position: position,
                 list_type: 2,
             };
-            console.log(obj, position);
             return obj;
         },
         initOtherSwiperData() {
             const params = this.$store.getters.getWorkParams;
             const { position, filter } = params;
-
             const { curposition, total, from } = position;
             this.filterObj = filter;
             this.apiFrom = from || '/api/works/list';
 
+            if (typeof filter.page_size === 'undefined') {
+                // h5页面刷新，禁止滑动。
+                this.disableslide = true;
+                if (filter.sort) {
+                    this.disableslide = false;
+                }
+            }
             if (total < 2 || this.isFromShare) {
                 this.disableslide = true;
             }
-            console.log(position, this.disableslide, 'init----data--siwper');
+            console.log(
+                position,
+                filter,
+                this.disableslide,
+                'init----data--siwper',
+            );
             // 获取前后两页面的内容。
             if (!this.disableslide) {
                 this.prePageParam.initPosition = curposition;
@@ -911,6 +919,16 @@ export default {
                 }
             }
         },
+        getUserLotteryNum() {
+            api.get('/api/activity/getuserlotterynum').then((res) => {
+                if (res.vote_num === '5') {
+                    uni.showToast({
+                        title: '恭喜你获得一次免费的抽奖资格，快来抽奖吧',
+                        icon: 'none',
+                    });
+                }
+            });
+        },
     },
     onLoad(query) {
         this.id = utils.getParam(query, 'id');
@@ -931,13 +949,6 @@ export default {
             this.isFromShare,
             '-----this.activity_id---',
         );
-        // activity_id,  没有7..
-        if (this.activity_id) {
-            // wyhd 五一活动
-            const arr = ['xchd', 'dsxnh', 'dsxnh', 'dshd', '', 'wyhd'];
-            const type = arr[this.activity_id - 3];
-            this.fr = logger.getFr(type, {});
-        }
 
         // 获取detail页面的内容
         this.getData();
@@ -958,6 +969,7 @@ export default {
     },
     onHide() {
         // this.isPaused = true;
+        console.log('hidiiing--------');
     },
     onShow() {
         // 返回列表，刷新作品页，首页的点赞
@@ -1093,11 +1105,26 @@ export default {
                     rgba(219, 78, 14, 1),
                     rgba(255, 159, 115, 1)
                 );
-                border-radius: 55px;
+                border-radius: 55rpx;
                 color: #fff;
             }
             .close {
                 background: #e76a31;
+            }
+        }
+        &.liuyi {
+            .saveBtn {
+                color: #fff;
+                background-color: #c790ff;
+                background-image: url(../../../static/images/work/querter-circle.png);
+                background-repeat: no-repeat;
+                background-position: 12rpx 12rpx;
+                background-size: 34rpx 36rpx;
+                box-shadow: 0 0 24rpx 0 rgba(255, 255, 255, 1) inset;
+            }
+            .close {
+                background: transparent;
+                border: 2rpx solid #fff;
             }
         }
     }

@@ -236,6 +236,7 @@
                 "navigationBarTitleText": "我的作品"
             }
         },
+
         {
             "path": "pages/activity-pages/labor/index",
             "style": {
@@ -245,7 +246,7 @@
         {
             "path": "pages/activity-pages/upload/modify",
             "style": {
-                "navigationBarTitleText": "青少年动起来"
+                "navigationBarTitleText": "上传作品"
             }
         },
         {
@@ -345,6 +346,12 @@
             }
         },
         {
+            "path": "pages/openGame/zhibo",
+            "style": {
+                "navigationBarTitleText": "直播"
+            }
+        },
+        {
             "path": "pages/uc/reported/result",
             "style": {
                 "navigationBarTitleText": "上报成功"
@@ -353,8 +360,45 @@
     ],
     "subPackages": [
         {
-            "root": "pagesA",
+            "root": "activity",
             "pages": [
+                {
+                    "path": "pages/children/index",
+                    "style": {
+                        "navigationBarTitleText": "七彩童年，快乐成长秀风采",
+                        "usingComponents": {
+                            "poster": "/wxcomponents/third-party/poster/poster/index"
+                        }
+                    }
+                },
+                {
+                    "path": "pages/upload/modify",
+                    "style": {
+                        "navigationBarTitleText": "上传作品"
+                    }
+                },
+                {
+                    "path": "pages/upload/result",
+                    "style": {
+                        "navigationBarTitleText": "上传成功"
+                    }
+                },
+                {
+                    "path": "pages/mywork/mywork",
+                    "style": {
+                        "navigationBarTitleText": "我的作品",
+                        "onReachBottomDistance": 0
+                    }
+                },
+                {
+                    "path": "pages/index",
+                    "style": {
+                        "navigationBarTitleText": "我的活动",
+                        "usingComponents": {
+                            "poster": "/wxcomponents/third-party/poster/poster/index"
+                        }
+                    }
+                },
                 // ============== 春节 活动 =================
                 {
                     "path": "chunjie/index",

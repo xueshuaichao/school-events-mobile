@@ -1,301 +1,261 @@
 <template>
     <view
-        v-show="!isLoading"
+        v-if="!isLoading"
+        :class="[`${publicConfig.activityName}-page`]"
         class="page-read-work"
-        :style="{ 'background-color': publicConfig.mainBgColor }"
-        :class="{ login: userInfo === null }"
     >
-        <login
-            v-if="userInfo === null"
-            @login="onLogin"
-        />
-        <!-- my works -->
         <view
-            v-else
-            class="panel"
+            class="page-read-work"
+            :style="{ 'background-color': publicConfig.mainBgColor }"
+            :class="{ login: userInfo === null }"
         >
-            <view
-                v-if="type === 'myWork'"
-                class="panel-hd"
-                :style="{ 'background-color': publicConfig.mainBgColor }"
-            >
-                <text
-                    class="panel-title"
-                    :class="{ active: tabActiveIndex === 2 }"
-                    :style="{
-                        'background-color':
-                            tabActiveIndex === 2
-                                ? publicConfig.primaryColor
-                                : '',
-                        color:
-                            tabActiveIndex === 2
-                                ? '#fff'
-                                : publicConfig.primaryColor
-                    }"
-                    @click="setTabActive(2)"
-                >
-                    已通过({{ allNum.pass || 0 }})
-                </text>
-                <text
-                    class="panel-title"
-                    :class="{ active: tabActiveIndex === 1 }"
-                    :style="{
-                        'background-color':
-                            tabActiveIndex === 1
-                                ? publicConfig.primaryColor
-                                : '',
-                        color:
-                            tabActiveIndex === 1
-                                ? '#fff'
-                                : publicConfig.primaryColor
-                    }"
-                    @click="setTabActive(1)"
-                >
-                    待审核({{ allNum.wait || 0 }})
-                </text>
-                <text
-                    class="panel-title"
-                    :class="{ active: tabActiveIndex === 3 }"
-                    :style="{
-                        'background-color':
-                            tabActiveIndex === 3
-                                ? publicConfig.primaryColor
-                                : '',
-                        color:
-                            tabActiveIndex === 3
-                                ? '#fff'
-                                : publicConfig.primaryColor
-                    }"
-                    @click="setTabActive(3)"
-                >
-                    未通过({{ allNum.no_pass || 0 }})
-                </text>
-            </view>
+            <login
+                v-if="userInfo === null"
+                @login="onLogin"
+            />
+            <!-- my works -->
             <view
                 v-else
-                class="search-box"
-                :style="{ 'background-color': publicConfig.mainBgColor }"
+                class="panel"
             >
-                <button
-                    v-for="(item, index) in publicConfig.catMenu"
-                    :key="index"
-                    :class="{
-                        active: filter.activity_cat === index + 1
-                    }"
-                    :style="{
-                        'background-color':
-                            filter.activity_cat === index + 1
-                                ? publicConfig.primaryColor
-                                : '',
-                        color:
-                            filter.activity_cat === index + 1
-                                ? '#fff'
-                                : publicConfig.primaryColor
-                    }"
-                    @click="toggle(index + 1)"
-                >
-                    {{ item }}
-                </button>
-                <button
-                    v-for="(item, index) in publicConfig.sort"
-                    :key="index"
-                    :style="{
-                        'background-color':
-                            filter.sort === (index === 0 ? 'new' : 'hot')
-                                ? publicConfig.primaryColor
-                                : '',
-                        color:
-                            filter.sort === (index === 0 ? 'new' : 'hot')
-                                ? '#fff'
-                                : publicConfig.primaryColor
-                    }"
-                    @click="toggle(index === 0 ? 'new' : 'hot')"
-                >
-                    {{ item }}
-                </button>
                 <view
-                    class="search"
-                    :style="{ 'background-color': publicConfig.primaryBgColor }"
+                    v-if="type === 'myWork'"
+                    class="panel-hd"
+                    :style="{ 'background-color': publicConfig.mainBgColor }"
+                >
+                    <text
+                        class="panel-title"
+                        :class="{ active: tabActiveIndex === 2 }"
+                        @click="setTabActive(2)"
+                    >
+                        已通过({{ allNum.pass || 0 }})
+                    </text>
+                    <text
+                        class="panel-title"
+                        :class="{ active: tabActiveIndex === 1 }"
+                        @click="setTabActive(1)"
+                    >
+                        待审核({{ allNum.wait || 0 }})
+                    </text>
+                    <text
+                        class="panel-title"
+                        :class="{ active: tabActiveIndex === 3 }"
+                        @click="setTabActive(3)"
+                    >
+                        未通过({{ allNum.no_pass || 0 }})
+                    </text>
+                </view>
+                <view
+                    v-else
+                    class="search-box"
+                    :style="{ 'background-color': publicConfig.mainBgColor }"
+                >
+                    <button
+                        v-for="(item, index) in publicConfig.catMenu"
+                        :key="index"
+                        :class="{
+                            active: filter.activity_cat === index + 1
+                        }"
+                        :style="{
+                            'background-color':
+                                filter.activity_cat === index + 1
+                                    ? publicConfig.primaryColor
+                                    : '',
+                            color:
+                                filter.activity_cat === index + 1
+                                    ? '#fff'
+                                    : publicConfig.primaryColor
+                        }"
+                        @click="toggle(index + 1)"
+                    >
+                        {{ item }}
+                    </button>
+                    <button
+                        v-for="(item, index) in publicConfig.sort"
+                        :key="index"
+                        :style="{
+                            'background-color':
+                                filter.sort === (index === 0 ? 'new' : 'hot')
+                                    ? publicConfig.primaryColor
+                                    : '',
+                            color:
+                                filter.sort === (index === 0 ? 'new' : 'hot')
+                                    ? '#fff'
+                                    : publicConfig.primaryColor
+                        }"
+                        @click="toggle(index === 0 ? 'new' : 'hot')"
+                    >
+                        {{ item }}
+                    </button>
+                    <view
+                        class="search"
+                        :style="{
+                            'background-color': publicConfig.primaryBgColor
+                        }"
+                    >
+                        <image
+                            :src="
+                                `https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/${publicConfig.activityName}_search.png`
+                            "
+                        />
+                        <form action="javascript:return true">
+                            <input
+                                v-model="changeValue"
+                                type="text"
+                                confirm-type="search"
+                                confirm-hold="true"
+                                :maxlength="13"
+                                :placeholder-style="
+                                    `color:${publicConfig.placeholderColor}`
+                                "
+                                placeholder="请输入作者姓名或作品名称"
+                                @confirm="bindconfirm"
+                            >
+                        </form>
+                        <text
+                            class="search-button"
+                            @click="bindconfirm"
+                        >
+                            搜索
+                        </text>
+                    </view>
+                </view>
+                <view
+                    v-if="total > 0"
+                    class="media-list"
+                >
+                    <view
+                        v-for="(item, index) in dataList"
+                        :key="item.id"
+                        class="media-content"
+                    >
+                        <event-craft-cover
+                            :info="item"
+                            :media-icon="type !== 'myWork'"
+                            :like-icon="type === 'myWork'"
+                            :best-icon="false"
+                            :bg-color="publicConfig.primaryBgColor"
+                            @click.native="viewDetail(item, index)"
+                        />
+
+                        <view
+                            v-if="type === 'myWork'"
+                            class="work-info"
+                        >
+                            <view class="media-name text-two-line">
+                                {{ ` ${item.resource_name}` }}
+                            </view>
+
+                            <view class="media-time">
+                                {{ item.created_at }}
+                            </view>
+                            <view class="btn">
+                                <text
+                                    v-if="Number(tabActiveIndex) === 2"
+                                    class="btn-item"
+                                    @click="viewDetail(item, index)"
+                                >
+                                    查看
+                                </text>
+                                <text
+                                    v-if="Number(tabActiveIndex) === 3"
+                                    class="btn-item big"
+                                    @click="reason(item)"
+                                >
+                                    驳回原因
+                                </text>
+                                <text
+                                    v-if="Number(tabActiveIndex) !== 2"
+                                    class="btn-item"
+                                    @click="modifyItem(item)"
+                                >
+                                    编辑
+                                </text>
+                                <text
+                                    class="btn-item"
+                                    @click="onConfirmDelete(item)"
+                                >
+                                    删除
+                                </text>
+                            </view>
+                        </view>
+                        <view
+                            v-else
+                            class="work-info"
+                        >
+                            <view class="text-two-line">
+                                {{ item.resource_name }}
+                            </view>
+                            <view class="media-name">
+                                {{ item.user_name }}
+                            </view>
+                            <view class="media-time">
+                                {{ item.created_at }}
+                            </view>
+                            <view class="vote-num">
+                                {{ item.ticket }}赞
+                            </view>
+                        </view>
+                    </view>
+                    <uni-load-more
+                        class="loadMore"
+                        :status="loadMoreStatus"
+                        :content-text="{
+                            contentdown: '上拉显示更多',
+                            contentrefresh: '正在加载...',
+                            contentnomore: '———— 已经到底了~ ————'
+                        }"
+                        color="#fff"
+                    />
+                </view>
+                <view
+                    v-if="type === 'search'"
+                    v-show="searchEmpty"
+                    class="empty"
                 >
                     <image
                         :src="
-                            `https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/${publicConfig.activityName}_search.png`
+                            `https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/${publicConfig.activityName}_empty_search.png`
                         "
                     />
-                    <form action="javascript:return true">
-                        <input
-                            v-model="changeValue"
-                            type="text"
-                            confirm-type="search"
-                            confirm-hold="true"
-                            :maxlength="13"
-                            :placeholder-style="
-                                `color:${publicConfig.placeholderColor}`
-                            "
-                            placeholder="请输入作者姓名或作品名称"
-                            @confirm="bindconfirm"
-                        >
-                    </form>
-                    <text
-                        class="search-button"
-                        @click="bindconfirm"
-                    >
-                        搜索
-                    </text>
+                    <view>
+                        搜索不到您要的结果，换个关键词试试吧～
+                    </view>
                 </view>
-            </view>
-            <view
-                v-if="total > 0"
-                class="media-list"
-            >
                 <view
-                    v-for="(item, index) in dataList"
-                    :key="item.id"
-                    class="media-content"
-                    :style="{ 'background-color': publicConfig.primaryColor }"
+                    v-show="myWorkEmpty"
+                    class="work-empty"
                 >
-                    <event-craft-cover
-                        :info="item"
-                        :media-icon="type !== 'myWork'"
-                        :like-icon="type === 'myWork'"
-                        :best-icon="false"
-                        :bg-color="publicConfig.primaryBgColor"
-                        @click.native="viewDetail(item, index)"
+                    <image
+                        :src="
+                            `https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/${publicConfig.activityName}_empty_work.png`
+                        "
                     />
-
-                    <view
-                        v-if="type === 'myWork'"
-                        class="work-info"
-                    >
-                        <view class="media-name text-two-line">
-                            {{ ` ${item.resource_name}` }}
-                        </view>
-
-                        <view class="media-time">
-                            {{ item.created_at }}
-                        </view>
-                        <view class="btn">
-                            <text
-                                v-if="Number(tabActiveIndex) === 2"
-                                class="btn-item"
-                                :style="{
-                                    'background-color':
-                                        publicConfig.primaryBgColor
-                                }"
-                                @click="viewDetail(item, index)"
-                            >
-                                查看
-                            </text>
-                            <text
-                                v-if="Number(tabActiveIndex) === 3"
-                                class="btn-item big"
-                                :style="{
-                                    'background-color':
-                                        publicConfig.primaryBgColor
-                                }"
-                                @click="reason(item)"
-                            >
-                                驳回原因
-                            </text>
-                            <text
-                                v-if="Number(tabActiveIndex) !== 2"
-                                class="btn-item"
-                                :style="{
-                                    'background-color':
-                                        publicConfig.primaryBgColor
-                                }"
-                                @click="modifyItem(item)"
-                            >
-                                编辑
-                            </text>
-                            <text
-                                class="btn-item"
-                                :style="{
-                                    'background-color':
-                                        publicConfig.primaryBgColor
-                                }"
-                                @click="onConfirmDelete(item)"
-                            >
-                                删除
-                            </text>
-                        </view>
+                    <view>
+                        {{ allTotal === 0 ? "您还没有上传作品" : "暂无作品" }}
                     </view>
-                    <view
-                        v-else
-                        class="work-info"
+                    <navigator
+                        v-if="allTotal === 0"
+                        :url="
+                            `/pages/activity-pages/upload/modify?activity_id=${filter.activity_id}`
+                        "
                     >
-                        <view class="text-two-line">
-                            {{ item.resource_name }}
+                        <view
+                            class="goUpload"
+                            :style="{
+                                'background-color': publicConfig.primaryColor
+                            }"
+                        >
+                            去上传
                         </view>
-                        <view class="media-name">
-                            {{ item.user_name }}
-                        </view>
-                        <view class="media-time">
-                            {{ item.created_at }}
-                        </view>
-                        <view class="vote-num">
-                            {{ item.ticket }}赞
-                        </view>
-                    </view>
+                    </navigator>
                 </view>
-                <uni-load-more
-                    class="loadMore"
-                    :status="loadMoreStatus"
-                    :content-text="{
-                        contentdown: '上拉显示更多',
-                        contentrefresh: '正在加载...',
-                        contentnomore: '———— 已经到底了~ ————'
-                    }"
-                    color="#fff"
+                <goHome
+                    :path="publicConfig.homePath"
+                    :text-color="publicConfig.primaryColor"
+                    :name="publicConfig.activityName"
                 />
             </view>
-            <view
-                v-if="type === 'search'"
-                v-show="searchEmpty"
-                class="empty"
-            >
-                <image
-                    :src="
-                        `https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/${publicConfig.activityName}_empty_search.png`
-                    "
-                />
-                <view :style="{ color: publicConfig.primaryColor }">
-                    搜索不到您要的结果，换个关键词试试吧～
-                </view>
-            </view>
-            <view
-                v-show="myWorkEmpty"
-                class="work-empty"
-            >
-                <image
-                    :src="
-                        `https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/${publicConfig.activityName}_empty_work.png`
-                    "
-                />
-                <view :style="{ color: publicConfig.primaryColor }">
-                    {{ allTotal === 0 ? "您还没有上传作品" : "暂无作品" }}
-                </view>
-                <navigator
-                    v-if="allTotal === 0"
-                    :url="
-                        `/pages/activity-pages/upload/modify?activity_id=${filter.activity_id}`
-                    "
-                >
-                    <view
-                        class="goUpload"
-                        :style="{
-                            'background-color': publicConfig.primaryColor
-                        }"
-                    >
-                        去上传
-                    </view>
-                </navigator>
-            </view>
-            <goHome
-                :path="publicConfig.homePath"
-                :text-color="publicConfig.primaryColor"
-                :name="publicConfig.activityName"
-            />
         </view>
     </view>
 </template>
@@ -509,7 +469,7 @@ export default {
                     },
                 });
                 uni.navigateTo({
-                    url: `/pages/work/detail/detail?id=${item.id}&activity_id=8`,
+                    url: `/pages/work/detail/detail?id=${item.id}&activity_id=${this.filter.activity_id}`,
                 });
             }
         },
@@ -932,4 +892,5 @@ export default {
         margin-top: 180upx;
     }
 }
+@import "../theme/myWork.less";
 </style>

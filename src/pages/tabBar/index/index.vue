@@ -5,7 +5,7 @@
             class="cover"
         >
             <image
-                src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/h5/suspension-wuyi.png"
+                src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/h5/suspension-liuyi.png"
             />
             <view
                 class="join-btn"
@@ -17,23 +17,7 @@
                 class="close"
                 @click="handleClose"
             />
-            <!-- <image
-                src="/static/images/chunjie/third_entry_close.png"
-
-            /> -->
         </view>
-        <!-- <navigator
-            v-if="yiqingshow === 1 && isShow"
-            url="/pages/read/index"
-        >
-            <view class="chunjie-entry">
-                <image
-                    src="/static/images/yiqing/close.png"
-                    class="close-icon"
-                    @click.stop="handleCloseSuspension"
-                />
-            </view>
-        </navigator> -->
         <!-- search -->
         <view class="search">
             <input
@@ -63,6 +47,17 @@
                 >
                     <swiper-item>
                         <navigator
+                            url="/activity/pages/children/index"
+                            class="swiper-item"
+                        >
+                            <image
+                                class="banner-image"
+                                src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/h5/liuyi-banner.png"
+                            />
+                        </navigator>
+                    </swiper-item>
+                    <swiper-item>
+                        <navigator
                             url="/pages/activity-pages/labor/index"
                             class="swiper-item"
                         >
@@ -80,29 +75,6 @@
                             <image
                                 class="banner-image"
                                 src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/h5/opengame-banner.png"
-                            />
-                        </navigator>
-                    </swiper-item>
-                    <swiper-item>
-                        <navigator
-                            url="/pages/read/index"
-                            class="swiper-item"
-                        >
-                            <image
-                                class="banner-image"
-                                src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/h5/read-banner.png"
-                            />
-                        </navigator>
-                    </swiper-item>
-                    <!-- 疫情入口 -->
-                    <swiper-item>
-                        <navigator
-                            url="/pages/yiqing/index"
-                            class="swiper-item"
-                        >
-                            <image
-                                class="banner-image"
-                                src="http://aitiaozhan.oss-cn-beijing.aliyuncs.com/school-events-mobile/prize-banner.png"
                             />
                         </navigator>
                     </swiper-item>
@@ -185,6 +157,15 @@
                 </text>
             </navigator>
         </view>
+        <navigator
+            v-if="!isH5"
+            url="/pages/openGame/zhibo"
+        >
+            <image
+                class="zhibo-entry"
+                src="http://aitiaozhan.oss-cn-beijing.aliyuncs.com/school-events-mobile/zhibo-entry01.png"
+            />
+        </navigator>
         <work
             :title="'热门活动'"
             :more-url="'/pages/tabBar/upload/upload'"
@@ -236,7 +217,7 @@ export default {
                 talent: { list: [], total: 0 },
             },
             prompt: false,
-            isFirstLogin: 'hasLaborPromt',
+            isFirstLogin: 'hasLiuyiPromt',
             status: 1,
             // show: 1,
             // #ifdef H5
@@ -246,6 +227,12 @@ export default {
             changeValue: '',
             hotList: [],
             confList: [
+                {
+                    id: 9,
+                    img:
+                        'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/h5/liuyi-s-banner.png',
+                    url: '/activity/pages/children/index',
+                },
                 {
                     id: 8,
                     img:
@@ -299,7 +286,6 @@ export default {
             uni.setStorageSync('onShowFrom', '');
             // error
         }
-        // this.getNewActivityStatus();
     },
     created() {},
     methods: {
@@ -338,15 +324,11 @@ export default {
                 () => {},
             );
         },
-        // handleCloseSuspension() {
-        //     this.isShow = false;
-        // },
         getNewActivityStatus() {
             // 1未开始，2进行中，3已结束
             api.get('/api/activity/activitystatus', {
-                activity_id: 8,
+                activity_id: 9,
             }).then((data) => {
-                console.log(data, 'aaaa');
                 this.status = data.status;
                 // 1显示  0不显示
             });
@@ -356,45 +338,24 @@ export default {
             if (uni.getStorageSync('hasReadPromt')) {
                 uni.removeStorageSync('hasReadPromt');
             }
+            if (uni.getStorageSync('hasLaborPromt')) {
+                uni.removeStorageSync('hasLaborPromt');
+            }
             if (!isFirstLogin) {
                 this.prompt = true;
             }
         },
         handlePromt() {
             uni.setStorageSync(this.isFirstLogin, true);
+            this.prompt = false;
             uni.navigateTo({
-                url: '/pages/activity-pages/labor/index',
+                url: '/activity/pages/children/index',
             });
         },
         handleClose() {
             this.prompt = false;
             uni.setStorageSync(this.isFirstLogin, true);
         },
-        // setNewsTabActive(index) {
-        //     this.newsTabActiveIndex = index;
-        //     this.getArticle(this.newsColumn[index].id);
-        // },
-        // moreArticle() {
-        //     uni.navigateTo({
-        //         url: `/pages/news/list/list?tab=${this.newsTabActiveIndex}`,
-        //     });
-        // },
-        // getArticle(columnId) {
-        //     return api
-        //         .get('/api/article/list', {
-        //             column: columnId,
-        //             page_num: 1,
-        //             page_size: 5,
-        //         })
-        //         .then((res) => {
-        //             this.newsData = res.list;
-        //         });
-        // },
-        // getMenuData() {
-        //     api.get('/api/index/entry').then((res) => {
-        //         this.menuConf = res;
-        //     });
-        // },
         getWorkList(type, refresh) {
             let catId;
             if (type === 'individual') {
@@ -426,30 +387,25 @@ export default {
         },
 
         getData(refresh) {
-            // api.get('/api/column/list').then(res => {
-            //     // 首页不展示第一个大赛动态 tab
-            //     res.list.shift();
-            //     this.newsColumn = res.list;
-
-            // this.getArticle(this.newsColumn[0].id);
-            // this.getMenuData();
-            this.getAllShowActivity();
+            this.getHotActivity();
             this.getWorkList('individual');
             this.getWorkList('team');
             this.getWorkList('talent', refresh);
-            // })
         },
-        getAllShowActivity() {
-            api.post('/api/activity/list', {
-                page_size: 4,
-                page_num: 1,
-                status: 2,
-            }).then((data) => {
-                this.hotList = data.list.map((item) => {
+        getHotActivity() {
+            api.get('/api/activity/hotactivity').then((data) => {
+                this.hotList = data.map((item) => {
                     let obj = item;
+                    obj.start_time = obj.start_time.slice(0, 10);
+                    obj.end_time = obj.end_time.slice(0, 10);
+                    if (obj.activity_base > 999999999) {
+                        obj.activity_base_c = '99999W+';
+                    } else {
+                        obj.activity_base_c = obj.activity_base > 10000
+                            ? `${Math.floor(obj.activity_base / 10000)}W+`
+                            : `${obj.activity_base}人`;
+                    }
                     this.confList.forEach((d) => {
-                        obj.start_time = obj.start_time.slice(0, 10);
-                        obj.end_time = obj.end_time.slice(0, 10);
                         if (d.id === obj.id) {
                             obj = { ...obj, ...d };
                         }
@@ -500,37 +456,37 @@ export default {
         margin: 130upx auto 0;
     }
     .join-btn {
-        width: 420upx;
-        height: 110upx;
-        background: linear-gradient(
-            180deg,
-            rgba(219, 78, 14, 1),
-            rgba(255, 159, 115, 1)
-        );
-        border-radius: 55upx;
+        width: 540upx;
+        height: 98upx;
+        margin: 30upx auto 50upx;
+
+        border-radius: 50upx;
         color: #fff;
         font-size: 40upx;
-        line-height: 110upx;
+        line-height: 98upx;
         text-align: center;
-        margin: -50upx auto 50upx;
-        position: relative;
-        z-index: 1;
+        background-color: #c790ff;
+        background-image: url(../../../static/images/work/querter-circle.png);
+        background-repeat: no-repeat;
+        background-position: 12rpx 12rpx;
+        background-size: 34rpx 36rpx;
+        box-shadow: 0 0 24rpx 0 rgba(255, 255, 255, 1) inset;
     }
     .close {
-        width: 52upx;
-        height: 52upx;
+        width: 62upx;
+        height: 62upx;
         border-radius: 50%;
-        background: #de5416;
         margin: 0 auto;
         position: relative;
+        border: 2upx solid #fff;
         &::before,
         &::after {
             position: absolute;
             content: "";
-            width: 22upx;
+            width: 34upx;
             height: 4upx;
-            left: 15upx;
-            top: 25upx;
+            left: 14upx;
+            top: 28upx;
             border-radius: 2upx;
             background: #fff;
             transform: rotate(45deg);
@@ -545,7 +501,9 @@ uni-swiper {
         height: 100%;
     }
 }
-
+.zhibo-entry {
+    width: 100%;
+}
 .page-index {
     padding-bottom: 20upx;
     position: relative;

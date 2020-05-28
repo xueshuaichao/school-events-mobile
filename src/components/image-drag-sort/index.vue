@@ -56,7 +56,6 @@
         <view
             v-if="lists.length > 0"
             class="prompt"
-            :style="{ color: textColor }"
         >
             点击预览/删除图片，长按拖拽排序，共{{ lists.length }}张图片
         </view>
@@ -77,10 +76,6 @@ let itemXNun = 0; // 拖拽元素的列数
 export default {
     name: 'ImageDragSort',
     props: {
-        textColor: {
-            type: String,
-            default: '#999',
-        },
         list: {
             type: Array,
             default() {
@@ -402,7 +397,7 @@ export default {
     right: -19rpx;
     top: -19rpx;
     display: inline-block;
-    width: 38rpx;
-    height: 38rpx;
+    width: 48rpx;
+    height: 48rpx;
 }
 </style>

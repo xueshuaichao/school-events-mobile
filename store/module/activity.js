@@ -14,12 +14,13 @@ export default {
                     activityName: 'labor',
                     activityId: 8,
                     catId: 20, // 所属分类
+                    showAllCat: false,
                     time: '4月27日--5月31日',
                     primaryColor: '#DB4E0E', // 主色调
-                    darkPrimaryColor: '#451600', // 深一些
+                    // darkPrimaryColor: '#451600', // 深一些
                     primaryBgColor: '#FF9F73', // 主要的背景颜色
-                    infoColor: '#AB3500', // 浅一些
-                    titleColor: '#FFE179', // 规则的title
+                    // infoColor: '#AB3500', // 浅一些
+                    // titleColor: '#FFE179', // 规则的title
                     placeholderColor: 'rgba(255,255,255,.6)',
                     homePath: '/pages/activity-pages/labor/index',
                     shareConfig: {
@@ -121,10 +122,124 @@ export default {
                     // 上传作品页
                     activityCat: [], // 表现形式
                     uploadMode: ['video', 'image'], // 上传类型 只传1个值时（['video']）不显示表现形式
-                    placeholderNameText: '作品名称（不超过11字）',
+                    placeholderNameText: '*作品名称（不超过11字）',
                     placeholderDescText: '劳动心得（不超过150字）',
                     nameMaxLength: 11,
                     descMaxLength: 150,
+                },
+                myWorkColorConfig: {},
+                indexColorConfig: {},
+                uploadColorConfig: {},
+            },
+            {
+                activityId: 9,
+                publicConfig: {
+                    title: '七彩童年 快乐成长秀风采',
+                    log: 'lyhd',
+                    sort: ['最新', '最热'],
+                    catMenu: [], // 分组
+                    mainBgColor: '#EBE1FF',
+                    activityName: 'children',
+                    activityId: 9,
+                    catId: '', // 所属分类
+                    showAllCat: true,
+                    time: '5月29日--6月20日',
+                    primaryColor: '#BB77FF', // 主色调
+                    darkPrimaryColor: '#C790FF', // 深一些 （按钮的颜色）
+                    primaryBgColor: '#DCC0FF', // 主要的背景颜色 （图片背景）
+                    infoColor: '#333333', // 浅一些
+                    ruleTitleColor: '#666', // 规则的title
+                    placeholderColor: 'rgba(255,255,255,.6)',
+                    homePath: '/activity/pages/children/index',
+                    shareConfig: {
+                        title: [
+                            '七彩童年， 快乐成长秀风采！超多奖品等你拿',
+                            '闪亮小童星，成长大舞台！快来看～',
+                            '这个“六一”有点甜，秀才艺，抢“糖果”，赢好礼！',
+                            '六一嗨翻天！快来围观孩子们的才艺show～',
+                            '欢乐儿童节！秀出才艺展风采，赢取惊喜好礼！',
+                        ],
+                        h5Title: [
+                            '七彩童年， 快乐成长秀风采！超多奖品等你拿',
+                            '闪亮小童星，成长大舞台！快来看～',
+                            '这个“六一”有点甜，秀才艺，抢“糖果”，赢好礼！',
+                            '六一嗨翻天！快来围观孩子们的才艺show～',
+                            '欢乐儿童节！秀出才艺展风采，赢取惊喜好礼！',
+                        ],
+                        desc: [
+                            '七彩童年， 快乐成长秀风采！秀才艺，抢“糖果”，赢好礼',
+                        ],
+                        image:
+                            'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/children_share.png',
+                        path: '/activity/pages/children/index',
+                    },
+                },
+                indexConfig: {
+                    // 活动页
+                    rules: rulesData.rules.filter(v => v.id === 9)[0].text, // 规则文案
+                    prizes: [
+                        {
+                            title: '人气作品奖',
+                            text:
+                                '截至2020年6月20日23:59:59，单个参赛作品获得点赞数前20名的参赛者可获得如下奖品：',
+                            item: [
+                                {
+                                    text: ['一等奖', '小度音响*2'],
+                                },
+                                {
+                                    text: ['二等奖', '旅行箱*6'],
+                                },
+                                {
+                                    text: ['三等奖', 'AR地球仪*12'],
+                                },
+                            ],
+                        },
+                        {
+                            title: '糖果幸运奖',
+                            text: '参与糖果雨抽奖活动，即有机会获得如下奖品：',
+                            item: [
+                                {
+                                    text: ['', '航拍无人机'],
+                                },
+                                {
+                                    text: ['', '多功能棋盘'],
+                                },
+                                {
+                                    text: ['', '水彩笔套装36色'],
+                                },
+                                {
+                                    text: ['', '小米书包'],
+                                },
+                            ],
+                        },
+                    ], // 奖品文案
+                    prizesDetail: {},
+                },
+                uploadConfig: {
+                    // 上传作品页
+                    activityCat: [], // 表现形式
+                    uploadMode: ['video', 'image'], // 上传类型 只传1个值时（['video']）不显示表现形式
+                    placeholderNameText: '*作品名称（不超过11字）',
+                    placeholderDescText: '作品介绍(不超过80个字符)',
+                    nameMaxLength: 11,
+                    descMaxLength: 80,
+                },
+                myWorkColorConfig: {
+                    // primaryColor: '#C790FF', // 主色调
+                },
+                indexColorConfig: {
+                    maskBgColor: '#fff',
+                    placeholderColor: '#999',
+                },
+                uploadColorConfig: {
+                    mainBgColor: '#fff',
+                    // primaryColor: '#C790FF', // 主色调
+                    // tipsColor: '#999', // 提示文字
+                    // titleColor: '#333',
+                    placeholderColor: '#999',
+                    // inputBgColor: '#fff',
+                    // inputColor: '#333',
+                    // inputBorderColor: '#C790FF',
                 },
             },
         ],
@@ -134,6 +249,10 @@ export default {
         // eslint-disable-next-line max-len
         getPublicConfig: state => activityId => state.activities.filter(v => v.activityId === Number(activityId))[0]
             .publicConfig,
+        // eslint-disable-next-line max-len
+        getColorConfig: state => ({ activityId, page }) => state.activities.filter(
+            v => v.activityId === Number(activityId),
+        )[0][page],
         // 获取各个页面配置 包括：活动页、我的作品、上传页、上传结果页
         // eslint-disable-next-line max-len
         getActivityConfig: state => ({ activityId, page }) => state.activities.filter(

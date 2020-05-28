@@ -1,211 +1,157 @@
 <template>
     <view>
         <official-account />
-        <view :class="['page-index', { 'stop-scroll': prompt || prompt01 }]">
+        <view :class="['page-index', { 'stop-scroll': prompt }]">
             <!-- 活动规则 -->
             <view
-                v-if="prompt"
+                v-show="prompt"
                 class="activerulebox"
             >
-                <view
-                    class="close"
-                    @click="handleClose"
-                />
-                <view class="title-icon">
-                    活动规则
-                </view>
                 <view class="active-content">
-                    <view>
-                        <view class="title">
-                            活动时间
-                        </view>
-                        <view class="text">
-                            2020年1月10日至2020年2月8日
-                        </view>
-                    </view>
-                    <view>
-                        <view class="title">
-                            活动对象
-                        </view>
-                        <view class="text">
-                            本次活动仅限3-18岁的青少年参与
-                        </view>
-                    </view>
-                    <view>
-                        <view class="title">
-                            参赛作品
-                        </view>
-                        <view class="text">
-                            作品类别分为歌唱表演、舞蹈表演、创意制作、口才表演、乐器演奏、书法绘画、杂技、魔术、摄影
-                        </view>
-                    </view>
-                    <view>
-                        <view class="title">
-                            作品要求
-                        </view>
-                        <view class="text">
-                            <ul>
-                                <li>
-                                    视频格式：支持MP4、MOV、3GP、MP4V、M4V、MKV、AVI、FLV等，视频时长不超过5分钟；单张图片小于10MB。
-                                </li>
-                                <li>
-                                    内容：如果发现有用户上传不合规内容，如涉及攻击我国政治制度、法律制度、黄赌毒、封建迷信等违背社会主义核心价值观的内容、
-                                    非原创、盗窃他人或平台的内容、或恶意刷票等扰乱秩序者，该账号将取消活动参与资格，不合规视频/图片将被删除。
-                                </li>
-                            </ul>
-                        </view>
-                    </view>
-                    <view>
-                        <view class="title">
-                            参赛规则
-                        </view>
-                        <view class="text">
-                            <ul>
-                                <li>
-                                    参赛者在“青少年爱挑战”平台注册并通过活动页面上传作品，审核通过后可邀请亲友投票。
-                                </li>
-                                <li>
-                                    每个账户每天只能为同一作品投票1次。
-                                </li>
-                                <li>
-                                    根据参赛作品获得的投票数进行排名，排行榜将以2020年2月8日23:59时的排名为最终结果，上榜者（排名前39名）可获得相应奖品。
-                                </li>
-                                <li>
-                                    活动组委会根据才艺秀作品质量和内容，综合评选出20名优秀参赛者，送出奖品。
-                                </li>
-                                <li>
-                                    获奖名单将于2020年2月11日在爱挑战官网（http://atz.qsnatz.com/）及官方微信公众号（UP青少年爱挑战）进行公布。
-                                </li>
-                                <li>
-                                    本活动最终解释权在法律允许范围内归活动举办方所有。
-                                </li>
-                            </ul>
-                        </view>
-                        <view class="qr-wrap">
-                            <image
-                                class="qr-code"
-                                src="http://aitiaozhan.oss-cn-beijing.aliyuncs.com/chunjiehao/qrcode.jpg"
-                            />
-                            <view class="text">
-                                关注“UP青少年爱挑战”公众号，了解更多活动信息
-                            </view>
-                        </view>
-                    </view>
-                </view>
-            </view>
-            <!-- 奖项设置 -->
-            <view
-                v-if="prompt01"
-                class="activerulebox"
-            >
-                <view
-                    class="close"
-                    @click="handleClose"
-                />
-                <view class="title-icon">
-                    奖项设置
-                </view>
-                <view class="active-content">
-                    <view class="renqi-prize">
-                        <view class="renqi-title">
-                            人气奖
-                        </view>
-                        <view>
-                            截止到2020年2月8日23:59，按投票名次可获得如下奖品
-                        </view>
-                    </view>
-                    <view class="prize-box">
-                        <view
-                            v-for="item in prizeList"
-                            :key="item.name"
-                            class="prize-item"
-                        >
-                            <view>{{ item.prize_score }}</view>
-                            <view>
-                                <image :src="item.prize" />
-                            </view>
-                            <view>{{ item.name }}</view>
-                        </view>
-                    </view>
-                    <view class="caiyi-box">
-                        <view class="caiyi-title">
-                            才艺达人奖
-                        </view>
-                        <view class="caiyi-text">
-                            <view>
-                                由活动组委会根据才艺秀作品质量和内容，综合评选出20名优秀参赛者，奖励蓝牙音箱1个
-                            </view>
-                            <image
-                                src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/chunjie/prize06.png"
-                            />
-                        </view>
-                        <view class="prize-prompt">
-                            图片仅供参考，奖品以实物为准
-                        </view>
-                    </view>
-
-                    <image
-                        class="register02"
-                        src="http://aitiaozhan.oss-cn-beijing.aliyuncs.com/chunjiehao/register02.png"
+                    <view
+                        class="close"
+                        @click="handleClose"
                     />
-                    <view class="jinguizi">
-                        <view>
-                            <image
-                                src="http://aitiaozhan.oss-cn-beijing.aliyuncs.com/jinguizi01.png"
-                            />
-                            <view>金龟子陪你过大年</view>
-                            <view>
-                                小朋友的拜年神器，让孩子成为最受欢迎的拜年小达人
-                            </view>
-                        </view>
-                        <view>
-                            <image
-                                src="http://aitiaozhan.oss-cn-beijing.aliyuncs.com/jinguizi02.png"
-                            />
-                            <view>金龟子看图写话漫游古都之西安篇 </view>
-                            <view>
-                                有趣实用的传统文化故事，帮助小朋友敢表达、会表达
-                            </view>
-                        </view>
+                    <view class="title-icon">
+                        活动规则
                     </view>
-                    <view class="getStyle">
+                    <view class="active-rule-box">
                         <view>
                             <view class="title">
-                                领取方式：
+                                活动时间
                             </view>
                             <view class="text">
-                                {{
-                                    isH5 ? "扫描" : "点击"
-                                }}小程序码，进入“我的”开始学习
+                                2020年1月20日——2月15日（2月18日公布结果）
                             </view>
                         </view>
-                        <image
-                            src="../../static/images/chunjie/mini-pro.png"
-                            @click="openMiniProgram"
-                        />
-                    </view>
-                    <view>
-                        <view class="title">
-                            奖品兑换说明
+                        <view>
+                            <view class="title">
+                                活动对象
+                            </view>
+                            <view class="text">
+                                全员可参与
+                            </view>
                         </view>
-                        <view class="text">
-                            <view>
-                                1、每名参赛选手只有1次可兑换机会，如有同时获得了不同奖项以最高奖项为准。
+                        <view>
+                            <view class="title">
+                                参赛作品
                             </view>
-                            <view>
-                                2、工作人员将于2月10日至2月12日期间电话联系获奖账号所绑定的手机号，电话无法联系的将视为自动放弃兑奖资格。
+                            <view class="text">
+                                围绕春节主题，创作以春节、年为元素的视频或图片作品，记录你的美好春节。
                             </view>
-                            <view>
-                                3、礼品将于2月13-14日期间通过普通快递寄出。
+                        </view>
+                        <view>
+                            <view class="title">
+                                作品要求
                             </view>
-                            <view>
-                                4、礼品属于用户奖励活动，不提供发票、收据。
+                            <view class="text">
+                                <ul>
+                                    <li>
+                                        视频格式：支持MP4、MOV、3GP、MP4V、M4V、MKV、AVI、FLV等，视频时长不超过5分钟；视频清晰、画面精美。
+                                    </li>
+                                    <li>
+                                        图片格式：单张图片小于10MB，图片清晰、完整。
+                                    </li>
+                                    <li>
+                                        内容：如果发现有用户上传不合规内容、黄赌毒、封建迷信等违背社会主义核心价值观的内容、非原创、
+                                        盗窃他人或平台的内容、或恶意刷投票量等扰乱秩序者，该账户将取消活动参与资格，不合规视频将被删除。
+                                    </li>
+                                </ul>
                             </view>
-                            <view>
-                                5、礼品不支持退换和售后，请当面核实无质量问题再签收。
+                        </view>
+                        <view>
+                            <view class="title">
+                                参赛规则
                             </view>
-                            <view>
-                                6、若因用户提供的收货地址等信息有误而未收到礼品，概不补发。
+                            <view class="text">
+                                <ul>
+                                    <li>
+                                        参赛者需注册并通过活动界面上传作品，审核通过后可邀请亲友投票。
+                                    </li>
+                                    <li>
+                                        未传视频的注册用户只能为参赛选手投票，无法参与排行榜活动。
+                                    </li>
+                                    <li>
+                                        每个账户每天只能为同一作品投票1次。
+                                    </li>
+                                    <li>
+                                        排行榜将根据视频投票数进行排名，排行榜将以2020年2月15日23:59:59时的排名为最终结果，上榜者可获得相应礼品。
+                                    </li>
+                                    <li>
+                                        获奖名单将于2月18日在爱挑战官网(http://atz.qsnatz.com/)
+                                        及官方服务号（UP青少年爱挑战）进行公布。
+                                    </li>
+                                </ul>
+                            </view>
+                        </view>
+                        <view>
+                            <view class="title">
+                                奖品兑换说明
+                            </view>
+                            <view class="text">
+                                <view>
+                                    1、每名参赛选手只有1次可兑奖机会，如同时获得了不同奖项，以最高奖项为准。
+                                </view>
+                                <view>
+                                    2、工作人员将于2月19日期间电话联系获奖账号所绑定的手机号，电话无法联系的将视为自动放弃兑奖资格。
+                                </view>
+                                <view>
+                                    3、礼品将于2月20-21日期间通过普通快递寄出。
+                                </view>
+                                <view>
+                                    4、奖品属于用户奖励活动，不提供发票、收据。
+                                </view>
+                                <view>
+                                    5、奖品不支持退换和售后，请当面核实无质量问题再签收。
+                                </view>
+                                <view>
+                                    6、因用户提供的收货地址等信息有误而导致奖品未收到的，不予补发。
+                                </view>
+                            </view>
+                        </view>
+                        <view>
+                            <view class="title">
+                                活动奖品
+                            </view>
+                            <view class="text">
+                                <view>
+                                    截止到2020年2月15日23:59:59整，按投票名次可获得如下奖品：
+                                </view>
+                            </view>
+                        </view>
+                        <view class="prize-prompt">
+                            <view class="prize-item-prompt">
+                                <view>
+                                    <text>一等奖</text>
+                                    <image
+                                        src="../../static/images/chunjie/chunjiehao-prize01.png"
+                                    />
+                                    <text>空气炸锅*1</text>
+                                </view>
+                                <view>
+                                    <text>二等奖</text>
+                                    <image
+                                        src="http://aitiaozhan.oss-cn-beijing.aliyuncs.com/school-events-mobile/chunjiehao-prize02.png"
+                                    />
+                                    <text>美的养生壶*2</text>
+                                </view>
+                                <view>
+                                    <text>三等奖</text>
+                                    <image
+                                        src="../../static/images/chunjie/chunjiehao-prize03.png"
+                                    />
+                                    <text>欧普护眼台灯*3</text>
+                                </view>
+                                <view>
+                                    <text>四等奖</text>
+                                    <image
+                                        src="../../static/images/chunjie/chunjiehao-prize04.png"
+                                    />
+                                    <text>小熊加湿器*4</text>
+                                </view>
+                            </view>
+                            <view class="prize-slogan-prompt">
+                                礼品图片仅供参考，请以实物为准
                             </view>
                         </view>
                         <view class="qr-wrap">
@@ -236,41 +182,50 @@
                         我的作品
                     </view>
                 </view>
-                <view class="active-schedule">
-                    <text>活动时间：1月10日-2月8日</text>
-                    <text>结果公布：2月11日</text>
-                </view>
                 <view class="register">
                     <image
-                        src="http://aitiaozhan.oss-cn-beijing.aliyuncs.com/chunjiehao/register.png"
+                        src="http://aitiaozhan.oss-cn-beijing.aliyuncs.com/school-events-mobile/chunjiehao-title.png"
                     />
                 </view>
+                <view class="active-schedule">
+                    <text>活动时间：1月20日-2月15日</text>
+                    <text>结果公布：2月18日</text>
+                </view>
+
                 <view class="prize">
-                    <view>
-                        <text>一等奖</text>
-                        <image
-                            src="http://aitiaozhan.oss-cn-beijing.aliyuncs.com/chunjiehao/prize01.png"
-                        />
-                        <text>学习机*1个</text>
+                    <view class="prize-item">
+                        <view>
+                            <text>一等奖</text>
+                            <image
+                                src="../../static/images/chunjie/chunjiehao-prize01.png"
+                            />
+                            <text>空气炸锅*1</text>
+                        </view>
+                        <view>
+                            <text>二等奖</text>
+                            <image
+                                src="http://aitiaozhan.oss-cn-beijing.aliyuncs.com/school-events-mobile/chunjiehao-prize02.png"
+                            />
+                            <text>美的养生壶*2</text>
+                        </view>
+                        <view>
+                            <text>三等奖</text>
+                            <image
+                                src="../../static/images/chunjie/chunjiehao-prize03.png"
+                            />
+                            <text>欧普护眼台灯*3</text>
+                        </view>
+                        <view>
+                            <text>四等奖</text>
+                            <image
+                                src="../../static/images/chunjie/chunjiehao-prize04.png"
+                            />
+                            <text>小熊加湿器*4</text>
+                        </view>
                     </view>
-                    <view>
-                        <text>二等奖</text>
-                        <image
-                            src="http://aitiaozhan.oss-cn-beijing.aliyuncs.com/chunjiehao/prize02.png"
-                        />
-                        <text>小度*4个</text>
+                    <view class="prize-slogan01">
+                        截止到2020年2月15日23:59:59整，按投票名次可获得以上奖品
                     </view>
-                    <view>
-                        <text>三等奖</text>
-                        <image
-                            src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/chunjie/prize03.png"
-                        />
-                        <text>无人机*6个</text>
-                    </view>
-                    <view
-                        class="prize-more"
-                        @click="handleMorePrize"
-                    />
                 </view>
                 <!-- 跑马灯 -->
                 <view class="page-section-spacing">
@@ -282,8 +237,7 @@
                         :duration="500"
                         vertical="true"
                         circular="true"
-                        :touchable="false"
-                        :disable-touch="false"
+                        :disable-touch="true"
                         easing-function="easeInOutCubic"
                     >
                         <swiper-item
@@ -291,13 +245,14 @@
                             :key="item.id"
                         >
                             <view class="swiper-item">
-                                <image src="/static/images/chunjie/horn.png" />
+                                <image
+                                    src="/static/images/chunjie/horn01.png"
+                                />
                                 <view class="swiper-info">
                                     <text>
                                         用户{{ item.user_name | plusXing }}
                                     </text>
                                     <text>发布了</text>
-                                    <text>#{{ item.cat_name }}#</text>
                                     <text>{{ item.resource_name }}</text>
                                 </view>
                                 <text>刚刚</text>
@@ -309,6 +264,7 @@
                     class="cansai-text"
                     src="../../static/images/chunjie/cansai_text.png"
                 />
+
                 <!-- work show -->
                 <view class="menu-list">
                     <view class="search-box">
@@ -330,11 +286,11 @@
                         </button>
                         <view class="search">
                             <image
-                                src="../../static/images/chunjie/search-icon.png"
+                                src="../../static/images/chunjie/search-icon01.png"
                             />
                             <input
                                 v-model="changeValue"
-                                placeholder-style="color:#C9AC67"
+                                placeholder-style="color:#FF2E3F"
                                 type="text"
                                 confirm-type="search"
                                 confirm-hold="true"
@@ -362,7 +318,7 @@
                             />
 
                             <view class="media-name text-one-line">
-                                {{ `#${item.cat_name}# ${item.resource_name}` }}
+                                {{ `${item.resource_name}` }}
                             </view>
                             <text class="vote-num">
                                 {{ item.ticket }}票
@@ -407,6 +363,22 @@ import EventCraftCover from '../../components/event-craft-cover/index.vue';
 
 export default {
     filters: {
+        optimizeImage: (val) => {
+            if (!val) {
+                return '';
+            }
+            let newUrl = '';
+            const width = 335;
+            const height = 225;
+            if (val.indexOf('?') !== -1) {
+                newUrl = `${val}&x-oss-process=image/format,png/interlace,1/quality,Q_80/resize,m_pad,h_${height
+                    * 2},w_${width * 2}`;
+            } else {
+                newUrl = `${val}?x-oss-process=image/format,png/interlace,1/quality,Q_80/resize,m_pad,h_${height
+                    * 2},w_${width * 2}`;
+            }
+            return newUrl;
+        },
         plusXing: (val) => {
             if (val.length === 11) {
                 return `${val.substr(0, 3)}****${val.substr(7)}`;
@@ -420,21 +392,21 @@ export default {
     },
     data() {
         return {
-            // #ifdef H5
-            isH5: true,
-            // #endif
-
             fr: '',
+            shareDesc: '',
             changeValue: '',
             activeMenuIndex: 'new',
             loadMoreStatus: 'more',
+            mediaIcon: {
+                1: '../../static/images/chunjie/video-icon.png',
+                2: '../../static/images/chunjie/img-icon.png',
+            },
             prompt: false,
-            prompt01: false,
             isPlayed: false,
             newsTabActiveIndex: 0,
             dataList: [],
             filter: {
-                activity_id: 3,
+                activity_id: 4,
                 page_num: 1,
                 page_size: 10,
                 sort: 'new',
@@ -455,20 +427,17 @@ export default {
                 {
                     prize_score: '三等奖',
                     name: '无人机*6个',
-                    prize:
-                        'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/chunjie/prize03.png',
+                    prize: '../../static/images/chunjie/prize03.png',
                 },
                 {
                     prize_score: '四等奖',
                     name: '护眼灯*8个',
-                    prize:
-                        'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/chunjie/prize04.png',
+                    prize: '../../static/images/chunjie/prize04.png',
                 },
                 {
                     prize_score: '五等奖',
                     name: '液晶手写板*20个',
-                    prize:
-                        'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/chunjie/prize05.png',
+                    prize: '../../static/images/chunjie/prize05.png',
                 },
             ],
             status: 2,
@@ -482,7 +451,7 @@ export default {
         this.getCrouselList();
     },
     onLoad(params) {
-        this.fr = logger.getFr('xchd', params);
+        this.fr = logger.getFr('dsxnh', params);
     },
     onHide() {
         this.changeValue = '';
@@ -490,13 +459,11 @@ export default {
     onUnload() {
         clearInterval(this.setId);
     },
-
     methods: {
         getCrouselList() {
             this.setId = setInterval(() => {
-                console.log('再次请求crousel');
                 api.post('/api/activity/resourcelist', {
-                    activity_id: 3,
+                    activity_id: 4,
                     page_num: 1,
                     page_size: 10,
                     sort: 'new',
@@ -533,7 +500,7 @@ export default {
         chunjieStatus() {
             // 1未开始，2进行中，3已结束
             api.post('/api/activity/getactivitystatus', {
-                activity_id: 3,
+                activity_id: 4,
             }).then((res) => {
                 this.status = res.status;
             });
@@ -544,7 +511,7 @@ export default {
                     fr: this.fr,
                 }).then(() => {
                     uni.navigateTo({
-                        url: '/pagesA/chunjie/upload/upload',
+                        url: '/activity/chunjiehao/upload/upload',
                     });
                 });
             } else {
@@ -556,9 +523,6 @@ export default {
                     icon: 'none',
                 });
             }
-        },
-        handleMorePrize() {
-            this.prompt01 = true;
         },
 
         onReachBottom() {
@@ -577,7 +541,7 @@ export default {
                 return;
             }
             uni.navigateTo({
-                url: `/pagesA/chunjie/myWork/myWork?type=search&name=${this.changeValue.trim()}`,
+                url: `/activity/chunjiehao/myWork/myWork?type=search&name=${this.changeValue.trim()}`,
             });
         },
         initShare() {
@@ -587,17 +551,22 @@ export default {
             //     '我来给你拜新年，表演才艺送祝福！',
             //     '鼠年春节我精彩，才艺拜年望喜爱！',
             // ];
-            const titleList = ['我来给你拜新年，表演才艺送祝福'];
+            const titleList = [
+                '发现身边年俗文化，记录“鼠”于你的美好新年！记录新年，赢大奖～',
+                '拿起手机，一起来记录“鼠年”春节的快乐瞬间！记录新年，赢大奖～',
+                '细“鼠”身边的年味！分享美好瞬间，赢取新春大奖～',
+                '记录“鼠”于我们的幸福中国年！分享美好瞬间，赢大奖！',
+                '春节到～“鼠”不尽的幸福瞬间值得记录！晒年味，赢好礼～',
+            ];
             const title = titleList[Math.floor(Math.random() * titleList.length)];
             const desc = '快乐过寒假，才艺拜大年！';
-            // eslint-disable-next-line prefer-destructuring
-            this.shareDesc = titleList[0];
+            this.shareDesc = title;
 
             share({
                 title,
                 desc,
                 thumbnail:
-                    'http://aitiaozhan.oss-cn-beijing.aliyuncs.com/banner.png?x-oss-process=image/format,png/interlace,1/quality,Q_80/resize,m_pad,h_100',
+                    'http://aitiaozhan.oss-cn-beijing.aliyuncs.com/h5/chunjiehao-banner.png?x-oss-process=image/format,png/interlace,1/quality,Q_80/resize,m_pad,h_100',
             });
         },
         viewDetail({ id }, index) {
@@ -610,7 +579,7 @@ export default {
                 },
             });
             uni.navigateTo({
-                url: `/pages/work/detail/detail?id=${id}&activity_id=3`,
+                url: `/pages/work/detail/detail?id=${id}&activity_id=4`,
             });
         },
         toggle(k) {
@@ -628,13 +597,12 @@ export default {
                 fr: this.fr,
             }).then(() => {
                 uni.navigateTo({
-                    url: '/pagesA/chunjie/myWork/myWork?type=myWork',
+                    url: '/activity/chunjiehao/myWork/myWork?type=myWork',
                 });
             });
         },
         handleClose() {
             this.prompt = false;
-            this.prompt01 = false;
         },
 
         onPlay() {
@@ -645,19 +613,6 @@ export default {
             }
 
             this.isPlayed = true;
-        },
-        openMiniProgram() {
-            // #ifndef H5
-            // eslint-disable-next-line no-undef
-            wx.navigateToMiniProgram({
-                appId: 'wxe8f8e50ab33cbce8',
-                path: 'pages/account/index',
-                success(res) {
-                    console.log(res);
-                    // 打开成功
-                },
-            });
-            // #endif
         },
         handleVote(item) {
             if (this.status === 2) {
@@ -702,13 +657,13 @@ export default {
         return {
             title: this.shareDesc,
             // imageUrl: '/static/images/index/banner.png',
-            path: '/pagesA/chunjie/index',
+            path: '/activity/chunjiehao/index',
         };
     },
 };
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 // 跑马灯
 .page-section-spacing {
     width: 710upx;
@@ -720,19 +675,18 @@ export default {
     box-sizing: border-box;
     margin-left: 20rpx;
     line-height: 46rpx;
-
+    margin-top: 20rpx;
     .swiper {
         width: 100%;
         height: 100%;
         .swiper-item {
             image {
+                float: left;
                 width: 37upx;
                 height: 26upx;
-                // margin-bottom: 4upx;
-                // vertical-align: middle;
                 margin-right: 9upx;
-                margin-top: 11upx;
-                float: left;
+                // vertical-align: middle;
+                margin-top: 11rpx;
             }
             .swiper-info {
                 float: left;
@@ -742,7 +696,6 @@ export default {
                 overflow: hidden;
                 display: inline-block;
                 color: #ff3849;
-
                 & > text:nth-child(1) {
                     color: #fccda2;
                 }
@@ -757,6 +710,7 @@ export default {
                     color: #ff3849;
                 }
             }
+
             & > text:last-child {
                 color: #ff3849;
                 float: right;
@@ -812,69 +766,12 @@ export default {
     height: 68upx;
 }
 
-.caiyi-box {
-    text-align: center;
-    .prize-prompt {
-        width: 350upx;
-        height: 30upx;
-        font-size: 22upx;
-        background: #c24124;
-        color: #ff5630;
-        border-radius: 16upx;
-        padding: 0 12px;
-        text-align: center;
-        margin-top: 28upx;
-        margin-bottom: 36upx;
-        display: inline-block;
-    }
-    .caiyi-title {
-        width: 240upx;
-        height: 60upx;
-        background: linear-gradient(
-            0deg,
-            rgba(255, 22, 16, 1),
-            rgba(255, 189, 103, 1)
-        );
-        border: 2upx solid #ffe19a;
-        border-radius: 30upx;
-        display: inline-block;
-        line-height: 60rpx;
-        margin-bottom: 11rpx;
-        font-size: 34upx;
-        color: rgba(255, 255, 255, 1);
-    }
-    .caiyi-text {
-        display: flex;
-        justify-content: space-between;
-        view {
-            width: 530upx;
-            text-align: left;
-            font-size: 22upx;
-        }
-        image {
-            width: 69upx;
-            height: 64upx;
-        }
-    }
-}
 .renqi-prize {
     text-align: center;
     margin-bottom: 30upx;
-    .renqi-title {
-        width: 240upx;
-        height: 60upx;
-        background: linear-gradient(
-            0deg,
-            rgba(255, 22, 16, 1),
-            rgba(255, 189, 103, 1)
-        );
-        border: 2upx solid #ffe19a;
-        border-radius: 30upx;
-        display: inline-block;
-        line-height: 60rpx;
-        margin-bottom: 11rpx;
-        font-size: 34upx;
-        color: rgba(255, 255, 255, 1);
+    image {
+        width: 248upx;
+        height: 68upx;
     }
     view {
         font-size: 22upx;
@@ -914,83 +811,43 @@ body.dialog-open {
         }
     }
 }
-.prize-box {
-    // overflow: hidden;
-    display: flex;
-    justify-content: space-around;
-    flex-flow: row wrap;
-    .prize-item {
-        float: left;
-        width: 194upx;
-        text-align: center;
-        margin-bottom: 40upx;
 
-        view:first-child {
-            color: #fff4b8;
-            font-size: 34upx;
-            margin-bottom: 10upx;
-        }
-        view:nth-child(2) {
-            background: url("https://aitiaozhan.oss-cn-beijing.aliyuncs.com/chunjie/prize-bg.png")
-                no-repeat;
-            background-size: 100% 100%;
-            width: 193upx;
-            height: 221upx;
-        }
-        image {
-            width: 150upx;
-            height: 150upx;
-            margin-top: 35upx;
-        }
-        view:last-child {
-            color: #a23820;
-            font-size: 24upx;
-            margin-top: 10upx;
-        }
-    }
-}
 .loadMore {
     width: 100%;
 }
 .upload {
     position: fixed;
     bottom: 0upx;
-    text-align: center;
-    width: 100%;
-    height: 113upx;
-    font-size: 36upx;
-    z-index: 10;
-    color: #ffe57b;
-    text-shadow: 0px 4px 6px rgba(241, 0, 0, 0.65);
-    line-height: 113upx;
     background: linear-gradient(
         0deg,
-        rgba(255, 22, 16, 1),
-        rgba(255, 189, 103, 1)
+        rgba(255, 149, 71, 1),
+        rgba(255, 222, 152, 1)
     );
-    // border-image: linear-gradient(
-    //         -57deg,
-    //         rgba(255, 231, 174, 1),
-    //         rgba(255, 225, 154, 1)
-    //     )
-    //     2 2;
-    box-shadow: 0px 16px 30px 0px rgba(203, 20, 34, 0.69);
+    text-align: center;
+    width: 100%;
+    color: #ff2e3f;
+    height: 116upx;
+    font-size: 36upx;
+    line-height: 116upx;
+    text-align: center;
+    z-index: 10;
 }
 .upload-disable {
     position: fixed;
     bottom: 0upx;
-    text-align: center;
-    width: 100%;
-    height: 113upx;
-    font-size: 36upx;
     background: linear-gradient(
         0deg,
-        rgba(167, 140, 139, 1),
-        rgba(212, 207, 200, 1)
+        rgba(133, 115, 102, 1),
+        rgba(179, 170, 152, 1)
     );
-    box-shadow: 0px 16px 30px 0px rgba(203, 20, 34, 0.11);
-    color: #ffffff;
-    line-height: 113upx;
+    // background-size: 100% 100%;
+    text-align: center;
+    width: 100%;
+    height: 116upx;
+    color: #e4ded4;
+    font-size: 36upx;
+    line-height: 116upx;
+    z-index: 1;
 }
 .cansai-text {
     width: 312upx;
@@ -998,47 +855,99 @@ body.dialog-open {
     margin-left: 220upx;
     margin-top: 20upx;
 }
-.prize {
-    background: url("https://aitiaozhan.oss-cn-beijing.aliyuncs.com/chunjie/prize_bg.png")
-        no-repeat;
-    background-size: 100% 100%;
-    height: 242upx;
-    // display:flex;
-    // justify-content: space-between;
-    & view:first-child {
-        margin-left: 63upx;
+.prize-prompt {
+    text-align: center;
+    .prize-item-prompt {
+        display: flex;
+        justify-content: space-between;
+        view {
+            font-size: 22upx;
+            text-align: center;
+            color: #ffde98;
+            // width: 154upx;
+            & text:first-child {
+                width: 100%;
+                float: left;
+                margin-top: 20upx;
+                font-size: 24upx;
+            }
+            & text:last-child {
+                width: 100%;
+                float: left;
+            }
+            & image {
+                width: 116upx;
+                height: 116upx;
+            }
+        }
     }
-    view {
-        font-size: 24upx;
-        text-align: center;
-        float: left;
-        width: 154upx;
+    .prize-slogan-prompt {
+        color: #b11a27;
+        font-size: 20upx;
+        display: inline-block;
+    }
+}
 
-        & text:first-child {
-            color: #ff3442;
-            width: 100%;
-            float: left;
-            margin-top: 20upx;
-        }
-        & text:last-child {
-            color: #ab7e3c;
-            width: 100%;
-            float: left;
-        }
-        image {
-            width: 116upx;
-            height: 116upx;
+.prize {
+    background: #ffde98;
+    // background-size: 100% 100%;
+    height: 242upx;
+    border: 10upx solid #b11a27;
+    margin: 0 30upx;
+    border-radius: 16upx;
+    padding-bottom: 20rpx;
+    text-align: center;
+    .prize-item {
+        display: flex;
+        justify-content: space-between;
+        view {
+            font-size: 20upx;
+            text-align: center;
+            // float: left;
+            // width: 154upx;
+            & text:first-child {
+                color: #ff3442;
+                width: 100%;
+                float: left;
+                margin-top: 20upx;
+                font-size: 24upx;
+            }
+            & text:last-child {
+                color: #ab7e3c;
+                width: 100%;
+                float: left;
+            }
+            & image {
+                width: 116upx;
+                height: 116upx;
+            }
         }
     }
-    .prize-more {
-        width: 189upx;
-        height: 224upx;
-        background: url("../../static/images/chunjie/more-prize-bg.png")
-            no-repeat;
-        background-size: 100% 100%;
-        background-position: center 24upx;
-        font-size: 34upx;
-        color: #ffe57b;
+    .prize-slogan {
+        width: 576upx;
+        height: 32upx;
+        background: #b69755;
+        color: #932210;
+        border-radius: 16upx;
+        padding: 0 26upx;
+        line-height: 32upx;
+        text-align: center;
+        margin-top: 15rpx;
+        display: inline-block;
+        font-size: 20upx;
+    }
+    .prize-slogan01 {
+        width: 576upx;
+        height: 32upx;
+        background: #b69755;
+        color: #ffde98;
+        border-radius: 16upx;
+        padding: 0 26upx;
+        line-height: 32upx;
+        text-align: center;
+        margin-top: 15rpx;
+        display: inline-block;
+        font-size: 20upx;
     }
 }
 .active-schedule {
@@ -1058,8 +967,9 @@ body.dialog-open {
     }
 }
 .banner {
+    position: relative;
     height: 740upx;
-    background: url(http://aitiaozhan.oss-cn-beijing.aliyuncs.com/banner.png?t=2)
+    background: url(http://aitiaozhan.oss-cn-beijing.aliyuncs.com/h5/chunjiehao-banner.png?t=2)
         no-repeat;
     background-size: 100% 100%;
 }
@@ -1072,7 +982,11 @@ body.dialog-open {
         width: 335upx;
         justify-items: space-betwen;
         position: relative;
-
+        margin-bottom: 50upx;
+        .video {
+            width: 335upx;
+            height: 225upx;
+        }
         .media-name {
             color: #fff;
             width: 100%;
@@ -1090,28 +1004,39 @@ body.dialog-open {
             float: left;
         }
         .vote {
-            background: url("../../static/images/chunjie/vote_bg.png");
-            background-size: 100% 100%;
-            height: 78upx;
-            width: 171upx;
-            color: #ff481e;
+            background: #ffde98;
+            height: 52upx;
+            width: 140upx;
+            color: #ff2e3f;
             font-size: 24upx;
             // position: absolute;
             // right:0;
             text-align: center;
-            line-height: 58upx;
+            line-height: 52upx;
             font-weight: 700;
             float: right;
+            border-radius: 26rpx;
+        }
+        .media-icon {
+            width: 40upx;
+            height: 40upx;
+            background: rgba(0, 0, 0, 0.6);
+            border-radius: 20upx;
+            text-align: center;
+            line-height: 42upx;
+            position: absolute;
+            top: 175upx;
+            right: 10upx;
+            image {
+                width: 22upx;
+                height: 22upx;
+            }
         }
     }
 }
 
 .activerulebox {
-    background: url("http://aitiaozhan.oss-cn-beijing.aliyuncs.com/school-events-mobile/bg.png")
-        no-repeat;
-    background-position: 25upx 57upx;
     background-color: rgba(0, 0, 0, 0.8);
-    background-size: 93% 94%;
     width: 100%;
     height: 100%;
     box-sizing: border-box;
@@ -1133,55 +1058,56 @@ body.dialog-open {
         margin-bottom: 40upx;
     }
     .title-icon {
-        background: url("../../static/images/chunjie/title.png") no-repeat;
+        background: url("http://aitiaozhan.oss-cn-beijing.aliyuncs.com/school-events-mobile/chunjiehao-rule.png")
+            no-repeat;
         background-size: 100% 100%;
-        font-size: 34upx;
-        width: 387upx;
-        height: 99upx;
+        font-size: 0upx;
+        width: 303upx;
+        height: 90upx;
         position: absolute;
-        top: 23upx;
+        top: -43upx;
         left: 190upx;
         text-align: center;
         line-height: 69upx;
+        z-index: 222;
     }
     .close {
-        background: url("../../static/images/chunjie/close.png") no-repeat;
+        background: url("../../static/images/chunjie/prompt-close.png")
+            no-repeat;
         background-size: 100% 100%;
         width: 62upx;
         height: 62upx;
-        top: 30upx;
-        right: 13upx;
+        top: -13upx;
+        right: -12upx;
         position: absolute;
     }
     .active-content {
-        overflow-y: scroll;
+        background: #ff2e3f;
         position: absolute;
-        top: 116upx;
+        top: 62upx;
         left: 29upx;
-        max-height: 88%;
+        height: 92%;
         width: 678upx;
-        padding: 0 30upx;
+        padding: 76upx 30upx 38upx;
         box-sizing: border-box;
         padding-right: 20upx;
+        border-radius: 46rpx;
+        .active-rule-box {
+            width: 100%;
+            overflow-y: scroll;
+            max-height: 100%;
+            overflow-x: hidden;
+        }
         .size {
             font-size: 28upx;
         }
     }
 }
-::-webkit-scrollbar {
-    width: 4upx;
-    background-color: transparent;
-}
-::-webkit-scrollbar-thumb {
-    background-color: #ffe4a2;
-}
 
 .page-index {
     padding-bottom: 20upx;
     display: relative;
-    background: url("http://aitiaozhan.oss-cn-beijing.aliyuncs.com/school-events-mobile/main_bg.png")
-        repeat-y;
-    background-size: contain;
+    background: #ff2e3f;
     .main-swiper {
         .active-rule {
             position: absolute;
@@ -1206,21 +1132,19 @@ body.dialog-open {
         padding-bottom: 120upx;
         .search-box {
             overflow: hidden;
-
+            margin-bottom: 30rpx;
             button {
                 width: 120upx;
-                height: 94upx;
+                height: 68upx;
                 float: left;
-                line-height: 72upx;
+                line-height: 68upx;
                 color: #ffffff;
                 background: transparent;
                 font-size: 30upx;
                 font-weight: 700;
-
+                border-radius: 34upx;
                 &.active {
-                    background: url("../../static/images/chunjie/neworhot.png")
-                        no-repeat;
-                    background-size: 100% 100%;
+                    background: #ffde98;
                     color: #ff3849;
                 }
                 &::after {
@@ -1228,7 +1152,7 @@ body.dialog-open {
                 }
             }
             .search {
-                background: #ffedc3;
+                background: #b11a27;
                 width: 440upx;
                 height: 72upx;
                 position: relative;
@@ -1243,7 +1167,6 @@ body.dialog-open {
                     left: 24upx;
                 }
                 input {
-                    // margin-left:11upx;
                     width: 293upx;
                     position: absolute;
                     top: 20upx;
@@ -1252,11 +1175,11 @@ body.dialog-open {
                     // #endif
                     left: 60upx;
                     font-size: 24upx;
-                    color: #ff3849;
+                    color: #ffbec4;
                 }
                 .search-button {
                     font-size: 24upx;
-                    color: #ff5831;
+                    color: #ffde98;
                     position: absolute;
                     top: 20upx;
                     right: 22upx;

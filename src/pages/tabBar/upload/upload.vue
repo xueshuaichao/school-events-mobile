@@ -7,7 +7,7 @@
             <view
                 v-if="item.id !== 7 || (item.id === 7 && !isH5)"
                 class="item-card"
-                @click="jumpRoute(item.url)"
+                @click="jumpRoute(item)"
             >
                 <view class="clearfix">
                     <view class="fl-l title-activity">
@@ -32,7 +32,7 @@
                             src="/static/images/upload/fire.png"
                         />
                         <view class="count fl-r">
-                            {{ item.activity_base || 6000 }}人关注
+                            {{ item.activity_base_c || 6000 }}关注
                         </view>
                     </view>
                 </view>
@@ -45,7 +45,7 @@
                     </view>
                     <image
                         class="banner"
-                        :src="item.img"
+                        :src="item.mini_h5_img"
                     />
                 </view>
             </view>
@@ -65,13 +65,21 @@ export default {
             filter: {
                 page_size: 10,
                 page_num: 1,
+                mini_h5_show: 1,
             },
             // #ifdef H5
             isH5: true,
             // #endif
             loading: false,
             list: [],
+            total: 0,
             confList: [
+                {
+                    id: 9,
+                    img:
+                        'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/h5/liuyi-banner.png',
+                    url: '/activity/pages/children/index',
+                },
                 {
                     id: 8,
                     img:
@@ -100,38 +108,65 @@ export default {
                     id: 4,
                     img:
                         'http://aitiaozhan.oss-cn-beijing.aliyuncs.com/chunjiehao.png',
-                    url: '/pagesA/chunjiehao/index',
+                    url: '/activity/chunjiehao/index',
                 },
                 {
                     id: 3,
                     img:
                         'http://aitiaozhan.oss-cn-beijing.aliyuncs.com/banner4.png',
-                    url: '/pagesA/chunjie/index',
+                    url: '/activity/chunjie/index',
                 },
             ],
         };
     },
     methods: {
-        jumpRoute(url) {
-            uni.navigateTo({
-                url,
-            });
+        jumpRoute(item) {
+            if (!item.url) {
+                uni.showToast({
+                    title: '正在为您准备精彩活动',
+                    icon: 'none',
+                });
+            } else if (item.status === 1) {
+                uni.showToast({
+                    title: '活动尚未开始，敬请启期待',
+                    icon: 'none',
+                });
+            } else {
+                uni.navigateTo({
+                    url: item.url,
+                });
+            }
         },
         getData(refresh) {
             api.post('/api/activity/list', this.filter).then(
-                (data) => {
-                    console.log(data, '/api/activity/list');
-                    this.list = data.list.map((item) => {
+                ({ list, total }) => {
+                    this.total = total;
+                    const lists = list.map((item) => {
                         let obj = item;
+                        obj.start_time = obj.start_time.slice(5, 10);
+                        obj.end_time = obj.end_time.slice(5, 10);
+                        if (obj.activity_base > 999999999) {
+                            obj.activity_base_c = '99999W+';
+                        } else {
+                            obj.activity_base_c = obj.activity_base > 10000
+                                ? `${Math.floor(
+                                    obj.activity_base / 10000,
+                                )}W+`
+                                : `${obj.activity_base}人`;
+                        }
+
                         this.confList.forEach((d) => {
                             if (d.id === obj.id) {
-                                obj.start_time = obj.start_time.slice(5, 10);
-                                obj.end_time = obj.end_time.slice(5, 10);
                                 obj = { ...obj, ...d };
                             }
                         });
                         return obj;
                     });
+                    if (this.filter.page_num === 1) {
+                        this.list = lists;
+                    } else {
+                        this.list = this.list.concat(lists);
+                    }
                     if (refresh) {
                         uni.stopPullDownRefresh();
                     }
@@ -148,7 +183,14 @@ export default {
         this.getData();
     },
     onPullDownRefresh() {
-        this.getData('refresh');
+        this.filter.page_num = 1;
+        this.getData('fresh');
+    },
+    onReachBottom() {
+        if (this.total > this.filter.page_size * this.filter.page_num) {
+            this.filter.page_num += 1;
+            this.getData();
+        }
     },
 };
 </script>

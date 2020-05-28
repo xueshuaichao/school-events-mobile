@@ -110,7 +110,7 @@
                     class="avatar file fl-l"
                     src="/static/images/work/file.png"
                 />
-                <view class="fl-l text-two-line">
+                <view class="fl-l text-two-lines">
                     <text class="work-name">
                         {{ pageData.resource_name }}
                     </text>
@@ -180,7 +180,16 @@
                     />
                     <view> {{ praise_count || 0 }} </view>
                 </view>
-
+                <view
+                    class="item"
+                    @click.stop="showMessage"
+                >
+                    <image
+                        class="icon"
+                        src="/static/images/yiqing/detail/message.png"
+                    />
+                    <view>{{ commentTotal }}</view>
+                </view>
                 <view
                     class="item"
                     @click="handleCanvass"
@@ -189,14 +198,6 @@
                         class="icon"
                         src="/static/images/yiqing/detail/share.png"
                     />
-                </view>
-
-                <view class="item">
-                    <image
-                        class="icon"
-                        src="/static/images/yiqing/detail/view.png"
-                    />
-                    <view> {{ play_count || 1 }} </view>
                 </view>
             </view>
 
@@ -216,7 +217,8 @@
                 class="join-game-read"
                 :class="[
                     { wuyi: activityId === 8 },
-                    { openGame: from === 'openGame' }
+                    { openGame: from === 'openGame' },
+                    { liuyi: activityId === 9 }
                 ]"
                 @click="joinGame"
             >
@@ -229,31 +231,19 @@
                 </text>
             </view>
             <view
-                v-if="from === 'openGame'"
-                class="join-game-read to-activty-index read-index"
-                :class="[{ openGame1: from === 'openGame' }]"
-                @click="goHome"
-            >
-                <text>
-                    {{ homeText }}
-                </text>
-            </view>
-            <view
-                v-if="isFromShare === '1' && activityId > 5"
+                v-if="isFromShare && (activityId > 5 || from === 'openGame')"
                 class="join-game-read to-activty-index"
                 :class="[
                     { 'read-index': activityId === 6 },
-                    { 'wuyi-index': activityId === 8 }
+                    { 'wuyi-index': activityId === 8 },
+                    { 'liuyi-index': activityId === 9 },
+                    { openGame1: from === 'openGame' }
                 ]"
                 @click="watchIndex"
             >
                 <image
                     class="icon"
-                    :src="
-                        activityId === 6
-                            ? '/static/images/work/laba-read.png'
-                            : '/static/images/work/laba-wuyi.png'
-                    "
+                    :src="labaPath"
                 />
                 <text>
                     查看活动
@@ -323,6 +313,10 @@ export default {
             type: String,
             default: '',
         },
+        showDrawer: {
+            type: Boolean,
+            default: false,
+        },
         isChangeSlide: {
             type: Number,
             default: 1,
@@ -331,12 +325,15 @@ export default {
             type: Number,
             default: 1,
         },
+        commentTotal: {
+            type: Number,
+            default: 0,
+        },
     },
     data() {
         return {
             isFullScreen: false,
             recordTxts: ['校级记录', '市级记录', '省级记录'],
-            homeText: '< 返回首页',
             // #ifdef H5
             isH5: true,
             // #endif
@@ -344,13 +341,23 @@ export default {
             isPlayed: false,
             isPaused: false,
             isVideoWaiting: false,
-            play_count: 1,
+            // play_count: 1,
             showMore: false,
             introduce: this.pageData.introduce || '',
+            total: 10,
             catName: this.pageData.cat_name,
             praise_count: this.pageData.praise_count || 0,
             toggleLikeObj: {},
         };
+    },
+    computed: {
+        labaPath() {
+            let id = this.activityId;
+            if (this.from === 'openGame') {
+                id = 7;
+            }
+            return `/static/images/work/laba-${id}.png`;
+        },
     },
     watch: {
         isChangeSlide(val) {
@@ -390,8 +397,12 @@ export default {
                 this.setPlayCount();
             }
         },
-        likeStatus(newVal, oldVal) {
-            if (newVal && !oldVal && !this.toggleLikeObj[this.pageData.id]) {
+        likeStatus(newVal) {
+            if (
+                newVal
+                && !this.toggleLikeObj[this.pageData.id]
+                && this.swiperPage === this.isChangeSlide
+            ) {
                 this.praise_count += 1;
                 this.toggleLikeObj[this.pageData.id] = 1;
             }
@@ -405,12 +416,7 @@ export default {
             }
         },
     },
-    created() {
-        this.play_count = this.pageData.play_count;
-        if (this.pageData.resource_type === 2) {
-            this.play_count += 1;
-        }
-    },
+    created() {},
     mounted() {
         this.videoContext = uni.createVideoContext(
             `detail${this.swiperPage}`,
@@ -436,7 +442,7 @@ export default {
             api.post('/api/works/playcount', {
                 id: this.pageData.id,
             }).then(() => {
-                this.play_count += 1;
+                // this.play_count += 1;
             });
         },
         handleCanvass() {
@@ -447,6 +453,9 @@ export default {
         },
         joinGame() {
             this.$emit('doAction', 'joinGame');
+        },
+        showMessage() {
+            this.$emit('doAction', 'showMessage');
         },
         onPause() {
             this.isPaused = true;
@@ -485,12 +494,12 @@ export default {
             if (this.activityId === 8) {
                 url = '/pages/activity-pages/labor/index';
             }
-            uni.navigateTo({
-                url,
-            });
-        },
-        goHome() {
-            const url = '/pages/openGame/index';
+            if (this.activityId === 9) {
+                url = '/activity/pages/children/index';
+            }
+            if (this.from === 'openGame') {
+                url = '/pages/openGame/index';
+            }
             uni.navigateTo({
                 url,
             });
@@ -717,8 +726,9 @@ export default {
         vertical-align: middle;
     }
     .work-name-wrap {
+        padding-top: 2upx;
         line-height: 24upx;
-        .text-two-line {
+        .text-two-lines {
             width: 90%;
         }
     }
@@ -773,12 +783,13 @@ export default {
         &.wuyi {
             background: #db4e0e;
         }
+        &.liuyi {
+            background: #c790ff;
+        }
         &.openGame {
             background: #9f1ff3;
         }
-        &.openGame1 {
-            color: #9f1ff3 !important;
-        }
+
         .icon {
             width: 44rpx;
             height: 42rpx;
@@ -800,6 +811,12 @@ export default {
             }
             &.read-index {
                 color: #0f8c64;
+            }
+            &.liuyi-index {
+                color: #c790ff;
+            }
+            &.openGame1 {
+                color: #9f1ff3 !important;
             }
         }
     }

@@ -1,198 +1,202 @@
 <template>
     <view
         v-if="!isLoading"
-        class="page-upload"
+        :class="[`${publicConfig.activityName}-page`]"
     >
-        <view
-            v-if="!needBindMobile"
-            class="main"
-            :style="{ background: publicConfig.mainBgColor }"
-        >
+        <view :class="['page-upload']">
             <view
-                v-if="uploadConfig.activityCat.length"
-                class="selection bb-sep"
+                v-if="!needBindMobile"
+                class="main"
+                :style="{ background: publicConfig.mainBgColor }"
             >
                 <view
-                    class="label"
-                    :style="{ color: publicConfig.primaryColor }"
+                    v-if="publicConfig.showAllCat"
+                    class="uni-list-cell-db"
                 >
-                    选择组别
-                </view>
-                <view class="items">
-                    <text
-                        v-for="(item, k) in uploadConfig.activityCat"
-                        :key="k"
-                        class="select-item"
-                        :class="{ active: formData.activity_cat === k + 1 }"
-                        :style="{
-                            'border-color': publicConfig.primaryColor,
-                            'background-color':
-                                formData.activity_cat === k + 1
-                                    ? publicConfig.primaryColor
-                                    : '',
-                            color:
-                                formData.activity_cat === k + 1
-                                    ? '#fff'
-                                    : publicConfig.primaryColor
-                        }"
-                        @click="setActivityCat(k + 1)"
+                    <picker
+                        :value="index"
+                        :range="catData"
+                        :range-key="'name'"
+                        @change="onSelect"
                     >
-                        {{ item }}
-                    </text>
+                        <view
+                            v-if="!formData.cat_id"
+                            class="uni-input placeholder fake-input"
+                        >
+                            选择分类
+                        </view>
+                        <view
+                            v-if="formData.cat_id"
+                            class="uni-input fake-input"
+                        >
+                            {{ catData[index].name }}
+                        </view>
+                    </picker>
                 </view>
-            </view>
-            <view
-                v-if="uploadConfig.uploadMode.length > 1"
-                class="selection bb-sep"
-            >
                 <view
-                    class="label"
-                    :style="{ color: publicConfig.primaryColor }"
+                    v-if="uploadConfig.activityCat.length"
+                    class="selection bb-sep"
                 >
-                    表现形式
+                    <view class="label">
+                        选择组别
+                    </view>
+                    <view class="items">
+                        <text
+                            v-for="(item, k) in uploadConfig.activityCat"
+                            :key="k"
+                            class="select-item"
+                            :class="{ active: formData.activity_cat === k + 1 }"
+                            @click="setActivityCat(k + 1)"
+                        >
+                            {{ item }}
+                        </text>
+                    </view>
                 </view>
-                <view class="items">
-                    <text
-                        v-for="(item, k) in uploadConfig.uploadMode"
-                        :key="k"
-                        class="select-item"
-                        :class="{ active: formData.resource_type === k + 1 }"
-                        :style="{
-                            'border-color': publicConfig.primaryColor,
-                            'background-color':
-                                formData.resource_type === k + 1
-                                    ? publicConfig.primaryColor
-                                    : '',
-                            color:
-                                formData.resource_type === k + 1
-                                    ? '#fff'
-                                    : publicConfig.primaryColor
-                        }"
-                        @click="setNewsTabActive(k + 1)"
+                <view
+                    v-if="uploadConfig.uploadMode.length > 1"
+                    class="selection bb-sep"
+                >
+                    <view class="label">
+                        表现形式
+                    </view>
+                    <view class="items">
+                        <text
+                            v-for="(item, k) in uploadConfig.uploadMode"
+                            :key="k"
+                            class="select-item"
+                            :class="{
+                                active: formData.resource_type === k + 1
+                            }"
+                            @click="setNewsTabActive(k + 1)"
+                        >
+                            {{ item === "video" ? "视频" : "图片" }}
+                        </text>
+                    </view>
+                </view>
+
+                <view class="uni-form-item uni-column">
+                    <input
+                        v-model="formData.resource_name"
+                        class="uni-input"
+                        placeholder-class="placeholder"
+                        :placeholder-style="
+                            `color:${publicConfig.placeholderColor}`
+                        "
+                        :maxlength="uploadConfig.nameMaxLength"
+                        :placeholder="uploadConfig.placeholderNameText"
                     >
-                        {{ item === "video" ? "视频" : "图片" }}
+                </view>
+                <view class="textarea-view">
+                    <text class="max-length">
+                        {{ formData.introduce.length || 0 }}/{{
+                            uploadConfig.descMaxLength
+                        }}
                     </text>
+
+                    <textarea
+                        v-model="formData.introduce"
+                        class="uni-textarea"
+                        placeholder-class="placeholder"
+                        :placeholder-style="
+                            `color:${publicConfig.placeholderColor}`
+                        "
+                        :maxlength="uploadConfig.descMaxLength"
+                        :placeholder="uploadConfig.placeholderDescText"
+                    />
                 </view>
-            </view>
+                <template v-if="uploadMode === 'video'">
+                    <upload
+                        :type="'video'"
+                        :source="formData.video_id"
+                        @change="updateVideo"
+                    />
+                    <upload
+                        :type="'image'"
+                        :is-video="true"
+                        :source="formData.video_img_url"
+                        @change="updateImage"
+                    />
+                </template>
+                <template v-if="uploadMode === 'image'">
+                    <upload
+                        :type="'image'"
+                        :preview="false"
+                        :source="formData.video_img_url"
+                        @change="updateImage"
+                    />
+                    <image-drag-sort
+                        v-show="images.length"
+                        ref="preview"
+                        :text-color="publicConfig.primaryColor"
+                        :list="images"
+                    />
+                </template>
 
-            <view class="uni-form-item uni-column">
-                <input
-                    v-model="formData.resource_name"
-                    class="uni-input"
-                    placeholder-class="placeholder"
-                    :placeholder-style="
-                        `color:${publicConfig.placeholderColor}`
-                    "
-                    :maxlength="uploadConfig.nameMaxLength"
-                    :style="{ background: publicConfig.primaryBgColor }"
-                    :placeholder="uploadConfig.placeholderNameText"
-                >
-            </view>
-
-            <textarea
-                v-model="formData.introduce"
-                class="uni-textarea"
-                placeholder-class="placeholder"
-                :placeholder-style="`color:${publicConfig.placeholderColor}`"
-                :style="{ background: publicConfig.primaryBgColor }"
-                :maxlength="uploadConfig.descMaxLength"
-                :placeholder="uploadConfig.placeholderDescText"
-            />
-            <template v-if="uploadMode === 'video'">
-                <upload
-                    :type="'video'"
-                    :source="formData.video_id"
-                    :theme="theme"
-                    @change="updateVideo"
-                />
-                <upload
-                    :type="'image'"
-                    :is-video="true"
-                    :source="formData.video_img_url"
-                    :theme="theme"
-                    @change="updateImage"
-                />
-            </template>
-            <template v-if="uploadMode === 'image'">
-                <upload
-                    :type="'image'"
-                    :preview="false"
-                    :theme="theme"
-                    :source="formData.video_img_url"
-                    @change="updateImage"
-                />
-                <image-drag-sort
-                    v-show="images.length"
-                    ref="preview"
-                    :text-color="publicConfig.primaryColor"
-                    :list="images"
-                />
-            </template>
-
-            <view
-                class="btn"
-                :style="{ background: publicConfig.primaryColor }"
-                @click="upload"
-            >
-                上传
-            </view>
-        </view>
-        <view
-            v-if="needBindMobile"
-            class="page-bind-mobile"
-        >
-            <div class="tip">
-                上传作品需要绑定手机号，后面也可以用该手机号登录
-            </div>
-
-            <view
-                class="form-item-wrap"
-                :class="{
-                    inValid: accountData.isValid === false
-                }"
-            >
-                <input
-                    v-model="accountData.mobile"
-                    class="form-input"
-                    placeholder-class="placeholder"
-                    maxlength="30"
-                    placeholder="请输入手机号"
-                >
-                <view class="error-tip">
-                    {{ accountData.isValid ? "" : accountData.msg }}
-                </view>
-            </view>
-
-            <view class="form-item-wrap">
-                <input
-                    v-model="accountData.verify_code"
-                    class="form-input"
-                    placeholder-class="placeholder"
-                    maxlength="30"
-                    placeholder="请输入验证码"
-                >
-                <view
-                    v-if="!captcha.isSend"
-                    class="send-captcha"
-                    @click="sendCaptcha"
-                >
-                    获取验证码
-                </view>
-                <view
-                    v-if="captcha.isSend"
-                    class="send-captcha is-send"
-                >
-                    {{ captcha.remain }}S后重新发
-                </view>
-            </view>
-
-            <view class="form-item-wrap">
                 <view
                     class="btn"
                     :style="{ background: publicConfig.primaryColor }"
-                    @click="bindMobile"
+                    @click="upload"
                 >
-                    确定
+                    上传
+                </view>
+            </view>
+            <view
+                v-if="needBindMobile"
+                class="page-bind-mobile"
+            >
+                <div class="tip">
+                    上传作品需要绑定手机号，后面也可以用该手机号登录
+                </div>
+
+                <view
+                    class="form-item-wrap"
+                    :class="{
+                        inValid: accountData.isValid === false
+                    }"
+                >
+                    <input
+                        v-model="accountData.mobile"
+                        class="form-input"
+                        placeholder-class="placeholder"
+                        maxlength="30"
+                        placeholder="请输入手机号"
+                    >
+                    <view class="error-tip">
+                        {{ accountData.isValid ? "" : accountData.msg }}
+                    </view>
+                </view>
+
+                <view class="form-item-wrap">
+                    <input
+                        v-model="accountData.verify_code"
+                        class="form-input"
+                        placeholder-class="placeholder"
+                        maxlength="30"
+                        placeholder="请输入验证码"
+                    >
+                    <view
+                        v-if="!captcha.isSend"
+                        class="send-captcha"
+                        @click="sendCaptcha"
+                    >
+                        获取验证码
+                    </view>
+                    <view
+                        v-if="captcha.isSend"
+                        class="send-captcha is-send"
+                    >
+                        {{ captcha.remain }}S后重新发
+                    </view>
+                </view>
+
+                <view class="form-item-wrap">
+                    <view
+                        class="btn"
+                        :style="{ background: publicConfig.primaryColor }"
+                        @click="bindMobile"
+                    >
+                        确定
+                    </view>
                 </view>
             </view>
         </view>
@@ -245,7 +249,6 @@ export default {
             lock: true,
             // 编辑
             id: '',
-            theme: {},
         };
     },
     computed: {
@@ -260,9 +263,14 @@ export default {
             uni.setNavigationBarTitle({ title: '编辑作品' });
             this.getItemData();
         }
-        this.publicConfig = this.$store.getters.getPublicConfig(
-            this.formData.activity_id,
-        );
+        const uploadColorConfig = this.$store.getters.getColorConfig({
+            activityId: this.formData.activity_id,
+            page: 'uploadColorConfig',
+        });
+        this.publicConfig = {
+            ...this.$store.getters.getPublicConfig(this.formData.activity_id),
+            ...uploadColorConfig,
+        };
         this.uploadConfig = this.$store.getters.getActivityConfig({
             activityId: this.formData.activity_id,
             page: 'uploadConfig',
@@ -271,10 +279,6 @@ export default {
 
         this.formData.cat_id = this.publicConfig.catId;
         this.formData.resource_type = this.uploadMode === 'video' ? 1 : 2;
-        this.theme = {
-            primaryColor: this.publicConfig.primaryColor,
-            bgColor: this.publicConfig.primaryBgColor,
-        };
     },
     created() {
         // this.getData();
@@ -348,6 +352,11 @@ export default {
             }
         },
         getData() {
+            api.get('/api/works/childcat', {
+                cat_id: 3,
+            }).then((res) => {
+                this.catData = res;
+            });
             api.get('/api/user/info').then(
                 (res) => {
                     this.needBindMobile = res.user_info && res.user_info.is_bind_mobile === 0;
@@ -398,6 +407,12 @@ export default {
                     title: err.message,
                 }),
             );
+        },
+        onSelect(e) {
+            this.index = e.detail.value;
+            const catId = this.catData[this.index].cat_id;
+            this.formData.cat_id = catId;
+            console.log(this.formData);
         },
         errTip(title) {
             uni.showToast({
@@ -538,36 +553,51 @@ export default {
     }
 
     .uni-input {
-        height: 88upx;
+        height: 80upx;
         box-sizing: border-box;
-        line-height: 38upx;
+        // line-height: 80upx;
         padding-left: 24upx;
+        padding-top: 0;
     }
-
+    .textarea-view {
+        position: relative;
+        .max-length {
+            position: absolute;
+            bottom: 10upx;
+            right: 10upx;
+            z-index: 1;
+            color: #cdcdcd;
+            font-size: 24upx;
+        }
+    }
     .uni-textarea {
-        height: 190upx;
-        padding: 30upx 20upx;
+        height: 160upx;
+        padding: 30upx 20upx 38upx;
         width: 100%;
         box-sizing: border-box;
         line-height: 42upx;
     }
 
     .fake-input {
-        padding-top: 26upx;
+        padding-top: 0upx;
+        line-height: 80upx;
+        color: #999;
     }
 
     .bt-sep {
         margin-top: 40rpx;
     }
-
     .uni-input,
     .uni-textarea {
-        // border: 1upx solid #ccc;
+        border: 1upx solid transparent;
         margin-bottom: 40rpx;
         font-size: 28rpx;
         background: #0f8c64;
-        border-radius: 12rpx;
+        border-radius: 24upx;
         color: #fff;
+    }
+    .uni-input {
+        border-radius: 40upx;
     }
 
     /deep/ .comp-upload {
@@ -576,6 +606,7 @@ export default {
 
         .cover-wrap {
             background: #0f8c64;
+            border-radius: 12upx;
 
             .icon-desc {
                 color: #0f8c64;
@@ -618,10 +649,10 @@ export default {
     .btn {
         width: 100%;
         color: #fff;
-        height: 110rpx;
-        line-height: 110rpx;
+        height: 98rpx;
+        line-height: 98rpx;
         text-align: center;
-        margin-top: 168rpx;
+        margin-top: 33upx;
         background: #0f8c64;
         border-radius: 55px;
     }
@@ -651,7 +682,7 @@ export default {
 
         .select-item {
             // width: 110rpx;
-            padding: 0 44rpx;
+            padding: 0 57rpx;
             height: 56rpx;
             line-height: 56rpx;
             border: 1px solid #0f8c64;
@@ -725,4 +756,5 @@ export default {
         }
     }
 }
+@import "../theme/upload.less";
 </style>

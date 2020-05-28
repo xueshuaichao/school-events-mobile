@@ -436,6 +436,66 @@ const detailConf = [
             ['争当劳动之星，就差你的赞了，快来！'],
         ],
     },
+    {
+        posterConfig: {
+            width: 600,
+            height: 775,
+            debug: false,
+            texts: [
+                {
+                    x: 89,
+                    y: 552,
+                    text: [
+                        {
+                            text: '',
+                            fontSize: 28,
+                            color: '#fff',
+                            opacity: 1,
+                            marginRight: 10,
+                            lineHeight: 40,
+                            lineNum: 1,
+                            width: 1100,
+                            textOverflow: 'ellipsis',
+                        },
+                    ],
+                    baseLine: 'middle',
+                },
+            ],
+            images: [
+                {
+                    url:
+                        'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/h5/liuyi-poster2.png',
+                    width: 600,
+                    height: 775,
+                    y: 0,
+                    x: 0,
+                },
+                {
+                    url: '',
+                    width: 455,
+                    height: 257,
+                    y: 262,
+                    x: 63,
+                    borderRadius: 20,
+                },
+                {
+                    url: '',
+                    width: 90,
+                    height: 90,
+                    y: 624,
+                    x: 422,
+                    borderRadius: 46,
+                },
+            ],
+        },
+        titleList: [
+            ['七彩童年， 快乐成长秀风采！快来围观我的作品'],
+            ['快乐六一！我是才艺小达人，等你来打call~'],
+            ['欢乐儿童节，精彩才艺SHOW出来！来看看吧'],
+            ['我正在参加“快乐成长秀风采活动”为我点赞吧！'],
+            ['快乐儿童节，我来秀才艺！来点赞吧，就差你啦~'],
+        ],
+    },
 ];
 
 export default detailConf;

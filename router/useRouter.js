@@ -102,10 +102,10 @@ const routesConfig = {
             path: '/pages/address/edit',
         },
         {
-            path: '/pagesA/chunjie/upload/upload',
+            path: '/activity/chunjie/upload/upload',
         },
         {
-            path: '/pagesA/chunjiehao/upload/upload',
+            path: '/activity/chunjiehao/upload/upload',
         },
         {
             path: '/pages/upload/result/result',
@@ -114,19 +114,19 @@ const routesConfig = {
             path: '/pages/upload/modify/modify',
         },
         {
-            path: '/pagesA/chunjie/myWork/myWork',
+            path: '/activity/chunjie/myWork/myWork',
         },
         {
-            path: '/pagesA/chunjiehao/myWork/myWork',
+            path: '/activity/chunjiehao/myWork/myWork',
         },
         {
-            path: '/pagesA/chunjiehao/upload/result',
+            path: '/activity/chunjiehao/upload/result',
         },
         {
-            path: '/pagesA/chunjie/index',
+            path: '/activity/chunjie/index',
         },
         {
-            path: '/pagesA/chunjiehao/index',
+            path: '/activity/chunjiehao/index',
         },
         {
             path: '/pages/yiqing/index',
@@ -152,6 +152,15 @@ const routesConfig = {
         {
             path: '/pages/activity-pages/labor/index',
         },
+
+        {
+            path: '/activity/pages/children/index',
+        },
+
+        {
+            path: '/activity/pages/mywork/mywork',
+        },
+
         {
             path: '/pages/activity-pages/mywork/mywork',
         },

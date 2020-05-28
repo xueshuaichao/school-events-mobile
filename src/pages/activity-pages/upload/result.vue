@@ -1,66 +1,80 @@
 <template>
-    <div
-        class="page-read-upload-result"
-        :style="{ background: publicConfig.mainBgColor }"
-    >
-        <view class="icon-wrap">
-            <image
-                v-if="publicConfig.activityName"
-                class="icon icon-success"
-                :src="
-                    `https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/${publicConfig.activityName}_success.png`
-                "
-            />
-        </view>
-        <view
-            class="main-title"
-            :style="{ color: publicConfig.primaryColor }"
-        >
-            恭喜您，上传成功!
-        </view>
-        <view class="sub-title">
-            <view
-                class="tips"
-                :style="{ color: publicConfig.primaryColor }"
-            >
-                管理员会尽快审核，请耐心等候！
+    <view :class="[`${publicConfig.activityName}-page`]">
+        <div class="page-read-upload-result">
+            <view class="icon-wrap">
+                <image
+                    v-if="publicConfig.activityName"
+                    class="icon icon-success"
+                    :src="
+                        `https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/${publicConfig.activityName}_success.png`
+                    "
+                />
             </view>
-            <text
-                class="link btn mr-right"
-                :style="{
-                    color: publicConfig.primaryColor,
-                    'border-color': publicConfig.primaryColor
-                }"
-                @click="reUpload"
+            <view class="main-title">
+                恭喜您，上传成功!
+            </view>
+            <view class="sub-title">
+                <view
+                    v-if="addNum === 1"
+                    class="tips"
+                >
+                    恭喜您获得一次抽奖机会，快去抽大奖吧！
+                </view>
+                <view
+                    v-else
+                    class="tips"
+                >
+                    管理员会尽快审核，请耐心等候！
+                </view>
+                <text
+                    class="link btn mr-right"
+                    :style="{
+                        color: publicConfig.primaryColor,
+                        'border-color': publicConfig.primaryColor
+                    }"
+                    @click="reUpload"
+                >
+                    再次上传作品
+                </text>
+                <text
+                    class="link btn blue-bg"
+                    :style="{
+                        'background-color': publicConfig.primaryColor,
+                        'border-color': publicConfig.primaryColor
+                    }"
+                    @click="goToUc"
+                >
+                    查看作品
+                </text>
+            </view>
+            <view
+                v-if="addNum === 1"
+                class="add-img"
+                @click="jumpHome"
             >
-                再次上传作品
-            </text>
-            <text
-                class="link btn blue-bg"
-                :style="{
-                    'background-color': publicConfig.primaryColor,
-                    'border-color': publicConfig.primaryColor
-                }"
-                @click="goToUc"
-            >
-                查看作品
-            </text>
-        </view>
-        <goHome
-            :path="publicConfig.homePath"
-            :text-color="publicConfig.primaryColor"
-            :name="publicConfig.activityName"
-        />
-    </div>
+                <image
+                    src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/children_add.png"
+                />
+            </view>
+            <goHome
+                :path="publicConfig.homePath"
+                :text-color="publicConfig.primaryColor"
+                :name="publicConfig.activityName"
+            />
+        </div>
+    </view>
 </template>
 
 <script>
+import api from '../../../common/api';
+
 export default {
     data() {
         return {
             activityId: '',
             publicConfig: {},
             resultConfig: {},
+            addNum: 0, // 六一活动上传次数
         };
     },
     onLoad(params) {
@@ -72,6 +86,9 @@ export default {
             activityId: this.activityId,
             page: 'resultConfig',
         });
+        if (this.activityId === '9') {
+            this.getLotteryNum();
+        }
     },
     methods: {
         reUpload() {
@@ -82,6 +99,16 @@ export default {
         goToUc() {
             uni.reLaunch({
                 url: `/pages/activity-pages/mywork/mywork?status=1&type=myWork&activity_id=${this.activityId}`,
+            });
+        },
+        getLotteryNum() {
+            api.get('/api/activity/getuserlotterynum').then((res) => {
+                this.addNum = Number(res.add_activity);
+            });
+        },
+        jumpHome() {
+            uni.reLaunch({
+                url: '/pages/pages/children/index',
             });
         },
     },
@@ -159,6 +186,33 @@ export default {
     .mt {
         margin-top: 40rpx;
     }
+    @keyframes mymove {
+        0% {
+            transform: scale(1); /*开始为原始大小*/
+        }
+        25% {
+            transform: scale(1.04); /*放大1.1倍*/
+            // margin-right: 26upx;
+        }
+        50% {
+            transform: scale(1);
+        }
+        75% {
+            transform: scale(1.04);
+            // margin-right: 26upx;
+        }
+    }
+    .add-img {
+        width: 322upx;
+        height: 133upx;
+        display: block;
+        margin: 30upx auto 0;
+        animation: mymove 2s infinite;
+        & > image {
+            width: 100%;
+            height: 100%;
+        }
+    }
     .goHome {
         position: fixed;
         bottom: 40upx;
@@ -179,4 +233,5 @@ export default {
         }
     }
 }
+@import "../theme/upload.less";
 </style>
