@@ -361,7 +361,7 @@ export default {
             showPosterMask: false,
             canvasImg: '',
             posterCommonConfig: {
-                pixelRatio: 3,
+                pixelRatio: 1,
                 width: 538,
                 height: 760,
                 debug: false,
@@ -1149,6 +1149,10 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.canvas {
+    width: 538rpx;
+    height: 760rpx;
+}
 .canvas.pro {
     position: absolute;
     bottom: 0;
