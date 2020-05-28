@@ -384,7 +384,7 @@ export default {
                     fr: this.fr,
                 }).then(() => {
                     uni.navigateTo({
-                        url: `/pages/activity-pages/upload/modify?activity_id=${this.filter.activity_id}`,
+                        url: `/activity/pages/upload/modify?activity_id=${this.filter.activity_id}`,
                     });
                 });
             } else {
@@ -404,7 +404,7 @@ export default {
         // },
         bindconfirm() {
             uni.navigateTo({
-                url: `/pages/activity-pages/mywork/mywork?type=search&name=${this.changeValue.trim()}&activity_id=${
+                url: `/activity/pages/mywork/mywork?type=search&name=${this.changeValue.trim()}&activity_id=${
                     this.filter.activity_id
                 }`,
             });
@@ -445,7 +445,7 @@ export default {
                 fr: this.fr,
             }).then(() => {
                 uni.navigateTo({
-                    url: `/pages/activity-pages/mywork/mywork?type=myWork&activity_id=${this.filter.activity_id}`,
+                    url: `/activity/pages/mywork/mywork?type=myWork&activity_id=${this.filter.activity_id}`,
                 });
             });
         },

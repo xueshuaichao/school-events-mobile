@@ -706,6 +706,7 @@ export default {
             });
         },
         h5WinDrawImage(config) {
+            this.posterWin = true;
             // h5 中奖海报
             const wxGetImageInfo = this.promisify(uni.getImageInfo);
             Promise.all([
@@ -736,6 +737,7 @@ export default {
             });
         },
         h5LoseDrawImage(config) {
+            this.posterWin = false;
             const wxGetImageInfo = this.promisify(uni.getImageInfo);
             Promise.all([
                 wxGetImageInfo({
@@ -779,6 +781,7 @@ export default {
             } else if (res.draw === 4) {
                 index = 3;
             }
+            this.posterWin = true;
             this.lotteryDetail = drawDetail[index - 1];
             const imgPath = this.isH5
                 ? '/activity/static/children_img'
@@ -819,6 +822,7 @@ export default {
                 }).then(
                     () => {
                         this.openLottery(type, status).then(({ config }) => {
+                            console.log(111, status, config);
                             this.lock = false;
                             if (config) {
                                 uni.showLoading({
@@ -828,6 +832,7 @@ export default {
                                     ...this.posterCommonConfig,
                                     ...config,
                                 };
+                                console.log(111, status, config);
                                 // 需等画报配置修改后才能生成
                                 this.showPoster = true;
                                 this.$nextTick(() => {
@@ -863,7 +868,6 @@ export default {
                                         title:
                                             type === 1 ? '正在开奖' : '请稍等',
                                     });
-                                    this.posterWin = status;
                                     if (status) {
                                         // 中奖
                                         this.h5WinDrawImage(config);
@@ -1016,6 +1020,7 @@ export default {
         },
         closePoster() {
             // 关闭抽奖结果
+            this.showPoster = false;
             this.showPosterMask = false;
         },
         checkImgAuthFun(res) {
@@ -1073,7 +1078,7 @@ export default {
                             });
                         } else {
                             uni.navigateTo({
-                                url: `/pages/activity-pages/upload/modify?activity_id=${this.activityId}`,
+                                url: `/activity/pages/upload/modify?activity_id=${this.activityId}`,
                             });
                         }
                     });
@@ -1098,7 +1103,7 @@ export default {
         },
         jumpSearch(item) {
             uni.navigateTo({
-                url: `/pages/activity-pages/mywork/mywork?type=search&activity_id=${this.activityId}&user_id=${item.user_id}`,
+                url: `/activity/pages/mywork/mywork?type=search&activity_id=${this.activityId}&user_id=${item.user_id}`,
             });
         },
         onReachBottom() {

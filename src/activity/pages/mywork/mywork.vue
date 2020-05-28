@@ -237,7 +237,7 @@
                     <navigator
                         v-if="allTotal === 0"
                         :url="
-                            `/pages/activity-pages/upload/modify?activity_id=${filter.activity_id}`
+                            `/activity/pages/upload/modify?activity_id=${filter.activity_id}`
                         "
                     >
                         <view
@@ -489,7 +489,7 @@ export default {
                 });
             }
             return uni.navigateTo({
-                url: `/pages/activity-pages/upload/modify?id=${id}&activity_id=${this.filter.activity_id}`,
+                url: `/activity/pages/upload/modify?id=${id}&activity_id=${this.filter.activity_id}`,
             });
         },
         onConfirmDelete(item) {

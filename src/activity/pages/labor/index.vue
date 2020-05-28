@@ -229,7 +229,7 @@ export default {
         },
         jumpSearch(item) {
             uni.navigateTo({
-                url: `/pages/activity-pages/mywork/mywork?type=search&activity_id=${this.activityId}&user_id=${item.user_id}`,
+                url: `/activity/pages/mywork/mywork?type=search&activity_id=${this.activityId}&user_id=${item.user_id}`,
             });
         },
         onReachBottom() {
@@ -244,7 +244,7 @@ export default {
         return {
             title: this.title,
             imageUrl: this.publicConfig.shareConfig.image,
-            path: '/pages/activity-pages/labor/index',
+            path: '/activity/pages/labor/index',
         };
     },
 };
