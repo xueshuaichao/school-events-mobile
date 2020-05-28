@@ -110,7 +110,10 @@
                         v-if="canvasImg"
                         class="canvas-img"
                     >
-                        <image :src="canvasImg" />
+                        <image
+                            class="image"
+                            :src="canvasImg"
+                        />
                     </view>
                     <template v-if="isH5">
                         <view class="children-btn btn">
@@ -1496,7 +1499,7 @@ export default {
             width: 538upx;
             height: 760upx;
             margin: 0 auto 30upx;
-            image {
+            .image {
                 width: 100%;
                 height: 100%;
                 -webkit-touch-callout: default;
