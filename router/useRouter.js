@@ -153,7 +153,7 @@ const routesConfig = {
             path: '/pages/activity-pages/labor/index',
         },
         {
-            path: '/pages/activity-pages/children/index',
+            path: '/pagesA/activity-pages/children/index',
         },
         {
             path: '/pages/activity-pages/mywork/mywork',

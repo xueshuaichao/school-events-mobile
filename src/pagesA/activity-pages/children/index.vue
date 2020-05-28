@@ -8,7 +8,7 @@
         <!-- 右侧随屏 -->
         <view
             class="right-fixed"
-            @click="showLottery(true)"
+            @click="startActive()"
         >
             <view class="animation-box">
                 <view class="tips">
@@ -64,8 +64,17 @@
         <!-- 中奖海报 -->
         <template>
             <template>
+                <poster
+                    v-if="!isH5 && showPoster"
+                    id="poster"
+                    :config="posterCommonConfig"
+                    :hide-loading="true"
+                    @success="onPosterSuccess"
+                    @fail="onPosterFail"
+                />
                 <canvas
                     v-if="isH5"
+                    id="firstCanvas"
                     class="canvas pro"
                     style="width: 538px; height: 760px;"
                     canvas-id="firstCanvas"
@@ -76,21 +85,22 @@
                 class="poster-img-mask"
             >
                 <view class="poster-img-mask-box">
-                    <template v-if="myPrizeList">
-                        <view class="prize-btn children-btn">
+                    <template>
+                        <view
+                            v-f="myPrizeList"
+                            class="prize-btn children-btn"
+                        >
                             我的中奖
                         </view>
-                    </template>
-                    <template v-else>
                         <view
                             v-if="posterWin"
-                            class="tips"
+                            :class="['tips', { cur: myPrizeList }]"
                         >
                             恭喜您！抽中<text>{{ lotteryDetail }}</text>1个
                         </view>
                         <view
                             v-else
-                            class="tips"
+                            :class="['tips', { cur: myPrizeList }]"
                         >
                             未中奖！别气馁，每天都有机会哦～
                         </view>
@@ -143,7 +153,7 @@
                     <image
                         class="close"
                         src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/children_close.png"
-                        @click="onHidePoster"
+                        @click="closePoster"
                     />
                 </view>
             </view>
@@ -292,6 +302,7 @@
 <script>
 import packetRain from '../../../components/packet-rain/index.vue';
 import indexPage from '../common/index.vue';
+import share from '../../../common/share';
 import logger from '../../../common/logger';
 import maskBox from '../common/mask.vue';
 import api from '../../../common/api';
@@ -301,12 +312,6 @@ export default {
         indexPage,
         packetRain,
         maskBox,
-    },
-    props: {
-        activityId: {
-            type: Number,
-            default: 9,
-        },
     },
     data() {
         return {
@@ -319,7 +324,8 @@ export default {
             loading: false,
             publicConfig: {},
             indexConfig: {},
-            fr: 'lyhd',
+            fr: '',
+            activityId: '',
             hideIndex: -1,
             maskPrompt: false,
             type: 0,
@@ -345,7 +351,6 @@ export default {
             imgAuthBtn: false,
             showPosterMask: false,
             canvasImg: '',
-            posterWin: true,
             posterCommonConfig: {
                 pixelRatio: 2,
                 width: 538,
@@ -353,6 +358,7 @@ export default {
                 debug: false,
                 images: [],
             },
+            posterWin: true,
             posterFailConfig: {
                 images: [
                     {
@@ -395,7 +401,7 @@ export default {
                         url: '',
                         width: 260,
                         height: 34,
-                        y: 655,
+                        y: 566,
                         x: 140,
                     },
                     {
@@ -410,13 +416,11 @@ export default {
             },
         };
     },
-    onUnload() {
-        if (this.showPacketRain) {
-            this.luckyDraw();
-            this.showPacketRain = false;
-        }
+    onShow() {
+        this.getLotteryNum();
     },
-    created() {
+    onLoad(params) {
+        this.activityId = 9;
         this.publicConfig = {
             ...this.$store.getters.getPublicConfig(this.activityId),
             ...this.$store.getters.getColorConfig({
@@ -428,20 +432,28 @@ export default {
             activityId: this.activityId,
             page: 'indexConfig',
         });
-        this.fr = logger.getFr(this.publicConfig.log, {});
+        this.fr = logger.getFr(this.publicConfig.log, params);
         this.loading = true;
         this.activityStatus();
-        this.getAuthStatus();
+        this.initShare();
+        if (!this.isH5) {
+            this.getAuthStatus();
+        }
+        // this.getLotteryNum();
+    },
+    onUnload() {
+        if (this.showPacketRain) {
+            this.luckyDraw();
+            this.showPacketRain = false;
+        }
+    },
+    created() {
         this.showLottery();
         this.ctx = uni.createCanvasContext('firstCanvas');
+        console.log(this.ctx);
     },
+
     methods: {
-        unload() {
-            if (this.showPacketRain) {
-                this.luckyDraw();
-                this.showPacketRain = false;
-            }
-        },
         luckyDraw() {
             // 中途退出 消耗次数
             api.get('/api/activity/luckydraw', {
@@ -485,7 +497,7 @@ export default {
                     this.createPoster(1, false);
                 }
             } else {
-                this.onShowOpenLotteryPanel();
+                this.showOpenLotteryPanel = true;
             }
         },
         getLuckyList(num = 1) {
@@ -521,6 +533,7 @@ export default {
                     uni.showToast({
                         title: '恭喜你获得一次免费的抽奖资格，快来抽奖吧',
                         icon: 'none',
+                        duration: 5000,
                     });
                     this.lotteryNum = {
                         ...this.lotteryNum,
@@ -537,11 +550,53 @@ export default {
                     fr: this.fr,
                 }).then(
                     () => {
+                        api.get('/api/activity/getuserlotterynum').then(
+                            (res) => {
+                                this.lotteryNum = {
+                                    ...this.lotteryNum,
+                                    ...res,
+                                };
+                                if (this.lotteryNum.lottery_num > 0) {
+                                    this.lock = false;
+                                    this.showPacketRain = true;
+                                    this.showLotteryPanel = false;
+                                    this.lotteryNum.lottery_num -= 1;
+                                } else if (
+                                    this.lotteryNum.vote_num >= 5
+                                    && this.lotteryNum.add_activity > 0
+                                    && this.lotteryNum.login > 0
+                                ) {
+                                    uni.showToast({
+                                        title: '今日已无抽奖机会，明日再来吧',
+                                        icon: 'none',
+                                    });
+                                    this.lock = false;
+                                } else {
+                                    this.showLotteryPanel = false;
+                                    this.getPrizeNum();
+                                    this.lock = false;
+                                }
+                            },
+                            () => {
+                                // 未登录时 抽奖次数显为3
+                                this.$set(this.lotteryNum, 'lottery_num', 3);
+                            },
+                        );
+                    },
+                    () => {
+                        this.lock = false;
+                    },
+                );
+            }
+        },
+        startActive() {
+            if (this.status === 2) {
+                api.isLogin({
+                    fr: this.fr,
+                }).then(
+                    () => {
                         if (this.lotteryNum.lottery_num > 0) {
-                            this.lock = false;
-                            this.showPacketRain = true;
-                            this.showLotteryPanel = false;
-                            this.lotteryNum.lottery_num -= 1;
+                            this.showLotteryPanel = true;
                         } else if (
                             this.lotteryNum.vote_num >= 5
                             && this.lotteryNum.add_activity > 0
@@ -562,6 +617,14 @@ export default {
                         this.lock = false;
                     },
                 );
+            } else {
+                uni.showToast({
+                    title:
+                        this.status === 1
+                            ? '活动未开始，敬请期待'
+                            : '活动已结束',
+                    icon: 'none',
+                });
             }
         },
         showLottery(type = false) {
@@ -582,7 +645,7 @@ export default {
             } else {
                 api.get('/api/activity/firstlogin').then(
                     (res) => {
-                        if (res === 0) {
+                        if (res.is_first_login === 0) {
                             this.showLotteryPanel = true;
                         }
                     },
@@ -621,6 +684,16 @@ export default {
                 },
             );
         },
+        setImageInfo(imgSrc) {
+            const oImgBox = document.createElement('img');
+            oImgBox.src = `${imgSrc}?v=${Math.random()}`;
+            oImgBox.crossOrigin = 'anonymous';
+            return new Promise((resolve) => {
+                oImgBox.addEventListener('load', () => {
+                    resolve(oImgBox);
+                });
+            });
+        },
         h5WinDrawImage(config) {
             // h5 中奖海报
             const wxGetImageInfo = this.promisify(uni.getImageInfo);
@@ -650,7 +723,6 @@ export default {
             });
         },
         h5LoseDrawImage(config) {
-            // h5 未中奖海报
             const wxGetImageInfo = this.promisify(uni.getImageInfo);
             Promise.all([
                 wxGetImageInfo({
@@ -672,10 +744,27 @@ export default {
             });
         },
         winDrawImage(res) {
-            this.lotteryDetail = res.draw;
-            this.posterSuccessConfig.images[1].url = `https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/children_poster_${res.draw}.png`;
-            this.posterSuccessConfig.images[2].url = `https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/children_poster_t${res.draw}.png`;
-            this.posterSuccessConfig.images[3].url = `https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/activity_code_${this.activityId}.png`;
+            const drawDetail = [
+                '航拍无人机',
+                '多功能棋盘',
+                '水彩笔套装',
+                '小米书包',
+            ];
+            let index = res.draw;
+            // 由于后端将中奖排序写错 需将3、4调换
+            if (res.draw === 3) {
+                index = 4;
+            } else if (res.draw === 4) {
+                index = 3;
+            }
+            this.lotteryDetail = drawDetail[index - 1];
+            const imgPath = this.isH5
+                ? '/pagesA/static/children_img'
+                : 'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx';
+            this.posterSuccessConfig.images[0].url = `${imgPath}/children_poster.png`;
+            this.posterSuccessConfig.images[1].url = `${imgPath}/children_poster_${index}.png`;
+            this.posterSuccessConfig.images[2].url = `${imgPath}/children_poster_t${index}.png`;
+            this.posterSuccessConfig.images[3].url = `${imgPath}/activity_code_${this.activityId}.png`;
             return {
                 config: this.posterSuccessConfig,
                 status: true,
@@ -683,8 +772,11 @@ export default {
         },
         loseDrawImage(res) {
             const index = res.cover_id || Math.floor(Math.random() * 4);
-            this.posterFailConfig.images[0].url = `https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/children_poster_fail_${index}.png`;
-            this.posterFailConfig.images[1].url = `https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/activity_code_${this.activityId}.png`;
+            const imgPath = this.isH5
+                ? '/pagesA/static/children_img'
+                : 'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx';
+            this.posterFailConfig.images[0].url = `${imgPath}/children_poster_fail_${index}.png`;
+            this.posterFailConfig.images[1].url = `${imgPath}/activity_code_${this.activityId}.png`;
             this.posterWin = false;
             // 抽奖失败 记录海报
             api.get('/api/activity/updrawlist', {
@@ -714,20 +806,16 @@ export default {
                                     ...this.posterCommonConfig,
                                     ...config,
                                 };
-                                this.$emit(
-                                    'createPoster',
-                                    this.posterCommonConfig,
-                                );
-                                // // 需等画报配置修改后才能生成
-                                // this.showPoster = true;
-                                // this.$nextTick(() => {
-                                //     this.poster = this.selectComponent(
-                                //         '#poster',
-                                //     );
-                                //     this.poster.onCreate(
-                                //         this.posterCommonConfig,
-                                //     );
-                                // });
+                                // 需等画报配置修改后才能生成
+                                this.showPoster = true;
+                                this.$nextTick(() => {
+                                    this.poster = this.selectComponent(
+                                        '#poster',
+                                    );
+                                    this.poster.onCreate(
+                                        this.posterCommonConfig,
+                                    );
+                                });
                             }
                         });
                     },
@@ -781,20 +869,21 @@ export default {
                 y: 0,
                 width: 538, // 截取的画布的宽
                 height: 760, // 截取的画布的高
-                destWidth: 538, // 保存成的画布宽度
-                destHeight: 760, // 保存成的画布高度
-                fileType: 'png', // 保存成的文件类型
+                fileType: 'jpg', // 保存成的文件类型
                 quality: 1, // 图片质量
                 canvasId: 'firstCanvas', // 画布ID
                 success(res) {
-                    that.onShowPosterMask();
+                    that.showOpenLotteryPanel = false;
+                    that.showPosterMask = true;
                     that.canvasImg = res.tempFilePath;
                     uni.hideLoading();
                 },
-                fail() {
+                fail(res) {
+                    console.log(res);
+                    that.showOpenLotteryPanel = false;
                     uni.hideLoading();
                     uni.showToast({
-                        title: '保存失败，稍后再试',
+                        title: '生成失败，稍后再试',
                         duration: 2000,
                         icon: 'none',
                     });
@@ -815,14 +904,13 @@ export default {
                     } else {
                         that.imgAuthBtn = false;
                     }
-                    console.log(that.imgAuthBtn);
                 },
             });
         },
-        onPosterSuccess(canvasImg) {
-            this.canvasImg = canvasImg;
-            this.onHideOpenLotteryPanel();
-            this.onShowPosterMask();
+        onPosterSuccess({ detail }) {
+            this.showPosterMask = true;
+            this.canvasImg = detail;
+            this.showOpenLotteryPanel = false;
             this.lock = false;
             uni.hideLoading();
         },
@@ -830,12 +918,6 @@ export default {
             uni.hideLoading();
             this.lock = false;
             console.log(111, err);
-        },
-        onShowOpenLotteryPanel() {
-            this.showOpenLotteryPanel = true;
-        },
-        onHideOpenLotteryPanel() {
-            this.showOpenLotteryPanel = false;
         },
         handleSave() {
             uni.showLoading({ mask: true, title: '保存中' });
@@ -901,13 +983,9 @@ export default {
                 },
             });
         },
-        onHidePoster() {
+        closePoster() {
             // 关闭抽奖结果
             this.showPosterMask = false;
-        },
-        onShowPosterMask() {
-            // 显示中奖结果
-            this.showPosterMask = true;
         },
         checkImgAuthFun(res) {
             // 二次以上检验是否授权图片
@@ -934,7 +1012,6 @@ export default {
             }
         },
         getNewLotteryNum({ index, type }) {
-            console.log(index, type);
             if (type) {
                 return false;
             }
@@ -958,14 +1035,35 @@ export default {
                         fr: this.fr,
                     }).then(() => {
                         this.maskPrompt = false;
-                        uni.navigateTo({
-                            url: `/pages/activity-pages/upload/modify?activity_id=${this.activityId}`,
-                        });
+                        if (this.isH5) {
+                            uni.showToast({
+                                title: '请在UP爱挑战小程序上传作品',
+                                icon: 'none',
+                            });
+                        } else {
+                            uni.navigateTo({
+                                url: `/pages/activity-pages/upload/modify?activity_id=${this.activityId}`,
+                            });
+                        }
                     });
                     break;
             }
 
             return true;
+        },
+        initShare() {
+            const titleList = this.isH5
+                ? this.publicConfig.shareConfig.h5Title
+                : this.publicConfig.shareConfig.title;
+            const descList = this.publicConfig.shareConfig.desc;
+            const random = Math.floor(Math.random() * titleList.length);
+            this.title = titleList[random];
+            const desc = descList[0];
+            share({
+                title: this.title,
+                desc,
+                thumbnail: `${this.publicConfig.shareConfig.image}?x-oss-process=image/format,png/interlace,1/quality,Q_80/resize,m_pad,h_100`,
+            });
         },
         jumpSearch(item) {
             uni.navigateTo({
@@ -1061,7 +1159,7 @@ export default {
         right: 0upx;
         top: 50%;
         margin-top: -36upx;
-        z-index: 999;
+        z-index: 10;
         .tips {
             position: absolute;
             top: 50%;
@@ -1102,7 +1200,7 @@ export default {
         right: 0;
         bottom: 0;
         top: 0;
-        z-index: 1001;
+        z-index: 11;
         background-color: rgba(0, 0, 0, 0.79);
         &.open-lottery {
             .lottery-panel-img {
@@ -1330,18 +1428,18 @@ export default {
         box-sizing: border-box;
         background-color: rgba(0, 0, 0, 0.79);
         text-align: center;
-        z-index: 1003;
+        z-index: 13;
         .poster-img-mask-box {
             position: absolute;
             left: 0;
             right: 0;
             top: 50%;
-            transform: translateY(-55%);
+            transform: translateY(-50%);
         }
         .prize-btn {
             background-color: #ff78a5;
             display: inline-block;
-            margin: 18upx auto 16upx;
+            margin: 0upx auto 0upx;
             padding: 0 50upx;
         }
         .tips {
@@ -1349,6 +1447,10 @@ export default {
             color: #fff;
             line-height: 108upx;
             height: 108upx;
+            &.cur {
+                height: 66upx;
+                line-height: 66upx;
+            }
             & > text {
                 color: #bb77ff;
                 font-size: 40upx;
@@ -1395,4 +1497,5 @@ export default {
         }
     }
 }
+@import "../theme/index.less";
 </style>
