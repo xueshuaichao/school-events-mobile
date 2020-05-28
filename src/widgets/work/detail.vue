@@ -722,6 +722,7 @@ export default {
         vertical-align: middle;
     }
     .work-name-wrap {
+        padding-top: 2upx;
         line-height: 24upx;
         .text-two-line {
             width: 90%;
