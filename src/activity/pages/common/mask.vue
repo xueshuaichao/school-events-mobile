@@ -147,9 +147,6 @@
                                     v-else
                                     class="tips"
                                 >
-                                    <view class="tips-text">
-                                        （图片仅供参考，奖品以实物为准）
-                                    </view>
                                     <view class="tips-content">
                                         航拍无人机、多功能棋盘、水彩笔套装36色、小米书包，奖品总数量共100份。
                                     </view>
@@ -173,6 +170,9 @@
                                 </view>
                                 <view class="text-item">
                                     5.若因用户提供的收货信息有误而未收到奖品，概不补发。
+                                </view>
+                                <view class="text-item">
+                                    6.图片仅供参考，奖品以实物为准。
                                 </view>
                             </view>
                         </view>
@@ -819,7 +819,7 @@ export default {
             }
             .prize-list-item {
                 &.prize-list-item-0 {
-                    padding: 0 20upx 40upx;
+                    padding: 0 20upx 0upx;
                 }
             }
             .tips {
@@ -827,16 +827,15 @@ export default {
                 font-size: 24upx;
                 text-align: center;
                 margin: 30upx 20upx 40upx;
-                .tips-text {
-                    margin-bottom: 30upx;
-                }
             }
             .tips-content {
                 font-size: 26upx;
                 color: #666;
                 text-align: left;
                 line-height: 40upx;
-
+                & > view {
+                    margin-bottom: 8upx;
+                }
                 .title {
                     font-weight: bold;
                     color: #666;
