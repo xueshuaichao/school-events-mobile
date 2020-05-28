@@ -258,8 +258,7 @@
         {
             "path": "pages/activity-pages/mywork/mywork",
             "style": {
-                "navigationBarTitleText": "我的作品",
-                "onReachBottomDistance": 0
+                "navigationBarTitleText": "我的作品"
             }
         },
         // #ifdef H5
@@ -386,8 +385,7 @@
                 {
                     "path": "pages/mywork/mywork",
                     "style": {
-                        "navigationBarTitleText": "我的作品",
-                        "onReachBottomDistance": 0
+                        "navigationBarTitleText": "我的作品"
                     }
                 },
                 {
