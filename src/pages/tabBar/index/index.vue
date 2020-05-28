@@ -157,7 +157,7 @@
                 </text>
             </navigator>
         </view>
-        <navigator
+        <!-- <navigator
             v-if="!isH5"
             url="/pages/openGame/zhibo"
         >
@@ -165,7 +165,7 @@
                 class="zhibo-entry"
                 src="http://aitiaozhan.oss-cn-beijing.aliyuncs.com/school-events-mobile/zhibo-entry01.png"
             />
-        </navigator>
+        </navigator> -->
         <work
             :title="'热门活动'"
             :more-url="'/pages/tabBar/upload/upload'"
@@ -401,7 +401,7 @@ export default {
                     if (obj.activity_base > 999999999) {
                         obj.activity_base_c = '99999W+';
                     } else {
-                        obj.activity_base_c = obj.activity_base > 10000
+                        obj.activity_base_c = obj.activity_base > 100000
                             ? `${Math.floor(obj.activity_base / 10000)}W+`
                             : `${obj.activity_base}人`;
                     }
