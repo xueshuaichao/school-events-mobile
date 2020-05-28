@@ -87,7 +87,7 @@
                 <view class="poster-img-mask-box">
                     <template>
                         <view
-                            v-f="myPrizeList"
+                            v-if="myPrizeList"
                             class="prize-btn children-btn"
                         >
                             我的中奖
@@ -96,7 +96,7 @@
                             v-if="posterWin"
                             :class="['tips', { cur: myPrizeList }]"
                         >
-                            恭喜您！抽中<text>{{ lotteryDetail }}</text>1个
+                            恭喜您！抽中<text>{{ lotteryDetail.name }}</text>1{{ lotteryDetail.unit ? "个" : "套" }}
                         </view>
                         <view
                             v-else
@@ -352,7 +352,7 @@ export default {
             showOpenLotteryPanel: false, // 开奖 false-隐藏
             myPrizeList: false,
             packetNum: 0,
-            lotteryDetail: '',
+            lotteryDetail: {},
             poster: null,
             imgAuthBtn: false,
             showPosterMask: false,
@@ -558,12 +558,12 @@ export default {
                     () => {
                         api.get('/api/activity/getuserlotterynum').then(
                             (res) => {
+                                this.lock = false;
                                 this.lotteryNum = {
                                     ...this.lotteryNum,
                                     ...res,
                                 };
                                 if (this.lotteryNum.lottery_num > 0) {
-                                    this.lock = false;
                                     this.showPacketRain = true;
                                     this.showLotteryPanel = false;
                                     this.lotteryNum.lottery_num -= 1;
@@ -576,16 +576,15 @@ export default {
                                         title: '今日已无抽奖机会，明日再来吧',
                                         icon: 'none',
                                     });
-                                    this.lock = false;
                                 } else {
                                     this.showLotteryPanel = false;
                                     this.getPrizeNum();
-                                    this.lock = false;
                                 }
                             },
                             () => {
                                 // 未登录时 抽奖次数显为3
                                 this.$set(this.lotteryNum, 'lottery_num', 3);
+                                this.lock = false;
                             },
                         );
                     },
@@ -596,41 +595,44 @@ export default {
             }
         },
         startActive() {
-            if (this.status === 2) {
-                api.isLogin({
-                    fr: this.fr,
-                }).then(
-                    () => {
-                        if (this.lotteryNum.lottery_num > 0) {
-                            this.showLotteryPanel = true;
-                        } else if (
-                            this.lotteryNum.vote_num >= 5
-                            && this.lotteryNum.add_activity > 0
-                            && this.lotteryNum.login > 0
-                        ) {
-                            uni.showToast({
-                                title: '今日已无抽奖机会，明日再来吧',
-                                icon: 'none',
-                            });
+            if (!this.lock) {
+                this.lock = true;
+                if (this.status === 2) {
+                    api.isLogin({
+                        fr: this.fr,
+                    }).then(
+                        () => {
                             this.lock = false;
-                        } else {
-                            this.showLotteryPanel = false;
-                            this.getPrizeNum();
+                            if (this.lotteryNum.lottery_num > 0) {
+                                this.showLotteryPanel = true;
+                            } else if (
+                                this.lotteryNum.vote_num >= 5
+                                && this.lotteryNum.add_activity > 0
+                                && this.lotteryNum.login > 0
+                            ) {
+                                uni.showToast({
+                                    title: '今日已无抽奖机会，明日再来吧',
+                                    icon: 'none',
+                                });
+                            } else {
+                                this.showLotteryPanel = false;
+                                this.getPrizeNum();
+                            }
+                        },
+                        () => {
                             this.lock = false;
-                        }
-                    },
-                    () => {
-                        this.lock = false;
-                    },
-                );
-            } else {
-                uni.showToast({
-                    title:
-                        this.status === 1
-                            ? '活动未开始，敬请期待'
-                            : '活动已结束',
-                    icon: 'none',
-                });
+                        },
+                    );
+                } else {
+                    uni.showToast({
+                        title:
+                            this.status === 1
+                                ? '活动未开始，敬请期待'
+                                : '活动已结束',
+                        icon: 'none',
+                    });
+                    this.lock = false;
+                }
             }
         },
         showLottery(type = false) {
@@ -717,15 +719,17 @@ export default {
                     src: config.images[3].url,
                 }),
             ]).then((res) => {
-                const ctx = uni.createCanvasContext('firstCanvas');
-                ctx.drawImage(res[0].path, 0, 0, 538, 760);
-                ctx.drawImage(res[1].path, 88, 356, 362, 190);
-                ctx.drawImage(res[2].path, 140, 566, 260, 34);
-                ctx.drawImage(res[3].path, 417, 591, 86, 86);
-                ctx.draw();
-                setTimeout(() => {
-                    this.saveCanvas();
-                }, 200);
+                this.ctx.drawImage(res[0].path, 0, 0, 538, 760);
+                this.ctx.drawImage(res[1].path, 88, 356, 362, 190);
+                this.ctx.drawImage(res[2].path, 140, 566, 260, 34);
+                this.ctx.drawImage(res[3].path, 417, 591, 86, 86);
+                this.ctx.draw(
+                    false,
+                    setTimeout(() => {
+                        // 需要异步 不然画不出来
+                        this.saveCanvas();
+                    }, 500),
+                );
             });
         },
         h5LoseDrawImage(config) {
@@ -751,10 +755,19 @@ export default {
         },
         winDrawImage(res) {
             const drawDetail = [
-                '航拍无人机',
-                '多功能棋盘',
-                '水彩笔套装',
-                '小米书包',
+                {
+                    name: '航拍无人机',
+                },
+                {
+                    name: '多功能棋盘',
+                    unit: '套',
+                },
+                {
+                    name: '水彩笔套装',
+                },
+                {
+                    name: '小米书包',
+                },
             ];
             let index = res.draw;
             // 由于后端将中奖排序写错 需将3、4调换
@@ -833,32 +846,40 @@ export default {
         },
         h5CreatePoster(type = 1, status) {
             // type 1-开奖 2-我的中奖
-            api.isLogin({
-                fr: this.fr,
-            }).then(
-                () => {
-                    this.openLottery(type, status).then(
-                        ({ config, status }) => {
-                            if (config) {
-                                uni.showLoading({
-                                    title: type === 1 ? '正在开奖' : '请稍等',
-                                });
-                                this.posterWin = status;
-                                if (status) {
-                                    // 中奖
-                                    this.h5WinDrawImage(config);
-                                } else {
-                                    // 未中奖
-                                    this.h5LoseDrawImage(config);
+            if (!this.lock) {
+                this.lock = true;
+                api.isLogin({
+                    fr: this.fr,
+                }).then(
+                    () => {
+                        this.openLottery(type, status).then(
+                            ({ config, status }) => {
+                                this.lock = false;
+                                if (config) {
+                                    uni.showLoading({
+                                        title:
+                                            type === 1 ? '正在开奖' : '请稍等',
+                                    });
+                                    this.posterWin = status;
+                                    if (status) {
+                                        // 中奖
+                                        this.h5WinDrawImage(config);
+                                    } else {
+                                        // 未中奖
+                                        this.h5LoseDrawImage(config);
+                                    }
                                 }
-                            }
-                        },
-                    );
-                },
-                () => {
-                    this.lock = false;
-                },
-            );
+                            },
+                            () => {
+                                this.lock = false;
+                            },
+                        );
+                    },
+                    () => {
+                        this.lock = false;
+                    },
+                );
+            }
         },
         promisify: api => (options, ...params) => new Promise((resolve, reject) => {
             const extras = {
@@ -887,6 +908,7 @@ export default {
                 fail(res) {
                     console.log(res);
                     that.showOpenLotteryPanel = false;
+                    that.showLotteryPanel = false;
                     uni.hideLoading();
                     uni.showToast({
                         title: '生成失败，稍后再试',
