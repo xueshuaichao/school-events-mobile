@@ -719,15 +719,17 @@ export default {
                     src: config.images[3].url,
                 }),
             ]).then((res) => {
-                const ctx = uni.createCanvasContext('firstCanvas');
-                ctx.drawImage(res[0].path, 0, 0, 538, 760);
-                ctx.drawImage(res[1].path, 88, 356, 362, 190);
-                ctx.drawImage(res[2].path, 140, 566, 260, 34);
-                ctx.drawImage(res[3].path, 417, 591, 86, 86);
-                ctx.draw();
-                setTimeout(() => {
-                    this.saveCanvas();
-                }, 200);
+                this.ctx.drawImage(res[0].path, 0, 0, 538, 760);
+                this.ctx.drawImage(res[1].path, 88, 356, 362, 190);
+                this.ctx.drawImage(res[2].path, 140, 566, 260, 34);
+                this.ctx.drawImage(res[3].path, 417, 591, 86, 86);
+                this.ctx.draw(
+                    false,
+                    setTimeout(() => {
+                        // 需要异步 不然画不出来
+                        this.saveCanvas();
+                    }, 500),
+                );
             });
         },
         h5LoseDrawImage(config) {
@@ -906,6 +908,7 @@ export default {
                 fail(res) {
                     console.log(res);
                     that.showOpenLotteryPanel = false;
+                    that.showLotteryPanel = false;
                     uni.hideLoading();
                     uni.showToast({
                         title: '生成失败，稍后再试',
