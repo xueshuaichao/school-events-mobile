@@ -361,7 +361,7 @@ export default {
             showPosterMask: false,
             canvasImg: '',
             posterCommonConfig: {
-                pixelRatio: 2,
+                pixelRatio: 3,
                 width: 538,
                 height: 760,
                 debug: false,
