@@ -46,7 +46,7 @@
                             </view>
                             <view class="clearfix">
                                 <text class="fl-l num">
-                                    {{ item.activity_base || 6000 }}人关注
+                                    {{ item.activity_base_c || 6000 }}关注
                                 </text>
                                 <view class="fl-r join-game">
                                     立即参加

@@ -191,8 +191,8 @@ export default {
             if (!this.isH5) {
                 this.showKeybord = true;
                 e.detail.height = e.detail.height || 180;
-                this.inputTop = this.screenHeight * 0.74 - e.detail.height - this.pix * 120;
-                this.markerheight = this.screenHeight - e.detail.height - this.pix * 120;
+                this.inputTop = this.screenHeight * 0.74 - e.detail.height - this.pix * 130;
+                this.markerheight = this.screenHeight - e.detail.height - this.pix * 130;
             }
         },
         blur() {

@@ -396,10 +396,12 @@ export default {
             api.get('/api/activity/hotactivity').then((data) => {
                 this.hotList = data.map((item) => {
                     let obj = item;
-                    console.log(obj);
+                    obj.start_time = obj.start_time.slice(0, 10);
+                    obj.end_time = obj.end_time.slice(0, 10);
+                    obj.activity_base_c = obj.activity_base > 10000
+                        ? `${Math.floor(obj.activity_base / 10000)}万+`
+                        : `${obj.activity_base}人`;
                     this.confList.forEach((d) => {
-                        obj.start_time = obj.start_time.slice(0, 10);
-                        obj.end_time = obj.end_time.slice(0, 10);
                         if (d.id === obj.id) {
                             obj = { ...obj, ...d };
                         }
