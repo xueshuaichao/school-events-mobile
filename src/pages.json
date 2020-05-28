@@ -236,28 +236,11 @@
                 "navigationBarTitleText": "我的作品"
             }
         },
-        {
-            "path": "pages/activity-pages/index",
-            "style": {
-                "navigationBarTitleText": "我的活动",
-                "usingComponents": {
-                    "poster": "/wxcomponents/third-party/poster/poster/index"
-                }
-            }
-        },
+
         {
             "path": "pages/activity-pages/labor/index",
             "style": {
                 "navigationBarTitleText": "青少年动起来"
-            }
-        },
-        {
-            "path": "pages/activity-pages/children/index",
-            "style": {
-                "navigationBarTitleText": "七彩童年，快乐成长秀风采",
-                "usingComponents": {
-                    "poster": "/wxcomponents/third-party/poster/poster/index"
-                }
             }
         },
         {
@@ -379,6 +362,24 @@
         {
             "root": "pagesA",
             "pages": [
+                {
+                    "path": "activity-pages/children/index",
+                    "style": {
+                        "navigationBarTitleText": "七彩童年，快乐成长秀风采",
+                        "usingComponents": {
+                            "poster": "/wxcomponents/third-party/poster/poster/index"
+                        }
+                    }
+                },
+                {
+                    "path": "activity-pages/index",
+                    "style": {
+                        "navigationBarTitleText": "我的活动",
+                        "usingComponents": {
+                            "poster": "/wxcomponents/third-party/poster/poster/index"
+                        }
+                    }
+                },
                 // ============== 春节 活动 =================
                 {
                     "path": "chunjie/index",

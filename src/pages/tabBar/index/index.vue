@@ -47,7 +47,7 @@
                 >
                     <swiper-item>
                         <navigator
-                            url="/pages/activity-pages/children/index"
+                            url="/pagesA/activity-pages/children/index"
                             class="swiper-item"
                         >
                             <image
