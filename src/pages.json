@@ -360,10 +360,10 @@
     ],
     "subPackages": [
         {
-            "root": "pagesA",
+            "root": "activity",
             "pages": [
                 {
-                    "path": "activity-pages/children/index",
+                    "path": "pages/children/index",
                     "style": {
                         "navigationBarTitleText": "七彩童年，快乐成长秀风采",
                         "usingComponents": {
@@ -372,26 +372,26 @@
                     }
                 },
                 {
-                    "path": "activity-pages/upload/modify",
+                    "path": "pages/upload/modify",
                     "style": {
                         "navigationBarTitleText": "上传作品"
                     }
                 },
                 {
-                    "path": "activity-pages/upload/result",
+                    "path": "pages/upload/result",
                     "style": {
                         "navigationBarTitleText": "上传成功"
                     }
                 },
                 {
-                    "path": "activity-pages/mywork/mywork",
+                    "path": "pages/mywork/mywork",
                     "style": {
                         "navigationBarTitleText": "我的作品",
                         "onReachBottomDistance": 0
                     }
                 },
                 {
-                    "path": "activity-pages/index",
+                    "path": "pages/index",
                     "style": {
                         "navigationBarTitleText": "我的活动",
                         "usingComponents": {

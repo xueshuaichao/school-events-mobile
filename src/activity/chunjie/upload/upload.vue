@@ -440,7 +440,7 @@ export default {
             title,
             imageUrl:
                 'http://aitiaozhan.oss-cn-beijing.aliyuncs.com/banner.png',
-            path: '/pagesA/chunjie/index',
+            path: '/activity/chunjie/index',
         };
     },
 };

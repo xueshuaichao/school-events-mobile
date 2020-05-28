@@ -108,7 +108,7 @@ export default {
         },
         jumpHome() {
             uni.reLaunch({
-                url: '/pagesA/activity-pages/children/index',
+                url: '/pages/pages/children/index',
             });
         },
     },

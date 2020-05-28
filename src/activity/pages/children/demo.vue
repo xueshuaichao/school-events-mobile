@@ -687,7 +687,7 @@ export default {
             }
             this.lotteryDetail = drawDetail[index - 1];
             const imgPath = this.isH5
-                ? '/pagesA/static/children_img'
+                ? '/activity/static/children_img'
                 : 'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx';
             this.posterSuccessConfig.images[0].url = `${imgPath}/children_poster.png`;
             this.posterSuccessConfig.images[1].url = `${imgPath}/children_poster_${index}.png`;
@@ -701,7 +701,7 @@ export default {
         loseDrawImage(res) {
             const index = res.cover_id || Math.floor(Math.random() * 4);
             const imgPath = this.isH5
-                ? '/pagesA/static/children_img'
+                ? '/activity/static/children_img'
                 : 'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx';
             this.posterFailConfig.images[0].url = `${imgPath}/children_poster_fail_${index}.png`;
             this.posterFailConfig.images[1].url = `${imgPath}/activity_code_${this.activityId}.png`;

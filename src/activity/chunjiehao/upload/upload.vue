@@ -537,7 +537,7 @@ export default {
                     console.log(res);
                     uni.hideLoading();
                     uni.navigateTo({
-                        url: '/pagesA/chunjiehao/upload/result',
+                        url: '/activity/chunjiehao/upload/result',
                     });
                     this.resetForm();
                 },
@@ -570,7 +570,7 @@ export default {
             title,
             imageUrl:
                 'http://aitiaozhan.oss-cn-beijing.aliyuncs.com/h5/chunjiehao-banner.png',
-            path: '/pagesA/chunjiehao/index',
+            path: '/activity/chunjiehao/index',
         };
     },
 };

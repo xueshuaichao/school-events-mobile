@@ -827,6 +827,7 @@ export default {
         margin: 0 0 20rpx;
         display: flex;
         justify-content: space-around;
+        align-items: center;
         top: 0upx;
         height: 84rpx;
         left: 0;

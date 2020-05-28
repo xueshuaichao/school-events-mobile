@@ -150,7 +150,7 @@ export default {
                     infoColor: '#333333', // 浅一些
                     ruleTitleColor: '#666', // 规则的title
                     placeholderColor: 'rgba(255,255,255,.6)',
-                    homePath: '/pages/activity-pages/children/index',
+                    homePath: '/activity/pages/children/index',
                     shareConfig: {
                         title: [
                             '七彩童年， 快乐成长秀风采！超多奖品等你拿',
@@ -171,7 +171,7 @@ export default {
                         ],
                         image:
                             'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/children_share.png',
-                        path: '/pages/activity-pages/children/index',
+                        path: '/activity/pages/children/index',
                     },
                 },
                 indexConfig: {

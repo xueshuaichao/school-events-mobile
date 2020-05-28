@@ -31,6 +31,22 @@
             </view>
             <view v-else>
                 <view class="search-box">
+                    <button
+                        :class="{
+                            active: activeMenuIndex === 'new'
+                        }"
+                        @click="toggle('new')"
+                    >
+                        最新
+                    </button>
+                    <button
+                        :class="{
+                            active: activeMenuIndex === 'hot'
+                        }"
+                        @click="toggle('hot')"
+                    >
+                        最热
+                    </button>
                     <view class="search">
                         <image
                             src="../../../static/images/chunjie/search-icon.png"
@@ -41,7 +57,7 @@
                                 type="text"
                                 confirm-type="search"
                                 confirm-hold="true"
-                                placeholder-style="color:#C9AC67"
+                                placeholder-style="color:#FF2E3F"
                                 placeholder="请输入作者姓名或作品名称"
                                 @confirm="bindconfirm"
                             >
@@ -53,23 +69,6 @@
                             搜索
                         </button>
                     </view>
-
-                    <button
-                        :class="{
-                            active: activeMenuIndex === 'hot'
-                        }"
-                        @click="toggle('hot')"
-                    >
-                        最热
-                    </button>
-                    <button
-                        :class="{
-                            active: activeMenuIndex === 'new'
-                        }"
-                        @click="toggle('new')"
-                    >
-                        最新
-                    </button>
                 </view>
             </view>
             <view v-if="total > 0">
@@ -88,7 +87,7 @@
                         class="work-info"
                     >
                         <view class="media-name text-one-line">
-                            {{ `#${item.cat_name}# ${item.resource_name}` }}
+                            {{ ` ${item.resource_name}` }}
                         </view>
                         <view class="media-time">
                             {{ item.created_at }}
@@ -112,13 +111,10 @@
                         class="work-info"
                     >
                         <view class="media-name">
-                            {{ `#${item.cat_name}# ${item.user_name}` }}
+                            {{ item.user_name }}
                         </view>
-                        <view>
+                        <view class="text-two-line">
                             {{ item.resource_name }}
-                        </view>
-                        <view class="media-time">
-                            作品介绍
                         </view>
                         <text class="vote-num">
                             {{ item.ticket }}票
@@ -141,7 +137,9 @@
                 v-show="searchEmpty"
                 class="empty"
             >
-                <image src="../../../static/images/chunjie/empty.png" />
+                <image
+                    src="http://aitiaozhan.oss-cn-beijing.aliyuncs.com/school-events-mobile/empty01.png"
+                />
                 <view>搜索不到您要的结果，换个关键词试试吧～</view>
             </view>
             <view
@@ -149,14 +147,14 @@
                 class="work-empty"
             >
                 <image
-                    src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/chunjie/work-empty.png"
+                    src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/chunjie/work-empty01.png"
                 />
                 <view>
                     {{ allTotal === 0 ? "您还没有上传作品" : "暂无作品" }}
                 </view>
                 <navigator
                     v-if="allTotal === 0"
-                    url="/pagesA/chunjie/upload/upload"
+                    url="/activity/chunjiehao/upload/upload"
                 >
                     <view class="goUpload">
                         去上传
@@ -216,13 +214,12 @@ export default {
             filter: {
                 page_num: 1,
                 page_size: 10,
-                activity_id: 3,
+                activity_id: 4,
             },
             total: 1,
             type: 'myWork',
             allNum: {},
             allTotal: 0,
-            fr: '',
         };
     },
     computed: {
@@ -236,14 +233,13 @@ export default {
     methods: {
         goHome() {
             uni.reLaunch({
-                url: '/pagesA/chunjie/index',
+                url: '/activity/chunjiehao/index',
             });
         },
         toggle(k) {
             this.activeMenuIndex = k;
             this.filter.sort = k;
             this.filter.page_num = 1;
-            uni.pageScrollTo({ scrollTop: 0, duration: 300 });
             this.searchWorkData();
         },
         handleClick() {
@@ -354,7 +350,7 @@ export default {
                     },
                 });
                 uni.navigateTo({
-                    url: `/pages/work/detail/detail?id=${id}&activity_id=3`,
+                    url: `/pages/work/detail/detail?id=${id}&activity_id=4`,
                 });
             }
         },
@@ -367,7 +363,7 @@ export default {
         if (type === 'myWork') {
             this.getWorkData();
         } else if (type === 'search') {
-            uni.setNavigationBarTitle({ title: '秀才艺，赢好礼' });
+            uni.setNavigationBarTitle({ title: 'dou说新年好' });
             this.filter.search = name;
             this.changeValue = name;
             this.searchWorkData();
@@ -378,13 +374,20 @@ export default {
             // 来自页面内分享按钮
             console.log(res.target);
         }
-        const titleList = ['我来给你拜新年，表演才艺送祝福'];
+        const titleList = [
+            '一幅幅春节影像作品，是最想留下的幸福瞬间！我的春节作品，正在等你来投票哦！',
+            '记录新年，赢大奖！小伙伴们快来帮我投票吧～～',
+            '快来看我记录的春节快乐瞬间！请为我投票，晒年味，赢好礼！',
+            '快来看我家的新年有什么不一样！快来为我投票吧！晒年俗，赢大奖！',
+            '家家“年味”各不同，快来围观我家的欢乐新年吧～别忘了投票哦！',
+            '嗨～我在参加“记录新年赢大奖”活动，动动手指为我投票吧！',
+        ];
         const title = titleList[Math.floor(Math.random() * titleList.length)];
         return {
             title,
             imageUrl:
-                'http://aitiaozhan.oss-cn-beijing.aliyuncs.com/banner.png',
-            path: '/pagesA/chunjie/index',
+                'http://aitiaozhan.oss-cn-beijing.aliyuncs.com/h5/chunjiehao-banner.png',
+            path: '/activity/chunjiehao/index',
         };
     },
 };
@@ -410,12 +413,11 @@ export default {
     margin-bottom: 15px;
     padding: 0;
 }
-
 .empty {
     text-align: center;
     image {
-        width: 300upx;
-        height: 236upx;
+        width: 303upx;
+        height: 301upx;
         margin-top: 174upx;
     }
     view {
@@ -433,23 +435,19 @@ export default {
     }
     .goUpload {
         margin-top: 37upx;
-        width: 420upx;
+        width: 450upx;
         height: 110upx;
         background: linear-gradient(
             0deg,
-            rgba(255, 22, 16, 1),
-            rgba(255, 189, 103, 1)
+            rgba(255, 149, 71, 1),
+            rgba(255, 222, 152, 1)
         );
-        border: 2rpx solid #ffe19a;
-        // border-image:linear-gradient(-57deg, rgba(255,231,174,1), rgba(255,225,154,1)) 2 2;
-        box-shadow: 0upx 16upx 30upx 0upx rgba(203, 20, 34, 0.36);
         border-radius: 55px;
         font-size: 36upx;
         font-weight: 600;
-        color: #ffe57b;
+        color: #ff2e3f;
         line-height: 110upx;
         text-align: center;
-        text-shadow: 0upx 4upx 6upx rgba(241, 0, 0, 0.65);
         display: inline-block;
     }
     view {
@@ -465,7 +463,7 @@ export default {
     display: flex;
     justify-content: space-between;
     position: relative;
-    background: #fff6e1;
+    background: #ffde98;
     color: #ff3849;
     margin-bottom: 20upx;
     border-radius: 20upx;
@@ -519,28 +517,23 @@ export default {
     box-sizing: border-box;
     width: 100%;
     min-height: 100vh;
-    background: url("http://aitiaozhan.oss-cn-beijing.aliyuncs.com/school-events-mobile/main_bg.png")
-        repeat-y;
-    background-size: contain;
+    background: #ff2e3f;
+    // background-size: contain;
     .search-box {
         overflow: hidden;
+        margin-bottom: 30rpx;
         button {
-            width: 140upx;
-            height: 94upx;
+            width: 120upx;
+            height: 68upx;
             float: left;
-            line-height: 72upx;
+            line-height: 68upx;
             color: #ffffff;
             background: transparent;
             font-size: 30upx;
             font-weight: 700;
-            margin-top: 40upx;
-            &:nth-child(2) {
-                margin-left: 200upx;
-            }
+            border-radius: 34upx;
             &.active {
-                background: url("../../../static/images/chunjie/neworhot.png")
-                    no-repeat;
-                background-size: 100% 100%;
+                background: #ffde98;
                 color: #ff3849;
             }
             &::after {
@@ -548,46 +541,37 @@ export default {
             }
         }
         .search {
-            background: #ffedc3;
-            width: 528upx;
-            height: 80upx;
-            line-height: 80upx;
+            background: #b11a27;
+            width: 440upx;
+            height: 72upx;
             position: relative;
-            border-radius: 76upx;
-            float: left;
-            flex: 1;
+            float: right;
+            border-radius: 60upx;
 
             image {
                 width: 28upx;
                 height: 28upx;
                 position: absolute;
-                top: 24upx;
-                left: 29upx;
+                top: 23upx;
+                left: 24upx;
             }
             input {
-                width: 425upx;
+                width: 280upx;
                 position: absolute;
                 top: 20upx;
-                left: 69upx;
-                font-size: 28upx;
-                color: #ff3849;
+                // #ifndef H5
+                top: 15upx;
+                // #endif
+                left: 60upx;
+                font-size: 24upx;
+                color: #ffbec4;
             }
             .search-button {
-                width: 142upx;
-                height: 80upx;
+                font-size: 24upx;
+                color: #ffde98;
                 position: absolute;
-                margin: 0;
-                right: -160upx;
-                font-size: 32upx;
-                background: linear-gradient(
-                    0deg,
-                    rgba(255, 22, 16, 1),
-                    rgba(255, 189, 103, 1)
-                );
-                border: 2upx solid #ffe19a;
-                border-radius: 40upx;
-                line-height: 80upx;
-                text-align: center;
+                top: 4upx;
+                right: 4upx;
             }
         }
     }

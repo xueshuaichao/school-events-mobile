@@ -77,7 +77,7 @@ export default {
                     id: 9,
                     img:
                         'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/h5/liuyi-banner.png',
-                    url: '/pagesA/activity-pages/children/index',
+                    url: '/activity/pages/children/index',
                 },
                 {
                     id: 8,
@@ -107,13 +107,13 @@ export default {
                     id: 4,
                     img:
                         'http://aitiaozhan.oss-cn-beijing.aliyuncs.com/chunjiehao.png',
-                    url: '/pagesA/chunjiehao/index',
+                    url: '/activity/chunjiehao/index',
                 },
                 {
                     id: 3,
                     img:
                         'http://aitiaozhan.oss-cn-beijing.aliyuncs.com/banner4.png',
-                    url: '/pagesA/chunjie/index',
+                    url: '/activity/chunjie/index',
                 },
             ],
         };

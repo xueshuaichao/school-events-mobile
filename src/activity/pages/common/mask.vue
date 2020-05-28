@@ -150,9 +150,7 @@
                                     <view class="tips-text">
                                         （图片仅供参考，奖品以实物为准）
                                     </view>
-                                    <view
-                                        class="tips-content"
-                                    >
+                                    <view class="tips-content">
                                         航拍无人机、多功能棋盘、水彩笔套装36色、小米书包，奖品总数量共100份。
                                     </view>
                                 </view>
