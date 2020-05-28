@@ -506,6 +506,7 @@ export default {
         z-index: 1002;
         .active-content {
             position: absolute;
+            left: 50%;
             top: 50%;
             transform: translate(-50%, -55%);
             .rule-tips {
