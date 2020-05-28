@@ -261,6 +261,8 @@ export default {
                     }),
                 );
                 this.changeVal = '';
+            } else {
+                this.changeVal = '';
             }
         },
         toUpper() {
