@@ -65,6 +65,7 @@ export default {
             filter: {
                 page_size: 10,
                 page_num: 1,
+                mini_h5_show: 1,
             },
             // #ifdef H5
             isH5: true,
