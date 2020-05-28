@@ -372,6 +372,25 @@
                     }
                 },
                 {
+                    "path": "activity-pages/upload/modify",
+                    "style": {
+                        "navigationBarTitleText": "上传作品"
+                    }
+                },
+                {
+                    "path": "activity-pages/upload/result",
+                    "style": {
+                        "navigationBarTitleText": "上传成功"
+                    }
+                },
+                {
+                    "path": "activity-pages/mywork/mywork",
+                    "style": {
+                        "navigationBarTitleText": "我的作品",
+                        "onReachBottomDistance": 0
+                    }
+                },
+                {
                     "path": "activity-pages/index",
                     "style": {
                         "navigationBarTitleText": "我的活动",

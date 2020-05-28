@@ -231,7 +231,7 @@ export default {
                     id: 9,
                     img:
                         'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/h5/liuyi-s-banner.png',
-                    url: '/pages/activity-pages/children/index',
+                    url: '/pagesA/activity-pages/children/index',
                 },
                 {
                     id: 8,
@@ -349,7 +349,7 @@ export default {
             uni.setStorageSync(this.isFirstLogin, true);
             this.prompt = false;
             uni.navigateTo({
-                url: '/pages/activity-pages/children/index',
+                url: '/pagesA/activity-pages/children/index',
             });
         },
         handleClose() {

@@ -496,7 +496,7 @@ export default {
                 url = '/pages/activity-pages/labor/index';
             }
             if (this.activityId === 9) {
-                url = '/pages/activity-pages/children/index';
+                url = '/pagesA/activity-pages/children/index';
             }
             if (this.from === 'openGame') {
                 url = '/pages/openGame/index';
