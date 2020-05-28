@@ -626,7 +626,7 @@ export default {
             max-height: 1000upx;
         }
         .close {
-            bottom: -75upx;
+            bottom: -85upx;
             right: 50%;
             transform: translateX(50%);
             top: auto;
