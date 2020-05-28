@@ -96,7 +96,7 @@
                             v-if="posterWin"
                             :class="['tips', { cur: myPrizeList }]"
                         >
-                            恭喜您！抽中<text>{{ lotteryDetail.name }}</text>1{{ lotteryDetail.unit ? "个" : "套" }}
+                            恭喜您！抽中<text>{{ lotteryDetail.name }}</text>1{{ lotteryDetail.unit ? "套" : "个" }}
                         </view>
                         <view
                             v-else
@@ -1461,7 +1461,7 @@ export default {
         box-sizing: border-box;
         background-color: rgba(0, 0, 0, 0.79);
         text-align: center;
-        z-index: 13;
+        z-index: 50;
         .poster-img-mask-box {
             position: absolute;
             left: 0;
