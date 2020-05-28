@@ -145,7 +145,7 @@ export default {
                         obj.start_time = obj.start_time.slice(5, 10);
                         obj.end_time = obj.end_time.slice(5, 10);
                         obj.activity_base_c = obj.activity_base > 10000
-                            ? `${Math.floor(obj.activity_base / 10000)}万+`
+                            ? `${Math.floor(obj.activity_base / 10000)}W+`
                             : `${obj.activity_base}人`;
 
                         this.confList.forEach((d) => {
