@@ -278,8 +278,16 @@ export default {
     filters: {
         optimizeImage: (val) => {
             let newUrl = '';
-            const width = 330;
-            const height = 667;
+            let width = 330;
+            let height = 667;
+            try {
+                const res = uni.getSystemInfoSync();
+                width = res.windowWidth;
+                height = res.windowHeight;
+            } catch (e) {
+                // error
+            }
+
             if (val.indexOf('?') !== -1) {
                 newUrl = `${val}&x-oss-process=image/format,png/interlace,1/quality,Q_80/resize,m_pad,h_${height
                     * 2},w_${width * 2},color_000000`;
@@ -329,6 +337,10 @@ export default {
             type: Number,
             default: 0,
         },
+        isChangeStatusLike: {
+            type: Boolean,
+            default: false,
+        },
     },
     data() {
         return {
@@ -373,12 +385,11 @@ export default {
                         this.isPlayed = true;
                     }
                 } else {
-                    this.videoContext.stop();
+                    this.videoContext.pause();
                 }
             }
             if (val === this.swiperPage && this.pageData.resource_type === 1) {
                 this.isPlayed = false;
-                this.videoContext.seek(0);
 
                 if (this.isH5) {
                     const b = document.querySelector(
@@ -390,6 +401,7 @@ export default {
                         this.isPlayed = true;
                     }
                 } else {
+                    this.videoContext.seek(0);
                     this.videoContext.play();
                 }
             }
@@ -397,14 +409,14 @@ export default {
                 this.setPlayCount();
             }
         },
-        likeStatus(newVal) {
+        isChangeStatusLike() {
             if (
-                newVal
+                this.swiperPage === this.isChangeSlide
                 && !this.toggleLikeObj[this.pageData.id]
-                && this.swiperPage === this.isChangeSlide
+                && this.likeStatus
             ) {
+                this.toggleLikeObj[this.pageData.id] = true;
                 this.praise_count += 1;
-                this.toggleLikeObj[this.pageData.id] = 1;
             }
         },
         pageData(val) {
@@ -412,7 +424,6 @@ export default {
                 this.praise_count = this.pageData.praise_count || 0;
                 this.introduce = this.pageData.introduce || '';
                 this.catName = this.pageData.cat_name || '';
-                this.play_count = this.pageData.play_count;
             }
         },
     },
@@ -441,8 +452,6 @@ export default {
         setPlayCount() {
             api.post('/api/works/playcount', {
                 id: this.pageData.id,
-            }).then(() => {
-                // this.play_count += 1;
             });
         },
         handleCanvass() {

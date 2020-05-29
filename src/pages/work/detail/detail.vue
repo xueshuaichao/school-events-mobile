@@ -109,6 +109,7 @@
                     :from="from"
                     :show-drawer="showDrawer"
                     :comment-total="commentTotal"
+                    :is-change-status-like="isChangeStatusLike"
                     @doAction="doAction"
                 />
             </swiper-item>
@@ -128,6 +129,7 @@
                         :from="from"
                         :show-drawer="showDrawer"
                         :comment-total="commentTotal"
+                        :is-change-status-like="isChangeStatusLike"
                         @doAction="doAction"
                     />
                 </swiper-item>
@@ -145,6 +147,7 @@
                         :from="from"
                         :show-drawer="showDrawer"
                         :comment-total="commentTotal"
+                        :is-change-status-like="isChangeStatusLike"
                         @doAction="doAction"
                     />
                 </swiper-item>
@@ -161,6 +164,7 @@
                     :from="from"
                     :show-drawer="showDrawer"
                     :comment-total="commentTotal"
+                    :is-change-status-like="isChangeStatusLike"
                     @doAction="doAction"
                 />
             </swiper-item>
@@ -237,6 +241,7 @@ export default {
             filterObj: {},
             apiFrom: '',
             commentTotal: 0,
+            isChangeStatusLike: false,
         };
     },
     created() {},
@@ -474,8 +479,6 @@ export default {
                 this.fr = logger.getFr(type, {});
             }
 
-            console.log(this.activity_id, '---setGetDetail----');
-
             if (this.from !== 'openGame') {
                 if (this.activity_id > 2) {
                     this.curDetailConf = detailConf[this.activity_id - 1];
@@ -533,6 +536,7 @@ export default {
                 () => api.get(url, param).then(
                     () => {
                         this.likeStatus = 1;
+                        this.isChangeStatusLike = !this.isChangeStatusLike;
                         if (this.activity_id === 9) {
                             this.getUserLotteryNum();
                         }
@@ -732,17 +736,6 @@ export default {
                 newSlideCurPosition -= 1;
                 targetPosition = oldSlideCurPosition - 2;
             }
-
-            console.log(
-                'old',
-                oldSlideCurPosition,
-                'new',
-                newSlideCurPosition,
-                'target--',
-                targetPosition,
-                'max---',
-                this.prePageParam.MaxPosition,
-            );
             this.prePageParam.slideCurPosition = newSlideCurPosition;
             objPosition = this.getPageSizeInfo(targetPosition);
             this.setSwiperPageData(event, objPosition);
@@ -850,12 +843,6 @@ export default {
             if (total < 2 || this.isFromShare) {
                 this.disableslide = true;
             }
-            console.log(
-                position,
-                filter,
-                this.disableslide,
-                'init----data--siwper',
-            );
             // 获取前后两页面的内容。
             if (!this.disableslide) {
                 this.prePageParam.initPosition = curposition;

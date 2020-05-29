@@ -96,7 +96,7 @@
                 "/api": {
                     // "target": "http://aitiaozhan.wdyclass.com:8000/",
                     "target": "http://aitiaozhan.dev.wdyclass.com",
-                    // "target": "http://atz.qsnatz.com",
+                    // "target": "https://aitiaozhan.wdyedu.com",
                     "changeOrigin": true,
                     "secure": false,
                     "proxyTimeout": 3000000,
