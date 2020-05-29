@@ -593,8 +593,8 @@ export default {
             &.active-content-4 {
                 width: 640upx;
                 height: 700upx;
-                padding-left: 45upx;
-                padding-right: 45upx;
+                padding-left: 42upx;
+                padding-right: 42upx;
                 background-image: url(https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/children_mask_footer_mini1.png);
             }
             &.active-content-lucky {
@@ -1035,6 +1035,7 @@ export default {
                         height: 93upx;
                         border: 1px solid #bb77ff;
                         border-radius: 6upx;
+                        box-sizing: border-box;
                     }
                     .name {
                         color: #bb77ff;
@@ -1043,7 +1044,7 @@ export default {
                         & > text {
                             font-weight: normal;
                             display: inline-block;
-                            margin-left: 4upx;
+                            margin-left: 2upx;
                         }
                     }
                     .time {
