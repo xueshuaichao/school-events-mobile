@@ -593,8 +593,8 @@ export default {
             &.active-content-4 {
                 width: 640upx;
                 height: 700upx;
-                padding-left: 42upx;
-                padding-right: 42upx;
+                padding-left: 38upx;
+                padding-right: 38upx;
                 background-image: url(https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/children_mask_footer_mini1.png);
             }
             &.active-content-lucky {
@@ -1042,6 +1042,7 @@ export default {
                         font-weight: bold;
                         line-height: 1;
                         margin-right: 10upx;
+                        max-width: 240upx;
                         & > text {
                             font-weight: normal;
                             display: inline-block;
