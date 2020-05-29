@@ -381,7 +381,7 @@ export default {
                         height: 760,
                         y: 0,
                         x: 0,
-                        borderRadius: 3,
+                        borderRadius: 2,
                     },
                     {
                         url: '',
