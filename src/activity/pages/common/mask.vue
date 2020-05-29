@@ -448,7 +448,7 @@ export default {
                     '水彩笔套装36色',
                     '小米书包',
                 ];
-                let index = 3;
+                let index = val.draw;
                 if (val.draw === 3) {
                     index = 4;
                 } else if (val.draw === 4) {
@@ -457,8 +457,8 @@ export default {
                 const obj = {
                     name: drawDetail[index - 1],
                     img: `https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/children_poster_${index}.png`,
-                    time: '2002-11-15 03:00:00',
-                    status: 1,
+                    time: val.created_at,
+                    status: val.status,
                 };
                 this.myDraw = obj;
             },
