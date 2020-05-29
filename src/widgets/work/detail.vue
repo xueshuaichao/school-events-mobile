@@ -123,16 +123,7 @@
                     </text>
                 </view>
             </view>
-            <view
-                v-if="activityId !== 8"
-                class="intro text-three-line"
-            >
-                {{ introduce }}
-            </view>
-            <view
-                v-if="activityId === 8"
-                class="intro"
-            >
+            <view class="intro">
                 <text>
                     {{
                         !showMore && introduce && introduce.length > 50
