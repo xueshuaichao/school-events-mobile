@@ -14,31 +14,37 @@
                 { liuyi: activity_id === 9 }
             ]"
         >
-            <image
-                class="saveImg"
-                :src="canvasImg"
-            />
-            <!-- 保存图片 -->
-            <view
-                v-show="!imgAuthBtn"
-                class="saveBtn"
-                @click="handleSave"
-            >
-                保存到本地
-            </view>
-            <button
-                v-show="imgAuthBtn"
-                open-type="openSetting"
-                class="saveBtn"
-                @opensetting="checkImgAuthFun"
-            >
-                授权相册并保存到本地
-            </button>
+            <view class="activerule">
+                <image
+                    class="saveImg"
+                    :style="{
+                        height: canvasImgH + 'px',
+                        width: canvasImgW + 'px'
+                    }"
+                    :src="canvasImg"
+                />
+                <!-- 保存图片 -->
+                <view
+                    v-show="!imgAuthBtn"
+                    class="saveBtn"
+                    @click="handleSave"
+                >
+                    保存到本地
+                </view>
+                <button
+                    v-show="imgAuthBtn"
+                    open-type="openSetting"
+                    class="saveBtn"
+                    @opensetting="checkImgAuthFun"
+                >
+                    授权相册并保存到本地
+                </button>
 
-            <view
-                class="close"
-                @click="handleClose"
-            />
+                <view
+                    class="close"
+                    @click="handleClose"
+                />
+            </view>
         </view>
 
         <!-- 小程序分享 -->
@@ -200,6 +206,14 @@ export default {
         drawer,
     },
     data() {
+        let pix = 2;
+        try {
+            const res = uni.getSystemInfoSync();
+            pix = res.windowWidth / 750;
+        } catch (e) {
+            // error
+        }
+        console.log(pix, '------pix');
         return {
             id: '',
             detailId: '',
@@ -242,6 +256,9 @@ export default {
             apiFrom: '',
             commentTotal: 0,
             isChangeStatusLike: false,
+            canvasImgH: 570 * pix,
+            canvasImgW: 826 * pix,
+            pix,
         };
     },
     created() {},
@@ -501,6 +518,8 @@ export default {
                 };
             }
             this.posterConfig.images[1].url = `${res.video_img_url}?x-oss-process=image/resize,m_pad,w_460,h_300`;
+            this.canvasImgW = this.posterConfig.width * this.pix;
+            this.canvasImgH = this.posterConfig.height * this.pix;
             if (this.from === 'openGame') {
                 this.posterConfig.texts[0].text[0].text = `${
                     res.resource_name
@@ -994,19 +1013,23 @@ export default {
         width: 100%;
         height: 100%;
         z-index: 999;
+        .activerule {
+            padding-top: 120upx;
+        }
         .saveImg {
-            position: absolute;
-            width: 520upx;
-            height: 730upx;
-            left: 115upx;
-            top: 168upx;
+            position: relative;
+            left: 50%;
+            // top: 150upx;
+            transform: translateX(-50%);
         }
         .saveBtn {
-            position: absolute;
+            // position: absolute;
+            position: relative;
             width: 520upx;
             height: 96upx;
-            left: 115upx;
-            top: 938upx;
+            left: 50%;
+            transform: translateX(-50%);
+            // top: 938upx;
             background: linear-gradient(
                 180deg,
                 rgba(0, 132, 255, 1),
@@ -1019,16 +1042,19 @@ export default {
             line-height: 96upx;
             text-align: center;
             letter-spacing: 2rpx;
+            margin-top: 30rpx;
         }
         .close {
-            position: absolute;
+            position: relative;
             width: 54upx;
             height: 54upx;
             background: rgba(0, 132, 255, 1);
-            left: 348upx;
-            top: 1074upx;
+            left: 50%;
+            // top: 1074upx;
             border-radius: 50%;
+            transform: translateX(-50%);
             display: inline-block;
+            margin-top: 30rpx;
             &::before,
             &::after {
                 content: "";
@@ -1049,15 +1075,21 @@ export default {
             }
         }
         &.openGame {
+            .activerule {
+                padding-top: 30upx;
+            }
             .saveBtn {
                 background: url("../../../static/images/zhibo/openGame-btn.png");
                 background-size: 100% 100%;
                 border-radius: 0;
                 color: #333;
                 line-height: 80rpx;
+                margin-top: 14rpx;
             }
             .close {
+                margin-top: 14rpx;
                 background: transparent;
+                border: 2upx solid #fff;
             }
         }
         &.read {
