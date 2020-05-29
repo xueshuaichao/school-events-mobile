@@ -1026,21 +1026,22 @@ export default {
                 .my-draw-item {
                     border-bottom: 1px #c790ff dashed;
                     display: flex;
-                    justify-content: space-between;
                     align-items: center;
                     height: 158upx;
-                    line-height: 158upx;
                     & > image {
                         width: 100upx;
                         height: 93upx;
                         border: 1px solid #bb77ff;
                         border-radius: 6upx;
                         box-sizing: border-box;
+                        margin-right: 22upx;
                     }
                     .name {
                         color: #bb77ff;
                         font-size: 32upx;
                         font-weight: bold;
+                        line-height: 1;
+                        margin-right: 10upx;
                         & > text {
                             font-weight: normal;
                             display: inline-block;
@@ -1050,6 +1051,7 @@ export default {
                     .time {
                         color: #999;
                         font-size: 20upx;
+                        line-height: 1;
                     }
                 }
                 &.none {
