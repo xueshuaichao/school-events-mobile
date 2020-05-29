@@ -14,7 +14,7 @@ const main = {
         borderWidth,
         backgroundColor,
         borderColor,
-        borderRadius = 0,
+        borderRadius = 0, // 一定要大于1！！！
         opacity = 1
     }) {
         // 判断是否块内有文字
