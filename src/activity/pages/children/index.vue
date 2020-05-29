@@ -87,20 +87,14 @@
                 <view class="poster-img-mask-box">
                     <template>
                         <view
-                            v-if="myPrizeList"
-                            class="prize-btn children-btn"
-                        >
-                            我的中奖
-                        </view>
-                        <view
                             v-if="posterWin"
-                            :class="['tips', { cur: myPrizeList }]"
+                            class="tips"
                         >
                             恭喜您！抽中<text>{{ lotteryDetail.name }}</text>1{{ lotteryDetail.unit ? "套" : "个" }}
                         </view>
                         <view
                             v-else
-                            :class="['tips', { cur: myPrizeList }]"
+                            class="tips"
                         >
                             未中奖！别气馁，每天都有机会哦～
                         </view>
@@ -242,16 +236,8 @@
                                 获取抽奖机会
                             </view>
                             <view
-                                v-if="isH5"
                                 class="btn"
-                                @click="h5CreatePoster(2)"
-                            >
-                                我的中奖
-                            </view>
-                            <view
-                                v-else
-                                class="btn"
-                                @click="createPoster(2)"
+                                @click="myDrawList"
                             >
                                 我的中奖
                             </view>
@@ -278,7 +264,9 @@
             :lottery-num="lotteryNum"
             :show-qr-code="type === 1 || type === 0"
             :rules="indexConfig.rules"
+            :draw-data="myDrawData"
             @close="handleClose"
+            @getPrizeNum="getPrizeNum"
             @getLuckyList="getLuckyList"
             @getNewLotteryNum="getNewLotteryNum"
         />
@@ -297,14 +285,14 @@
                 <view
                     v-if="isH5"
                     class="children-btn join-lottery"
-                    @click="h5CreatePoster(1)"
+                    @click="h5CreatePoster()"
                 >
                     点击开奖
                 </view>
                 <view
                     v-else
                     class="children-btn join-lottery"
-                    @click="createPoster(1)"
+                    @click="createPoster()"
                 >
                     点击开奖
                 </view>
@@ -330,6 +318,7 @@ export default {
     data() {
         return {
             showPoster: false, // 由于中奖和位中奖config有差异 需要等配置文件修改后初始化海报组件
+            myDrawData: {},
             // #ifdef H5
             isH5: true,
             // #endif
@@ -358,7 +347,6 @@ export default {
             showPacketRain: false, // 显示红包雨
             showLotteryPanel: false, // 显示抽奖弹框 false-隐藏 登录后每天只显示一次
             showOpenLotteryPanel: false, // 开奖 false-隐藏
-            myPrizeList: false,
             packetNum: 0,
             lotteryDetail: {},
             poster: null,
@@ -506,9 +494,9 @@ export default {
             this.showPacketRain = false;
             if (num === 0) {
                 if (this.isH5) {
-                    this.h5CreatePoster(1, false);
+                    this.h5CreatePoster(false);
                 } else {
-                    this.createPoster(1, false);
+                    this.createPoster(false);
                 }
             } else {
                 this.showOpenLotteryPanel = true;
@@ -684,31 +672,26 @@ export default {
         closeLotteryPanel() {
             this.showLotteryPanel = false;
         },
-        openLottery(type, status = true) {
+        openLottery(status = true) {
             // 开奖 我的中奖
-            const url = type === 1 ? '/api/activity/luckydraw' : '/api/activity/mydraw';
-            this.myPrizeList = type !== 1;
-            return api.get(url, status ? {} : { draw: 0 }).then(
-                (res) => {
-                    // 我的中奖 如果用户没有抽过奖 显示立即参与
-                    if (type === 2 && Array.isArray(res) && res.length === 0) {
-                        this.showLotteryPanel = true;
-                        return true;
-                    }
-                    if (res.status) {
-                        // 中奖了
-                        return this.winDrawImage(res);
-                    }
-                    // 没中奖
-                    return this.loseDrawImage(res);
-                },
-                (err) => {
-                    uni.showToast({
-                        title: err.message,
-                        icon: 'none',
-                    });
-                },
-            );
+            return api
+                .get('/api/activity/luckydraw', status ? {} : { draw: 0 })
+                .then(
+                    (res) => {
+                        if (res.status) {
+                            // 中奖了
+                            return this.winDrawImage(res);
+                        }
+                        // 没中奖
+                        return this.loseDrawImage(res);
+                    },
+                    (err) => {
+                        uni.showToast({
+                            title: err.message,
+                            icon: 'none',
+                        });
+                    },
+                );
         },
         setImageInfo(imgSrc) {
             const oImgBox = document.createElement('img');
@@ -828,7 +811,7 @@ export default {
                 status: false,
             };
         },
-        createPoster(type = 1, status) {
+        createPoster(status = true) {
             this.getAuthStatus();
             if (!this.lock) {
                 this.lock = true;
@@ -836,18 +819,16 @@ export default {
                     fr: this.fr,
                 }).then(
                     () => {
-                        this.openLottery(type, status).then(({ config }) => {
-                            console.log(111, status, config);
+                        this.openLottery(status).then(({ config }) => {
                             this.lock = false;
                             if (config) {
                                 uni.showLoading({
-                                    title: type === 1 ? '正在开奖' : '请稍等',
+                                    title: '正在开奖',
                                 });
                                 this.posterCommonConfig = {
                                     ...this.posterCommonConfig,
                                     ...config,
                                 };
-                                console.log(111, this.posterCommonConfig);
                                 // 需等画报配置修改后才能生成
                                 this.showPoster = true;
                                 this.$nextTick(() => {
@@ -867,7 +848,7 @@ export default {
                 );
             }
         },
-        h5CreatePoster(type = 1, status) {
+        h5CreatePoster(status = true) {
             // type 1-开奖 2-我的中奖
             if (!this.lock) {
                 this.lock = true;
@@ -875,13 +856,12 @@ export default {
                     fr: this.fr,
                 }).then(
                     () => {
-                        this.openLottery(type, status).then(
+                        this.openLottery(status).then(
                             ({ config, status }) => {
                                 this.lock = false;
                                 if (config) {
                                     uni.showLoading({
-                                        title:
-                                            type === 1 ? '正在开奖' : '请稍等',
+                                        title: '正在开奖',
                                     });
                                     if (status) {
                                         // 中奖
@@ -1140,6 +1120,13 @@ export default {
                     icon: 'none',
                 });
             }
+        },
+        myDrawList() {
+            api.get('/api/activity/mydraw').then((res) => {
+                this.myDrawData = res;
+                console.log(res);
+                this.showMask({ title: '我的中奖', type: 4 });
+            });
         },
         showMask({ title, type }) {
             // type 1-奖品设置 2-幸运榜单 3-获取抽奖机会

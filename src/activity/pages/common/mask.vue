@@ -301,6 +301,43 @@
                             </view>
                         </view>
                     </template>
+                    <template v-else-if="type === 4">
+                        <view class="my-draw">
+                            <template v-if="myDraw.status">
+                                <veiw class="my-draw-list">
+                                    <view class="my-draw-item">
+                                        <image :src="myDraw.img" />
+                                        <view
+                                            class="name"
+                                        >
+                                            {{ myDraw.name
+                                            }}<text>x1</text>
+                                        </view>
+                                        <view class="time">
+                                            {{
+                                                myDraw.time
+                                            }}
+                                        </view>
+                                    </view>
+                                </veiw>
+                            </template>
+                            <template v-else>
+                                <div class="my-draw-list none">
+                                    <image />
+                                    <view>很遗憾！暂未中奖</view>
+                                </div>
+                            </template>
+
+                            <view
+                                class="get-draw-num"
+                                @click="getPrizeNum"
+                            >
+                                <image
+                                    src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/get_draw_num.png"
+                                />
+                            </view>
+                        </view>
+                    </template>
                     <view
                         v-if="showQrCode"
                         class="qr-wrap"
@@ -346,6 +383,12 @@ export default {
                 return [];
             },
         },
+        drawData: {
+            type: Object,
+            default() {
+                return {};
+            },
+        },
         theme: {
             type: Object,
             default() {
@@ -376,6 +419,7 @@ export default {
             luckyAllTotal: -1,
             luckyNum: 1,
             lotteryType: this.lotteryNum.type || [],
+            myDraw: {},
         };
     },
     watch: {
@@ -388,6 +432,31 @@ export default {
                 this.luckyTotal = list.reverse();
                 this.luckyListArr = val.list;
                 this.luckyAllTotal = val.total;
+            },
+            deep: true,
+            immediate: true,
+        },
+        drawData: {
+            handler(val) {
+                const drawDetail = [
+                    '航拍无人机',
+                    '多功能棋盘',
+                    '水彩笔套装36色',
+                    '小米书包',
+                ];
+                let index = val.draw;
+                if (val.draw === 3) {
+                    index = 4;
+                } else if (val.draw === 4) {
+                    index = 3;
+                }
+                const obj = {
+                    name: drawDetail[index - 1],
+                    img: `https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/children_poster_${index}.png`,
+                    time: val.created_at,
+                    status: val.status,
+                };
+                this.myDraw = obj;
             },
             deep: true,
             immediate: true,
@@ -406,6 +475,9 @@ export default {
                 index,
                 type,
             });
+        },
+        getPrizeNum() {
+            this.$emit('getPrizeNum');
         },
     },
 };
@@ -520,6 +592,13 @@ export default {
             &.active-content-0 {
             }
             &.active-content-1 {
+            }
+            &.active-content-4 {
+                width: 640upx;
+                height: 700upx;
+                padding-left: 45upx;
+                padding-right: 45upx;
+                background-image: url(https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/children_mask_footer_mini1.png);
             }
             &.active-content-lucky {
                 width: 540upx;
@@ -942,6 +1021,58 @@ export default {
                     background: rgba(199, 144, 255, 0.35);
                     box-shadow: inset 0px 0px 0px 0px rgba(255, 255, 255, 0.35);
                     color: #d5abff;
+                }
+            }
+        }
+        .my-draw {
+            .my-draw-list {
+                .my-draw-item {
+                    border-bottom: 1px #c790ff dashed;
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    height: 158upx;
+                    line-height: 158upx;
+                    & > image {
+                        width: 100upx;
+                        height: 93upx;
+                        border: 1px solid #bb77ff;
+                        border-radius: 6upx;
+                    }
+                    .name {
+                        color: #bb77ff;
+                        font-size: 32upx;
+                        font-weight: bold;
+                        & > text {
+                            font-weight: normal;
+                            display: inline-block;
+                            margin-left: 4upx;
+                        }
+                    }
+                    .time {
+                        color: #999;
+                        font-size: 20upx;
+                    }
+                }
+                &.none {
+                    text-align: center;
+                    & > image {
+                        width: 146upx;
+                        height: 140upx;
+                        margin: 0 auto 40upx;
+                    }
+                    & > view {
+                        color: #bb77ff;
+                        font-size: 36upx;
+                    }
+                }
+            }
+            .get-draw-num {
+                & > image {
+                    width: 472upx;
+                    height: 178upx;
+                    position: absolute;
+                    bottom: 127upx;
                 }
             }
         }
