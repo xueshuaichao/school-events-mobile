@@ -307,23 +307,20 @@
                                 <veiw class="my-draw-list">
                                     <view class="my-draw-item">
                                         <image :src="myDraw.img" />
-                                        <view
-                                            class="name"
-                                        >
-                                            {{ myDraw.name
-                                            }}<text>x1</text>
+                                        <view class="name">
+                                            {{ myDraw.name }}<text>x1</text>
                                         </view>
                                         <view class="time">
-                                            {{
-                                                myDraw.time
-                                            }}
+                                            {{ myDraw.time }}
                                         </view>
                                     </view>
                                 </veiw>
                             </template>
                             <template v-else>
                                 <div class="my-draw-list none">
-                                    <image />
+                                    <image
+                                        src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/my_draw_none.png"
+                                    />
                                     <view>很遗憾！暂未中奖</view>
                                 </div>
                             </template>
@@ -1059,7 +1056,7 @@ export default {
                     & > image {
                         width: 146upx;
                         height: 140upx;
-                        margin: 0 auto 40upx;
+                        margin: 34upx auto;
                     }
                     & > view {
                         color: #bb77ff;

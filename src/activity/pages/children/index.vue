@@ -373,9 +373,9 @@ export default {
                     },
                     {
                         url: '',
-                        width: 126,
-                        height: 126,
-                        y: 602,
+                        width: 122,
+                        height: 122,
+                        y: 603,
                         x: 79,
                         borderRadius: 100,
                     },
