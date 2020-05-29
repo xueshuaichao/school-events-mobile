@@ -308,10 +308,17 @@
                                     <view class="my-draw-item">
                                         <image :src="myDraw.img" />
                                         <view class="name">
-                                            {{ myDraw.name }}<text>x1</text>
-                                        </view>
-                                        <view class="time">
-                                            {{ myDraw.time }}
+                                            <view>
+                                                {{ myDraw.name
+                                                }}<text
+                                                    class="num"
+                                                >
+                                                    x1
+                                                </text>
+                                            </view>
+                                            <view class="time">
+                                                {{ myDraw.time }}
+                                            </view>
                                         </view>
                                     </view>
                                 </veiw>
@@ -637,7 +644,7 @@ export default {
         }
         .active-content {
             box-shadow: inset 0px 0px 24upx 0px rgba(182, 146, 255, 0.57);
-            border-radius: 50upx;
+            border-radius: 56upx;
             padding-bottom: 250upx;
             background-image: url(https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/children_mask_footer.png);
             background-repeat: no-repeat;
@@ -1042,17 +1049,18 @@ export default {
                         font-weight: bold;
                         line-height: 1;
                         margin-right: 10upx;
-                        max-width: 240upx;
-                        & > text {
-                            font-weight: normal;
-                            display: inline-block;
-                            margin-left: 2upx;
+                        .num {
+                            font-size: 32upx;
+                            color: #bb77ff;
+                            margin-left: 8upx;
                         }
-                    }
-                    .time {
-                        color: #999;
-                        font-size: 20upx;
-                        line-height: 1;
+                        .time {
+                            color: #999;
+                            font-size: 22upx;
+                            line-height: 1;
+                            font-weight: normal;
+                            margin-top: 16upx;
+                        }
                     }
                 }
                 &.none {

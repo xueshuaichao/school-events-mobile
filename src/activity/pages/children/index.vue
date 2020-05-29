@@ -452,7 +452,6 @@ export default {
     created() {
         this.showLottery();
         this.ctx = uni.createCanvasContext('firstCanvas');
-        console.log(this.ctx);
     },
 
     methods: {
@@ -1122,11 +1121,27 @@ export default {
             }
         },
         myDrawList() {
-            api.get('/api/activity/mydraw').then((res) => {
-                this.myDrawData = res;
-                console.log(res);
-                this.showMask({ title: '我的中奖', type: 4 });
-            });
+            if (!this.lock) {
+                this.lock = true;
+                api.isLogin().then(
+                    () => {
+                        api.get('/api/activity/mydraw').then(
+                            (res) => {
+                                this.lock = false;
+                                this.myDrawData = res;
+                                console.log(res);
+                                this.showMask({ title: '我的中奖', type: 4 });
+                            },
+                            () => {
+                                this.lock = false;
+                            },
+                        );
+                    },
+                    () => {
+                        this.lock = false;
+                    },
+                );
+            }
         },
         showMask({ title, type }) {
             // type 1-奖品设置 2-幸运榜单 3-获取抽奖机会
