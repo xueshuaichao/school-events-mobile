@@ -144,13 +144,18 @@
                             v-if="lotteryNum.vote_num < 5"
                             class="text-item"
                         >
-                            今日点赞5个作品，抽奖次数<text>+1</text>
+                            <text>今日点赞5个作品，抽奖次数</text><text class="n">
+                                +1
+                            </text>
                         </view>
                         <view
                             v-if="lotteryNum.add_activity < 1"
                             class="text-item"
                         >
-                            今日上传1个作品，抽奖次数<text>+1</text>
+                            <text>今日上传1个作品，抽奖次数</text>
+                            <text class="n">
+                                +1
+                            </text>
                         </view>
                     </view>
                     <image
@@ -376,7 +381,7 @@ export default {
                         height: 760,
                         y: 0,
                         x: 0,
-                        borderRadius: 1,
+                        borderRadius: 3,
                     },
                     {
                         url: '',
@@ -397,7 +402,7 @@ export default {
                         height: 760,
                         y: 0,
                         x: 0,
-                        borderRadius: 1,
+                        borderRadius: 2,
                     },
                     {
                         url: '',
@@ -1532,16 +1537,19 @@ export default {
             margin: 0 auto;
         }
         .text-item-box {
-            min-height: 60upx;
+            min-height: 56upx;
         }
         .text-item {
             font-size: 26upx;
-            line-height: 60upx;
+            line-height: 56upx;
             color: #fff;
-            & > text {
+            display: flex;
+            align-items: center;
+            text-align: center;
+            justify-content: center;
+            .n {
                 color: #bb77ff;
                 font-size: 34upx;
-                vertical-align: middle;
             }
         }
 
