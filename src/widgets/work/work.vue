@@ -28,7 +28,13 @@
                     >
                         <view class="img-box fl-l">
                             <view class="going">
-                                进行中
+                                {{
+                                    item.status === 2
+                                        ? "进行中"
+                                        : item.status === 3
+                                            ? "已结束"
+                                            : "未开始"
+                                }}
                             </view>
                             <image
                                 class="banner"
