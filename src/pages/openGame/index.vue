@@ -239,7 +239,7 @@ import uniLoadMore from '../../components/uni-load-more/uni-load-more.vue';
 import share from '../../common/share';
 import logger from '../../common/logger';
 import EventCraftCover from '../../components/event-craft-cover/index.vue';
-import utils from '../../common/utils';
+// import utils from '../../common/utils';
 
 export default {
     filters: {
@@ -292,6 +292,7 @@ export default {
             setId: '',
             oldsort: 3,
             showGotop: false,
+            act_status: 2,
         };
     },
     created() {
@@ -300,6 +301,7 @@ export default {
     mounted() {},
     onLoad(params) {
         this.fr = logger.getFr('dsxnh', params);
+        this.getNewActivityStatus();
     },
     onShow() {
         this.changeValue = '';
@@ -309,6 +311,15 @@ export default {
         clearInterval(this.setId);
     },
     methods: {
+        getNewActivityStatus() {
+            // 1未开始，2进行中，3已结束
+            api.get('/api/activity/activitystatus', {
+                activity_id: 7,
+            }).then((data) => {
+                this.act_status = data.status;
+                // 1显示  0不显示
+            });
+        },
         handleToTop() {
             uni.pageScrollTo({
                 scrollTop: 0,
@@ -347,7 +358,7 @@ export default {
             );
         },
         handleUpload() {
-            if (utils.isOverDate()) {
+            if (this.act_status === 2) {
                 api.isLogin({
                     fr: this.fr,
                 }).then(() => {
@@ -455,7 +466,7 @@ export default {
             this.isPlayed = true;
         },
         handleVote(item) {
-            if (utils.isOverDate()) {
+            if (this.act_status === 2) {
                 api.isLogin({
                     fr: this.fr,
                 }).then(() => {
