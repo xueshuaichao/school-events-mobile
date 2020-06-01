@@ -368,12 +368,12 @@ export default {
                 jinisi: [
                     {
                         name: '吉尼斯个人',
-                        id: 1,
+                        id: 6,
                         cat_id: 113,
                     },
                     {
                         name: '吉尼斯团队',
-                        id: 2,
+                        id: 6,
                         cat_id: 125,
                     },
                 ],

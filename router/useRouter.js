@@ -244,6 +244,9 @@ const routesConfig = {
             path: '/pages/openGame/jingjiupload',
         },
         {
+            path: '/pages/openGame/zhibo-list',
+        },
+        {
             path: '/pages/upload/default/upload',
         },
         {
