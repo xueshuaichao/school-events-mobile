@@ -662,9 +662,13 @@ export default {
                         uni.navigateTo({
                             url: '/pages/read/upload/modify',
                         });
-                    } else {
+                    } else if (this.activity_id === 8) {
                         uni.navigateTo({
                             url: `/pages/activity-pages/upload/modify?activity_id=${this.activity_id}`,
+                        });
+                    } else {
+                        uni.navigateTo({
+                            url: `/activity/pages/upload/modify?activity_id=${this.activity_id}`,
                         });
                     }
                 } else if (status === 1) {
