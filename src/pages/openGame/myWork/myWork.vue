@@ -357,7 +357,7 @@
 import api from '../../../common/api';
 import uniLoadMore from '../../../components/uni-load-more/uni-load-more.vue';
 import EventCraftCover from '../../../components/event-craft-cover/index.vue';
-import utils from '../../../common/utils';
+// import utils from '../../../common/utils';
 
 export default {
     components: {
@@ -401,6 +401,7 @@ export default {
             type: '',
             allNum: {},
             allTotal: 0,
+            act_status: 2,
         };
     },
     computed: {
@@ -413,7 +414,7 @@ export default {
     },
     methods: {
         handleVote(item) {
-            if (utils.isOverDate()) {
+            if (this.act_status === 2) {
                 api.isLogin({
                     fr: this.fr,
                 }).then(() => {
@@ -625,6 +626,15 @@ export default {
                 }
             });
         },
+        getNewActivityStatus() {
+            // 1未开始，2进行中，3已结束
+            api.get('/api/activity/activitystatus', {
+                activity_id: 7,
+            }).then((data) => {
+                this.act_status = data.status;
+                // 1显示  0不显示
+            });
+        },
     },
     onLoad(query) {
         const {
@@ -644,6 +654,7 @@ export default {
             this.changeValue = name;
             this.searchWorkData();
         }
+        this.getNewActivityStatus();
     },
     onShareAppMessage(res) {
         if (res.from === 'button') {
