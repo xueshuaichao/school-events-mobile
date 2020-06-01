@@ -56,11 +56,11 @@ export default {
         };
     },
     created() {
-        api.post('/api/activity/commitactivityfollow', {
-            activity_id: 7,
-        }).then(() => {
-            // this.activity_num1 = data.activity_num;
-        });
+        // api.post('/api/activity/commitactivityfollow', {
+        //     activity_id: 7,
+        // }).then(() => {
+        // this.activity_num1 = data.activity_num;
+        // });
     },
     onShareAppMessage(res) {
         if (res.from === 'button') {
