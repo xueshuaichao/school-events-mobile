@@ -143,6 +143,48 @@ export default {
                     activityId: 9,
                     catId: '', // 所属分类
                     showAllCat: true,
+                    configCatId: [
+                        {
+                            name: '歌唱表演',
+                            cat_id: 16,
+                        },
+                        {
+                            name: '舞蹈表演',
+                            cat_id: 17,
+                        },
+                        {
+                            name: '口才表演',
+                            cat_id: 18,
+                        },
+                        {
+                            name: '乐器演奏',
+                            cat_id: 19,
+                        },
+                        {
+                            name: '手工制作',
+                            cat_id: 20,
+                        },
+                        {
+                            name: '书法与绘画',
+                            cat_id: 21,
+                        },
+                        {
+                            name: '杂技',
+                            cat_id: 23,
+                        },
+                        {
+                            name: '魔术',
+                            cat_id: 24,
+                        },
+                        {
+                            name: '艺术设计',
+                            cat_id: 102,
+                        },
+                        {
+                            name: '其它',
+                            cat_id: 25,
+                        },
+                    ],
                     time: '5月29日--6月20日',
                     primaryColor: '#BB77FF', // 主色调
                     darkPrimaryColor: '#C790FF', // 深一些 （按钮的颜色）

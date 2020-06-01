@@ -300,6 +300,18 @@ export default {
                         ...this.formData,
                         ...res,
                     };
+                    // pm删除了几个分类 因此如果不存在默认选择其它
+                    const catIndex = this.publicConfig.configCatId.findIndex(
+                        v => v.cat_id === res.cat_id,
+                    );
+                    if (catIndex === -1) {
+                        this.$set(this.formData, 'cat_id', 25);
+                        this.$set(this.formData, 'cat_name', '其它');
+                        this.index = this.publicConfig.configCatId.length - 1;
+                    } else {
+                        this.index = catIndex;
+                    }
+                    console.log(this.formData);
                     if (res.resource_type === 2) {
                         this.uploadMode = 'image';
                         this.images = res.img;
@@ -352,11 +364,18 @@ export default {
             }
         },
         getData() {
-            api.get('/api/works/childcat', {
-                cat_id: 3,
-            }).then((res) => {
-                this.catData = res;
-            });
+            if (
+                this.publicConfig.configCatId
+                && this.publicConfig.configCatId.length
+            ) {
+                this.catData = this.publicConfig.configCatId;
+            } else {
+                api.get('/api/works/childcat', {
+                    cat_id: 3,
+                }).then((res) => {
+                    this.catData = res;
+                });
+            }
             api.get('/api/user/info').then(
                 (res) => {
                     this.needBindMobile = res.user_info && res.user_info.is_bind_mobile === 0;
@@ -412,7 +431,6 @@ export default {
             this.index = e.detail.value;
             const catId = this.catData[this.index].cat_id;
             this.formData.cat_id = catId;
-            console.log(this.formData);
         },
         errTip(title) {
             uni.showToast({
@@ -472,7 +490,6 @@ export default {
                     /(^\s*)|(\s*$)/g,
                     '',
                 );
-                console.log(111, formData.cat_id);
                 if (formData.cat_id === '') {
                     this.lock = true;
                     return this.errTip('请选择分类');
