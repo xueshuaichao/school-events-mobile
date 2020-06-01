@@ -305,7 +305,7 @@ export default {
                         v => v.cat_id === res.cat_id,
                     );
                     if (catIndex === -1) {
-                        this.$set(this.formData, 'cat_id', 25);
+                        this.$set(this.formData, 'cat_id', 102);
                         this.$set(this.formData, 'cat_name', '其它');
                         this.index = this.publicConfig.configCatId.length - 1;
                     } else {

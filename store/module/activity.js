@@ -178,11 +178,11 @@ export default {
                         },
                         {
                             name: '艺术设计',
-                            cat_id: 102,
+                            cat_id: 25,
                         },
                         {
                             name: '其它',
-                            cat_id: 25,
+                            cat_id: 102,
                         },
                     ],
                     time: '5月29日--6月20日',
