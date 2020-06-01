@@ -568,8 +568,8 @@ export default {
                 ].unit;
             }
         },
-        getallcategory(id) {
-            return api.get(`/api/works/getallcategory?cid=${id}`).then(
+        getallcategory() {
+            return api.get('/api/works/getallcategory?cid=131').then(
                 (data) => {
                     this.catData = data;
                 },
