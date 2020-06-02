@@ -174,16 +174,16 @@
         />
         <!-- menu -->
         <work
-            :title="'爱挑战优秀个人'"
-            :more-url="'/pages/work/list/list?cat_id=1'"
+            :title="'爱挑战竞技优秀作品'"
+            :more-url="'/pages/work/list/list?cat_id=0'"
             :info="workData.individual.list"
-            :cat-id="1"
+            :cat-id="0"
         />
         <work
-            :title="'爱挑战优秀团体'"
-            :more-url="'/pages/work/list/list?cat_id=2'"
+            :title="'爱挑战吉尼斯优秀作品'"
+            :more-url="'/pages/work/list/list?cat_id=6'"
             :info="workData.team.list"
-            :cat-id="2"
+            :cat-id="6"
         />
         <work
             :title="'才艺秀优秀作品'"
@@ -358,10 +358,10 @@ export default {
         },
         getWorkList(type, refresh) {
             let catId;
-            if (type === 'individual') {
-                catId = 1;
-            } else if (type === 'team') {
-                catId = 2;
+            if (type === 'atz') {
+                catId = 0;
+            } else if (type === 'guiness') {
+                catId = 6;
             } else if (type === 'talent') {
                 catId = 3;
             }
@@ -373,9 +373,9 @@ export default {
                 sort: 4,
                 page_size: 6,
             }).then((res) => {
-                if (type === 'individual') {
+                if (type === 'atz') {
                     this.workData.individual = res;
-                } else if (type === 'team') {
+                } else if (type === 'guiness') {
                     this.workData.team = res;
                 } else if (type === 'talent') {
                     this.workData.talent = res;
@@ -388,8 +388,8 @@ export default {
 
         getData(refresh) {
             this.getHotActivity();
-            this.getWorkList('individual');
-            this.getWorkList('team');
+            this.getWorkList('atz');
+            this.getWorkList('guiness');
             this.getWorkList('talent', refresh);
         },
         getHotActivity() {

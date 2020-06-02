@@ -368,13 +368,13 @@ export default {
                 jinisi: [
                     {
                         name: '吉尼斯个人',
-                        id: 1,
-                        cat_id: 113,
+                        id: 6,
+                        cat_id: 131,
                     },
                     {
                         name: '吉尼斯团队',
-                        id: 2,
-                        cat_id: 125,
+                        id: 6,
+                        cat_id: 131,
                     },
                 ],
             },
@@ -568,8 +568,8 @@ export default {
                 ].unit;
             }
         },
-        getallcategory() {
-            return api.get('/api/works/getallcategory?cid=131').then(
+        getallcategory(id) {
+            return api.get(`/api/works/getallcategory?cid=${id}`).then(
                 (data) => {
                     this.catData = data;
                 },
