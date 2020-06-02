@@ -63,9 +63,13 @@
                         <text
                             v-for="(item, k) in uploadConfig.uploadMode"
                             :key="k"
-                            class="select-item"
+                            class="select-item for-disable"
                             :class="{
-                                active: formData.resource_type === k + 1
+                                active: formData.resource_type === k + 1,
+                                disabled:
+                                    (formData.cat_id === 18 ||
+                                    formData.cat_id === 16) &&
+                                    item !== 'video'
                             }"
                             @click="setNewsTabActive(k + 1)"
                         >
@@ -341,11 +345,15 @@ export default {
             this.formData.activity_cat = index;
         },
         setNewsTabActive(index) {
+            let Index = index;
             if (this.id) {
                 return false;
             }
-            this.formData.resource_type = index;
-            this.uploadMode = this.uploadConfig.uploadMode[index - 1];
+            if (this.formData.cat_id === 16 || this.formData.cat_id === 18) {
+                Index = 1;
+            }
+            this.formData.resource_type = Index;
+            this.uploadMode = this.uploadConfig.uploadMode[Index - 1];
             return true;
         },
         updateVideo(data) {
@@ -431,6 +439,9 @@ export default {
             this.index = e.detail.value;
             const catId = this.catData[this.index].cat_id;
             this.formData.cat_id = catId;
+            if (catId === 16 || catId === 18) {
+                this.setNewsTabActive(1);
+            }
         },
         errTip(title) {
             uni.showToast({
@@ -718,6 +729,10 @@ export default {
             &.active {
                 background: #0f8c64;
                 color: #fff;
+            }
+            &.for-disable.disabled {
+                color: #eee;
+                border-color: #eee;
             }
         }
     }
