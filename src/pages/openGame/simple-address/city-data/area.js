@@ -417,6 +417,14 @@ var areaData = [
             {
                 label: "白河县",
                 value: "610929"
+            },
+            {
+                label: "高新区",
+                value: "610930"
+            },
+            {
+                label: "恒口示范区",
+                value: "610931"
             }
         ],
         [
