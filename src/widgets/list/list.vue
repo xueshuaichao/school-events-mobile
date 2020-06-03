@@ -52,7 +52,7 @@
                 >
                     <view class="col">
                         <view class="menu-list">
-                            <view
+                            <!-- <view
                                 class="menu-item"
                                 :class="{
                                     active: filter.cat_id.one_level_id === -1
@@ -60,9 +60,9 @@
                                 @click.stop="onSelect('cat_one', -1)"
                             >
                                 全部
-                            </view>
+                            </view> -->
                             <view
-                                v-for="item in categoryData[2].list"
+                                v-for="item in categoryData"
                                 :key="item.cat_id"
                                 class="menu-item"
                                 :class="{
@@ -206,7 +206,12 @@ export default {
             showMenu: false,
             hiddingMenu: false,
 
-            categoryData: [],
+            categoryData: [
+                { cat_id: -1, name: '全部' },
+                { cat_id: 0, name: '爱挑战竞技作品' },
+                { cat_id: 6, name: '爱挑战吉尼斯作品' },
+                { cat_id: 3, name: '才艺秀作品' },
+            ],
             // countyData: [],
             showMenuType: '',
 
@@ -315,17 +320,17 @@ export default {
         },
 
         getData() {
-            api.get('/api/works/cats').then((res) => {
-                this.categoryData = res;
-                const arr = res[2].list.filter(
-                    d => d.cat_id === this.filter.cat_id.one_level_id,
-                );
-                if (arr.length) {
-                    this.curCategory = arr[0].name;
-                } else {
-                    this.curCategory = '全部';
-                }
-            });
+            // api.get('/api/works/cats').then((res) => {
+            //     this.categoryData = res;
+            //     const arr = res[2].list.filter(
+            //         d => d.cat_id === this.filter.cat_id.one_level_id,
+            //     );
+            //     if (arr.length) {
+            //         this.curCategory = arr[0].name;
+            //     } else {
+            //         this.curCategory = '全部';
+            //     }
+            // });
         },
         getTableData() {
             uni.pageScrollTo({
@@ -532,7 +537,7 @@ export default {
     .tab-bar {
         display: flex;
         background: #fff;
-        padding: 0 20%;
+        padding: 0 12%;
         font-size: 32upx;
     }
 

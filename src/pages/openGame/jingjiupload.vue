@@ -369,12 +369,12 @@ export default {
                     {
                         name: '吉尼斯个人',
                         id: 6,
-                        cat_id: 113,
+                        cat_id: 131,
                     },
                     {
                         name: '吉尼斯团队',
                         id: 6,
-                        cat_id: 125,
+                        cat_id: 131,
                     },
                 ],
             },

@@ -63,9 +63,13 @@
                         <text
                             v-for="(item, k) in uploadConfig.uploadMode"
                             :key="k"
-                            class="select-item"
+                            class="select-item for-disable"
                             :class="{
-                                active: formData.resource_type === k + 1
+                                active: formData.resource_type === k + 1,
+                                disabled:
+                                    (formData.cat_id === 18 ||
+                                    formData.cat_id === 16) &&
+                                    item !== 'video'
                             }"
                             @click="setNewsTabActive(k + 1)"
                         >
@@ -300,6 +304,18 @@ export default {
                         ...this.formData,
                         ...res,
                     };
+                    // pm删除了几个分类 因此如果不存在默认选择其它
+                    const catIndex = this.publicConfig.configCatId.findIndex(
+                        v => v.cat_id === res.cat_id,
+                    );
+                    if (catIndex === -1) {
+                        this.$set(this.formData, 'cat_id', 25);
+                        this.$set(this.formData, 'cat_name', '其它');
+                        this.index = this.publicConfig.configCatId.length - 1;
+                    } else {
+                        this.index = catIndex;
+                    }
+                    console.log(this.formData);
                     if (res.resource_type === 2) {
                         this.uploadMode = 'image';
                         this.images = res.img;
@@ -329,11 +345,15 @@ export default {
             this.formData.activity_cat = index;
         },
         setNewsTabActive(index) {
+            let Index = index;
             if (this.id) {
                 return false;
             }
-            this.formData.resource_type = index;
-            this.uploadMode = this.uploadConfig.uploadMode[index - 1];
+            if (this.formData.cat_id === 16 || this.formData.cat_id === 18) {
+                Index = 1;
+            }
+            this.formData.resource_type = Index;
+            this.uploadMode = this.uploadConfig.uploadMode[Index - 1];
             return true;
         },
         updateVideo(data) {
@@ -352,11 +372,18 @@ export default {
             }
         },
         getData() {
-            api.get('/api/works/childcat', {
-                cat_id: 3,
-            }).then((res) => {
-                this.catData = res;
-            });
+            if (
+                this.publicConfig.configCatId
+                && this.publicConfig.configCatId.length
+            ) {
+                this.catData = this.publicConfig.configCatId;
+            } else {
+                api.get('/api/works/childcat', {
+                    cat_id: 3,
+                }).then((res) => {
+                    this.catData = res;
+                });
+            }
             api.get('/api/user/info').then(
                 (res) => {
                     this.needBindMobile = res.user_info && res.user_info.is_bind_mobile === 0;
@@ -412,7 +439,9 @@ export default {
             this.index = e.detail.value;
             const catId = this.catData[this.index].cat_id;
             this.formData.cat_id = catId;
-            console.log(this.formData);
+            if (catId === 16 || catId === 18) {
+                this.setNewsTabActive(1);
+            }
         },
         errTip(title) {
             uni.showToast({
@@ -472,7 +501,6 @@ export default {
                     /(^\s*)|(\s*$)/g,
                     '',
                 );
-                console.log(111, formData.cat_id);
                 if (formData.cat_id === '') {
                     this.lock = true;
                     return this.errTip('请选择分类');
@@ -701,6 +729,10 @@ export default {
             &.active {
                 background: #0f8c64;
                 color: #fff;
+            }
+            &.for-disable.disabled {
+                color: #eee;
+                border-color: #eee;
             }
         }
     }
