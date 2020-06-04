@@ -235,11 +235,8 @@ export default {
         paramsFilter(val) {
             if (val) {
                 // // h5 与 小程序监听 paramsFilter的值，获取的时间不一样。1.这里为了兼容小程序和h5
-                this.filter.cat_id.one_level_id = Number(val.cat_id.one_level_id) || -1;
-                this.filter.keyword = val.keyword;
-                this.filter.sort = Number(val.sort) || 1;
-                this.filter.show_type = val.show_type || '';
-                this.getData();
+                this.initFilter(val);
+                // this.getData();
                 this.getTableData();
             }
         },
@@ -249,7 +246,7 @@ export default {
             try {
                 const value = uni.getStorageSync('onShowFrom');
                 if (value === 'detail') {
-                    this.getData();
+                    // this.getData();
                     this.getTableData();
                     if (!this.paramsFilter.from) {
                         uni.setStorageSync('onShowFrom', '');
@@ -262,7 +259,7 @@ export default {
         },
         canRefresh() {
             uni.stopPullDownRefresh();
-            this.getData();
+            // this.getData();
             this.getTableData();
             this.getSearchWord();
         },
@@ -275,23 +272,30 @@ export default {
         if (this.isFromTabbar) {
             this.filter.cat_id.one_level_id = -1;
             this.getTableData();
-            this.getData();
+            // this.getData();
         } else if (
-            this.paramsFilter.cat_id.one_level_id > 0
+            this.paramsFilter.cat_id.one_level_id > -2
             || this.paramsFilter.keyword
         ) {
             // h5
             // h5 与 小程序监听 paramsFilter的值，获取的时间不一样。1.这里为了兼容小程序和h5
-            this.filter.cat_id.one_level_id = Number(this.paramsFilter.cat_id.one_level_id) || -1;
-            this.filter.keyword = this.paramsFilter.keyword;
-            this.filter.sort = Number(this.paramsFilter.sort) || 1;
-            this.filter.show_type = this.paramsFilter.show_type || '';
+            this.initFilter(this.paramsFilter);
             this.getTableData();
-            this.getData();
+            // this.getData();
         }
         this.getSearchWord();
     },
     methods: {
+        initFilter(val) {
+            this.filter.cat_id.one_level_id = Number(val.cat_id.one_level_id);
+            this.filter.keyword = val.keyword;
+            this.filter.sort = Number(val.sort) || 1;
+            this.filter.show_type = val.show_type || '';
+            this.curCategory = this.categoryData.filter(
+                d => d.cat_id === this.filter.cat_id.one_level_id,
+            )[0].name;
+            console.log(this.curCategory, this.filter, 'llalalla');
+        },
         onSelect(type, value) {
             switch (type) {
                 case 'sort':
@@ -304,13 +308,8 @@ export default {
                     }
                     break;
                 case 'cat_one':
-                    if (value === -1) {
-                        this.filter.cat_id.one_level_id = -1;
-                        this.curCategory = '全部';
-                    } else {
-                        this.filter.cat_id.one_level_id = value.cat_id;
-                        this.curCategory = value.name;
-                    }
+                    this.filter.cat_id.one_level_id = value.cat_id;
+                    this.curCategory = value.name;
                     this.toggleMenu('category');
                     break;
                 default:
@@ -319,19 +318,19 @@ export default {
             this.getTableData();
         },
 
-        getData() {
-            // api.get('/api/works/cats').then((res) => {
-            //     this.categoryData = res;
-            //     const arr = res[2].list.filter(
-            //         d => d.cat_id === this.filter.cat_id.one_level_id,
-            //     );
-            //     if (arr.length) {
-            //         this.curCategory = arr[0].name;
-            //     } else {
-            //         this.curCategory = '全部';
-            //     }
-            // });
-        },
+        // getData() {
+        // api.get('/api/works/cats').then((res) => {
+        //     this.categoryData = res;
+        //     const arr = res[2].list.filter(
+        //         d => d.cat_id === this.filter.cat_id.one_level_id,
+        //     );
+        //     if (arr.length) {
+        //         this.curCategory = arr[0].name;
+        //     } else {
+        //         this.curCategory = '全部';
+        //     }
+        // });
+        // },
         getTableData() {
             uni.pageScrollTo({
                 scrollTop: 0,

@@ -148,7 +148,7 @@ export default {
     },
     methods: {
         goDetail() {
-            if (this.info.status === 1) {
+            if ((this.info.status === 1 && this.from) || !this.from) {
                 this.info.play_count = this.info.play_count + 1;
                 this.$store.commit('setFilterData', {
                     filter: this.filter,

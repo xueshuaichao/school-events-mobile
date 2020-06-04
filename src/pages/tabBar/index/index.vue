@@ -303,7 +303,7 @@ export default {
             // fr 统计关键字是
             const showType = this.changeValue === this.searchWord ? 1 : '';
             return uni.navigateTo({
-                url: `/pages/work/list/list?keyword=${this.changeValue.trim()}&show_type=${showType}`,
+                url: `/pages/work/list/list?keyword=${this.changeValue.trim()}&show_type=${showType}&cat_id=-1`,
             });
         },
         getUserInfo() {

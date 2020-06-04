@@ -855,8 +855,7 @@ export default {
             const { curposition, total, from } = position;
             this.filterObj = filter;
             this.apiFrom = from || '/api/works/list';
-
-            if (typeof filter.page_size === 'undefined') {
+            if (!Object.prototype.hasOwnProperty.call(filter, 'page_size')) {
                 // h5页面刷新，禁止滑动。
                 this.disableslide = true;
                 if (filter.sort) {
