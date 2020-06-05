@@ -181,7 +181,7 @@ export default {
                             cat_id: 102,
                         },
                         {
-                            name: '其它',
+                            name: '其他表演',
                             cat_id: 25,
                         },
                     ],

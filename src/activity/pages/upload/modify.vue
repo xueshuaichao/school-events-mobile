@@ -3,6 +3,7 @@
         v-if="!isLoading"
         :class="[`${publicConfig.activityName}-page`]"
     >
+        {{ formData.resource_type }}
         <view :class="['page-upload']">
             <view
                 v-if="!needBindMobile"
@@ -266,7 +267,6 @@ export default {
         this.formData.activity_id = params.activity_id;
         if (this.id) {
             uni.setNavigationBarTitle({ title: '编辑作品' });
-            this.getItemData();
         }
         const uploadColorConfig = this.$store.getters.getColorConfig({
             activityId: this.formData.activity_id,
@@ -280,9 +280,6 @@ export default {
             activityId: this.formData.activity_id,
             page: 'uploadConfig',
         });
-        // [this.uploadMode] = [this.uploadConfig.uploadMode[0]];
-
-        console.log(this.formData.resource_type);
         this.formData.cat_id = this.publicConfig.catId;
         this.formData.resource_type = this.uploadMode === 'video' ? 1 : 2;
     },
@@ -300,26 +297,34 @@ export default {
                     id: this.id,
                     activity_id: this.formData.activity_id,
                 }).then((res) => {
-                    let { img, resource_type: resourceType } = res;
-
-                    this.isLoading = false;
-
+                    let {
+                        img,
+                        resource_type: resourceType,
+                        cat_id: catId,
+                        cat_name: catName,
+                        video_img_url: videoImgUrl,
+                    } = res;
                     // pm删除了几个分类 因此如果不存在默认选择其它
-                    const catIndex = this.publicConfig.configCatId.findIndex(
-                        v => v.cat_id === res.cat_id,
+                    // 编辑的作品分类是否存在 catIndex === -1 不存在
+                    const catIndex = this.catData.findIndex(
+                        v => v.cat_id === catId,
                     );
                     if (catIndex === -1) {
-                        this.$set(this.formData, 'cat_id', 25);
-                        this.$set(this.formData, 'cat_name', '其它');
-                        this.index = this.publicConfig.configCatId.length - 1;
+                        catId = 102;
+                        catName = '其他表演';
+                        this.index = this.catData.findIndex(
+                            v => v.cat_id === 102,
+                        );
                     } else {
                         this.index = catIndex;
+                        // 如果该分类不支持图片类型 强制改成视频类型 并清空之前上传的图片封面图
                         if (
-                            (res.cat_id === 16 || res.cat_id === 18)
+                            (catId === 16 || catId === 18)
                             && resourceType === 2
                         ) {
                             resourceType = 1;
                             img = [];
+                            videoImgUrl = '';
                         }
                     }
                     this.uploadMode = resourceType === 1 ? 'video' : 'image';
@@ -327,16 +332,17 @@ export default {
                     if (resourceType === 2) {
                         this.uploadMode = 'image';
                         this.images = img;
-                    } else {
-                        this.formData.video_id = res.video_id;
-                        this.formData.video_img_url = res.video_img_url;
                     }
                     this.formData = {
                         ...this.formData,
                         ...res,
-                        resource_type: resourceType,
                         img,
+                        resource_type: resourceType,
+                        cat_id: catId,
+                        cat_name: catName,
+                        video_img_url: videoImgUrl,
                     };
+                    this.isLoading = false;
                 });
             }
         },
@@ -390,11 +396,13 @@ export default {
                 && this.publicConfig.configCatId.length
             ) {
                 this.catData = this.publicConfig.configCatId;
+                this.getItemData();
             } else {
                 api.get('/api/works/childcat', {
                     cat_id: 3,
                 }).then((res) => {
                     this.catData = res;
+                    this.getItemData();
                 });
             }
             api.get('/api/user/info').then(

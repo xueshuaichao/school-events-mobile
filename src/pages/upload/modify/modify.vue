@@ -12,6 +12,7 @@
                     :value="index"
                     :range="catData"
                     :range-key="'name'"
+                    :disabled="true"
                     @change="onSelect"
                 >
                     <view
@@ -21,13 +22,10 @@
                         选择分类
                     </view>
                     <view
-                        v-if="formData.cat_id"
+                        v-else
                         class="uni-input fake-input"
                     >
-                        <template v-if="init">
-                            {{ catName }}
-                        </template>
-                        <template v-else>
+                        <template>
                             {{ catData[index].name }}
                         </template>
                     </view>
@@ -187,7 +185,6 @@ export default {
                 { type: 'image', column_name: '图片' },
             ],
             images: [],
-            catName: '',
             newsTabActiveIndex: 0,
             uploadMode: 'video',
 
@@ -237,33 +234,64 @@ export default {
             }
         },
         getData() {
-            // this.isLoading = true;
             api.get('/api/works/childcat', {
                 cat_id: 3,
             }).then((res) => {
                 this.catData = res;
-            });
+                if (this.id) {
+                    api.get('/api/user/workinfo', {
+                        id: this.id,
+                    }).then((res) => {
+                        let {
+                            img,
+                            resource_type: resourceType,
+                            cat_id: catId,
+                            cat_name: catName,
+                            video_img_url: videoImgUrl,
+                        } = res;
+                        this.isLoading = false;
+                        // pm删除了几个分类 因此如果不存在默认选择其它
+                        // 编辑的作品分类是否存在 catIndex === -1 不存在
+                        const catIndex = this.catData.findIndex(
+                            v => v.cat_id === catId,
+                        );
+                        if (catIndex === -1) {
+                            // pm删除了几个分类 因此如果不存在默认选择其它
+                            catId = 102;
+                            catName = '其他表演';
+                            this.index = this.catData.findIndex(
+                                v => v.cat_id === 102,
+                            );
+                        } else {
+                            this.index = catIndex;
+                            // pm要求： 如果该分类不支持图片类型 强制改成视频类型 并清空之前上传的图片
+                            if (
+                                (catId === 16 || catId === 18)
+                                && resourceType === 2
+                            ) {
+                                resourceType = 1;
+                                img = [];
+                                videoImgUrl = '';
+                            }
+                        }
 
-            if (this.id) {
-                api.get('/api/user/workinfo', {
-                    id: this.id,
-                }).then((res) => {
-                    this.formData.id = res.id;
-                    this.isLoading = false;
-                    this.formData.resource_type = res.resource_type;
-                    this.formData.cat_id = res.cat_id;
-                    this.formData.resource_name = res.resource_name;
-                    this.formData.introduce = res.introduce;
-                    this.catName = res.cat_name;
-                    if (res.resource_type === 2) {
-                        this.uploadMode = 'image';
-                        this.images = res.img;
-                    } else {
-                        this.formData.video_id = res.video_id;
-                        this.formData.video_img_url = res.video_img_url;
-                    }
-                });
-            }
+                        if (resourceType === 2) {
+                            this.uploadMode = 'image';
+                            this.images = img;
+                        }
+
+                        this.formData = {
+                            ...this.formData,
+                            ...res,
+                            img,
+                            cat_id: catId,
+                            cat_name: catName,
+                            video_img_url: videoImgUrl,
+                            resource_type: 1,
+                        };
+                    });
+                }
+            });
         },
         onSelect(e) {
             this.init = false;
