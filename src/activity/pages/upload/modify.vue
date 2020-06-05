@@ -17,6 +17,7 @@
                         :value="index"
                         :range="catData"
                         :range-key="'name'"
+                        :disabled="id"
                         @change="onSelect"
                     >
                         <view
@@ -281,6 +282,7 @@ export default {
         });
         // [this.uploadMode] = [this.uploadConfig.uploadMode[0]];
 
+        console.log(this.formData.resource_type);
         this.formData.cat_id = this.publicConfig.catId;
         this.formData.resource_type = this.uploadMode === 'video' ? 1 : 2;
     },
@@ -298,12 +300,10 @@ export default {
                     id: this.id,
                     activity_id: this.formData.activity_id,
                 }).then((res) => {
+                    let { img, resource_type: resourceType } = res;
+
                     this.isLoading = false;
-                    this.uploadMode = res.resource_type === 1 ? 'video' : 'image';
-                    this.formData = {
-                        ...this.formData,
-                        ...res,
-                    };
+
                     // pm删除了几个分类 因此如果不存在默认选择其它
                     const catIndex = this.publicConfig.configCatId.findIndex(
                         v => v.cat_id === res.cat_id,
@@ -314,16 +314,29 @@ export default {
                         this.index = this.publicConfig.configCatId.length - 1;
                     } else {
                         this.index = catIndex;
+                        if (
+                            (res.cat_id === 16 || res.cat_id === 18)
+                            && resourceType === 2
+                        ) {
+                            resourceType = 1;
+                            img = [];
+                        }
                     }
-                    console.log(this.formData);
-                    if (res.resource_type === 2) {
+                    this.uploadMode = resourceType === 1 ? 'video' : 'image';
+
+                    if (resourceType === 2) {
                         this.uploadMode = 'image';
-                        this.images = res.img;
+                        this.images = img;
                     } else {
                         this.formData.video_id = res.video_id;
                         this.formData.video_img_url = res.video_img_url;
                     }
-                    console.log(this.formData);
+                    this.formData = {
+                        ...this.formData,
+                        ...res,
+                        resource_type: resourceType,
+                        img,
+                    };
                 });
             }
         },
