@@ -403,10 +403,10 @@
     padding: 30rpx;
     font-size: 28rpx;
     color: #333;
-    line-break: 46rpx;
+    line-height: 46rpx;
 
     .title {
-        font-size: 28rpx;
+        font-size: 38rpx;
         line-height: 53rpx;
         color: #000;
         font-weight: 500;

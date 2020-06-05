@@ -142,6 +142,12 @@
                             />
                         </button>
                     </view>
+                    <view class="user-argement">
+                        登录注册即代表您同意爱挑战
+                        <navigator url="/pages/uc/argement/index">
+                            《用户协议》
+                        </navigator>
+                    </view>
                 </template>
             </template>
         </view>
@@ -724,6 +730,14 @@ export default {
                 font-size: 28rpx;
                 line-height: 50rpx;
             }
+        }
+    }
+    .user-argement {
+        display: flex;
+        justify-content: center;
+        font-size: 26rpx;
+        uni-navigator {
+            color: #2b66ff;
         }
     }
 
