@@ -121,12 +121,8 @@
                         />
                     </view>
                 </navigator>
-                <!-- <navigator
-                    v-if="userInfo.identity === 4 && !isH5"
-                    class="menu-item"
-                    url="/pages/uc/record/record"
-                > -->
                 <navigator
+                    v-if="userInfo.identity === 4 && !isH5"
                     class="menu-item"
                     url="/pages/uc/record/record"
                 >
@@ -189,14 +185,10 @@
                     </text>
                 </navigator> -->
             </view>
-            <!-- <navigator
+            <navigator
                 v-if="
                     userInfo.identity === 3 && userInfo.is_admin === 1 && !isH5
                 "
-                class="submit-button"
-                url="/pages/uc/reported/reported"
-            > -->
-            <navigator
                 class="submit-button"
                 url="/pages/uc/reported/reported"
             >
