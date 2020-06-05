@@ -80,6 +80,9 @@ const routesConfig = {
             path: '/pages/uc/myWork/myWork',
         },
         {
+            path: '/pages/uc/argement/index',
+        },
+        {
             path: '/pages/doc/detail/detail',
             name: 'doc',
             component: () => import('@/pages/doc/detail/detail.vue'),

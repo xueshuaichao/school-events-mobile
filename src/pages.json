@@ -321,6 +321,12 @@
             }
         },
         {
+            "path": "pages/uc/argement/index",
+            "style": {
+                "navigationBarTitleText": "爱挑战用户协议"
+            }
+        },
+        {
             "path": "pages/uc/reported/reported",
             "style": {
                 "navigationBarTitleText": "上报成绩"
