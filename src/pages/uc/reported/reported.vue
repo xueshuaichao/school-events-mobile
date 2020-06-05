@@ -3,7 +3,7 @@
         <view class="form-info">
             <view class="uni-list-cell-db">
                 <text class="form-item-text">
-                    项目范围
+                    活动名称
                 </text>
                 <view class="title form-item-cont">
                     青少年爱挑战
@@ -21,7 +21,7 @@
                         :checked="formData.resource_scope === '1'"
                         style="transform: scale(0.6);"
                         color="#1166FF"
-                    />爱挑战-个人</label>
+                    />爱挑战竞技项目</label>
                     <label
                         class="radio"
                     ><radio
@@ -29,7 +29,7 @@
                         :checked="formData.resource_scope === '2'"
                         style="transform: scale(0.6);"
                         color="#1166FF"
-                    />爱挑战-团队</label>
+                    />爱挑战吉尼斯项目</label>
                 </radio-group>
             </view>
             <view class="uni-list-cell-db">
@@ -786,7 +786,7 @@ export default {
             color: #333;
         }
         .radio {
-            margin-right: 56upx;
+            margin-right: 20upx;
             font-size: 28upx;
             color: #999;
         }
@@ -796,7 +796,7 @@ export default {
         align-items: center;
         margin-bottom: 40upx;
         .form-item-text {
-            width: 112upx;
+            width: 120upx;
             margin-right: 16upx;
             font-size: 28upx;
             color: #333;
