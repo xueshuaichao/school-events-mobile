@@ -60,13 +60,14 @@
                             驳回原因
                         </button>
                         <button
-                            v-if="!isH5 && item.status !== 1"
+                            v-if="!isH5 && item.status === 2"
                             class="btn"
                             @click="editWork(item)"
                         >
                             编辑
                         </button>
                         <button
+                            v-if="item.status"
                             class="btn"
                             @click="onConfirmDelete(item)"
                         >
@@ -173,6 +174,8 @@ export default {
                 urlPath = `/pages/read/upload/modify?id=${id}`;
             } else if (activityId === 8) {
                 urlPath = `/pages/activity-pages/upload/modify?id=${id}&activity_id=${activityId}`;
+            } else if (activityId > 8) {
+                urlPath = `/activity/pages/upload/modify?id=${id}&activity_id=${activityId}`;
             }
             return uni.navigateTo({
                 url: urlPath,

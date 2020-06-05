@@ -171,7 +171,7 @@
                                     编辑
                                 </text>
                                 <text
-                                    v-if="Number(tabActiveIndex) !== 1"
+                                    v-if="Number(tabActiveIndex) > 1"
                                     class="btn-item"
                                     @click="onConfirmDelete(item)"
                                 >
