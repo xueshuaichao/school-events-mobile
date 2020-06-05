@@ -8,7 +8,7 @@
                 参赛项目信息
             </view>
             <view
-                v-if="!id"
+                v-if="!id && type === 'jingji'"
                 class="show-type-input"
             >
                 <view class="show-type-text">
@@ -394,6 +394,9 @@ export default {
     onLoad({ type, id }) {
         this.type = type;
         this.id = id;
+        if (type === 'jinisi') {
+            this.setScoperSelect(0);
+        }
         if (id) {
             api.get('/api/works/detail', { id: this.id }).then((data) => {
                 this.formData = { ...this.formData, ...data };
@@ -546,17 +549,14 @@ export default {
         // 项目范围
         onScopeSelect(e) {
             this.resourceIndex = e.detail.value;
-            this.formData.resource_name = this.scopeData[this.type][
-                e.detail.value
-            ].name;
-            this.formData.resource_scope = this.scopeData[this.type][
-                e.detail.value
-            ].id;
+            this.setScoperSelect(e.detail.value);
+        },
+        setScoperSelect(val) {
+            this.formData.resource_name = this.scopeData[this.type][val].name;
+            this.formData.resource_scope = this.scopeData[this.type][val].id;
             this.catIndex = 0;
             this.formData.cat_name = '';
-            this.getallcategory(
-                this.scopeData[this.type][e.detail.value].cat_id,
-            );
+            this.getallcategory(this.scopeData[this.type][val].cat_id);
         },
         onSelect(e) {
             this.catIndex = e.detail.value;

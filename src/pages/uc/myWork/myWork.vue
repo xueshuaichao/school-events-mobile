@@ -60,13 +60,14 @@
                             驳回原因
                         </button>
                         <button
-                            v-if="!isH5 && item.status !== 1"
+                            v-if="!isH5 && item.status === 2"
                             class="btn"
                             @click="editWork(item)"
                         >
                             编辑
                         </button>
                         <button
+                            v-if="item.status"
                             class="btn"
                             @click="onConfirmDelete(item)"
                         >

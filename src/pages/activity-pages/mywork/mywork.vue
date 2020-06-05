@@ -165,13 +165,14 @@
                                     驳回原因
                                 </text>
                                 <text
-                                    v-if="Number(tabActiveIndex) !== 2"
+                                    v-if="Number(tabActiveIndex) === 3"
                                     class="btn-item"
                                     @click="modifyItem(item)"
                                 >
                                     编辑
                                 </text>
                                 <text
+                                    v-if="Number(tabActiveIndex) > 1"
                                     class="btn-item"
                                     @click="onConfirmDelete(item)"
                                 >
