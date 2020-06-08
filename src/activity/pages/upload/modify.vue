@@ -303,7 +303,6 @@ export default {
                         cat_name: catName,
                         video_img_url: videoImgUrl,
                     } = res;
-                    catId = 16;
                     // pm删除了几个分类 因此如果不存在默认选择其它
                     // 编辑的作品分类是否存在 catIndex === -1 不存在
                     const catIndex = this.catData.findIndex(
