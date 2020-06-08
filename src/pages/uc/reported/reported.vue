@@ -168,7 +168,7 @@
                 </template>
             </view>
             <view
-                v-if="rangeIndex === 0"
+                v-if="gradeType === 0"
                 class="uni-list-cell-db"
             >
                 <text class="form-item-text">
@@ -437,6 +437,7 @@ export default {
                 video_img_url: '',
                 school_id: '',
             },
+            gradeType: 0, // 参赛学生类型 0-个人 1团队
             statudentCheckbox: [],
             statudent: [],
             achievementDateInfo: {
@@ -641,6 +642,8 @@ export default {
             this.formData.cat_name = picked.label;
             this.catText = picked.label;
             this.result = this.catData;
+            // 根据参赛类型修改 参赛学生选择框类型
+            [this.gradeType] = picked.indexes;
             // 取出最后一级数据
             picked.values.forEach((item, index) => {
                 if (index < picked.values.length - 1) {
