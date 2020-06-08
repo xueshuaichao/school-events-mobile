@@ -283,9 +283,6 @@ export default {
         this.formData.resource_type = this.uploadMode === 'video' ? 1 : 2;
     },
     created() {
-        // this.getData();
-    },
-    onShow() {
         this.getData();
     },
     methods: {
