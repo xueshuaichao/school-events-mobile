@@ -222,15 +222,12 @@ export default {
     // },
     methods: {
         updateVideo(data) {
-            this.formData = {
-                ...this.formData,
-                video_id: data.video_id,
-                file_name: data.tempFilePath.substring(
-                    data.tempFilePath.lastIndexOf('/') + 1,
-                ),
-                file_size: data.size,
-                file_suffix: data.tempFilePath.split('.').pop() || '',
-            };
+            this.formData.video_id = data.video_id;
+            this.formData.file_name = data.tempFilePath.substring(
+                data.tempFilePath.lastIndexOf('/') + 1,
+            );
+            this.formData.file_size = data.size;
+            this.formData.file_suffix = data.tempFilePath.split('.').pop() || '';
         },
 
         updateImage(data) {
@@ -295,7 +292,7 @@ export default {
                             cat_id: catId,
                             cat_name: catName,
                             video_img_url: videoImgUrl,
-                            resource_type: 1,
+                            resource_type: resourceType,
                         };
                     });
                 }
