@@ -662,7 +662,9 @@ export default {
             this.formData = {
                 ...this.formData,
                 video_id: data.video_id,
-                file_name: data.tempFilePath,
+                file_name: data.tempFilePath.substring(
+                    data.tempFilePath.lastIndexOf('/') + 1,
+                ),
                 file_size: data.size,
                 file_suffix: data.tempFilePath.split('.').pop() || '',
             };

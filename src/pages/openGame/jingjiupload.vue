@@ -534,16 +534,18 @@ export default {
             this.createInput = '';
         },
         updateVideo(data) {
-            console.log(data, 'data121');
-            this.formData.file_size = data.size;
-            this.formData.video_id = data.video_id;
-            this.formData.file_name = data.tempFilePath;
-            const foo = data.tempFilePath.split('.');
-            this.formData.file_suffix = foo[foo.length - 1];
+            this.formData = {
+                ...this.formData,
+                video_id: data.video_id,
+                file_name: data.tempFilePath.substring(
+                    data.tempFilePath.lastIndexOf('/') + 1,
+                ),
+                file_size: data.size,
+                file_suffix: data.tempFilePath.split('.').pop() || '',
+            };
         },
 
         updateImage(data) {
-            console.log(data, 'data33');
             this.formData.video_img_url = data[0] && data[0].path;
         },
         // 项目范围

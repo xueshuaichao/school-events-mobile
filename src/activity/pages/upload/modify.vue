@@ -3,7 +3,6 @@
         v-if="!isLoading"
         :class="[`${publicConfig.activityName}-page`]"
     >
-        {{ formData.resource_type }}
         <view :class="['page-upload']">
             <view
                 v-if="!needBindMobile"
@@ -304,11 +303,13 @@ export default {
                         cat_name: catName,
                         video_img_url: videoImgUrl,
                     } = res;
+                    catId = 16;
                     // pm删除了几个分类 因此如果不存在默认选择其它
                     // 编辑的作品分类是否存在 catIndex === -1 不存在
                     const catIndex = this.catData.findIndex(
                         v => v.cat_id === catId,
                     );
+
                     if (catIndex === -1) {
                         catId = 102;
                         catName = '其他表演';
@@ -325,6 +326,7 @@ export default {
                             resourceType = 1;
                             img = [];
                             videoImgUrl = '';
+                            catName = catId === 16 ? '歌唱表演' : '口才表演';
                         }
                     }
                     this.uploadMode = resourceType === 1 ? 'video' : 'image';
@@ -376,7 +378,15 @@ export default {
             return true;
         },
         updateVideo(data) {
-            this.formData.video_id = data.video_id;
+            this.formData = {
+                ...this.formData,
+                video_id: data.video_id,
+                file_name: data.tempFilePath.substring(
+                    data.tempFilePath.lastIndexOf('/') + 1,
+                ),
+                file_size: data.size,
+                file_suffix: data.tempFilePath.split('.').pop() || '',
+            };
         },
 
         updateImage(data) {
@@ -474,8 +484,6 @@ export default {
         bindMobile() {
             const { mobile } = this.accountData;
             const captcha = this.accountData.verify_code;
-
-            console.log(mobile);
             if (mobile.length !== 11 || mobile[0] !== '1') {
                 this.accountData.isValid = false;
                 this.accountData.msg = '手机号码不正确';
