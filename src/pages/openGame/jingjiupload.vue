@@ -499,7 +499,7 @@ export default {
             console.log(e.label.replace(/-/g, ''));
             this.formData.district = e.label.replace(/-/g, '');
             this.formData.districtCode = e.value;
-            this.formData.city = `${e.cityCode}00`;
+            this.formData.city = `${e.cityCode}`;
             this.formData.county = e.areaCode;
         },
         resetForm() {
