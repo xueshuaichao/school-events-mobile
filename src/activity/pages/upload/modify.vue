@@ -68,9 +68,10 @@
                             :class="{
                                 active: formData.resource_type === k + 1,
                                 disabled:
-                                    (formData.cat_id === 18 ||
+                                    ((formData.cat_id === 18 ||
                                     formData.cat_id === 16) &&
-                                    item !== 'video'
+                                    item !== 'video') ||
+                                    id !== ''
                             }"
                             @click="setNewsTabActive(k + 1)"
                         >
@@ -283,9 +284,6 @@ export default {
         this.formData.resource_type = this.uploadMode === 'video' ? 1 : 2;
     },
     created() {
-        // this.getData();
-    },
-    onShow() {
         this.getData();
     },
     methods: {
@@ -377,15 +375,12 @@ export default {
             return true;
         },
         updateVideo(data) {
-            this.formData = {
-                ...this.formData,
-                video_id: data.video_id,
-                file_name: data.tempFilePath.substring(
-                    data.tempFilePath.lastIndexOf('/') + 1,
-                ),
-                file_size: data.size,
-                file_suffix: data.tempFilePath.split('.').pop() || '',
-            };
+            this.formData.video_id = data.video_id;
+            this.formData.file_name = data.tempFilePath.substring(
+                data.tempFilePath.lastIndexOf('/') + 1,
+            );
+            this.formData.file_size = data.size;
+            this.formData.file_suffix = data.tempFilePath.split('.').pop() || '';
         },
 
         updateImage(data) {

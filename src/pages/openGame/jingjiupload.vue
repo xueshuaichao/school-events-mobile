@@ -358,11 +358,13 @@ export default {
                         name: '爱挑战个人',
                         id: 1,
                         cat_id: 1,
+                        scope: 1,
                     },
                     {
                         name: '爱挑战团队',
                         id: 2,
                         cat_id: 2,
+                        scope: 1,
                     },
                 ],
                 jinisi: [
@@ -370,11 +372,13 @@ export default {
                         name: '吉尼斯个人',
                         id: 6,
                         cat_id: 131,
+                        scope: 4,
                     },
                     {
                         name: '吉尼斯团队',
                         id: 6,
                         cat_id: 131,
+                        scope: 4,
                     },
                 ],
             },
@@ -499,7 +503,7 @@ export default {
             console.log(e.label.replace(/-/g, ''));
             this.formData.district = e.label.replace(/-/g, '');
             this.formData.districtCode = e.value;
-            this.formData.city = `${e.cityCode}00`;
+            this.formData.city = `${e.cityCode}`;
             this.formData.county = e.areaCode;
         },
         resetForm() {
@@ -534,15 +538,12 @@ export default {
             this.createInput = '';
         },
         updateVideo(data) {
-            this.formData = {
-                ...this.formData,
-                video_id: data.video_id,
-                file_name: data.tempFilePath.substring(
-                    data.tempFilePath.lastIndexOf('/') + 1,
-                ),
-                file_size: data.size,
-                file_suffix: data.tempFilePath.split('.').pop() || '',
-            };
+            this.formData.video_id = data.video_id;
+            this.formData.file_name = data.tempFilePath.substring(
+                data.tempFilePath.lastIndexOf('/') + 1,
+            );
+            this.formData.file_size = data.size;
+            this.formData.file_suffix = data.tempFilePath.split('.').pop() || '';
         },
 
         updateImage(data) {
@@ -556,6 +557,7 @@ export default {
         setScoperSelect(val) {
             this.formData.resource_name = this.scopeData[this.type][val].name;
             this.formData.resource_scope = this.scopeData[this.type][val].id;
+            this.formData.resource_scope = this.scopeData[this.type][val].scope;
             this.catIndex = 0;
             this.formData.cat_name = '';
             this.getallcategory(this.scopeData[this.type][val].cat_id);

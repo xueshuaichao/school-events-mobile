@@ -2,7 +2,7 @@
 var provinceData = [
     {
         label: "陕西省",
-        value: "61"
+        value: "610000"
     }
 ];
 export default provinceData;

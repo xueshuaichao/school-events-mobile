@@ -235,7 +235,7 @@ export default {
     },
     methods: {
         getLabelFromCode() {
-            console.log("121212", this.cityCode);
+            console.log("11111111", this.cityCode);
             // 根据编码设置位置
             if (this.cityCode) {
                 let cityIndex = 0,
@@ -243,12 +243,7 @@ export default {
                     countyIndex = 0,
                     countyLabel = "";
                 cityData[0].forEach((d, index) => {
-                    console.log(
-                        d.value + "00",
-                        this.cityCode,
-                        d.value + "00" === this.cityCode
-                    );
-                    if (d.value + "00" === String(this.cityCode)) {
+                    if (d.value === String(this.cityCode)) {
                         console.log(d);
                         cityIndex = index;
                         cityLabel = d.label;
@@ -344,6 +339,7 @@ export default {
             return pcikerLabel;
         },
         _getCityCode() {
+            console.log(this.cityDataList[this.pickerValue[1]].value);
             return this.cityDataList[this.pickerValue[1]].value;
         },
         _getProvinceCode() {
