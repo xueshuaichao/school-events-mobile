@@ -282,10 +282,9 @@ export default {
         });
         this.formData.cat_id = this.publicConfig.catId;
         this.formData.resource_type = this.uploadMode === 'video' ? 1 : 2;
-    },
-    created() {
         this.getData();
     },
+    created() {},
     methods: {
         // 编辑作品
         getItemData() {
