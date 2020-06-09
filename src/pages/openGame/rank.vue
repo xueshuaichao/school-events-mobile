@@ -114,7 +114,7 @@
                             :key="item.value"
                             class="cols"
                             :class="{
-                                active: item.value + '00' === filter.city_id
+                                active: item.value === filter.city_id
                             }"
                             @click.stop="selCity(item, index)"
                         >
@@ -284,7 +284,7 @@ export default {
                 if (this.filter.city_id !== item.value) {
                     this.filter.county_id = 0;
                 }
-                this.filter.city_id = item.value + "00";
+                this.filter.city_id = item.value;
                 this.curCityIndex = index;
                 this.filterLabel.city_label = item.label;
                 this.filterLabel.county_label = "";
