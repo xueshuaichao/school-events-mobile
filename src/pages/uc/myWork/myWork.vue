@@ -129,8 +129,7 @@ export default {
         getWorkStatic() {
             api.get('/api/user/workstatics', { parent_scope: 2 }).then(
                 (res) => {
-                    // this.workStatics = res[0];
-                    [this.workStatics] = res;
+                    this.workStatics = res;
                 },
                 () => {},
             );
