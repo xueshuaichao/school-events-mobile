@@ -512,12 +512,6 @@ var areaData = [
                 value: "820110",
                 label: "西咸新区"
             }
-        ],
-        [
-            {
-                value: "610000",
-                label: "省直属"
-            }
         ]
     ]
 ];
