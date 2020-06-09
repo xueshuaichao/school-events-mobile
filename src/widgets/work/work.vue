@@ -46,7 +46,7 @@
                                 {{ item.activity_name || "" }}
                             </view>
                             <view class="time">
-                                活动时间：{{ item.start_time || "" }}/{{
+                                活动时间：{{ item.start_time || "" }}-{{
                                     item.end_time || ""
                                 }}
                             </view>
