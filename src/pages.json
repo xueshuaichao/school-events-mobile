@@ -361,6 +361,12 @@
             "style": {
                 "navigationBarTitleText": "上报成功"
             }
+        },
+        {
+            "path": "pages/uc/honor/honor",
+            "style": {
+                "navigationBarTitleText": "我的荣誉"
+            }
         }
     ],
     "subPackages": [

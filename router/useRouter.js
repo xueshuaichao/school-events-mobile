@@ -83,6 +83,9 @@ const routesConfig = {
             path: '/pages/uc/argement/index',
         },
         {
+            path: '/pages/uc/honor/honor',
+        },
+        {
             path: '/pages/doc/detail/detail',
             name: 'doc',
             component: () => import('@/pages/doc/detail/detail.vue'),

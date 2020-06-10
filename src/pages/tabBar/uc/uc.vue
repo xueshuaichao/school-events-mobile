@@ -8,201 +8,170 @@
             @login="onLogin"
         />
         <template v-else>
-            <view class="user-bg">
-                <image
-                    class="avatar-bg"
-                    :src="userInfo.bg_img || '/static/images/uc/avatar-bg.png'"
-                />
-                <view
-                    class="set-bg"
-                    @click.stop="setBg"
-                >
+            <view class="page-top">
+                <view class="icons-top">
+                    <navigator
+                        class="icons setting"
+                        url="/pages/uc/setting/setting"
+                    >
+                        <image src="/static/images/uc/settings.png" />
+                    </navigator>
+                    <navigator
+                        class="icons mess"
+                        url="/pages/uc/message/message"
+                    >
+                        <image src="/static/images/uc/messages.png" />
+                    </navigator>
+                </view>
+                <view class="user-info">
                     <image
-                        class="set-bg-icon"
-                        src="/static/images/uc/update.png"
-                    />更换背景
+                        class="avatar"
+                        :src="
+                            userInfo.avatar_url ||
+                                '/static/images/uc/avatar.png'
+                        "
+                        @click="settingImg"
+                    />
+                    <view class="main-info">
+                        <view class="user-name">
+                            {{ userInfo.name || "" }}
+                        </view>
+                        <template v-if="userInfo.identity === 2">
+                            <!-- 教育局员工 -->
+                            <view class="info user-from">
+                                部门：{{
+                                    userInfo.teacher_info.department_name || ""
+                                }}
+                            </view>
+                        </template>
+                        <template v-if="userInfo.identity === 3">
+                            <!-- 老师 -->
+                            <view class="info user-from">
+                                老师
+                            </view>
+                        </template>
+
+                        <template v-if="userInfo.identity === 4">
+                            <!-- 学生 -->
+                            <view class="info user-from">
+                                {{ userInfo.student_info.school_name
+                                }}{{ userInfo.student_info.grade_name
+                                }}{{ userInfo.student_info.class_name }}
+                            </view>
+                            <view class="info user-id">
+                                用户名：{{ userInfo.student_info.number }}
+                            </view>
+                        </template>
+                    </view>
+                </view>
+                <view class="user-statistics">
+                    <view class="user-data">
+                        <navigator url="/pages/uc/myWork/myWork">
+                            <view class="num">
+                                9999
+                            </view>
+                            <view>
+                                作品
+                            </view>
+                        </navigator>
+                    </view>
+                    <view class="user-data">
+                        <view class="num">
+                            9999
+                        </view>
+                        <view>
+                            获赞作品
+                        </view>
+                    </view>
+                    <view class="user-data">
+                        <view class="num">
+                            9999
+                        </view>
+                        <view>
+                            播放
+                        </view>
+                    </view>
                 </view>
             </view>
-            <view class="user-info">
-                <image
-                    class="avatar"
-                    :src="userInfo.avatar_url || '/static/images/uc/avatar.png'"
-                />
-                <view class="main-info">
-                    <view class="user-name">
-                        {{ userInfo.name || "" }}
+            <view class="page-context">
+                <view class="honor-block">
+                    <view class="honor-top clearfix">
+                        <view class="fl-l txt">
+                            <image src="/static/images/uc/honor-cup.png" />
+                            我的荣誉
+                        </view>
+                        <navigator url="/pages/uc/honor/honor">
+                            <view class="fl-r more">
+                                更多
+                            </view>
+                        </navigator>
                     </view>
-                    <template v-if="userInfo.identity === 2">
-                        <!-- 教育局员工 -->
-                        <view class="info user-from">
-                            部门：{{
-                                userInfo.teacher_info.department_name || ""
-                            }}
-                        </view>
-                    </template>
-                    <template v-if="userInfo.identity === 3">
-                        <!-- 老师 -->
-                        <view class="info user-from">
-                            老师
-                        </view>
-                    </template>
-
-                    <template v-if="userInfo.identity === 4">
-                        <!-- 学生 -->
-                        <view class="info user-from">
-                            {{ userInfo.student_info.school_name
-                            }}{{ userInfo.student_info.grade_name
-                            }}{{ userInfo.student_info.class_name }}
-                        </view>
-                        <view class="info user-id">
-                            用户名：{{ userInfo.student_info.number }}
-                        </view>
-                    </template>
+                    <view class="honor-ctx">
+                        <honor-card
+                            v-for="(item, index) in honorList"
+                            :key="index"
+                        />
+                    </view>
                 </view>
-            </view>
-            <view class="menu-list">
-                <navigator
-                    class="menu-item"
-                    url="/pages/uc/myWork/myWork"
-                >
-                    <view class="text">
-                        <image
-                            class="icon"
-                            src="/static/images/uc/work.png"
-                        />
-                        我的作品
-                    </view>
-                    <view class="arrow">
-                        <text class="text-blue">
-                            已上传{{ userInfo.works_count }}个作品
-                        </text>
-                        <image
-                            class="arrow-r"
-                            src="/static/images/uc/r-arrow.png"
-                        />
-                    </view>
-                </navigator>
-                <navigator
-                    class="menu-item"
-                    url="/pages/uc/message/message"
-                >
-                    <view class="text">
-                        <image
-                            class="icon"
-                            src="/static/images/uc/message.png"
-                        />
-                        消息
-                    </view>
-                    <view class="arrow">
-                        <text class="text-red">
-                            {{ userInfo.msg_count }}
-                        </text>
-                        <image
-                            class="arrow-r"
-                            src="/static/images/uc/r-arrow.png"
-                        />
-                    </view>
-                </navigator>
-                <navigator
-                    class="menu-item"
-                    url="/pages/uc/setting/setting"
-                >
-                    <view class="text">
-                        <image
-                            class="icon"
-                            src="/static/images/uc/setting.png"
-                        />
-                        设置
-                    </view>
-                    <view class="arrow">
-                        <image
-                            class="arrow-r"
-                            src="/static/images/uc/r-arrow.png"
-                        />
-                    </view>
-                </navigator>
-                <navigator
-                    v-if="userInfo.identity === 4 && !isH5"
-                    class="menu-item"
-                    url="/pages/uc/record/record"
-                >
-                    <view class="text">
-                        <image
-                            class="icon"
-                            src="/static/images/uc/record.png"
-                        />
-                        我的记录
-                    </view>
-                    <view class="arrow">
-                        <image
-                            class="arrow-r"
-                            src="/static/images/uc/r-arrow.png"
-                        />
-                    </view>
-                </navigator>
-                <!-- <view class="menu-item">
-                    <image
-                        class="icon"
-                        src="/static/images/uc/coin.png"
-                    />
-                    <text class="text">
-                        我的挑战币
-                    </text>
-                    <text class="coin">
-                        {{ userInfo.challenge_coin }}
-                    </text>
-                </view>
-
-                <navigator
-                    class="menu-item"
-                    url="/pages/address/exchangeRecord"
-                >
-                    <image
-                        class="icon"
-                        src="/static/images/uc/record.png"
-                    />
-                    <text class="text">
-                        兑换记录
-                    </text>
-                    <text class="arrow">
+                <view class="my-work-block">
+                    <view class="myork-title">
+                        <view
+                            class="work-nav"
+                            :class="{ active: selTab === 0 }"
+                            @click="clickTab(0)"
                         >
-                    </text>
-                </navigator>
-
-                <navigator
-                    class="menu-item"
-                    url="/pages/address/address?title=收货地址"
-                >
-                    <image
-                        class="icon"
-                        src="/static/images/uc/address.png"
-                    />
-                    <text class="text">
-                        收货地址
-                    </text>
-                    <text class="arrow">
+                            作品
+                            <text>
+                                23
+                            </text>
+                        </view>
+                        <view
+                            class="work-nav"
+                            :class="{ active: selTab === 1 }"
+                            @click="clickTab(1)"
                         >
-                    </text>
-                </navigator> -->
+                            喜欢
+                            <text>
+                                23
+                            </text>
+                        </view>
+                    </view>
+                    <template v-if="tableData.length">
+                        <view class="works-list">
+                            <view
+                                v-for="(item, index) in tableData"
+                                :key="item.id"
+                                class="work-item"
+                            >
+                                <work
+                                    :info="item"
+                                    :from="'/api/user/worklist'"
+                                    @click.native="toDetail(item, index)"
+                                />
+                            </view>
+                        </view>
+                        <uni-load-more
+                            class="loadMore"
+                            :status="loadMoreStatus"
+                            :content-text="{
+                                contentdown: '上拉显示更多',
+                                contentrefresh: '正在加载...',
+                                contentnomore: '———— 已经到底了~ ————'
+                            }"
+                            color="#999"
+                        />
+                    </template>
+                </view>
             </view>
-            <navigator
-                v-if="
-                    userInfo.identity === 3 && userInfo.is_admin === 1 && !isH5
-                "
-                class="submit-button"
-                url="/pages/uc/reported/reported"
-            >
-                上报成绩
-            </navigator>
+            <template v-if="userInfo.identity === 3">
+                <navigator
+                    class="reported-btn"
+                    url="/pages/uc/reported/reported"
+                >
+                    上报成绩
+                </navigator>
+            </template>
         </template>
-        <!-- <view class="form-item-wrap">
-            <view
-                class="btn"
-                @click="bindMobile"
-            >
-                退出登录
-            </view>
-        </view> -->
     </view>
 </template>
 
@@ -211,10 +180,16 @@ import api from '../../../common/api';
 import config from '../../../common/config';
 import utils from '../../../common/utils';
 import login from '../../../widgets/login/login.vue';
+import honorCard from '../../../components/uc/honor.vue';
+import work from '../../../components/work/work.vue';
+import uniLoadMore from '../../../components/uni-load-more/uni-load-more.vue';
 
 export default {
     components: {
         login,
+        honorCard,
+        work,
+        uniLoadMore,
     },
     data() {
         return {
@@ -230,10 +205,25 @@ export default {
             workStatics: {},
             isLoadingTableData: true,
             tableData: [],
+            selTab: 0,
+            honorList: [1, 2, 3, 4],
+            filter: {
+                status: 1,
+                page_size: 10,
+                page_num: 1,
+            },
+            total: 0,
+            loadMoreStatus: 'none',
         };
     },
+    created() {
+        this.getWorkData();
+    },
     methods: {
-        setBg() {
+        clickTab(val) {
+            this.selTab = val;
+        },
+        settingImg() {
             this.isSetImg = true;
             this.chooseImage();
         },
@@ -251,10 +241,10 @@ export default {
         },
         updataUser(data) {
             api.post('/api/user/updateuser', {
-                bg_img: data.path,
+                avatar_url: data.path,
             }).then(
                 () => {
-                    this.userInfo.bg_img = data.path;
+                    this.userInfo.avatar_url = data.path;
                 },
                 (err) => {
                     uni.showToast({
@@ -340,6 +330,50 @@ export default {
         onLogin() {
             this.getData();
         },
+        toDetail(item, index) {
+            this.$store.commit('setFilterData', {
+                position: {
+                    total: this.total,
+                    curposition: index,
+                    from: '/api/user/worklist',
+                },
+                filter: this.filter,
+            });
+            uni.navigateTo({
+                url: `/pages/work/detail/detail?id=${item.id}&activity_id=${item.activity_id}`,
+            });
+        },
+        getWorkData(title) {
+            // 作品状态 status 0—待审核 1—已通过 2—未通过 -1 全部
+            return api.get('/api/user/worklist', this.filter).then(
+                ({ list, total }) => {
+                    if (title === 'reachBottom') {
+                        this.tableData = this.tableData.concat(list);
+                    } else {
+                        this.tableData = list;
+                    }
+                    this.total = total;
+                    if (
+                        this.total
+                        <= this.filter.page_num * this.filter.page_size
+                    ) {
+                        this.loadMoreStatus = title === 'reachBottom' ? 'noMore' : 'none';
+                    } else {
+                        this.loadMoreStatus = 'more';
+                    }
+                },
+                () => {
+                    this.tableData = [];
+                },
+            );
+        },
+        onReachBottom() {
+            if (this.loadMoreStatus === 'more') {
+                this.filter.page_num = this.filter.page_num + 1;
+                this.loadMoreStatus = 'loading';
+                this.getWorkData('reachBottom');
+            }
+        },
     },
     onLoad() {
         this.getData();
@@ -365,144 +399,160 @@ export default {
 .page-uc-index {
     padding-bottom: 20upx;
     position: relative;
+    .page-top {
+        width: 750rpx;
+        height: 510rpx;
+        background: url(/static/images/uc/my-bg.png);
+        background-size: 100% 100%;
 
-    .sep {
-        border-bottom: 20rpx solid rgba(247, 247, 247, 1);
-    }
-    .user-bg {
-        height: 290rpx;
-        margin-bottom: 60rpx;
-        position: relative;
-        .avatar-bg {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-        }
-        .set-bg {
-            float: right;
-            margin: 67rpx 24rpx 0 0;
-            font-size: 24rpx;
-            color: #fff;
-            position: relative;
-            z-index: 1;
-        }
-        .set-bg-icon {
-            width: 23rpx;
-            height: 23rpx;
-            margin-right: 5rpx;
-        }
-    }
-    .user-info {
-        position: absolute;
-        left: 24rpx;
-        right: 24rpx;
-        top: 115rpx;
-        padding: 50rpx 46rpx;
-        background: linear-gradient(
-            180deg,
-            rgba(255, 255, 255, 0.8) 0%,
-            rgba(255, 255, 255, 1) 100%
-        );
-        box-shadow: 0px 3px 10px 0px rgba(0, 0, 0, 0.09);
-        border-radius: 2px;
-        display: flex;
-
-        .avatar {
-            margin-right: 24upx;
-            width: 131upx;
-            height: 131upx;
-        }
-
-        .main-info {
-            flex: 1;
-            overflow: hidden;
-
-            .user-name {
-                font-size: 32upx;
-                color: #333;
-                margin-bottom: 16upx;
-            }
-
-            .info {
-                color: #999;
-                font-size: 22upx;
-                margin-bottom: 16upx;
-            }
-            .go-setting {
-                display: inline-block;
-                color: #1166ff;
-            }
-        }
-    }
-
-    .menu-list {
-        padding: 4upx 32upx 48upx;
-        .arrow-r {
-            width: 12upx;
-            height: 22upx;
-        }
-        .text-blue {
-            color: #1166ff;
-            padding-right: 16upx;
-        }
-        .text-red {
-            color: #ff6555;
-            padding-right: 16upx;
-        }
-        .menu-item {
-            height: 62px;
-            font-size: 32rpx;
-            color: #333;
+        .user-info {
+            padding: 54rpx 60rpx;
             display: flex;
-            justify-content: space-between;
-            align-items: center;
 
-            .icon {
-                width: 41rpx;
-                height: 41rpx;
-                margin-right: 20rpx;
-                position: relative;
-                top: 10rpx;
+            .avatar {
+                margin-right: 24upx;
+                width: 116upx;
+                height: 116upx;
+                border-radius: 50%;
             }
 
-            .arrow {
-                float: right;
-                color: #ccc;
-            }
+            .main-info {
+                // flex: 1;
+                width: 340rpx;
+                overflow: hidden;
+                color: #fff;
 
-            .coin {
-                color: #ff7915;
-                font-size: 32rpx;
-                float: right;
-                position: relative;
-                top: 6rpx;
+                .user-name {
+                    font-size: 32upx;
+                    margin-bottom: 16upx;
+                    font-weight: 600;
+                    word-break: break-all;
+                }
+
+                .info {
+                    font-size: 26upx;
+                    margin-bottom: 16upx;
+                }
+            }
+        }
+        .user-statistics {
+            display: flex;
+            color: #fff;
+            justify-content: space-around;
+            padding: 50rpx;
+            .user-data {
+                font-size: 28rpx;
+                line-height: 40rpx;
+                text-align: center;
+                &:nth-child(2) {
+                    border-right: 2rpx solid #82bfff;
+                    border-left: 2rpx solid #82bfff;
+                    padding: 0 60rpx;
+                }
+                .num {
+                    font-size: 36rpx;
+                    line-height: 36rpx;
+                    font-weight: 600;
+                    margin-bottom: 14rpx;
+                }
+            }
+        }
+        .icons-top {
+            position: absolute;
+            right: 50rpx;
+            top: 32rpx;
+            display: flex;
+            color: #fff;
+            .setting {
+                margin-right: 40rpx;
+            }
+            image {
+                width: 38rpx;
+                height: 38rpx;
             }
         }
     }
-    .submit-button {
-        background-color: #1166ff;
-        color: #fff;
-        line-height: 98rpx;
-        width: 690rpx;
-        margin: 0 auto;
-        font-size: 32rpx;
-        text-align: center;
+    .page-context {
+        margin-top: -90rpx;
+        background: #f8f8f8;
+        border-radius: 50rpx 50rpx 0 0;
+        .honor-block {
+            padding: 60rpx 30rpx 20rpx;
+            background: #fff;
+            border-radius: 50rpx 50rpx 0 0;
+            margin-bottom: 40rpx;
+            .honor-top {
+                margin-bottom: 40rpx;
+                .txt {
+                    line-height: 32rpx;
+                    font-weight: 600;
+                    font-size: 32rpx;
+                    color: #333;
+                    position: relative;
+                    padding-left: 40rpx;
+                    image {
+                        position: absolute;
+                        left: 0;
+                        top: 0;
+                        width: 36rpx;
+                        height: 36rpx;
+                    }
+                }
+                .more {
+                    font-size: 26rpx;
+                    color: #999;
+                }
+            }
+            .honor-ctx {
+                display: flex;
+                justify-content: space-between;
+                flex-wrap: wrap;
+            }
+        }
+        .my-work-block {
+            background: #fff;
+            padding: 30rpx;
+            .myork-title {
+                line-height: 26rpx;
+                font-size: 32rpx;
+                display: flex;
+                justify-content: space-around;
+                padding: 20rpx 50rpx;
+                margin-bottom: 20rpx;
+                .work-nav {
+                    padding: 0 21rpx 20rpx;
+                    color: #999;
+                    &.active {
+                        color: #333;
+                        border-bottom: 4rpx solid #1166ff;
+                    }
+                }
+            }
+            .works-list {
+                display: flex;
+                justify-content: space-between;
+                flex-wrap: wrap;
+                .work-item {
+                    margin-bottom: 20rpx;
+                }
+            }
+        }
     }
-
-    // .form-item-wrap {
-    //     padding: 30rpx;
-    // }
-
-    // .btn {
-    //     width: 100%;
-    //     background: #1166ff;
-    //     color: #fff;
-    //     height: 98upx;
-    //     line-height: 98upx;
-    //     text-align: center;
-    //     margin-top: 168upx;
-    // }
+    .reported-btn {
+        position: fixed;
+        bottom: var(--window-bottom);
+        width: 100%;
+        background: #1166ff;
+        color: #fff;
+        text-align: center;
+        font-size: 36rpx;
+        left: 0;
+        height: 98rpx;
+        font-weight: 500;
+        line-height: 98rpx;
+        // #ifdef H5
+        bottom: 120rpx;
+        // #endif
+    }
 }
 </style>

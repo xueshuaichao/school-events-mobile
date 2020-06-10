@@ -736,6 +736,8 @@ export default {
         display: flex;
         justify-content: center;
         font-size: 26rpx;
+        color: #999;
+        navigator,
         uni-navigator {
             color: #2b66ff;
         }

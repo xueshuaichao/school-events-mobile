@@ -8,6 +8,7 @@
                     maxlength="13"
                     :placeholder="searchWord"
                     @confirm="bindconfirm"
+                    @focus="toggleDropStatus"
                 >
                 <text
                     class="button"
@@ -135,6 +136,10 @@
                 <blank />
             </view>
         </view>
+        <my-dropdown
+            :search-drop-status="showSearchDrop"
+            @searchStatus="searchStatus"
+        />
     </view>
 </template>
 
@@ -142,6 +147,7 @@
 import uniLoadMore from '../../components/uni-load-more/uni-load-more.vue';
 import api from '../../common/api';
 import work from '../../components/work/work.vue';
+import myDropdown from '../../components/search/my-dropdown.vue';
 import blank from '../blank/blank.vue';
 
 export default {
@@ -149,6 +155,7 @@ export default {
         work,
         blank,
         uniLoadMore,
+        myDropdown,
     },
     props: {
         hasPageParams: {
@@ -219,6 +226,7 @@ export default {
             curSort: '最热',
             isSearchWord: false, // 是否设置了关键词
             searchWord: '',
+            showSearchDrop: false,
         };
     },
     watch: {
@@ -371,8 +379,12 @@ export default {
                 console.log('show menu');
             }
         },
+        toggleDropStatus() {
+            this.showSearchDrop = !this.showSearchDrop;
+        },
         bindconfirm() {
             if (this.isSearchWord) {
+                this.toggleDropStatus();
                 if (!this.filter.keyword) {
                     this.filter.keyword = this.searchWord;
                 }
@@ -491,16 +503,19 @@ export default {
 }
 
 .tab-bar-wrap {
-    position: fixed;
-    top: 0;
-    z-index: 1000;
+    // position: fixed;
+    // top: 0;
+    // z-index: 1000;
     box-shadow: 0 0 8upx 0 rgba(0, 0, 0, 0.05);
     .search {
         font-size: 24upx;
         overflow: hidden;
-        padding: 20upx 30upx 0;
+        padding: 20upx 30upx 20rpx;
         background: #fff;
         box-shadow: 0 0upx 5upx 0 rgba(0, 0, 0, 0.05);
+        position: fixed;
+        top: 0;
+        z-index: 103;
 
         input {
             background: #f3f3f3;
@@ -534,6 +549,11 @@ export default {
         background: #fff;
         padding: 0 20%;
         font-size: 32upx;
+        position: fixed;
+        top: 100upx;
+        width: 100%;
+        box-sizing: border-box;
+        z-index: 101;
     }
 
     .tab-item {
