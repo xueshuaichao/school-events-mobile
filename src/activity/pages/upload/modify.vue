@@ -7,7 +7,6 @@
             <view
                 v-if="!needBindMobile"
                 class="main"
-                :style="{ background: publicConfig.mainBgColor }"
             >
                 <view
                     v-if="publicConfig.showAllCat"
@@ -133,14 +132,12 @@
                     <image-drag-sort
                         v-show="images.length"
                         ref="preview"
-                        :text-color="publicConfig.primaryColor"
                         :list="images"
                     />
                 </template>
 
                 <view
                     class="btn"
-                    :style="{ background: publicConfig.primaryColor }"
                     @click="upload"
                 >
                     上传
@@ -198,7 +195,6 @@
                 <view class="form-item-wrap">
                     <view
                         class="btn"
-                        :style="{ background: publicConfig.primaryColor }"
                         @click="bindMobile"
                     >
                         确定

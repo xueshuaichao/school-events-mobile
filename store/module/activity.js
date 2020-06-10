@@ -10,17 +10,13 @@ export default {
                     log: 'wyhd',
                     sort: ['最新', '最热'],
                     catMenu: [], // 分组
-                    mainBgColor: '#FFCE99',
                     activityName: 'labor',
                     activityId: 8,
                     catId: 20, // 所属分类
                     showAllCat: false,
                     time: '4月27日--5月31日',
                     primaryColor: '#DB4E0E', // 主色调
-                    // darkPrimaryColor: '#451600', // 深一些
                     primaryBgColor: '#FF9F73', // 主要的背景颜色
-                    // infoColor: '#AB3500', // 浅一些
-                    // titleColor: '#FFE179', // 规则的title
                     placeholderColor: 'rgba(255,255,255,.6)',
                     homePath: '/pages/activity-pages/labor/index',
                     shareConfig: {
@@ -127,7 +123,6 @@ export default {
                     nameMaxLength: 11,
                     descMaxLength: 150,
                 },
-                myWorkColorConfig: {},
                 indexColorConfig: {},
                 uploadColorConfig: {},
             },
@@ -138,7 +133,6 @@ export default {
                     log: 'lyhd',
                     sort: ['最新', '最热'],
                     catMenu: [], // 分组
-                    mainBgColor: '#EBE1FF',
                     activityName: 'children',
                     activityId: 9,
                     catId: '', // 所属分类
@@ -187,10 +181,7 @@ export default {
                     ],
                     time: '5月29日--6月20日',
                     primaryColor: '#BB77FF', // 主色调
-                    darkPrimaryColor: '#C790FF', // 深一些 （按钮的颜色）
                     primaryBgColor: '#DCC0FF', // 主要的背景颜色 （图片背景）
-                    infoColor: '#333333', // 浅一些
-                    ruleTitleColor: '#666', // 规则的title
                     placeholderColor: 'rgba(255,255,255,.6)',
                     homePath: '/activity/pages/children/index',
                     shareConfig: {
@@ -266,22 +257,12 @@ export default {
                     nameMaxLength: 11,
                     descMaxLength: 80,
                 },
-                myWorkColorConfig: {
-                    // primaryColor: '#C790FF', // 主色调
-                },
                 indexColorConfig: {
                     maskBgColor: '#fff',
                     placeholderColor: '#999',
                 },
                 uploadColorConfig: {
-                    mainBgColor: '#fff',
-                    // primaryColor: '#C790FF', // 主色调
-                    // tipsColor: '#999', // 提示文字
-                    // titleColor: '#333',
                     placeholderColor: '#999',
-                    // inputBgColor: '#fff',
-                    // inputColor: '#333',
-                    // inputBorderColor: '#C790FF',
                 },
             },
         ],

@@ -1,8 +1,5 @@
 <template>
-    <view
-        :class="['activity-page-index', className]"
-        :style="{ 'background-color': publicConfig.mainBgColor }"
-    >
+    <view :class="['activity-page-index', className]">
         <official-account v-if="!isH5" />
         <view
             :class="[

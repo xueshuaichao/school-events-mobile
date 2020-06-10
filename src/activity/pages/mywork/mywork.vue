@@ -5,7 +5,6 @@
     >
         <view
             class="page-read-work"
-            :style="{ 'background-color': publicConfig.mainBgColor }"
             :class="{ login: userInfo === null }"
         >
             <login
@@ -20,7 +19,6 @@
                 <view
                     v-if="type === 'myWork'"
                     class="panel-hd"
-                    :style="{ 'background-color': publicConfig.mainBgColor }"
                 >
                     <text
                         class="panel-title"
@@ -47,23 +45,12 @@
                 <view
                     v-else
                     class="search-box"
-                    :style="{ 'background-color': publicConfig.mainBgColor }"
                 >
                     <button
                         v-for="(item, index) in publicConfig.catMenu"
                         :key="index"
                         :class="{
                             active: filter.activity_cat === index + 1
-                        }"
-                        :style="{
-                            'background-color':
-                                filter.activity_cat === index + 1
-                                    ? publicConfig.primaryColor
-                                    : '',
-                            color:
-                                filter.activity_cat === index + 1
-                                    ? '#fff'
-                                    : publicConfig.primaryColor
                         }"
                         @click="toggle(index + 1)"
                     >
@@ -72,26 +59,15 @@
                     <button
                         v-for="(item, index) in publicConfig.sort"
                         :key="index"
-                        :style="{
-                            'background-color':
+                        :class="{
+                            active:
                                 filter.sort === (index === 0 ? 'new' : 'hot')
-                                    ? publicConfig.primaryColor
-                                    : '',
-                            color:
-                                filter.sort === (index === 0 ? 'new' : 'hot')
-                                    ? '#fff'
-                                    : publicConfig.primaryColor
                         }"
                         @click="toggle(index === 0 ? 'new' : 'hot')"
                     >
                         {{ item }}
                     </button>
-                    <view
-                        class="search"
-                        :style="{
-                            'background-color': publicConfig.primaryBgColor
-                        }"
-                    >
+                    <view class="search">
                         <image
                             :src="
                                 `https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/${publicConfig.activityName}_search.png`
@@ -240,21 +216,12 @@
                             `/activity/pages/upload/modify?activity_id=${filter.activity_id}`
                         "
                     >
-                        <view
-                            class="goUpload"
-                            :style="{
-                                'background-color': publicConfig.primaryColor
-                            }"
-                        >
+                        <view class="goUpload">
                             去上传
                         </view>
                     </navigator>
                 </view>
-                <goHome
-                    :path="publicConfig.homePath"
-                    :text-color="publicConfig.primaryColor"
-                    :name="publicConfig.activityName"
-                />
+                <goHome :path="publicConfig.homePath" />
             </view>
         </view>
     </view>

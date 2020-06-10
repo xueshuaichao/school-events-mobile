@@ -1,9 +1,34 @@
 .labor-page {
+    .page-read-work {
+        background-color: #ffce99;
+    }
+    .page-read-work .panel .panel-hd {
+        background-color: #ffce99;
+    }
     .page-read-work .panel .panel-hd .panel-title {
         color: #db4e0e;
         &.active {
             background-color: #db4e0e;
             color: #fff;
+        }
+    }
+
+    .page-read-work .search-box {
+        background-color: #ffce99;
+        .search {
+            background-color: #ff9f73;
+        }
+        button {
+            border: 1px solid #db4e0e;
+            width: 120upx;
+            color: #db4e0e;
+            &.active {
+                background-color: #db4e0e;
+                color: #fff;
+            }
+            &:first-of-type {
+                margin-right: 12upx;
+            }
         }
     }
     .media-content {
@@ -18,9 +43,10 @@
     }
     .work-empty .goUpload {
         color: #fff;
+        background-color: #db4e0e;
     }
     .goHome {
-        color: #db4e0e !important;
+        color: #db4e0e;
         &::before {
             border-top: 1rpx solid #db4e0e;
             border-right: 1rpx solid #db4e0e;
@@ -29,6 +55,12 @@
 }
 
 .children-page {
+    .page-read-work {
+        background-color: #ebe1ff;
+    }
+    .page-read-work .panel .panel-hd {
+        background-color: #ebe1ff;
+    }
     .page-read-work .panel .panel-hd .panel-title {
         color: #666;
         &.active {
@@ -36,13 +68,26 @@
             color: #fff;
         }
     }
-    .page-read-work .search-box button {
-        border: 1px solid #c790ff;
-        width: 120upx;
-        &:first-of-type {
-            margin-right: 12upx;
+
+    .page-read-work .search-box {
+        background-color: #ebe1ff;
+        .search {
+            background-color: #dcc0ff;
+        }
+        button {
+            border: 1px solid #c790ff;
+            width: 120upx;
+            color: #bb77ff;
+            &.active {
+                background-color: #bb77ff;
+                color: #fff;
+            }
+            &:first-of-type {
+                margin-right: 12upx;
+            }
         }
     }
+
     .media-content {
         background-color: #fff;
         box-shadow: inset 0px 0px 24upx 0px rgba(182, 146, 255, 1);
@@ -65,13 +110,14 @@
     }
     .work-empty .goUpload {
         color: #fff;
+        background-color: #bb77ff;
     }
     .event-craft-cover .tag {
         background: #ffe79c;
         color: #bb77ff;
     }
     .goHome {
-        color: #c790ff !important;
+        color: #c790ff;
         &::before {
             border-top: 1rpx solid #c790ff !important;
             border-right: 1rpx solid #c790ff !important;

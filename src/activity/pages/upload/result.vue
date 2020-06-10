@@ -28,20 +28,12 @@
                 </view>
                 <text
                     class="link btn mr-right"
-                    :style="{
-                        color: publicConfig.primaryColor,
-                        'border-color': publicConfig.primaryColor
-                    }"
                     @click="reUpload"
                 >
                     再次上传作品
                 </text>
                 <text
                     class="link btn blue-bg"
-                    :style="{
-                        'background-color': publicConfig.primaryColor,
-                        'border-color': publicConfig.primaryColor
-                    }"
                     @click="goToUc"
                 >
                     查看作品
@@ -56,11 +48,7 @@
                     src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/children_add.png"
                 />
             </view>
-            <goHome
-                :path="publicConfig.homePath"
-                :text-color="publicConfig.primaryColor"
-                :name="publicConfig.activityName"
-            />
+            <goHome :path="publicConfig.homePath" />
         </div>
     </view>
 </template>
