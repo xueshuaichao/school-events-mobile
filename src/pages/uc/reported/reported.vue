@@ -447,7 +447,7 @@ export default {
             },
             checkedStudents: [],
             catText: '',
-            rangeIndex: 0,
+            rangeIndex: 0, // 0-竞技 1-吉尼斯
             stageData: '',
             catDataArray: [],
             catData: [],
@@ -458,16 +458,6 @@ export default {
             studentData: [],
             studentDataIndex: 0,
             date: false,
-            range: [
-                {
-                    name: '爱挑战-个人',
-                    id: 1,
-                },
-                {
-                    name: '爱挑战-团队',
-                    id: 2,
-                },
-            ],
             lock: true,
         };
     },
@@ -516,6 +506,9 @@ export default {
         radioChange(e) {
             this.formData.cat_id = '';
             this.rangeIndex = e.detail.value - 1;
+            if (this.rangeIndex === 1) {
+                this.gradeType = 0;
+            }
             this.catData = this.catDataArray[this.rangeIndex].child;
             this.formData.resource_scope = e.detail.value;
             // this.formData.create_info_array = [];
@@ -579,7 +572,7 @@ export default {
             this.classDataIndex = e.detail.value;
             this.formData.class_id = this.classData[this.classDataIndex].id;
             if (id !== this.formData.class_id) {
-                if (this.rangeIndex === 0) {
+                if (this.gradeType === 0) {
                     this.statudent = [];
                 } else {
                     this.statudentCheckbox = [];
@@ -589,7 +582,7 @@ export default {
             this.getStudents();
         },
         getStudents() {
-            if (this.rangeIndex === 0) {
+            if (this.gradeType === 0) {
                 this.statudent = [];
             } else {
                 this.statudentCheckbox = [];
@@ -642,8 +635,10 @@ export default {
             this.formData.cat_name = picked.label;
             this.catText = picked.label;
             this.result = this.catData;
-            // 根据参赛类型修改 参赛学生选择框类型
-            [this.gradeType] = picked.indexes;
+            // 竞技项目根据分类 确定参赛学生选择框类型 多选还是单选
+            if (this.rangeIndex === 0) {
+                [this.gradeType] = picked.indexes;
+            }
             // 取出最后一级数据
             picked.values.forEach((item, index) => {
                 if (index < picked.values.length - 1) {
@@ -683,17 +678,14 @@ export default {
                 }, 100);
             }
         },
-        onSelectCat(e) {
-            this.catIndex = e.detail.cat_id;
-            this.formData.range_id = this.range[this.catIndex].id;
-        },
+
         getTimeSeconds({ minutes, seconds, millisecond }) {
             return (minutes / 1) * 60 + seconds / 1 + millisecond / 1000;
         },
         onValidate() {
             let status = true;
             this.formData.create_info_array = [];
-            if (this.rangeIndex === 0) {
+            if (this.gradeType === 0) {
                 this.formData.create_info_array = this.statudent;
             } else {
                 this.formData.create_info_array = this.statudentCheckbox;
@@ -739,6 +731,17 @@ export default {
                 }
                 if (this.onValidate()) {
                     uni.showLoading();
+                    if (this.rangeIndex === 0) {
+                        if (this.gradeType === 0) {
+                            this.formData.resource_scope = 1;
+                        } else {
+                            this.formData.resource_scope = 2;
+                        }
+                        this.formData.parent_scope = 1;
+                    } else {
+                        this.formData.resource_scope = 6;
+                        this.formData.parent_scope = 4;
+                    }
                     api.post('/api/works/uploadgrade', this.formData).then(
                         (res) => {
                             console.log(res);
