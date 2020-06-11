@@ -250,6 +250,9 @@ const routesConfig = {
             path: '/pages/upload/default/upload',
         },
         {
+            path: '/pages/activity/apply',
+        },
+        {
             path: '*',
             name: 'moddle',
             redirect: (to) => {

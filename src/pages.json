@@ -355,6 +355,12 @@
             "style": {
                 "navigationBarTitleText": "上报成功"
             }
+        },
+        {
+            "path": "pages/activity/apply",
+            "style": {
+                "navigationBarTitleText": "申请活动-青少年爱挑战"
+            }
         }
     ],
     "subPackages": [
