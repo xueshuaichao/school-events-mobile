@@ -39,7 +39,7 @@
                         v-model="formData.phone"
                         class="uni-input"
                         placeholder-class="uni-placeholder"
-                        maxlength="13"
+                        maxlength="11"
                         placeholder="请填写联系人手机号"
                     >
                 </view>
@@ -89,9 +89,9 @@
                     <textarea
                         v-model="formData.activity_desc"
                         class="uni-textarea"
-                        maxlength="100"
+                        maxlength="200"
                         placeholder-style="color:#999;"
-                        placeholder="请描述活动主题、活动流程等细节（不超过100字）"
+                        placeholder="请描述活动主题、活动流程等细节（不超过200字）"
                     />
                 </view>
                 <view class="uni-btn-v">
