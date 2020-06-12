@@ -169,19 +169,19 @@ export default {
                             cat_id: 21,
                         },
                         {
-                            name: '杂技',
+                            name: '杂技魔术',
                             cat_id: 23,
                         },
-                        {
-                            name: '魔术',
-                            cat_id: 24,
-                        },
+                        // {
+                        //     name: '魔术',
+                        //     cat_id: 24,
+                        // },
                         {
                             name: '艺术设计',
                             cat_id: 25,
                         },
                         {
-                            name: '其它',
+                            name: '其他表演',
                             cat_id: 102,
                         },
                     ],

@@ -8,7 +8,7 @@
                     maxlength="13"
                     :placeholder="searchWord"
                     @confirm="bindconfirm"
-                    @focus="toggleDropStatus"
+                    @focus="showSearchDrop = true"
                 >
                 <text
                     class="button"
@@ -53,7 +53,7 @@
                 >
                     <view class="col">
                         <view class="menu-list">
-                            <view
+                            <!-- <view
                                 class="menu-item"
                                 :class="{
                                     active: filter.cat_id.one_level_id === -1
@@ -61,9 +61,9 @@
                                 @click.stop="onSelect('cat_one', -1)"
                             >
                                 全部
-                            </view>
+                            </view> -->
                             <view
-                                v-for="item in categoryData[2].list"
+                                v-for="item in categoryData"
                                 :key="item.cat_id"
                                 class="menu-item"
                                 :class="{
@@ -138,7 +138,9 @@
         </view>
         <my-dropdown
             :search-drop-status="showSearchDrop"
+            :drop-list="dropList"
             @searchStatus="searchStatus"
+            @setHotWord="setHotWord"
         />
     </view>
 </template>
@@ -213,7 +215,12 @@ export default {
             showMenu: false,
             hiddingMenu: false,
 
-            categoryData: [],
+            categoryData: [
+                { cat_id: -1, name: '全部' },
+                { cat_id: 0, name: '爱挑战竞技作品' },
+                { cat_id: 6, name: '爱挑战吉尼斯作品' },
+                { cat_id: 3, name: '才艺秀作品' },
+            ],
             // countyData: [],
             showMenuType: '',
 
@@ -227,6 +234,7 @@ export default {
             isSearchWord: false, // 是否设置了关键词
             searchWord: '',
             showSearchDrop: false,
+            dropList: [],
         };
     },
     watch: {
@@ -238,11 +246,8 @@ export default {
         paramsFilter(val) {
             if (val) {
                 // // h5 与 小程序监听 paramsFilter的值，获取的时间不一样。1.这里为了兼容小程序和h5
-                this.filter.cat_id.one_level_id = Number(val.cat_id.one_level_id) || -1;
-                this.filter.keyword = val.keyword;
-                this.filter.sort = Number(val.sort) || 1;
-                this.filter.show_type = val.show_type || '';
-                this.getData();
+                this.initFilter(val);
+                // this.getData();
                 this.getTableData();
             }
         },
@@ -252,7 +257,7 @@ export default {
             try {
                 const value = uni.getStorageSync('onShowFrom');
                 if (value === 'detail') {
-                    this.getData();
+                    // this.getData();
                     this.getTableData();
                     if (!this.paramsFilter.from) {
                         uni.setStorageSync('onShowFrom', '');
@@ -265,7 +270,7 @@ export default {
         },
         canRefresh() {
             uni.stopPullDownRefresh();
-            this.getData();
+            // this.getData();
             this.getTableData();
             this.getSearchWord();
         },
@@ -278,23 +283,30 @@ export default {
         if (this.isFromTabbar) {
             this.filter.cat_id.one_level_id = -1;
             this.getTableData();
-            this.getData();
+            // this.getData();
         } else if (
-            this.paramsFilter.cat_id.one_level_id > 0
+            this.paramsFilter.cat_id.one_level_id > -2
             || this.paramsFilter.keyword
         ) {
             // h5
             // h5 与 小程序监听 paramsFilter的值，获取的时间不一样。1.这里为了兼容小程序和h5
-            this.filter.cat_id.one_level_id = Number(this.paramsFilter.cat_id.one_level_id) || -1;
-            this.filter.keyword = this.paramsFilter.keyword;
-            this.filter.sort = Number(this.paramsFilter.sort) || 1;
-            this.filter.show_type = this.paramsFilter.show_type || '';
+            this.initFilter(this.paramsFilter);
             this.getTableData();
-            this.getData();
+            // this.getData();
         }
         this.getSearchWord();
     },
     methods: {
+        initFilter(val) {
+            this.filter.cat_id.one_level_id = Number(val.cat_id.one_level_id);
+            this.filter.keyword = val.keyword;
+            this.filter.sort = Number(val.sort) || 1;
+            this.filter.show_type = val.show_type || '';
+            this.curCategory = this.categoryData.filter(
+                d => d.cat_id === this.filter.cat_id.one_level_id,
+            )[0].name;
+            console.log(this.curCategory, this.filter, 'llalalla');
+        },
         onSelect(type, value) {
             switch (type) {
                 case 'sort':
@@ -307,13 +319,8 @@ export default {
                     }
                     break;
                 case 'cat_one':
-                    if (value === -1) {
-                        this.filter.cat_id.one_level_id = -1;
-                        this.curCategory = '全部';
-                    } else {
-                        this.filter.cat_id.one_level_id = value.cat_id;
-                        this.curCategory = value.name;
-                    }
+                    this.filter.cat_id.one_level_id = value.cat_id;
+                    this.curCategory = value.name;
                     this.toggleMenu('category');
                     break;
                 default:
@@ -322,19 +329,19 @@ export default {
             this.getTableData();
         },
 
-        getData() {
-            api.get('/api/works/cats').then((res) => {
-                this.categoryData = res;
-                const arr = res[2].list.filter(
-                    d => d.cat_id === this.filter.cat_id.one_level_id,
-                );
-                if (arr.length) {
-                    this.curCategory = arr[0].name;
-                } else {
-                    this.curCategory = '全部';
-                }
-            });
-        },
+        // getData() {
+        // api.get('/api/works/cats').then((res) => {
+        //     this.categoryData = res;
+        //     const arr = res[2].list.filter(
+        //         d => d.cat_id === this.filter.cat_id.one_level_id,
+        //     );
+        //     if (arr.length) {
+        //         this.curCategory = arr[0].name;
+        //     } else {
+        //         this.curCategory = '全部';
+        //     }
+        // });
+        // },
         getTableData() {
             uni.pageScrollTo({
                 scrollTop: 0,
@@ -379,16 +386,25 @@ export default {
                 console.log('show menu');
             }
         },
-        toggleDropStatus() {
-            this.showSearchDrop = !this.showSearchDrop;
+        searchStatus(val) {
+            this.showSearchDrop = val;
+        },
+        setHotWord(word) {
+            this.searchWord = word;
+            this.filter.keyword = word;
+            this.bindconfirm();
+            this.showSearchDrop = false;
         },
         bindconfirm() {
             if (this.isSearchWord) {
-                this.toggleDropStatus();
+                this.showSearchDrop = false;
                 if (!this.filter.keyword) {
                     this.filter.keyword = this.searchWord;
                 }
-                if (this.filter.keyword === this.searchWord) {
+                if (
+                    this.filter.keyword === this.searchWord
+                    && this.searchWord
+                ) {
                     this.filter.show_type = 1;
                 } else {
                     this.filter.show_type = '';
@@ -413,10 +429,11 @@ export default {
             api.get('/api/works/searchword', {
                 type: 1,
             }).then(
-                (res) => {
-                    if (res && res.status === 1) {
+                (data) => {
+                    if (data && data.length) {
+                        this.dropList = data;
                         this.isSearchWord = true;
-                        this.searchWord = res.rec_word;
+                        this.searchWord = data[0].rec_word;
                     } else {
                         this.isSearchWord = false;
                         this.searchWord = '请输入学校名称/作品名称/作者名称';
@@ -547,7 +564,7 @@ export default {
     .tab-bar {
         display: flex;
         background: #fff;
-        padding: 0 20%;
+        padding: 0 12%;
         font-size: 32upx;
         position: fixed;
         top: 100upx;

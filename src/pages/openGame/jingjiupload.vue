@@ -8,7 +8,7 @@
                 参赛项目信息
             </view>
             <view
-                v-if="!id"
+                v-if="!id && type === 'jingji'"
                 class="show-type-input"
             >
                 <view class="show-type-text">
@@ -358,23 +358,27 @@ export default {
                         name: '爱挑战个人',
                         id: 1,
                         cat_id: 1,
+                        scope: 1,
                     },
                     {
                         name: '爱挑战团队',
                         id: 2,
                         cat_id: 2,
+                        scope: 1,
                     },
                 ],
                 jinisi: [
                     {
                         name: '吉尼斯个人',
-                        id: 1,
-                        cat_id: 113,
+                        id: 6,
+                        cat_id: 131,
+                        scope: 4,
                     },
                     {
                         name: '吉尼斯团队',
-                        id: 2,
-                        cat_id: 125,
+                        id: 6,
+                        cat_id: 131,
+                        scope: 4,
                     },
                 ],
             },
@@ -394,6 +398,9 @@ export default {
     onLoad({ type, id }) {
         this.type = type;
         this.id = id;
+        if (type === 'jinisi') {
+            this.setScoperSelect(0);
+        }
         if (id) {
             api.get('/api/works/detail', { id: this.id }).then((data) => {
                 this.formData = { ...this.formData, ...data };
@@ -496,7 +503,7 @@ export default {
             console.log(e.label.replace(/-/g, ''));
             this.formData.district = e.label.replace(/-/g, '');
             this.formData.districtCode = e.value;
-            this.formData.city = `${e.cityCode}00`;
+            this.formData.city = `${e.cityCode}`;
             this.formData.county = e.areaCode;
         },
         resetForm() {
@@ -531,32 +538,29 @@ export default {
             this.createInput = '';
         },
         updateVideo(data) {
-            console.log(data, 'data121');
-            this.formData.file_size = data.size;
             this.formData.video_id = data.video_id;
-            this.formData.file_name = data.tempFilePath;
-            const foo = data.tempFilePath.split('.');
-            this.formData.file_suffix = foo[foo.length - 1];
+            this.formData.file_name = data.tempFilePath.substring(
+                data.tempFilePath.lastIndexOf('/') + 1,
+            );
+            this.formData.file_size = data.size;
+            this.formData.file_suffix = data.tempFilePath.split('.').pop() || '';
         },
 
         updateImage(data) {
-            console.log(data, 'data33');
             this.formData.video_img_url = data[0] && data[0].path;
         },
         // 项目范围
         onScopeSelect(e) {
             this.resourceIndex = e.detail.value;
-            this.formData.resource_name = this.scopeData[this.type][
-                e.detail.value
-            ].name;
-            this.formData.resource_scope = this.scopeData[this.type][
-                e.detail.value
-            ].id;
+            this.setScoperSelect(e.detail.value);
+        },
+        setScoperSelect(val) {
+            this.formData.resource_name = this.scopeData[this.type][val].name;
+            this.formData.resource_scope = this.scopeData[this.type][val].id;
+            this.formData.resource_scope = this.scopeData[this.type][val].scope;
             this.catIndex = 0;
             this.formData.cat_name = '';
-            this.getallcategory(
-                this.scopeData[this.type][e.detail.value].cat_id,
-            );
+            this.getallcategory(this.scopeData[this.type][val].cat_id);
         },
         onSelect(e) {
             this.catIndex = e.detail.value;

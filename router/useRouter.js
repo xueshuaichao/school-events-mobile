@@ -86,6 +86,9 @@ const routesConfig = {
             path: '/pages/uc/honor/honor',
         },
         {
+            path: '/pages/uc/uc/index',
+        },
+        {
             path: '/pages/doc/detail/detail',
             name: 'doc',
             component: () => import('@/pages/doc/detail/detail.vue'),
@@ -248,6 +251,9 @@ const routesConfig = {
         },
         {
             path: '/pages/openGame/jingjiupload',
+        },
+        {
+            path: '/pages/openGame/zhibo-list',
         },
         {
             path: '/pages/upload/default/upload',

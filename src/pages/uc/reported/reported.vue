@@ -3,7 +3,7 @@
         <view class="form-info">
             <view class="uni-list-cell-db">
                 <text class="form-item-text">
-                    项目范围
+                    活动名称
                 </text>
                 <view class="title form-item-cont">
                     青少年爱挑战
@@ -21,7 +21,7 @@
                         :checked="formData.resource_scope === '1'"
                         style="transform: scale(0.6);"
                         color="#1166FF"
-                    />爱挑战-个人</label>
+                    />爱挑战竞技项目</label>
                     <label
                         class="radio"
                     ><radio
@@ -29,7 +29,7 @@
                         :checked="formData.resource_scope === '2'"
                         style="transform: scale(0.6);"
                         color="#1166FF"
-                    />爱挑战-团队</label>
+                    />爱挑战吉尼斯项目</label>
                 </radio-group>
             </view>
             <view class="uni-list-cell-db">
@@ -168,7 +168,7 @@
                 </template>
             </view>
             <view
-                v-if="rangeIndex === 0"
+                v-if="gradeType === 0"
                 class="uni-list-cell-db"
             >
                 <text class="form-item-text">
@@ -437,6 +437,7 @@ export default {
                 video_img_url: '',
                 school_id: '',
             },
+            gradeType: 0, // 参赛学生类型 0-个人 1团队
             statudentCheckbox: [],
             statudent: [],
             achievementDateInfo: {
@@ -446,7 +447,7 @@ export default {
             },
             checkedStudents: [],
             catText: '',
-            rangeIndex: 0,
+            rangeIndex: 0, // 0-竞技 1-吉尼斯
             stageData: '',
             catDataArray: [],
             catData: [],
@@ -457,16 +458,6 @@ export default {
             studentData: [],
             studentDataIndex: 0,
             date: false,
-            range: [
-                {
-                    name: '爱挑战-个人',
-                    id: 1,
-                },
-                {
-                    name: '爱挑战-团队',
-                    id: 2,
-                },
-            ],
             lock: true,
         };
     },
@@ -515,6 +506,9 @@ export default {
         radioChange(e) {
             this.formData.cat_id = '';
             this.rangeIndex = e.detail.value - 1;
+            if (this.rangeIndex === 1) {
+                this.gradeType = 0;
+            }
             this.catData = this.catDataArray[this.rangeIndex].child;
             this.formData.resource_scope = e.detail.value;
             // this.formData.create_info_array = [];
@@ -578,7 +572,7 @@ export default {
             this.classDataIndex = e.detail.value;
             this.formData.class_id = this.classData[this.classDataIndex].id;
             if (id !== this.formData.class_id) {
-                if (this.rangeIndex === 0) {
+                if (this.gradeType === 0) {
                     this.statudent = [];
                 } else {
                     this.statudentCheckbox = [];
@@ -588,7 +582,7 @@ export default {
             this.getStudents();
         },
         getStudents() {
-            if (this.rangeIndex === 0) {
+            if (this.gradeType === 0) {
                 this.statudent = [];
             } else {
                 this.statudentCheckbox = [];
@@ -641,6 +635,10 @@ export default {
             this.formData.cat_name = picked.label;
             this.catText = picked.label;
             this.result = this.catData;
+            // 竞技项目根据分类 确定参赛学生选择框类型 多选还是单选
+            if (this.rangeIndex === 0) {
+                [this.gradeType] = picked.indexes;
+            }
             // 取出最后一级数据
             picked.values.forEach((item, index) => {
                 if (index < picked.values.length - 1) {
@@ -662,7 +660,9 @@ export default {
             this.formData = {
                 ...this.formData,
                 video_id: data.video_id,
-                file_name: data.tempFilePath,
+                file_name: data.tempFilePath.substring(
+                    data.tempFilePath.lastIndexOf('/') + 1,
+                ),
                 file_size: data.size,
                 file_suffix: data.tempFilePath.split('.').pop() || '',
             };
@@ -678,17 +678,14 @@ export default {
                 }, 100);
             }
         },
-        onSelectCat(e) {
-            this.catIndex = e.detail.cat_id;
-            this.formData.range_id = this.range[this.catIndex].id;
-        },
+
         getTimeSeconds({ minutes, seconds, millisecond }) {
             return (minutes / 1) * 60 + seconds / 1 + millisecond / 1000;
         },
         onValidate() {
             let status = true;
             this.formData.create_info_array = [];
-            if (this.rangeIndex === 0) {
+            if (this.gradeType === 0) {
                 this.formData.create_info_array = this.statudent;
             } else {
                 this.formData.create_info_array = this.statudentCheckbox;
@@ -734,6 +731,17 @@ export default {
                 }
                 if (this.onValidate()) {
                     uni.showLoading();
+                    if (this.rangeIndex === 0) {
+                        if (this.gradeType === 0) {
+                            this.formData.resource_scope = 1;
+                        } else {
+                            this.formData.resource_scope = 2;
+                        }
+                        this.formData.parent_scope = 1;
+                    } else {
+                        this.formData.resource_scope = 6;
+                        this.formData.parent_scope = 4;
+                    }
                     api.post('/api/works/uploadgrade', this.formData).then(
                         (res) => {
                             console.log(res);
@@ -786,7 +794,7 @@ export default {
             color: #333;
         }
         .radio {
-            margin-right: 56upx;
+            margin-right: 20upx;
             font-size: 28upx;
             color: #999;
         }
@@ -796,7 +804,7 @@ export default {
         align-items: center;
         margin-bottom: 40upx;
         .form-item-text {
-            width: 112upx;
+            width: 120upx;
             margin-right: 16upx;
             font-size: 28upx;
             color: #333;

@@ -15,34 +15,47 @@
                 </view>
             </view>
             <view class="content">
+                <template v-if="type === 'guinness'">
+                    <view class="title">
+                        项目说明:
+                    </view>
+                </template>
                 <view
                     v-for="content in conf.content[activeMenuIndex]"
                     :key="content.title"
+                    class="item"
                 >
                     <view class="title">
+                        <template v-if="type === 'challenge'">
+                            ·
+                        </template>
                         {{ content.title }}
                     </view>
                     <view class="text">
                         {{ content.content }}
                     </view>
                 </view>
-                <view v-if="type !== 'guinness'">
-                    <view class="title">
-                        参赛视频拍摄说明：
-                    </view>
-                    <view class="text">
-                        1、视频要求3-10分钟 <br>
-                        2、要求视频画质清晰可见（不低于720P) <br>
-                        <template v-if="type === 'challenge'">
-                            3、内容健康，符合爱挑战规则
-                        </template>
-                    </view>
-
+                <view>
+                    <template v-if="type !== 'guinness'">
+                        <view class="title">
+                            参赛视频拍摄说明：
+                        </view>
+                        <view class="text">
+                            1、视频要求3-10分钟 <br>
+                            2、要求视频画质清晰可见（不低于720P) <br>
+                            <template v-if="type === 'challenge'">
+                                3、内容健康，符合爱挑战规则
+                            </template>
+                        </view>
+                    </template>
                     <template v-if="!isH5">
                         <navigator
                             v-if="type === 'challenge'"
-                            url="/pages/openGame/jingjiupload?type=jingji"
-                            open-type="redirect"
+                            :url="
+                                userInfo === null
+                                    ? '/pages/login/login'
+                                    : '/pages/openGame/jingjiupload?type=jingji'
+                            "
                         >
                             <view class="btn">
                                 我要来挑战
@@ -59,6 +72,19 @@
                         >
                             <view class="btn">
                                 我要秀才艺
+                            </view>
+                        </navigator>
+                        <navigator
+                            v-if="type === 'guinness'"
+                            :url="
+                                userInfo === null
+                                    ? '/pages/login/login'
+                                    : '/pages/openGame/jingjiupload?type=jinisi'
+                            "
+                            hover-class="other-navigator-hover"
+                        >
+                            <view class="btn">
+                                我要来挑战
                             </view>
                         </navigator>
                     </template>
@@ -121,18 +147,20 @@ export default {
 <style lang="less">
 .page-doc-list {
     display: flex;
-
+    height: 100vh;
+    overflow-y: hidden;
     .menu-list {
-        width: 212rpx;
+        width: 220rpx;
         background: rgba(245, 245, 245, 1);
-        min-height: 100vh;
+        height: 100vh;
     }
 
     .menu-item {
-        line-height: 108rpx;
+        line-height: 32rpx;
         text-align: center;
-        font-size: 28rpx;
+        font-size: 24rpx;
         color: #3c3c3c;
+        padding: 28rpx 8rpx;
 
         &.active {
             background: #268fff;
@@ -142,20 +170,21 @@ export default {
 
     .content {
         flex: 1;
-
         padding: 40rpx;
         font-size: 28rpx;
         color: #333333;
-
+        overflow-y: auto;
+        .item {
+            margin-bottom: 40rpx;
+            line-height: 44rpx;
+        }
         .title {
             font-size: 32rpx;
             color: #333;
             font-weight: bold;
-            margin-bottom: 24rpx;
         }
-
         .text {
-            margin-bottom: 40rpx;
+            margin-top: 6rpx;
         }
     }
 
@@ -168,7 +197,7 @@ export default {
         height: 94rpx;
         background: rgba(17, 102, 255, 1);
         border-radius: 2rpx;
-        margin: 0 auto;
+        margin: 40rpx auto 40rpx;
     }
 }
 </style>

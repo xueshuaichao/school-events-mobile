@@ -1,19 +1,20 @@
 <template>
     <view
         class="my-drop-box"
-        :class="{ show: showSearchDrop }"
+        :class="{ show: searchDropStatus && dropList.length }"
+        @click.prevent="selItem"
     >
         <view
             class="drop-ctx dropdown animated slideInDown faster"
             :class="hiddingDrop ? 'slideOutUp' : ''"
-            @click.prevent="hiddenSearchDrop"
         >
             <view
-                v-for="(item, index) in list"
+                v-for="(item, index) in dropList"
                 :key="index"
                 class="item"
+                @click.stop="selItem(item)"
             >
-                #hhhhhasdasda
+                #{{ item.rec_word }}
             </view>
         </view>
     </view>
@@ -25,32 +26,34 @@ export default {
             type: Boolean,
             default: false,
         },
+        dropList: {
+            type: Array,
+            default: () => [],
+        },
     },
     data() {
         return {
             list: [1, 2, 3, 4, 5],
-            hiddingDrop: true,
-            showSearchDrop: false,
+            hiddingDrop: false,
         };
     },
     watch: {
-        searchDropStatus() {
+        searchDropStatus(val) {
+            this.searchDropStatus = val;
             this.toggleSearch();
         },
     },
     methods: {
-        hiddenSearchDrop() {},
+        selItem(item) {
+            this.$emit('setHotWord', item.rec_word ? item.rec_word : '');
+        },
         toggleSearch() {
-            if (this.showSearchDrop) {
+            if (!this.searchDropStatus) {
                 this.hiddingDrop = true;
                 setTimeout(() => {
                     this.hiddingDrop = false;
-                    this.showSearchDrop = false;
-                    console.log('hide meanu--');
+                    this.$emit('searchStatus', false);
                 }, 300);
-            } else {
-                console.log('show menu---');
-                this.showSearchDrop = true;
             }
         },
     },

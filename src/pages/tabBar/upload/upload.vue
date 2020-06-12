@@ -20,7 +20,7 @@
                                 src="/static/images/upload/time.png"
                             />
                             <view class="fl-l time-start-end">
-                                活动日期：{{ item.start_time || "" }}/{{
+                                活动时间：{{ item.start_time || "" }}-{{
                                     item.end_time || ""
                                 }}
                             </view>

@@ -165,6 +165,11 @@ export default {
         },
         updateVideo(data) {
             this.formData.video_id = data.video_id;
+            this.formData.file_name = data.tempFilePath.substring(
+                data.tempFilePath.lastIndexOf('/') + 1,
+            );
+            this.formData.file_size = data.size;
+            this.formData.file_suffix = data.tempFilePath.split('.').pop() || '';
         },
 
         updateImage(data) {

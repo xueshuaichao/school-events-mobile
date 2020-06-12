@@ -24,66 +24,77 @@
             </view>
         </view>
         <template v-if="loading">
-            <view
-                v-for="(item, index) in listTest"
-                :key="index"
-                class="mess-item"
-            >
+            <view class="content">
                 <view
-                    class="item clearfix"
-                    :style="{ left: item.left + 'px' }"
-                    :data-left="item.left"
+                    v-for="(item, index) in dataList"
+                    :key="item.id"
+                    class="mess-item"
                 >
                     <view
-                        class="fl-l"
-                        :data-index="index"
-                        @touchstart="touchS"
-                        @touchmove="touchM"
-                        @touchend="touchE"
+                        class="item clearfix"
+                        :style="{ left: item.left + 'px' }"
+                        :data-left="item.left"
                     >
                         <view
-                            class="fl-l left"
-                            :class="`message-${selTab}`"
+                            class="fl-l"
+                            :data-index="index"
+                            @touchstart="touchS"
+                            @touchmove="touchM"
+                            @touchend="touchE"
+                            @click="toDetail(item)"
                         >
-                            <image
-                                :src="
-                                    `/static/images/uc/message-${selTab +
-                                        1}.png`
-                                "
-                            />
-                        </view>
-                        <view class="fl-l center clearfix">
-                            <view class="fl-l center-main">
-                                <view class="txt">
-                                    恭喜你，你的作品已经通过
-                                </view>
-                                <view class="time">
-                                    2020-05-20
-                                </view>
+                            <view
+                                class="fl-l left"
+                                :class="'message-' + selTab"
+                            >
+                                <image
+                                    :src="
+                                        `/static/images/uc/message-${selTab +
+                                            1}.png`
+                                    "
+                                />
                             </view>
-                            <template v-if="!item.left">
-                                <view class="fl-r dot" />
-                            </template>
+                            <view class="fl-l center clearfix">
+                                <view class="fl-l center-main">
+                                    <view class="txt">
+                                        {{ item.content }}
+                                    </view>
+                                    <view class="time">
+                                        {{ item.created_at }}
+                                    </view>
+                                </view>
+                                <template v-if="!item.is_read">
+                                    <view class="fl-r dot" />
+                                </template>
+                            </view>
                         </view>
-                    </view>
-                    <view
-                        class="fl-l delete-btn"
-                        @click="deleteMes(item, index)"
-                    >
-                        删除
+                        <view
+                            class="fl-l delete-btn"
+                            @click="deleteMes(item)"
+                        >
+                            删除
+                        </view>
                     </view>
                 </view>
+                <uni-load-more
+                    class="loadMore"
+                    :status="loadMoreStatus"
+                    :content-text="{
+                        contentdown: '上拉显示更多',
+                        contentrefresh: '正在加载...',
+                        contentnomore: '———— 已经到底了~ ————'
+                    }"
+                    color="#999"
+                />
             </view>
-            <uni-load-more
-                class="loadMore"
-                :status="loadMoreStatus"
-                :content-text="{
-                    contentdown: '上拉显示更多',
-                    contentrefresh: '正在加载...',
-                    contentnomore: '———— 已经到底了~ ————'
-                }"
-                color="#999"
-            />
+        </template>
+        <template v-if="loading && dataList.length">
+            <view
+                class="all-show-close"
+                @click="allShowChoose"
+            >
+                全部已读
+            </view>
         </template>
         <template v-if="loading && !dataList.length">
             <blank msg="暂无消息通知" />
@@ -108,12 +119,13 @@ export default {
             filter: {
                 page_num: 1,
                 page_size: 10,
+                category: 1,
             },
             selTab: 0,
-            listTest: [],
             loading: false,
             startX: 0,
             delBtnWidth: 80,
+            checkedArr: [],
         };
     },
     created() {
@@ -124,16 +136,30 @@ export default {
                 that.delBtnWidth = 136 * pix;
             },
         });
-        this.loading = true;
-        this.listTest = [{ left: 0 }, { left: 0 }, { left: 0 }];
-        // this.listTest = this.listTest.map(d => {
-        //     d.left = 1;
-        //     return d;
-        // })
     },
     methods: {
+        toDetail(item) {
+            this.$store.commit('setFilterData', {
+                position: {
+                    total: 1,
+                    curposition: 0,
+                    from: '',
+                },
+                filter: this.filter,
+            });
+            if (!item.is_read) {
+                this.handleMessage([item.msg_id]);
+            }
+
+            uni.navigateTo({
+                url: `/works/list/detail?id=${item.detail.resource_id}`,
+            });
+        },
         clickTab(val) {
             this.selTab = val;
+            this.filter.category = val + 1;
+            this.filter.page_num = 1;
+            this.getDataList();
         },
         onReachBottom() {
             if (this.loadMoreStatus === 'more') {
@@ -143,7 +169,12 @@ export default {
             }
         },
         getDataList(title) {
-            api.get('/api/common/msg', this.filter).then(({ list, total }) => {
+            api.get('/api/common/msg', this.filter).then(({ List, total }) => {
+                const list = List.map((d) => {
+                    const D = d;
+                    D.left = 0;
+                    return D;
+                });
                 if (title === 'reachBottom') {
                     this.dataList = this.dataList.concat(list);
                 } else {
@@ -158,13 +189,31 @@ export default {
                 } else {
                     this.loadMoreStatus = 'more';
                 }
+                this.loading = true;
             });
         },
-        handleMessage(id, type = '') {
+        allShowChoose() {
+            this.dataList.forEach((item) => {
+                const itemVal = String(item.msg_id);
+                if (!this.checkedArr.includes(itemVal)) {
+                    this.checkedArr.push(itemVal);
+                }
+            });
+            if (!this.checkedArr.length) {
+                uni.showToast({
+                    title: '暂无未读消息',
+                });
+            } else {
+                this.handleMessage(this.checkedArr);
+            }
+        },
+
+        handleMessage(id) {
             const idArr = Array.isArray(id) ? id : [id];
             api.post('/api/common/readmsg', {
                 msg_id: idArr,
             }).then(() => {
+                this.checkedArr = [];
                 this.dataList.forEach((item, index) => {
                     idArr.forEach((itemId) => {
                         if (item.msg_id === Number(itemId)) {
@@ -172,17 +221,35 @@ export default {
                         }
                     });
                 });
-                if (type === 'all') {
-                    // return this.resetChecbox();
-                }
-                return uni.navigateTo({
-                    url: `/pages/uc/myWork/myWork?type=${type}`,
-                });
             });
         },
-        deleteMes(item, index) {
-            console.log(index, 'deleteMes');
-            this.listTest = this.listTest.filter((d, idx) => index !== idx);
+        deleteMes(item) {
+            const index = this.dataList.indexOf(item);
+            api.post('/api/common/deletemsg', { id: item.id }).then(
+                () => {
+                    if (index !== -1) {
+                        this.dataList.splice(index, 1);
+                        this.total -= 1;
+                        if (
+                            this.dataList.length <= this.filter.page_size
+                            && this.total >= this.filter.page_size
+                        ) {
+                            this.filter.page_num = 1;
+                            this.getDataList();
+                        }
+                    }
+                    uni.showToast({
+                        title: '已删除',
+                        icon: 'none',
+                    });
+                },
+                () => {
+                    uni.showToast({
+                        title: '操作失败，再试一下',
+                        icon: 'none',
+                    });
+                },
+            );
         },
         touchS(e) {
             // if (e.touches.length == 1) {
@@ -211,13 +278,10 @@ export default {
             }
             // 获取手指触摸的是哪一项
             const { index } = e.currentTarget.dataset;
-            const list = this.listTest;
+            const list = this.dataList;
             list[index].left = left;
-            // this.listTest[index]['left'] = left;
-            // this.$set(this.listTest[index], 'left', left);
-
             // 更新列表的状态
-            this.listTest = list;
+            this.dataList = list;
             // }
         },
         touchE(e) {
@@ -231,16 +295,11 @@ export default {
             const left = disX > delBtnWidth / 2 ? 0 - this.delBtnWidth : 0;
             // 获取手指触摸的是哪一项
             const { index } = e.currentTarget.dataset;
-            this.$set(this.listTest[index], 'left', left);
-            // this.listTest[index]['left'] = left;
-            // console.log(left, index, this.listTest)
-
-            const list = this.listTest;
+            this.$set(this.dataList[index], 'left', left);
+            const list = this.dataList;
             list[index].left = left;
-            // console.log(list[index].txtStyle)
             // 更新列表的状态
-            this.listTest = list;
-            console.log(this.listTest, left);
+            this.dataList = list;
             // }
         },
     },
@@ -256,17 +315,28 @@ export default {
         display: flex;
         justify-content: space-around;
         border-bottom: 2rpx solid #cdcdcd;
+        position: fixed;
+        top: 0;
+        width: 100%;
+        background: #fff;
+        z-index: 1;
         .mes-panel-title {
-            padding: 20rpx 16rpx;
             color: #999;
             font-size: 32rpx;
-            line-height: 26rpx;
-            margin-bottom: 10rpx;
+            line-height: 70rpx;
+            margin: 30rpx 0;
+            width: 192rpx;
+            text-align: center;
             &.active {
-                border-bottom: 4rpx solid #1166ff;
-                color: #333;
+                background: rgba(17, 102, 255, 1);
+                border-radius: 34rpx;
+                color: #fff;
             }
         }
+    }
+    .content {
+        margin-top: 132rpx;
+        margin-bottom: 110rpx;
     }
     .mess-item {
         position: relative;
@@ -347,6 +417,17 @@ export default {
     }
     .blank-wrap {
         margin-top: 180upx;
+    }
+    .all-show-close {
+        position: fixed;
+        bottom: 0;
+        height: 100rpx;
+        text-align: center;
+        line-height: 100rpx;
+        font-size: 30rpx;
+        color: #666;
+        width: 100%;
+        background: #fff;
     }
 }
 </style>

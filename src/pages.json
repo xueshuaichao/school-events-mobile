@@ -54,6 +54,13 @@
             }
         },
         {
+            "path": "pages/uc/uc/index",
+            "style": {
+                "navigationBarTitleText": "个人空间",
+                "enablePullDownRefresh": true
+            }
+        },
+        {
             "path": "pages/doc/intro/intro",
             "style": {
                 "navigationBarTitleText": "参赛指南"

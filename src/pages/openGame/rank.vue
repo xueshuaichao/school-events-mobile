@@ -114,7 +114,7 @@
                             :key="item.value"
                             class="cols"
                             :class="{
-                                active: item.value + '00' === filter.city_id
+                                active: item.value === filter.city_id
                             }"
                             @click.stop="selCity(item, index)"
                         >
@@ -189,6 +189,7 @@
                 <view
                     :key="index"
                     class="rank-item rank-item-bar clearfix"
+                    @click="toDetail(item)"
                 >
                     <view class="rank-num rank-num-img fl-l">
                         <template v-if="index < 3">
@@ -262,6 +263,19 @@ export default {
         };
     },
     methods: {
+        toDetail(item) {
+            this.$store.commit("setFilterData", {
+                position: {
+                    total: 1,
+                    curposition: 0,
+                    from: ""
+                },
+                filter: this.filter
+            });
+            uni.navigateTo({
+                url: `/works/list/detail?id=${item.resource_id}`
+            });
+        },
         selEducate(item) {
             this.filterLabel.education_label = item.label;
             this.filter.education_level = item.id;
@@ -284,7 +298,7 @@ export default {
                 if (this.filter.city_id !== item.value) {
                     this.filter.county_id = 0;
                 }
-                this.filter.city_id = item.value + "00";
+                this.filter.city_id = item.value;
                 this.curCityIndex = index;
                 this.filterLabel.city_label = item.label;
                 this.filterLabel.county_label = "";

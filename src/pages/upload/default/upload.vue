@@ -39,8 +39,11 @@
                             v-for="(item, k) in tabs"
                             :key="k"
                             class="show-type-title"
-                            :class="{ active: newsTabActiveIndex === k }"
-                            @click="setNewsTabActive(k)"
+                            :class="{
+                                active: newsTabActiveIndex === k,
+                                disabled: item.disabled
+                            }"
+                            @click="setNewsTabActive(k, item.disabled)"
                         >
                             {{ item.column_name }}
                         </text>
@@ -183,8 +186,8 @@ export default {
             isLoading: true,
             type: '',
             tabs: [
-                { id: '1', column_name: '视频' },
-                { id: '2', column_name: '图片' },
+                { id: '1', column_name: '视频', disabled: false },
+                { id: '2', column_name: '图片', disabled: false },
             ],
             images: [],
 
@@ -257,9 +260,13 @@ export default {
             this.uploadMode = 'video';
             this.images = [];
         },
-        setNewsTabActive(index) {
-            this.newsTabActiveIndex = index;
-            if (index === 0) {
+        setNewsTabActive(index, disable) {
+            let Index = index;
+            if (disable) {
+                Index = 0;
+            }
+            this.newsTabActiveIndex = Index;
+            if (Index === 0) {
                 this.uploadMode = 'video';
                 this.formData.video_img_url = '';
             } else {
@@ -269,6 +276,11 @@ export default {
         },
         updateVideo(data) {
             this.formData.video_id = data.video_id;
+            this.formData.file_name = data.tempFilePath.substring(
+                data.tempFilePath.lastIndexOf('/') + 1,
+            );
+            this.formData.file_size = data.size;
+            this.formData.file_suffix = data.tempFilePath.split('.').pop() || '';
         },
 
         updateImage(data) {
@@ -351,6 +363,12 @@ export default {
             this.index = e.detail.value;
             const catId = this.catData[this.index].cat_id;
             this.formData.cat_id = catId;
+            if (catId === 16 || catId === 18) {
+                this.$set(this.tabs[1], 'disabled', true);
+                this.setNewsTabActive(0, true);
+            } else {
+                this.$set(this.tabs[1], 'disabled', false);
+            }
             console.log(this.formData);
         },
         errTip(title) {
@@ -560,6 +578,10 @@ export default {
         &.active {
             background-color: #1166ff;
             color: #fff;
+        }
+        &.disabled {
+            color: #eee;
+            border-color: #eee;
         }
     }
 

@@ -17,6 +17,7 @@
                         :value="index"
                         :range="catData"
                         :range-key="'name'"
+                        :disabled="id"
                         @change="onSelect"
                     >
                         <view
@@ -63,9 +64,14 @@
                         <text
                             v-for="(item, k) in uploadConfig.uploadMode"
                             :key="k"
-                            class="select-item"
+                            class="select-item for-disable"
                             :class="{
-                                active: formData.resource_type === k + 1
+                                active: formData.resource_type === k + 1,
+                                disabled:
+                                    ((formData.cat_id === 18 ||
+                                    formData.cat_id === 16) &&
+                                    item !== 'video') ||
+                                    id !== ''
                             }"
                             @click="setNewsTabActive(k + 1)"
                         >
@@ -261,7 +267,6 @@ export default {
         this.formData.activity_id = params.activity_id;
         if (this.id) {
             uni.setNavigationBarTitle({ title: '编辑作品' });
-            this.getItemData();
         }
         const uploadColorConfig = this.$store.getters.getColorConfig({
             activityId: this.formData.activity_id,
@@ -275,17 +280,11 @@ export default {
             activityId: this.formData.activity_id,
             page: 'uploadConfig',
         });
-        // [this.uploadMode] = [this.uploadConfig.uploadMode[0]];
-
         this.formData.cat_id = this.publicConfig.catId;
         this.formData.resource_type = this.uploadMode === 'video' ? 1 : 2;
-    },
-    created() {
-        // this.getData();
-    },
-    onShow() {
         this.getData();
     },
+    created() {},
     methods: {
         // 编辑作品
         getItemData() {
@@ -294,32 +293,54 @@ export default {
                     id: this.id,
                     activity_id: this.formData.activity_id,
                 }).then((res) => {
-                    this.isLoading = false;
-                    this.uploadMode = res.resource_type === 1 ? 'video' : 'image';
+                    let {
+                        img,
+                        resource_type: resourceType,
+                        cat_id: catId,
+                        cat_name: catName,
+                        video_img_url: videoImgUrl,
+                    } = res;
+                    // pm删除了几个分类 因此如果不存在默认选择其它
+                    // 编辑的作品分类是否存在 catIndex === -1 不存在
+                    const catIndex = this.catData.findIndex(
+                        v => v.cat_id === catId,
+                    );
+
+                    if (catIndex === -1) {
+                        catId = 102;
+                        catName = '其他表演';
+                        this.index = this.catData.findIndex(
+                            v => v.cat_id === 102,
+                        );
+                    } else {
+                        this.index = catIndex;
+                        // 如果该分类不支持图片类型 强制改成视频类型 并清空之前上传的图片封面图
+                        if (
+                            (catId === 16 || catId === 18)
+                            && resourceType === 2
+                        ) {
+                            resourceType = 1;
+                            img = [];
+                            videoImgUrl = '';
+                            catName = catId === 16 ? '歌唱表演' : '口才表演';
+                        }
+                    }
+                    this.uploadMode = resourceType === 1 ? 'video' : 'image';
+
+                    if (resourceType === 2) {
+                        this.uploadMode = 'image';
+                        this.images = img;
+                    }
                     this.formData = {
                         ...this.formData,
                         ...res,
+                        img,
+                        resource_type: resourceType,
+                        cat_id: catId,
+                        cat_name: catName,
+                        video_img_url: videoImgUrl,
                     };
-                    // pm删除了几个分类 因此如果不存在默认选择其它
-                    const catIndex = this.publicConfig.configCatId.findIndex(
-                        v => v.cat_id === res.cat_id,
-                    );
-                    if (catIndex === -1) {
-                        this.$set(this.formData, 'cat_id', 102);
-                        this.$set(this.formData, 'cat_name', '其它');
-                        this.index = this.publicConfig.configCatId.length - 1;
-                    } else {
-                        this.index = catIndex;
-                    }
-                    console.log(this.formData);
-                    if (res.resource_type === 2) {
-                        this.uploadMode = 'image';
-                        this.images = res.img;
-                    } else {
-                        this.formData.video_id = res.video_id;
-                        this.formData.video_img_url = res.video_img_url;
-                    }
-                    console.log(this.formData);
+                    this.isLoading = false;
                 });
             }
         },
@@ -341,15 +362,24 @@ export default {
             this.formData.activity_cat = index;
         },
         setNewsTabActive(index) {
+            let Index = index;
             if (this.id) {
                 return false;
             }
-            this.formData.resource_type = index;
-            this.uploadMode = this.uploadConfig.uploadMode[index - 1];
+            if (this.formData.cat_id === 16 || this.formData.cat_id === 18) {
+                Index = 1;
+            }
+            this.formData.resource_type = Index;
+            this.uploadMode = this.uploadConfig.uploadMode[Index - 1];
             return true;
         },
         updateVideo(data) {
             this.formData.video_id = data.video_id;
+            this.formData.file_name = data.tempFilePath.substring(
+                data.tempFilePath.lastIndexOf('/') + 1,
+            );
+            this.formData.file_size = data.size;
+            this.formData.file_suffix = data.tempFilePath.split('.').pop() || '';
         },
 
         updateImage(data) {
@@ -369,11 +399,13 @@ export default {
                 && this.publicConfig.configCatId.length
             ) {
                 this.catData = this.publicConfig.configCatId;
+                this.getItemData();
             } else {
                 api.get('/api/works/childcat', {
                     cat_id: 3,
                 }).then((res) => {
                     this.catData = res;
+                    this.getItemData();
                 });
             }
             api.get('/api/user/info').then(
@@ -431,6 +463,9 @@ export default {
             this.index = e.detail.value;
             const catId = this.catData[this.index].cat_id;
             this.formData.cat_id = catId;
+            if (catId === 16 || catId === 18) {
+                this.setNewsTabActive(1);
+            }
         },
         errTip(title) {
             uni.showToast({
@@ -442,8 +477,6 @@ export default {
         bindMobile() {
             const { mobile } = this.accountData;
             const captcha = this.accountData.verify_code;
-
-            console.log(mobile);
             if (mobile.length !== 11 || mobile[0] !== '1') {
                 this.accountData.isValid = false;
                 this.accountData.msg = '手机号码不正确';
@@ -718,6 +751,10 @@ export default {
             &.active {
                 background: #0f8c64;
                 color: #fff;
+            }
+            &.for-disable.disabled {
+                color: #eee;
+                border-color: #eee;
             }
         }
     }

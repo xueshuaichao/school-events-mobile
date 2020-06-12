@@ -26,6 +26,7 @@
                 :placeholder="searchWord"
                 maxlength="13"
                 @confirm="bindconfirm"
+                @focus="showSearchDrop = true"
             >
             <text
                 class="button"
@@ -174,16 +175,16 @@
         />
         <!-- menu -->
         <work
-            :title="'爱挑战优秀个人'"
-            :more-url="'/pages/work/list/list?cat_id=1'"
+            :title="'爱挑战竞技优秀作品'"
+            :more-url="'/pages/work/list/list?cat_id=0'"
             :info="workData.individual.list"
-            :cat-id="1"
+            :cat-id="0"
         />
         <work
-            :title="'爱挑战优秀团体'"
-            :more-url="'/pages/work/list/list?cat_id=2'"
+            :title="'爱挑战吉尼斯优秀作品'"
+            :more-url="'/pages/work/list/list?cat_id=6'"
             :info="workData.team.list"
-            :cat-id="2"
+            :cat-id="6"
         />
         <work
             :title="'才艺秀优秀作品'"
@@ -191,17 +192,25 @@
             :info="workData.talent.list"
             :cat-id="3"
         />
+        <my-dropdown
+            :search-drop-status="showSearchDrop"
+            :drop-list="dropList"
+            @searchStatus="searchStatus"
+            @setHotWord="setHotWord"
+        />
     </view>
 </template>
 
 <script>
 import work from '../../../widgets/work/work.vue';
 import api from '../../../common/api';
+import myDropdown from '../../../components/search/my-dropdown.vue';
 // import bindMobile from '../../../components/bind-mobile/index.vue';
 
 export default {
     components: {
         work,
+        myDropdown,
         // bindMobile,
     },
     data() {
@@ -260,6 +269,8 @@ export default {
             ],
             isSearchWord: false, // 是否设置了关键词
             searchWord: '',
+            showSearchDrop: false,
+            dropList: [],
         };
     },
     onHide() {
@@ -289,8 +300,19 @@ export default {
     },
     created() {},
     methods: {
+        searchStatus(val) {
+            this.showSearchDrop = val;
+        },
+        setHotWord(word) {
+            if (word) {
+                this.searchWord = word;
+                this.bindconfirm();
+            }
+            this.showSearchDrop = false;
+        },
         bindconfirm() {
             if (!this.changeValue.trim()) {
+                this.showSearchDrop = false;
                 if (this.isSearchWord) {
                     this.changeValue = this.searchWord;
                 } else {
@@ -303,7 +325,7 @@ export default {
             // fr 统计关键字是
             const showType = this.changeValue === this.searchWord ? 1 : '';
             return uni.navigateTo({
-                url: `/pages/work/list/list?keyword=${this.changeValue.trim()}&show_type=${showType}`,
+                url: `/pages/work/list/list?keyword=${this.changeValue.trim()}&show_type=${showType}&cat_id=-1`,
             });
         },
         getUserInfo() {
@@ -358,10 +380,10 @@ export default {
         },
         getWorkList(type, refresh) {
             let catId;
-            if (type === 'individual') {
-                catId = 1;
-            } else if (type === 'team') {
-                catId = 2;
+            if (type === 'atz') {
+                catId = 0;
+            } else if (type === 'guiness') {
+                catId = 6;
             } else if (type === 'talent') {
                 catId = 3;
             }
@@ -373,9 +395,9 @@ export default {
                 sort: 4,
                 page_size: 6,
             }).then((res) => {
-                if (type === 'individual') {
+                if (type === 'atz') {
                     this.workData.individual = res;
-                } else if (type === 'team') {
+                } else if (type === 'guiness') {
                     this.workData.team = res;
                 } else if (type === 'talent') {
                     this.workData.talent = res;
@@ -388,8 +410,8 @@ export default {
 
         getData(refresh) {
             this.getHotActivity();
-            this.getWorkList('individual');
-            this.getWorkList('team');
+            this.getWorkList('atz');
+            this.getWorkList('guiness');
             this.getWorkList('talent', refresh);
         },
         getHotActivity() {
@@ -418,10 +440,11 @@ export default {
             api.get('/api/works/searchword', {
                 type: 1,
             }).then(
-                (res) => {
-                    if (res && res.status === 1) {
+                (data) => {
+                    if (data && data.length) {
                         this.isSearchWord = true;
-                        this.searchWord = res.rec_word;
+                        this.searchWord = data[0].rec_word;
+                        this.dropList = data;
                     } else {
                         this.searchWord = '请输入学校名称/作品名称/作者名称';
                     }
@@ -512,10 +535,12 @@ uni-swiper {
         width: 100%;
         font-size: 24upx;
         overflow: hidden;
-        padding: 20upx 0 14upx 30upx;
+        padding: 20upx 0 30upx 30upx;
         background: #fff;
         box-shadow: 0 0upx 5upx 0 rgba(0, 0, 0, 0.05);
         // margin-bottom: 10upx;
+        position: relative;
+        z-index: 103;
         input {
             background: #f3f3f3;
             border: none;
@@ -542,7 +567,7 @@ uni-swiper {
         }
     }
     .main-swiper {
-        padding: 30upx;
+        padding: 0 30rpx 30rpx;
 
         uni-swiper {
             height: 280upx;
