@@ -1,5 +1,8 @@
 <template>
-    <view class="widget-uc-index">
+    <view
+        v-if="!isLoading"
+        class="widget-uc-index"
+    >
         <login
             v-if="isfromUc && !userInfo.user_id"
             @login="onLogin"
@@ -20,7 +23,10 @@
                         >
                             <image src="/static/images/uc/messages.png" />
                         </navigator>
-                        <view class="mess-pop">
+                        <view
+                            v-if="userInfo.msg_count"
+                            class="mess-pop"
+                        >
                             {{
                                 userInfo.msg_count > 99
                                     ? "..."
@@ -86,7 +92,7 @@
                         >
                             {{ userInfo.resource_count }}
                         </view>
-                        <view>
+                        <view class="txt">
                             作品
                         </view>
                     </view>
@@ -94,7 +100,7 @@
                         <view class="num">
                             {{ userInfo.praise_count }}
                         </view>
-                        <view>
+                        <view class="txt">
                             获赞
                         </view>
                     </view>
@@ -102,7 +108,7 @@
                         <view class="num">
                             {{ userInfo.play_count }}
                         </view>
-                        <view>
+                        <view class="txt">
                             播放
                         </view>
                     </view>
@@ -389,10 +395,16 @@ export default {
             });
         },
         getData(refresh) {
+            if (this.isLoading) {
+                uni.showToast({
+                    title: '加载中',
+                });
+            }
             return api.get('/api/user/info').then(
                 (res) => {
                     this.userInfo = { ...this.userInfo, ...res.user_info };
                     this.isLoading = false;
+                    uni.hideToast();
                     if (this.isfromUc) {
                         this.userInfo.uid = this.userInfo.user_id;
                         this.filter.uid = this.userInfo.user_id;
@@ -404,6 +416,7 @@ export default {
                     }
                 },
                 () => {
+                    uni.hideToast();
                     this.isLoading = false;
                     this.userInfo = {};
                 },
@@ -506,10 +519,11 @@ export default {
             display: flex;
 
             .avatar {
-                margin-right: 24upx;
+                margin-right: 34upx;
                 width: 116upx;
                 height: 116upx;
                 border-radius: 50%;
+                border: 2upx solid rgba(255, 255, 255, 0.28);
             }
 
             .main-info {
@@ -519,15 +533,15 @@ export default {
                 color: #fff;
 
                 .user-name {
-                    font-size: 32upx;
-                    margin-bottom: 16upx;
+                    font-size: 30upx;
+                    margin-bottom: 10upx;
                     font-weight: 600;
                     word-break: break-all;
                 }
 
                 .info {
-                    font-size: 26upx;
-                    margin-bottom: 16upx;
+                    font-size: 24upx;
+                    margin-bottom: 10upx;
                     color: rgba(255, 255, 255, 0.8);
                 }
             }
@@ -535,7 +549,7 @@ export default {
         .user-statistics {
             display: flex;
             color: #fff;
-            justify-content: space-around;
+            justify-content: space-evenly;
             padding: 50rpx;
             .user-data {
                 font-size: 28rpx;
@@ -544,13 +558,16 @@ export default {
                 &:nth-child(2) {
                     border-right: 2rpx solid #82bfff;
                     border-left: 2rpx solid #82bfff;
-                    padding: 0 60rpx;
+                    padding: 0 70rpx;
                 }
                 .num {
                     font-size: 36rpx;
                     line-height: 36rpx;
                     font-weight: 600;
                     margin-bottom: 14rpx;
+                }
+                .txt {
+                    color: rgba(255, 255, 255, 0.7);
                 }
             }
         }
@@ -560,12 +577,17 @@ export default {
             top: 32rpx;
             display: flex;
             color: #fff;
-            .setting {
-                margin-right: 40rpx;
-            }
             image {
                 width: 38rpx;
                 height: 38rpx;
+            }
+            .setting {
+                margin-right: 40rpx;
+
+                image {
+                    height: 37rpx;
+                    width: 39rpx;
+                }
             }
             .mess-pop {
                 position: absolute;
@@ -590,7 +612,7 @@ export default {
             padding: 60rpx 30rpx 20rpx;
             background: #fff;
             border-radius: 50rpx 50rpx 0 0;
-            margin-bottom: 40rpx;
+            margin-bottom: 20rpx;
             .honor-top {
                 margin-bottom: 40rpx;
                 .txt {
@@ -599,7 +621,7 @@ export default {
                     font-size: 32rpx;
                     color: #333;
                     position: relative;
-                    padding-left: 40rpx;
+                    padding-left: 52rpx;
                     height: 32rpx;
                     image {
                         position: absolute;
@@ -649,6 +671,7 @@ export default {
                 .work-nav {
                     padding: 0 21rpx 20rpx;
                     color: #999;
+                    font-weight: 600;
                     &.active {
                         color: #333;
                         border-bottom: 4rpx solid #1166ff;
@@ -660,7 +683,7 @@ export default {
                 justify-content: space-between;
                 flex-wrap: wrap;
                 .work-item {
-                    margin-bottom: 20rpx;
+                    margin-bottom: 30rpx;
                 }
             }
         }

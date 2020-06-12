@@ -1,7 +1,7 @@
 <template>
     <view class="honor-card">
         <view class="top">
-            <view class="name">
+            <view class="name text-one-line">
                 {{ info.activity_name }}
             </view>
             <view class="time">
@@ -82,6 +82,7 @@ export default {
         image {
             width: 24rpx;
             height: 24rpx;
+            margin-right: 6rpx;
         }
     }
 }

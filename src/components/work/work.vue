@@ -301,6 +301,7 @@ export default {
         box-shadow: 0 2upx 20upx 0 rgba(194, 216, 255, 1) inset;
         border-radius: 10upx;
         padding: 24rpx;
+        border: 1px solid rgba(17, 102, 255, 0.18);
 
         .thumbnail-wrap {
             margin-right: 24upx;

@@ -24,7 +24,10 @@
             </view>
         </view>
         <template v-if="loading">
-            <view class="content">
+            <view
+                class="content"
+                :class="{ hidden: startX }"
+            >
                 <view
                     v-for="(item, index) in dataList"
                     :key="item.id"
@@ -169,16 +172,16 @@ export default {
             }
         },
         getDataList(title) {
-            api.get('/api/common/msg', this.filter).then(({ List, total }) => {
-                const list = List.map((d) => {
+            api.get('/api/common/msg', this.filter).then(({ list, total }) => {
+                const List = list.map((d) => {
                     const D = d;
                     D.left = 0;
                     return D;
                 });
                 if (title === 'reachBottom') {
-                    this.dataList = this.dataList.concat(list);
+                    this.dataList = this.dataList.concat(List);
                 } else {
-                    this.dataList = list;
+                    this.dataList = List;
                 }
                 this.total = total;
                 if (
@@ -302,6 +305,7 @@ export default {
             this.dataList = list;
             // }
         },
+        stopOutMove() {},
     },
     onLoad() {
         this.getDataList();
@@ -327,6 +331,7 @@ export default {
             margin: 30rpx 0;
             width: 192rpx;
             text-align: center;
+            font-weight: 600;
             &.active {
                 background: rgba(17, 102, 255, 1);
                 border-radius: 34rpx;
@@ -337,6 +342,10 @@ export default {
     .content {
         margin-top: 132rpx;
         margin-bottom: 110rpx;
+        max-height: calc(100vh - 242rpx);
+        &.hidden {
+            overflow-y: hidden;
+        }
     }
     .mess-item {
         position: relative;
@@ -351,7 +360,7 @@ export default {
             box-sizing: border-box;
         }
         .left {
-            margin: 30rpx 24rpx 30rpx 30rpx;
+            margin: 48rpx 24rpx 0 30rpx;
             width: 90rpx;
             height: 90rpx;
             border-radius: 50%;
@@ -375,7 +384,7 @@ export default {
             line-height: 46rpx;
             width: 606rpx;
             padding: 30rpx 0;
-            border-bottom: 2rpx solid #cdcdcd;
+            border-bottom: 2rpx solid #eee;
             height: 186rpx;
             box-sizing: border-box;
             .center-main {
@@ -402,7 +411,7 @@ export default {
                 border-radius: 50%;
                 background: #ff6555;
                 margin-right: 20rpx;
-                margin-top: 20rpx;
+                margin-top: 62rpx;
             }
         }
 

@@ -551,11 +551,12 @@ uni-swiper {
             display: block;
             padding: 0 40upx;
             box-sizing: border-box;
+            font-size: 28upx;
         }
         .placeholderStyle {
             color: #999999;
             text-align: left;
-            font-size: 24upx;
+            font-size: 26upx;
         }
         .button {
             float: left;
@@ -563,7 +564,7 @@ uni-swiper {
             line-height: 60upx;
             color: #666666;
             font-size: 32upx;
-            margin-left: 28upx;
+            margin-left: 26upx;
         }
     }
     .main-swiper {

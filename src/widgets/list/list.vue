@@ -545,11 +545,12 @@ export default {
             padding-left: 40upx;
             box-sizing: border-box;
             margin-bottom: 10upx;
+            font-size: 26upx;
         }
         .placeholderStyle {
             color: #999999;
             text-align: left;
-            font-size: 24upx;
+            font-size: 26upx;
         }
         .button {
             float: left;

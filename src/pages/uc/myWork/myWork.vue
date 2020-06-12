@@ -11,7 +11,9 @@
                 :class="{ active: tabActiveIndex === 0 }"
                 @click="setTabActive(0)"
             >
-                已通过({{
+                <text class="bold">
+                    已通过
+                </text>({{
                     (workStatics.pass_num > 90
                         ? "99+"
                         : workStatics.pass_num) || 0
@@ -22,7 +24,10 @@
                 :class="{ active: tabActiveIndex === 1 }"
                 @click="setTabActive(1)"
             >
-                待审核({{
+                <text class="bold">
+                    待审核
+                </text>
+                ({{
                     (workStatics.no_verify_num > 99
                         ? "99+"
                         : workStatics.no_verify_num) || 0
@@ -33,7 +38,10 @@
                 :class="{ active: tabActiveIndex === 2 }"
                 @click="setTabActive(2)"
             >
-                未通过({{
+                <text class="bold">
+                    未通过
+                </text>
+                ({{
                     (workStatics.refuse_num > 99
                         ? "99+"
                         : workStatics.refuse_num) || 0
@@ -331,6 +339,9 @@ export default {
             font-size: 30rpx;
             border-radius: 36rpx;
             line-height: 70rpx;
+            .bold {
+                font-weight: 600;
+            }
             &.active {
                 background: #1166ff;
                 color: #fff;
@@ -338,11 +349,9 @@ export default {
         }
     }
     .work-list {
-        margin-top: 30rpx;
+        margin-top: 16upx;
         .work-item {
             padding: 30upx 0 0upx;
-            margin-bottom: 40upx;
-
             position: relative;
             .thumbnail-wrap,
             .thumbnail {
@@ -362,23 +371,22 @@ export default {
         .btns {
             position: absolute;
             right: 20upx;
-            bottom: 20upx;
-            height: 60upx;
-            // width: 360upx;
+            bottom: 24upx;
             display: flex;
             justify-content: space-around;
             box-sizing: border-box;
             .btn {
                 display: inline-block;
                 padding: 0 18upx;
-                height: 60upx;
-                font-size: 26upx;
-                line-height: 60upx;
+                height: 64upx;
+                font-size: 28upx;
+                line-height: 64upx;
                 text-align: center;
                 margin: 0 6rpx;
                 color: #666;
-                border-radius: 30rpx;
+                border-radius: 32upx;
                 border: 2upx solid #999;
+                background: #fff;
 
                 &.active {
                     border-color: #1166ff;
@@ -388,7 +396,7 @@ export default {
             }
             &.pass {
                 .btn {
-                    padding: 0 40rpx;
+                    padding: 0 46rpx;
                 }
             }
         }

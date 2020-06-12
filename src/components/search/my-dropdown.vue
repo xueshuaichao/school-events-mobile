@@ -83,7 +83,7 @@ export default {
             color: #2f3033;
             font-size: 30rpx;
             line-height: 42rpx;
-            border-bottom: 2upx solid #ddd;
+            border-bottom: 2upx solid #eee;
         }
     }
 }

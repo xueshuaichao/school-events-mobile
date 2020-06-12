@@ -87,7 +87,10 @@
                     {{ pageData.create_name }}
                 </view>
             </view>
-            <view class="school-and-record">
+            <view
+                v-if="pageData.school_name || pageData.record"
+                class="school-and-record"
+            >
                 <text>{{ pageData.school_name }}</text>
                 <template v-if="pageData.record">
                     <image
@@ -610,22 +613,23 @@ export default {
     left: 0;
     // pointer-events: none;
     z-index: 10;
-    text-shadow: 0 2upx 2upx rgba(0, 0, 0, 0.35);
+    text-shadow: 0 2upx 3upx rgba(0, 0, 0, 0.35);
 
     .author-info {
         position: relative;
         height: 34rpx;
         .author-name {
             color: #fff;
-            font-size: 28upx;
+            font-size: 30upx;
             position: relative;
             line-height: 34upx;
             display: inline-block;
             width: 400rpx;
+            font-weight: 600;
         }
     }
     .school-and-record {
-        font-size: 24upx;
+        font-size: 26upx;
         margin: 6upx 0 24upx 0;
     }
 
@@ -635,14 +639,14 @@ export default {
     }
     .work-name-wrap {
         width: 90%;
-        margin-bottom: 13upx;
-        line-height: 36upx;
+        margin-top: 16upx;
     }
     .work-name {
-        font-size: 28upx;
+        font-size: 30upx;
         color: #fff;
         font-weight: 600;
         margin-right: 10upx;
+        line-height: 40rpx;
     }
     .deatil-achievement {
         font-size: 24upx;
@@ -650,14 +654,15 @@ export default {
     }
 
     .intro {
-        font-size: 25upx;
+        font-size: 26upx;
         line-height: 35upx;
         position: relative;
+        margin-top: 12upx;
     }
     .cat-name {
         font-size: 24upx;
         color: #fff;
-        margin-top: 18upx;
+        margin-top: 22upx;
         line-height: 42upx;
         display: inline-block;
         padding: 4upx 16upx;
@@ -673,7 +678,7 @@ export default {
             text-align: center;
             background: rgba(119, 119, 119, 0.4);
             padding: 4rpx 0;
-            color: #fff;
+            color: rgba(255, 255, 255, 0.5);
             display: inline-block;
             border-radius: 4rpx;
         }
@@ -697,6 +702,7 @@ export default {
     text-align: center;
     z-index: 10;
     min-width: 100upx;
+    text-shadow: 0 2upx 3upx rgba(0, 0, 0, 0.35);
 
     .icon-wrap {
         //margin-right: 36rpx;
@@ -710,6 +716,7 @@ export default {
             margin-bottom: 52rpx;
             margin-left: 50rpx;
             min-width: 120rpx;
+            letter-spacing: 2upx;
         }
     }
 
@@ -724,6 +731,7 @@ export default {
             width: 90rpx;
             height: 90rpx;
             border-radius: 66rpx;
+            box-shadow: 0 4upx 4upx 0 rgba(0, 0, 0, 0.28);
         }
     }
     .primary {
@@ -735,7 +743,7 @@ export default {
         width: 102rpx;
         height: 116rpx;
         border-radius: 56rpx;
-        padding: 20rpx 24rpx 0;
+        padding: 24rpx 24rpx 0;
         box-sizing: border-box;
     }
 }
