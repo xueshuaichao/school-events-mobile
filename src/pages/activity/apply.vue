@@ -129,7 +129,11 @@ export default {
                 },
                 {
                     type: 'phone',
-                    errorMsg: '请输入正确的手机号',
+                    errorMsg: '请输入联系人手机号',
+                },
+                {
+                    type: 'phoneReg',
+                    errorMsg: '请输入正确格式的手机号',
                 },
                 {
                     type: 'verify_code',
@@ -169,13 +173,13 @@ export default {
         sendCaptcha() {
             if (!this.formData.phone) {
                 return uni.showToast({
-                    title: '请输入正确的手机号',
+                    title: '请输入联系人手机号',
                     icon: 'none',
                 });
             }
             if (!this.isMobile.test(this.formData.phone)) {
                 return uni.showToast({
-                    title: '请输入正确的手机号',
+                    title: '请输入正确格式的手机号',
                     icon: 'none',
                 });
             }
@@ -228,12 +232,14 @@ export default {
             let status = true;
             try {
                 Object.keys(this.formData).forEach((item) => {
-                    if (this.formData[item].trim() === '') {
-                        throw Error(item);
-                    } else if (item === 'phone') {
-                        if (!this.isMobile.test(this.formData.phone)) {
+                    if (item === 'phone') {
+                        if (this.formData[item].trim() === '') {
                             throw Error(item);
+                        } else if (!this.isMobile.test(this.formData.phone)) {
+                            throw Error('phoneReg');
                         }
+                    } else if (this.formData[item].trim() === '') {
+                        throw Error(item);
                     }
                 });
             } catch (e) {
