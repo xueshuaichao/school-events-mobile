@@ -374,6 +374,12 @@
             "style": {
                 "navigationBarTitleText": "我的荣誉"
             }
+        },
+        {
+            "path": "pages/activity/apply",
+            "style": {
+                "navigationBarTitleText": "申请活动-青少年爱挑战"
+            }
         }
     ],
     "subPackages": [
