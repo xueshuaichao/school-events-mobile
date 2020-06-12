@@ -16,7 +16,7 @@
                         class="uni-input"
                         placeholder-class="uni-placeholder"
                         maxlength="20"
-                        placeholder="请输入学校名称（不超过20字）"
+                        placeholder="请填写学校名称（不超过20字）"
                     >
                 </view>
                 <view class="uni-form-item uni-column">
@@ -28,7 +28,7 @@
                         class="uni-input"
                         placeholder-class="uni-placeholder"
                         maxlength="10"
-                        placeholder="请输入学校联系人（不超过10字）"
+                        placeholder="请填写学校联系人（不超过10字）"
                     >
                 </view>
                 <view class="uni-form-item uni-column">
@@ -40,7 +40,7 @@
                         class="uni-input"
                         placeholder-class="uni-placeholder"
                         maxlength="13"
-                        placeholder="请输入联系人手机号"
+                        placeholder="请填写联系人手机号"
                     >
                 </view>
                 <view class="uni-form-item uni-column">
@@ -53,7 +53,7 @@
                             class="uni-input"
                             placeholder-class="uni-placeholder"
                             maxlength="6"
-                            placeholder="请输入验证码"
+                            placeholder="请填写验证码"
                         >
                         <view
                             v-if="!captcha.isSend"
@@ -79,7 +79,7 @@
                         class="uni-input"
                         placeholder-class="uni-placeholder"
                         maxlength="30"
-                        placeholder="请输入活动名称（不超过30字）"
+                        placeholder="请填写活动名称（不超过30字）"
                     >
                 </view>
                 <view class="uni-form-item uni-column">
@@ -121,27 +121,27 @@ export default {
             validateRule: [
                 {
                     type: 'school_name',
-                    errorMsg: '请输入学校名称',
+                    errorMsg: '请填写学校名称',
                 },
                 {
                     type: 'name',
-                    errorMsg: '请输入学校联系人',
+                    errorMsg: '请填写学校联系人',
                 },
                 {
                     type: 'phone',
-                    errorMsg: '请输入联系人手机号',
+                    errorMsg: '请填写联系人手机号',
                 },
                 {
                     type: 'phoneReg',
-                    errorMsg: '请输入正确格式的手机号',
+                    errorMsg: '请填写正确格式的手机号',
                 },
                 {
                     type: 'verify_code',
-                    errorMsg: '请输入验证码',
+                    errorMsg: '请填写验证码',
                 },
                 {
                     type: 'activity_name',
-                    errorMsg: '请输入活动名称',
+                    errorMsg: '请填写活动名称',
                 },
                 {
                     type: 'activity_desc',
@@ -173,13 +173,13 @@ export default {
         sendCaptcha() {
             if (!this.formData.phone) {
                 return uni.showToast({
-                    title: '请输入联系人手机号',
+                    title: '请填写联系人手机号',
                     icon: 'none',
                 });
             }
             if (!this.isMobile.test(this.formData.phone)) {
                 return uni.showToast({
-                    title: '请输入正确格式的手机号',
+                    title: '请填写正确格式的手机号',
                     icon: 'none',
                 });
             }
