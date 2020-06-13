@@ -638,6 +638,9 @@ export default {
             // 竞技项目根据分类 确定参赛学生选择框类型 多选还是单选
             if (this.rangeIndex === 0) {
                 [this.gradeType] = picked.indexes;
+            } else {
+                // 吉尼斯参赛学生选择框类型 多选还是单选
+                this.gradeType = picked.index === 3 || picked.index === 4 ? 1 : 0;
             }
             // 取出最后一级数据
             picked.values.forEach((item, index) => {
@@ -653,8 +656,8 @@ export default {
             this.result = arr.find(v => v.cat_id === id).child;
         },
         handleAchievement({ unit }) {
-            this.date = !unit;
-            this.formData.achievement_unit = unit || '秒';
+            this.date = !!(unit === '分' || unit === '秒' || unit === '毫秒');
+            this.formData.achievement_unit = this.date ? '秒' : unit;
         },
         updateVideo(data) {
             this.formData = {
@@ -818,7 +821,7 @@ export default {
         align-items: center;
         font-size: 28upx;
         input {
-            width: 138upx;
+            width: 125upx;
         }
         .date-text {
             display: inline-block;
