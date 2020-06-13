@@ -855,15 +855,16 @@ export default {
             const { curposition, total, from } = position;
             this.filterObj = filter;
             this.apiFrom = from || '/api/works/list';
+
+            if (total < 2 || this.isFromShare) {
+                this.disableslide = true;
+            }
             if (!Object.prototype.hasOwnProperty.call(filter, 'page_size')) {
                 // h5页面刷新，禁止滑动。
                 this.disableslide = true;
                 if (filter.sort) {
                     this.disableslide = false;
                 }
-            }
-            if (total < 2 || this.isFromShare) {
-                this.disableslide = true;
             }
             // 获取前后两页面的内容。
             if (!this.disableslide) {

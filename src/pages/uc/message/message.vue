@@ -1,97 +1,105 @@
 <template>
     <view class="page-message">
-        <template v-if="showDataList.length">
-            <view class="panel">
-                <view
-                    v-if="!showCheckboxPanel"
-                    class="select-text"
-                    @click="showCheckbox(true)"
-                >
-                    选择
-                </view>
-                <view
-                    v-else
-                    class="select-handle"
-                >
-                    <checkbox-group @change="allChoose">
-                        <label>
-                            <checkbox
-                                style="transform:scale(0.7)"
-                                value="all"
-                                color="#1166FF"
-                                :class="{ checked: allChecked }"
-                                :checked="allChecked ? true : false"
-                            />全选
-                        </label>
-                    </checkbox-group>
-                    <view class="btn">
-                        <text @click="cancel">
-                            取消
-                        </text>
-                        <text
-                            class="btn"
-                            @click="setMessageStatus"
-                        >
-                            标记为已读
-                        </text>
-                    </view>
-                </view>
+        <view class="mes-panel-hd">
+            <view
+                class="mes-panel-title"
+                :class="{ active: selTab === 0 }"
+                @click="clickTab(0)"
+            >
+                系统通知
             </view>
-            <view class="message-list">
-                <template>
-                    <checkbox-group @change="changeCheckbox">
+            <view
+                class="mes-panel-title"
+                :class="{ active: selTab === 1 }"
+                @click="clickTab(1)"
+            >
+                喜欢
+            </view>
+            <view
+                class="mes-panel-title"
+                :class="{ active: selTab === 2 }"
+                @click="clickTab(2)"
+            >
+                评论
+            </view>
+        </view>
+        <template v-if="loading">
+            <view
+                class="content"
+                :class="{ hidden: startX }"
+            >
+                <view
+                    v-for="(item, index) in dataList"
+                    :key="item.id"
+                    class="mess-item"
+                >
+                    <view
+                        class="item clearfix"
+                        :style="{ left: item.left + 'px' }"
+                        :data-left="item.left"
+                    >
                         <view
-                            v-for="(item, index) in showDataList"
-                            :key="index"
-                            class="message-item"
-                            :class="{ unread: !showCheckboxPanel }"
+                            class="fl-l"
+                            :data-index="index"
+                            @touchstart="touchS"
+                            @touchmove="touchM"
+                            @touchend="touchE"
+                            @click="toDetail(item)"
                         >
-                            <text
-                                v-if="!item.is_read && !showCheckboxPanel"
-                                class="status"
-                            />
-                            <view class="checkbox-view">
-                                <checkbox
-                                    v-if="showCheckboxPanel"
-                                    style="transform:scale(0.7)"
-                                    :value="String(item.msg_id)"
-                                    :checked="
-                                        checkedArr.includes(String(item.msg_id))
+                            <view
+                                class="fl-l left"
+                                :class="'message-' + selTab"
+                            >
+                                <image
+                                    :src="
+                                        `/static/images/uc/message-${selTab +
+                                            1}.png`
                                     "
-                                    class="checkbox"
-                                    :class="{
-                                        checked: checkedArr.includes(
-                                            String(item.msg_id)
-                                        )
-                                    }"
                                 />
                             </view>
-                            <text class="detail-text">
-                                {{ item.content }}
-                            </text>
-                            <view
-                                v-if="item.type === 1 || item.type === 2"
-                                class="handle"
-                                @click="handleMessage(item.msg_id, item.type)"
-                            >
-                                点击查看
+                            <view class="fl-l center clearfix">
+                                <view class="fl-l center-main">
+                                    <view class="txt">
+                                        {{ item.content }}
+                                    </view>
+                                    <view class="time">
+                                        {{ item.created_at }}
+                                    </view>
+                                </view>
+                                <template v-if="!item.is_read">
+                                    <view class="fl-r dot" />
+                                </template>
                             </view>
                         </view>
-                    </checkbox-group>
-                </template>
+                        <view
+                            class="fl-l delete-btn"
+                            @click="deleteMes(item)"
+                        >
+                            删除
+                        </view>
+                    </view>
+                </view>
+                <uni-load-more
+                    class="loadMore"
+                    :status="loadMoreStatus"
+                    :content-text="{
+                        contentdown: '上拉显示更多',
+                        contentrefresh: '正在加载...',
+                        contentnomore: '———— 已经到底了~ ————'
+                    }"
+                    color="#999"
+                />
             </view>
-            <uni-load-more
-                class="loadMore"
-                :status="loadMoreStatus"
-                :content-text="{
-                    contentdown: '上拉显示更多',
-                    contentrefresh: '正在加载...',
-                    contentnomore: '———— 已经到底了~ ————'
-                }"
-                color="#999"
-            />
         </template>
-        <template v-else>
+        <template v-if="loading && dataList.length">
+            <view
+                class="all-show-close"
+                @click="allShowChoose"
+            >
+                全部已读
+            </view>
+        </template>
+        <template v-if="loading && !dataList.length">
             <blank msg="暂无消息通知" />
         </template>
     </view>
@@ -109,21 +117,53 @@ export default {
     },
     data() {
         return {
-            showCheckboxPanel: false,
-            isChecked: false,
-            checkedArr: [], // 复选框选中的值
-            allChecked: false, // 是否全选
-            showDataList: [],
             dataList: [],
-            unreadList: [],
             loadMoreStatus: 'none',
             filter: {
                 page_num: 1,
                 page_size: 10,
+                category: 1,
             },
+            selTab: 0,
+            loading: false,
+            startX: 0,
+            delBtnWidth: 80,
+            checkedArr: [],
         };
     },
+    created() {
+        const that = this;
+        uni.getSystemInfo({
+            success(res) {
+                const pix = res.screenWidth / 750;
+                that.delBtnWidth = 136 * pix;
+            },
+        });
+    },
     methods: {
+        toDetail(item) {
+            this.$store.commit('setFilterData', {
+                position: {
+                    total: 1,
+                    curposition: 0,
+                    from: '',
+                },
+                filter: this.filter,
+            });
+            if (!item.is_read) {
+                this.handleMessage([item.msg_id]);
+            }
+
+            uni.navigateTo({
+                url: `/works/list/detail?id=${item.detail.resource_id}`,
+            });
+        },
+        clickTab(val) {
+            this.selTab = val;
+            this.filter.category = val + 1;
+            this.filter.page_num = 1;
+            this.getDataList();
+        },
         onReachBottom() {
             if (this.loadMoreStatus === 'more') {
                 this.filter.page_num = this.filter.page_num + 1;
@@ -133,13 +173,16 @@ export default {
         },
         getDataList(title) {
             api.get('/api/common/msg', this.filter).then(({ list, total }) => {
+                const List = list.map((d) => {
+                    const D = d;
+                    D.left = 0;
+                    return D;
+                });
                 if (title === 'reachBottom') {
-                    this.dataList = this.dataList.concat(list);
+                    this.dataList = this.dataList.concat(List);
                 } else {
-                    this.dataList = list;
+                    this.dataList = List;
                 }
-                this.unreadList = this.dataList.filter(v => v.is_read === 0);
-                this.showDataList = this.dataList;
                 this.total = total;
                 if (
                     this.total
@@ -149,121 +192,120 @@ export default {
                 } else {
                     this.loadMoreStatus = 'more';
                 }
+                this.loading = true;
             });
         },
-        handleMessage(id, type = '') {
+        allShowChoose() {
+            this.dataList.forEach((item) => {
+                const itemVal = String(item.msg_id);
+                if (!this.checkedArr.includes(itemVal)) {
+                    this.checkedArr.push(itemVal);
+                }
+            });
+            if (!this.checkedArr.length) {
+                uni.showToast({
+                    title: '暂无未读消息',
+                });
+            } else {
+                this.handleMessage(this.checkedArr);
+            }
+        },
+
+        handleMessage(id) {
             const idArr = Array.isArray(id) ? id : [id];
             api.post('/api/common/readmsg', {
                 msg_id: idArr,
             }).then(() => {
-                this.showDataList.forEach((item, index) => {
+                this.checkedArr = [];
+                this.dataList.forEach((item, index) => {
                     idArr.forEach((itemId) => {
                         if (item.msg_id === Number(itemId)) {
-                            this.$set(this.showDataList[index], 'is_read', 1);
+                            this.$set(this.dataList[index], 'is_read', 1);
                         }
                     });
                 });
-                if (type === 'all') {
-                    return this.resetChecbox();
-                }
-                return uni.navigateTo({
-                    url: `/pages/uc/myWork/myWork?type=${type}`,
-                });
             });
         },
-        cancel() {
-            this.resetChecbox();
-        },
-        resetChecbox() {
-            // 隐藏选择状态
-            this.showCheckbox(false);
-            // 取消选择
-            this.allChecked = false;
-            this.checkedArr = [];
-            this.unreadList = this.showDataList.filter(v => v.is_read === 0);
-        },
-        showCheckbox(status) {
-            // if (!status) {
-            //     this.showDataList = this.dataList;
-            //     this.showCheckboxPanel = status;
-            // } else {
-            //     api.get('/api/common/msg', {
-            //         ...this.filter,
-            //         is_read: 0,
-            //     }).then(({ total, list }) => {
-            //         if (total === 0) {
-            //             uni.showToast({
-            //                 icon: 'none',
-            //                 title: '暂无未读消息',
-            //             });
-            //         } else {
-            //             this.unreadList = list;
-            //             this.showDataList = this.unreadList;
-            //         }
-            //     });
-            // }
-            if (this.unreadList.length === 0) {
-                return uni.showToast({
-                    icon: 'none',
-                    title: '暂无未读消息',
-                });
-            }
-            this.showCheckboxPanel = status;
-            if (!status) {
-                this.showDataList = this.dataList;
-            } else {
-                this.showDataList = this.unreadList;
-            }
-            return true;
-        },
-        setMessageStatus() {
-            if (this.checkedArr.length === 0) {
-                uni.showToast({
-                    icon: 'none',
-                    title: '请选择待标记的消息',
-                });
-            } else {
-                this.handleMessage(this.checkedArr, 'all');
-            }
-        },
-        // 多选复选框改变事件
-        changeCheckbox(e) {
-            // 非选择状态下
-            if (!this.changeCheckbox) {
-                return false;
-            }
-            // 选择状态下
-            const { value } = e.detail;
-            this.checkedArr = value;
-            // 如果选择的数组中有值，并且长度等于列表的长度，就是全选
-            if (
-                this.checkedArr.length > 0
-                && this.checkedArr.length === this.showDataList.length
-            ) {
-                this.allChecked = true;
-            } else {
-                this.allChecked = false;
-            }
-            return true;
-        },
-        // 全选事件
-        allChoose(e) {
-            const chooseItem = e.detail.value;
-            // 全选
-            if (chooseItem[0] === 'all') {
-                this.allChecked = true;
-                this.showDataList.forEach((item) => {
-                    const itemVal = String(item.msg_id);
-                    if (!this.checkedArr.includes(itemVal)) {
-                        this.checkedArr.push(itemVal);
+        deleteMes(item) {
+            const index = this.dataList.indexOf(item);
+            api.post('/api/common/deletemsg', { id: item.id }).then(
+                () => {
+                    if (index !== -1) {
+                        this.dataList.splice(index, 1);
+                        this.total -= 1;
+                        if (
+                            this.dataList.length <= this.filter.page_size
+                            && this.total >= this.filter.page_size
+                        ) {
+                            this.filter.page_num = 1;
+                            this.getDataList();
+                        }
                     }
-                });
-            } else {
-                // 取消全选
-                this.allChecked = false;
-                this.checkedArr = [];
-            }
+                    uni.showToast({
+                        title: '已删除',
+                        icon: 'none',
+                    });
+                },
+                () => {
+                    uni.showToast({
+                        title: '操作失败，再试一下',
+                        icon: 'none',
+                    });
+                },
+            );
         },
+        touchS(e) {
+            // if (e.touches.length == 1) {
+            // 设置触摸起始点水平方向位置
+            this.startX = e.touches[0].clientX;
+            // }
+        },
+        touchM(e) {
+            // if (e.touches.length == 1) {
+            // 手指移动时水平方向位置
+            const moveX = e.touches[0].clientX;
+            // 手指起始点位置与移动期间的差值
+            const disX = this.startX - moveX;
+            const { delBtnWidth } = this;
+            let left = 0;
+            if (disX === 0 || disX < 0) {
+                // 如果移动距离小于等于0，说明向右滑动，文本层位置不变
+                left = 0;
+            } else if (disX > 0) {
+                // 移动距离大于0，文本层left值等于手指移动距离
+                left = 0 - disX;
+                if (disX >= delBtnWidth) {
+                    // 控制手指移动距离最大值为删除按钮的宽度
+                    left = 0 - this.delBtnWidth;
+                }
+            }
+            // 获取手指触摸的是哪一项
+            const { index } = e.currentTarget.dataset;
+            const list = this.dataList;
+            list[index].left = left;
+            // 更新列表的状态
+            this.dataList = list;
+            // }
+        },
+        touchE(e) {
+            // if (e.changedTouches.length == 1) {
+            // 手指移动结束后水平位置
+            const endX = e.changedTouches[0].clientX;
+            // 触摸开始与结束，手指移动的距离
+            const disX = this.startX - endX;
+            const { delBtnWidth } = this;
+            // 如果距离小于删除按钮的1/2，不显示删除按钮
+            const left = disX > delBtnWidth / 2 ? 0 - this.delBtnWidth : 0;
+            // 获取手指触摸的是哪一项
+            const { index } = e.currentTarget.dataset;
+            this.$set(this.dataList[index], 'left', left);
+            const list = this.dataList;
+            list[index].left = left;
+            // 更新列表的状态
+            this.dataList = list;
+            // }
+        },
+        stopOutMove() {},
     },
     onLoad() {
         this.getDataList();
@@ -272,95 +314,129 @@ export default {
 </script>
 
 <style lang="less">
-/* #ifdef H5 */
-uni-checkbox .uni-checkbox-input {
-    border-radius: 50% !important;
-    color: #ffffff !important;
-}
-uni-checkbox .uni-checkbox-input.uni-checkbox-input-checked {
-    background: #1166ff;
-    border-color: #1166ff;
-}
-uni-checkbox .uni-checkbox-input.uni-checkbox-input-checked::before {
-    text-align: center;
-    color: #fff;
-    background: transparent;
-    transform: translate(-70%, -50%) scale(1);
-    -webkit-transform: translate(-70%, -50%) scale(1);
-}
-/* #endif */
-/* 微信样式 */
-/* #ifdef APP-PLUS ||MP-WEIXIN */
-checkbox .wx-checkbox-input {
-    order-radius: 50% !important;
-    color: #ffffff !important;
-}
-
-checkbox .wx-checkbox-input.wx-checkbox-input-checked {
-    color: #fff;
-    background: #1166ff;
-}
-
-.wx-checkbox-input.wx-checkbox-input-checked {
-    background: #1166ff;
-    border-color: #1166ff;
-}
-/* #endif */
 .page-message {
-    padding: 20upx 30upx 0;
-    .panel {
-        height: 80upx;
-        line-height: 80upx;
-        font-size: 30upx;
-        border-bottom: 1upx solid #dddddd;
-    }
-    .select {
-        color: #0861ff;
-    }
-    .select-handle {
+    .mes-panel-hd {
         display: flex;
-        justify-content: space-between;
-        color: #000;
-        .btn {
-            padding-left: 10upx;
-        }
-    }
-    .message-list {
-        min-height: 100vh;
-        .message-item {
-            position: relative;
-            padding: 54upx 40upx 20upx 64upx;
-            border-bottom: 1upx solid #dddddd;
-            &.unread {
-                padding-left: 26upx;
+        justify-content: space-around;
+        border-bottom: 2rpx solid #cdcdcd;
+        position: fixed;
+        top: 0;
+        width: 100%;
+        background: #fff;
+        z-index: 1;
+        .mes-panel-title {
+            color: #999;
+            font-size: 32rpx;
+            line-height: 70rpx;
+            margin: 30rpx 0;
+            width: 192rpx;
+            text-align: center;
+            font-weight: 600;
+            &.active {
+                background: rgba(17, 102, 255, 1);
+                border-radius: 34rpx;
+                color: #fff;
             }
         }
-        .checkbox-view {
-            position: absolute;
-            left: 0;
-            top: 60upx;
+    }
+    .content {
+        margin-top: 132rpx;
+        margin-bottom: 110rpx;
+        max-height: calc(100vh - 242rpx);
+        &.hidden {
+            overflow-y: hidden;
         }
-        .status {
+    }
+    .mess-item {
+        position: relative;
+        height: 186rpx;
+        overflow-x: hidden;
+        .item {
             position: absolute;
-            top: 68upx;
             left: 0;
-            width: 10upx;
-            height: 10upx;
+            top: 0;
+            width: 886rpx;
+            height: 186rpx;
+            box-sizing: border-box;
+        }
+        .left {
+            margin: 48rpx 24rpx 0 30rpx;
+            width: 90rpx;
+            height: 90rpx;
             border-radius: 50%;
-            background-color: #ff6555;
+            text-align: center;
+            image {
+                width: 40rpx;
+                height: 40rpx;
+                margin-top: 24rpx;
+            }
+            &.message-0 {
+                background: #75a6ff;
+            }
+            &.message-1 {
+                background: #ff9b9b;
+            }
+            &.message-2 {
+                background: #ffd09b;
+            }
         }
-        .detail-text {
-            font-size: 28upx;
-            color: #000;
-            word-break: break-all;
+        .center {
+            line-height: 46rpx;
+            width: 606rpx;
+            padding: 30rpx 0;
+            border-bottom: 2rpx solid #eee;
+            height: 186rpx;
+            box-sizing: border-box;
+            .center-main {
+                width: 530rpx;
+                overflow: hidden;
+            }
+            .txt {
+                height: 92rpx;
+                display: -webkit-box;
+                -webkit-box-orient: vertical;
+                -webkit-line-clamp: 2;
+                overflow: hidden;
+                font-size: 30rpx;
+                color: #333;
+                line-height: 46rpx;
+            }
+            .time {
+                color: #999;
+                font-size: 22rpx;
+            }
+            .dot {
+                width: 14rpx;
+                height: 14rpx;
+                border-radius: 50%;
+                background: #ff6555;
+                margin-right: 20rpx;
+                margin-top: 62rpx;
+            }
         }
-        .handle {
-            font-size: 28upx;
-            color: #0861ff;
+
+        .delete-btn {
+            background: #ff6555;
+            color: #fff;
+            font-size: 30rpx;
+            width: 136rpx;
+            text-align: center;
+            line-height: 186rpx;
         }
     }
     .blank-wrap {
         margin-top: 180upx;
+    }
+    .all-show-close {
+        position: fixed;
+        bottom: 0;
+        height: 100rpx;
+        text-align: center;
+        line-height: 100rpx;
+        font-size: 30rpx;
+        color: #666;
+        width: 100%;
+        background: #fff;
     }
 }
 </style>

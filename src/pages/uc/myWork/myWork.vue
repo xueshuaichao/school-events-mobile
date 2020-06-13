@@ -4,31 +4,49 @@
         <!-- my works -->
         <view
             v-if="true || userInfo.identity === 3 || userInfo.identity === 4"
-            class="panel"
+            class="work-panel"
         >
-            <view class="panel-hd">
-                <text
-                    class="panel-title"
-                    :class="{ active: tabActiveIndex === 0 }"
-                    @click="setTabActive(0)"
-                >
-                    已通过({{ workStatics.pass_num || 0 }})
+            <text
+                class="panel-title"
+                :class="{ active: tabActiveIndex === 0 }"
+                @click="setTabActive(0)"
+            >
+                <text class="bold">
+                    已通过
+                </text>({{
+                    (workStatics.pass_num > 90
+                        ? "99+"
+                        : workStatics.pass_num) || 0
+                }})
+            </text>
+            <text
+                class="panel-title"
+                :class="{ active: tabActiveIndex === 1 }"
+                @click="setTabActive(1)"
+            >
+                <text class="bold">
+                    待审核
                 </text>
-                <text
-                    class="panel-title"
-                    :class="{ active: tabActiveIndex === 1 }"
-                    @click="setTabActive(1)"
-                >
-                    待审核({{ workStatics.no_verify_num || 0 }})
+                ({{
+                    (workStatics.no_verify_num > 99
+                        ? "99+"
+                        : workStatics.no_verify_num) || 0
+                }})
+            </text>
+            <text
+                class="panel-title"
+                :class="{ active: tabActiveIndex === 2 }"
+                @click="setTabActive(2)"
+            >
+                <text class="bold">
+                    未通过
                 </text>
-                <text
-                    class="panel-title"
-                    :class="{ active: tabActiveIndex === 2 }"
-                    @click="setTabActive(2)"
-                >
-                    未通过({{ workStatics.refuse_num || 0 }})
-                </text>
-            </view>
+                ({{
+                    (workStatics.refuse_num > 99
+                        ? "99+"
+                        : workStatics.refuse_num) || 0
+                }})
+            </text>
         </view>
         <view class="work-list">
             <template v-if="tableData.length">
@@ -44,24 +62,27 @@
                         :from="'/api/user/worklist'"
                         @click.native="toDetail(item, index)"
                     />
-                    <view class="btns">
+                    <view
+                        class="btns"
+                        :class="{ pass: item.status === 1 }"
+                    >
                         <button
                             v-if="item.status === 1"
-                            class="btn"
+                            class="btn active"
                             @click="toDetail(item, index)"
                         >
                             查看
                         </button>
                         <button
                             v-if="item.status === 2"
-                            class="btn"
+                            class="btn active"
                             @click="showCause(item)"
                         >
                             驳回原因
                         </button>
                         <button
                             v-if="!isH5 && item.status === 2"
-                            class="btn"
+                            class="btn active"
                             @click="editWork(item)"
                         >
                             编辑
@@ -301,29 +322,36 @@ export default {
 <style lang="less">
 .page-my-work {
     padding: 84upx 30upx 0;
-    .panel {
+    .work-panel {
         position: fixed;
         top: 0;
-        height: 84upx;
         left: 0;
         right: 0;
         background-color: #fff;
         z-index: 1;
-    }
-    .panel .panel-hd .panel-title {
-        display: inline-block;
-        padding-left: 0;
-        padding-right: 0;
-        color: #666;
-        &.active {
-            color: #1166ff;
+        display: flex;
+        justify-content: space-around;
+        padding: 30rpx 0;
+        .panel-title {
+            display: block;
+            padding: 0 32rpx;
+            color: #666;
+            font-size: 30rpx;
+            border-radius: 36rpx;
+            line-height: 70rpx;
+            .bold {
+                font-weight: 600;
+            }
+            &.active {
+                background: #1166ff;
+                color: #fff;
+            }
         }
     }
     .work-list {
+        margin-top: 16upx;
         .work-item {
             padding: 30upx 0 0upx;
-            margin-bottom: 40upx;
-
             position: relative;
             .thumbnail-wrap,
             .thumbnail {
@@ -342,22 +370,34 @@ export default {
 
         .btns {
             position: absolute;
-            right: 0;
-            bottom: 0upx;
-            height: 60upx;
-
+            right: 20upx;
+            bottom: 24upx;
+            display: flex;
+            justify-content: space-around;
+            box-sizing: border-box;
             .btn {
                 display: inline-block;
-                padding: 0;
-                min-width: 120upx;
-                height: 60upx;
-                font-size: 26upx;
-                line-height: 60upx;
-                color: #fff;
+                padding: 0 18upx;
+                height: 64upx;
+                font-size: 28upx;
+                line-height: 64upx;
                 text-align: center;
-                margin-left: 16upx;
-                background: #1166ff;
-                border-radius: 0;
+                margin: 0 6rpx;
+                color: #666;
+                border-radius: 32upx;
+                border: 2upx solid #999;
+                background: #fff;
+
+                &.active {
+                    border-color: #1166ff;
+                    color: #fff;
+                    background: #1166ff;
+                }
+            }
+            &.pass {
+                .btn {
+                    padding: 0 46rpx;
+                }
             }
         }
     }

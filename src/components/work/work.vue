@@ -33,7 +33,13 @@
             <slot name="tag" />
         </view>
         <view class="work-info">
-            <view class="work-name text-one-line">
+            <view
+                class="work-name"
+                :class="{
+                    'text-two-line': mode === 'single',
+                    'text-one-line': mode === 'mini'
+                }"
+            >
                 {{
                     info.resource_name || "爱挑战大赛-首页-1分钟单跳绳(男子组)"
                 }}
@@ -52,10 +58,10 @@
                             class="icon-user"
                             src="/static/images/widgets/work/user.png"
                         />
-                        {{ info.create_name }}
+                        {{ info.create_name || "" }}
                     </view>
                     <view class="from text-one-line">
-                        {{ info.create_user_class }}
+                        {{ info.create_user_class || "" }}
                     </view>
                 </view>
             </template>
@@ -104,6 +110,7 @@ export default {
     props: {
         info: {
             type: Object,
+            default: () => {},
         },
         mode: {
             type: String,
@@ -204,8 +211,8 @@ export default {
         }
 
         .thumbnail {
-            width: 305upx;
-            height: 170upx;
+            width: 100%;
+            height: 100%;
             border-radius: 4upx;
         }
 
@@ -291,10 +298,16 @@ export default {
         width: 100%;
         height: auto;
         display: flex;
+        box-shadow: 0 2upx 20upx 0 rgba(194, 216, 255, 1) inset;
+        border-radius: 10upx;
+        padding: 24rpx;
+        border: 1px solid rgba(17, 102, 255, 0.18);
 
         .thumbnail-wrap {
             margin-right: 24upx;
             margin-bottom: 0;
+            width: 300upx;
+            height: 200upx;
         }
 
         .work-info {
@@ -305,7 +318,11 @@ export default {
         .text-info {
             color: #999;
             font-size: 22upx;
-            margin-top: 24upx;
+            margin-top: 14upx;
+        }
+        .work-name {
+            font-size: 28upx;
+            font-weight: 500;
         }
     }
 }

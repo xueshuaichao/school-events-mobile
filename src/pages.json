@@ -54,6 +54,13 @@
             }
         },
         {
+            "path": "pages/uc/uc/index",
+            "style": {
+                "navigationBarTitleText": "个人空间",
+                "enablePullDownRefresh": true
+            }
+        },
+        {
             "path": "pages/doc/intro/intro",
             "style": {
                 "navigationBarTitleText": "参赛指南"
@@ -321,6 +328,12 @@
             }
         },
         {
+            "path": "pages/uc/argement/index",
+            "style": {
+                "navigationBarTitleText": "爱挑战用户协议"
+            }
+        },
+        {
             "path": "pages/uc/reported/reported",
             "style": {
                 "navigationBarTitleText": "上报成绩"
@@ -354,6 +367,12 @@
             "path": "pages/uc/reported/result",
             "style": {
                 "navigationBarTitleText": "上报成功"
+            }
+        },
+        {
+            "path": "pages/uc/honor/honor",
+            "style": {
+                "navigationBarTitleText": "我的荣誉"
             }
         },
         {

@@ -189,6 +189,7 @@
                 <view
                     :key="index"
                     class="rank-item rank-item-bar clearfix"
+                    @click="toDetail(item)"
                 >
                     <view class="rank-num rank-num-img fl-l">
                         <template v-if="index < 3">
@@ -262,6 +263,19 @@ export default {
         };
     },
     methods: {
+        toDetail(item) {
+            this.$store.commit("setFilterData", {
+                position: {
+                    total: 1,
+                    curposition: 0,
+                    from: ""
+                },
+                filter: this.filter
+            });
+            uni.navigateTo({
+                url: `/works/list/detail?id=${item.resource_id}`
+            });
+        },
         selEducate(item) {
             this.filterLabel.education_label = item.label;
             this.filter.education_level = item.id;

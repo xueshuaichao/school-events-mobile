@@ -8,6 +8,7 @@
                     maxlength="13"
                     :placeholder="searchWord"
                     @confirm="bindconfirm"
+                    @focus="showSearchDrop = true"
                 >
                 <text
                     class="button"
@@ -135,6 +136,12 @@
                 <blank />
             </view>
         </view>
+        <my-dropdown
+            :search-drop-status="showSearchDrop"
+            :drop-list="dropList"
+            @searchStatus="searchStatus"
+            @setHotWord="setHotWord"
+        />
     </view>
 </template>
 
@@ -142,6 +149,7 @@
 import uniLoadMore from '../../components/uni-load-more/uni-load-more.vue';
 import api from '../../common/api';
 import work from '../../components/work/work.vue';
+import myDropdown from '../../components/search/my-dropdown.vue';
 import blank from '../blank/blank.vue';
 
 export default {
@@ -149,6 +157,7 @@ export default {
         work,
         blank,
         uniLoadMore,
+        myDropdown,
     },
     props: {
         hasPageParams: {
@@ -224,6 +233,8 @@ export default {
             curSort: '最热',
             isSearchWord: false, // 是否设置了关键词
             searchWord: '',
+            showSearchDrop: false,
+            dropList: [],
         };
     },
     watch: {
@@ -375,12 +386,25 @@ export default {
                 console.log('show menu');
             }
         },
+        searchStatus(val) {
+            this.showSearchDrop = val;
+        },
+        setHotWord(word) {
+            this.searchWord = word;
+            this.filter.keyword = word;
+            this.bindconfirm();
+            this.showSearchDrop = false;
+        },
         bindconfirm() {
             if (this.isSearchWord) {
+                this.showSearchDrop = false;
                 if (!this.filter.keyword) {
                     this.filter.keyword = this.searchWord;
                 }
-                if (this.filter.keyword === this.searchWord) {
+                if (
+                    this.filter.keyword === this.searchWord
+                    && this.searchWord
+                ) {
                     this.filter.show_type = 1;
                 } else {
                     this.filter.show_type = '';
@@ -405,10 +429,11 @@ export default {
             api.get('/api/works/searchword', {
                 type: 1,
             }).then(
-                (res) => {
-                    if (res && res.status === 1) {
+                (data) => {
+                    if (data && data.length) {
+                        this.dropList = data;
                         this.isSearchWord = true;
-                        this.searchWord = res.rec_word;
+                        this.searchWord = data[0].rec_word;
                     } else {
                         this.isSearchWord = false;
                         this.searchWord = '请输入学校名称/作品名称/作者名称';
@@ -495,16 +520,19 @@ export default {
 }
 
 .tab-bar-wrap {
-    position: fixed;
-    top: 0;
-    z-index: 1000;
+    // position: fixed;
+    // top: 0;
+    // z-index: 1000;
     box-shadow: 0 0 8upx 0 rgba(0, 0, 0, 0.05);
     .search {
         font-size: 24upx;
         overflow: hidden;
-        padding: 20upx 30upx 0;
+        padding: 20upx 30upx 20rpx;
         background: #fff;
         box-shadow: 0 0upx 5upx 0 rgba(0, 0, 0, 0.05);
+        position: fixed;
+        top: 0;
+        z-index: 103;
 
         input {
             background: #f3f3f3;
@@ -517,11 +545,12 @@ export default {
             padding-left: 40upx;
             box-sizing: border-box;
             margin-bottom: 10upx;
+            font-size: 26upx;
         }
         .placeholderStyle {
             color: #999999;
             text-align: left;
-            font-size: 24upx;
+            font-size: 26upx;
         }
         .button {
             float: left;
@@ -538,6 +567,11 @@ export default {
         background: #fff;
         padding: 0 12%;
         font-size: 32upx;
+        position: fixed;
+        top: 100upx;
+        width: 100%;
+        box-sizing: border-box;
+        z-index: 101;
     }
 
     .tab-item {
