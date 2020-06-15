@@ -9,7 +9,7 @@
             </view>
         </view>
         <view class="btm">
-            <view>
+            <view class="txt">
                 <image src="/static/images/uc/honor-model.png" />
                 {{
                     info.activity_id === 5
@@ -20,7 +20,7 @@
                 }}： {{ info.one_final_rank }}
             </view>
             <template v-if="info.two_final_rank">
-                <view>
+                <view class="txt">
                     <image src="/static/images/uc/honor-model.png" />
                     {{
                         info.activity_id === 5
@@ -79,10 +79,19 @@ export default {
         font-size: 26rpx;
         height: 132rpx;
         box-sizing: border-box;
-        image {
-            width: 24rpx;
-            height: 24rpx;
-            margin-right: 6rpx;
+
+        .txt {
+            position: relative;
+            height: 44rpx;
+            text-indent: 30rpx;
+            image {
+                width: 24rpx;
+                height: 24rpx;
+                position: absolute;
+                left: 0;
+                top: 0;
+                margin-top: 10rpx;
+            }
         }
     }
 }

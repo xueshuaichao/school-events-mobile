@@ -397,6 +397,7 @@ export default {
         getData(refresh) {
             if (this.isLoading) {
                 uni.showToast({
+                    icon: 'none',
                     title: '加载中',
                 });
             }
