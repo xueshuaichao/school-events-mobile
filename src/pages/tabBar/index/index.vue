@@ -285,6 +285,7 @@ export default {
         this.getSearchWord();
     },
     onShow() {
+        this.showSearchDrop = false;
         // 页面从详情过来的，则，需要刷新一下页面数据，点赞量会变化。
         try {
             const value = uni.getStorageSync('onShowFrom');

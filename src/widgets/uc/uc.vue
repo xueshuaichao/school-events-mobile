@@ -50,7 +50,9 @@
                         </view>
                         <template
                             v-if="
-                                userInfo.identity === 2 && userInfo.teacher_info
+                                userInfo.identity === 2 &&
+                                    userInfo.teacher_info &&
+                                    userInfo.teacher_info.department_name
                             "
                         >
                             <!-- 教育局员工 -->
@@ -69,7 +71,9 @@
 
                         <template
                             v-if="
-                                userInfo.identity === 4 && userInfo.student_info
+                                userInfo.identity === 4 &&
+                                    userInfo.student_info &&
+                                    userInfo.student_info.number
                             "
                         >
                             <!-- 学生 -->

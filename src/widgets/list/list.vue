@@ -242,6 +242,7 @@ export default {
         isShow() {
             // 处理点赞以后，页面数据刷新的问题。
             this.showMenu = false;
+            this.showSearchDrop = false;
             try {
                 const value = uni.getStorageSync('onShowFrom');
                 if (value === 'detail') {
