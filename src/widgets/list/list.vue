@@ -160,10 +160,6 @@ export default {
         myDropdown,
     },
     props: {
-        hasPageParams: {
-            type: Boolean,
-            default: false,
-        },
         isReachBtm: {
             type: Boolean,
             default: false,
@@ -243,14 +239,6 @@ export default {
                 this.onReachBottoms();
             }
         },
-        paramsFilter(val) {
-            if (val) {
-                // // h5 与 小程序监听 paramsFilter的值，获取的时间不一样。1.这里为了兼容小程序和h5
-                this.initFilter(val);
-                // this.getData();
-                this.getTableData();
-            }
-        },
         isShow() {
             // 处理点赞以后，页面数据刷新的问题。
             this.showMenu = false;
@@ -275,25 +263,12 @@ export default {
             this.getSearchWord();
         },
     },
-    created() {
-        // tabbar不需要设置参数，直接从接口得到
+    mounted() {
         uni.showLoading({
             title: '加载中',
         });
-        if (this.isFromTabbar) {
-            this.filter.cat_id.one_level_id = -1;
-            this.getTableData();
-            // this.getData();
-        } else if (
-            this.paramsFilter.cat_id.one_level_id > -2
-            || this.paramsFilter.keyword
-        ) {
-            // h5
-            // h5 与 小程序监听 paramsFilter的值，获取的时间不一样。1.这里为了兼容小程序和h5
-            this.initFilter(this.paramsFilter);
-            this.getTableData();
-            // this.getData();
-        }
+        this.initFilter(this.paramsFilter);
+        this.getTableData();
         this.getSearchWord();
     },
     methods: {
@@ -305,7 +280,6 @@ export default {
             this.curCategory = this.categoryData.filter(
                 d => d.cat_id === this.filter.cat_id.one_level_id,
             )[0].name;
-            console.log(this.curCategory, this.filter, 'llalalla');
         },
         onSelect(type, value) {
             switch (type) {
@@ -328,20 +302,6 @@ export default {
             }
             this.getTableData();
         },
-
-        // getData() {
-        // api.get('/api/works/cats').then((res) => {
-        //     this.categoryData = res;
-        //     const arr = res[2].list.filter(
-        //         d => d.cat_id === this.filter.cat_id.one_level_id,
-        //     );
-        //     if (arr.length) {
-        //         this.curCategory = arr[0].name;
-        //     } else {
-        //         this.curCategory = '全部';
-        //     }
-        // });
-        // },
         getTableData() {
             uni.pageScrollTo({
                 scrollTop: 0,
@@ -390,7 +350,6 @@ export default {
             this.showSearchDrop = val;
         },
         setHotWord(word) {
-            this.searchWord = word;
             this.filter.keyword = word;
             this.bindconfirm();
             this.showSearchDrop = false;
@@ -398,13 +357,7 @@ export default {
         bindconfirm() {
             if (this.isSearchWord) {
                 this.showSearchDrop = false;
-                if (!this.filter.keyword) {
-                    this.filter.keyword = this.searchWord;
-                }
-                if (
-                    this.filter.keyword === this.searchWord
-                    && this.searchWord
-                ) {
+                if (this.dropList.includes(this.filter.keyword)) {
                     this.filter.show_type = 1;
                 } else {
                     this.filter.show_type = '';
@@ -413,9 +366,6 @@ export default {
             return this.getTableData();
         },
         onReachBottoms() {
-            console.log(
-                this.total === this.filter.page_num * this.filter.page_size,
-            );
             if (this.total > this.filter.page_num * this.filter.page_size) {
                 this.filter.page_num = this.filter.page_num + 1;
                 this.loadMoreStatus = 'loading';
@@ -431,9 +381,13 @@ export default {
             }).then(
                 (data) => {
                     if (data && data.length) {
-                        this.dropList = data;
                         this.isSearchWord = true;
-                        this.searchWord = data[0].rec_word;
+                        if (this.isFromTabbar) {
+                            this.searchWord = data[0].rec_word;
+                        }
+                        data.forEach((d) => {
+                            this.dropList.push(d.rec_word);
+                        });
                     } else {
                         this.isSearchWord = false;
                         this.searchWord = '请输入学校名称/作品名称/作者名称';

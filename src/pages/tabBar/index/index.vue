@@ -304,6 +304,7 @@ export default {
             this.showSearchDrop = val;
         },
         setHotWord(word) {
+            console.log(word, 'asa');
             if (word) {
                 this.searchWord = word;
                 this.bindconfirm();
@@ -323,7 +324,10 @@ export default {
                 }
             }
             // fr 统计关键字是
-            const showType = this.changeValue === this.searchWord ? 1 : '';
+
+            const showType = this.dropList.includes(this.changeValue.trim())
+                ? 1
+                : '';
             return uni.navigateTo({
                 url: `/pages/work/list/list?keyword=${this.changeValue.trim()}&show_type=${showType}&cat_id=-1`,
             });
@@ -443,8 +447,10 @@ export default {
                 (data) => {
                     if (data && data.length) {
                         this.isSearchWord = true;
+                        data.forEach((d) => {
+                            this.dropList.push(d.rec_word);
+                        });
                         this.searchWord = data[0].rec_word;
-                        this.dropList = data;
                     } else {
                         this.searchWord = '请输入学校名称/作品名称/作者名称';
                     }

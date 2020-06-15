@@ -14,7 +14,7 @@
                 class="item"
                 @click.stop="selItem(item)"
             >
-                #{{ item.rec_word }}
+                #{{ item }}
             </view>
         </view>
     </view>
@@ -45,7 +45,7 @@ export default {
     },
     methods: {
         selItem(item) {
-            this.$emit('setHotWord', item.rec_word ? item.rec_word : '');
+            this.$emit('setHotWord', item.type ? '' : item);
         },
         toggleSearch() {
             if (!this.searchDropStatus) {
