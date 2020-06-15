@@ -140,6 +140,9 @@ export default {
     methods: {
         toDetail(item) {
             if (!this.selTab) {
+                if (!item.is_read) {
+                    this.handleMessage([item.msg_id]);
+                }
                 uni.navigateTo({
                     url: `/pages/uc/myWork/myWork?type=${item.type}`,
                 });
