@@ -42,7 +42,6 @@ export default {
         this.isReachBtm = !this.isReachBtm;
     },
     onLoad(params) {
-        console.log(params, 'list-----from-----');
         this.filter.keyword = params.keyword || '';
         this.filter.cat_id.one_level_id = params.cat_id;
         this.filter.show_type = params.show_type;

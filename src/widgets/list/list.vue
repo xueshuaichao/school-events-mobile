@@ -274,6 +274,7 @@ export default {
     },
     methods: {
         initFilter(val) {
+            console.log(val);
             this.filter.cat_id.one_level_id = Number(val.cat_id.one_level_id);
             this.filter.keyword = val.keyword;
             this.filter.sort = Number(val.sort) || 1;
@@ -281,6 +282,7 @@ export default {
             this.curCategory = this.categoryData.filter(
                 d => d.cat_id === this.filter.cat_id.one_level_id,
             )[0].name;
+            console.log(this.filter, 'initFilter----');
         },
         onSelect(type, value) {
             switch (type) {
