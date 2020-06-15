@@ -64,7 +64,7 @@
                     />
                     <view
                         class="btns"
-                        :class="{ pass: item.status === 1 }"
+                        :class="{ pass: item.status === 1 || isH5 }"
                     >
                         <button
                             v-if="item.status === 1"
@@ -353,14 +353,15 @@ export default {
         .work-item {
             padding: 30upx 0 0upx;
             position: relative;
-            .thumbnail-wrap,
-            .thumbnail {
-                width: 266upx;
-                height: 155upx;
-            }
+            // .thumbnail-wrap,
+            // .thumbnail {
+            //     width: 266upx;
+            //     height: 155upx;
+            // }
         }
         .work-name {
             line-height: 1;
+            white-space: normal;
         }
         .text-info {
             margin-bottom: 24upx;
@@ -375,14 +376,15 @@ export default {
             display: flex;
             justify-content: space-around;
             box-sizing: border-box;
+            width: 328upx;
             .btn {
                 display: inline-block;
-                padding: 0 18upx;
+                padding: 0 14upx;
                 height: 64upx;
                 font-size: 28upx;
                 line-height: 64upx;
                 text-align: center;
-                margin: 0 6rpx;
+                margin: 0;
                 color: #666;
                 border-radius: 32upx;
                 border: 2upx solid #999;
@@ -396,7 +398,9 @@ export default {
             }
             &.pass {
                 .btn {
-                    padding: 0 46rpx;
+                    padding: 0;
+                    width: 152upx;
+                    text-align: center;
                 }
             }
         }

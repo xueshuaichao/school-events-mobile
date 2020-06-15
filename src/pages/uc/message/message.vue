@@ -24,10 +24,7 @@
             </view>
         </view>
         <template v-if="loading">
-            <view
-                class="content"
-                :class="{ hidden: startX }"
-            >
+            <view class="content">
                 <view
                     v-for="(item, index) in dataList"
                     :key="item.id"
@@ -343,9 +340,6 @@ export default {
         margin-top: 132rpx;
         margin-bottom: 110rpx;
         max-height: calc(100vh - 242rpx);
-        &.hidden {
-            overflow-y: hidden;
-        }
     }
     .mess-item {
         position: relative;

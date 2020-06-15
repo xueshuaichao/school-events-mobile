@@ -302,6 +302,7 @@ export default {
         border-radius: 10upx;
         padding: 24rpx;
         border: 1px solid rgba(17, 102, 255, 0.18);
+        box-sizing: border-box;
 
         .thumbnail-wrap {
             margin-right: 24upx;
