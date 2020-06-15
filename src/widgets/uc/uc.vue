@@ -314,6 +314,7 @@ export default {
                 (data) => {
                     this.isLoading = false;
                     this.userInfo = { ...this.userInfo, ...data };
+                    console.log(this.userInfo, 'getComeInUserInfo');
                     this.getHonor(uid);
                     this.getPraise(uid);
                     this.getWorkPassNum(uid);
@@ -430,6 +431,7 @@ export default {
                     if (refreshMess) {
                         uni.stopPullDownRefresh();
                     }
+                    console.log(this.userInfo, 'api/user/info');
                     this.getComeInUserInfo(this.filter.uid);
                 },
                 () => {

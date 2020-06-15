@@ -41,10 +41,7 @@ export default {
             },
         };
     },
-    created() {
-        this.loading = true;
-        this.getData();
-    },
+    created() {},
     methods: {
         getData(title) {
             return api.get('/api/user/honorlist', this.filter).then(
@@ -78,7 +75,10 @@ export default {
         },
     },
     onLoad({ uid }) {
+        console.log('uid----', uid);
         this.filter.uid = uid;
+        this.loading = true;
+        this.getData();
     },
 };
 </script>
