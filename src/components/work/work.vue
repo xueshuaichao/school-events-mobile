@@ -160,7 +160,7 @@ export default {
     methods: {
         goDetail() {
             let jump = true;
-            if (this.info.status === 1 && this.from) {
+            if (this.info.status === 1 && this.from && this.ableSlide) {
                 jump = false;
             }
             if (jump) {

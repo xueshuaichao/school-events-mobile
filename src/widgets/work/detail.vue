@@ -170,7 +170,7 @@
                         class="icon avator"
                         :src="
                             pageData.create_user_avatar_url ||
-                                '/static/images/work/avatar.png'
+                                '/static/images/uc/avatar.png'
                         "
                     />
                 </view>
