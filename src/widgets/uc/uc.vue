@@ -74,12 +74,12 @@
                         >
                             <!-- 学生 -->
                             <view class="info user-from">
-                                {{ userInfo.student_info.school_name
-                                }}{{ userInfo.student_info.grade_name
-                                }}{{ userInfo.student_info.class_name }}
+                                {{ userInfo.student_info.school_name || ""
+                                }}{{ userInfo.student_info.grade_name || ""
+                                }}{{ userInfo.student_info.class_name || "" }}
                             </view>
                             <view class="info user-id">
-                                用户名：{{ userInfo.student_info.number }}
+                                用户名：{{ userInfo.student_info.number || "" }}
                             </view>
                         </template>
                     </view>
@@ -90,7 +90,7 @@
                             class="num"
                             @click="jumpMywork"
                         >
-                            {{ userInfo.resource_count }}
+                            {{ userInfo.resource_count || 0 }}
                         </view>
                         <view class="txt">
                             作品
@@ -98,7 +98,7 @@
                     </view>
                     <view class="user-data">
                         <view class="num">
-                            {{ userInfo.praise_count }}
+                            {{ userInfo.praise_count || 0 }}
                         </view>
                         <view class="txt">
                             获赞
@@ -106,7 +106,7 @@
                     </view>
                     <view class="user-data">
                         <view class="num">
-                            {{ userInfo.play_count }}
+                            {{ userInfo.play_count || 0 }}
                         </view>
                         <view class="txt">
                             播放
@@ -115,7 +115,7 @@
                 </view>
             </view>
             <view class="page-context">
-                <template>
+                <template v-if="honorList.length">
                     <view class="honor-block">
                         <view class="honor-top clearfix">
                             <view class="fl-l txt">
@@ -164,8 +164,8 @@
                             >
                                 <work
                                     :info="item"
+                                    :able-slide="false"
                                     :from="'/api/user/worklist'"
-                                    @click.native="toDetail(item)"
                                 />
                             </view>
                         </view>
@@ -255,7 +255,16 @@ export default {
     },
     watch: {
         refresh() {
-            this.getData('refresh');
+            let refreshMess = 'refreshMess';
+            try {
+                const value = uni.getStorageSync('doLogout');
+                if (value) {
+                    refreshMess = '';
+                }
+            } catch (e) {
+                // error
+            }
+            this.getData(refreshMess);
         },
         reachBottom() {
             this.onReachBottoms();
@@ -394,13 +403,16 @@ export default {
                 });
             });
         },
-        getData(refresh) {
+        getData(refreshMess) {
             if (this.isLoading) {
                 uni.showToast({
                     icon: 'none',
                     title: '加载中',
                 });
             }
+            uni.removeStorage({
+                key: 'doLogout',
+            });
             return api.get('/api/user/info').then(
                 (res) => {
                     this.userInfo = { ...this.userInfo, ...res.user_info };
@@ -410,7 +422,7 @@ export default {
                         this.userInfo.uid = this.userInfo.user_id;
                         this.filter.uid = this.userInfo.user_id;
                     }
-                    if (refresh) {
+                    if (refreshMess) {
                         uni.stopPullDownRefresh();
                     } else {
                         this.getComeInUserInfo(this.filter.uid);
@@ -447,19 +459,6 @@ export default {
                 },
                 () => {},
             );
-        },
-        toDetail(item) {
-            this.$store.commit('setFilterData', {
-                position: {
-                    total: 1,
-                    curposition: 0,
-                    from: '',
-                },
-                filter: this.filter,
-            });
-            uni.navigateTo({
-                url: `/pages/work/detail/detail?id=${item.id}&activity_id=${item.activity_id}`,
-            });
         },
         getWorkData(title) {
             let url = '/api/user/worklist';

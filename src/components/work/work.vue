@@ -149,19 +149,29 @@ export default {
             type: String,
             default: '',
         },
+        ableSlide: {
+            type: Boolean,
+            default: true,
+        },
     },
     data() {
         return {};
     },
     methods: {
         goDetail() {
-            if ((this.info.status === 1 && this.from) || !this.from) {
+            let jump = true;
+            if (this.info.status === 1 && this.from) {
+                jump = false;
+            }
+            if (jump) {
                 this.info.play_count = this.info.play_count + 1;
+
+                const total = this.ableSlide ? this.total : 1;
                 this.$store.commit('setFilterData', {
                     filter: this.filter,
                     position: {
                         curposition: this.curposition,
-                        total: this.total,
+                        total,
                         from: this.from,
                     },
                 });

@@ -69,7 +69,7 @@
                             </view>
                         </view>
                         <view
-                            class="fl-l delete-btn"
+                            class="fl-r delete-btn"
                             @click="deleteMes(item)"
                         >
                             删除
@@ -139,21 +139,27 @@ export default {
     },
     methods: {
         toDetail(item) {
-            this.$store.commit('setFilterData', {
-                position: {
-                    total: 1,
-                    curposition: 0,
-                    from: '',
-                },
-                filter: this.filter,
-            });
-            if (!item.is_read) {
-                this.handleMessage([item.msg_id]);
+            if (!this.selTab) {
+                uni.navigateTo({
+                    url: `/pages/uc/myWork/myWork?type=${item.type}`,
+                });
+            } else if (item.detail && item.detail.resource_id) {
+                this.$store.commit('setFilterData', {
+                    position: {
+                        total: 1,
+                        curposition: 0,
+                        from: '',
+                    },
+                    filter: this.filter,
+                });
+                if (!item.is_read) {
+                    this.handleMessage([item.msg_id]);
+                }
+                console.log(item, 'toDetail------');
+                uni.navigateTo({
+                    url: `/works/list/detail?id=${item.detail.resource_id}`,
+                });
             }
-
-            uni.navigateTo({
-                url: `/works/list/detail?id=${item.detail.resource_id}`,
-            });
         },
         clickTab(val) {
             this.selTab = val;

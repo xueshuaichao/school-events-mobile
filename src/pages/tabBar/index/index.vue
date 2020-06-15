@@ -539,7 +539,7 @@ uni-swiper {
         background: #fff;
         box-shadow: 0 0upx 5upx 0 rgba(0, 0, 0, 0.05);
         // margin-bottom: 10upx;
-        position: relative;
+        position: fixed;
         z-index: 103;
         input {
             background: #f3f3f3;
@@ -569,6 +569,7 @@ uni-swiper {
     }
     .main-swiper {
         padding: 0 30rpx 30rpx;
+        margin-top: 112rpx;
 
         uni-swiper {
             height: 280upx;

@@ -859,7 +859,10 @@ export default {
             if (total < 2 || this.isFromShare) {
                 this.disableslide = true;
             }
-            if (!Object.prototype.hasOwnProperty.call(filter, 'page_size')) {
+            if (
+                !this.disableslide
+                && !Object.prototype.hasOwnProperty.call(filter, 'page_size')
+            ) {
                 // h5页面刷新，禁止滑动。
                 this.disableslide = true;
                 if (filter.sort) {
