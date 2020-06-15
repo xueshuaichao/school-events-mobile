@@ -245,6 +245,7 @@ export default {
                 page_size: 10,
                 page_num: 1,
                 uid: 1,
+                parent_scope: 2,
             },
             total: 0,
             loadMoreStatus: 'none',
@@ -424,9 +425,8 @@ export default {
                     }
                     if (refreshMess) {
                         uni.stopPullDownRefresh();
-                    } else {
-                        this.getComeInUserInfo(this.filter.uid);
                     }
+                    this.getComeInUserInfo(this.filter.uid);
                 },
                 () => {
                     uni.hideToast();

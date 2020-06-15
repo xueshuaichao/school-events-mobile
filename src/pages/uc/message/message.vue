@@ -155,9 +155,10 @@ export default {
                 if (!item.is_read) {
                     this.handleMessage([item.msg_id]);
                 }
-                console.log(item, 'toDetail------');
                 uni.navigateTo({
-                    url: `/works/list/detail?id=${item.detail.resource_id}`,
+                    url: `/pages/work/detail/detail?id=${
+                        item.detail.resource_id
+                    }&activity_id=${item.detail.activity_id || ''}`,
                 });
             }
         },

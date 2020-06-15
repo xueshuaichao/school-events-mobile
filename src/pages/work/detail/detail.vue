@@ -213,7 +213,6 @@ export default {
         } catch (e) {
             // error
         }
-        console.log(pix, '------pix');
         return {
             id: '',
             detailId: '',

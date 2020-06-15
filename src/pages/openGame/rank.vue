@@ -273,7 +273,7 @@ export default {
                 filter: this.filter
             });
             uni.navigateTo({
-                url: `/works/list/detail?id=${item.resource_id}`
+                url: `/pages/work/detail/detail?id=${item.resource_id}`
             });
         },
         selEducate(item) {

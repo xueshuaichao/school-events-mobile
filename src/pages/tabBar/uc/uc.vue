@@ -26,15 +26,9 @@ export default {
             this.reachBottom = !this.reachBottom;
         },
     },
-    onShow() {
-        this.refreshPage = !this.refreshPage;
-    },
     onHide() {},
     onPullDownRefresh() {
         this.refreshPage = !this.refreshPage;
-        // this.getData().then(() => {
-        //     uni.stopPullDownRefresh();
-        // });
     },
 };
 </script>
