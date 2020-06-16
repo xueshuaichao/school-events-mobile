@@ -60,7 +60,7 @@
                         :mode="'single'"
                         :show-class="false"
                         :from="'/api/user/worklist'"
-                        @click.native="toDetail(item, index)"
+                        @click.prevent="toDetail(item, index)"
                     />
                     <view
                         class="btns"
@@ -69,7 +69,7 @@
                         <button
                             v-if="item.status === 1"
                             class="btn active"
-                            @click="toDetail(item, index)"
+                            @click.stop="toDetail(item, index)"
                         >
                             查看
                         </button>
@@ -360,7 +360,6 @@ export default {
             // }
         }
         .work-name {
-            line-height: 1;
             white-space: normal;
         }
         .text-info {

@@ -269,6 +269,7 @@ export default {
             } catch (e) {
                 // error
             }
+            this.filter.pass_num = 1;
             this.getData(refreshMess);
         },
         reachBottom() {

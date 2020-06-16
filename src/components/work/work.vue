@@ -160,9 +160,10 @@ export default {
     methods: {
         goDetail() {
             let jump = true;
-            if (this.info.status === 1 && this.from && this.ableSlide) {
+            if (this.info.status !== 1 && this.from && this.ableSlide) {
                 jump = false;
             }
+            console.log(this.info.status, this.from, this.ableSlide);
             if (jump) {
                 this.info.play_count = this.info.play_count + 1;
 
@@ -271,8 +272,9 @@ export default {
     .work-name {
         font-size: 26upx;
         color: #333;
-        margin-bottom: 10upx;
+        margin-bottom: 4upx;
         font-weight: 600;
+        line-height: 34upx;
         .achievement {
             margin-left: 8upx;
         }
@@ -282,6 +284,7 @@ export default {
         display: flex;
         color: #999;
         font-size: 22upx;
+        line-height: 30upx;
 
         .icon-user {
             display: inline-block;
@@ -334,6 +337,7 @@ export default {
         .work-name {
             font-size: 28upx;
             font-weight: 500;
+            line-height: 34upx;
         }
     }
 }
