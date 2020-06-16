@@ -127,6 +127,7 @@
                                 {{ userInfo.myself_page ? "我" : "TA" }}的荣誉
                             </view>
                             <view
+                                v-if="honorList.length > 4"
                                 class="fl-r more"
                                 @click="jumpHonor"
                             >
@@ -599,7 +600,7 @@ export default {
             }
             .mess-pop {
                 position: absolute;
-                right: -12rpx;
+                right: 12rpx;
                 width: 26rpx;
                 height: 24rpx;
                 line-height: 24rpx;
@@ -607,7 +608,7 @@ export default {
                 color: #fff;
                 background: #ff6555;
                 font-size: 14rpx;
-                top: -12rpx;
+                top: 12rpx;
                 border-radius: 12rpx;
             }
         }
