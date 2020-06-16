@@ -448,6 +448,7 @@ export default {
                 (data) => {
                     if (data && data.length) {
                         this.isSearchWord = true;
+                        this.dropList = [];
                         data.forEach((d) => {
                             this.dropList.push(d.rec_word);
                         });

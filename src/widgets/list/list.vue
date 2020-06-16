@@ -388,6 +388,7 @@ export default {
                         if (this.isFromTabbar) {
                             this.searchWord = data[0].rec_word;
                         }
+                        this.dropList = [];
                         data.forEach((d) => {
                             this.dropList.push(d.rec_word);
                         });
