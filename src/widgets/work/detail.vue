@@ -209,6 +209,7 @@
                     />
                 </view>
                 <view
+                    v-if="activityId"
                     class="item primary"
                     @click="watchIndex"
                 >

@@ -727,6 +727,7 @@ export default {
         line-height: 120rpx;
         font-weight: 28rpx;
         color: #666;
+        text-align: center;
     }
 }
 </style>
