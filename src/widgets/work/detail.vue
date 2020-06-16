@@ -493,12 +493,8 @@ export default {
         },
         jumpUc() {
             api.isLogin().then(() => {
-                this.$store.commit('setDetailUserId', {
-                    from: 'detail',
-                    uid: this.pageData.create_by,
-                });
-                uni.reLaunch({
-                    url: '/pages/uc/uc/index',
+                uni.navigateTo({
+                    url: `/pages/uc/uc/index?uid=${this.pageData.create_by}`,
                 });
             });
         },
@@ -750,7 +746,7 @@ export default {
         line-height: 36rpx;
         background: #1166ff;
         width: 102rpx;
-        height: 116rpx;
+        height: 118rpx;
         border-radius: 56rpx;
         padding: 24rpx 24rpx 0;
         box-sizing: border-box;

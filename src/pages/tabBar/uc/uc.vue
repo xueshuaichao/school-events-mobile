@@ -3,6 +3,7 @@
         <uc
             :refresh="refreshPage"
             :reach-bottom="reachBottom"
+            :page-show="pageShow"
         />
     </view>
 </template>
@@ -18,6 +19,7 @@ export default {
         return {
             refreshPage: false,
             reachBottom: false,
+            pageShow: false,
         };
     },
     created() {},
@@ -27,7 +29,7 @@ export default {
         },
     },
     onShow() {
-        this.refreshPage = !this.refreshPage;
+        this.pageShow = !this.pageShow;
     },
     onPullDownRefresh() {
         this.refreshPage = !this.refreshPage;

@@ -386,7 +386,7 @@ export default {
                 margin: 0;
                 color: #666;
                 border-radius: 32upx;
-                border: 2upx solid #999;
+                border: 2upx solid #ccc;
                 background: #fff;
 
                 &.active {

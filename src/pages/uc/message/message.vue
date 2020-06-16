@@ -203,14 +203,16 @@ export default {
             });
         },
         allShowChoose() {
+            this.checkedArr = [];
             this.dataList.forEach((item) => {
                 const itemVal = String(item.msg_id);
-                if (!this.checkedArr.includes(itemVal)) {
+                if (!this.checkedArr.includes(itemVal) && !item.is_read) {
                     this.checkedArr.push(itemVal);
                 }
             });
             if (!this.checkedArr.length) {
                 uni.showToast({
+                    icon: 'none',
                     title: '暂无未读消息',
                 });
             } else {
@@ -325,7 +327,7 @@ export default {
     .mes-panel-hd {
         display: flex;
         justify-content: space-around;
-        border-bottom: 2rpx solid #cdcdcd;
+        border-bottom: 2rpx solid #eee;
         position: fixed;
         top: 0;
         width: 100%;
@@ -347,7 +349,7 @@ export default {
         }
     }
     .content {
-        margin-top: 132rpx;
+        margin-top: 130rpx;
         margin-bottom: 110rpx;
         max-height: calc(100vh - 242rpx);
     }

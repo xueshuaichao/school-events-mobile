@@ -127,7 +127,6 @@
                                 {{ userInfo.myself_page ? "我" : "TA" }}的荣誉
                             </view>
                             <view
-                                v-if="honorList.length > 4"
                                 class="fl-r more"
                                 @click="jumpHonor"
                             >
@@ -185,6 +184,11 @@
                             color="#999"
                         />
                     </template>
+                    <template v-else>
+                        <view class="temp-data-list">
+                            暂无数据
+                        </view>
+                    </template>
                 </view>
             </view>
             <template v-if="userInfo.identity === 3 && userInfo.myself_page">
@@ -225,7 +229,15 @@ export default {
             type: Boolean,
             default: true,
         },
+        uid: {
+            type: Number,
+            default: 1,
+        },
         reachBottom: {
+            type: Boolean,
+            default: false,
+        },
+        pageShow: {
             type: Boolean,
             default: false,
         },
@@ -261,32 +273,30 @@ export default {
     },
     watch: {
         refresh() {
-            let refreshMess = 'refreshMess';
+            this.filter.pass_num = 1;
+            this.getData('refreshMess');
+        },
+        pageShow() {
             try {
                 const value = uni.getStorageSync('doLogout');
                 if (value) {
-                    refreshMess = '';
+                    this.filter.pass_num = 1;
+                    this.getData();
                 }
             } catch (e) {
                 // error
             }
-            this.filter.pass_num = 1;
-            this.getData(refreshMess);
         },
         reachBottom() {
             this.onReachBottoms();
         },
     },
-    created() {
+    mounted() {
         if (!this.isfromUc) {
-            const info = this.$store.getters.detailUserInfo;
-            this.userInfo.uid = info.uid;
-            this.filter.uid = info.uid;
+            this.userInfo.uid = this.uid;
+            this.filter.uid = this.uid;
         }
         this.getData();
-    },
-    beforeDestroy() {
-        // this.clearDetailInfo();
     },
     methods: {
         onLogin() {
@@ -433,7 +443,6 @@ export default {
                     if (refreshMess) {
                         uni.stopPullDownRefresh();
                     }
-                    console.log(this.userInfo, 'api/user/info');
                     this.getComeInUserInfo(this.filter.uid);
                 },
                 () => {
@@ -501,12 +510,6 @@ export default {
                 this.loadMoreStatus = 'loading';
                 this.getWorkData('reachBottom');
             }
-        },
-        clearDetailInfo() {
-            this.$store.commit('setDetailUserId', {
-                from: '',
-                uid: this.userInfo.user_id,
-            });
         },
     },
     onLoad() {},
@@ -600,16 +603,16 @@ export default {
             }
             .mess-pop {
                 position: absolute;
-                right: 12rpx;
-                width: 26rpx;
-                height: 24rpx;
-                line-height: 24rpx;
+                right: 2rpx;
+                width: 36rpx;
+                height: 28rpx;
+                line-height: 28rpx;
                 text-align: center;
                 color: #fff;
                 background: #ff6555;
-                font-size: 14rpx;
-                top: 12rpx;
-                border-radius: 12rpx;
+                font-size: 18rpx;
+                top: 6rpx;
+                border-radius: 14rpx;
             }
         }
     }
@@ -719,6 +722,11 @@ export default {
             bottom: 0;
             // #endif
         }
+    }
+    .temp-data-list {
+        line-height: 120rpx;
+        font-weight: 28rpx;
+        color: #666;
     }
 }
 </style>
