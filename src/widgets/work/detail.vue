@@ -217,7 +217,7 @@
             </view>
         </view>
         <view
-            v-if="isPaused && isPlayed"
+            v-if="isPaused && pageData.resource_type === 1"
             class="pause-cover"
         >
             <view
@@ -316,7 +316,6 @@ export default {
             isH5: true,
             // #endif
             canAutoPlay: false,
-            isPlayed: false,
             isPaused: false,
             isVideoWaiting: false,
             // play_count: 1,
@@ -326,6 +325,7 @@ export default {
             catName: this.pageData.cat_name,
             praise_count: this.pageData.praise_count || 0,
             toggleLikeObj: {},
+            togglePlatCounts: {},
         };
     },
     watch: {
@@ -339,14 +339,14 @@ export default {
                     if (b) {
                         b.pause();
                         this.isPaused = true;
-                        this.isPlayed = true;
                     }
+                    this.togglePlatCounts[this.pageData.id] = 0;
                 } else {
                     this.videoContext.pause();
                 }
             }
             if (val === this.swiperPage && this.pageData.resource_type === 1) {
-                this.isPlayed = false;
+                // 当前作品
 
                 if (this.isH5) {
                     const b = document.querySelector(
@@ -355,11 +355,11 @@ export default {
                     if (b) {
                         b.pause();
                         this.isPaused = true;
-                        this.isPlayed = true;
                     }
                 } else {
                     this.videoContext.seek(0);
                     this.videoContext.play();
+                    this.setPlayCount();
                 }
             }
             if (val === this.swiperPage && this.pageData.resource_type === 2) {
@@ -390,8 +390,14 @@ export default {
             `detail${this.swiperPage}`,
             this,
         );
-        if (!this.isH5 && this.swiperPage === 1) {
+        if (
+            !this.isH5
+            && this.swiperPage === 1
+            && this.pageData.resource_type === 1
+        ) {
             this.videoContext.play();
+            this.setPlayCount();
+            console.log('mounted--play-----');
         }
         if (this.swiperPage === 1 && this.pageData.resource_type === 2) {
             this.setPlayCount();
@@ -431,14 +437,14 @@ export default {
         },
         togglePlayStatus() {
             this.isPaused = false;
-            this.$refs.video.play();
+            this.videoContext.play();
         },
         onPlay() {
-            if (!this.isPlayed) {
+            if (!this.togglePlatCounts[this.pageData.id] && this.isH5) {
+                this.togglePlatCounts[this.pageData.id] = 1;
                 this.setPlayCount();
             }
             this.isVideoWaiting = false;
-            this.isPlayed = true;
         },
         onWaiting() {
             this.isVideoWaiting = true;
