@@ -654,7 +654,7 @@ export default {
                         position: absolute;
                         right: 0;
                         top: 50%;
-                        transform: translateY(-58%) rotate(45deg);
+                        transform: translateY(-56%) rotate(45deg);
                         border-radius: 2rpx 0 2rpx 0;
                     }
                 }
