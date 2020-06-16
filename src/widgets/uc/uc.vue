@@ -89,11 +89,11 @@
                     </view>
                 </view>
                 <view class="user-statistics">
-                    <view class="user-data">
-                        <view
-                            class="num"
-                            @click="jumpMywork"
-                        >
+                    <view
+                        class="user-data"
+                        @click="jumpMywork"
+                    >
+                        <view class="num">
                             {{ userInfo.resource_count || 0 }}
                         </view>
                         <view class="txt">
@@ -572,6 +572,7 @@ export default {
                     line-height: 36rpx;
                     font-weight: 600;
                     margin-bottom: 14rpx;
+                    padding: 20upx;
                 }
                 .txt {
                     color: rgba(255, 255, 255, 0.7);
@@ -580,7 +581,7 @@ export default {
         }
         .icons-top {
             position: absolute;
-            right: 50rpx;
+            right: 30rpx;
             top: 32rpx;
             display: flex;
             color: #fff;
@@ -588,9 +589,10 @@ export default {
                 width: 38rpx;
                 height: 38rpx;
             }
+            .icons {
+                padding: 20upx;
+            }
             .setting {
-                margin-right: 40rpx;
-
                 image {
                     height: 37rpx;
                     width: 39rpx;
