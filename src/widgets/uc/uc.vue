@@ -622,13 +622,13 @@ export default {
             .honor-top {
                 margin-bottom: 40rpx;
                 .txt {
-                    line-height: 36rpx;
+                    line-height: 38rpx;
                     font-weight: 600;
                     font-size: 32rpx;
                     color: #333;
                     position: relative;
                     padding-left: 52rpx;
-                    height: 32rpx;
+                    height: 36rpx;
                     image {
                         position: absolute;
                         left: 0;
@@ -642,17 +642,19 @@ export default {
                     color: #999;
                     padding-right: 20rpx;
                     position: relative;
+                    height: 36rpx;
+                    line-height: 36rpx;
                     &::before {
                         width: 14rpx;
                         height: 14rpx;
                         border-top: 4rpx solid #999;
                         border-right: 4rpx solid #999;
-                        transform: rotate(45deg);
                         content: "";
                         display: block;
                         position: absolute;
                         right: 0;
-                        top: 10rpx;
+                        top: 50%;
+                        transform: translateY(-58%) rotate(45deg);
                         border-radius: 2rpx 0 2rpx 0;
                     }
                 }

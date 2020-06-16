@@ -26,7 +26,9 @@ export default {
             this.reachBottom = !this.reachBottom;
         },
     },
-    onHide() {},
+    onShow() {
+        this.refreshPage = !this.refreshPage;
+    },
     onPullDownRefresh() {
         this.refreshPage = !this.refreshPage;
     },
