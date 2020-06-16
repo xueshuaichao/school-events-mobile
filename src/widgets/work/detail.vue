@@ -393,6 +393,9 @@ export default {
         if (!this.isH5 && this.swiperPage === 1) {
             this.videoContext.play();
         }
+        if (this.swiperPage === 1 && this.pageData.resource_type === 2) {
+            this.setPlayCount();
+        }
         // hack for html5 video size notwoking
         // #ifdef H5
         window.removeEventListener(

@@ -572,7 +572,6 @@ export default {
                     line-height: 36rpx;
                     font-weight: 600;
                     margin-bottom: 14rpx;
-                    padding: 20upx;
                 }
                 .txt {
                     color: rgba(255, 255, 255, 0.7);
