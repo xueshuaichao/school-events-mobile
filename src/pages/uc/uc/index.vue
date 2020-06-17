@@ -1,13 +1,12 @@
 <template>
     <view class="page-uc-index">
         <uc
-            :refresh="refreshPage"
+            :isfrom-uc="false"
             :reach-bottom="reachBottom"
-            :page-show="pageShow"
+            :uid="uid"
         />
     </view>
 </template>
-
 <script>
 import uc from '../../../widgets/uc/uc.vue';
 
@@ -17,27 +16,22 @@ export default {
     },
     data() {
         return {
-            refreshPage: false,
             reachBottom: false,
-            pageShow: false,
+            uid: 1,
         };
     },
-    created() {},
     methods: {
         onReachBottom() {
             this.reachBottom = !this.reachBottom;
         },
     },
-    onShow() {
-        this.pageShow = !this.pageShow;
-    },
-    onPullDownRefresh() {
-        this.refreshPage = !this.refreshPage;
+    onLoad({ uid }) {
+        this.uid = Number(uid);
+        console.log(uid, 'pageg-----');
     },
 };
 </script>
-
-<style lang="less">
+<style scoped>
 .page-uc-index {
     padding-bottom: 20upx;
     position: relative;
