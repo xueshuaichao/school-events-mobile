@@ -1,6 +1,6 @@
 .labor-page {
     .page-upload {
-        &.main {
+        .main {
             background-color: #ffce99;
         }
         .uni-input,
@@ -69,7 +69,7 @@
 
 .children-page {
     .page-upload {
-        &.main {
+        .main {
             background-color: #fff;
         }
         .uni-input,
@@ -77,6 +77,9 @@
             background: #fff;
             border: 1px solid #c790ff;
             color: #333;
+            &.placeholder {
+                color: #999;
+            }
         }
         .selection {
             .label {
@@ -130,6 +133,79 @@
                 &.blue-bg {
                     background-color: #bb77ff;
                     border-color: #bb77ff;
+                    color: #fff;
+                }
+            }
+        }
+    }
+}
+
+.brand-page {
+    .page-upload {
+        .main {
+            background: #583ed4;
+        }
+        .uni-input,
+        .uni-textarea {
+            background: #fff;
+            color: #333;
+        }
+        .selection {
+            .label {
+                color: #fff;
+            }
+            .select-item {
+                border-color: #ff685c;
+                color: #ff685c;
+                &.active {
+                    background-color: #ff685c;
+                    color: #fff;
+                }
+                &.for-disable.disabled {
+                    color: #694fe6;
+                    border-color: #694fe6;
+                }
+            }
+        }
+    }
+    /deep/ .page-upload .comp-upload {
+        .comp-title,
+        .desc,
+        .tips {
+            color: #fff;
+        }
+        .cover-wrap {
+            background-color: #9882ff;
+        }
+        .normal-text {
+            background-color: #ff685c;
+        }
+    }
+    /deep/ .prompt {
+        color: #999;
+    }
+    .page-upload .btn {
+        background-color: #ff685c;
+    }
+    // 上传结果
+    .page-read-upload-result {
+        background-color: #583ed4;
+        .main-title {
+            color: #ff685c;
+            font-size: 34upx;
+        }
+        .sub-title {
+            .tips {
+                color: #fff;
+            }
+            .link {
+                &.btn {
+                    color: #ff685c;
+                    border-color: #ff685c;
+                }
+                &.blue-bg {
+                    background-color: #ff685c;
+                    border-color: #ff685c;
                     color: #fff;
                 }
             }

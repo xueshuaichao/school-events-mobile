@@ -171,7 +171,7 @@
                 @showMask="showMask"
                 @voteCallBack="voteCallBack"
             >
-                <template v-slot:prize>
+                <template v-slot:main-data>
                     <view class="prize-box">
                         <view
                             v-for="(prize, list) in indexConfig.prizes"
@@ -244,7 +244,6 @@
                         </view>
                     </view>
                 </template>
-                <template v-slot:rank />
             </indexPage>
         </view>
         <!-- 规则 中奖说明 中奖榜单 -->
