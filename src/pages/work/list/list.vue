@@ -3,7 +3,6 @@
         <list
             :is-reach-btm="isReachBtm"
             :params-filter="filter"
-            :has-page-params="hasPageParams"
             :is-show="isShow"
             :is-from-tabbar="false"
             @changeBottom="changeBottom"
@@ -22,12 +21,11 @@ export default {
     data() {
         return {
             isReachBtm: false,
-            hasPageParams: false,
             filter: {
                 keyword: '',
                 sort: 1,
                 cat_id: {
-                    one_level_id: 0,
+                    one_level_id: -1,
                 },
                 from: '/list/list',
             },
@@ -48,7 +46,6 @@ export default {
         this.filter.cat_id.one_level_id = params.cat_id;
         this.filter.show_type = params.show_type;
         const title = '作品展示';
-        this.hasPageParams = true;
         uni.setNavigationBarTitle({
             title,
         });

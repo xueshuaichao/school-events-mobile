@@ -8,6 +8,7 @@
                     maxlength="13"
                     :placeholder="searchWord"
                     @confirm="bindconfirm"
+                    @focus="showSearchDrop = true"
                 >
                 <text
                     class="button"
@@ -135,6 +136,12 @@
                 <blank />
             </view>
         </view>
+        <my-dropdown
+            :search-drop-status="showSearchDrop"
+            :drop-list="dropList"
+            @searchStatus="searchStatus"
+            @setHotWord="setHotWord"
+        />
     </view>
 </template>
 
@@ -142,6 +149,7 @@
 import uniLoadMore from '../../components/uni-load-more/uni-load-more.vue';
 import api from '../../common/api';
 import work from '../../components/work/work.vue';
+import myDropdown from '../../components/search/my-dropdown.vue';
 import blank from '../blank/blank.vue';
 
 export default {
@@ -149,12 +157,9 @@ export default {
         work,
         blank,
         uniLoadMore,
+        myDropdown,
     },
     props: {
-        hasPageParams: {
-            type: Boolean,
-            default: false,
-        },
         isReachBtm: {
             type: Boolean,
             default: false,
@@ -224,6 +229,8 @@ export default {
             curSort: '最热',
             isSearchWord: false, // 是否设置了关键词
             searchWord: '',
+            showSearchDrop: false,
+            dropList: [],
         };
     },
     watch: {
@@ -232,17 +239,10 @@ export default {
                 this.onReachBottoms();
             }
         },
-        paramsFilter(val) {
-            if (val) {
-                // // h5 与 小程序监听 paramsFilter的值，获取的时间不一样。1.这里为了兼容小程序和h5
-                this.initFilter(val);
-                // this.getData();
-                this.getTableData();
-            }
-        },
         isShow() {
             // 处理点赞以后，页面数据刷新的问题。
             this.showMenu = false;
+            this.showSearchDrop = false;
             try {
                 const value = uni.getStorageSync('onShowFrom');
                 if (value === 'detail') {
@@ -264,29 +264,17 @@ export default {
             this.getSearchWord();
         },
     },
-    created() {
-        // tabbar不需要设置参数，直接从接口得到
+    mounted() {
         uni.showLoading({
             title: '加载中',
         });
-        if (this.isFromTabbar) {
-            this.filter.cat_id.one_level_id = -1;
-            this.getTableData();
-            // this.getData();
-        } else if (
-            this.paramsFilter.cat_id.one_level_id > -2
-            || this.paramsFilter.keyword
-        ) {
-            // h5
-            // h5 与 小程序监听 paramsFilter的值，获取的时间不一样。1.这里为了兼容小程序和h5
-            this.initFilter(this.paramsFilter);
-            this.getTableData();
-            // this.getData();
-        }
+        this.initFilter(this.paramsFilter);
+        this.getTableData();
         this.getSearchWord();
     },
     methods: {
         initFilter(val) {
+            console.log(val);
             this.filter.cat_id.one_level_id = Number(val.cat_id.one_level_id);
             this.filter.keyword = val.keyword;
             this.filter.sort = Number(val.sort) || 1;
@@ -294,7 +282,7 @@ export default {
             this.curCategory = this.categoryData.filter(
                 d => d.cat_id === this.filter.cat_id.one_level_id,
             )[0].name;
-            console.log(this.curCategory, this.filter, 'llalalla');
+            console.log(this.filter, 'initFilter----');
         },
         onSelect(type, value) {
             switch (type) {
@@ -317,20 +305,6 @@ export default {
             }
             this.getTableData();
         },
-
-        // getData() {
-        // api.get('/api/works/cats').then((res) => {
-        //     this.categoryData = res;
-        //     const arr = res[2].list.filter(
-        //         d => d.cat_id === this.filter.cat_id.one_level_id,
-        //     );
-        //     if (arr.length) {
-        //         this.curCategory = arr[0].name;
-        //     } else {
-        //         this.curCategory = '全部';
-        //     }
-        // });
-        // },
         getTableData() {
             uni.pageScrollTo({
                 scrollTop: 0,
@@ -375,12 +349,18 @@ export default {
                 console.log('show menu');
             }
         },
+        searchStatus(val) {
+            this.showSearchDrop = val;
+        },
+        setHotWord(word) {
+            this.filter.keyword = word;
+            this.bindconfirm();
+            this.showSearchDrop = false;
+        },
         bindconfirm() {
             if (this.isSearchWord) {
-                if (!this.filter.keyword) {
-                    this.filter.keyword = this.searchWord;
-                }
-                if (this.filter.keyword === this.searchWord) {
+                this.showSearchDrop = false;
+                if (this.dropList.includes(this.filter.keyword)) {
                     this.filter.show_type = 1;
                 } else {
                     this.filter.show_type = '';
@@ -389,9 +369,6 @@ export default {
             return this.getTableData();
         },
         onReachBottoms() {
-            console.log(
-                this.total === this.filter.page_num * this.filter.page_size,
-            );
             if (this.total > this.filter.page_num * this.filter.page_size) {
                 this.filter.page_num = this.filter.page_num + 1;
                 this.loadMoreStatus = 'loading';
@@ -405,10 +382,16 @@ export default {
             api.get('/api/works/searchword', {
                 type: 1,
             }).then(
-                (res) => {
-                    if (res && res.status === 1) {
+                (data) => {
+                    if (data && data.length) {
                         this.isSearchWord = true;
-                        this.searchWord = res.rec_word;
+                        if (this.isFromTabbar) {
+                            this.searchWord = data[0].rec_word;
+                        }
+                        this.dropList = [];
+                        data.forEach((d) => {
+                            this.dropList.push(d.rec_word);
+                        });
                     } else {
                         this.isSearchWord = false;
                         this.searchWord = '请输入学校名称/作品名称/作者名称';
@@ -495,16 +478,19 @@ export default {
 }
 
 .tab-bar-wrap {
-    position: fixed;
-    top: 0;
-    z-index: 1000;
+    // position: fixed;
+    // top: 0;
+    // z-index: 1000;
     box-shadow: 0 0 8upx 0 rgba(0, 0, 0, 0.05);
     .search {
         font-size: 24upx;
         overflow: hidden;
-        padding: 20upx 30upx 0;
+        padding: 20upx 30upx 20rpx;
         background: #fff;
         box-shadow: 0 0upx 5upx 0 rgba(0, 0, 0, 0.05);
+        position: fixed;
+        top: 0;
+        z-index: 103;
 
         input {
             background: #f3f3f3;
@@ -517,11 +503,12 @@ export default {
             padding-left: 40upx;
             box-sizing: border-box;
             margin-bottom: 10upx;
+            font-size: 26upx;
         }
         .placeholderStyle {
             color: #999999;
             text-align: left;
-            font-size: 24upx;
+            font-size: 26upx;
         }
         .button {
             float: left;
@@ -538,6 +525,11 @@ export default {
         background: #fff;
         padding: 0 12%;
         font-size: 32upx;
+        position: fixed;
+        top: 100upx;
+        width: 100%;
+        box-sizing: border-box;
+        z-index: 101;
     }
 
     .tab-item {

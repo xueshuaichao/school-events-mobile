@@ -3,7 +3,6 @@
         <list
             :is-reach-btm="isReachBtm"
             :params-filter="filter"
-            :has-page-params="hasPageParams"
             :is-show="isShow"
             :is-from-tabbar="true"
             :can-refresh="canRefresh"
@@ -24,7 +23,6 @@ export default {
     data() {
         return {
             isReachBtm: false,
-            hasPageParams: true,
             isShow: false,
             filter: {
                 keyword: '',
@@ -36,7 +34,6 @@ export default {
             canRefresh: false,
         };
     },
-    created() {},
     methods: {
         changeBottom() {
             this.isReachBtm = !this.isReachBtm;

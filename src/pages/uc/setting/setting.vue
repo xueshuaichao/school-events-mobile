@@ -267,6 +267,11 @@ export default {
             }
         },
         doLogout() {
+            try {
+                uni.setStorageSync('doLogout', 'logout');
+            } catch (e) {
+                // error
+            }
             api.logout().then(() => {
                 this.getData();
             });

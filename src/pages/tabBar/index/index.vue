@@ -26,6 +26,7 @@
                 :placeholder="searchWord"
                 maxlength="13"
                 @confirm="bindconfirm"
+                @focus="showSearchDrop = true"
             >
             <text
                 class="button"
@@ -191,17 +192,25 @@
             :info="workData.talent.list"
             :cat-id="3"
         />
+        <my-dropdown
+            :search-drop-status="showSearchDrop"
+            :drop-list="dropList"
+            @searchStatus="searchStatus"
+            @setHotWord="setHotWord"
+        />
     </view>
 </template>
 
 <script>
 import work from '../../../widgets/work/work.vue';
 import api from '../../../common/api';
+import myDropdown from '../../../components/search/my-dropdown.vue';
 // import bindMobile from '../../../components/bind-mobile/index.vue';
 
 export default {
     components: {
         work,
+        myDropdown,
         // bindMobile,
     },
     data() {
@@ -260,6 +269,8 @@ export default {
             ],
             isSearchWord: false, // 是否设置了关键词
             searchWord: '',
+            showSearchDrop: false,
+            dropList: [],
         };
     },
     onHide() {
@@ -274,6 +285,7 @@ export default {
         this.getSearchWord();
     },
     onShow() {
+        this.showSearchDrop = false;
         // 页面从详情过来的，则，需要刷新一下页面数据，点赞量会变化。
         try {
             const value = uni.getStorageSync('onShowFrom');
@@ -289,8 +301,20 @@ export default {
     },
     created() {},
     methods: {
+        searchStatus(val) {
+            this.showSearchDrop = val;
+        },
+        setHotWord(word) {
+            console.log(word, 'asa');
+            if (word) {
+                this.searchWord = word;
+                this.bindconfirm();
+            }
+            this.showSearchDrop = false;
+        },
         bindconfirm() {
             if (!this.changeValue.trim()) {
+                this.showSearchDrop = false;
                 if (this.isSearchWord) {
                     this.changeValue = this.searchWord;
                 } else {
@@ -301,7 +325,10 @@ export default {
                 }
             }
             // fr 统计关键字是
-            const showType = this.changeValue === this.searchWord ? 1 : '';
+
+            const showType = this.dropList.includes(this.changeValue.trim())
+                ? 1
+                : '';
             return uni.navigateTo({
                 url: `/pages/work/list/list?keyword=${this.changeValue.trim()}&show_type=${showType}&cat_id=-1`,
             });
@@ -418,10 +445,14 @@ export default {
             api.get('/api/works/searchword', {
                 type: 1,
             }).then(
-                (res) => {
-                    if (res && res.status === 1) {
+                (data) => {
+                    if (data && data.length) {
                         this.isSearchWord = true;
-                        this.searchWord = res.rec_word;
+                        this.dropList = [];
+                        data.forEach((d) => {
+                            this.dropList.push(d.rec_word);
+                        });
+                        this.searchWord = data[0].rec_word;
                     } else {
                         this.searchWord = '请输入学校名称/作品名称/作者名称';
                     }
@@ -512,10 +543,12 @@ uni-swiper {
         width: 100%;
         font-size: 24upx;
         overflow: hidden;
-        padding: 20upx 0 14upx 30upx;
+        padding: 20upx 0 30upx 30upx;
         background: #fff;
         box-shadow: 0 0upx 5upx 0 rgba(0, 0, 0, 0.05);
         // margin-bottom: 10upx;
+        position: fixed;
+        z-index: 103;
         input {
             background: #f3f3f3;
             border: none;
@@ -526,11 +559,12 @@ uni-swiper {
             display: block;
             padding: 0 40upx;
             box-sizing: border-box;
+            font-size: 28upx;
         }
         .placeholderStyle {
             color: #999999;
             text-align: left;
-            font-size: 24upx;
+            font-size: 26upx;
         }
         .button {
             float: left;
@@ -538,11 +572,12 @@ uni-swiper {
             line-height: 60upx;
             color: #666666;
             font-size: 32upx;
-            margin-left: 28upx;
+            margin-left: 26upx;
         }
     }
     .main-swiper {
-        padding: 30upx;
+        padding: 0 30rpx 30rpx;
+        margin-top: 112rpx;
 
         uni-swiper {
             height: 280upx;
