@@ -349,7 +349,7 @@ export default {
                 text-align: center;
             }
             .item {
-                margin: 20rpx 0;
+                margin-bottom: 40rpx;
                 padding-right: 20rpx;
                 .img-box {
                     width: 72rpx;
