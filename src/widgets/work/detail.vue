@@ -476,6 +476,15 @@ export default {
             if (this.from === 'openGame') {
                 url = '/pages/openGame/index';
             }
+            if (this.activityId === 3) {
+                url = '/activity/chunjie/index';
+            }
+            if (this.activityId === 4) {
+                url = '/activity/chunjiehao/index';
+            }
+            if (this.activityId === 5) {
+                url = '/pages/yiqing/index';
+            }
             uni.navigateTo({
                 url,
             });

@@ -394,6 +394,9 @@ export default {
                     color: #fff;
                     background: #1166ff;
                 }
+                &::after {
+                    border-radius: 80upx;
+                }
             }
             &.pass {
                 .btn {

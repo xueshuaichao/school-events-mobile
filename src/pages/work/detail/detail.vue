@@ -1249,7 +1249,7 @@ export default {
             width: 56upx;
             height: 56upx;
             left: 347upx;
-            top: 260upx;
+            top: 250upx;
             color: #333;
             font-size: 28upx;
         }
