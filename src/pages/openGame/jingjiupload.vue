@@ -557,7 +557,7 @@ export default {
         setScoperSelect(val) {
             this.formData.resource_name = this.scopeData[this.type][val].name;
             this.formData.resource_scope = this.scopeData[this.type][val].id;
-            this.formData.resource_scope = this.scopeData[this.type][val].scope;
+            this.formData.parent_scope = this.scopeData[this.type][val].scope;
             this.catIndex = 0;
             this.formData.cat_name = '';
             this.getallcategory(this.scopeData[this.type][val].cat_id);
