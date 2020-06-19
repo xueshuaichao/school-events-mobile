@@ -137,6 +137,7 @@ export default {
             isFocus: false,
             markerheight: 100,
             screenHeight: 0,
+            hasLogin: false,
         };
     },
     watch: {
@@ -236,35 +237,43 @@ export default {
             this.showKeybord = false;
             if (this.changeVal.trim()) {
                 const content = this.changeVal.trim();
-                api.isLogin({
-                    fr: this.fr,
-                }).then(
-                    () => {
-                        api.post('/api/comment/add', {
-                            content,
-                            topic_type: 3,
-                            topic_id: this.pageData.resource_id,
-                            comment_type: 1,
-                        }).then(() => {
-                            uni.showToast({
-                                title: '已提交',
-                                icon: 'none',
-                            });
-                            this.loading = false;
-                            // this.changeVal = '';
-                            this.filter.page_num = 1;
-                            this.getList();
-                        });
-                    },
-                    () => uni.showToast({
-                        icon: 'none',
-                        title: '请先登录',
-                    }),
-                );
-                this.changeVal = '';
+                if (this.isLogin) {
+                    this.addComment(content);
+                } else {
+                    api.isLogin({
+                        fr: this.fr,
+                    }).then(
+                        () => {
+                            this.addComment(content);
+                        },
+                        () => uni.showToast({
+                            icon: 'none',
+                            title: '请先登录',
+                        }),
+                    );
+                    this.changeVal = '';
+                }
             } else {
                 this.changeVal = '';
             }
+        },
+        addComment(content) {
+            this.hasLogin = true;
+            api.post('/api/comment/add', {
+                content,
+                topic_type: 3,
+                topic_id: this.pageData.resource_id,
+                comment_type: 1,
+            }).then(() => {
+                uni.showToast({
+                    title: '已提交',
+                    icon: 'none',
+                });
+                this.loading = false;
+                // this.changeVal = '';
+                this.filter.page_num = 1;
+                // this.getList();
+            });
         },
         toUpper() {
             this.filter.page_num = 1;

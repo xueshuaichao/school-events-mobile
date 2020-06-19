@@ -13,7 +13,10 @@
                     <template v-if="item.image">
                         <image :src="item.image" />
                     </template>
-                    <view class="score">
+                    <view
+                        v-if="item.score"
+                        class="score"
+                    >
                         综合评分：{{ item.score }}
                     </view>
                 </view>
@@ -36,62 +39,18 @@
     </view>
 </template>
 <script>
+import api from '../../../common/api';
+
 export default {
     data() {
         return {
-            list: [
-                {
-                    school_name: '我是雨过',
-                    slogan: '宣言：没有比人更高的山，没有比脚更 长的路得得',
-                    image:
-                        'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/children_poster_fail_0.png',
-                    name: '于果果',
-                    score: '88',
-                    user_id: 3433,
-                },
-                {
-                    school_name: '我是雨过',
-                    slogan: '宣言：没有比人更高的山，没有比脚更 长的路得得',
-                    image: '',
-                    name: '于果果',
-                    score: '88',
-                    user_id: 3433,
-                },
-                {
-                    school_name: '我是雨过',
-                    slogan: '宣言：没有比人更高的山，没有比脚更 长的路得得',
-                    image: '',
-                    name: '于果果',
-                    score: '88',
-                    user_id: 3433,
-                },
-                {
-                    school_name: '我是雨过',
-                    slogan: '宣言：没有比人更高的山，没有比脚更 长的路得得',
-                    image: '',
-                    name: '于果果',
-                    score: '88',
-                    user_id: 3433,
-                },
-                {
-                    school_name: '我是雨过',
-                    slogan: '宣言：没有比人更高的山，没有比脚更 长的路得得',
-                    image: '',
-                    name: '于果果',
-                    score: '88',
-                    user_id: 3433,
-                },
-                {
-                    school_name: '我是雨过',
-                    slogan: '宣言：没有比人更高的山，没有比脚更 长的路得得',
-                    image:
-                        'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/children_poster_fail_0.png',
-                    name: '于果果',
-                    score: '88',
-                    user_id: 3433,
-                },
-            ],
+            list: [],
         };
+    },
+    created() {
+        api.get('/api/activity/semimember').then((list) => {
+            this.list = list;
+        });
     },
 };
 </script>
