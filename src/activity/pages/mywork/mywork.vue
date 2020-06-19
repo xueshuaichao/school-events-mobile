@@ -23,6 +23,12 @@
                     v-if="type === 'myWork' && Object.keys(detail).length"
                     class="user-detail"
                 >
+                    <view
+                        v-if="isSelf"
+                        class="poster-btn"
+                    >
+                        我的海报
+                    </view>
                     <view class="user-image-info">
                         <image
                             class="user-image"
@@ -50,13 +56,10 @@
                             {{ detail.desc }}
                         </view>
                     </view>
-                    <view class="user-tips">
-                        记得为我点赞哦~
-                    </view>
                 </view>
                 <view
                     v-if="type === 'myWork' && isSelf"
-                    class="panel-hd"
+                    :class="['panel-hd', isSelf ? 'panel-hd-self' : '']"
                 >
                     <text
                         class="panel-title"
@@ -338,20 +341,25 @@ export default {
     },
     methods: {
         onLogin() {
-            this.getData();
-        },
-        getData() {
-            api.get('/api/user/info').then(
+            this.getData().then(
                 (res) => {
                     this.userInfo = res.user_info;
                     this.isLoading = false;
-                    this.initShare();
+                    if (
+                        this.type === 'myWork'
+                        && this.filter.activity_id === 10
+                    ) {
+                        this.getEnrollInfo();
+                    }
                 },
                 () => {
                     this.isLoading = false;
                     this.userInfo = null;
                 },
             );
+        },
+        getData() {
+            return api.get('/api/user/info');
         },
         toggle(k) {
             uni.showLoading();
@@ -422,6 +430,7 @@ export default {
         getEnrollInfo() {
             api.get('/api/activity/getenrollinfo', {
                 activity_id: this.filter.activity_id,
+                user_id: this.userId,
             }).then((data) => {
                 if (!Array.isArray(data)) {
                     this.detail = data.detail;
@@ -601,12 +610,22 @@ export default {
             page: 'myWorkConfig',
         });
         this.filter.activity_id = activityId;
-        this.getData();
+        this.getData().then(
+            (res) => {
+                this.userInfo = res.user_info;
+                this.isLoading = false;
+                if (type === 'myWork' && activityId === 10) {
+                    this.userId = this.userInfo.user_id;
+                    this.getEnrollInfo();
+                }
+            },
+            () => {
+                this.isLoading = false;
+                this.userInfo = null;
+            },
+        );
         if (type === 'myWork') {
             this.getWorkData();
-            if (activityId === 10) {
-                this.getEnrollInfo();
-            }
         } else if (type === 'search') {
             uni.setNavigationBarTitle({ title: this.publicConfig.title });
             this.filter.search = name;
@@ -617,6 +636,7 @@ export default {
             this.changeValue = name;
             this.searchWorkData();
         }
+        this.initShare();
     },
     onShareAppMessage(res) {
         if (res.from === 'button') {
@@ -634,12 +654,36 @@ export default {
 
 <style lang="less">
 .user-detail {
-    margin: 0 30upx;
     box-shadow: inset 0 0 24upx 0 rgba(152, 130, 255, 1);
     background-color: #fff;
     padding: 20upx;
     border-radius: 20upx;
     margin-bottom: 40upx;
+    position: relative;
+    .poster-btn {
+        position: absolute;
+        right: -11upx;
+        top: 20upx;
+        background-color: #ff574a;
+        border-radius: 24upx 0 0 24upx;
+        padding: 0upx 23upx;
+        height: 48upx;
+        line-height: 48upx;
+        color: #fff;
+        font-size: 22upx;
+        &::after {
+            content: "";
+            position: absolute;
+            bottom: -9upx;
+            right: 6upx;
+            width: 0;
+            height: 0;
+            border-top: 6upx solid transparent;
+            border-bottom: 6upx solid transparent;
+            border-right: 6upx solid #c40d00;
+            transform: rotate(44deg);
+        }
+    }
     .user-image-info {
         display: flex;
         .user-image {
@@ -913,6 +957,12 @@ export default {
         z-index: 10;
         background-color: #a1debe;
         padding: 20upx 0;
+        &.panel-hd-self {
+            position: static;
+            padding: 0upx 0 30upx;
+            margin: 0;
+            height: 68upx;
+        }
     }
 
     .panel .panel-hd .panel-title {

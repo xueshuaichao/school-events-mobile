@@ -226,6 +226,10 @@ export default {
             type: Boolean,
             default: false,
         },
+        myWorkPath: {
+            type: String,
+            default: '',
+        },
     },
     data() {
         return {
@@ -394,8 +398,11 @@ export default {
             api.isLogin({
                 fr: this.fr,
             }).then(() => {
+                console.log(this.myWorkPath);
                 uni.navigateTo({
-                    url: `/activity/pages/mywork/mywork?type=myWork&activity_id=${this.filter.activity_id}`,
+                    url: this.myWorkPath
+                        ? this.myWorkPath
+                        : `/activity/pages/mywork/mywork?type=myWork&activity_id=${this.filter.activity_id}`,
                 });
             });
         },

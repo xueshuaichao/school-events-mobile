@@ -12,11 +12,10 @@
         />
         <template v-else>
             <!-- 我的海报 -->
-            <poster
+            <savePoster
                 v-if="showPosterMask"
-                ref="poster"
+                :image="posterImage"
                 @togglePoster="togglePoster"
-                @getPosterConfig="getPosterConfig"
             />
             <view>
                 <indexPage
@@ -27,6 +26,7 @@
                     class-name="brand-page"
                     :fr="fr"
                     :hide-button="true"
+                    :my-work-path="myWorkPath"
                     @showMask="showMask"
                     @voteCallBack="voteCallBack"
                 >
@@ -113,18 +113,11 @@
                 </view>
             </view>
             <!-- 规则 中奖说明 中奖榜单 -->
-            <maskBox
+            <modal
                 v-if="maskPrompt"
                 class="mask"
-                :type="type"
                 :title="maskTitle"
-                :theme="{
-                    bgColor:
-                        publicConfig.maskBgColor || publicConfig.primaryBgColor,
-                    titleColor: publicConfig.titleColor
-                }"
                 @close="handleClose"
-                @getNewLotteryNum="getNewLotteryNum"
             />
         </template>
     </div>
@@ -133,16 +126,16 @@
 <script>
 import indexPage from '../common/index.vue';
 import logger from '../../../common/logger';
-import maskBox from '../common/mask.vue';
+import modal from './modal.vue';
 import api from '../../../common/api';
-import poster from './poster.vue';
+import savePoster from './savePoster.vue';
 import login from '../../../widgets/login/login.vue';
 
 export default {
     components: {
         indexPage,
-        maskBox,
-        poster,
+        modal,
+        savePoster,
         login,
     },
     props: {
@@ -171,6 +164,7 @@ export default {
             fr: 'dyrhd',
             maskPrompt: false,
             showPosterMask: false,
+            posterImage: '',
             type: 0,
             maskTitle: '',
             prizeList: [
@@ -188,6 +182,7 @@ export default {
                 },
             ],
             expertList: [],
+            myWorkPath: '',
         };
     },
     created() {
@@ -203,11 +198,13 @@ export default {
             page: 'indexConfig',
         });
         this.fr = logger.getFr(this.publicConfig.log, {});
-        this.loading = true;
         this.activityStatus();
         console.log(33333);
         this.isLogin().then(
-            () => {
+            (res) => {
+                console.log(res);
+                this.userInfo = res.user_info;
+                this.loading = true;
                 this.getenrollinfo();
             },
             () => {
@@ -218,15 +215,6 @@ export default {
     },
     methods: {
         unload() {},
-        onH5Create(detail) {
-            this.$refs.poster.h5DrawImage(detail);
-        },
-        onPosterSuccess(detail) {
-            this.$refs.poster.onPosterSuccess(detail);
-        },
-        onPosterFail(err) {
-            this.$refs.poster.onPosterFail(err);
-        },
         togglePoster(status) {
             this.showPosterMask = status;
         },
@@ -259,6 +247,7 @@ export default {
                 activity_id: this.activityId,
             }).then(
                 (data) => {
+                    this.myWorkPath = `/activity/pages/mywork/ucenter?activity_id=10&user_id=${this.userInfo.user_id}`;
                     if (Array.isArray(data) && data.length === 0) {
                         // 参赛
                         this.canJoin = true;
@@ -268,9 +257,7 @@ export default {
                         if (this.isFirstJoin === 1) {
                             // 首次参赛 要生成海报
                             this.showPosterMask = true;
-                            this.$nextTick(() => {
-                                this.$refs.poster.createPoster(data);
-                            });
+                            this.posterImage = data.detail.poster;
                         }
                     }
                 },

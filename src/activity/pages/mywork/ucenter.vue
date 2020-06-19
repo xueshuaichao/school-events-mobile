@@ -13,6 +13,12 @@
                 v-else
                 :class="['panel', isSelf ? 'is-self' : '']"
             >
+                <!-- 我的海报 -->
+                <savePoster
+                    v-if="showPosterMask"
+                    :image="posterImage"
+                    @togglePoster="togglePoster"
+                />
                 <view
                     v-if="Object.keys(detail).length"
                     class="user-detail"
@@ -20,6 +26,7 @@
                     <view
                         v-if="isSelf"
                         class="poster-btn"
+                        @clikc="togglePoster(true)"
                     >
                         我的海报
                     </view>
@@ -222,6 +229,7 @@ import goHome from '../common/goHome.vue';
 import login from '../../../widgets/login/login.vue';
 import uniLoadMore from '../../../components/uni-load-more/uni-load-more.vue';
 import EventCraftCover from '../../../components/event-craft-cover/index.vue';
+import savePoster from '../brand/savePoster.vue';
 
 export default {
     components: {
@@ -229,6 +237,7 @@ export default {
         uniLoadMore,
         EventCraftCover,
         login,
+        savePoster,
     },
     filters: {
         optimizeImage: (val) => {
@@ -273,6 +282,8 @@ export default {
             userId: '',
             isSelf: false,
             detail: {},
+            showPosterMask: false,
+            posterImage: '',
         };
     },
     computed: {
@@ -283,6 +294,9 @@ export default {
     methods: {
         onLogin() {
             this.getData();
+        },
+        togglePoster(status) {
+            this.showPosterMask = status;
         },
         getData() {
             api.get('/api/user/info').then(
@@ -475,6 +489,7 @@ export default {
             if (!Array.isArray(data)) {
                 this.detail = data.detail;
                 this.isSelf = data.is_self;
+                this.posterImage = data.poster;
             }
             this.getData();
         });
@@ -495,9 +510,6 @@ export default {
 </script>
 
 <style lang="less">
-/deep/ .goHome {
-    bottom: 130upx;
-}
 .user-detail {
     box-shadow: inset 0 0 24upx 0 rgba(152, 130, 255, 1);
     background-color: #fff;
@@ -773,7 +785,6 @@ export default {
     &.login {
         background-color: #fff !important;
     }
-    // background-size: contain;
     .panel {
         padding: 0upx 30upx 0;
         &.no-padding {
@@ -844,13 +855,13 @@ export default {
     .blank-wrap {
         margin-top: 180upx;
     }
-    /deep/ .goHome {
+    .goHome {
         color: #583ed4;
         &::before {
             border-top: 1rpx solid #583ed4 !important;
             border-right: 1rpx solid #583ed4 !important;
         }
+        bottom: 130upx;
     }
 }
-@import "../theme/myWork.less";
 </style>

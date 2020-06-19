@@ -431,7 +431,10 @@
                 {
                     "path": "pages/brand/join",
                     "style": {
-                        "navigationBarTitleText": "我为爱挑战代言"
+                        "navigationBarTitleText": "我为爱挑战代言",
+                        "usingComponents": {
+                            "poster": "/wxcomponents/third-party/poster/poster/index"
+                        }
                     }
                 },
                 // ============== 春节 活动 =================
