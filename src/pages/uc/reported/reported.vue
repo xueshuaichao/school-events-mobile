@@ -656,8 +656,8 @@ export default {
             this.result = arr.find(v => v.cat_id === id).child;
         },
         handleAchievement({ unit }) {
-            this.date = !!(unit === '分' || unit === '秒' || unit === '毫秒');
-            this.formData.achievement_unit = this.date ? '秒' : unit;
+            this.date = !unit;
+            this.formData.achievement_unit = this.date ? '' : unit;
         },
         updateVideo(data) {
             this.formData = {

@@ -451,6 +451,8 @@ export default {
                 this.formData.video_id = data.video.video_id;
                 this.formData.resource_id = id;
                 this.achivementInput = data.achievement;
+                this.achievement_unit = data.achievement_unit;
+
                 this.teacherInput = data.teacher || '';
                 this.createInput = data.create_name;
                 this.attestationInput = data.attestation_name || '';
@@ -462,6 +464,9 @@ export default {
                 this.formData.file_size = data.video.file_size;
                 this.formData.file_name = data.video.file_name;
                 this.formData.file_suffix = data.video.file_suffix;
+                if (!this.achievement_unit || this.achievement_unit === '秒') {
+                    this.formateSeconds(this.achivementInput);
+                }
                 console.log(data);
             });
         }
@@ -601,7 +606,7 @@ export default {
         setScoperSelect(val) {
             this.formData.resource_name = this.scopeData[this.type][val].name;
             this.formData.resource_scope = this.scopeData[this.type][val].id;
-            this.formData.resource_scope = this.scopeData[this.type][val].scope;
+            this.formData.parent_scope = this.scopeData[this.type][val].scope;
             this.catIndex = 0;
             this.formData.cat_name = '';
             this.getallcategory(this.scopeData[this.type][val].cat_id);
@@ -615,11 +620,18 @@ export default {
             }
         },
         handleAchievement({ unit }) {
-            this.date = !!(unit === '分' || unit === '秒' || unit === '毫秒');
-            this.formData.achievement_unit = this.date ? '秒' : unit;
+            this.date = !unit;
+            this.formData.achievement_unit = this.date ? '' : unit;
         },
         getTimeSeconds({ minutes, seconds, millisecond }) {
             return Number(minutes) * 60 + Number(seconds) + millisecond / 1000;
+        },
+        formateSeconds(seconds) {
+            const intNum = Math.floor(seconds);
+            const fraNum = seconds * 1000 - intNum * 1000;
+            this.achievementDateInfo.minutes = Math.floor(intNum / 60);
+            this.achievementDateInfo.seconds = intNum % 60;
+            this.achievementDateInfo.millisecond = fraNum;
         },
         getallcategory(id) {
             return api.get(`/api/works/getallcategory?cid=${id}`).then(
