@@ -1179,7 +1179,7 @@ export default {
         font-size: 28upx;
         .ticket-mask-content {
             width: 100%;
-            height: 324upx;
+            height: 272upx;
             background: #fff;
             border-radius: 30upx 30upx 0 0;
             position: absolute;
