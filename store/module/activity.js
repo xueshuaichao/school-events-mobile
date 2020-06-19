@@ -14,7 +14,7 @@ export default {
                     activityId: 8,
                     catId: 20, // 所属分类
                     showAllCat: false,
-                    time: '4月27日--5月31日',
+                    time: '活动时间：4月27日--5月31日',
                     primaryColor: '#DB4E0E', // 主色调
                     primaryBgColor: '#FF9F73', // 主要的背景颜色
                     placeholderColor: 'rgba(255,255,255,.6)',
@@ -179,7 +179,7 @@ export default {
                             cat_id: 102,
                         },
                     ],
-                    time: '5月29日--6月20日',
+                    time: '活动时间：5月29日--6月20日',
                     primaryColor: '#BB77FF', // 主色调
                     primaryBgColor: '#DCC0FF', // 主要的背景颜色 （图片背景）
                     placeholderColor: 'rgba(255,255,255,.6)',
@@ -260,6 +260,90 @@ export default {
                 indexColorConfig: {
                     maskBgColor: '#fff',
                     placeholderColor: '#999',
+                },
+                uploadColorConfig: {
+                    placeholderColor: '#999',
+                },
+            },
+            {
+                activityId: 10,
+                publicConfig: {
+                    title: '我为爱挑战代言',
+                    log: 'dyrhd',
+                    sort: ['最新', '最热'],
+                    catMenu: [], // 分组
+                    activityName: 'brand',
+                    activityId: 10,
+                    catId: '', // 所属分类
+                    showAllCat: true,
+                    configCatId: [
+                        {
+                            name: '歌唱表演',
+                            cat_id: 16,
+                        },
+                        {
+                            name: '舞蹈表演',
+                            cat_id: 17,
+                        },
+                        {
+                            name: '口才表演',
+                            cat_id: 18,
+                        },
+                        {
+                            name: '乐器演奏',
+                            cat_id: 19,
+                        },
+                        {
+                            name: '手工制作',
+                            cat_id: 20,
+                        },
+                        {
+                            name: '书法与绘画',
+                            cat_id: 21,
+                        },
+                        {
+                            name: '杂技魔术',
+                            cat_id: 23,
+                        },
+                        // {
+                        //     name: '魔术',
+                        //     cat_id: 24,
+                        // },
+                        {
+                            name: '艺术设计',
+                            cat_id: 25,
+                        },
+                        {
+                            name: '其他表演',
+                            cat_id: 102,
+                        },
+                    ],
+                    time: '海选时间：7月1日--7月24日',
+                    primaryColor: '#FF8E85', // 主色调
+                    primaryBgColor: '#9882FF', // 主要的背景颜色 （图片背景）
+                    placeholderColor: 'rgba(255,255,255,.6)',
+                    homePath: '/activity/pages/children/index',
+                    shareConfig: {
+                        title: ['秀我风采，为青少年代言！'],
+                        h5Title: ['秀我风采，为青少年代言！'],
+                        desc: ['不要迟疑，为我点赞！我要做“爱挑战”代言人！'],
+                        image:
+                            'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/children_share.png',
+                        path: '/activity/pages/children/index',
+                    },
+                },
+                uploadConfig: {
+                    // 上传作品页
+                    activityCat: [], // 表现形式
+                    uploadMode: ['video', 'image'], // 上传类型 只传1个值时（['video']）不显示表现形式
+                    placeholderNameText: '*作品名称（不超过11字）',
+                    placeholderDescText: '作品介绍(不超过80个字符)',
+                    nameMaxLength: 11,
+                    descMaxLength: 80,
+                },
+                indexColorConfig: {
+                    maskBgColor: '#fff',
+                    placeholderColor: '#d1c7ff',
                 },
                 uploadColorConfig: {
                     placeholderColor: '#999',

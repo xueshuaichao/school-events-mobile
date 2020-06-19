@@ -414,6 +414,12 @@
                     }
                 },
                 {
+                    "path": "pages/mywork/ucenter",
+                    "style": {
+                        "navigationBarTitleText": "个人中心"
+                    }
+                },
+                {
                     "path": "pages/index",
                     "style": {
                         "navigationBarTitleText": "我的活动",
@@ -426,6 +432,12 @@
                     "path": "pages/rematch/list",
                     "style": {
                         "navigationBarTitleText": "复赛名单"
+                    }
+                },
+                {
+                    "path": "pages/brand/join",
+                    "style": {
+                        "navigationBarTitleText": "我为爱挑战代言"
                     }
                 },
                 // ============== 春节 活动 =================

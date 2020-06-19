@@ -172,10 +172,20 @@ const routesConfig = {
         {
             path: '/activity/pages/mywork/mywork',
         },
+        {
+            path: '/activity/pages/mywork/ucenter',
+        },
+        {
+            path: '/activity/pages/index',
+        },
+        {
+            path: '/activity/pages/brand/join',
+        },
 
         {
             path: '/pages/activity-pages/mywork/mywork',
         },
+
         {
             path: '/pages/login/login',
         },

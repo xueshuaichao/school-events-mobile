@@ -1,8 +1,5 @@
 <template>
-    <view
-        v-if="!isLoading"
-        :class="[`${publicConfig.activityName}-page`]"
-    >
+    <view v-if="!isLoading">
         <view
             class="page-read-work"
             :class="{ login: userInfo === null }"
@@ -14,21 +11,22 @@
             <!-- my works -->
             <view
                 v-else
-                :class="[
-                    'panel',
-                    filter.activity_id === 10 ? 'is-ucenter' : ''
-                ]"
+                :class="['panel', isSelf ? 'is-self' : '']"
             >
                 <view
-                    v-if="type === 'myWork' && Object.keys(detail).length"
+                    v-if="Object.keys(detail).length"
                     class="user-detail"
                 >
+                    <view
+                        v-if="isSelf"
+                        class="poster-btn"
+                    >
+                        我的海报
+                    </view>
                     <view class="user-image-info">
-                        <image
-                            class="user-image"
-                            :src="detail.image"
-                            mode=""
-                        />
+                        <view class="user-image">
+                            <image :src="detail.image" />
+                        </view>
                         <view class="user-info">
                             <view class="name">
                                 {{ detail.name }}
@@ -50,12 +48,15 @@
                             {{ detail.desc }}
                         </view>
                     </view>
-                    <view class="user-tips">
+                    <view
+                        v-if="!isSelf"
+                        class="user-tips"
+                    >
                         记得为我点赞哦~
                     </view>
                 </view>
                 <view
-                    v-if="type === 'myWork' && isSelf"
+                    v-if="isSelf"
                     class="panel-hd"
                 >
                     <text
@@ -81,78 +82,24 @@
                     </text>
                 </view>
                 <view
-                    v-else-if="type === 'seach'"
-                    class="search-box"
-                >
-                    <button
-                        v-for="(item, index) in publicConfig.catMenu"
-                        :key="index"
-                        :class="{
-                            active: filter.activity_cat === index + 1
-                        }"
-                        @click="toggle(index + 1)"
-                    >
-                        {{ item }}
-                    </button>
-                    <button
-                        v-for="(item, index) in publicConfig.sort"
-                        :key="index"
-                        :class="{
-                            active:
-                                filter.sort === (index === 0 ? 'new' : 'hot')
-                        }"
-                        @click="toggle(index === 0 ? 'new' : 'hot')"
-                    >
-                        {{ item }}
-                    </button>
-                    <view class="search">
-                        <image
-                            :src="
-                                `https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/${publicConfig.activityName}_search.png`
-                            "
-                        />
-                        <form action="javascript:return true">
-                            <input
-                                v-model="changeValue"
-                                type="text"
-                                confirm-type="search"
-                                confirm-hold="true"
-                                :maxlength="13"
-                                :placeholder-style="
-                                    `color:${publicConfig.placeholderColor}`
-                                "
-                                placeholder="请输入作者姓名或作品名称"
-                                @confirm="bindconfirm"
-                            >
-                        </form>
-                        <text
-                            class="search-button"
-                            @click="bindconfirm"
-                        >
-                            搜索
-                        </text>
-                    </view>
-                </view>
-                <view
                     v-if="total > 0"
-                    class="media-list"
+                    :class="['media-list', isSelf ? '' : 'media-box']"
                 >
                     <view
                         v-for="(item, index) in dataList"
                         :key="item.id"
-                        class="media-content"
+                        :class="['media-content', isSelf ? 'self' : '']"
                     >
                         <event-craft-cover
                             :info="item"
-                            :media-icon="type !== 'myWork'"
-                            :like-icon="type === 'myWork'"
+                            :media-icon="true"
+                            :like-icon="false"
                             :best-icon="false"
                             :bg-color="publicConfig.primaryBgColor"
                             @click.native="viewDetail(item, index)"
                         />
-
                         <view
-                            v-if="type === 'myWork'"
+                            v-if="isSelf === true"
                             class="work-info"
                         >
                             <view class="media-name text-two-line">
@@ -197,17 +144,23 @@
                             v-else
                             class="work-info"
                         >
-                            <view class="text-two-line">
-                                {{ item.resource_name }}
+                            <view class="media-name text-one-line">
+                                {{ `${item.resource_name}` }}
                             </view>
-                            <view class="media-name">
-                                {{ item.user_name }}
-                            </view>
-                            <view class="media-time">
-                                {{ item.created_at }}
-                            </view>
-                            <view class="vote-num">
+                            <text class="vote-num">
                                 {{ item.ticket }}赞
+                            </text>
+                            <view
+                                class="vote"
+                                @click="handleVote(item)"
+                            >
+                                <image
+                                    class="like-icon"
+                                    :src="
+                                        `https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/${publicConfig.activityName}_like_icon.png`
+                                    "
+                                />
+                                点赞
                             </view>
                         </view>
                     </view>
@@ -223,20 +176,6 @@
                     />
                 </view>
                 <view
-                    v-if="type === 'search'"
-                    v-show="searchEmpty"
-                    class="empty"
-                >
-                    <image
-                        :src="
-                            `https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/${publicConfig.activityName}_empty_search.png`
-                        "
-                    />
-                    <view>
-                        搜索不到您要的结果，换个关键词试试吧～
-                    </view>
-                </view>
-                <view
                     v-show="myWorkEmpty"
                     class="work-empty"
                 >
@@ -245,22 +184,32 @@
                             `https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/${publicConfig.activityName}_empty_work.png`
                         "
                     />
-                    <view>
-                        {{ allTotal === 0 ? "您还没有上传作品" : "暂无作品" }}
-                    </view>
-                    <navigator
-                        v-if="allTotal === 0"
-                        :url="
-                            `/activity/pages/upload/modify?activity_id=${filter.activity_id}`
-                        "
-                    >
-                        <view class="goUpload">
-                            去上传
+                    <view v-if="isSelf">
+                        <view v-if="allTotal === 0">
+                            <view>
+                                您还没有上传作品<br>上传作品才能赢取代言人权益哦～
+                            </view>
                         </view>
-                    </navigator>
+                        <view v-else>
+                            暂无作品
+                        </view>
+                    </view>
+                    <view v-else>
+                        TA还没有上传作品，去看看其他作品吧~
+                    </view>
                 </view>
-                <goHome :path="publicConfig.homePath" />
+                <navigator
+                    v-if="isSelf"
+                    :url="
+                        `/activity/pages/upload/modify?activity_id=${filter.activity_id}`
+                    "
+                >
+                    <view class="goUpload">
+                        上传作品
+                    </view>
+                </navigator>
             </view>
+            <goHome :path="publicConfig.homePath" />
         </view>
     </view>
 </template>
@@ -304,7 +253,6 @@ export default {
             isLoading: true,
             userInfo: null,
             publicConfig: {},
-            myWorkConfig: {},
             dataList: [],
             changeValue: '',
             loadMoreStatus: 'none',
@@ -318,7 +266,6 @@ export default {
                 status: 2,
             },
             total: 1,
-            type: 'myWork',
             allNum: {},
             allTotal: 0,
             shareDesc: '',
@@ -329,11 +276,8 @@ export default {
         };
     },
     computed: {
-        searchEmpty() {
-            return this.total === 0 && this.type === 'search';
-        },
         myWorkEmpty() {
-            return this.total === 0 && this.type === 'myWork';
+            return this.total === 0;
         },
     },
     methods: {
@@ -345,7 +289,7 @@ export default {
                 (res) => {
                     this.userInfo = res.user_info;
                     this.isLoading = false;
-                    this.initShare();
+                    this.getWorkData();
                 },
                 () => {
                     this.isLoading = false;
@@ -353,43 +297,7 @@ export default {
                 },
             );
         },
-        toggle(k) {
-            uni.showLoading();
-            if (this.publicConfig.catMenu.length) {
-                this.filter.activity_cat = Number(k);
-            }
-            if (this.publicConfig.sort.length) {
-                this.filter.sort = k;
-            }
-            uni.pageScrollTo({ scrollTop: 0, duration: 300 });
-            this.filter.page_num = 1;
-            this.searchWorkData();
-        },
-        handleClick() {
-            if (!this.changeValue) {
-                uni.showToast({
-                    title: '请输入搜索内容',
-                    icon: 'none',
-                });
-                return;
-            }
-            this.filter.search = this.changeValue.trim();
-            this.filter.page_num = 1;
-            this.searchWorkData();
-        },
-        bindconfirm() {
-            const value = this.changeValue.trim();
-            if (!value) {
-                uni.showToast({
-                    title: '请输入搜索内容',
-                    icon: 'none',
-                });
-                return;
-            }
-            this.filter.search = value.trim();
-            this.filter.page_num = 1;
-            this.searchWorkData();
-        },
+
         getWorkData(title) {
             this.filter.activity_cat = 0;
             return api
@@ -420,48 +328,16 @@ export default {
                 );
         },
         getEnrollInfo() {
-            api.get('/api/activity/getenrollinfo', {
+            return api.get('/api/activity/getenrollinfo', {
                 activity_id: this.filter.activity_id,
-            }).then((data) => {
-                if (!Array.isArray(data)) {
-                    this.detail = data.detail;
-                    this.isSelf = data.is_self;
-                }
+                user_id: this.userId,
             });
         },
-        searchWorkData(title) {
-            api.post('/api/activity/resourcelist', this.filter).then(
-                ({ list, total }) => {
-                    if (title === 'reachBottom') {
-                        this.dataList = this.dataList.concat(list);
-                    } else {
-                        this.dataList = list;
-                    }
-
-                    this.total = total;
-                    if (
-                        this.total
-                        <= this.filter.page_num * this.filter.page_size
-                    ) {
-                        // this.loadMoreStatus = 'noMore';
-                        this.loadMoreStatus = title === 'reachBottom' ? 'noMore' : 'none';
-                    } else {
-                        this.loadMoreStatus = 'more';
-                    }
-                    uni.hideLoading();
-                },
-            );
-        },
         onReachBottom() {
-            console.log('到底部');
             if (this.loadMoreStatus === 'more') {
                 this.filter.page_num = this.filter.page_num + 1;
                 this.loadMoreStatus = 'loading';
-                if (this.type === 'myWork') {
-                    this.getWorkData('reachBottom');
-                } else {
-                    this.searchWorkData('reachBottom');
-                }
+                this.getWorkData('reachBottom');
             }
         },
         setTabActive(i) {
@@ -473,10 +349,7 @@ export default {
         },
         viewDetail(item, index) {
             if (this.tabActiveIndex === 2) {
-                let from = '/api/activity/resourcelist';
-                if (this.type === 'myWork') {
-                    from = '/api/activity/userresource';
-                }
+                const from = '/api/activity/userresource';
                 this.$store.commit('setFilterData', {
                     filter: this.filter,
                     position: {
@@ -569,7 +442,6 @@ export default {
             const descList = this.publicConfig.shareConfig.desc;
             const random = Math.floor(Math.random() * titleList.length);
             this.title = titleList[random];
-            console.log(this.publicConfig.shareConfig.title, this.title);
             const desc = descList[random];
 
             share({
@@ -586,37 +458,27 @@ export default {
     },
     onLoad(query) {
         const {
-            type, name, status, user_id: userId,
+            type,
+            status,
+            activity_id: activityId,
+            user_id: userId,
         } = query;
-        const activityId = Number(query.activity_id);
         this.userId = userId;
         this.type = type;
         if (status) {
             this.tabActiveIndex = Number(status);
         }
-
         this.publicConfig = this.$store.getters.getPublicConfig(activityId);
-        this.myWorkConfig = this.$store.getters.getActivityConfig({
-            activityId,
-            page: 'myWorkConfig',
-        });
         this.filter.activity_id = activityId;
-        this.getData();
-        if (type === 'myWork') {
-            this.getWorkData();
-            if (activityId === 10) {
-                this.getEnrollInfo();
+        this.filter.user_id = userId;
+        this.getEnrollInfo().then((data) => {
+            if (!Array.isArray(data)) {
+                this.detail = data.detail;
+                this.isSelf = data.is_self;
             }
-        } else if (type === 'search') {
-            uni.setNavigationBarTitle({ title: this.publicConfig.title });
-            this.filter.search = name;
-            if (userId) {
-                this.filter.user_id = userId;
-                this.filter.week = 1;
-            }
-            this.changeValue = name;
-            this.searchWorkData();
-        }
+            this.getData();
+        });
+        this.initShare();
     },
     onShareAppMessage(res) {
         if (res.from === 'button') {
@@ -633,19 +495,53 @@ export default {
 </script>
 
 <style lang="less">
+/deep/ .goHome {
+    bottom: 130upx;
+}
 .user-detail {
-    margin: 0 30upx;
     box-shadow: inset 0 0 24upx 0 rgba(152, 130, 255, 1);
     background-color: #fff;
     padding: 20upx;
     border-radius: 20upx;
+    position: relative;
     margin-bottom: 40upx;
+    .poster-btn {
+        position: absolute;
+        right: -11upx;
+        top: 20upx;
+        background-color: #ff574a;
+        border-radius: 24upx 0 0 24upx;
+        padding: 0upx 23upx;
+        height: 48upx;
+        line-height: 48upx;
+        color: #fff;
+        font-size: 22upx;
+        &::after {
+            content: "";
+            position: absolute;
+            bottom: -9upx;
+            right: 6upx;
+            width: 0;
+            height: 0;
+            border-top: 6upx solid transparent;
+            border-bottom: 6upx solid transparent;
+            border-right: 6upx solid #c40d00;
+            transform: rotate(44deg);
+        }
+    }
     .user-image-info {
         display: flex;
         .user-image {
             width: 220upx;
             height: 292upx;
+            image {
+                width: 100%;
+                height: 100%;
+                border-radius: 10upx;
+                display: inline-block;
+            }
             margin-right: 40upx;
+            border-radius: 10upx;
         }
         .user-info {
             color: #333;
@@ -679,8 +575,9 @@ export default {
         border-radius: 10upx;
         word-break: break-all;
         .user-desc-text {
-            height: 186upx;
+            height: 96upx;
             overflow-y: auto;
+            word-break: break-all;
         }
     }
     .user-tips {
@@ -708,41 +605,64 @@ export default {
     image {
         width: 300upx;
         height: 236upx;
-        margin-top: 174upx;
+        margin-top: 80upx;
     }
-    .goUpload {
-        margin-top: 37upx;
-        width: 450upx;
-        height: 110upx;
-        background: #0f8c64;
-        border-radius: 55px;
-        font-size: 36upx;
-        font-weight: 600;
-        color: #fff;
-        line-height: 110upx;
-        text-align: center;
-        display: inline-block;
-    }
+
     view {
-        color: #0f8c64;
+        color: #fff;
         font-size: 28upx;
         margin-top: 30upx;
     }
 }
+.goUpload {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 116upx;
+    background: #ff685c;
+    font-size: 36upx;
+    font-weight: 600;
+    color: #fff;
+    line-height: 116upx;
+    text-align: center;
+    display: inline-block;
+}
 .media-list {
     overflow-y: auto;
 }
-.media-content {
-    width: 690upx;
-    padding: 21upx;
-    box-sizing: border-box;
+.media-box {
     display: flex;
     justify-content: space-between;
+    flex-flow: row wrap;
+    overflow: hidden;
+}
+.media-content {
+    width: 335upx;
+    padding: 0;
+    justify-items: space-betwen;
     position: relative;
-    background: #0f8c64;
-    color: #fff;
-    margin-bottom: 20upx;
-    border-radius: 20upx;
+    margin-bottom: 50upx;
+    &.self {
+        width: 690upx;
+        padding: 21upx;
+        box-sizing: border-box;
+        display: flex;
+        justify-content: space-between;
+        position: relative;
+        color: #fff;
+        margin-bottom: 20upx;
+        border-radius: 20upx;
+        background-color: #fff;
+        box-shadow: inset 0px 0px 24upx 0px rgba(152, 130, 255, 1);
+        .work-info {
+            color: #333;
+            width: 300upx;
+            .media-time {
+                color: #666;
+            }
+        }
+    }
     .work {
         width: 335upx;
         height: 225upx;
@@ -766,9 +686,16 @@ export default {
             height: 22upx;
         }
     }
+    /deep/ .event-craft-cover {
+        .tag {
+            background: #ffe79c;
+            color: #bb77ff;
+        }
+    }
+
     .work-info {
-        width: 300upx;
         position: relative;
+        color: #fff;
         .media-name {
             width: 100%;
             font-size: 28upx;
@@ -784,11 +711,34 @@ export default {
             opacity: 0.7;
             margin-bottom: 66upx;
         }
+        .like-icon {
+            width: 27upx;
+            height: 27upx;
+            position: absolute;
+            top: 50%;
+            left: 20upx;
+            transform: translateY(-50%);
+
+            text {
+                color: #fff;
+            }
+        }
+        .vote {
+            float: right;
+            width: 130upx;
+            height: 60upx;
+            background-color: #ff685c;
+            border-radius: 30upx;
+            color: rgba(255, 255, 255, 1);
+            font-size: 28upx;
+            line-height: 60upx;
+            position: relative;
+            padding-left: 52upx;
+            box-sizing: border-box;
+        }
         .vote-num {
             font-size: 30upx;
-            left: 0;
-            position: absolute;
-            bottom: 14upx;
+            color: #fff;
         }
         .btn {
             display: flex;
@@ -798,7 +748,7 @@ export default {
             flex: 1;
             margin: 0 5upx;
             height: 50upx;
-            background: rgba(25, 181, 131, 1);
+            background-color: #ff685c;
             border-radius: 25upx;
             font-size: 24upx;
             color: rgba(255, 255, 255, 1);
@@ -815,118 +765,43 @@ export default {
 }
 
 .page-read-work {
-    padding-top: 30upx;
+    padding: 30upx 0 116upx;
     box-sizing: border-box;
     width: 100%;
     min-height: 100vh;
-    background: #a1debe;
+    background-color: #583ed4;
     &.login {
         background-color: #fff !important;
     }
     // background-size: contain;
-    .search-box {
-        overflow: hidden;
-        margin-bottom: 30rpx;
-        margin: 0 0rpx 20rpx;
-        top: 0upx;
-        height: 84rpx;
-        left: 0;
-        right: 0;
-        position: fixed;
-        z-index: 10;
-        background-color: #a1debe;
-        padding: 20upx 30upx;
-        button {
-            width: 144upx;
-            height: 68upx;
-            float: left;
-            line-height: 68upx;
-            color: #0f8c64;
-            background: transparent;
-            font-size: 30upx;
-            font-weight: 700;
-            border-radius: 34upx;
-            padding: 0;
-            &.active {
-                background: #0f8c64;
-                color: #fff;
-            }
-            &::after {
-                border: none;
-            }
-        }
-        .search {
-            background: #0f8c64;
-            width: 400upx;
-            height: 72upx;
-            position: relative;
-            float: right;
-            border-radius: 60upx;
-
-            image {
-                width: 28upx;
-                height: 28upx;
-                position: absolute;
-                top: 50%;
-                transform: translateY(-50%);
-                left: 12upx;
-            }
-            input {
-                width: 276upx;
-                position: absolute;
-                top: 50%;
-                transform: translateY(-50%);
-                left: 50upx;
-                font-size: 22upx;
-                color: #fff;
-            }
-            .search-button {
-                font-size: 24upx;
-                color: #fff;
-                position: absolute;
-                top: 50%;
-                transform: translateY(-50%);
-                right: 22upx;
-            }
-        }
-    }
     .panel {
-        padding: 96upx 30upx 0;
-        &.is-ucenter {
-            padding-top: 0;
-        }
+        padding: 0upx 30upx 0;
         &.no-padding {
             padding-top: 10upx;
         }
     }
     .panel .panel-hd {
+        margin: 0;
         border-bottom: none;
-        margin: 0 0 20rpx;
         display: flex;
         justify-content: space-around;
         align-items: center;
-        top: 0upx;
-        height: 84rpx;
-        left: 0;
-        right: 0;
-        position: fixed;
-        z-index: 10;
-        background-color: #a1debe;
-        padding: 20upx 0;
+        height: 68upx;
+        background-color: #583ed4;
+        padding: 0upx 0 30upx;
     }
 
     .panel .panel-hd .panel-title {
         display: inline-block;
-        color: #0f8c64;
         padding: 0 25upx;
         height: 68upx;
         line-height: 68upx;
         font-size: 30upx;
-
+        color: #fff;
         &.active {
-            background: #0f8c64;
-            border-radius: 34px;
+            background-color: #ff685c;
             color: #fff;
+            border-radius: 34px;
         }
         &.active::after {
             display: none;
@@ -968,6 +843,13 @@ export default {
 
     .blank-wrap {
         margin-top: 180upx;
+    }
+    /deep/ .goHome {
+        color: #583ed4;
+        &::before {
+            border-top: 1rpx solid #583ed4 !important;
+            border-right: 1rpx solid #583ed4 !important;
+        }
     }
 }
 @import "../theme/myWork.less";

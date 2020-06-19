@@ -2,22 +2,8 @@
     <view :class="['activity-page-index', className]">
         <official-account v-if="!isH5" />
         <view
-            :class="[
-                'page-index',
-                { 'stop-scroll': prompt || prizePrompt || isStopScroll }
-            ]"
+            :class="['page-index', { 'stop-scroll': prompt || isStopScroll }]"
         >
-            <!-- 奖品说明 -->
-            <prize-desc
-                v-if="prizePrompt"
-                :prizes-detail="indexConfig.prizesDetail"
-                :theme="{
-                    bgColor: publicConfig.primaryBgColor,
-                    titleColor: publicConfig.titleColor
-                }"
-                :name="publicConfig.activityName"
-                @close="handleClose"
-            />
             <view class="main-swiper">
                 <view class="banner">
                     <view>
@@ -43,22 +29,12 @@
                     </view>
                     <template v-show="publicConfig.time !== ''">
                         <i class="active-time">
-                            活动时间：{{ publicConfig.time }}
+                            {{ publicConfig.time }}
                         </i>
                     </template>
                 </view>
                 <view class="main-content">
-                    <slot name="prize">
-                        <!-- 奖品 -->
-                        <prize
-                            :name="publicConfig.activityName"
-                            :text-color="publicConfig.primaryColor"
-                            :border-color="publicConfig.primaryBgColor"
-                            :prize-list="indexConfig.prizes"
-                            @handleActiveprize="handleActiveprize"
-                        />
-                    </slot>
-                    <slot name="rank" />
+                    <slot name="main-data" />
                     <!-- 跑马灯 -->
                     <tipsList
                         :text="
@@ -171,6 +147,7 @@
                     </view>
                 </view>
                 <view
+                    v-if="!hideButton"
                     :class="
                         status === 2 || status === 1 || isH5
                             ? 'upload'
@@ -196,11 +173,8 @@
 
 <script>
 import api from '../../../common/api';
-import prizeDesc from './prize-desc.vue';
-import prize from './prize.vue';
 import tipsList from './tips-list.vue';
 import uniLoadMore from '../../../components/uni-load-more/uni-load-more.vue';
-// import share from '../../../common/share';
 import EventCraftCover from '../../../components/event-craft-cover/index.vue';
 
 export default {
@@ -214,8 +188,6 @@ export default {
     },
     components: {
         uniLoadMore,
-        prizeDesc,
-        prize,
         tipsList,
         EventCraftCover,
     },
@@ -250,34 +222,20 @@ export default {
             type: String,
             default: '',
         },
+        hideButton: {
+            type: Boolean,
+            default: false,
+        },
     },
     data() {
         return {
             // #ifdef H5
             isH5: true,
             // #endif
-            prizeList: [
-                {
-                    text: ['一等奖', '护眼仪'],
-                },
-                {
-                    text: ['二等奖', '护眼灯'],
-                },
-                {
-                    text: ['三等奖', '书包'],
-                },
-                {
-                    text: ['四等奖', '奖状'],
-                },
-            ],
-            shareDesc: '',
             changeValue: '',
-            activeMenuIndex: 1,
             loadMoreStatus: 'more',
             prompt: false,
-            prizePrompt: false,
             isPlayed: false,
-            newsTabActiveIndex: 0,
             dataList: [],
             filter: {
                 cat_id: this.publicConfig.catId,
@@ -303,7 +261,9 @@ export default {
     },
     created() {
         this.getData();
-        this.activityStatus();
+        if (!this.hideButton) {
+            this.activityStatus();
+        }
         this.getCrouselList();
     },
     onShow() {},
@@ -395,10 +355,6 @@ export default {
             }
             return true;
         },
-
-        // onReachBottom() {
-
-        // },
         bindconfirm() {
             uni.navigateTo({
                 url: `/activity/pages/mywork/mywork?type=search&name=${this.changeValue.trim()}&activity_id=${
@@ -434,9 +390,6 @@ export default {
             // this.prompt = true;
             this.$emit('showMask', { title: '活动规则', type: 0 });
         },
-        handleActiveprize() {
-            this.prizePrompt = true;
-        },
         handleMywork() {
             api.isLogin({
                 fr: this.fr,
@@ -445,20 +398,6 @@ export default {
                     url: `/activity/pages/mywork/mywork?type=myWork&activity_id=${this.filter.activity_id}`,
                 });
             });
-        },
-        handleClose() {
-            this.prompt = false;
-            this.prizePrompt = false;
-        },
-
-        onPlay() {
-            if (!this.isPlayed) {
-                api.get('/api/works/playcount', {
-                    id: this.id,
-                });
-            }
-
-            this.isPlayed = true;
         },
         handleVote(item) {
             if (this.status === 2) {
@@ -498,16 +437,6 @@ export default {
                 });
             }
         },
-    },
-    onShareAppMessage(res) {
-        if (res.from === 'button') {
-            // 来自页面内分享按钮
-            console.log(res.target);
-        }
-        return {
-            title: this.shareDesc,
-            path: '/pages/read/index',
-        };
     },
 };
 </script>
