@@ -496,6 +496,91 @@ const detailConf = [
             ['快乐儿童节，我来秀才艺！来点赞吧，就差你啦~'],
         ],
     },
+    {
+        posterConfig: {
+            width: 570,
+            height: 820,
+            debug: false,
+            texts: [
+                {
+                    x: 50,
+                    y: 600,
+                    text: [
+                        {
+                            text: '',
+                            fontSize: 28,
+                            color: '#FF574A',
+                            opacity: 1,
+                            marginRight: 10,
+                            lineHeight: 40,
+                            lineNum: 1,
+                            width: 1100,
+                            textOverflow: 'ellipsis',
+                        },
+                    ],
+                    baseLine: 'middle',
+                },
+                {
+                    x: 54,
+                    y: 516,
+                    text: [
+                        {
+                            text: '',
+                            fontSize: 32,
+                            color: '#fff',
+                            opacity: 1,
+                            marginRight: 10,
+                            lineNum: 1,
+                            lineHeight: 174,
+                            width: 362,
+                            textOverflow: 'ellipsis',
+                            textALign: 'center',
+                        },
+                    ],
+                    zIndex: 9999,
+                    baseLine: 'middle',
+                },
+            ],
+            images: [
+                {
+                    url:
+                        'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/h5/qiyi-poster.png',
+                    width: 570,
+                    height: 820,
+                    y: 0,
+                    x: 0,
+                },
+                {
+                    url: '',
+                    width: 470,
+                    height: 316,
+                    y: 254,
+                    x: 48,
+                    borderRadius: 20,
+                },
+                {
+                    url: '',
+                    width: 110,
+                    height: 110,
+                    y: 684,
+                    x: 434,
+                    borderRadius: 100,
+                },
+                {
+                    url:
+                        'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/h5/qiyi-bar-poster.png',
+                    width: 362,
+                    height: 74,
+                    y: 484,
+                    x: 5,
+                },
+            ],
+        },
+        titleList: [
+            ['“爱挑战”代言人，舍我其谁！快为我点赞吧！'],
+            ['“爱挑战”代言人，非我莫属，快为我点赞吧！'],
+        ],
+    },
 ];
 
 export default detailConf;

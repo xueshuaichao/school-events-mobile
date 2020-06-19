@@ -11,7 +11,8 @@
                 { chunjie: activity_id === 3 || activity_id === 4 },
                 { wuyi: activity_id === 8 },
                 { openGame: from === 'openGame' },
-                { liuyi: activity_id === 9 }
+                { liuyi: activity_id === 9 },
+                { qiyi: activity_id === 10 }
             ]"
         >
             <view class="activerule">
@@ -478,7 +479,7 @@ export default {
                 this.activity_id = res.activity_id || 0;
             }
             this.id = res.id;
-
+            this.activity_id = 10;
             // activity_id,  没有7..
             if (this.activity_id) {
                 // wyhd 五一活动
@@ -529,6 +530,10 @@ export default {
                 }`;
             } else {
                 this.posterConfig.texts[0].text[0].text = res.resource_name;
+            }
+            if (this.activity_id === 10) {
+                // 作者
+                this.posterConfig.texts[1].text[0].text = `我是${res.create_name}`;
             }
             this.pageData.video_img_url = res.video_img_url;
 
@@ -1152,6 +1157,24 @@ export default {
                 border: 2rpx solid #fff;
             }
         }
+        &.qiyi {
+            .saveBtn {
+                width: 570upx;
+                background: linear-gradient(
+                    180deg,
+                    rgba(255, 142, 133, 1),
+                    rgba(255, 87, 74, 1)
+                );
+                box-shadow: 0 4upx 6upx 0 rgba(0, 0, 0, 0.4);
+            }
+            .close {
+                background: linear-gradient(
+                    180deg,
+                    rgba(255, 142, 133, 1),
+                    rgba(255, 87, 74, 1)
+                );
+            }
+        }
     }
 
     .share-mask {
@@ -1226,7 +1249,7 @@ export default {
             width: 56upx;
             height: 56upx;
             left: 347upx;
-            top: 260upx;
+            top: 250upx;
             color: #333;
             font-size: 28upx;
         }

@@ -111,6 +111,9 @@ const routesConfig = {
             path: '/pages/address/edit',
         },
         {
+            path: '/activity/pages/rematch/list',
+        },
+        {
             path: '/activity/chunjie/upload/upload',
         },
         {

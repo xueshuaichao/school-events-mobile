@@ -124,10 +124,10 @@ function initWechatShare(config, params) {
 }
 
 const contentList = [
-    '陕西青少年爱挑战，激发学生创新精神',
-    '第二届陕西“青少年爱挑战活动大赛”',
-    '陕西青少年爱挑战活动大赛，少年强则国强',
-    '陕西“爱挑战”探索青少年综合素质',
+    '青少年爱挑战，激发学生创新精神',
+    '第二届“青少年爱挑战活动大赛”',
+    '青少年爱挑战活动大赛，少年强则国强',
+    '“爱挑战”探索青少年综合素质',
 ];
 
 function h5InitShare(customShareConfig) {

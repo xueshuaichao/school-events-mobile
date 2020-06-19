@@ -75,6 +75,10 @@ export default {
             total: 0,
             confList: [
                 {
+                    id: 10,
+                    url: '/activity/pages/index?activity_id=10',
+                },
+                {
                     id: 9,
                     img:
                         'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/h5/liuyi-banner.png',

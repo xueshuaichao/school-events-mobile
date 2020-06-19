@@ -5,7 +5,7 @@
             class="cover"
         >
             <image
-                src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/h5/suspension-liuyi.png"
+                src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/h5/suspension-qiyi.png"
             />
             <view
                 class="join-btn"
@@ -46,18 +46,18 @@
                     :duration="duration"
                     :circular="true"
                 >
-                    <swiper-item>
-                        <navigator
-                            url="/activity/pages/children/index"
-                            class="swiper-item"
-                        >
-                            <image
-                                class="banner-image"
-                                src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/h5/liuyi-banner.png"
-                            />
-                        </navigator>
+                    <swiper-item
+                        v-for="(item, index) in bannerlist"
+                        :key="index"
+                        class="swiper-item"
+                        @click="jumpIndex(item)"
+                    >
+                        <image
+                            class="banner-image"
+                            :src="item.banner_image"
+                        />
                     </swiper-item>
-                    <swiper-item>
+                    <!-- <swiper-item>
                         <navigator
                             url="/pages/activity-pages/labor/index"
                             class="swiper-item"
@@ -67,8 +67,8 @@
                                 src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/h5/wuyi-banner.png"
                             />
                         </navigator>
-                    </swiper-item>
-                    <swiper-item v-if="!isH5">
+                    </swiper-item> -->
+                    <!-- <swiper-item v-if="!isH5">
                         <navigator
                             url="/pages/openGame/index"
                             class="swiper-item"
@@ -78,7 +78,7 @@
                                 src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/h5/opengame-banner.png"
                             />
                         </navigator>
-                    </swiper-item>
+                    </swiper-item> -->
                 </swiper>
             </view>
         </view>
@@ -226,7 +226,7 @@ export default {
                 talent: { list: [], total: 0 },
             },
             prompt: false,
-            isFirstLogin: 'hasLiuyiPromt',
+            isFirstLogin: 'hasQiyiPromt',
             status: 1,
             // show: 1,
             // #ifdef H5
@@ -235,6 +235,7 @@ export default {
             needBindMobile: false,
             changeValue: '',
             hotList: [],
+            bannerlist: [],
             confList: [
                 {
                     id: 9,
@@ -283,6 +284,7 @@ export default {
         this.getData();
         this.getUserInfo();
         this.getSearchWord();
+        this.getBannerList();
     },
     onShow() {
         this.showSearchDrop = false;
@@ -301,6 +303,22 @@ export default {
     },
     created() {},
     methods: {
+        jumpIndex(item) {
+            if (item.banner_url) {
+                uni.navigateTo({
+                    url: item.banner_url,
+                });
+            }
+        },
+        getBannerList() {
+            let id = 5;
+            if (this.isH5) {
+                id = 6;
+            }
+            api.get(`/api/banner/list?space_id=${id}`).then((list) => {
+                this.bannerlist = list;
+            });
+        },
         searchStatus(val) {
             this.showSearchDrop = val;
         },
@@ -367,6 +385,9 @@ export default {
             }
             if (uni.getStorageSync('hasLaborPromt')) {
                 uni.removeStorageSync('hasLaborPromt');
+            }
+            if (uni.getStorageSync('hasLiuyiPromt')) {
+                uni.removeStorageSync('hasLiuyiPromt');
             }
             if (!isFirstLogin) {
                 this.prompt = true;
@@ -481,43 +502,46 @@ export default {
     text-align: center;
     font-size: 0;
     image:first-child {
-        width: 558upx;
-        height: 700upx;
+        width: 750rpx;
+        height: 620rpx;
         display: block;
-        margin: 130upx auto 0;
+        margin: 160upx auto 0;
     }
     .join-btn {
-        width: 540upx;
-        height: 98upx;
-        margin: 30upx auto 50upx;
-
-        border-radius: 50upx;
+        width: 570upx;
+        height: 110upx;
+        margin: 40upx auto 30upx;
+        border-radius: 60upx;
         color: #fff;
         font-size: 40upx;
-        line-height: 98upx;
+        line-height: 110upx;
         text-align: center;
-        background-color: #c790ff;
-        background-image: url(../../../static/images/work/querter-circle.png);
-        background-repeat: no-repeat;
-        background-position: 12rpx 12rpx;
-        background-size: 34rpx 36rpx;
-        box-shadow: 0 0 24rpx 0 rgba(255, 255, 255, 1) inset;
+        background: linear-gradient(
+            180deg,
+            rgba(255, 142, 133, 1),
+            rgba(255, 87, 74, 1)
+        );
+        box-shadow: 0 4upx 6upx 0 rgba(0, 0, 0, 0.4);
     }
     .close {
-        width: 62upx;
-        height: 62upx;
+        width: 52upx;
+        height: 52upx;
         border-radius: 50%;
         margin: 0 auto;
         position: relative;
-        border: 2upx solid #fff;
+        background: linear-gradient(
+            180deg,
+            rgba(255, 142, 133, 1),
+            rgba(255, 87, 74, 1)
+        );
         &::before,
         &::after {
             position: absolute;
             content: "";
-            width: 34upx;
+            width: 24upx;
             height: 4upx;
             left: 14upx;
-            top: 28upx;
+            top: 24upx;
             border-radius: 2upx;
             background: #fff;
             transform: rotate(45deg);

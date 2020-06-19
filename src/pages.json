@@ -429,6 +429,12 @@
                     }
                 },
                 {
+                    "path": "pages/rematch/list",
+                    "style": {
+                        "navigationBarTitleText": "复赛名单"
+                    }
+                },
+                {
                     "path": "pages/brand/join",
                     "style": {
                         "navigationBarTitleText": "我为爱挑战代言",
