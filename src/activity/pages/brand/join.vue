@@ -1,19 +1,12 @@
 <template>
     <div class="join-page">
         <view>
-            <poster
-                v-if="!isH5"
-                id="poster"
+            <posterh5
+                ref="posterh5"
                 :config="posterCommonConfig"
                 :hide-loading="true"
                 @success="onPosterSuccess"
                 @fail="onPosterFail"
-            />
-            <canvas
-                v-els
-                class="canvas pro"
-                style="width: 570px; height: 820px;"
-                canvas-id="firstCanvas"
             />
             <form>
                 <view class="uni-form-item uni-column">
@@ -194,16 +187,17 @@
     </div>
 </template>
 <script>
+// import QRCode from 'qrcodejs2';
 import api from '../../../common/api';
 import imageCutter from '../../../components/image-cutter/image-cutter.vue';
 import config from '../../../common/config';
 import utils from '../../../common/utils';
-import poster from './poster.vue';
+import posterh5 from './posterh5.vue';
 
 export default {
     components: {
         imageCutter,
-        poster,
+        posterh5,
     },
     data() {
         return {
@@ -300,59 +294,66 @@ export default {
                         height: 122,
                         y: 678,
                         x: 428,
-                        borderRadius: 122,
+                        borderRadius: this.isH5 ? 0 : 122,
                     },
                 ],
             },
         };
     },
+    created() {
+        this.getUserInfo();
+    },
     methods: {
-        getPosterConfig(data) {
-            this.$emit('createPoster', data);
+        onLogin({ user_info: userInfo }) {
+            this.userInfo = userInfo;
+            this.getQrCode();
         },
-        onPosterSuccess() {},
-        onPosterFail() {},
+        onPosterSuccess(detail) {
+            this.submit(detail);
+        },
+        onPosterFail(err) {
+            console.log(err);
+            uni.showToast({
+                title: '生成失败，稍后再试',
+                duration: 2000,
+                icon: 'none',
+            });
+        },
         getUserInfo() {
             api.get('/api/user/info').then((res) => {
                 this.userInfo = res.user_info;
                 this.getQrCode();
             });
         },
-        onLogin({ user_info: userInfo }) {
-            this.userInfo = userInfo;
-            this.getQrCode();
-        },
         getQrCode() {
-            // if (this.isH5) {
-            // } else {
-            this.handleTicketMask();
-            // }
+            if (this.isH5) {
+                this.getH5QrCode();
+            } else {
+                this.getMpQrCode();
+            }
         },
-        handleTicketMask() {
-            uni.showLoading({
-                mask: true,
-            });
-            const url = '/activity/pages/mywork/ucenter';
+        getH5QrCode() {
+            this.posterCommonConfig.images[3].url = 'http://aitiaozhan.my.dev.wdyclass.com:1024/api/common/qrcode?url=http%3A%2F%2Faitiaozhan.my.dev.wdyclass.com%3A1024%2Factivity%2Fpages%2Fmywork%2Fucenter%3Factivity_id%3D10%26user_id%3D3433&w=122';
+        },
+        getMpQrCode() {
+            // 小程序二维码
+            const url = '/activity/pages/brand/ucenter';
             const scene = `activity_id=10&user_id=${this.userInfo.user_id}`;
-            // const scene = `id=${this.id}`;
-            console.log(url, scene, 'url---scene---');
             api.post('/api/weixin/getminiqrcode', {
                 path: url,
                 scene,
             }).then(
                 ({ url }) => {
-                    uni.hideLoading();
                     if (url) {
                         this.base64src(url, (res) => {
-                            this.posterConfig.images[3].url = res;
+                            this.posterCommonConfig.images[3].url = res;
                         });
                     } else {
-                        this.posterConfig.images[3].url = 'http://aitiaozhan.oss-cn-beijing.aliyuncs.com/main-erweima.png';
+                        this.posterCommonConfig.images[3].url = 'http://aitiaozhan.oss-cn-beijing.aliyuncs.com/main-erweima.png';
                     }
                 },
                 () => {
-                    this.posterConfig.images[3].url = 'http://aitiaozhan.oss-cn-beijing.aliyuncs.com/main-erweima.png';
-                    uni.hideLoading();
+                    this.posterCommonConfig.images[3].url = 'http://aitiaozhan.oss-cn-beijing.aliyuncs.com/main-erweima.png';
                 },
             );
         },
@@ -454,35 +455,47 @@ export default {
             if (!this.lock) {
                 this.lock = true;
                 if (this.validate()) {
-                    api.post('/api/activity/enroll', {
-                        detail: this.formData,
-                        activity_id: 10,
-                    }).then(
-                        () => {
-                            this.lock = false;
-                            uni.showToast({
-                                title: '提交成功',
-                                icon: 'success',
-                            });
-
-                            setTimeout(() => {
-                                uni.navigateTo({
-                                    url:
-                                        '/activity/pages/index?activity_id=10&is_first=1',
-                                });
-                            }, 2000);
-                            // this.resetData();
-                        },
-                        (err) => {
-                            this.lock = false;
-                            uni.showToast({
-                                icon: 'none',
-                                title: err.message,
-                            });
-                        },
-                    );
+                    this.createPoster();
                 }
             }
+        },
+        createPoster() {
+            this.posterCommonConfig.images[1].url = this.formData.image;
+            this.posterCommonConfig.images[2].url = 'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/brand_poster_name.png';
+            this.posterCommonConfig.texts[0].text = `我是${this.formData.name}`;
+            this.posterCommonConfig.texts[1].text = `${this.formData.slogan}`;
+            this.$refs.posterh5.createPoster(this.posterCommonConfig);
+        },
+        submit(path) {
+            this.uploadFile(path).then((data) => {
+                this.formData[this.isH5 ? 'poster_h5' : 'poster_mp'] = data.path;
+                api.post('/api/activity/enroll', {
+                    detail: this.formData,
+                    activity_id: 10,
+                }).then(
+                    () => {
+                        this.lock = false;
+                        uni.showToast({
+                            title: '提交成功',
+                            icon: 'success',
+                        });
+
+                        setTimeout(() => {
+                            uni.navigateTo({
+                                url:
+                                    '/activity/pages/index?activity_id=10&is_first=1',
+                            });
+                        }, 2000);
+                    },
+                    (err) => {
+                        this.lock = false;
+                        uni.showToast({
+                            icon: 'none',
+                            title: err.message,
+                        });
+                    },
+                );
+            });
         },
         validate() {
             let status = true;
@@ -519,6 +532,12 @@ export default {
 .join-page {
     padding: 40upx 30upx 110upx;
     background-color: #583ed4;
+    .canvas.pro {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        transform: translate3d(-9999rpx, 0, 0);
+    }
     .uni-form-item {
         margin-bottom: 40upx;
         .title {

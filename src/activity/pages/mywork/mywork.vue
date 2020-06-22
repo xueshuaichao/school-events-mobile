@@ -14,48 +14,10 @@
             <!-- my works -->
             <view
                 v-else
-                :class="[
-                    'panel',
-                    filter.activity_id === 10 ? 'is-ucenter' : ''
-                ]"
+                class="panel"
             >
                 <view
-                    v-if="type === 'myWork' && Object.keys(detail).length"
-                    class="user-detail"
-                >
-                    <view class="user-image-info">
-                        <image
-                            class="user-image"
-                            :src="detail.image"
-                            mode=""
-                        />
-                        <view class="user-info">
-                            <view class="name">
-                                {{ detail.name }}
-                            </view>
-                            <view class="school">
-                                {{ detail.school_name }}
-                            </view>
-                            <view class="teacher">
-                                推荐老师：{{ detail.teacher }}
-                            </view>
-                            <view class="slogan">
-                                我的代言：{{ detail.slogan }}
-                            </view>
-                        </view>
-                    </view>
-                    <view class="user-desc">
-                        <view>自我介绍：</view>
-                        <view class="user-desc-text">
-                            {{ detail.desc }}
-                        </view>
-                    </view>
-                    <view class="user-tips">
-                        记得为我点赞哦~
-                    </view>
-                </view>
-                <view
-                    v-if="type === 'myWork' && isSelf"
+                    v-if="type === 'myWork'"
                     class="panel-hd"
                 >
                     <text
@@ -81,7 +43,7 @@
                     </text>
                 </view>
                 <view
-                    v-else-if="type === 'seach'"
+                    v-else
                     class="search-box"
                 >
                     <button
@@ -301,6 +263,9 @@ export default {
     },
     data() {
         return {
+            // #ifdef H5
+            isH5: true,
+            // #endif
             isLoading: true,
             userInfo: null,
             publicConfig: {},
@@ -324,8 +289,6 @@ export default {
             shareDesc: '',
             title: '',
             userId: '',
-            isSelf: false,
-            detail: {},
         };
     },
     computed: {
@@ -338,20 +301,19 @@ export default {
     },
     methods: {
         onLogin() {
-            this.getData();
-        },
-        getData() {
-            api.get('/api/user/info').then(
+            this.getData().then(
                 (res) => {
                     this.userInfo = res.user_info;
                     this.isLoading = false;
-                    this.initShare();
                 },
                 () => {
                     this.isLoading = false;
                     this.userInfo = null;
                 },
             );
+        },
+        getData() {
+            return api.get('/api/user/info');
         },
         toggle(k) {
             uni.showLoading();
@@ -418,16 +380,6 @@ export default {
                     },
                     () => {},
                 );
-        },
-        getEnrollInfo() {
-            api.get('/api/activity/getenrollinfo', {
-                activity_id: this.filter.activity_id,
-            }).then((data) => {
-                if (!Array.isArray(data)) {
-                    this.detail = data.detail;
-                    this.isSelf = data.is_self;
-                }
-            });
         },
         searchWorkData(title) {
             api.post('/api/activity/resourcelist', this.filter).then(
@@ -601,12 +553,21 @@ export default {
             page: 'myWorkConfig',
         });
         this.filter.activity_id = activityId;
-        this.getData();
+        this.getData().then(
+            (res) => {
+                this.userInfo = res.user_info;
+                this.isLoading = false;
+                if (type === 'myWork' && activityId === 10) {
+                    this.userId = this.userInfo.user_id;
+                }
+            },
+            () => {
+                this.isLoading = false;
+                this.userInfo = null;
+            },
+        );
         if (type === 'myWork') {
             this.getWorkData();
-            if (activityId === 10) {
-                this.getEnrollInfo();
-            }
         } else if (type === 'search') {
             uni.setNavigationBarTitle({ title: this.publicConfig.title });
             this.filter.search = name;
@@ -617,6 +578,7 @@ export default {
             this.changeValue = name;
             this.searchWorkData();
         }
+        this.initShare();
     },
     onShareAppMessage(res) {
         if (res.from === 'button') {
@@ -634,12 +596,36 @@ export default {
 
 <style lang="less">
 .user-detail {
-    margin: 0 30upx;
     box-shadow: inset 0 0 24upx 0 rgba(152, 130, 255, 1);
     background-color: #fff;
     padding: 20upx;
     border-radius: 20upx;
     margin-bottom: 40upx;
+    position: relative;
+    .poster-btn {
+        position: absolute;
+        right: -11upx;
+        top: 20upx;
+        background-color: #ff574a;
+        border-radius: 24upx 0 0 24upx;
+        padding: 0upx 23upx;
+        height: 48upx;
+        line-height: 48upx;
+        color: #fff;
+        font-size: 22upx;
+        &::after {
+            content: "";
+            position: absolute;
+            bottom: -9upx;
+            right: 6upx;
+            width: 0;
+            height: 0;
+            border-top: 6upx solid transparent;
+            border-bottom: 6upx solid transparent;
+            border-right: 6upx solid #c40d00;
+            transform: rotate(44deg);
+        }
+    }
     .user-image-info {
         display: flex;
         .user-image {
@@ -892,9 +878,6 @@ export default {
     }
     .panel {
         padding: 96upx 30upx 0;
-        &.is-ucenter {
-            padding-top: 0;
-        }
         &.no-padding {
             padding-top: 10upx;
         }

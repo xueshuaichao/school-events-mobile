@@ -452,7 +452,6 @@ export default {
         this.showLottery();
         this.ctx = uni.createCanvasContext('firstCanvas');
     },
-
     methods: {
         luckyDraw() {
             // 中途退出 消耗次数
