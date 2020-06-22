@@ -168,7 +168,7 @@
                 </template>
             </view>
             <view
-                v-if="gradeType === 0"
+                v-if="gradeType === 1"
                 class="uni-list-cell-db"
             >
                 <text class="form-item-text">
@@ -437,7 +437,7 @@ export default {
                 video_img_url: '',
                 school_id: '',
             },
-            gradeType: 0, // 参赛学生类型 0-个人 1团队
+            gradeType: 1, // 参赛学生类型 1-个人 2团队
             statudentCheckbox: [],
             statudent: [],
             achievementDateInfo: {
@@ -506,12 +506,10 @@ export default {
         radioChange(e) {
             this.formData.cat_id = '';
             this.rangeIndex = e.detail.value - 1;
-            if (this.rangeIndex === 1) {
-                this.gradeType = 0;
-            }
             this.catData = this.catDataArray[this.rangeIndex].child;
             this.formData.resource_scope = e.detail.value;
-            // this.formData.create_info_array = [];
+            this.statudent = [];
+            this.statudentCheckbox = [];
         },
         getCatData() {
             api.get('/api/works/gradecategory').then((res) => {
@@ -572,7 +570,7 @@ export default {
             this.classDataIndex = e.detail.value;
             this.formData.class_id = this.classData[this.classDataIndex].id;
             if (id !== this.formData.class_id) {
-                if (this.gradeType === 0) {
+                if (this.gradeType === 1) {
                     this.statudent = [];
                 } else {
                     this.statudentCheckbox = [];
@@ -582,7 +580,7 @@ export default {
             this.getStudents();
         },
         getStudents() {
-            if (this.gradeType === 0) {
+            if (this.gradeType === 1) {
                 this.statudent = [];
             } else {
                 this.statudentCheckbox = [];
@@ -635,11 +633,8 @@ export default {
             this.formData.cat_name = picked.label;
             this.catText = picked.label;
             this.result = this.catData;
-            // 竞技项目根据分类 确定参赛学生选择框类型 多选还是单选
-            if (this.rangeIndex === 0) {
-                [this.gradeType] = picked.indexes;
-            }
-            // 取出最后一级数据
+
+            // 取出最后一级数据 用于获取当前选中数据
             picked.values.forEach((item, index) => {
                 if (index < picked.values.length - 1) {
                     this.getLastCat(this.result, item);
@@ -651,10 +646,12 @@ export default {
         },
         getLastCat(arr, id) {
             this.result = arr.find(v => v.cat_id === id).child;
+            console.log(this.result);
         },
-        handleAchievement({ unit }) {
-            this.date = !unit;
-            this.formData.achievement_unit = unit || '秒';
+        handleAchievement({ unit, more_people: morePeople }) {
+            this.date = unit === '秒';
+            this.formData.achievement_unit = this.date ? '秒' : unit;
+            this.gradeType = morePeople;
         },
         updateVideo(data) {
             this.formData = {
@@ -685,7 +682,7 @@ export default {
         onValidate() {
             let status = true;
             this.formData.create_info_array = [];
-            if (this.gradeType === 0) {
+            if (this.gradeType === 1) {
                 this.formData.create_info_array = this.statudent;
             } else {
                 this.formData.create_info_array = this.statudentCheckbox;
@@ -732,7 +729,7 @@ export default {
                 if (this.onValidate()) {
                     uni.showLoading();
                     if (this.rangeIndex === 0) {
-                        if (this.gradeType === 0) {
+                        if (this.gradeType === 1) {
                             this.formData.resource_scope = 1;
                         } else {
                             this.formData.resource_scope = 2;
@@ -818,7 +815,7 @@ export default {
         align-items: center;
         font-size: 28upx;
         input {
-            width: 138upx;
+            width: 125upx;
         }
         .date-text {
             display: inline-block;
