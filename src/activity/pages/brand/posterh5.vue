@@ -16,81 +16,82 @@ export default {
             // #endif
             imgAuthBtn: false,
             showPosterMask: false,
-            canvasImg: '',
+            ratio: 1,
         };
     },
     created() {
-        this.ctx = uni.createCanvasContext('firstCanvas');
+        const that = this;
+        uni.getSystemInfo({
+            success(res) {
+                that.ratio = res.pixelRatio;
+            },
+        });
+    },
+    mounted() {
+        if (this.isH5) {
+            this.ctx = uni.createCanvasContext('firstCanvas');
+        } else {
+            // eslint-disable-next-line no-undef
+            this.ctx = wx.createCanvasContext('firstCanvas', this);
+        }
     },
     methods: {
         createPoster(config) {
             this.posterCommonConfig = config;
-            return new Promise((resolve) => {
-                this.h5DrawImage(config).then((res) => {
-                    resolve(res);
-                });
-            });
+            this.h5DrawImage(config);
         },
-
         h5DrawImage(config) {
             // h5 我的海报
             const wxGetImageInfo = this.promisify(uni.getImageInfo);
             const imageInfoArr = [];
-            console.log(config.images);
             config.images.forEach((item) => {
-                console.log(item.url);
                 imageInfoArr.push(
                     wxGetImageInfo({
                         src: item.url, // 背景图片
                     }),
                 );
             });
-            return new Promise((resolve) => {
-                Promise.all(imageInfoArr).then((res) => {
-                    this.ctx = uni.createCanvasContext('firstCanvas');
-                    res.forEach((item, index) => {
-                        console.log(item);
-                        this.ctx.save();
-                        if (config.images[index].borderRadius) {
-                            this.drawRadiusRect(
-                                config.images[index].x,
-                                config.images[index].y,
-                                config.images[index].width,
-                                config.images[index].height,
-                                config.images[index].borderRadius,
-                            );
-                            this.ctx.strokeStyle = 'rgba(255,255,255,0)';
-                            this.ctx.stroke();
-                            this.ctx.clip();
-                            this.ctx.drawImage(
-                                item.path,
-                                config.images[index].x,
-                                config.images[index].y,
-                                config.images[index].width,
-                                config.images[index].height,
-                            );
-                        } else {
-                            this.ctx.drawImage(
-                                item.path,
-                                config.images[index].x,
-                                config.images[index].y,
-                                config.images[index].width,
-                                config.images[index].height,
-                            );
-                        }
-                        this.ctx.restore();
-                    });
-                    const { texts } = config;
-                    if (texts && texts.length > 0) {
-                        texts.forEach((item) => {
-                            this.drawText(item);
-                        });
-                        this.ctx.draw();
+            Promise.all(imageInfoArr).then((res) => {
+                res.forEach((item, index) => {
+                    this.ctx.save();
+                    if (config.images[index].borderRadius) {
+                        this.drawRadiusRect(
+                            config.images[index].x,
+                            config.images[index].y,
+                            config.images[index].width,
+                            config.images[index].height,
+                            config.images[index].borderRadius,
+                        );
+                        this.ctx.strokeStyle = 'rgba(255,255,255,0)';
+                        this.ctx.stroke();
+                        this.ctx.clip();
+                        this.ctx.drawImage(
+                            item.path,
+                            config.images[index].x,
+                            config.images[index].y,
+                            config.images[index].width,
+                            config.images[index].height,
+                        );
+                    } else {
+                        this.ctx.drawImage(
+                            item.path,
+                            config.images[index].x,
+                            config.images[index].y,
+                            config.images[index].width,
+                            config.images[index].height,
+                        );
                     }
+                    this.ctx.restore();
+                });
+                const { texts } = config;
+                if (texts && texts.length > 0) {
+                    texts.forEach((item) => {
+                        this.drawText(item);
+                    });
+                }
+                this.ctx.draw(false, () => {
                     setTimeout(() => {
-                        this.saveCanvas().then((res) => {
-                            resolve(res);
-                        });
+                        this.saveCanvas(config);
                     }, 300);
                 });
             });
@@ -277,30 +278,31 @@ export default {
             };
             api({ ...options, ...extras }, ...params);
         }),
-        saveCanvas() {
-            return new Promise((resolve) => {
-                uni.canvasToTempFilePath({
+        saveCanvas({ width, height }) {
+            const that = this;
+            uni.canvasToTempFilePath(
+                {
                     // 把画布转化成临时文件
                     x: 0,
                     y: 0,
-                    width: this.posterCommonConfig.width, // 截取的画布的宽
-                    height: this.posterCommonConfig.height, // 截取的画布的高
+                    width, // 截取的画布的宽
+                    height, // 截取的画布的高
+                    destWidth: width * that.ratio, // 保存图片的宽
+                    destHeight: height * that.ratio, // 保存图片的height
                     fileType: 'png', // 保存成的文件类型
                     quality: 1, // 图片质量
                     canvasId: 'firstCanvas', // 画布ID
                     success(res) {
-                        resolve(res.tempFilePath);
-                    },
-                    fail() {
                         uni.hideLoading();
-                        uni.showToast({
-                            title: '生成失败，稍后再试',
-                            duration: 2000,
-                            icon: 'none',
-                        });
+                        that.$emit('success', res.tempFilePath);
                     },
-                });
-            });
+                    fail(err) {
+                        uni.hideLoading();
+                        that.$emit('fail', err);
+                    },
+                },
+                this,
+            );
         },
     },
 };

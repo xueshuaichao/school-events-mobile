@@ -13,20 +13,29 @@
                 v-else
                 :class="['panel', isSelf ? 'is-self' : '']"
             >
+                <!-- 生成海报 -->
+                <posterh5
+                    ref="posterh5"
+                    :config="posterCommonConfig"
+                    :hide-loading="true"
+                    @success="onPosterSuccess"
+                    @fail="onPosterFail"
+                />
                 <!-- 我的海报 -->
                 <savePoster
                     v-if="showPosterMask"
-                    :image="posterImage"
+                    ref="savePoster"
+                    :image="myPoster"
                     @togglePoster="togglePoster"
                 />
                 <view
-                    v-if="Object.keys(detail).length"
+                    v-if="detail && Object.keys(detail).length"
                     class="user-detail"
                 >
                     <view
                         v-if="isSelf"
                         class="poster-btn"
-                        @clikc="togglePoster(true)"
+                        @click="getMyPoster()"
                     >
                         我的海报
                     </view>
@@ -205,16 +214,21 @@
                         TA还没有上传作品，去看看其他作品吧~
                     </view>
                 </view>
-                <navigator
+                <!-- <navigator
                     v-if="isSelf"
                     :url="
                         `/activity/pages/upload/modify?activity_id=${filter.activity_id}`
                     "
                 >
-                    <view class="goUpload">
-                        上传作品
-                    </view>
-                </navigator>
+
+                </navigator> -->
+
+                <view
+                    class="goUpload"
+                    @click="handleUpload"
+                >
+                    上传作品
+                </view>
             </view>
             <goHome :path="publicConfig.homePath" />
         </view>
@@ -229,7 +243,10 @@ import goHome from '../common/goHome.vue';
 import login from '../../../widgets/login/login.vue';
 import uniLoadMore from '../../../components/uni-load-more/uni-load-more.vue';
 import EventCraftCover from '../../../components/event-craft-cover/index.vue';
-import savePoster from '../brand/savePoster.vue';
+import config from '../../../common/config';
+import utils from '../../../common/utils';
+import posterh5 from './posterh5.vue';
+import savePoster from './savePoster.vue';
 
 export default {
     components: {
@@ -237,6 +254,7 @@ export default {
         uniLoadMore,
         EventCraftCover,
         login,
+        posterh5,
         savePoster,
     },
     filters: {
@@ -259,6 +277,10 @@ export default {
     },
     data() {
         return {
+            // #ifdef H5
+            isH5: true,
+            // #endif
+            status: 2,
             isLoading: true,
             userInfo: null,
             publicConfig: {},
@@ -283,7 +305,75 @@ export default {
             isSelf: false,
             detail: {},
             showPosterMask: false,
-            posterImage: '',
+            myPoster: '',
+            posterCommonConfig: {
+                pixelRatio: 2,
+                width: 569,
+                height: 820,
+                debug: false,
+                texts: [
+                    {
+                        text: '',
+                        height: 75,
+                        textAlign: 'center',
+                        y: 565,
+                        x: 182,
+                        fontSize: '30',
+                        color: '#fff',
+                        lineNum: 1,
+                        textOverflow: 'ellipsis',
+                        fontWeight: 'bold',
+                        zIndex: 10,
+                    },
+                    {
+                        text: '',
+                        width: 562,
+                        height: 60,
+                        textAlign: 'center',
+                        y: 652,
+                        x: 285,
+                        fontSize: '24',
+                        color: '#FFC953',
+                        lineNum: 1,
+                        textOverflow: 'ellipsis',
+                        zIndex: 100,
+                    },
+                ],
+                images: [
+                    {
+                        url:
+                            'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/brand_poster.jpg?x-oss-process=image/format,jpg/interlace,1/quality,Q_70/resize,m_pad,w_570,h_820',
+                        width: 570,
+                        height: 820,
+                        y: 0,
+                        x: 0,
+                    },
+                    {
+                        url: '',
+                        width: 370,
+                        height: 500,
+                        y: 169,
+                        x: 99,
+                        borderRadius: 55,
+                    },
+                    {
+                        url:
+                            'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/brand_poster_name.png',
+                        width: 528,
+                        height: 145,
+                        y: 527,
+                        x: 21,
+                    },
+                    {
+                        url: '',
+                        width: 122,
+                        height: 122,
+                        y: 678,
+                        x: 428,
+                        borderRadius: this.isH5 ? 0 : 122,
+                    },
+                ],
+            },
         };
     },
     computed: {
@@ -292,11 +382,165 @@ export default {
         },
     },
     methods: {
-        onLogin() {
-            this.getData();
+        onLogin({ user_info: userInfo }) {
+            this.userInfo = userInfo;
+            this.isLoading = false;
+            this.getQrCode();
+        },
+        uploadFile(tempFilePath) {
+            this.tempFilePath = tempFilePath;
+            uni.showToast({
+                icon: 'loading',
+                title: '上传中',
+                duration: 200000,
+            });
+            return new Promise((resolve, reject) => {
+                uni.uploadFile({
+                    url: `${config.host}/api/file/uploadfile`, // 仅为示例，非真实的接口地址
+                    filePath: tempFilePath,
+                    name: 'file',
+                    formData: {
+                        file_type: 'image',
+                    },
+                    header: {
+                        userKey: utils.getToken(),
+                    },
+                    success: (uploadFileRes) => {
+                        let resp;
+                        try {
+                            resp = JSON.parse(uploadFileRes.data);
+                        } catch (e) {
+                            uni.showToast({
+                                title: '服务器开小差了~',
+                                icon: 'none',
+                            });
+                            return reject(e);
+                        }
+                        if (resp.status === 200) {
+                            uni.hideToast();
+                            resolve(resp.data);
+                        } else {
+                            // fail
+                            uni.showToast({
+                                title: resp.msg,
+                                icon: 'none',
+                            });
+                            return reject(resp.msg);
+                        }
+                        return false;
+                    },
+                });
+            });
+        },
+        onPosterSuccess(detail) {
+            this.myPoster = detail;
+            this.submit(detail);
+            this.togglePoster(true);
+        },
+        onPosterFail(err) {
+            console.log(err);
+            uni.showToast({
+                title: '生成失败，稍后再试',
+                duration: 2000,
+                icon: 'none',
+            });
+        },
+        submit(path) {
+            this.uploadFile(path).then((data) => {
+                console.log(this.detail);
+                this.detail[this.isH5 ? 'poster_h5' : 'poster_mp'] = data.path;
+                api.post('/api/activity/enroll', {
+                    detail: this.detail,
+                    activity_id: 10,
+                });
+            });
+        },
+        getQrCode() {
+            if (this.isH5) {
+                this.getH5QrCode();
+            } else {
+                this.getMpQrCode();
+            }
+        },
+        getH5QrCode() {
+            this.posterCommonConfig.images[3].url = 'http://aitiaozhan.my.dev.wdyclass.com:1024/api/common/qrcode?url=http%3A%2F%2Faitiaozhan.my.dev.wdyclass.com%3A1024%2Factivity%2Fpages%2Fmywork%2Fucenter%3Factivity_id%3D10%26user_id%3D3433&w=122';
+        },
+        getMpQrCode() {
+            // 小程序二维码
+            const url = '/activity/pages/brand/ucenter';
+            const scene = `activity_id=10&user_id=${this.userInfo.user_id}`;
+            api.post('/api/weixin/getminiqrcode', {
+                path: url,
+                scene,
+            }).then(
+                ({ url }) => {
+                    if (url) {
+                        this.base64src(url, (res) => {
+                            this.posterCommonConfig.images[3].url = res;
+                        });
+                    } else {
+                        this.posterCommonConfig.images[3].url = 'http://aitiaozhan.oss-cn-beijing.aliyuncs.com/main-erweima.png';
+                    }
+                },
+                () => {
+                    this.posterCommonConfig.images[3].url = 'http://aitiaozhan.oss-cn-beijing.aliyuncs.com/main-erweima.png';
+                },
+            );
+        },
+        // base64转url
+        base64src(base64data, cb) {
+            // eslint-disable-next-line no-undef
+            const fsm = wx.getFileSystemManager();
+            // const FILE_BASE_NAME = 'tmp_base64src'; // 自定义文件名
+            const FILE_BASE_NAME = `tmp_base64src_${new Date() - 0}`; // 自定义文件名
+            const [, format, bodyData] = /data:image\/(\w+);base64,(.*)/.exec(base64data) || [];
+            if (!format) {
+                return new Error('ERROR_BASE64SRC_PARSE');
+            }
+            // eslint-disable-next-line no-undef
+            const filePath = `${wx.env.USER_DATA_PATH}/${FILE_BASE_NAME}.${format}`;
+            // eslint-disable-next-line no-undef
+            const buffer = wx.base64ToArrayBuffer(bodyData);
+            fsm.writeFile({
+                filePath,
+                data: buffer,
+                encoding: 'binary',
+                success() {
+                    cb(filePath);
+                },
+                fail() {
+                    return new Error('ERROR_BASE64SRC_WRITE');
+                },
+            });
+            return '';
+        },
+        getMyPoster() {
+            if (
+                (this.isH5 && !this.detail.poster_h5)
+                || (!this.isH5 && !this.detail.poster_mp)
+            ) {
+                this.createPoster();
+            } else {
+                this.togglePoster(true);
+            }
+        },
+        createPoster() {
+            const { image, name, slogan } = this.detail;
+            this.posterCommonConfig.images[1].url = image;
+            this.posterCommonConfig.texts[0].text = name;
+            this.posterCommonConfig.texts[1].text = slogan;
+            this.$refs.posterh5.createPoster(this.posterCommonConfig);
         },
         togglePoster(status) {
             this.showPosterMask = status;
+        },
+        activityStatus() {
+            // 1未开始，2进行中，3已结束
+            api.get('/api/activity/activitystatus', {
+                activity_id: this.activityId,
+            }).then((res) => {
+                this.status = res.status;
+            });
         },
         getData() {
             api.get('/api/user/info').then(
@@ -304,6 +548,7 @@ export default {
                     this.userInfo = res.user_info;
                     this.isLoading = false;
                     this.getWorkData();
+                    this.getQrCode();
                 },
                 () => {
                     this.isLoading = false;
@@ -469,6 +714,35 @@ export default {
                 }`,
             });
         },
+        handleUpload() {
+            if (this.isH5) {
+                return uni.showToast({
+                    title: '请在UP爱挑战小程序上传作品',
+                    icon: 'none',
+                });
+            }
+            if (this.status === 2) {
+                this.isLogin().then(
+                    () => {
+                        uni.navigateTo({
+                            url: `/activity/pages/upload/modify?activity_id=${this.activityId}`,
+                        });
+                    },
+                    () => {
+                        this.userInfo = null;
+                    },
+                );
+            } else {
+                uni.showToast({
+                    title:
+                        this.status === 1
+                            ? '活动未开始，敬请期待'
+                            : '活动已结束',
+                    icon: 'none',
+                });
+            }
+            return true;
+        },
     },
     onLoad(query) {
         const {
@@ -487,13 +761,21 @@ export default {
         this.filter.user_id = userId;
         this.getEnrollInfo().then((data) => {
             if (!Array.isArray(data)) {
-                this.detail = data.detail;
+                if (data.detail) {
+                    this.detail = data.detail;
+                    this.myPoster = data.detail[this.isH5 ? 'poster_h5' : 'poster_mp'];
+                }
                 this.isSelf = data.is_self;
-                this.posterImage = data.poster;
             }
             this.getData();
         });
+        this.activityStatus();
         this.initShare();
+    },
+    onShow() {
+        if (!this.isH5 && this.$refs.savePoster) {
+            this.$refs.savePoster.getAuthStatus();
+        }
     },
     onShareAppMessage(res) {
         if (res.from === 'button') {

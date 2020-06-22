@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 <template>
     <view>
         <view class="poster-img-mask">
@@ -12,8 +13,16 @@
                     />
                 </view>
                 <template v-if="isH5">
-                    <view class="brand-btn btn">
+                    <!-- <view class="brand-btn btn">
                         长按图片保存到本地
+                    </view> -->
+                    <view class="brand-btn btn">
+                        <a
+                            :href="image"
+                            download
+                        >
+                            保存图片
+                        </a>
                     </view>
                 </template>
                 <template v-else>
@@ -113,64 +122,71 @@ export default {
         handleSave() {
             uni.showLoading({ mask: true, title: '保存中' });
             const that = this;
-            // 图片保存到本地
             // eslint-disable-next-line no-undef
-            wx.saveImageToPhotosAlbum({
-                filePath: this.canvasImg,
-                success() {
-                    uni.hideLoading();
-                    that.prompt = false;
-                    that.showTicketMask = true;
-                    uni.showToast({
-                        title: '保存成功',
-                        icon: 'success',
-                        duration: 2000,
+            wx.getImageInfo({
+                src: that.image,
+                success(res) {
+                    // eslint-disable-next-line no-undef
+                    wx.saveImageToPhotosAlbum({
+                        filePath: res.path,
+                        success() {
+                            uni.hideLoading();
+                            that.prompt = false;
+                            that.showTicketMask = true;
+                            uni.showToast({
+                                title: '保存成功',
+                                icon: 'success',
+                                duration: 2000,
+                            });
+                        },
+                        fail(err) {
+                            console.log(err);
+                            uni.hideLoading();
+                            if (
+                                err.errMsg
+                                    === 'saveImageToPhotosAlbum:fail:auth denied'
+                                || err.errMsg
+                                    === 'saveImageToPhotosAlbum:fail auth deny'
+                            ) {
+                                // 这边微信做过调整，必须要在按钮中触发，因此需要在弹框回调中进行调用
+                                console.log('开始授权');
+                                // eslint-disable-next-line no-undef
+                                wx.openSetting({
+                                    success(settingdata) {
+                                        console.log('settingdata', settingdata);
+                                        if (
+                                            settingdata.authSetting[
+                                                'scope.writePhotosAlbum'
+                                            ]
+                                        ) {
+                                            // eslint-disable-next-line no-undef
+                                            wx.showModal({
+                                                title: '提示',
+                                                content:
+                                                    '获取权限成功,再次点击图片即可保存',
+                                                showCancel: false,
+                                            });
+                                        } else {
+                                            // eslint-disable-next-line no-undef
+                                            wx.showModal({
+                                                title: '提示',
+                                                content:
+                                                    '获取权限失败，将无法保存到相册哦~',
+                                                showCancel: false,
+                                            });
+                                        }
+                                    },
+                                    fail(failData) {
+                                        that.imgAuthBtn = true;
+                                        console.log('failData', failData);
+                                    },
+                                    complete(finishData) {
+                                        console.log('finishData', finishData);
+                                    },
+                                });
+                            }
+                        },
                     });
-                },
-                fail(err) {
-                    uni.hideLoading();
-                    if (
-                        err.errMsg
-                            === 'saveImageToPhotosAlbum:fail:auth denied'
-                        || err.errMsg === 'saveImageToPhotosAlbum:fail auth deny'
-                    ) {
-                        // 这边微信做过调整，必须要在按钮中触发，因此需要在弹框回调中进行调用
-                        console.log('开始授权');
-                        // eslint-disable-next-line no-undef
-                        wx.openSetting({
-                            success(settingdata) {
-                                console.log('settingdata', settingdata);
-                                if (
-                                    settingdata.authSetting[
-                                        'scope.writePhotosAlbum'
-                                    ]
-                                ) {
-                                    // eslint-disable-next-line no-undef
-                                    wx.showModal({
-                                        title: '提示',
-                                        content:
-                                            '获取权限成功,再次点击图片即可保存',
-                                        showCancel: false,
-                                    });
-                                } else {
-                                    // eslint-disable-next-line no-undef
-                                    wx.showModal({
-                                        title: '提示',
-                                        content:
-                                            '获取权限失败，将无法保存到相册哦~',
-                                        showCancel: false,
-                                    });
-                                }
-                            },
-                            fail(failData) {
-                                that.imgAuthBtn = true;
-                                console.log('failData', failData);
-                            },
-                            complete(finishData) {
-                                console.log('finishData', finishData);
-                            },
-                        });
-                    }
                 },
             });
         },
@@ -231,6 +247,10 @@ export default {
         font-size: 36upx;
         font-weight: 600;
         margin-top: 37upx;
+        a {
+            color: #fff;
+            text-decoration: none;
+        }
     }
     .close {
         display: block;

@@ -1,15 +1,6 @@
 <template>
     <div class="join-page">
         <view>
-            <view id="qrcode" />
-            <poster
-                v-if="!isH5"
-                id="poster"
-                :config="posterCommonConfig"
-                :hide-loading="true"
-                @success="onPosterSuccess"
-                @fail="onPosterFail"
-            />
             <posterh5
                 ref="posterh5"
                 :config="posterCommonConfig"
@@ -310,43 +301,29 @@ export default {
         };
     },
     created() {
-        // this.getUserInfo();
-    },
-    mounted() {
         this.getUserInfo();
     },
     methods: {
-        // crateQrcode() {
-        //     this.qr = new QRCode('qrcode', {
-        //         width: 120,
-        //         height: 120, // 高度
-        //         text: 'http://aitiaozhan.my.dev.wdyclass.com:1024/activity/pages/mywork/ucenter?activity_id=10&user_id=3433', // 二维码内容
-        //         background: '#f0f',
-        //         foreground: '#ff0',
-        //     });
-        //     // console.log(this.qr._oDrawing._elImage)
-        //     this.$nextTick(()=>{
-        //         const imgSrc = document.querySelector('#qrcode img');
-
-        //     })
-
-        // },
-        getPosterConfig(data) {
-            this.$emit('createPoster', data);
+        onLogin({ user_info: userInfo }) {
+            this.userInfo = userInfo;
+            this.getQrCode();
         },
-        onPosterSuccess({ detail }) {
+        onPosterSuccess(detail) {
             this.submit(detail);
         },
-        onPosterFail() {},
+        onPosterFail(err) {
+            console.log(err);
+            uni.showToast({
+                title: '生成失败，稍后再试',
+                duration: 2000,
+                icon: 'none',
+            });
+        },
         getUserInfo() {
             api.get('/api/user/info').then((res) => {
                 this.userInfo = res.user_info;
                 this.getQrCode();
             });
-        },
-        onLogin({ user_info: userInfo }) {
-            this.userInfo = userInfo;
-            this.getQrCode();
         },
         getQrCode() {
             if (this.isH5) {
@@ -356,30 +333,12 @@ export default {
             }
         },
         getH5QrCode() {
-            // h5二维码
-            // api.get('/api/common/qrcode', {
-            //     url: `${window.location.origin}/activity/pages/mywork/ucenter?activity_id=10&user_id=${3433}`,
-            //     w: 120,
-            // }).then((res) => {
-            //     console.log(res);
-            // const that = this;
-            // const img = new Image();
-            // img.src="http://aitiaozhan.my.dev.wdyclass.com:1024/api/common/qrcode?url=http%3A%2F%2Faitiaozhan.my.dev.wdyclass.com%3A1024%2Factivity%2Fpages%2Fmywork%2Fucenter%3Factivity_id%3D10%26user_id%3D3433&w=120";
-            // img.onload = function() {
-            //     that.posterCommonConfig.images[3].url = img.src;
-            // }
-            this.posterCommonConfig.images[3].url = 'http://aitiaozhan.my.dev.wdyclass.com:1024/api/common/qrcode?url=http%3A%2F%2Faitiaozhan.my.dev.wdyclass.com%3A1024%2Factivity%2Fpages%2Fmywork%2Fucenter%3Factivity_id%3D10%26user_id%3D3433&w=120';
-            //     this.posterCommonConfig.images[3].url = 'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/brand_poster_name.png';
-            // }, () => {
-            //     this.posterCommonConfig.images[3].url = 'http://aitiaozhan.oss-cn-beijing.aliyuncs.com/main-erweima.png';
-            // });
+            this.posterCommonConfig.images[3].url = 'http://aitiaozhan.my.dev.wdyclass.com:1024/api/common/qrcode?url=http%3A%2F%2Faitiaozhan.my.dev.wdyclass.com%3A1024%2Factivity%2Fpages%2Fmywork%2Fucenter%3Factivity_id%3D10%26user_id%3D3433&w=122';
         },
         getMpQrCode() {
             // 小程序二维码
-            const url = '/activity/pages/mywork/ucenter';
+            const url = '/activity/pages/brand/ucenter';
             const scene = `activity_id=10&user_id=${this.userInfo.user_id}`;
-            // const scene = `id=${this.id}`;
-            console.log(url, scene, 'url---scene---');
             api.post('/api/weixin/getminiqrcode', {
                 path: url,
                 scene,
@@ -496,37 +455,20 @@ export default {
             if (!this.lock) {
                 this.lock = true;
                 if (this.validate()) {
-                    this.posterCommonConfig.images[1].url = this.formData.image;
-                    this.posterCommonConfig.images[2].url = 'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/brand_poster_name.png';
-
-                    this.posterCommonConfig.texts[0].text = `我是${this.formData.name}`;
-                    this.posterCommonConfig.texts[1].text = `${this.formData.slogan}`;
-                    if (this.isH5) {
-                        this.$refs.posterh5
-                            .createPoster(this.posterCommonConfig)
-                            .then(
-                                (path) => {
-                                    this.submit(path);
-                                },
-                                (err) => {
-                                    uni.showToast({
-                                        title: err.message,
-                                        duration: 2000,
-                                    });
-                                },
-                            );
-                    } else {
-                        this.$nextTick(() => {
-                            this.poster = this.selectComponent('#poster');
-                            this.poster.onCreate(this.posterCommonConfig);
-                        });
-                    }
+                    this.createPoster();
                 }
             }
         },
+        createPoster() {
+            this.posterCommonConfig.images[1].url = this.formData.image;
+            this.posterCommonConfig.images[2].url = 'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/brand_poster_name.png';
+            this.posterCommonConfig.texts[0].text = `我是${this.formData.name}`;
+            this.posterCommonConfig.texts[1].text = `${this.formData.slogan}`;
+            this.$refs.posterh5.createPoster(this.posterCommonConfig);
+        },
         submit(path) {
             this.uploadFile(path).then((data) => {
-                this.formData.poster = data.path;
+                this.formData[this.isH5 ? 'poster_h5' : 'poster_mp'] = data.path;
                 api.post('/api/activity/enroll', {
                     detail: this.formData,
                     activity_id: 10,
@@ -544,7 +486,6 @@ export default {
                                     '/activity/pages/index?activity_id=10&is_first=1',
                             });
                         }, 2000);
-                        // this.resetData();
                     },
                     (err) => {
                         this.lock = false;

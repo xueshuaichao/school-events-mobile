@@ -170,7 +170,6 @@
         </view>
     </view>
 </template>
-
 <script>
 import api from '../../../common/api';
 import tipsList from './tips-list.vue';
@@ -253,6 +252,11 @@ export default {
             crouselList: [],
             setId: '',
         };
+    },
+    computed: {
+        workPath() {
+            return this.myWorkPath;
+        },
     },
     mounted() {
         uni.$on('onReachBottom', () => {
@@ -398,10 +402,10 @@ export default {
             api.isLogin({
                 fr: this.fr,
             }).then(() => {
-                console.log(this.myWorkPath);
+                console.log(this.workPath);
                 uni.navigateTo({
-                    url: this.myWorkPath
-                        ? this.myWorkPath
+                    url: this.workPath
+                        ? this.workPath
                         : `/activity/pages/mywork/mywork?type=myWork&activity_id=${this.filter.activity_id}`,
                 });
             });

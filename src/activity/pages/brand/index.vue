@@ -42,6 +42,17 @@
                             <view class="title">
                                 代言人权益
                             </view>
+                            <text
+                                class="prize-tips"
+                                @click="
+                                    showMask({
+                                        title: '权益说明',
+                                        type: 1
+                                    })
+                                "
+                            >
+                                更多权益
+                            </text>
                             <div class="item-box">
                                 <view
                                     v-for="(item, index) in prizeList"
@@ -117,6 +128,7 @@
                 v-if="maskPrompt"
                 class="mask"
                 :title="maskTitle"
+                :type="maskType"
                 @close="handleClose"
             />
         </template>
@@ -167,6 +179,7 @@ export default {
             posterImage: '',
             type: 0,
             maskTitle: '',
+            maskType: 0,
             prizeList: [
                 {
                     desc: ['为爱挑战代言！', '登世界吉尼斯舞台'],
@@ -199,7 +212,6 @@ export default {
         });
         this.fr = logger.getFr(this.publicConfig.log, {});
         this.activityStatus();
-        console.log(33333);
         this.isLogin().then(
             (res) => {
                 console.log(res);
@@ -209,6 +221,7 @@ export default {
             },
             () => {
                 this.canJoin = true;
+                this.loading = true;
             },
         );
         this.getProficients();
@@ -245,9 +258,10 @@ export default {
         getenrollinfo() {
             api.get('/api/activity/getenrollinfo', {
                 activity_id: this.activityId,
+                user_id: this.userInfo.user_id,
             }).then(
                 (data) => {
-                    this.myWorkPath = `/activity/pages/mywork/ucenter?activity_id=10&user_id=${this.userInfo.user_id}`;
+                    this.myWorkPath = `/activity/pages/brand/ucenter?activity_id=10&user_id=${this.userInfo.user_id}`;
                     if (Array.isArray(data) && data.length === 0) {
                         // 参赛
                         this.canJoin = true;
@@ -257,7 +271,9 @@ export default {
                         if (this.isFirstJoin === 1) {
                             // 首次参赛 要生成海报
                             this.showPosterMask = true;
-                            this.posterImage = data.detail.poster;
+                            this.posterImage = data.detail[
+                                this.isH5 ? 'poster_h5' : 'poster_mp'
+                            ];
                         }
                     }
                 },
@@ -279,7 +295,7 @@ export default {
         },
         showMask({ title, type }) {
             this.maskTitle = title;
-            this.type = type;
+            this.maskType = type;
             this.maskPrompt = true;
         },
         handleUpload() {
@@ -402,7 +418,7 @@ export default {
         .title {
             position: absolute;
             left: 50%;
-            top: -30upx;
+            top: -26upx;
             transform: translateX(-50%);
             color: #fff;
             font-size: 34upx;
@@ -411,10 +427,10 @@ export default {
             line-height: 60upx;
             text-align: center;
             padding: 0 35upx;
-            background: linear-gradient(
-                rgba(255, 142, 133, 1),
-                rgba(255, 87, 74, 1)
-            );
+            background-image: url(https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/brand_title_index.png);
+            background-size: 100% 100%;
+            background-position: center center;
+
             border-radius: 0 0 20upx 20upx;
         }
         .item-box {
@@ -430,6 +446,13 @@ export default {
         .item-box {
             font-size: 20upx;
             line-height: 30upx;
+        }
+        .prize-tips {
+            position: absolute;
+            top: 21upx;
+            right: 21upx;
+            color: #ffc466;
+            font-size: 26upx;
         }
         .item > image {
             width: 80upx;

@@ -1,8 +1,8 @@
 <template>
     <view class="modal-content">
-        <view class="modal-content-box prize">
+        <view :class="['modal-content-box', type === 1 ? 'rule' : '']">
             <view
-                v-if="1 < 0"
+                v-if="type === 0"
                 class="rule-content"
             >
                 <view class="box-bg">
@@ -36,9 +36,7 @@
                                         class="text-children"
                                     >
                                         <view>
-                                            <text class="dot" />{{
-                                                children
-                                            }}
+                                            <text class="dot" />{{ children }}
                                         </view>
                                     </view>
                                 </view>
@@ -77,39 +75,42 @@
                     </view>
                 </view>
             </view>
-            <view class="prize-content">
-                <!-- <view class="box-bg"> -->
-                <view class="box-scroll">
-                    <view class="title">
-                        {{ title }}
-                    </view>
-                    <view class="text-box">
-                        <view
-                            v-for="(item, index) in prizeList"
-                            :key="index"
-                        >
-                            <view class="tit">
-                                {{ item.title }}
-                            </view>
+            <view
+                v-else-if="type === 1"
+                class="prize-content"
+            >
+                <view class="box-bg">
+                    <view class="box-scroll">
+                        <view class="title">
+                            {{ title }}
+                        </view>
+                        <view class="text-box">
                             <view
-                                v-for="(list, k) in item.list"
-                                :key="k"
-                                class="text"
+                                v-for="(item, index) in prizeList"
+                                :key="index"
                             >
-                                <image
-                                    :src="
-                                        `https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/brand_prize_icon_${list.icon}.png`
-                                    "
-                                    mode=""
-                                />
-                                <view class="t">
-                                    {{ list.text }}
+                                <view class="tit-btn">
+                                    {{ item.title }}
+                                </view>
+                                <view
+                                    v-for="(list, k) in item.list"
+                                    :key="k"
+                                    class="text"
+                                >
+                                    <image
+                                        :src="
+                                            `https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/brand_prize_icon_${list.icon}.png`
+                                        "
+                                        mode=""
+                                    />
+                                    <view class="t">
+                                        {{ list.text }}
+                                    </view>
                                 </view>
                             </view>
                         </view>
                     </view>
                 </view>
-                <!-- </view> -->
             </view>
             <view
                 class="close"
@@ -130,6 +131,10 @@ export default {
         title: {
             type: String,
             default: '活动规则',
+        },
+        type: {
+            type: Number,
+            default: 0,
         },
     },
     data() {
@@ -328,10 +333,8 @@ export default {
         background-position: bottom center;
         background-size: 100% auto;
         background-repeat: no-repeat;
-        &.prize {
-            // height: 1068upx;
-            padding: 3upx;
-            background: #ff8d85;
+        &.rule {
+            background: #8f6fff;
         }
         .box-scroll {
             height: 100%;
@@ -436,14 +439,13 @@ export default {
         }
         .prize-content {
             height: 100%;
-            background-color: #8f6fff;
             text-align: center;
-            padding-top: 70upx;
             border-radius: 40upx;
             box-sizing: border-box;
-
+            .box-bg {
+                height: 100%;
+            }
             .tit {
-                background-color: #593fd5;
                 border-radius: 25upx;
                 height: 50upx;
                 line-height: 50upx;
@@ -462,13 +464,14 @@ export default {
                 font-size: 26upx;
                 line-height: 1;
                 & > image {
-                    width: 51upx;
-                    height: 55upx;
+                    width: 40upx;
+                    height: 40upx;
                     margin-right: 24upx;
                 }
                 .t {
                     width: 370upx;
                     text-align: left;
+                    color: #666;
                 }
             }
         }

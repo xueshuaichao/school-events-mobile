@@ -14,52 +14,11 @@
             <!-- my works -->
             <view
                 v-else
-                :class="[
-                    'panel',
-                    filter.activity_id === 10 ? 'is-ucenter' : ''
-                ]"
+                class="panel"
             >
                 <view
-                    v-if="type === 'myWork' && Object.keys(detail).length"
-                    class="user-detail"
-                >
-                    <view
-                        v-if="isSelf"
-                        class="poster-btn"
-                    >
-                        我的海报
-                    </view>
-                    <view class="user-image-info">
-                        <image
-                            class="user-image"
-                            :src="detail.image"
-                            mode=""
-                        />
-                        <view class="user-info">
-                            <view class="name">
-                                {{ detail.name }}
-                            </view>
-                            <view class="school">
-                                {{ detail.school_name }}
-                            </view>
-                            <view class="teacher">
-                                推荐老师：{{ detail.teacher }}
-                            </view>
-                            <view class="slogan">
-                                我的代言：{{ detail.slogan }}
-                            </view>
-                        </view>
-                    </view>
-                    <view class="user-desc">
-                        <view>自我介绍：</view>
-                        <view class="user-desc-text">
-                            {{ detail.desc }}
-                        </view>
-                    </view>
-                </view>
-                <view
-                    v-if="type === 'myWork' && isSelf"
-                    :class="['panel-hd', isSelf ? 'panel-hd-self' : '']"
+                    v-if="type === 'myWork'"
+                    class="panel-hd"
                 >
                     <text
                         class="panel-title"
@@ -84,7 +43,7 @@
                     </text>
                 </view>
                 <view
-                    v-else-if="type === 'seach'"
+                    v-else
                     class="search-box"
                 >
                     <button
@@ -304,6 +263,9 @@ export default {
     },
     data() {
         return {
+            // #ifdef H5
+            isH5: true,
+            // #endif
             isLoading: true,
             userInfo: null,
             publicConfig: {},
@@ -327,8 +289,6 @@ export default {
             shareDesc: '',
             title: '',
             userId: '',
-            isSelf: false,
-            detail: {},
         };
     },
     computed: {
@@ -345,12 +305,6 @@ export default {
                 (res) => {
                     this.userInfo = res.user_info;
                     this.isLoading = false;
-                    if (
-                        this.type === 'myWork'
-                        && this.filter.activity_id === 10
-                    ) {
-                        this.getEnrollInfo();
-                    }
                 },
                 () => {
                     this.isLoading = false;
@@ -426,17 +380,6 @@ export default {
                     },
                     () => {},
                 );
-        },
-        getEnrollInfo() {
-            api.get('/api/activity/getenrollinfo', {
-                activity_id: this.filter.activity_id,
-                user_id: this.userId,
-            }).then((data) => {
-                if (!Array.isArray(data)) {
-                    this.detail = data.detail;
-                    this.isSelf = data.is_self;
-                }
-            });
         },
         searchWorkData(title) {
             api.post('/api/activity/resourcelist', this.filter).then(
@@ -616,7 +559,6 @@ export default {
                 this.isLoading = false;
                 if (type === 'myWork' && activityId === 10) {
                     this.userId = this.userInfo.user_id;
-                    this.getEnrollInfo();
                 }
             },
             () => {
@@ -936,9 +878,6 @@ export default {
     }
     .panel {
         padding: 96upx 30upx 0;
-        &.is-ucenter {
-            padding-top: 0;
-        }
         &.no-padding {
             padding-top: 10upx;
         }
@@ -957,12 +896,6 @@ export default {
         z-index: 10;
         background-color: #a1debe;
         padding: 20upx 0;
-        &.panel-hd-self {
-            position: static;
-            padding: 0upx 0 30upx;
-            margin: 0;
-            height: 68upx;
-        }
     }
 
     .panel .panel-hd .panel-title {
