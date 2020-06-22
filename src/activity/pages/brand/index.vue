@@ -31,7 +31,7 @@
                     <template v-slot:main-data>
                         <!-- 复赛名单 -->
                         <view
-                            v-if="!rosterData.text"
+                            v-if="rosterData.text"
                             class="roster-list"
                         >
                             <view
@@ -42,9 +42,7 @@
                                     src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/brand_list_icon.png"
                                 />
                                 <text>
-                                    {{
-                                        rosterData.text || "复赛名单公布：7月28日"
-                                    }}
+                                    {{ rosterData.text }}
                                 </text>
                             </view>
                         </view>

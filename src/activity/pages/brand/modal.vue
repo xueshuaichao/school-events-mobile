@@ -57,7 +57,7 @@
                                         {{ list }}
                                     </view>
                                     <view class="tips">
-                                        {{ item.tips }}
+                                        {{ item.tips || "" }}
                                     </view>
                                 </view>
                             </view>
