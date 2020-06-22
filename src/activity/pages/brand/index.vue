@@ -19,7 +19,6 @@
             />
             <view>
                 <indexPage
-                    v-if="loading"
                     :index-config="indexConfig"
                     :public-config="publicConfig"
                     :is-stop-scroll="false"
@@ -28,13 +27,25 @@
                     :hide-button="true"
                     :my-work-path="myWorkPath"
                     @showMask="showMask"
-                    @voteCallBack="voteCallBack"
                 >
                     <template v-slot:main-data>
                         <!-- 复赛名单 -->
-                        <view class="roster-list">
-                            <view class="btn">
-                                <i class="icon icon-lb" />复赛名单
+                        <view
+                            v-if="!rosterData.text"
+                            class="roster-list"
+                        >
+                            <view
+                                class="btn"
+                                @click="jumpRosterList(rosterData.click)"
+                            >
+                                <image
+                                    src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/brand_list_icon.png"
+                                />
+                                <text>
+                                    {{
+                                        rosterData.text || "复赛名单公布：7月28日"
+                                    }}
+                                </text>
                             </view>
                         </view>
                         <!-- 代言人权益 -->
@@ -155,10 +166,6 @@ export default {
             type: Number,
             default: 10,
         },
-        isFirstJoin: {
-            type: Number,
-            default: 0,
-        },
     },
     data() {
         return {
@@ -170,13 +177,13 @@ export default {
             // #endif
             status: 2,
             lock: false,
-            loading: false,
             publicConfig: {},
             indexConfig: {},
             fr: 'dyrhd',
             maskPrompt: false,
             showPosterMask: false,
             posterImage: '',
+            rosterData: {},
             type: 0,
             maskTitle: '',
             maskType: 0,
@@ -211,29 +218,48 @@ export default {
             page: 'indexConfig',
         });
         this.fr = logger.getFr(this.publicConfig.log, {});
+        this.getStatus();
         this.activityStatus();
         this.isLogin().then(
             (res) => {
-                console.log(res);
                 this.userInfo = res.user_info;
-                this.loading = true;
+                this.myWorkPath = `/activity/pages/brand/ucenter?activity_id=10&user_id=${this.userInfo.user_id}`;
                 this.getenrollinfo();
             },
             () => {
                 this.canJoin = true;
-                this.loading = true;
             },
         );
         this.getProficients();
     },
     methods: {
         unload() {},
+        onshow() {
+            this.isLogin().then(
+                (res) => {
+                    this.userInfo = res.user_info;
+                    this.myWorkPath = `/activity/pages/brand/ucenter?activity_id=10&user_id=${this.userInfo.user_id}`;
+                    this.getenrollinfo();
+                },
+                () => {
+                    this.canJoin = true;
+                },
+            );
+        },
+        isLogin() {
+            return api.get('/api/user/info');
+        },
+        onLogin({ user_info: userInfo }) {
+            this.userInfo = userInfo;
+            this.myWorkPath = `/activity/pages/brand/ucenter?activity_id=10&user_id=${this.userInfo.user_id}`;
+            this.getenrollinfo();
+        },
         togglePoster(status) {
             this.showPosterMask = status;
         },
         getProficients() {
+            // 专家列表
             api.get('/api/activity/proficients').then((data) => {
-                console.log(data);
                 this.expertList = data;
             });
         },
@@ -248,28 +274,22 @@ export default {
                 this.status = res.status;
             });
         },
-        isLogin() {
-            return api.get('/api/user/info');
-        },
-        onLogin({ user_info: userInfo }) {
-            this.userInfo = userInfo;
-            this.getenrollinfo();
-        },
         getenrollinfo() {
             api.get('/api/activity/getenrollinfo', {
                 activity_id: this.activityId,
                 user_id: this.userInfo.user_id,
             }).then(
                 (data) => {
-                    this.myWorkPath = `/activity/pages/brand/ucenter?activity_id=10&user_id=${this.userInfo.user_id}`;
                     if (Array.isArray(data) && data.length === 0) {
                         // 参赛
                         this.canJoin = true;
                     } else {
                         // 上传作品
                         this.canJoin = false;
-                        if (this.isFirstJoin === 1) {
+                        const isFirstJoin = uni.getStorageSync('brand_first');
+                        if (isFirstJoin) {
                             // 首次参赛 要生成海报
+                            uni.removeStorageSync('brand_first');
                             this.showPosterMask = true;
                             this.posterImage = data.detail[
                                 this.isH5 ? 'poster_h5' : 'poster_mp'
@@ -282,21 +302,27 @@ export default {
                 },
             );
         },
-        handleClose() {
-            this.maskPrompt = false;
-        },
-        getPosterConfig(data) {
-            this.$emit('createPoster', data);
-        },
-        jumpSearch(item) {
-            uni.navigateTo({
-                url: `/pages/activity-pages/mywork/mywork?type=search&activity_id=${this.activityId}&user_id=${item.user_id}`,
-            });
-        },
         showMask({ title, type }) {
             this.maskTitle = title;
             this.maskType = type;
             this.maskPrompt = true;
+        },
+        handleClose() {
+            // 关闭弹窗
+            this.maskPrompt = false;
+        },
+        getStatus() {
+            // 获取按钮状态
+            api.get('/api/activity/buttonstatus').then((data) => {
+                console.log(data);
+            });
+        },
+        jumpRosterList(status) {
+            if (status) {
+                uni.navigateTo({
+                    url: '/pages/rematch/list',
+                });
+            }
         },
         handleUpload() {
             if (this.isH5 && this.canJoin === false) {
@@ -392,8 +418,7 @@ export default {
         text-align: center;
         margin-bottom: 64upx;
         .btn {
-            display: inline-block;
-            padding: 0 95upx 0 155upx;
+            display: flex;
             background: linear-gradient(
                 rgba(255, 142, 133, 1),
                 rgba(255, 87, 74, 1)
@@ -406,6 +431,16 @@ export default {
             font-weight: bold;
             height: 66upx;
             line-height: 66upx;
+            justify-content: center;
+            align-items: center;
+            min-width: 370upx;
+            max-width: 390upx;
+            margin: 0 auto;
+        }
+        image {
+            width: 48upx;
+            height: 48upx;
+            vertical-align: middle;
         }
     }
     .prize-box,
@@ -472,7 +507,6 @@ export default {
             width: 160upx;
             height: 160upx;
             border-radius: 50%;
-            background-color: #f00;
         }
         .expert-title {
             overflow: hidden;
@@ -480,6 +514,7 @@ export default {
             display: -webkit-box;
             -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
+            word-break: break-all;
         }
     }
 }

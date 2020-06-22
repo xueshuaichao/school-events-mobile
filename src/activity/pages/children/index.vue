@@ -243,6 +243,11 @@
                             </view>
                         </view>
                     </view>
+                    <!-- 跑马灯 -->
+                    <tipsList
+                        :text="`${activityId === 9 ? '抽中了' : '发布了'}`"
+                        :crousel-list="crouselList"
+                    />
                 </template>
             </indexPage>
         </view>
@@ -303,6 +308,7 @@
 <script>
 import packetRain from '../../../components/packet-rain/index.vue';
 import indexPage from '../common/index.vue';
+import tipsList from '../common/tips-list.vue';
 import share from '../../../common/share';
 import logger from '../../../common/logger';
 import maskBox from '../common/mask.vue';
@@ -311,6 +317,7 @@ import api from '../../../common/api';
 export default {
     components: {
         indexPage,
+        tipsList,
         packetRain,
         maskBox,
     },
@@ -326,6 +333,7 @@ export default {
             loading: false,
             publicConfig: {},
             indexConfig: {},
+            crouselList: [],
             fr: '',
             activityId: '',
             hideIndex: -1,
@@ -440,7 +448,7 @@ export default {
         if (!this.isH5) {
             this.getAuthStatus();
         }
-        // this.getLotteryNum();
+        this.getCrouselList();
     },
     onUnload() {
         if (this.showPacketRain) {
@@ -453,6 +461,31 @@ export default {
         this.ctx = uni.createCanvasContext('firstCanvas');
     },
     methods: {
+        getCrouselList() {
+            this.postCrouselList();
+            this.setId = setInterval(() => {
+                this.postCrouselList();
+            }, 1000 * 60 * 5);
+        },
+        postCrouselList() {
+            if (this.activityId === 9) {
+                // 六一活动显示 中奖信息
+                api.post('/api/activity/drawlist', {
+                    page_num: 1,
+                    page_size: 10,
+                }).then(({ list }) => {
+                    this.crouselList = list;
+                });
+            } else {
+                api.post('/api/activity/resourcelist', {
+                    activity_id: this.activityId,
+                    page_num: 1,
+                    page_size: 10,
+                }).then(({ list }) => {
+                    this.crouselList = list;
+                });
+            }
+        },
         luckyDraw() {
             // 中途退出 消耗次数
             api.get('/api/activity/luckydraw', {
@@ -1091,11 +1124,6 @@ export default {
                 title: this.title,
                 desc,
                 thumbnail: `${this.publicConfig.shareConfig.image}?x-oss-process=image/format,png/interlace,1/quality,Q_80/resize,m_pad,h_100`,
-            });
-        },
-        jumpSearch(item) {
-            uni.navigateTo({
-                url: `/activity/pages/mywork/mywork?type=search&activity_id=${this.activityId}&user_id=${item.user_id}`,
             });
         },
         onReachBottom() {

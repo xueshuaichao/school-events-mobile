@@ -159,7 +159,7 @@
                             v-else
                             class="work-info"
                         >
-                            <view class="text-two-line">
+                            <view class="text-two-line resource-name">
                                 {{ item.resource_name }}
                             </view>
                             <view class="media-name">
@@ -762,6 +762,7 @@ export default {
             margin-bottom: 15upx;
             &.text-two-line {
                 height: 63upx;
+                word-break: break-all;
             }
         }
         .media-time {

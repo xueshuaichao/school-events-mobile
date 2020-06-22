@@ -35,13 +35,6 @@
                 </view>
                 <view class="main-content">
                     <slot name="main-data" />
-                    <!-- 跑马灯 -->
-                    <tipsList
-                        :text="
-                            `${filter.activity_id === 9 ? '抽中了' : '发布了'}`
-                        "
-                        :crousel-list="crouselList"
-                    />
                     <!-- work show -->
                     <view class="menu-list">
                         <view class="cansai-text">
@@ -107,10 +100,16 @@
                                     :bg-color="publicConfig.primaryBgColor"
                                     @click.native="viewDetail(item, index)"
                                 />
-
+                                <view
+                                    v-if="publicConfig.activityId === 10"
+                                    class="media-name create-by text-one-line"
+                                >
+                                    {{ `${item.create_by}` }}
+                                </view>
                                 <view class="media-name text-one-line">
                                     {{ `${item.resource_name}` }}
                                 </view>
+
                                 <text class="vote-num">
                                     {{ item.ticket }}赞
                                 </text>
@@ -172,7 +171,7 @@
 </template>
 <script>
 import api from '../../../common/api';
-import tipsList from './tips-list.vue';
+
 import uniLoadMore from '../../../components/uni-load-more/uni-load-more.vue';
 import EventCraftCover from '../../../components/event-craft-cover/index.vue';
 
@@ -187,7 +186,6 @@ export default {
     },
     components: {
         uniLoadMore,
-        tipsList,
         EventCraftCover,
     },
     props: {
@@ -272,7 +270,6 @@ export default {
         if (!this.hideButton) {
             this.activityStatus();
         }
-        this.getCrouselList();
     },
     onShow() {},
     onHide() {
@@ -282,31 +279,6 @@ export default {
         clearInterval(this.setId);
     },
     methods: {
-        getCrouselList() {
-            this.postCrouselList();
-            this.setId = setInterval(() => {
-                this.postCrouselList();
-            }, 1000 * 60 * 5);
-        },
-        postCrouselList() {
-            if (this.filter.activity_id === 9) {
-                // 六一活动显示 中奖信息
-                api.post('/api/activity/drawlist', {
-                    page_num: 1,
-                    page_size: 10,
-                }).then(({ list }) => {
-                    this.crouselList = list;
-                });
-            } else {
-                api.post('/api/activity/resourcelist', {
-                    activity_id: this.filter.activity_id,
-                    page_num: 1,
-                    page_size: 10,
-                }).then(({ list }) => {
-                    this.crouselList = list;
-                });
-            }
-        },
         getData(title) {
             api.post('/api/activity/resourcelist', this.filter).then(
                 ({ list, total }) => {
@@ -402,7 +374,6 @@ export default {
             api.isLogin({
                 fr: this.fr,
             }).then(() => {
-                console.log(this.workPath);
                 uni.navigateTo({
                     url: this.workPath
                         ? this.workPath

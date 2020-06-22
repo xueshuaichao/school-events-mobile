@@ -162,9 +162,18 @@
         background-color: #fff;
         box-shadow: inset 0px 0px 24upx 0px rgba(152, 130, 255, 1);
         .work-info {
-            color: #343434;
+            .resource-name {
+                color: #343434;
+                font-size: 28upx;
+                margin-bottom: 29upx;
+                word-break: break-all;
+            }
+            .media-name {
+                color: #666;
+            }
             .media-time {
                 color: #666;
+                display: none;
             }
             .vote-num {
                 color: #9882ff;
@@ -182,15 +191,15 @@
         color: #fff;
         background-color: #ff685c;
     }
-    .event-craft-cover .tag {
+    /deep/ .event-craft-cover .tag {
         background: #ffe79c;
         color: #583ed4;
     }
-    .goHome {
+    /deep/ .goHome {
         color: #583ed4;
         &::before {
-            border-top: 1rpx solid #583ed4 !important;
-            border-right: 1rpx solid #583ed4 !important;
+            border-top: 1rpx solid #583ed4;
+            border-right: 1rpx solid #583ed4;
         }
     }
 }

@@ -4,9 +4,7 @@
             v-if="activityId === 10"
             ref="myChildren"
             :activity-id="activityId"
-            :is-first-join="isFirstJoin"
             :canvas-image="canvasImg"
-            @createPoster="createPoster"
         />
         <poster
             v-if="!isH5 && showPoster"
@@ -52,43 +50,9 @@ export default {
                 images: [],
             },
             posterWin: true,
-            isFirstJoin: false,
         };
     },
     methods: {
-        createPoster(config) {
-            this.posterCommonConfig = config;
-            this.showPoster = true;
-            if (this.isH5) {
-                this.h5Poster();
-            } else {
-                this.poster();
-            }
-        },
-        poster() {
-            this.$nextTick(() => {
-                this.poster = this.selectComponent('#poster');
-                this.poster.onCreate(this.posterCommonConfig);
-            });
-        },
-        h5Poster() {
-            this.$refs.myChildren.onH5Create(this.posterCommonConfig);
-        },
-        getPosterImageInfo() {
-            const wxGetImageInfo = this.promisify(uni.getImageInfo);
-            const config = this.posterCommonConfig;
-            console.log(
-                config.images.map(item => wxGetImageInfo({
-                    src: item.url, // 背景图片
-                })),
-            );
-        },
-        onPosterSuccess({ detail }) {
-            this.$refs.myChildren.onPosterSuccess(detail);
-        },
-        onPosterFail(err) {
-            this.$refs.myChildren.onPosterFail(err);
-        },
         initShare() {
             const titleList = this.isH5
                 ? this.publicConfig.shareConfig.h5Title
@@ -108,11 +72,16 @@ export default {
         },
     },
     onUnload() {
-        console.log(this.$refs.myChildren);
-        this.$refs.myChildren.unload();
+        if (this.$refs.myChildren) {
+            this.$refs.myChildren.unload();
+        }
+    },
+    onShow() {
+        if (this.$refs.myChildren) {
+            this.$refs.myChildren.onshow();
+        }
     },
     onLoad(params) {
-        this.isFirstJoin = Number(params.is_first);
         this.activityId = Number(params.activity_id);
         const title = this.activityName.filter(v => v.id === this.activityId)[0].title
             || '活动';
