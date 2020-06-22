@@ -110,7 +110,9 @@
                                 class="choose-image-box"
                                 @tap="chooseImage()"
                             >
-                                <image src="" />
+                                <image
+                                    src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/brand_upload_bg.png"
+                                />
                             </view>
                         </view>
 
@@ -455,6 +457,7 @@ export default {
             if (!this.lock) {
                 this.lock = true;
                 if (this.validate()) {
+                    uni.showLoading();
                     this.createPoster();
                 }
             }
@@ -479,11 +482,10 @@ export default {
                             title: '提交成功',
                             icon: 'success',
                         });
-
+                        uni.setStorageSync('brand_first', true);
                         setTimeout(() => {
                             uni.navigateTo({
-                                url:
-                                    '/activity/pages/index?activity_id=10&is_first=1',
+                                url: '/activity/pages/index?activity_id=10',
                             });
                         }, 2000);
                     },
@@ -611,6 +613,14 @@ export default {
                     width: 100%;
                     height: 100%;
                     border-radius: 20upx;
+                }
+                .choose-image-box {
+                    image {
+                        width: 79upx;
+                        height: 57upx;
+                        margin: 93upx auto 0;
+                        display: block;
+                    }
                 }
             }
             .tips-box {

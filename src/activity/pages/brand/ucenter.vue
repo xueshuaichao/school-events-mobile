@@ -9,227 +9,241 @@
                 @login="onLogin"
             />
             <!-- my works -->
-            <view
-                v-else
-                :class="['panel', isSelf ? 'is-self' : '']"
-            >
-                <!-- 生成海报 -->
-                <posterh5
-                    ref="posterh5"
-                    :config="posterCommonConfig"
-                    :hide-loading="true"
-                    @success="onPosterSuccess"
-                    @fail="onPosterFail"
-                />
-                <!-- 我的海报 -->
-                <savePoster
-                    v-if="showPosterMask"
-                    ref="savePoster"
-                    :image="myPoster"
-                    @togglePoster="togglePoster"
-                />
+            <template v-else>
+                <!-- 未参与活动 -->
                 <view
-                    v-if="detail && Object.keys(detail).length"
-                    class="user-detail"
-                >
-                    <view
-                        v-if="isSelf"
-                        class="poster-btn"
-                        @click="getMyPoster()"
-                    >
-                        我的海报
-                    </view>
-                    <view class="user-image-info">
-                        <view class="user-image">
-                            <image :src="detail.image" />
-                        </view>
-                        <view class="user-info">
-                            <view class="name">
-                                {{ detail.name }}
-                            </view>
-                            <view class="school">
-                                {{ detail.school_name }}
-                            </view>
-                            <view class="teacher">
-                                推荐老师：{{ detail.teacher }}
-                            </view>
-                            <view class="slogan">
-                                我的代言：{{ detail.slogan }}
-                            </view>
-                        </view>
-                    </view>
-                    <view class="user-desc">
-                        <view>自我介绍：</view>
-                        <view class="user-desc-text">
-                            {{ detail.desc }}
-                        </view>
-                    </view>
-                    <view
-                        v-if="!isSelf"
-                        class="user-tips"
-                    >
-                        记得为我点赞哦~
-                    </view>
-                </view>
-                <view
-                    v-if="isSelf"
-                    class="panel-hd"
-                >
-                    <text
-                        class="panel-title"
-                        :class="{ active: tabActiveIndex === 2 }"
-                        @click="setTabActive(2)"
-                    >
-                        已通过({{ allNum.pass || 0 }})
-                    </text>
-                    <text
-                        class="panel-title"
-                        :class="{ active: tabActiveIndex === 1 }"
-                        @click="setTabActive(1)"
-                    >
-                        待审核({{ allNum.wait || 0 }})
-                    </text>
-                    <text
-                        class="panel-title"
-                        :class="{ active: tabActiveIndex === 3 }"
-                        @click="setTabActive(3)"
-                    >
-                        未通过({{ allNum.no_pass || 0 }})
-                    </text>
-                </view>
-                <view
-                    v-if="total > 0"
-                    :class="['media-list', isSelf ? '' : 'media-box']"
-                >
-                    <view
-                        v-for="(item, index) in dataList"
-                        :key="item.id"
-                        :class="['media-content', isSelf ? 'self' : '']"
-                    >
-                        <event-craft-cover
-                            :info="item"
-                            :media-icon="true"
-                            :like-icon="false"
-                            :best-icon="false"
-                            :bg-color="publicConfig.primaryBgColor"
-                            @click.native="viewDetail(item, index)"
-                        />
-                        <view
-                            v-if="isSelf === true"
-                            class="work-info"
-                        >
-                            <view class="media-name text-two-line">
-                                {{ ` ${item.resource_name}` }}
-                            </view>
-
-                            <view class="media-time">
-                                {{ item.created_at }}
-                            </view>
-                            <view class="btn">
-                                <text
-                                    v-if="Number(tabActiveIndex) === 2"
-                                    class="btn-item"
-                                    @click="viewDetail(item, index)"
-                                >
-                                    查看
-                                </text>
-                                <text
-                                    v-if="Number(tabActiveIndex) === 3"
-                                    class="btn-item big"
-                                    @click="reason(item)"
-                                >
-                                    驳回原因
-                                </text>
-                                <text
-                                    v-if="Number(tabActiveIndex) === 3"
-                                    class="btn-item"
-                                    @click="modifyItem(item)"
-                                >
-                                    编辑
-                                </text>
-                                <text
-                                    v-if="Number(tabActiveIndex) > 1"
-                                    class="btn-item"
-                                    @click="onConfirmDelete(item)"
-                                >
-                                    删除
-                                </text>
-                            </view>
-                        </view>
-                        <view
-                            v-else
-                            class="work-info"
-                        >
-                            <view class="media-name text-one-line">
-                                {{ `${item.resource_name}` }}
-                            </view>
-                            <text class="vote-num">
-                                {{ item.ticket }}赞
-                            </text>
-                            <view
-                                class="vote"
-                                @click="handleVote(item)"
-                            >
-                                <image
-                                    class="like-icon"
-                                    :src="
-                                        `https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/${publicConfig.activityName}_like_icon.png`
-                                    "
-                                />
-                                点赞
-                            </view>
-                        </view>
-                    </view>
-                    <uni-load-more
-                        class="loadMore"
-                        :status="loadMoreStatus"
-                        :content-text="{
-                            contentdown: '上拉显示更多',
-                            contentrefresh: '正在加载...',
-                            contentnomore: '———— 已经到底了~ ————'
-                        }"
-                        color="#fff"
-                    />
-                </view>
-                <view
-                    v-show="myWorkEmpty"
-                    class="work-empty"
+                    v-if="!detail || !Object.keys(detail).length"
+                    class="no-join"
                 >
                     <image
                         :src="
                             `https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/${publicConfig.activityName}_empty_work.png`
                         "
                     />
-                    <view v-if="isSelf">
-                        <view v-if="allTotal === 0">
-                            <view>
-                                您还没有上传作品<br>上传作品才能赢取代言人权益哦～
+                    <view
+                        class="text"
+                    >
+                        您还没有参与活动<br>快来报名参赛，赢取代言人权益吧！
+                    </view>
+                    <navigator :url="`/activity/pages/brand/join`">
+                        <view class="join-btn">
+                            报名参赛
+                        </view>
+                    </navigator>
+                </view>
+                <!-- 已经参与活动 -->
+                <view
+                    v-else
+                    :class="['panel', isSelf ? 'is-self' : '']"
+                >
+                    <!-- 生成海报 -->
+                    <posterh5
+                        ref="posterh5"
+                        :config="posterCommonConfig"
+                        :hide-loading="true"
+                        @success="onPosterSuccess"
+                        @fail="onPosterFail"
+                    />
+                    <!-- 我的海报 -->
+                    <savePoster
+                        v-if="showPosterMask"
+                        ref="savePoster"
+                        :image="myPoster"
+                        @togglePoster="togglePoster"
+                    />
+                    <view class="user-detail">
+                        <view
+                            v-if="isSelf"
+                            class="poster-btn"
+                            @click="getMyPoster()"
+                        >
+                            我的海报
+                        </view>
+                        <view class="user-image-info">
+                            <view class="user-image">
+                                <image :src="detail.image" />
+                            </view>
+                            <view class="user-info">
+                                <view class="name">
+                                    {{ detail.name }}
+                                </view>
+                                <view class="school">
+                                    {{ detail.school_name }}
+                                </view>
+                                <view class="teacher">
+                                    推荐老师：{{ detail.teacher }}
+                                </view>
+                                <view class="slogan">
+                                    我的代言：{{ detail.slogan }}
+                                </view>
+                            </view>
+                        </view>
+                        <view class="user-desc">
+                            <view>自我介绍：</view>
+                            <view class="user-desc-text">
+                                {{ detail.desc }}
+                            </view>
+                        </view>
+                        <view
+                            v-if="!isSelf"
+                            class="user-tips"
+                        >
+                            记得为我点赞哦~
+                        </view>
+                    </view>
+                    <view
+                        v-if="isSelf"
+                        class="panel-hd"
+                    >
+                        <text
+                            class="panel-title"
+                            :class="{ active: tabActiveIndex === 2 }"
+                            @click="setTabActive(2)"
+                        >
+                            已通过({{ allNum.pass || 0 }})
+                        </text>
+                        <text
+                            class="panel-title"
+                            :class="{ active: tabActiveIndex === 1 }"
+                            @click="setTabActive(1)"
+                        >
+                            待审核({{ allNum.wait || 0 }})
+                        </text>
+                        <text
+                            class="panel-title"
+                            :class="{ active: tabActiveIndex === 3 }"
+                            @click="setTabActive(3)"
+                        >
+                            未通过({{ allNum.no_pass || 0 }})
+                        </text>
+                    </view>
+                    <view
+                        v-if="total > 0"
+                        :class="['media-list', isSelf ? '' : 'media-box']"
+                    >
+                        <view
+                            v-for="(item, index) in dataList"
+                            :key="item.id"
+                            :class="['media-content', isSelf ? 'self' : '']"
+                        >
+                            <event-craft-cover
+                                :info="item"
+                                :media-icon="true"
+                                :like-icon="false"
+                                :best-icon="false"
+                                :bg-color="publicConfig.primaryBgColor"
+                                @click.native="viewDetail(item, index)"
+                            />
+                            <view
+                                v-if="isSelf === true"
+                                class="work-info"
+                            >
+                                <view class="media-name text-two-line">
+                                    {{ ` ${item.resource_name}` }}
+                                </view>
+
+                                <view class="media-time">
+                                    {{ item.created_at }}
+                                </view>
+                                <view class="btn">
+                                    <text
+                                        v-if="Number(tabActiveIndex) === 2"
+                                        class="btn-item"
+                                        @click="viewDetail(item, index)"
+                                    >
+                                        查看
+                                    </text>
+                                    <text
+                                        v-if="Number(tabActiveIndex) === 3"
+                                        class="btn-item big"
+                                        @click="reason(item)"
+                                    >
+                                        驳回原因
+                                    </text>
+                                    <text
+                                        v-if="Number(tabActiveIndex) === 3"
+                                        class="btn-item"
+                                        @click="modifyItem(item)"
+                                    >
+                                        编辑
+                                    </text>
+                                    <text
+                                        v-if="Number(tabActiveIndex) > 1"
+                                        class="btn-item"
+                                        @click="onConfirmDelete(item)"
+                                    >
+                                        删除
+                                    </text>
+                                </view>
+                            </view>
+                            <view
+                                v-else
+                                class="work-info"
+                            >
+                                <view class="media-name text-one-line">
+                                    {{ `${item.resource_name}` }}
+                                </view>
+                                <text class="vote-num">
+                                    {{ item.ticket }}赞
+                                </text>
+                                <view
+                                    class="vote"
+                                    @click="handleVote(item)"
+                                >
+                                    <image
+                                        class="like-icon"
+                                        :src="
+                                            `https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/${publicConfig.activityName}_like_icon.png`
+                                        "
+                                    />
+                                    点赞
+                                </view>
+                            </view>
+                        </view>
+                        <uni-load-more
+                            class="loadMore"
+                            :status="loadMoreStatus"
+                            :content-text="{
+                                contentdown: '上拉显示更多',
+                                contentrefresh: '正在加载...',
+                                contentnomore: '———— 已经到底了~ ————'
+                            }"
+                            color="#fff"
+                        />
+                    </view>
+                    <view
+                        v-show="myWorkEmpty"
+                        class="work-empty"
+                    >
+                        <image
+                            :src="
+                                `https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/${publicConfig.activityName}_empty_work.png`
+                            "
+                        />
+                        <view v-if="isSelf">
+                            <view v-if="allTotal === 0">
+                                <view>
+                                    您还没有上传作品<br>上传作品才能赢取代言人权益哦～
+                                </view>
+                            </view>
+                            <view v-else>
+                                暂无作品
                             </view>
                         </view>
                         <view v-else>
-                            暂无作品
+                            TA还没有上传作品，去看看其他作品吧~
                         </view>
                     </view>
-                    <view v-else>
-                        TA还没有上传作品，去看看其他作品吧~
+
+                    <view
+                        class="goUpload"
+                        @click="handleUpload"
+                    >
+                        上传作品
                     </view>
                 </view>
-                <!-- <navigator
-                    v-if="isSelf"
-                    :url="
-                        `/activity/pages/upload/modify?activity_id=${filter.activity_id}`
-                    "
-                >
+            </template>
 
-                </navigator> -->
-
-                <view
-                    class="goUpload"
-                    @click="handleUpload"
-                >
-                    上传作品
-                </view>
-            </view>
             <goHome :path="publicConfig.homePath" />
         </view>
     </view>
@@ -792,6 +806,34 @@ export default {
 </script>
 
 <style lang="less">
+.no-join {
+    padding-top: 256upx;
+    & > image {
+        display: block;
+        margin: 0 auto;
+        width: 300upx;
+        height: 204upx;
+        margin-bottom: 10upx;
+    }
+    .text {
+        text-align: center;
+        color: #fff;
+        font-size: 28upx;
+        line-height: 66upx;
+    }
+    .join-btn {
+        height: 110upx;
+        width: 420upx;
+        text-align: center;
+        line-height: 110upx;
+        color: #fff;
+        font-size: 36upx;
+        font-weight: 600;
+        border-radius: 55upx;
+        margin: 20upx auto;
+        background-color: #ff685c;
+    }
+}
 .user-detail {
     box-shadow: inset 0 0 24upx 0 rgba(152, 130, 255, 1);
     background-color: #fff;
