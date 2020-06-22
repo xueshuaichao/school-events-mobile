@@ -19,7 +19,7 @@
                 @click="clickWrap"
             />
             <view class="all-num">
-                {{ total }} 条评论
+                {{ total > 99 ? "99+" : total }} 条评论
             </view>
             <scroll-view
                 scroll-y
@@ -36,30 +36,80 @@
                 </view>
                 <template v-if="loading && list.length">
                     <view
-                        v-for="(item, index) in list"
-                        :key="index"
-                        class="item clearfix"
-                        @click="clickItem(item)"
+                        v-for="item in list"
+                        :key="item.comment_id"
+                        class="item-wrap"
+                        @click.prevent="clickItem(item)"
                     >
-                        <view class="img-box fl-l">
-                            <image
-                                :src="
-                                    item.user_info.avatar_url ||
-                                        '/static/images/uc/avatar.png'
-                                "
-                            />
-                        </view>
-                        <view class="center fl-l">
-                            <view class="name">
-                                {{ item.user_info.name }}
+                        <view class="item">
+                            <view class="left">
+                                <view class="img-box">
+                                    <image
+                                        :src="
+                                            item.user_info.avatar_url ||
+                                                '/static/images/uc/avatar.png'
+                                        "
+                                    />
+                                </view>
+                                <view>
+                                    <view class="name">
+                                        {{ item.user_info.name }}
+                                    </view>
+                                    <view class="content">
+                                        {{ item.content }}
+                                    </view>
+                                </view>
                             </view>
-                            <view class="content">
-                                {{ item.content }}
+                            <view class="right">
+                                {{ item.created_at }}
                             </view>
                         </view>
-                        <view class="right fl-r">
-                            {{ item.created_at }}
-                        </view>
+                        <template v-if="item.sub_count">
+                            <view
+                                class="to-open show-or-hide"
+                                @click.stop="getMoreSubList(item)"
+                            >
+                                — 展开{{ item.sub_count }}条回复 —
+                            </view>
+                        </template>
+                        <template v-if="item.show">
+                            <view
+                                v-for="subItem in subList"
+                                :key="subItem.comment_id"
+                                class="sub-item item"
+                                @click.stop="clickItem(subItem)"
+                            >
+                                <view class="left">
+                                    <view class="img-box">
+                                        <image
+                                            :src="
+                                                subItem.user_info.avatar_url ||
+                                                    '/static/images/uc/avatar.png'
+                                            "
+                                        />
+                                    </view>
+                                    <view>
+                                        <view class="name">
+                                            {{ subItem.user_info.name }}
+                                        </view>
+                                        <view class="content">
+                                            <template
+                                                v-if="subItem.to_user_name"
+                                            >
+                                                回复
+                                                <text class="bold">
+                                                    {{ subItem.to_user_name }}
+                                                </text>
+                                            </template>
+                                            {{ subItem.content }}
+                                        </view>
+                                    </view>
+                                </view>
+                                <view class="right">
+                                    {{ subItem.created_at }}
+                                </view>
+                            </view>
+                        </template>
                     </view>
                 </template>
             </scroll-view>
@@ -80,6 +130,7 @@
                         :placeholder="placeholder"
                         maxlength="40"
                         :adjust-position="false"
+                        :focus="isFocus"
                         @blur="blur"
                         @focus="onFoucs"
                         @confirm="bindconfirm"
@@ -128,6 +179,13 @@ export default {
                 // comment_type: 1,
                 topic_id: this.pageData.resource_id,
             },
+            subFilter: {
+                page_num: 1,
+                page_size: 10,
+                topic_type: 3,
+                topic_id: this.pageData.resource_id,
+                to_comment_id: 0,
+            },
             total: 0,
             list: [],
             loading: false,
@@ -141,6 +199,8 @@ export default {
             hasLogin: false,
             hasKeybordEnterUp: false,
             placeholder: '写评论',
+            addObj: {},
+            subList: [],
         };
     },
     watch: {
@@ -192,6 +252,7 @@ export default {
     },
     methods: {
         onFoucs(e) {
+            this.isFocus = true;
             if (!this.isH5) {
                 this.showKeybord = true;
                 if (!this.hasKeybordEnterUp) {
@@ -221,7 +282,34 @@ export default {
             this.$emit('doAction', 'showMessage');
         },
         clickNull() {},
-        clickItem() {},
+        clickItem(item) {
+            console.log('clickItem-----');
+            this.placeholder = `回复@${item.user_info.name}`;
+            this.isFocus = true;
+            this.addObj = {
+                to_user_id: item.from_user_id,
+                to_comment_id: item.comment_id,
+            };
+        },
+        getMoreSubList(item) {
+            this.subFilter.to_comment_id = item.comment_id;
+            // 展开评论
+            this.list = this.list.map((D) => {
+                const d = D;
+                d.show = false;
+                if (d.comment_id === item.comment_id) d.show = true;
+                return d;
+            });
+            // 获取分页下的列表
+            api.post('/api/comment/list', this.subFilter).then(({ list }) => {
+                const List = list.map((d) => {
+                    const D = d;
+                    D.created_at = D.created_at.slice(5, 16);
+                    return D;
+                });
+                this.subList = List;
+            });
+        },
         getList() {
             api.post('/api/comment/list', this.filter).then(
                 ({ list, total }) => {
@@ -243,7 +331,9 @@ export default {
             );
         },
         bindconfirm() {
+            console.log('bindconfirm-----');
             this.showKeybord = false;
+            this.isFocus = false;
             if (this.changeVal.trim()) {
                 const content = this.changeVal.trim();
                 if (this.isLogin) {
@@ -268,20 +358,25 @@ export default {
         },
         addComment(content) {
             this.hasLogin = true;
-            api.post('/api/comment/add', {
+            const params = {
                 content,
                 topic_type: 3,
                 topic_id: this.pageData.resource_id,
                 comment_type: 1,
-            }).then(() => {
+                ...this.addObj,
+            };
+            console.log(params, 'add,,,,comment-----');
+            api.post('/api/comment/add', params).then(() => {
                 uni.showToast({
                     title: '已提交',
                     icon: 'none',
                 });
-                this.loading = false;
+                // this.loading = false;
                 // this.changeVal = '';
                 this.filter.page_num = 1;
-                // this.getList();
+                this.placeholder = '写评论';
+                this.addObj = {};
+                this.getList();
             });
         },
         toUpper() {
@@ -366,9 +461,18 @@ export default {
                 color: #5e6166;
                 text-align: center;
             }
-            .item {
+            .item-wrap {
                 margin-bottom: 40rpx;
                 padding-right: 20rpx;
+                .sub-item {
+                    padding-left: 40rpx;
+                    margin-bottom: 20rpx;
+                }
+                .item,
+                .left {
+                    display: flex;
+                    justify-content: space-between;
+                }
                 .img-box {
                     width: 72rpx;
                     height: 72rpx;
@@ -391,12 +495,23 @@ export default {
                     color: #5e6166;
                     line-height: 40rpx;
                     width: 368rpx;
+                    .bold {
+                        color: #303133;
+                        margin: 0 4rpx;
+                    }
                 }
 
                 .right {
                     font-size: 24rpx;
                     color: #8d9199;
                     line-height: 36rpx;
+                }
+                .show-or-hide {
+                    color: #b0b5bf;
+                    font-size: 28rpx;
+                }
+                .to-open {
+                    text-align: center;
                 }
             }
         }
