@@ -464,7 +464,7 @@ export default {
                 this.formData.file_size = data.video.file_size;
                 this.formData.file_name = data.video.file_name;
                 this.formData.file_suffix = data.video.file_suffix;
-                if (!this.achievement_unit || this.achievement_unit === '秒') {
+                if (this.achievement_unit === '秒') {
                     this.formateSeconds(this.achivementInput);
                 }
                 console.log(data);
