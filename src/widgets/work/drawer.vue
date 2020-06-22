@@ -39,6 +39,7 @@
                         v-for="(item, index) in list"
                         :key="index"
                         class="item clearfix"
+                        @click="clickItem(item)"
                     >
                         <view class="img-box fl-l">
                             <image
@@ -76,7 +77,7 @@
                     <input
                         v-model="changeVal"
                         type="text"
-                        placeholder="写评论"
+                        :placeholder="placeholder"
                         maxlength="40"
                         :adjust-position="false"
                         @blur="blur"
@@ -138,6 +139,8 @@ export default {
             markerheight: 100,
             screenHeight: 0,
             hasLogin: false,
+            hasKeybordEnterUp: false,
+            placeholder: '写评论',
         };
     },
     watch: {
@@ -191,9 +194,14 @@ export default {
         onFoucs(e) {
             if (!this.isH5) {
                 this.showKeybord = true;
-                e.detail.height = e.detail.height || 180;
-                this.inputTop = this.screenHeight * 0.74 - e.detail.height - this.pix * 130;
-                this.markerheight = this.screenHeight - e.detail.height - this.pix * 130;
+                if (!this.hasKeybordEnterUp) {
+                    e.detail.height = e.detail.height || 180;
+                    this.inputTop = this.screenHeight * 0.74
+                        - e.detail.height
+                        - this.pix * 130;
+                    this.markerheight = this.screenHeight - e.detail.height - this.pix * 130;
+                    this.hasKeybordEnterUp = true;
+                }
             }
         },
         blur() {
@@ -213,6 +221,7 @@ export default {
             this.$emit('doAction', 'showMessage');
         },
         clickNull() {},
+        clickItem() {},
         getList() {
             api.post('/api/comment/list', this.filter).then(
                 ({ list, total }) => {
