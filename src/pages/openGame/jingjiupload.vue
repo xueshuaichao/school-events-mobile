@@ -620,7 +620,7 @@ export default {
             }
         },
         handleAchievement({ unit }) {
-            this.date = unit === '秒';
+            this.date = !unit || unit === '秒';
             this.formData.achievement_unit = this.date ? '秒' : unit;
         },
         getTimeSeconds({ minutes, seconds, millisecond }) {

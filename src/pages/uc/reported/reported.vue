@@ -649,7 +649,7 @@ export default {
             console.log(this.result);
         },
         handleAchievement({ unit, more_people: morePeople }) {
-            this.date = unit === '秒';
+            this.date = !unit || unit === '秒';
             this.formData.achievement_unit = this.date ? '秒' : unit;
             this.gradeType = morePeople;
         },
