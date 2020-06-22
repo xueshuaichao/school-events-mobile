@@ -364,7 +364,7 @@ export default {
                 school_name: '',
                 grade_id: 1,
                 grade_name: '',
-                create_info: '',
+                create_info: [],
                 city: '',
                 county: '',
             },
@@ -620,8 +620,8 @@ export default {
             }
         },
         handleAchievement({ unit }) {
-            this.date = !unit;
-            this.formData.achievement_unit = this.date ? '' : unit;
+            this.date = unit === '秒';
+            this.formData.achievement_unit = this.date ? '秒' : unit;
         },
         getTimeSeconds({ minutes, seconds, millisecond }) {
             return Number(minutes) * 60 + Number(seconds) + millisecond / 1000;
