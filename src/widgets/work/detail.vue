@@ -485,6 +485,9 @@ export default {
             if (this.activityId === 5) {
                 url = '/pages/yiqing/index';
             }
+            if (this.activityId === 10) {
+                url = '/activity/pages/index?activity_id=10';
+            }
             uni.navigateTo({
                 url,
             });
