@@ -804,7 +804,7 @@ export default {
     // color: #c9ac67;
     .content-box {
         position: relative;
-        padding: 30upx;
+        padding: 30upx 30upx 128upx;
         background: #fff;
         .show-type-hd {
             // display: flex;
@@ -1018,6 +1018,10 @@ export default {
         height: 98upx;
         line-height: 98upx;
         text-align: center;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
     }
 
     .panel-hd {
