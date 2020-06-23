@@ -55,7 +55,13 @@
                                     {{ item.activity_base_c || 6000 }}关注
                                 </text>
                                 <view class="fl-r join-game">
-                                    立即参加
+                                    {{
+                                        item.status === 2
+                                            ? "立即参加"
+                                            : item.status === 3
+                                                ? "查看精彩"
+                                                : "敬请期待"
+                                    }}
                                 </view>
                             </view>
                         </view>

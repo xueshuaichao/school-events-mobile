@@ -115,20 +115,58 @@
                     </text>
                     成绩:
                 </view>
-                <view
-                    class="uni-list-cell-db"
-                    style="width: 437rpx;"
-                >
-                    <input
-                        v-model="achivementInput"
-                        class="uni-input"
-                        placeholder-class="placeholder"
-                        maxlength="8"
-                        placeholder="成绩"
+
+                <view class="uni-list-cell-db">
+                    <view
+                        v-if="date"
+                        class="achievement-dete form-item-cont"
                     >
-                    <text class="unit-class">
-                        {{ formData.achievement_unit }}
-                    </text>
+                        <input
+                            v-model="achievementDateInfo.minutes"
+                            class="uni-input"
+                            type="number"
+                            placeholder="分"
+                            maxlength="2"
+                        >
+                        <text class="date-text">
+                            分
+                        </text>
+                        <input
+                            v-model="achievementDateInfo.seconds"
+                            maxlength="2"
+                            type="number"
+                            class="uni-input"
+                            placeholder="秒"
+                        >
+                        <text class="date-text">
+                            秒
+                        </text>
+                        <input
+                            v-model="achievementDateInfo.millisecond"
+                            maxlength="3"
+                            type="number"
+                            class="uni-input"
+                            placeholder="毫秒"
+                        >
+                        <text class="date-text">
+                            毫秒
+                        </text>
+                    </view>
+                    <view
+                        v-else
+                        class="achievement-dete"
+                    >
+                        <input
+                            v-model="achivementInput"
+                            class="uni-input achivement-input"
+                            placeholder-class="placeholder"
+                            maxlength="8"
+                            placeholder="成绩"
+                        >
+                        <text class="date-text">
+                            {{ formData.achievement_unit }}
+                        </text>
+                    </view>
                 </view>
             </view>
             <view class="show-type-input">
@@ -326,7 +364,7 @@ export default {
                 school_name: '',
                 grade_id: 1,
                 grade_name: '',
-                create_info: '',
+                create_info: [],
                 city: '',
                 county: '',
             },
@@ -388,7 +426,13 @@ export default {
             catIndex: 0,
             identity: '',
             type: 'jingji',
+            date: false,
             achivementInput: '',
+            achievementDateInfo: {
+                minutes: '',
+                seconds: '',
+                millisecond: '',
+            },
             teacherInput: '',
             attestationInput: '',
             createInput: '',
@@ -407,6 +451,8 @@ export default {
                 this.formData.video_id = data.video.video_id;
                 this.formData.resource_id = id;
                 this.achivementInput = data.achievement;
+                this.achievement_unit = data.achievement_unit;
+
                 this.teacherInput = data.teacher || '';
                 this.createInput = data.create_name;
                 this.attestationInput = data.attestation_name || '';
@@ -418,6 +464,9 @@ export default {
                 this.formData.file_size = data.video.file_size;
                 this.formData.file_name = data.video.file_name;
                 this.formData.file_suffix = data.video.file_suffix;
+                if (this.achievement_unit === '秒') {
+                    this.formateSeconds(this.achivementInput);
+                }
                 console.log(data);
             });
         }
@@ -557,7 +606,7 @@ export default {
         setScoperSelect(val) {
             this.formData.resource_name = this.scopeData[this.type][val].name;
             this.formData.resource_scope = this.scopeData[this.type][val].id;
-            this.formData.resource_scope = this.scopeData[this.type][val].scope;
+            this.formData.parent_scope = this.scopeData[this.type][val].scope;
             this.catIndex = 0;
             this.formData.cat_name = '';
             this.getallcategory(this.scopeData[this.type][val].cat_id);
@@ -567,10 +616,22 @@ export default {
             if (this.catData.length > 0) {
                 this.formData.cat_id = this.catData[e.detail.value].cat_id;
                 this.formData.cat_name = this.catData[e.detail.value].cat_name;
-                this.formData.achievement_unit = this.catData[
-                    e.detail.value
-                ].unit;
+                this.handleAchievement(this.catData[e.detail.value]);
             }
+        },
+        handleAchievement({ unit }) {
+            this.date = !unit || unit === '秒';
+            this.formData.achievement_unit = this.date ? '秒' : unit;
+        },
+        getTimeSeconds({ minutes, seconds, millisecond }) {
+            return Number(minutes) * 60 + Number(seconds) + millisecond / 1000;
+        },
+        formateSeconds(seconds) {
+            const intNum = Math.floor(seconds);
+            const fraNum = seconds * 1000 - intNum * 1000;
+            this.achievementDateInfo.minutes = Math.floor(intNum / 60);
+            this.achievementDateInfo.seconds = intNum % 60;
+            this.achievementDateInfo.millisecond = fraNum;
         },
         getallcategory(id) {
             return api.get(`/api/works/getallcategory?cid=${id}`).then(
@@ -607,6 +668,11 @@ export default {
             if (this.disabled) {
                 return false;
             }
+            if (this.date) {
+                this.formData.achievement = String(
+                    this.getTimeSeconds(this.achievementDateInfo),
+                );
+            }
             const formData = Object.assign({}, this.formData);
             if (!formData.resource_name) {
                 return this.errTip('请选择项目范围');
@@ -635,7 +701,6 @@ export default {
             if (!formData.grade_name && this.identity !== 4) {
                 return this.errTip('请选择年级');
             }
-
             uni.showLoading();
             this.disabled = true;
             // check input
@@ -739,7 +804,7 @@ export default {
     // color: #c9ac67;
     .content-box {
         position: relative;
-        padding: 30upx;
+        padding: 30upx 30upx 128upx;
         background: #fff;
         .show-type-hd {
             // display: flex;
@@ -875,7 +940,7 @@ export default {
         height: 70upx;
         box-sizing: border-box;
         line-height: 38upx;
-        padding-left: 24upx;
+        padding: 0 24upx;
     }
 
     .uni-textarea {
@@ -953,6 +1018,10 @@ export default {
         height: 98upx;
         line-height: 98upx;
         text-align: center;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
     }
 
     .panel-hd {
@@ -995,6 +1064,22 @@ export default {
                 background: #ff3849;
                 color: #fff;
             }
+        }
+    }
+    .achievement-dete {
+        display: flex;
+        align-items: center;
+        font-size: 28upx;
+        input {
+            width: 104upx;
+            &.achivement-input {
+                width: 192rpx;
+            }
+        }
+        .date-text {
+            display: inline-block;
+            margin: 0 10upx 40upx;
+            color: #666;
         }
     }
 }

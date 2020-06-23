@@ -71,12 +71,10 @@
                         <view>发送给好友</view>
                     </view>
 
-                    <text
+                    <view
                         class="ticket-close"
                         @click="showTicketMask = false"
-                    >
-                        取消
-                    </text>
+                    />
                 </view>
             </view>
         </template>
@@ -479,7 +477,6 @@ export default {
                 this.activity_id = res.activity_id || 0;
             }
             this.id = res.id;
-            this.activity_id = 10;
             // activity_id,  没有7..
             if (this.activity_id) {
                 // wyhd 五一活动
@@ -491,6 +488,7 @@ export default {
                     '',
                     'wyhd',
                     'lyhd',
+                    'qyhd',
                 ];
                 const type = arr[this.activity_id - 3];
                 this.fr = logger.getFr(type, {});
@@ -521,19 +519,17 @@ export default {
             this.canvasImgW = this.posterConfig.width * this.pix;
             this.canvasImgH = this.posterConfig.height * this.pix;
             if (this.from === 'openGame') {
-                this.posterConfig.texts[0].text[0].text = `${
-                    res.resource_name
-                }${
+                this.posterConfig.texts[0].text = `${res.resource_name}${
                     res.achievement
                         ? `|${res.achievement}${res.achievement_unit}`
                         : ''
                 }`;
             } else {
-                this.posterConfig.texts[0].text[0].text = res.resource_name;
+                this.posterConfig.texts[0].text = res.resource_name;
             }
             if (this.activity_id === 10) {
                 // 作者
-                this.posterConfig.texts[1].text[0].text = `我是${res.create_name}`;
+                this.posterConfig.texts[1].text = `我是${res.create_name}`;
             }
             this.pageData.video_img_url = res.video_img_url;
 
@@ -1204,7 +1200,7 @@ export default {
         font-size: 28upx;
         .ticket-mask-content {
             width: 100%;
-            height: 324upx;
+            height: 272upx;
             background: #fff;
             border-radius: 30upx 30upx 0 0;
             position: absolute;
@@ -1246,12 +1242,29 @@ export default {
         }
         .ticket-close {
             position: absolute;
-            width: 56upx;
-            height: 56upx;
-            left: 347upx;
-            top: 250upx;
+            right: 0;
+            top: 0;
+            padding: 50upx;
             color: #333;
             font-size: 28upx;
+            &::before,
+            &::after {
+                content: "";
+                position: absolute;
+                display: block;
+                width: 28upx;
+                height: 4upx;
+                background: #999;
+                right: 30upx;
+                top: 30upx;
+                border-radius: 2upx;
+            }
+            &:before {
+                transform: rotate(45deg);
+            }
+            &:after {
+                transform: rotate(-45deg);
+            }
         }
     }
 }

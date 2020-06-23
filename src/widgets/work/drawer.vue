@@ -168,7 +168,6 @@
                         maxlength="40"
                         :adjust-position="false"
                         :focus="isFocus"
-                        @blur="blur"
                         @focus="onFoucs"
                         @confirm="bindconfirm"
                     >
@@ -332,9 +331,6 @@ export default {
                 }
             }
         },
-        blur() {
-            this.resetInitVal();
-        },
         showing() {
             this.animation.bottom('0').step({ duration: 300 });
             this.animationData = this.animation.export();
@@ -344,6 +340,7 @@ export default {
             this.animationData = this.animation.export();
         },
         clickWrap() {
+            this.resetInitVal();
             this.$emit('doAction', 'showMessage');
         },
         clickNull() {},
@@ -354,6 +351,7 @@ export default {
                 to_user_id: item.from_user_id,
                 to_comment_id: items ? items.comment_id : item.comment_id,
             };
+            console.log(item);
             this.selItem.to_user_id = item.from_user_id;
             this.selItem.to_user_name = item.user_info.name;
         },
@@ -605,7 +603,7 @@ export default {
             box-sizing: border-box;
             .no-data {
                 font-size: 28rpx;
-                line-height: 300rpx;
+                line-height: 100rpx;
                 color: #5e6166;
                 text-align: center;
             }
