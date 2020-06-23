@@ -8,6 +8,7 @@
                 v-for="(item, index) in list"
                 :key="index"
                 class="item"
+                @click="jumpUcCenter(item)"
             >
                 <view class="avatar">
                     <template v-if="item.image">
@@ -51,6 +52,13 @@ export default {
         api.get('/api/activity/semimember').then((list) => {
             this.list = list;
         });
+    },
+    methods: {
+        jumpUcCenter(item) {
+            uni.navigator({
+                url: `/activity/pages/brand/ucenter?activity_id=10&user_id=${item.user_id}`,
+            });
+        },
     },
 };
 </script>
