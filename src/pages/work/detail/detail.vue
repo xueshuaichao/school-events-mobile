@@ -479,7 +479,6 @@ export default {
                 this.activity_id = res.activity_id || 0;
             }
             this.id = res.id;
-            this.activity_id = 10;
             // activity_id,  没有7..
             if (this.activity_id) {
                 // wyhd 五一活动
@@ -491,6 +490,7 @@ export default {
                     '',
                     'wyhd',
                     'lyhd',
+                    'qyhd',
                 ];
                 const type = arr[this.activity_id - 3];
                 this.fr = logger.getFr(type, {});
@@ -521,19 +521,17 @@ export default {
             this.canvasImgW = this.posterConfig.width * this.pix;
             this.canvasImgH = this.posterConfig.height * this.pix;
             if (this.from === 'openGame') {
-                this.posterConfig.texts[0].text[0].text = `${
-                    res.resource_name
-                }${
+                this.posterConfig.texts[0].text = `${res.resource_name}${
                     res.achievement
                         ? `|${res.achievement}${res.achievement_unit}`
                         : ''
                 }`;
             } else {
-                this.posterConfig.texts[0].text[0].text = res.resource_name;
+                this.posterConfig.texts[0].text = res.resource_name;
             }
             if (this.activity_id === 10) {
                 // 作者
-                this.posterConfig.texts[1].text[0].text = `我是${res.create_name}`;
+                this.posterConfig.texts[1].text = `我是${res.create_name}`;
             }
             this.pageData.video_img_url = res.video_img_url;
 
