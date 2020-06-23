@@ -33,7 +33,7 @@
                                     class="text"
                                 >
                                     <view
-                                        class=""
+                                        class="text-title"
                                         :style="list.textConfig"
                                     >
                                         {{ list.text }}
@@ -164,15 +164,15 @@
                         </view>
                     </view>
                 </view>
-                <view
-                    class="close"
-                    @click="close()"
-                >
-                    <image
-                        src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/children_close.png"
-                        mode=""
-                    />
-                </view>
+            </view>
+            <view
+                class="close"
+                @click="close()"
+            >
+                <image
+                    src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/children_close.png"
+                    mode=""
+                />
             </view>
         </view>
     </view>
@@ -250,10 +250,6 @@ export default {
                         },
                         {
                             text: '3、形象代言人（8位）',
-                            textConfig: {
-                                color: '#6B4BFF',
-                                fontSize: '28rpx',
-                            },
                             children: [
                                 '登上世界吉尼斯嘉年华的舞台，为青少年“爱挑战”代言',
                                 '“形象代言人”奖杯',
@@ -263,10 +259,6 @@ export default {
                         },
                         {
                             text: '4、人气之星（20位）',
-                            textConfig: {
-                                color: '#6B4BFF',
-                                fontSize: '28rpx',
-                            },
                             children: [
                                 '人气之星奖杯',
                                 '2张世界吉尼斯嘉年华特邀入场券',
@@ -274,18 +266,10 @@ export default {
                         },
                         {
                             text: '5、组织单位奖（5位）',
-                            textConfig: {
-                                color: '#6B4BFF',
-                                fontSize: '28rpx',
-                            },
                             children: ['优秀组织单位奖奖杯'],
                         },
                         {
                             text: '6、伯乐奖（8位）',
-                            textConfig: {
-                                color: '#6B4BFF',
-                                fontSize: '28rpx',
-                            },
                             children: [
                                 '8位代言人的推荐老师将获得“伯乐奖”奖杯及“精美官方定制礼盒一套”',
                             ],
@@ -514,13 +498,32 @@ export default {
                 margin-top: 85upx;
             }
         }
+        .rule-content {
+            .text-box {
+                .item {
+                    &:nth-of-type(3) {
+                        .text {
+                            &:nth-of-type(4),
+                            &:nth-of-type(5),
+                            &:nth-of-type(6),
+                            &:nth-of-type(7) {
+                                .text-title {
+                                    color: #6b4cff;
+                                    font-size: 28upx;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
         .prize-content {
-            height: 100%;
             text-align: center;
             border-radius: 40upx;
             box-sizing: border-box;
             .box-bg {
-                height: 100%;
+                height: 928upx;
             }
             .tit {
                 border-radius: 25upx;

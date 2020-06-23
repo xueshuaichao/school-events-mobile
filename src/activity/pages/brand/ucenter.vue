@@ -398,10 +398,8 @@ export default {
         },
     },
     methods: {
-        onLogin({ user_info: userInfo }) {
-            this.userInfo = userInfo;
-            this.isLoading = false;
-            this.getQrCode();
+        onLogin() {
+            this.getData();
         },
         uploadFile(tempFilePath) {
             this.tempFilePath = tempFilePath;
@@ -565,9 +563,20 @@ export default {
             api.get('/api/user/info').then(
                 (res) => {
                     this.userInfo = res.user_info;
-                    this.isLoading = false;
                     this.getWorkData();
                     this.getQrCode();
+                    this.getEnrollInfo().then((data) => {
+                        if (!Array.isArray(data)) {
+                            if (data.detail) {
+                                this.detail = data.detail;
+                                this.myPoster = data.detail[
+                                    this.isH5 ? 'poster_h5' : 'poster_mp'
+                                ];
+                            }
+                            this.isSelf = data.is_self;
+                        }
+                        this.isLoading = false;
+                    });
                 },
                 () => {
                     this.isLoading = false;
@@ -764,11 +773,7 @@ export default {
                 title: this.title,
                 desc,
                 thumbnail: `${this.publicConfig.shareConfig.image}?x-oss-process=image/format,png/interlace,1/quality,Q_80/resize,m_pad,h_100`,
-                url: `${
-                    this.isH5
-                        ? `${window.location.origin}${this.publicConfig.shareConfig.path}`
-                        : ''
-                }`,
+                url: `${this.isH5 ? window.location.href : ''}`,
             });
         },
         handleUpload() {
@@ -815,17 +820,8 @@ export default {
         }
         this.publicConfig = this.$store.getters.getPublicConfig(activityId);
         this.filter.activity_id = activityId;
-        this.filter.user_id = userId;
+        this.filter.user_id = userId || '';
         this.getData();
-        this.getEnrollInfo().then((data) => {
-            if (!Array.isArray(data)) {
-                if (data.detail) {
-                    this.detail = data.detail;
-                    this.myPoster = data.detail[this.isH5 ? 'poster_h5' : 'poster_mp'];
-                }
-                this.isSelf = data.is_self;
-            }
-        });
         this.activityStatus();
         this.initShare();
     },
@@ -839,10 +835,13 @@ export default {
             // 来自页面内分享按钮
             console.log(res.target);
         }
+        const pages = getCurrentPages(); // eslint-disable-line
+        const { route } = pages[0];
+        const { activity_id: activityId, user_id: userId } = pages[0].options;
         return {
             title: this.title,
             imageUrl: this.publicConfig.shareConfig.image,
-            path: this.publicConfig.homePath,
+            path: `${route}?activity_id${activityId}&user_id=${userId}`,
         };
     },
 };

@@ -146,7 +146,9 @@
                 class="guide-mask"
             >
                 <view class="box">
-                    <image />
+                    <image
+                        src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/brand_guide.png"
+                    />
                     <view class="text">
                         快来上传作品展示优秀的你吧～
                     </view>
