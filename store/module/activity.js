@@ -276,48 +276,6 @@ export default {
                     activityId: 10,
                     catId: '', // 所属分类
                     showAllCat: true,
-                    configCatId: [
-                        {
-                            name: '歌唱表演',
-                            cat_id: 16,
-                        },
-                        {
-                            name: '舞蹈表演',
-                            cat_id: 17,
-                        },
-                        {
-                            name: '口才表演',
-                            cat_id: 18,
-                        },
-                        {
-                            name: '乐器演奏',
-                            cat_id: 19,
-                        },
-                        {
-                            name: '手工制作',
-                            cat_id: 20,
-                        },
-                        {
-                            name: '书法与绘画',
-                            cat_id: 21,
-                        },
-                        {
-                            name: '杂技魔术',
-                            cat_id: 23,
-                        },
-                        // {
-                        //     name: '魔术',
-                        //     cat_id: 24,
-                        // },
-                        {
-                            name: '艺术设计',
-                            cat_id: 25,
-                        },
-                        {
-                            name: '其他表演',
-                            cat_id: 102,
-                        },
-                    ],
                     time: '海选时间：7月1日--7月24日',
                     primaryColor: '#FF8E85', // 主色调
                     primaryBgColor: '#9882FF', // 主要的背景颜色 （图片背景）

@@ -1,6 +1,10 @@
 <template>
-    <div class="join-page">
-        <view>
+    <div :class="['join-page', !userInfo ? 'join-page-login' : '']">
+        <login
+            v-if="userInfo === null"
+            @login="onLogin"
+        />
+        <view v-else>
             <posterh5
                 ref="posterh5"
                 :config="posterCommonConfig"
@@ -191,6 +195,7 @@
 <script>
 // import QRCode from 'qrcodejs2';
 import api from '../../../common/api';
+import login from '../../../widgets/login/login.vue';
 import imageCutter from '../../../components/image-cutter/image-cutter.vue';
 import config from '../../../common/config';
 import utils from '../../../common/utils';
@@ -198,6 +203,7 @@ import posterh5 from './posterh5.vue';
 
 export default {
     components: {
+        login,
         imageCutter,
         posterh5,
     },
@@ -206,7 +212,7 @@ export default {
             // #ifdef H5
             isH5: true,
             // #endif
-            userInfo: {},
+            userInfo: null,
             formData: {
                 school_name: '',
                 name: '',
@@ -335,7 +341,10 @@ export default {
             }
         },
         getH5QrCode() {
-            this.posterCommonConfig.images[3].url = 'http://aitiaozhan.my.dev.wdyclass.com:1024/api/common/qrcode?url=http%3A%2F%2Faitiaozhan.my.dev.wdyclass.com%3A1024%2Factivity%2Fpages%2Fmywork%2Fucenter%3Factivity_id%3D10%26user_id%3D3433&w=122';
+            const uCenterUrl = `${window.location.origin}/activity/pages/brand/ucenter?activity_id=10&user_id=${this.userInfo.user_id}&w=244`;
+            this.posterCommonConfig.images[3].url = `http://aitiaozhan.my.dev.wdyclass.com:1024/api/common/qrcode?url=${decodeURI(
+                uCenterUrl,
+            )}`;
         },
         getMpQrCode() {
             // 小程序二维码
@@ -534,6 +543,9 @@ export default {
 .join-page {
     padding: 40upx 30upx 110upx;
     background-color: #583ed4;
+    &.join-page-login {
+        background-color: #fff;
+    }
     .canvas.pro {
         position: absolute;
         bottom: 0;
