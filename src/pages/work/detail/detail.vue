@@ -71,12 +71,10 @@
                         <view>发送给好友</view>
                     </view>
 
-                    <text
+                    <view
                         class="ticket-close"
                         @click="showTicketMask = false"
-                    >
-                        取消
-                    </text>
+                    />
                 </view>
             </view>
         </template>
@@ -1202,7 +1200,7 @@ export default {
         font-size: 28upx;
         .ticket-mask-content {
             width: 100%;
-            height: 324upx;
+            height: 272upx;
             background: #fff;
             border-radius: 30upx 30upx 0 0;
             position: absolute;
@@ -1244,12 +1242,29 @@ export default {
         }
         .ticket-close {
             position: absolute;
-            width: 56upx;
-            height: 56upx;
-            left: 347upx;
-            top: 250upx;
+            right: 0;
+            top: 0;
+            padding: 50upx;
             color: #333;
             font-size: 28upx;
+            &::before,
+            &::after {
+                content: "";
+                position: absolute;
+                display: block;
+                width: 28upx;
+                height: 4upx;
+                background: #999;
+                right: 30upx;
+                top: 30upx;
+                border-radius: 2upx;
+            }
+            &:before {
+                transform: rotate(45deg);
+            }
+            &:after {
+                transform: rotate(-45deg);
+            }
         }
     }
 }
