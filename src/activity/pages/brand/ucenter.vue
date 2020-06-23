@@ -20,9 +20,7 @@
                             `https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/${publicConfig.activityName}_empty_work.png`
                         "
                     />
-                    <view
-                        class="text"
-                    >
+                    <view class="text">
                         您还没有参与活动<br>快来报名参赛，赢取代言人权益吧！
                     </view>
                     <navigator :url="`/activity/pages/brand/join`">
@@ -139,9 +137,8 @@
                                 class="work-info"
                             >
                                 <view class="media-name text-two-line">
-                                    {{ ` ${item.resource_name}` }}
+                                    {{ item.resource_name }}
                                 </view>
-
                                 <view class="media-time">
                                     {{ item.created_at }}
                                 </view>
@@ -180,6 +177,11 @@
                                 v-else
                                 class="work-info"
                             >
+                                <view
+                                    class="media-name create-by text-one-line"
+                                >
+                                    {{ detail.name }}
+                                </view>
                                 <view class="media-name text-one-line">
                                     {{ `${item.resource_name}` }}
                                 </view>
@@ -477,7 +479,10 @@ export default {
             }
         },
         getH5QrCode() {
-            this.posterCommonConfig.images[3].url = 'http://aitiaozhan.my.dev.wdyclass.com:1024/api/common/qrcode?url=http%3A%2F%2Faitiaozhan.my.dev.wdyclass.com%3A1024%2Factivity%2Fpages%2Fmywork%2Fucenter%3Factivity_id%3D10%26user_id%3D3433&w=122';
+            const uCenterUrl = `${window.location.origin}/activity/pages/brand/ucenter?activity_id=10&user_id=${this.userInfo.user_id}&w=244`;
+            this.posterCommonConfig.images[3].url = `http://aitiaozhan.my.dev.wdyclass.com:1024/api/common/qrcode?url=${encodeURI(
+                uCenterUrl,
+            )}`;
         },
         getMpQrCode() {
             // 小程序二维码
@@ -551,7 +556,7 @@ export default {
         activityStatus() {
             // 1未开始，2进行中，3已结束
             api.get('/api/activity/activitystatus', {
-                activity_id: this.activityId,
+                activity_id: this.filter.activity_id,
             }).then((res) => {
                 this.status = res.status;
             });
@@ -707,6 +712,44 @@ export default {
                 }
             });
         },
+        handleVote(item) {
+            if (this.status === 2) {
+                api.isLogin({
+                    fr: this.fr,
+                }).then(() => {
+                    api.post('/api/activity/vote', {
+                        id: item.id,
+                        activity_id: this.filter.activity_id,
+                    }).then(
+                        () => {
+                            // eslint-disable-next-line no-param-reassign
+                            item.ticket += 1;
+                            // eslint-disable-next-line no-param-reassign
+                            item.vote_status = 1;
+                            uni.showToast({
+                                title: '已点赞',
+                                icon: 'none',
+                            });
+                            this.$emit('voteCallBack');
+                        },
+                        (res) => {
+                            uni.showToast({
+                                title: res.message,
+                                icon: 'none',
+                            });
+                        },
+                    );
+                });
+            } else {
+                uni.showToast({
+                    title:
+                        this.status === 1
+                            ? '活动未开始，敬请期待'
+                            : '活动已结束',
+                    icon: 'none',
+                });
+            }
+        },
         initShare() {
             const titleList = this.isH5
                 ? this.publicConfig.shareConfig.h5Title
@@ -736,10 +779,10 @@ export default {
                 });
             }
             if (this.status === 2) {
-                this.isLogin().then(
+                api.isLogin().then(
                     () => {
                         uni.navigateTo({
-                            url: `/activity/pages/upload/modify?activity_id=${this.activityId}`,
+                            url: `/activity/pages/upload/modify?activity_id=${this.filter.activity_id}`,
                         });
                     },
                     () => {
@@ -773,6 +816,7 @@ export default {
         this.publicConfig = this.$store.getters.getPublicConfig(activityId);
         this.filter.activity_id = activityId;
         this.filter.user_id = userId;
+        this.getData();
         this.getEnrollInfo().then((data) => {
             if (!Array.isArray(data)) {
                 if (data.detail) {
@@ -781,7 +825,6 @@ export default {
                 }
                 this.isSelf = data.is_self;
             }
-            this.getData();
         });
         this.activityStatus();
         this.initShare();
@@ -867,6 +910,7 @@ export default {
     }
     .user-image-info {
         display: flex;
+        margin-bottom: 20upx;
         .user-image {
             width: 220upx;
             height: 292upx;
@@ -910,6 +954,7 @@ export default {
         background-color: #ddd6ff;
         border-radius: 10upx;
         word-break: break-all;
+        font-size: 26upx;
         .user-desc-text {
             height: 96upx;
             overflow-y: auto;
@@ -1022,8 +1067,10 @@ export default {
             height: 22upx;
         }
     }
-    /deep/ .event-craft-cover {
+    /deep/ .event-craft-cover,
+    .event-craft-cover {
         .tag {
+            max-width: 130upx;
             background: #ffe79c;
             color: #bb77ff;
         }
@@ -1040,7 +1087,13 @@ export default {
             &.text-two-line {
                 height: 63upx;
             }
+            &.create-by {
+                font-size: 28upx;
+                line-height: 28upx;
+                margin-bottom: 9upx;
+            }
         }
+
         .media-time {
             color: #fff;
             font-size: 24upx;
@@ -1050,27 +1103,22 @@ export default {
         .like-icon {
             width: 27upx;
             height: 27upx;
-            position: absolute;
-            top: 50%;
-            left: 20upx;
-            transform: translateY(-50%);
-
-            text {
-                color: #fff;
-            }
+            margin-right: 5upx;
         }
         .vote {
             float: right;
-            width: 130upx;
-            height: 60upx;
             background-color: #ff685c;
+            color: #fff;
+            width: 170upx;
+            height: 60upx;
             border-radius: 30upx;
-            color: rgba(255, 255, 255, 1);
             font-size: 28upx;
             line-height: 60upx;
             position: relative;
-            padding-left: 52upx;
             box-sizing: border-box;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
         .vote-num {
             font-size: 30upx;

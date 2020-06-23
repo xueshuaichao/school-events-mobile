@@ -127,7 +127,7 @@
                 <view class="box-bg">
                     <view class="box-scroll">
                         <view class="img-box">
-                            <image :src="data.avatar" />
+                            <image :src="data.avatar | optimizeImage" />
                         </view>
                         <view class="text-box">
                             <view class="name">
@@ -158,7 +158,7 @@
                                     :key="k"
                                     class="result-item"
                                 >
-                                    {{ 11111 }}
+                                    {{ item }}
                                 </view>
                             </view>
                         </view>
@@ -180,6 +180,24 @@
 
 <script>
 export default {
+    filters: {
+        optimizeImage: (val) => {
+            if (!val) {
+                return '';
+            }
+            let newUrl = '';
+            const width = 325;
+            const height = 155;
+            if (val.indexOf('?') !== -1) {
+                newUrl = `${val}&x-oss-process=image/format,png/interlace,1/quality,Q_80/resize,m_pad,h_${height
+                    * 2},w_${width * 2}`;
+            } else {
+                newUrl = `${val}?x-oss-process=image/format,png/interlace,1/quality,Q_80/resize,m_pad,h_${height
+                    * 2},w_${width * 2}`;
+            }
+            return newUrl;
+        },
+    },
     props: {
         title: {
             type: String,
@@ -558,7 +576,7 @@ export default {
                 }
             }
             .text-box {
-                padding: 38upx 40upx 20upx;
+                padding: 38upx 40upx 40upx;
                 .name {
                     font-size: 40upx;
                     line-height: 1;
@@ -572,10 +590,11 @@ export default {
                         margin-left: 30upx;
                     }
                 }
-                .text-item {
+                .text-item,
+                .result-tit {
                     position: relative;
                     padding-left: 38upx;
-                    line-height: 36upx;
+                    line-height: 40upx;
                     font-size: 26upx;
                     color: #333;
                     &::before {
@@ -589,6 +608,18 @@ export default {
                         left: 0;
                         top: 10upx;
                     }
+                }
+                .result {
+                    margin-top: 30upx;
+                }
+                .result-tit {
+                    font-weight: bold;
+                }
+                .result-item {
+                    padding-left: 38upx;
+                    line-height: 40upx;
+                    font-size: 26upx;
+                    color: #333;
                 }
             }
         }

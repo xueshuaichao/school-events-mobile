@@ -141,6 +141,17 @@
                 :data="modalData"
                 @close="handleClose"
             />
+            <view
+                v-if="showGuideMask"
+                class="guide-mask"
+            >
+                <view class="box">
+                    <image />
+                    <view class="text">
+                        快来上传作品展示优秀的你吧～
+                    </view>
+                </view>
+            </view>
         </template>
     </div>
 </template>
@@ -200,6 +211,7 @@ export default {
             modalData: {},
             maskPrompt: false,
             showPosterMask: false,
+            showGuideMask: false,
             posterImage: '',
             rosterData: {},
             type: 0,
@@ -274,6 +286,10 @@ export default {
         },
         togglePoster(status) {
             this.showPosterMask = status;
+            this.toggleGuideMask(true);
+        },
+        toggleGuideMask(status) {
+            this.showGuideMask = status;
         },
         getProficients() {
             // 专家列表
@@ -354,6 +370,9 @@ export default {
             }
         },
         handleUpload() {
+            if (this.showGuideMask) {
+                this.toggleGuideMask(false);
+            }
             if (this.isH5 && this.canJoin === false) {
                 return uni.showToast({
                     title: '请在UP爱挑战小程序上传作品',
@@ -544,6 +563,33 @@ export default {
             -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
             word-break: break-all;
+        }
+    }
+    .guide-mask {
+        position: fixed;
+        top: 0;
+        bottom: 116upx;
+        left: 0;
+        right: 0;
+        background-color: rgba(0, 0, 0, 0.8);
+        z-index: 10;
+        .box {
+            position: absolute;
+            bottom: 0;
+            text-align: center;
+            width: 100%;
+        }
+        image {
+            width: 50upx;
+            height: 60upx;
+            display: block;
+            margin: 0 auto 30upx;
+        }
+        .text {
+            color: #fff;
+            line-height: 42upx;
+            font-size: 30upx;
+            margin-bottom: 30upx;
         }
     }
 }

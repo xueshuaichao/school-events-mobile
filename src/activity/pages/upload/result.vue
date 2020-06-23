@@ -59,6 +59,7 @@ import api from '../../../common/api';
 export default {
     data() {
         return {
+            userInfo: {},
             activityId: '',
             publicConfig: {},
             resultConfig: {},
@@ -66,7 +67,7 @@ export default {
         };
     },
     onLoad(params) {
-        this.activityId = params.activity_id;
+        this.activityId = Number(params.activity_id);
         this.publicConfig = this.$store.getters.getPublicConfig(
             this.activityId,
         );
@@ -77,16 +78,31 @@ export default {
         if (this.activityId === '9') {
             this.getLotteryNum();
         }
+        this.getUserInfo();
     },
     methods: {
+        getUserInfo() {
+            api.get('/api/user/info').then(
+                (res) => {
+                    this.userInfo = res.user_info;
+                },
+                () => {
+                    this.isLoading = false;
+                },
+            );
+        },
         reUpload() {
             uni.reLaunch({
                 url: `/activity/pages/upload/modify?activity_id=${this.activityId}`,
             });
         },
         goToUc() {
+            let url = `/activity/pages/mywork/mywork?status=1&type=myWork&activity_id=${this.activityId}`;
+            if (this.activityId === 10) {
+                url = `/activity/pages/brand/ucenter?status=1&activity_id=${this.activityId}&user_id=${this.userInfo.user_id}`;
+            }
             uni.reLaunch({
-                url: `/activity/pages/mywork/mywork?status=1&type=myWork&activity_id=${this.activityId}`,
+                url,
             });
         },
         getLotteryNum() {

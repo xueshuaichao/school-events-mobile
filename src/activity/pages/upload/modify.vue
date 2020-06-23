@@ -400,6 +400,13 @@ export default {
                 api.get('/api/works/childcat', {
                     cat_id: 3,
                 }).then((res) => {
+                    if (this.formData.activity_id) {
+                        const index = res.findIndex(
+                            item => item.cat_id === 102,
+                        );
+                        // eslint-disable-next-line no-param-reassign
+                        res[index].name = '体育竞技';
+                    }
                     this.catData = res;
                     this.getItemData();
                 });
