@@ -104,7 +104,7 @@
                                     v-if="publicConfig.activityId === 10"
                                     class="media-name create-by text-one-line"
                                 >
-                                    {{ `${item.create_by}` }}
+                                    {{ `${item.user_name}` }}
                                 </view>
                                 <view class="media-name text-one-line">
                                     {{ `${item.resource_name}` }}
@@ -611,10 +611,7 @@ body.dialog-open {
         .like-icon {
             width: 27upx;
             height: 27upx;
-            position: absolute;
-            top: 50%;
-            left: 20upx;
-            transform: translateY(-50%);
+            margin-right: 5upx;
         }
         .vote {
             float: right;
@@ -625,9 +622,9 @@ body.dialog-open {
             color: rgba(255, 255, 255, 1);
             font-size: 28upx;
             line-height: 60upx;
-            position: relative;
-            padding-left: 52upx;
-            box-sizing: border-box;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
         .media-icon {
             width: 40upx;

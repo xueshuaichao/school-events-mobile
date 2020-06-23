@@ -31,7 +31,7 @@
                     <template v-slot:main-data>
                         <!-- 复赛名单 -->
                         <view
-                            v-if="!rosterData.text"
+                            v-if="rosterData.text"
                             class="roster-list"
                         >
                             <view
@@ -42,9 +42,7 @@
                                     src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/brand_list_icon.png"
                                 />
                                 <text>
-                                    {{
-                                        rosterData.text || "复赛名单公布：7月28日"
-                                    }}
+                                    {{ rosterData.text }}
                                 </text>
                             </view>
                         </view>
@@ -95,9 +93,9 @@
                                     :key="index"
                                     class="item"
                                     :class="{ 'margin-0': index > 2 }"
-                                    @click="showExpertDetail(item.desc)"
+                                    @click="showExpertDetail(item)"
                                 >
-                                    <image :src="item.avatar" />
+                                    <image :src="item.avatar | setAvatarSize" />
                                     <view class="expert-name text-one-line">
                                         {{ item.name }}
                                     </view>
@@ -140,6 +138,7 @@
                 class="mask"
                 :title="maskTitle"
                 :type="maskType"
+                :data="modalData"
                 @close="handleClose"
             />
         </template>
@@ -161,6 +160,24 @@ export default {
         savePoster,
         login,
     },
+    filters: {
+        setAvatarSize: (val) => {
+            if (!val) {
+                return '';
+            }
+            let newUrl = '';
+            const width = 80;
+            const height = 80;
+            if (val.indexOf('?') !== -1) {
+                newUrl = `${val}&x-oss-process=image/format,png/interlace,1/quality,Q_80/resize,m_fixed,h_${height
+                    * 2},w_${width * 2}`;
+            } else {
+                newUrl = `${val}?x-oss-process=image/format,png/interlace,1/quality,Q_80/resize,m_fixed,h_${height
+                    * 2},w_${width * 2}`;
+            }
+            return newUrl;
+        },
+    },
     props: {
         activityId: {
             type: Number,
@@ -180,6 +197,7 @@ export default {
             publicConfig: {},
             indexConfig: {},
             fr: 'dyrhd',
+            modalData: {},
             maskPrompt: false,
             showPosterMask: false,
             posterImage: '',
@@ -263,8 +281,19 @@ export default {
                 this.expertList = data;
             });
         },
-        showExpertDetail(desc) {
-            console.log(desc);
+        showExpertDetail({
+            name, desc, avatar, technical,
+        }) {
+            this.showMask({
+                title: '',
+                type: 2,
+            });
+            this.modalData = {
+                avatar,
+                name,
+                desc,
+                technical,
+            };
         },
         activityStatus() {
             // 1未开始，2进行中，3已结束

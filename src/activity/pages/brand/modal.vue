@@ -1,13 +1,21 @@
 <template>
     <view class="modal-content">
-        <view :class="['modal-content-box', type === 1 ? 'rule' : '']">
+        <view
+            :class="[
+                'modal-content-box',
+                type === 1 || type === 2 ? 'rule' : ''
+            ]"
+        >
             <view
                 v-if="type === 0"
                 class="rule-content"
             >
                 <view class="box-bg">
                     <view class="box-scroll">
-                        <view class="title">
+                        <view
+                            v-if="title"
+                            class="title"
+                        >
                             {{ title }}
                         </view>
                         <view class="text-box">
@@ -57,7 +65,7 @@
                                         {{ list }}
                                     </view>
                                     <view class="tips">
-                                        {{ item.tips }}
+                                        {{ item.tips || "" }}
                                     </view>
                                 </view>
                             </view>
@@ -113,13 +121,58 @@
                 </view>
             </view>
             <view
-                class="close"
-                @click="close()"
+                v-else-if="type === 2"
+                class="expert-content"
             >
-                <image
-                    src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/children_close.png"
-                    mode=""
-                />
+                <view class="box-bg">
+                    <view class="box-scroll">
+                        <view class="img-box">
+                            <image :src="data.avatar" />
+                        </view>
+                        <view class="text-box">
+                            <view class="name">
+                                {{ data.name }}
+                                <text
+                                    v-if="data.technical"
+                                    class="tag"
+                                >
+                                    {{ data.technical }}
+                                </text>
+                            </view>
+                            <view
+                                v-for="(item, i) in data.desc.text"
+                                :key="i"
+                                class="text-item"
+                            >
+                                {{ item }}
+                            </view>
+                            <view
+                                v-if="data.desc.result"
+                                class="result"
+                            >
+                                <view class="result-tit">
+                                    研究成果
+                                </view>
+                                <view
+                                    v-for="(item, k) in data.desc.result"
+                                    :key="k"
+                                    class="result-item"
+                                >
+                                    {{ 11111 }}
+                                </view>
+                            </view>
+                        </view>
+                    </view>
+                </view>
+                <view
+                    class="close"
+                    @click="close()"
+                >
+                    <image
+                        src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/children_close.png"
+                        mode=""
+                    />
+                </view>
             </view>
         </view>
     </view>
@@ -130,11 +183,17 @@ export default {
     props: {
         title: {
             type: String,
-            default: '活动规则',
+            default: '',
         },
         type: {
             type: Number,
             default: 0,
+        },
+        data: {
+            type: Object,
+            default() {
+                return {};
+            },
         },
     },
     data() {
@@ -322,7 +381,7 @@ export default {
         position: absolute;
         background-color: #8f6fff;
         width: 690upx;
-        height: 968upx;
+        max-height: 968upx;
         left: 50%;
         top: 50%;
         transform: translate(-50%, -54%);
@@ -472,6 +531,64 @@ export default {
                     width: 370upx;
                     text-align: left;
                     color: #666;
+                }
+            }
+        }
+        .expert-content {
+            .box-bg {
+                max-height: 928upx;
+                height: auto;
+                padding: 0;
+            }
+            .box-scroll {
+                padding-top: 310upx;
+                position: relative;
+            }
+            .img-box {
+                height: 310upx;
+                margin-top: -2upx;
+                position: absolute;
+                top: -2upx;
+                left: -2upx;
+                right: -2upx;
+                & > image {
+                    width: 100%;
+                    height: 100%;
+                    border-radius: 30upx 30upx 0 0;
+                }
+            }
+            .text-box {
+                padding: 38upx 40upx 20upx;
+                .name {
+                    font-size: 40upx;
+                    line-height: 1;
+                    font-weight: 600;
+                    text-align: center;
+                    margin-bottom: 35upx;
+                    .tag {
+                        color: #6a4ee3;
+                        font-size: 30upx;
+                        display: inline-block;
+                        margin-left: 30upx;
+                    }
+                }
+                .text-item {
+                    position: relative;
+                    padding-left: 38upx;
+                    line-height: 36upx;
+                    font-size: 26upx;
+                    color: #333;
+                    &::before {
+                        content: "";
+                        width: 0;
+                        height: 0;
+                        border-top: 10upx solid transparent;
+                        border-bottom: 10upx solid transparent;
+                        border-left: 18upx solid #906fff;
+                        position: absolute;
+                        left: 0;
+                        top: 10upx;
+                    }
                 }
             }
         }
