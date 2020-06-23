@@ -104,7 +104,7 @@
                                     v-if="publicConfig.activityId === 10"
                                     class="media-name create-by text-one-line"
                                 >
-                                    {{ `${item.create_by}` }}
+                                    {{ `${item.user_name}` }}
                                 </view>
                                 <view class="media-name text-one-line">
                                     {{ `${item.resource_name}` }}
@@ -611,6 +611,7 @@ body.dialog-open {
         .like-icon {
             width: 27upx;
             height: 27upx;
+            margin-right: 5upx;
         }
         .vote {
             float: right;
