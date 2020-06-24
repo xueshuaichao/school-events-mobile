@@ -285,6 +285,8 @@ export default {
             this.filter.topic_id = this.pageData.resource_id;
             this.filter.page_num = 1;
             this.loading = false;
+            this.filter.last_id = 0;
+            this.subFilter.last_id = 0;
             this.resetInitVal();
             this.list = [];
             this.getList();
@@ -488,7 +490,7 @@ export default {
         setListData(id, content, params) {
             // 无刷新数据，更新列表。
             const date = new Date();
-            const time = `${date.getMonth()}-${date.getDate()}${date.getHours()}:${date.getMinutes()}`;
+            const time = `${date.getMonth()}-${date.getDate()} ${date.getHours()}:${date.getMinutes()}`;
             const obj = {
                 ...this.selItem,
                 comment_id: id,
@@ -498,6 +500,7 @@ export default {
             };
             if (!this.selItem.to_user_id) {
                 this.list.unshift(obj);
+                this.total += 1;
             } else {
                 this.list = this.list.map((D) => {
                     const d = D;
