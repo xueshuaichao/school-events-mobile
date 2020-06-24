@@ -173,6 +173,9 @@ const routesConfig = {
             path: '/activity/pages/mywork/mywork',
         },
         {
+            path: '/activity/pages/upload/modify',
+        },
+        {
             path: '/activity/pages/brand/ucenter',
         },
         {
