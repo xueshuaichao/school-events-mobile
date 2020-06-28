@@ -66,7 +66,8 @@ function appLogin() {
 }
 
 function getAppUserkey({ userkey }) {
-    alert(userkey);
+    // alert(userkey);
+    return userkey;
 }
 
 function isLogin(params = {}) {
