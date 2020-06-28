@@ -61,55 +61,52 @@ function post(url, data) {
 }
 
 function appLogin() {
-    return new Promise((resolve) => {
-        resolve(window.webkit.messageHandlers.appLogin.postMessage());
-    });
+    window.webkit.messageHandlers.appLogin.postMessage(null);
 }
 
 function isLogin(params = {}) {
     if (1 > 0) {
-        appLogin().then(({ userkey }) => {
-            if (userkey) {
-                alert(userkey);
+        const userkey = appLogin();
+        alert(userkey);
+    } else {
+        const { fr } = params;
+        let query = '';
+        if (fr) {
+            query = `?fr=${fr}`;
+        }
+        return new Promise((resolve, reject) => {
+            if (isLogin.userInfo) {
+                return resolve(isLogin.user_info);
             }
+
+            return pureGet('/api/user/info').then(
+                (res) => {
+                    const { data, status, msg } = res;
+
+                    if (status === 200) {
+                        isLogin.userInfo = data.user_info;
+                        resolve(data.user_info);
+                    } else if (status === 602) {
+                        uni.navigateTo({
+                            url: `/pages/login/login${query}`,
+                        });
+                        reject();
+                    } else {
+                        uni.showToast({
+                            title: msg,
+                            icon: 'none',
+                        });
+                        reject();
+                    }
+                },
+                (err) => {
+                    // net work error
+                    console.log(err);
+                },
+            );
         });
     }
-    const { fr } = params;
-    let query = '';
-    if (fr) {
-        query = `?fr=${fr}`;
-    }
-    return new Promise((resolve, reject) => {
-        if (isLogin.userInfo) {
-            return resolve(isLogin.user_info);
-        }
-
-        return pureGet('/api/user/info').then(
-            (res) => {
-                const { data, status, msg } = res;
-
-                if (status === 200) {
-                    isLogin.userInfo = data.user_info;
-                    resolve(data.user_info);
-                } else if (status === 602) {
-                    uni.navigateTo({
-                        url: `/pages/login/login${query}`,
-                    });
-                    reject();
-                } else {
-                    uni.showToast({
-                        title: msg,
-                        icon: 'none',
-                    });
-                    reject();
-                }
-            },
-            (err) => {
-                // net work error
-                console.log(err);
-            },
-        );
-    });
+    return true;
 }
 
 function logout() {
