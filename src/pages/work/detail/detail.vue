@@ -696,8 +696,6 @@ export default {
                 this.toggleLike();
             }
             if (action === 'showMessage') {
-                // this.showDrawer = true;
-                console.log(action, '12121212action');
                 this.showDrawer = !this.showDrawer;
             }
         },

@@ -65,7 +65,7 @@
                         </view>
                         <template v-if="item.show">
                             <view
-                                v-for="subItem in item.subList"
+                                v-for="subItem in item.subListCache"
                                 :key="subItem.comment_id"
                                 class="sub-item item"
                                 @click.stop="clickItem(subItem, item)"
@@ -109,14 +109,7 @@
                                 — 展开{{ item.sub_count }}条回复 —
                             </view>
                         </template>
-                        <template
-                            v-if="
-                                item.sub_count &&
-                                    item.show &&
-                                    item.subList &&
-                                    item.sub_count == item.subList.length
-                            "
-                        >
+                        <template v-if="closeSubItem(item)">
                             <view
                                 class="show-or-hide"
                                 @click="closeSubList(item)"
@@ -124,14 +117,7 @@
                                 — 收起 —
                             </view>
                         </template>
-                        <template
-                            v-if="
-                                item.sub_count &&
-                                    item.show &&
-                                    item.subList &&
-                                    item.sub_count > item.subList.length
-                            "
-                        >
+                        <template v-if="!closeSubItem(item) && item.show">
                             <view
                                 class="show-or-hide"
                                 @click.stop="getMoreSubList(item, 'more')"
@@ -175,6 +161,7 @@
                 <view
                     v-if="showKeybord"
                     class="fabu fl-r"
+                    :class="{ disable: !changeVal }"
                     @click="bindconfirm"
                 >
                     发布
@@ -353,7 +340,6 @@ export default {
                 to_user_id: item.from_user_id,
                 to_comment_id: items ? items.comment_id : item.comment_id,
             };
-            console.log(item);
             this.selItem.to_user_id = item.from_user_id;
             this.selItem.to_user_name = item.user_info.name;
         },
@@ -366,10 +352,37 @@ export default {
                 this.selItem.from_user_id = data.user_info.user_id;
             });
         },
+        closeSubItem(item) {
+            let show = false;
+            const count = Math.ceil(item.subList.length / 10) + 1;
+            if (
+                item.sub_count >= 4
+                && item.sub_count < 10
+                && item.sub_count === item.subList.length
+                && item.showCount === 2
+            ) {
+                show = true;
+            }
+            if (
+                item.sub_count > 10
+                && item.sub_count === item.subList.length
+                && item.showCount === count
+            ) {
+                show = true;
+            }
+            // 小10条展开
+            if (item.sub_count < 4 && item.showCount) {
+                show = true;
+            }
+            return show;
+        },
         getMoreSubList(item, more) {
             // 展开更多，数据已经加载，不重复获取数据
             let List = [];
-            if (item.sub_count > item.subList.length) {
+            if (
+                item.sub_count > item.subList.length
+                && (!item.showCount || item.showCount > 1)
+            ) {
                 if (item.subList && item.subList.length) {
                     this.subFilter.last_id = item.subList[item.subList.length - 1].comment_id;
                 }
@@ -397,20 +410,38 @@ export default {
             this.list = this.list.map((D) => {
                 const d = D;
                 if (d.comment_id === item.comment_id) {
+                    d.showCount += 1;
                     d.show = true;
                     if (more || d.subList.length) {
                         d.subList = d.subList.concat(List);
                     } else {
                         d.subList = List;
                     }
+                    this.setCacheSublist(d);
                 }
                 return d;
             });
+        },
+        setCacheSublist(D) {
+            // 显示3条评论，显示10条评论，
+            const d = D;
+            if (d.sub_count > 3) {
+                if (d.showCount === 1) {
+                    d.subListCache = d.subList.slice(0, 3);
+                } else if (d.showCount === 2) {
+                    d.subListCache = d.subList.slice(0, 10);
+                } else {
+                    d.subListCache = d.subList;
+                }
+            } else {
+                d.subListCache = d.subList;
+            }
         },
         closeSubList(item) {
             this.list = this.list.map((D) => {
                 const d = D;
                 if (d.comment_id === item.comment_id) {
+                    d.showCount = 0;
                     d.show = false;
                 }
                 return d;
@@ -432,7 +463,9 @@ export default {
                     const D = d;
                     D.created_at = D.created_at.slice(5, 16);
                     D.subList = [];
+                    D.subListCache = [];
                     D.show = false;
+                    D.showCount = 0;
                     return D;
                 });
                 if (this.filter.page_num === 1) {
@@ -512,6 +545,7 @@ export default {
                             d.subList = [obj];
                             d.sub_count = 1;
                         }
+                        this.setCacheSublist(d);
                     }
                     return d;
                 });
@@ -532,7 +566,6 @@ export default {
             this.isFocus = false;
         },
         toLower() {
-            console.log('toLower---');
             if (this.filter.page_num * this.filter.page_size < this.total) {
                 this.filter.page_num += 1;
                 this.getList();
@@ -693,6 +726,9 @@ export default {
                 font-size: 28rpx;
                 line-height: 80rpx;
                 margin-left: 14rpx;
+                &.disable {
+                    color: #b0b5bf;
+                }
             }
 
             input {
