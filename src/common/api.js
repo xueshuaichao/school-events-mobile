@@ -61,7 +61,7 @@ function post(url, data) {
 }
 
 function appLogin() {
-    window.webkit.messageHandlers.appLogin.postMessage(null);
+    window.webkit.messageHandlers.showMessage.postMessage('appLogin');
 }
 
 function isLogin(params = {}) {
