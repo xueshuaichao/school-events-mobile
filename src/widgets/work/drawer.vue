@@ -688,6 +688,7 @@ export default {
                     line-height: 38rpx;
                     font-weight: 500;
                     word-break: break-all;
+                    width: 400rpx;
                 }
                 .content {
                     font-size: 28rpx;
