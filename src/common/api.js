@@ -100,14 +100,23 @@ function isLogin(params = {}) {
         );
     });
 }
-function appLogin(type = 'ios', path = null) {
+let callBackFn = null;
+function appLogin(type = 'ios', path = null, callback) {
     if (type === 'ios') {
         window.webkit.messageHandlers.appLogin.postMessage(path);
     } else {
         // eslint-disable-next-line no-undef
         androidApp.appLogin(path);
     }
+    callBackFn = callback;
 }
+
+window.getAppUserkey = function (userkey) {
+    alert(11111);
+    if (userkey) {
+        callBackFn(userkey);
+    }
+};
 
 function logout() {
     try {

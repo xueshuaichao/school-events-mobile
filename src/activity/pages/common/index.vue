@@ -266,7 +266,6 @@ export default {
                 this.getData('reachBottom');
             }
         });
-        window.getAppUserkey = this.getAppUserkey;
     },
     created() {
         const u = navigator.userAgent;
@@ -315,35 +314,28 @@ export default {
                 this.status = res.status;
             });
         },
-        getAppUserkey(userkey, path) {
-            this.userkey = userkey;
-            if (this.userkey) {
-                if (path === 'upload') {
-                    uni.navigateTo({
-                        url: `/activity/pages/upload/modify?activity_id=${this.filter.activity_id}`,
-                    });
-                } else {
-                    uni.navigateTo({
-                        url: this.workPath
-                            ? this.workPath
-                            : `/activity/pages/mywork/mywork?type=myWork&activity_id=${this.filter.activity_id}`,
-                    });
-                }
-            }
-        },
         handleUpload() {
             if (this.status === 2) {
-                // if ((this.isIOS || this.isAndroid) && !this.userkey) {
-                api.appLogin(this.isIOS ? 'ios' : 'android', 'upload');
-                // } else {
-                //     api.isLogin({
-                //         fr: this.fr,
-                //     }).then(() => {
-                //         uni.navigateTo({
-                //             url: `/activity/pages/upload/modify?activity_id=${this.filter.activity_id}`,
-                //         });
-                //     });
-                // }
+                if (!(this.isIOS || this.isAndroid) && !this.userkey) {
+                    api.appLogin(
+                        this.isIOS ? 'ios' : 'android',
+                        'upload',
+                        (userkey) => {
+                            this.userkey = userkey;
+                            uni.navigateTo({
+                                url: `/activity/pages/upload/modify?activity_id=${this.filter.activity_id}`,
+                            });
+                        },
+                    );
+                } else {
+                    api.isLogin({
+                        fr: this.fr,
+                    }).then(() => {
+                        uni.navigateTo({
+                            url: `/activity/pages/upload/modify?activity_id=${this.filter.activity_id}`,
+                        });
+                    });
+                }
             } else {
                 uni.showToast({
                     title:
@@ -392,7 +384,18 @@ export default {
         },
         handleMywork() {
             if ((this.isIOS || this.isAndroid) && !this.userkey) {
-                api.appLogin(this.isIOS ? 'ios' : 'android', 'mywork');
+                api.appLogin(
+                    this.isIOS ? 'ios' : 'android',
+                    'mywork',
+                    (userkey) => {
+                        this.userkey = userkey;
+                        uni.navigateTo({
+                            url: this.workPath
+                                ? this.workPath
+                                : `/activity/pages/mywork/mywork?type=myWork&activity_id=${this.filter.activity_id}`,
+                        });
+                    },
+                );
             } else {
                 api.isLogin({
                     fr: this.fr,
