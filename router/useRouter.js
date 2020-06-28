@@ -256,6 +256,12 @@ const routesConfig = {
             path: '/pages/openGame/zhibo-list',
         },
         {
+            path: '/pages/openGame/zhibo',
+        },
+        {
+            path: '/pages/openGame/school-zhibo',
+        },
+        {
             path: '/pages/upload/default/upload',
         },
         {
