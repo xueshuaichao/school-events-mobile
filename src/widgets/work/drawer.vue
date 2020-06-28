@@ -38,6 +38,7 @@
                         v-for="item in list"
                         :key="item.comment_id"
                         class="item-wrap"
+                        :class="{ 'no-margin': item.sub_count }"
                         @click.prevent="clickItem(item)"
                     >
                         <view class="item">
@@ -112,7 +113,7 @@
                         <template v-if="closeSubItem(item)">
                             <view
                                 class="show-or-hide"
-                                @click="closeSubList(item)"
+                                @click.stop="closeSubList(item)"
                             >
                                 — 收起 —
                             </view>
@@ -523,7 +524,10 @@ export default {
         setListData(id, content, params) {
             // 无刷新数据，更新列表。
             const date = new Date();
-            const time = `${date.getMonth()}-${date.getDate()} ${date.getHours()}:${date.getMinutes()}`;
+            let time = `${this.joinDate(date.getMonth())}-`;
+            time += `${this.joinDate(date.getDate())} `;
+            time += `${this.joinDate(date.getHours())}:`;
+            time += `${this.joinDate(date.getMinutes())}`;
             const obj = {
                 ...this.selItem,
                 comment_id: id,
@@ -532,8 +536,13 @@ export default {
                 content,
             };
             if (!this.selItem.to_user_id) {
+                obj.subList = [];
+                obj.subListCache = [];
+                obj.show = false;
+                obj.showCount = 0;
                 this.list.unshift(obj);
                 this.total += 1;
+                console.log('llalal', this.list);
             } else {
                 this.list = this.list.map((D) => {
                     const d = D;
@@ -554,6 +563,10 @@ export default {
             this.$emit('getcommentTotal', this.allNum);
 
             this.resetInitVal();
+        },
+        joinDate(time) {
+            const Time = time < 10 ? `0${time}` : time;
+            return Time;
         },
         resetInitVal() {
             // reset for init value;
@@ -656,6 +669,9 @@ export default {
                     display: flex;
                     justify-content: space-between;
                 }
+                &.no-margin {
+                    margin-bottom: 0;
+                }
                 .img-box {
                     width: 72rpx;
                     height: 72rpx;
@@ -671,6 +687,8 @@ export default {
                     font-size: 30rpx;
                     line-height: 38rpx;
                     font-weight: 500;
+                    word-break: break-all;
+                    width: 400rpx;
                 }
                 .content {
                     font-size: 28rpx;
@@ -696,7 +714,7 @@ export default {
             color: #b0b5bf;
             font-size: 28rpx;
             text-align: center;
-            margin-top: 20rpx;
+            padding: 20rpx 0;
             line-height: 40rpx;
         }
         .message-add {
