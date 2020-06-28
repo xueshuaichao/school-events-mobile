@@ -99,8 +99,10 @@ function isLogin(params = {}) {
         );
     });
 }
-function appLogin() {
-    window.webkit.messageHandlers.appLogin.postMessage(null);
+function appLogin(type = 'ios', path = null) {
+    if (type === 'ios') {
+        window.webkit.messageHandlers.appLogin.postMessage(path);
+    }
 }
 
 function logout() {

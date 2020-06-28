@@ -19,7 +19,7 @@
                         class="active-rule"
                         @click="handleActiverule"
                     >
-                        活动规则{{ msg }}
+                        活动规则
                     </view>
                     <view
                         class="menu-title"
@@ -251,7 +251,6 @@ export default {
             setId: '',
             isIOS: false,
             isAndroid: false,
-            msg: '',
         };
     },
     computed: {
@@ -316,14 +315,26 @@ export default {
                 this.status = res.status;
             });
         },
-        getAppUserkey(userkey) {
-            this.msg = '323232323232';
+        getAppUserkey(userkey, path) {
             this.userkey = userkey;
+            if (this.userkey) {
+                if (path === 'upload') {
+                    uni.navigateTo({
+                        url: `/activity/pages/upload/modify?activity_id=${this.filter.activity_id}`,
+                    });
+                } else {
+                    uni.navigateTo({
+                        url: this.workPath
+                            ? this.workPath
+                            : `/activity/pages/mywork/mywork?type=myWork&activity_id=${this.filter.activity_id}`,
+                    });
+                }
+            }
         },
         handleUpload() {
             if (this.status === 2) {
                 if ((this.isIOS || this.isAndroid) && !this.userkey) {
-                    api.appLogin(this.isIOS ? 'ios' : 'android');
+                    api.appLogin(this.isIOS ? 'ios' : 'android', 'upload');
                 } else {
                     api.isLogin({
                         fr: this.fr,
@@ -380,7 +391,9 @@ export default {
             this.$emit('showMask', { title: '活动规则', type: 0 });
         },
         handleMywork() {
-            if (this.userkey) {
+            if ((this.isIOS || this.isAndroid) && !this.userkey) {
+                api.appLogin(this.isIOS ? 'ios' : 'android', 'mywork');
+            } else {
                 api.isLogin({
                     fr: this.fr,
                 }).then(() => {
@@ -390,8 +403,6 @@ export default {
                             : `/activity/pages/mywork/mywork?type=myWork&activity_id=${this.filter.activity_id}`,
                     });
                 });
-            } else {
-                api.appLogin();
             }
         },
         handleVote(item) {
