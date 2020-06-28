@@ -249,6 +249,8 @@ export default {
             status: 2,
             crouselList: [],
             setId: '',
+            isIOS: false,
+            isAndroid: false,
         };
     },
     computed: {
@@ -264,8 +266,12 @@ export default {
                 this.getData('reachBottom');
             }
         });
+        window.getAppUserkey = this.getAppUserkey;
     },
     created() {
+        const u = navigator.userAgent;
+        this.isIOS = u.toLowerCase().indexOf('wd-atz-ios') !== -1;
+        this.isAndroid = u.toLowerCase().indexOf('wd-atz-android') !== -1;
         this.getData();
         if (!this.hideButton) {
             this.activityStatus();
@@ -309,16 +315,13 @@ export default {
                 this.status = res.status;
             });
         },
+        getAppUserkey({ userkey }) {
+            this.userkey = userkey;
+        },
         handleUpload() {
-            // if (this.isH5) {
-            //     return uni.showToast({
-            //         title: '请在UP爱挑战小程序上传作品',
-            //         icon: 'none',
-            //     });
-            // }
             if (this.status === 2) {
-                if (1 > 0) {
-                    api.appLogin();
+                if ((this.isIOS || this.isAndroid) && !this.userkey) {
+                    api.appLogin(this.isIOS ? 'ios' : 'android');
                 } else {
                     api.isLogin({
                         fr: this.fr,
@@ -375,15 +378,19 @@ export default {
             this.$emit('showMask', { title: '活动规则', type: 0 });
         },
         handleMywork() {
-            api.isLogin({
-                fr: this.fr,
-            }).then(() => {
-                uni.navigateTo({
-                    url: this.workPath
-                        ? this.workPath
-                        : `/activity/pages/mywork/mywork?type=myWork&activity_id=${this.filter.activity_id}`,
+            if (this.userkey) {
+                api.isLogin({
+                    fr: this.fr,
+                }).then(() => {
+                    uni.navigateTo({
+                        url: this.workPath
+                            ? this.workPath
+                            : `/activity/pages/mywork/mywork?type=myWork&activity_id=${this.filter.activity_id}`,
+                    });
                 });
-            });
+            } else {
+                api.appLogin();
+            }
         },
         handleVote(item) {
             if (this.status === 2) {

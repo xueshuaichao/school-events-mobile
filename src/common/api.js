@@ -102,9 +102,6 @@ function isLogin(params = {}) {
 function appLogin() {
     window.webkit.messageHandlers.appLogin.postMessage(null);
 }
-function getAppUserkey({ userkey }) {
-    isLogin();
-}
 
 function logout() {
     try {
