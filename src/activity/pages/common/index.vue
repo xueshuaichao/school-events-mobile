@@ -19,7 +19,7 @@
                         class="active-rule"
                         @click="handleActiverule"
                     >
-                        活动规则
+                        活动规则{{ msg }}
                     </view>
                     <view
                         class="menu-title"
@@ -251,6 +251,7 @@ export default {
             setId: '',
             isIOS: false,
             isAndroid: false,
+            msg: '',
         };
     },
     computed: {
@@ -315,7 +316,8 @@ export default {
                 this.status = res.status;
             });
         },
-        getAppUserkey({ userkey }) {
+        getAppUserkey(userkey) {
+            this.msg = '323232323232';
             this.userkey = userkey;
         },
         handleUpload() {
