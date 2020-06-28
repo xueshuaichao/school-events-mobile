@@ -567,6 +567,7 @@ export default {
             width: 100%;
             box-sizing: border-box;
             left: 0;
+            bottom: 86rpx;
             .user-data {
                 font-size: 28rpx;
                 line-height: 40rpx;
