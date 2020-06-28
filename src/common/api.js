@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { http } from './third-party/request';
 
 function get(url, data) {
@@ -61,13 +62,16 @@ function post(url, data) {
 }
 
 function appLogin() {
-    window.webkit.messageHandlers.showMessage.postMessage('appLogin');
+    window.webkit.messageHandlers.appLogin.postMessage(null);
+}
+
+function getAppUserkey({ userkey }) {
+    alert(userkey);
 }
 
 function isLogin(params = {}) {
     if (1 > 0) {
-        const userkey = appLogin();
-        alert(userkey);
+        appLogin();
     } else {
         const { fr } = params;
         let query = '';
