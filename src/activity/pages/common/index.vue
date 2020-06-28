@@ -333,17 +333,17 @@ export default {
         },
         handleUpload() {
             if (this.status === 2) {
-                if ((this.isIOS || this.isAndroid) && !this.userkey) {
-                    api.appLogin(this.isIOS ? 'ios' : 'android', 'upload');
-                } else {
-                    api.isLogin({
-                        fr: this.fr,
-                    }).then(() => {
-                        uni.navigateTo({
-                            url: `/activity/pages/upload/modify?activity_id=${this.filter.activity_id}`,
-                        });
-                    });
-                }
+                // if ((this.isIOS || this.isAndroid) && !this.userkey) {
+                api.appLogin(this.isIOS ? 'ios' : 'android', 'upload');
+                // } else {
+                //     api.isLogin({
+                //         fr: this.fr,
+                //     }).then(() => {
+                //         uni.navigateTo({
+                //             url: `/activity/pages/upload/modify?activity_id=${this.filter.activity_id}`,
+                //         });
+                //     });
+                // }
             } else {
                 uni.showToast({
                     title:

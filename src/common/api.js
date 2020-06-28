@@ -1,3 +1,4 @@
+/* eslint-disable func-names */
 /* eslint-disable no-unused-vars */
 import { http } from './third-party/request';
 
@@ -102,6 +103,9 @@ function isLogin(params = {}) {
 function appLogin(type = 'ios', path = null) {
     if (type === 'ios') {
         window.webkit.messageHandlers.appLogin.postMessage(path);
+    } else {
+        // eslint-disable-next-line no-undef
+        androidApp.appLogin(path);
     }
 }
 
