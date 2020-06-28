@@ -441,6 +441,7 @@ export default {
 
         getData(refresh) {
             this.getHotActivity();
+            this.getBannerList();
             this.getWorkList('atz');
             this.getWorkList('guiness');
             this.getWorkList('talent', refresh);
