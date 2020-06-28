@@ -289,6 +289,9 @@ export default {
         togglePoster(status) {
             this.showPosterMask = status;
             this.toggleGuideMask(true);
+            setTimeout(() => {
+                this.toggleGuideMask(false);
+            }, 2000);
         },
         toggleGuideMask(status) {
             this.showGuideMask = status;
@@ -395,7 +398,7 @@ export default {
                         }
                     },
                     () => {
-                        this.userInfo = null;
+                        this.userInfo = {};
                     },
                 );
             } else {

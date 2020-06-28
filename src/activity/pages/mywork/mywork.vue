@@ -5,10 +5,10 @@
     >
         <view
             class="page-read-work"
-            :class="{ login: userInfo === null }"
+            :class="{ login: userInfo === null && type === 'myWork' }"
         >
             <login
-                v-if="userInfo === null"
+                v-if="type === 'myWork' && userInfo === null"
                 @login="onLogin"
             />
             <!-- my works -->

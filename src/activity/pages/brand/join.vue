@@ -83,7 +83,7 @@
                 </view>
                 <view class="uni-form-item uni-column">
                     <view class="title">
-                        <text>*</text>自我介绍
+                        自我介绍
                     </view>
                     <view class="input-box textarea">
                         <textarea
@@ -178,7 +178,10 @@
                             {{ formData.slogan }}
                         </view>
                     </view>
-                    <image class="qr-code" />
+                    <image
+                        src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/applet-code-10.png"
+                        class="qr-code"
+                    />
                 </view>
                 <view
                     class="close-btn"
@@ -212,7 +215,7 @@ export default {
             // #ifdef H5
             isH5: true,
             // #endif
-            userInfo: null,
+            userInfo: {},
             formData: {
                 school_name: '',
                 name: '',
@@ -227,7 +230,7 @@ export default {
             validateRule: [
                 {
                     type: 'name',
-                    errorMsg: '请填写学校联系人',
+                    errorMsg: '请填写您的姓名',
                 },
                 {
                     type: 'slogan',
@@ -312,8 +315,17 @@ export default {
         this.getUserInfo();
     },
     methods: {
+        initFormat(userInfo) {
+            this.formData.name = userInfo.name.length > 6
+                ? userInfo.name.slice(0, 6)
+                : userInfo.name;
+            this.formData.school_name = userInfo.teacher_info.school_name;
+        },
         onLogin({ user_info: userInfo }) {
             this.userInfo = userInfo;
+            if (this.userInfo.identity !== 1) {
+                this.initFormat(this.userInfo);
+            }
             this.getQrCode();
         },
         onPosterSuccess(detail) {
@@ -330,6 +342,9 @@ export default {
         getUserInfo() {
             api.get('/api/user/info').then((res) => {
                 this.userInfo = res.user_info;
+                if (this.userInfo.identity !== 1) {
+                    this.initFormat(this.userInfo);
+                }
                 this.getQrCode();
             });
         },
@@ -534,7 +549,13 @@ export default {
             });
         },
         togglePreview(status) {
-            this.posterPreview = status;
+            if (!this.lock) {
+                this.lock = true;
+                if (this.validate()) {
+                    this.posterPreview = status;
+                    this.lock = false;
+                }
+            }
         },
     },
 };

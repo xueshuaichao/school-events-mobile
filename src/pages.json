@@ -416,7 +416,7 @@
                 {
                     "path": "pages/brand/ucenter",
                     "style": {
-                        "navigationBarTitleText": "个人中心"
+                        "navigationBarTitleText": ""
                     }
                 },
                 {
