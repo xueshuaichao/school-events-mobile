@@ -202,12 +202,13 @@ export default {
                 suffix = tempFilePath.split(".").pop();
                 // eslint-disable-next-line no-empty
             } catch {}
-            if (["jpg", "jpeg", "png", "gif"].indexOf(suffix) === -1) {
-                return uni.showToast({
-                    icon: "none",
-                    title: "图片规格不正确"
-                });
-            }
+            console.log(1111, tempFilePath);
+            // if (["jpg", "jpeg", "png", "gif"].indexOf(suffix) === -1) {
+            //     return uni.showToast({
+            //         icon: "none",
+            //         title: "图片规格不正确"
+            //     });
+            // }
 
             uni.showToast({
                 icon: "loading",

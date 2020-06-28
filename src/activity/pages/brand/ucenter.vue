@@ -403,11 +403,11 @@ export default {
         },
         uploadFile(tempFilePath) {
             this.tempFilePath = tempFilePath;
-            uni.showToast({
-                icon: 'loading',
-                title: '上传中',
-                duration: 200000,
-            });
+            // uni.showToast({
+            //     icon: 'loading',
+            //     title: '上传中',
+            //     duration: 200000,
+            // });
             return new Promise((resolve, reject) => {
                 uni.uploadFile({
                     url: `${config.host}/api/file/uploadfile`, // 仅为示例，非真实的接口地址

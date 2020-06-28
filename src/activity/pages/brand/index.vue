@@ -382,7 +382,7 @@ export default {
             //     });
             // }
             if (this.status === 2) {
-                this.isLogin().then(
+                api.isLogin().then(
                     () => {
                         if (this.canJoin) {
                             uni.navigateTo({

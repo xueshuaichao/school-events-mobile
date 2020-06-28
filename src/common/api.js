@@ -60,7 +60,20 @@ function post(url, data) {
     );
 }
 
+function appLogin() {
+    return new Promise((resolve) => {
+        resolve(window.webkit.messageHandlers.appLogin.postMessage());
+    });
+}
+
 function isLogin(params = {}) {
+    if (1 > 0) {
+        appLogin().then(({ userkey }) => {
+            if (userkey) {
+                alert(userkey);
+            }
+        });
+    }
     const { fr } = params;
     let query = '';
     if (fr) {

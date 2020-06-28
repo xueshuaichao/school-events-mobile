@@ -382,11 +382,12 @@ export default {
             this.formData.video_img_url = data[0] && data[0].path;
             if (this.uploadMode === 'image') {
                 data.forEach((item) => {
+                    console.log(item.path);
                     this.$refs.preview.add(item.path);
                 });
                 setTimeout(() => {
                     this.$refs.preview.init();
-                }, 100);
+                }, 300);
             }
         },
         getData() {

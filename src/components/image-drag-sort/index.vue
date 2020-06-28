@@ -94,7 +94,8 @@ export default {
         };
     },
     watch: {
-        lists() {
+        lists(val) {
+            console.log(11111, val);
             // 监听数组变化
             const l = this.lists.length;
             if (l) {
@@ -123,7 +124,7 @@ export default {
                 wrapH = data.height; // 设置拖拽范围的总高度
                 wrapTop = data.top; // 设置拖拽范围的上边界坐标
                 wrapLeft = data.left; // 设置拖拽范围的左边界坐标
-                this.setNodeWH();
+                // this.setNodeWH();
             }).exec();
         },
         reset() {
@@ -137,7 +138,6 @@ export default {
                 .in(this)
                 .select('.item');
             item.boundingClientRect((data) => {
-                // console.log(data)
                 itemW = data.width; // 拖拽元素的宽度
                 itemH = data.height; // 拖拽元素的高度
                 this.setDragData();
@@ -292,7 +292,9 @@ export default {
                     icon: 'none',
                 });
             }
-            return this.list.push(item);
+            // return this.lists.push(item);
+            return this.$set(this.lists, this.lists.length, item);
+            // console.log(this.lists);
         },
         dump() {
             return this.list;
@@ -315,7 +317,7 @@ export default {
 
 .movable-area {
     width: 100%;
-    height: auto;
+    height: 100upx;
     display: flex;
     flex-flow: wrap;
 }
