@@ -61,57 +61,49 @@ function post(url, data) {
     );
 }
 
+function isLogin(params = {}) {
+    const { fr } = params;
+    let query = '';
+    if (fr) {
+        query = `?fr=${fr}`;
+    }
+    return new Promise((resolve, reject) => {
+        if (isLogin.userInfo) {
+            return resolve(isLogin.user_info);
+        }
+
+        return pureGet('/api/user/info').then(
+            (res) => {
+                const { data, status, msg } = res;
+
+                if (status === 200) {
+                    isLogin.userInfo = data.user_info;
+                    resolve(data.user_info);
+                } else if (status === 602) {
+                    uni.navigateTo({
+                        url: `/pages/login/login${query}`,
+                    });
+                    reject();
+                } else {
+                    uni.showToast({
+                        title: msg,
+                        icon: 'none',
+                    });
+                    reject();
+                }
+            },
+            (err) => {
+                // net work error
+                console.log(err);
+            },
+        );
+    });
+}
 function appLogin() {
     window.webkit.messageHandlers.appLogin.postMessage(null);
 }
-
 function getAppUserkey({ userkey }) {
-    // alert(userkey);
-    return userkey;
-}
-
-function isLogin(params = {}) {
-    if (1 > 0) {
-        appLogin();
-    } else {
-        const { fr } = params;
-        let query = '';
-        if (fr) {
-            query = `?fr=${fr}`;
-        }
-        return new Promise((resolve, reject) => {
-            if (isLogin.userInfo) {
-                return resolve(isLogin.user_info);
-            }
-
-            return pureGet('/api/user/info').then(
-                (res) => {
-                    const { data, status, msg } = res;
-
-                    if (status === 200) {
-                        isLogin.userInfo = data.user_info;
-                        resolve(data.user_info);
-                    } else if (status === 602) {
-                        uni.navigateTo({
-                            url: `/pages/login/login${query}`,
-                        });
-                        reject();
-                    } else {
-                        uni.showToast({
-                            title: msg,
-                            icon: 'none',
-                        });
-                        reject();
-                    }
-                },
-                (err) => {
-                    // net work error
-                    console.log(err);
-                },
-            );
-        });
-    }
-    return true;
+    isLogin();
 }
 
 function logout() {
@@ -130,4 +122,5 @@ export default {
     post,
     isLogin,
     logout,
+    appLogin,
 };

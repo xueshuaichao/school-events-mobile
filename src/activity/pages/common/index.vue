@@ -317,13 +317,17 @@ export default {
             //     });
             // }
             if (this.status === 2) {
-                api.isLogin({
-                    fr: this.fr,
-                }).then(() => {
-                    uni.navigateTo({
-                        url: `/activity/pages/upload/modify?activity_id=${this.filter.activity_id}`,
+                if (1 > 0) {
+                    api.appLogin();
+                } else {
+                    api.isLogin({
+                        fr: this.fr,
+                    }).then(() => {
+                        uni.navigateTo({
+                            url: `/activity/pages/upload/modify?activity_id=${this.filter.activity_id}`,
+                        });
                     });
-                });
+                }
             } else {
                 uni.showToast({
                     title:
