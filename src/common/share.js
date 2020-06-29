@@ -15,7 +15,7 @@ function initWechatShare(config, params) {
             jsApiList: [
                 'checkJsApi',
                 'getLocation',
-                'onMenuShareTimeline',
+                'updateTimelineShareData',
                 'onMenuShareAppMessage',
                 'onMenuShareQQ',
                 'onMenuShareWeibo',
@@ -26,7 +26,7 @@ function initWechatShare(config, params) {
         wx.config(conf);
 
         wx.ready(() => {
-            wx.onMenuShareTimeline({
+            wx.updateTimelineShareData({
                 title: params.title,
                 desc: params.desc,
                 link: params.url,
