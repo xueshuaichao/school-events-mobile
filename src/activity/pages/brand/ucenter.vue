@@ -342,7 +342,7 @@ export default {
                         height: 75,
                         textAlign: 'center',
                         y: 565,
-                        x: 182,
+                        x: 207,
                         fontSize: '30',
                         color: '#fff',
                         lineNum: 1,
