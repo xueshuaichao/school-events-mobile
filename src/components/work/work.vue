@@ -9,9 +9,19 @@
     >
         <view class="thumbnail-wrap">
             <image
+                v-if="info.resource_type === 1"
                 class="thumbnail"
                 :src="
                     info.video_img_url ||
+                        'http://aitiaozhan.oss-cn-beijing.aliyuncs.com/pic.png'
+                        | optimizeImage
+                "
+            />
+            <image
+                v-if="info.resource_type === 2"
+                class="thumbnail"
+                :src="
+                    info.img_url ||
                         'http://aitiaozhan.oss-cn-beijing.aliyuncs.com/pic.png'
                         | optimizeImage
                 "

@@ -65,10 +65,16 @@
                                 <view class="name">
                                     {{ detail.name }}
                                 </view>
-                                <view class="school">
+                                <view
+                                    v-if="detail.school_name"
+                                    class="school"
+                                >
                                     {{ detail.school_name }}
                                 </view>
-                                <view class="teacher">
+                                <view
+                                    v-if="detail.teacher"
+                                    class="teacher"
+                                >
                                     推荐老师：{{ detail.teacher }}
                                 </view>
                                 <view class="slogan">
@@ -76,7 +82,10 @@
                                 </view>
                             </view>
                         </view>
-                        <view class="user-desc">
+                        <view
+                            v-if="detail.desc"
+                            class="user-desc"
+                        >
                             <view>自我介绍：</view>
                             <view class="user-desc-text">
                                 {{ detail.desc }}
@@ -241,7 +250,7 @@
                         class="goUpload"
                         @click="handleUpload"
                     >
-                        上传作品
+                        {{ isSelf ? "上传作品" : "查看活动" }}
                     </view>
                 </view>
             </template>
@@ -460,11 +469,11 @@ export default {
             });
         },
         submit(path) {
+            const detail = {};
             this.uploadFile(path).then((data) => {
-                console.log(this.detail);
-                this.detail[this.isH5 ? 'poster_h5' : 'poster_mp'] = data.path;
-                api.post('/api/activity/enroll', {
-                    detail: this.detail,
+                detail[this.isH5 ? 'poster_h5' : 'poster_mp'] = data.path;
+                api.post('/api/activity/editenroll', {
+                    detail,
                     activity_id: 10,
                 });
             });
@@ -574,6 +583,15 @@ export default {
                                 ];
                             }
                             this.isSelf = data.is_self;
+                            if (!this.isSelf) {
+                                uni.setNavigationBarTitle({
+                                    title: '第二届青少年”爱挑战“寻找代言人',
+                                });
+                            } else {
+                                uni.setNavigationBarTitle({
+                                    title: '个人中心',
+                                });
+                            }
                         }
                         this.isLoading = false;
                     });
@@ -777,6 +795,11 @@ export default {
             });
         },
         handleUpload() {
+            if (!this.iself) {
+                return uni.navigateTo({
+                    url: `/activity/pages/index?activity_id=${this.filter.activity_id}`,
+                });
+            }
             if (this.isH5) {
                 return uni.showToast({
                     title: '请在UP爱挑战小程序上传作品',
