@@ -184,16 +184,18 @@
                 </view>
             </view>
         </view>
-        <imageCutter
-            v-if="url"
-            :url="url"
-            :fixed="true"
-            :blob="false"
-            :width="380"
-            :height="506"
-            @ok="onok"
-            @cancel="oncancle"
-        />
+        <view class="image-cutter-zindex">
+            <imageCutter
+                v-if="url"
+                :url="url"
+                :fixed="true"
+                :blob="false"
+                :width="380"
+                :height="506"
+                @ok="onok"
+                @cancel="oncancle"
+            />
+        </view>
     </div>
 </template>
 <script>
@@ -246,15 +248,15 @@ export default {
             posterPreview: false,
             posterCommonConfig: {
                 pixelRatio: 2,
-                width: 570,
-                height: 820,
+                width: 568,
+                height: 818,
                 debug: false,
                 texts: [
                     {
                         text: '',
                         height: 30,
                         textAlign: 'center',
-                        y: 544,
+                        y: 564,
                         x: 233,
                         fontSize: '30',
                         color: '#fff',
@@ -268,7 +270,7 @@ export default {
                         width: 570,
                         height: 25,
                         textAlign: 'center',
-                        y: 629,
+                        y: 649,
                         x: 285,
                         fontSize: '24',
                         color: '#FFC953',
@@ -600,6 +602,10 @@ export default {
     background-color: #583ed4;
     &.join-page-login {
         background-color: #fff;
+    }
+    .image-cutter-zindex {
+        position: relative;
+        z-index: 100;
     }
     .canvas.pro {
         position: absolute;

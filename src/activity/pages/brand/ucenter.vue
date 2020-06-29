@@ -333,15 +333,15 @@ export default {
             myPoster: '',
             posterCommonConfig: {
                 pixelRatio: 2,
-                width: 570,
-                height: 820,
+                width: 568,
+                height: 818,
                 debug: false,
                 texts: [
                     {
                         text: '',
                         height: 30,
                         textAlign: 'center',
-                        y: 544,
+                        y: 564,
                         x: 233,
                         fontSize: '30',
                         color: '#fff',
@@ -355,7 +355,7 @@ export default {
                         width: 570,
                         height: 25,
                         textAlign: 'center',
-                        y: 629,
+                        y: 649,
                         x: 285,
                         fontSize: '24',
                         color: '#FFC953',
@@ -555,6 +555,7 @@ export default {
         createPoster() {
             const { image, name, slogan } = this.detail;
             this.posterCommonConfig.images[1].url = image;
+            this.posterCommonConfig.images[2].url = 'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/brand_poster_name.png';
             this.posterCommonConfig.texts[0].text = `我是${name}`;
             this.posterCommonConfig.texts[1].text = slogan;
             this.$refs.posterh5.createPoster(this.posterCommonConfig);
@@ -851,18 +852,14 @@ export default {
             // 来自页面内分享按钮
             console.log(res.target);
         }
-        const pages = getCurrentPages(); // eslint-disable-line
-        const { route } = pages[2];
-        const { activity_id: activityId, user_id: userId } = pages[2].options;
-        const noLogin = !this.detail || !Object.keys(this.detail).length;
+        // const pages = getCurrentPages(); // eslint-disable-line
+        // const { route } = pages[2];
+        // const { user_id: userId } = pages[2].options;
+        // const noLogin = !this.detail || !Object.keys(this.detail).length;
         return {
             title: this.title,
             imageUrl: this.publicConfig.shareConfig.image,
-            path: `${
-                noLogin
-                    ? `${this.publicConfig.shareConfig.path}`
-                    : `${route}?activity_id${activityId}&user_id=${userId}`
-            }`,
+            path: this.publicConfig.shareConfig.path,
         };
     },
 };
