@@ -12,7 +12,7 @@
                 @success="onPosterSuccess"
                 @fail="onPosterFail"
             />
-            <form>
+            <form v-show="!url">
                 <view class="uni-form-item uni-column">
                     <view class="title">
                         <text>*</text>姓名
