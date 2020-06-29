@@ -362,9 +362,9 @@ export default {
         },
         getH5QrCode() {
             const uCenterUrl = `${window.location.origin}/activity/pages/brand/ucenter?activity_id=10&user_id=${this.userInfo.user_id}&w=244`;
-            this.posterCommonConfig.images[3].url = `http://aitiaozhan.my.dev.wdyclass.com:1024/api/common/qrcode?url=${decodeURI(
-                uCenterUrl,
-            )}`;
+            this.posterCommonConfig.images[3].url = `${
+                window.location.origin
+            }/api/common/qrcode?url=${decodeURI(uCenterUrl)}`;
         },
         getMpQrCode() {
             // 小程序二维码
