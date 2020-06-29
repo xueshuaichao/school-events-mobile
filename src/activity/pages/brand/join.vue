@@ -142,16 +142,6 @@
                                 </text>
                             </view>
                         </view>
-                        <imageCutter
-                            v-if="url"
-                            :url="url"
-                            :fixed="true"
-                            :blob="false"
-                            :width="380"
-                            :height="506"
-                            @ok="onok"
-                            @cancel="oncancle"
-                        />
                     </view>
                 </view>
                 <view class="uni-btn-v">
@@ -194,6 +184,16 @@
                 </view>
             </view>
         </view>
+        <imageCutter
+            v-if="url"
+            :url="url"
+            :fixed="true"
+            :blob="false"
+            :width="380"
+            :height="506"
+            @ok="onok"
+            @cancel="oncancle"
+        />
     </div>
 </template>
 <script>
@@ -255,7 +255,7 @@ export default {
                         height: 70,
                         textAlign: 'center',
                         y: 565,
-                        x: 207,
+                        x: 233,
                         fontSize: '30',
                         color: '#fff',
                         lineNum: 1,
@@ -265,11 +265,11 @@ export default {
                     },
                     {
                         text: '',
-                        width: 562,
+                        width: 572,
                         height: 60,
                         textAlign: 'center',
                         y: 652,
-                        x: 285,
+                        x: 286,
                         fontSize: '24',
                         color: '#FFC953',
                         lineNum: 1,
@@ -282,31 +282,31 @@ export default {
                         url:
                             'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/brand_poster.jpg?x-oss-process=image/format,jpg/interlace,1/quality,Q_70/resize,m_pad,w_570,h_820',
                         width: 570,
-                        height: 820,
+                        height: 818,
                         y: 0,
                         x: 0,
                     },
                     {
                         url: '',
-                        width: 370,
+                        width: 372,
                         height: 500,
-                        y: 169,
-                        x: 99,
-                        borderRadius: 20,
+                        y: 168,
+                        x: 101,
+                        borderRadius: 40,
                     },
                     {
                         url: '',
                         width: 528,
                         height: 145,
-                        y: 527,
-                        x: 21,
+                        y: 526,
+                        x: 23,
                     },
                     {
                         url: '',
                         width: 122,
                         height: 122,
-                        y: 678,
-                        x: 428,
+                        y: 677,
+                        x: 430,
                         borderRadius: this.isH5 ? 0 : 122,
                     },
                 ],

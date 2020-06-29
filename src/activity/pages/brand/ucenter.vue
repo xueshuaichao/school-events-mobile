@@ -333,16 +333,16 @@ export default {
             myPoster: '',
             posterCommonConfig: {
                 pixelRatio: 2,
-                width: 569,
+                width: 572,
                 height: 820,
                 debug: false,
                 texts: [
                     {
                         text: '',
-                        height: 75,
+                        height: 70,
                         textAlign: 'center',
                         y: 565,
-                        x: 207,
+                        x: 233,
                         fontSize: '30',
                         color: '#fff',
                         lineNum: 1,
@@ -352,11 +352,11 @@ export default {
                     },
                     {
                         text: '',
-                        width: 562,
+                        width: 572,
                         height: 60,
                         textAlign: 'center',
                         y: 652,
-                        x: 285,
+                        x: 286,
                         fontSize: '24',
                         color: '#FFC953',
                         lineNum: 1,
@@ -367,35 +367,34 @@ export default {
                 images: [
                     {
                         url:
-                            'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/brand_poster.jpg?x-oss-process=image/format,jpg/interlace,1/quality,Q_70/resize,m_pad,w_570,h_820',
-                        width: 570,
-                        height: 820,
+                            'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/brand_poster.jpg?x-oss-process=image/format,jpg/interlace,1/quality,Q_70/resize,m_pad,w_572,h_818',
+                        width: 572,
+                        height: 818,
                         y: 0,
                         x: 0,
                     },
                     {
                         url: '',
-                        width: 370,
+                        width: 372,
                         height: 500,
-                        y: 169,
-                        x: 99,
-                        borderRadius: 20,
+                        y: 168,
+                        x: 101,
+                        borderRadius: 40,
                     },
                     {
-                        url:
-                            'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/brand_poster_name.png',
+                        url: '',
                         width: 528,
                         height: 145,
-                        y: 527,
-                        x: 21,
+                        y: 526,
+                        x: 23,
                     },
                     {
                         url: '',
                         width: 122,
                         height: 122,
-                        y: 678,
-                        x: 428,
-                        borderRadius: 122,
+                        y: 677,
+                        x: 430,
+                        borderRadius: this.isH5 ? 0 : 122,
                     },
                 ],
             },
@@ -586,15 +585,6 @@ export default {
                                 ];
                             }
                             this.isSelf = data.is_self;
-                            if (!this.isSelf) {
-                                uni.setNavigationBarTitle({
-                                    title: '青少年”爱挑战“寻找代言人',
-                                });
-                            } else {
-                                uni.setNavigationBarTitle({
-                                    title: '个人中心',
-                                });
-                            }
                         }
                         this.isLoading = false;
                     });
