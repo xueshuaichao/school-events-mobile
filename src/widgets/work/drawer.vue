@@ -24,6 +24,7 @@
             <scroll-view
                 scroll-y
                 :style="{ height: drawerHeight + 'px' }"
+                :scroll-into-view="intoIndex"
                 class="scroll-context"
                 @scrolltolower="toLower"
             >
@@ -35,13 +36,13 @@
                 </view>
                 <template v-if="loading && list.length">
                     <view
-                        v-for="item in list"
+                        v-for="(item, idx) in list"
                         :key="item.comment_id"
                         class="item-wrap"
                         :class="{ 'no-margin': item.sub_count }"
                         @click.prevent="clickItem(item)"
                     >
-                        <view class="item">
+                        <view class="item father-item">
                             <view class="left">
                                 <view class="img-box">
                                     <image
@@ -103,6 +104,7 @@
 
                         <template v-if="item.sub_count && !item.show">
                             <view
+                                :id="'more' + idx"
                                 class="show-or-hide"
                                 @click.stop="getMoreSubList(item)"
                             >
@@ -112,7 +114,7 @@
                         <template v-if="item.show && showCloseItem(item)">
                             <view
                                 class="show-or-hide"
-                                @click.stop="closeSubList(item)"
+                                @click.stop="closeSubList(item, idx)"
                             >
                                 — 收起 —
                             </view>
@@ -238,6 +240,7 @@ export default {
                     name: '',
                 },
             },
+            intoIndex: '',
         };
     },
     watch: {
@@ -447,8 +450,8 @@ export default {
                 d.subListCache = d.subList.slice(0, (d.showCount - 1) * 10);
             }
         },
-        closeSubList(item) {
-            console.log('list--122---');
+        closeSubList(item, idx) {
+            console.log('list--122---', idx);
             // this.goTop();
             this.list = this.list.map((D) => {
                 const d = D;
@@ -458,7 +461,11 @@ export default {
                 }
                 return d;
             });
-            console.log('list--222222---');
+            this.$nextTick(() => {
+                this.intoIndex = `more${idx}`;
+                console.log(this.intoIndex, 'this.intoIndex-------');
+            });
+            this.intoIndex = '';
         },
         getList() {
             if (this.list.length) {
@@ -658,12 +665,14 @@ export default {
             color: #b0b5bf;
             font-size: 28rpx;
             line-height: 40rpx;
-            padding-bottom: 20rpx;
         }
         .scroll-context {
-            padding: 120rpx 30rpx 20rpx;
+            padding: 20rpx 30rpx 20rpx;
             box-sizing: border-box;
             background: #fff;
+            margin-top: 40rpx;
+            position: relative;
+            z-index: 9999;
             .no-data {
                 font-size: 28rpx;
                 line-height: 100rpx;
@@ -677,6 +686,9 @@ export default {
                     padding-left: 40rpx;
                     margin-bottom: 20rpx;
                     margin-top: 20rpx;
+                }
+                .father-item {
+                    background: pink;
                 }
                 .item,
                 .left {
