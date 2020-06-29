@@ -630,7 +630,7 @@ export default {
     }
     .uni-textarea {
         height: 160upx;
-        padding: 30upx 20upx 38upx;
+        padding: 16upx 20upx 38upx;
         width: 100%;
         box-sizing: border-box;
         line-height: 42upx;

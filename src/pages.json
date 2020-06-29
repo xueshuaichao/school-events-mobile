@@ -416,7 +416,7 @@
                 {
                     "path": "pages/brand/ucenter",
                     "style": {
-                        "navigationBarTitleText": ""
+                        "navigationBarTitleText": "青少年”爱挑战“寻找代言人"
                     }
                 },
                 {
@@ -437,7 +437,7 @@
                 {
                     "path": "pages/brand/join",
                     "style": {
-                        "navigationBarTitleText": "我为爱挑战代言",
+                        "navigationBarTitleText": "第二届青少年”爱挑战“寻找代言人",
                         "usingComponents": {
                             "poster": "/wxcomponents/third-party/poster/poster/index"
                         }

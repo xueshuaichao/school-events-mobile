@@ -147,8 +147,8 @@
                             :url="url"
                             :fixed="true"
                             :blob="false"
-                            :width="width"
-                            :height="height"
+                            :width="380"
+                            :height="506"
                             @ok="onok"
                             @cancel="oncancle"
                         />
@@ -204,6 +204,7 @@ import imageCutter from '../../../components/image-cutter/image-cutter.vue';
 import config from '../../../common/config';
 import utils from '../../../common/utils';
 import posterh5 from './posterh5.vue';
+import share from '../../../common/share';
 
 export default {
     components: {
@@ -251,7 +252,7 @@ export default {
                 texts: [
                     {
                         text: '',
-                        height: 75,
+                        height: 70,
                         textAlign: 'center',
                         y: 565,
                         x: 207,
@@ -291,7 +292,7 @@ export default {
                         height: 500,
                         y: 169,
                         x: 99,
-                        borderRadius: 55,
+                        borderRadius: 20,
                     },
                     {
                         url: '',
@@ -314,8 +315,24 @@ export default {
     },
     created() {
         this.getUserInfo();
+        this.publicConfig = this.$store.getters.getPublicConfig(10);
+        this.initShare();
     },
     methods: {
+        initShare() {
+            const titleList = this.isH5
+                ? this.publicConfig.shareConfig.h5Title
+                : this.publicConfig.shareConfig.title;
+            const descList = this.publicConfig.shareConfig.desc;
+            const random = Math.floor(Math.random() * titleList.length);
+            this.title = titleList[random];
+            const desc = descList[0];
+            share({
+                title: this.title,
+                desc,
+                thumbnail: `${this.publicConfig.shareConfig.image}?x-oss-process=image/format,png/interlace,1/quality,Q_80/resize,m_pad,h_100`,
+            });
+        },
         initFormat(userInfo) {
             this.formData.name = userInfo.name.length > 6
                 ? userInfo.name.slice(0, 6)
@@ -564,6 +581,17 @@ export default {
             }
         },
     },
+    onShareAppMessage(res) {
+        if (res.from === 'button') {
+            // 来自页面内分享按钮
+            console.log(res.target);
+        }
+        return {
+            title: this.title,
+            imageUrl: this.publicConfig.shareConfig.image,
+            path: this.publicConfig.shareConfig.path,
+        };
+    },
 };
 </script>
 <style lang="less" scoped>
@@ -703,6 +731,7 @@ export default {
         right: 0;
         bottom: 0;
         background-color: rgba(0, 0, 0, 0.8);
+        z-index: 10;
         .poster-preview-box {
             position: absolute;
             top: 50%;

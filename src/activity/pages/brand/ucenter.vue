@@ -379,7 +379,7 @@ export default {
                         height: 500,
                         y: 169,
                         x: 99,
-                        borderRadius: 55,
+                        borderRadius: 20,
                     },
                     {
                         url:
@@ -475,6 +475,8 @@ export default {
                 api.post('/api/activity/editenroll', {
                     detail,
                     activity_id: 10,
+                }).then(() => {
+                    this.detail[this.isH5 ? 'poster_h5' : 'poster_mp'] = data.path;
                 });
             });
         },
@@ -554,7 +556,7 @@ export default {
         createPoster() {
             const { image, name, slogan } = this.detail;
             this.posterCommonConfig.images[1].url = image;
-            this.posterCommonConfig.texts[0].text = name;
+            this.posterCommonConfig.texts[0].text = `我是${name}`;
             this.posterCommonConfig.texts[1].text = slogan;
             this.$refs.posterh5.createPoster(this.posterCommonConfig);
         },
@@ -586,7 +588,7 @@ export default {
                             this.isSelf = data.is_self;
                             if (!this.isSelf) {
                                 uni.setNavigationBarTitle({
-                                    title: '第二届青少年”爱挑战“寻找代言人',
+                                    title: '青少年”爱挑战“寻找代言人',
                                 });
                             } else {
                                 uni.setNavigationBarTitle({
@@ -860,12 +862,17 @@ export default {
             console.log(res.target);
         }
         const pages = getCurrentPages(); // eslint-disable-line
-        const { route } = pages[0];
-        const { activity_id: activityId, user_id: userId } = pages[0].options;
+        const { route } = pages[2];
+        const { activity_id: activityId, user_id: userId } = pages[2].options;
+        const noLogin = !this.detail || !Object.keys(this.detail).length;
         return {
             title: this.title,
             imageUrl: this.publicConfig.shareConfig.image,
-            path: `${route}?activity_id${activityId}&user_id=${userId}`,
+            path: `${
+                noLogin
+                    ? `${this.publicConfig.shareConfig.path}`
+                    : `${route}?activity_id${activityId}&user_id=${userId}`
+            }`,
         };
     },
 };
@@ -957,6 +964,7 @@ export default {
             }
             .school {
                 margin-bottom: 40upx;
+                line-height: 40upx;
             }
             .teacher {
                 margin-bottom: 38upx;
@@ -979,7 +987,7 @@ export default {
         word-break: break-all;
         font-size: 26upx;
         .user-desc-text {
-            height: 96upx;
+            max-height: 96upx;
             overflow-y: auto;
             word-break: break-all;
         }

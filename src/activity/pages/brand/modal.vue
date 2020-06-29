@@ -224,10 +224,10 @@ export default {
                             text: '海选：7月1日—24日',
                         },
                         {
-                            text: '复选：7月25日—28日 结果公布：7月28日',
+                            text: '复选：7月25日-28日，28日公布结果',
                         },
                         {
-                            text: '专家评选：7月28日—31日 结果公布：7月31日',
+                            text: '专家评选，7月28日-31日，31日公布结果',
                         },
                     ],
                 },
@@ -265,7 +265,7 @@ export default {
                             ],
                         },
                         {
-                            text: '5、组织单位奖（5位）',
+                            text: '5、组织单位奖（5个）',
                             children: ['优秀组织单位奖奖杯'],
                         },
                         {
@@ -417,7 +417,6 @@ export default {
             }
             .tit-btn {
                 background: linear-gradient(
-                    0deg,
                     rgba(255, 141, 133, 1),
                     rgba(255, 87, 73, 1)
                 );
@@ -461,7 +460,6 @@ export default {
             font-weight: 600;
             text-align: center;
             background: linear-gradient(
-                0deg,
                 rgba(255, 141, 133, 1),
                 rgba(255, 87, 73, 1)
             );

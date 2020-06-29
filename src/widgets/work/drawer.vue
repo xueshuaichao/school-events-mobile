@@ -128,20 +128,6 @@
                             </view>
                         </template>
                     </view>
-                    <view>
-                        <view>
-                            hahahh
-                        </view>
-                        <view>
-                            hahahh
-                        </view>
-                        <view>
-                            hahahh
-                        </view>
-                        <view>
-                            hahahh
-                        </view>
-                    </view>
                     <template
                         v-if="
                             total === list.length && loading && list.length > 10
