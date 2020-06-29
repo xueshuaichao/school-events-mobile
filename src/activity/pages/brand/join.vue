@@ -365,6 +365,7 @@ export default {
             this.posterCommonConfig.images[3].url = `${
                 window.location.origin
             }/api/common/qrcode?url=${decodeURI(uCenterUrl)}`;
+            this.posterCommonConfig.images[3].borderRadius = 0;
         },
         getMpQrCode() {
             // 小程序二维码

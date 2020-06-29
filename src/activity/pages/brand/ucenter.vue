@@ -395,7 +395,7 @@ export default {
                         height: 122,
                         y: 678,
                         x: 428,
-                        borderRadius: this.isH5 ? 0 : 122,
+                        borderRadius: 122,
                     },
                 ],
             },
@@ -490,6 +490,7 @@ export default {
             this.posterCommonConfig.images[3].url = `${
                 window.location.origin
             }/api/common/qrcode?url=${encodeURI(uCenterUrl)}`;
+            this.posterCommonConfig.images[3].borderRadius = 0;
         },
         getMpQrCode() {
             // 小程序二维码
