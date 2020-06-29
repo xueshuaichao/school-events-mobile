@@ -66,9 +66,10 @@
                         </view>
                         <template v-if="item.show">
                             <view
-                                v-for="subItem in item.subListCache"
+                                v-for="(subItem, index) in item.subListCache"
                                 :key="subItem.comment_id"
                                 class="sub-item item"
+                                :data-id="index"
                                 @click.stop="clickItem(subItem, item)"
                             >
                                 <view class="left">
@@ -110,7 +111,7 @@
                                 — 展开{{ item.sub_count }}条回复 —
                             </view>
                         </template>
-                        <template v-if="closeSubItem(item)">
+                        <template v-if="item.show && showCloseItem(item)">
                             <view
                                 class="show-or-hide"
                                 @click.stop="closeSubList(item)"
@@ -118,7 +119,7 @@
                                 — 收起 —
                             </view>
                         </template>
-                        <template v-if="!closeSubItem(item) && item.show">
+                        <template v-if="openSubItem(item) && item.show">
                             <view
                                 class="show-or-hide"
                                 @click.stop="getMoreSubList(item, 'more')"
@@ -275,6 +276,8 @@ export default {
             this.loading = false;
             this.filter.last_id = 0;
             this.subFilter.last_id = 0;
+            this.subFilter.to_comment_id = 0;
+            this.subFilter.topic_id = this.pageData.resource_id;
             this.resetInitVal();
             this.list = [];
             this.getList();
@@ -353,44 +356,52 @@ export default {
                 this.selItem.from_user_id = data.user_info.user_id;
             });
         },
-        closeSubItem(item) {
+        showCloseItem(item) {
             let show = false;
-            const count = Math.ceil(item.subList.length / 10) + 1;
-            if (
-                item.sub_count >= 4
-                && item.sub_count < 10
-                && item.sub_count === item.subList.length
-                && item.showCount === 2
-            ) {
+            const conut = Math.ceil(item.sub_count / 10) + 1;
+            console.log(conut, item.showCount, item.sub_count);
+            if (item.showCount && item.sub_count <= 3) {
+                show = true;
+            } else if (item.sub_count <= 10 && item.showCount === 2) {
+                show = true;
+            } else if (conut === item.showCount && item.sub_count > 10) {
                 show = true;
             }
-            if (
-                item.sub_count > 10
-                && item.sub_count === item.subList.length
-                && item.showCount === count
-            ) {
-                show = true;
-            }
-            // 小10条展开
-            if (item.sub_count < 4 && item.showCount) {
-                show = true;
+            return show;
+        },
+        openSubItem(item) {
+            let show = false;
+            if (item.subListCache.length !== item.sub_count) {
+                if (
+                    (item.sub_count > 10 || item.sub_count > 3)
+                    && item.showCount > 0
+                ) {
+                    show = true;
+                }
             }
             return show;
         },
         getMoreSubList(item, more) {
             // 展开更多，数据已经加载，不重复获取数据
             let List = [];
-            if (
+
+            let getNew = false;
+            if (!item.subList.length) {
+                getNew = true;
+            } else if (
                 item.sub_count > item.subList.length
-                && (!item.showCount || item.showCount > 1)
+                && item.sub_count > 10
+                && item.showCount >= 2
             ) {
+                getNew = true;
+            }
+            if (getNew) {
                 if (item.subList && item.subList.length) {
                     this.subFilter.last_id = item.subList[item.subList.length - 1].comment_id;
                 }
 
                 this.subFilter.to_comment_id = item.comment_id;
                 this.subFilter.page_num = Math.floor(item.subList.length / 10) + 1;
-
                 // 获取分页下的列表
                 api.post('/api/comment/list', this.subFilter).then(
                     ({ list }) => {
@@ -408,6 +419,7 @@ export default {
         },
         openSublist(item, List, more) {
             // 展开评论
+            console.log('item', item.showCount);
             this.list = this.list.map((D) => {
                 const d = D;
                 if (d.comment_id === item.comment_id) {
@@ -426,16 +438,14 @@ export default {
         setCacheSublist(D) {
             // 显示3条评论，显示10条评论，
             const d = D;
-            if (d.sub_count > 3) {
-                if (d.showCount === 1) {
-                    d.subListCache = d.subList.slice(0, 3);
-                } else if (d.showCount === 2) {
-                    d.subListCache = d.subList.slice(0, 10);
-                } else {
-                    d.subListCache = d.subList;
-                }
+            if (d.showCount === 0) {
+                d.subListCache = [];
+            } else if (d.showCount === 1) {
+                d.subListCache = d.subList.slice(0, 3);
+            } else if (d.showCount === 2) {
+                d.subListCache = d.subList.slice(0, 10);
             } else {
-                d.subListCache = d.subList;
+                d.subListCache = d.subList.slice(0, (d.showCount - 1) * 10);
             }
         },
         closeSubList(item) {
@@ -511,7 +521,6 @@ export default {
                 comment_type: 1,
                 ...this.addObj,
             };
-            console.log(params, 'add,,,,comment-----', this.addObj);
             api.post('/api/comment/add', params).then((id) => {
                 uni.showToast({
                     title: '已提交',
@@ -524,7 +533,7 @@ export default {
         setListData(id, content, params) {
             // 无刷新数据，更新列表。
             const date = new Date();
-            let time = `${this.joinDate(date.getMonth())}-`;
+            let time = `${this.joinDate(date.getMonth() + 1)}-`;
             time += `${this.joinDate(date.getDate())} `;
             time += `${this.joinDate(date.getHours())}:`;
             time += `${this.joinDate(date.getMinutes())}`;
