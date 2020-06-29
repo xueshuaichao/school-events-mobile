@@ -687,9 +687,9 @@ export default {
                     margin-bottom: 20rpx;
                     margin-top: 20rpx;
                 }
-                .father-item {
-                    background: pink;
-                }
+                // .father-item {
+                //     background: pink;
+                // }
                 .item,
                 .left {
                     display: flex;
