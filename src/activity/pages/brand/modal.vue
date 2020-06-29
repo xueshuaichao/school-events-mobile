@@ -74,7 +74,7 @@
                 </view>
                 <view class="qr-code">
                     <view class="text">
-                        本次活动最终解释权在法律允许的范围内过活动举办方所有
+                        本次活动最终解释权在法律允许的范围内过活动归举办方所有
                     </view>
                 </view>
             </view>
@@ -320,7 +320,7 @@ export default {
                             icon: 2,
                         },
                         {
-                            text: '官方包装宣传官方定制礼盒1套',
+                            text: '官方包装宣传及官方定制礼盒1套',
                             icon: 3,
                         },
                     ],
@@ -539,7 +539,7 @@ export default {
                     margin-right: 24upx;
                 }
                 .t {
-                    width: 370upx;
+                    width: 380upx;
                     text-align: left;
                     color: #666;
                 }

@@ -341,7 +341,7 @@ export default {
                         text: '',
                         height: 30,
                         textAlign: 'center',
-                        y: 564,
+                        y: 568,
                         x: 233,
                         fontSize: '30',
                         color: '#fff',
