@@ -246,15 +246,15 @@ export default {
             posterPreview: false,
             posterCommonConfig: {
                 pixelRatio: 2,
-                width: 569,
+                width: 570,
                 height: 820,
                 debug: false,
                 texts: [
                     {
                         text: '',
-                        height: 70,
+                        height: 30,
                         textAlign: 'center',
-                        y: 565,
+                        y: 544,
                         x: 233,
                         fontSize: '30',
                         color: '#fff',
@@ -265,11 +265,11 @@ export default {
                     },
                     {
                         text: '',
-                        width: 572,
-                        height: 60,
+                        width: 570,
+                        height: 25,
                         textAlign: 'center',
-                        y: 652,
-                        x: 286,
+                        y: 629,
+                        x: 285,
                         fontSize: '24',
                         color: '#FFC953',
                         lineNum: 1,
@@ -280,7 +280,7 @@ export default {
                 images: [
                     {
                         url:
-                            'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/brand_poster.jpg?x-oss-process=image/format,jpg/interlace,1/quality,Q_70/resize,m_pad,w_570,h_820',
+                            'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/brand_poster.jpg?x-oss-process=image/format,jpg/interlace,1/quality,Q_70/resize,m_pad,w_570,h_818',
                         width: 570,
                         height: 818,
                         y: 0,
@@ -291,7 +291,7 @@ export default {
                         width: 372,
                         height: 500,
                         y: 168,
-                        x: 101,
+                        x: 99,
                         borderRadius: 40,
                     },
                     {
@@ -299,14 +299,14 @@ export default {
                         width: 528,
                         height: 145,
                         y: 526,
-                        x: 23,
+                        x: 21,
                     },
                     {
                         url: '',
                         width: 122,
                         height: 122,
                         y: 677,
-                        x: 430,
+                        x: 428,
                         borderRadius: this.isH5 ? 0 : 122,
                     },
                 ],
