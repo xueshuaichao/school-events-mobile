@@ -100,6 +100,7 @@ function isLogin(params = {}) {
         );
     });
 }
+// #ifdef H5
 let callBackFn = null;
 function appLogin(type = 'ios', path = null, callback) {
     if (type === 'ios') {
@@ -112,11 +113,11 @@ function appLogin(type = 'ios', path = null, callback) {
 }
 
 window.getAppUserkey = function (userkey) {
-    alert(11111);
     if (userkey) {
         callBackFn(userkey);
     }
 };
+// #endif
 
 function logout() {
     try {
@@ -134,5 +135,7 @@ export default {
     post,
     isLogin,
     logout,
+    // #ifdef H5
     appLogin,
+    // #endif
 };

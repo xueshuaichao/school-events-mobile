@@ -316,7 +316,11 @@ export default {
         },
         handleUpload() {
             if (this.status === 2) {
-                if (!(this.isIOS || this.isAndroid) && !this.userkey) {
+                if (
+                    (this.isIOS || this.isAndroid)
+                    && !this.userkey
+                    && this.isH5
+                ) {
                     api.appLogin(
                         this.isIOS ? 'ios' : 'android',
                         'upload',
@@ -383,7 +387,7 @@ export default {
             this.$emit('showMask', { title: '活动规则', type: 0 });
         },
         handleMywork() {
-            if ((this.isIOS || this.isAndroid) && !this.userkey) {
+            if ((this.isIOS || this.isAndroid) && !this.userkey && this.isH5) {
                 api.appLogin(
                     this.isIOS ? 'ios' : 'android',
                     'mywork',
