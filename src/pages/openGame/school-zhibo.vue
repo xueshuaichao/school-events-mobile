@@ -94,27 +94,25 @@ export default {
     },
     methods: {
         getData(title) {
-            api.get('/api/market/address', this.filter).then(
-                ({ list, total }) => {
-                    this.isLoading = false;
-                    if (title === 'reachBottom') {
-                        this.addressList = this.addressList.concat(list);
-                    } else {
-                        this.addressList = list;
-                    }
+            api.get('/api/live/list', this.filter).then(({ list, total }) => {
+                this.isLoading = false;
+                if (title === 'reachBottom') {
+                    this.addressList = this.addressList.concat(list);
+                } else {
+                    this.addressList = list;
+                }
 
-                    this.total = total;
+                this.total = total;
 
-                    if (
-                        this.total
-                        <= this.filter.page_num * this.filter.page_size
-                    ) {
-                        this.loadMoreStatus = title === 'reachBottom' ? 'noMore' : 'none';
-                    } else {
-                        this.loadMoreStatus = 'more';
-                    }
-                },
-            );
+                if (
+                    this.total
+                    <= this.filter.page_num * this.filter.page_size
+                ) {
+                    this.loadMoreStatus = title === 'reachBottom' ? 'noMore' : 'none';
+                } else {
+                    this.loadMoreStatus = 'more';
+                }
+            });
         },
         onReachBottom() {
             console.log('到底部了');
