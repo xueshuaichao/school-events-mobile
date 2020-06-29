@@ -257,6 +257,7 @@ export default {
             canvasImgH: 570 * pix,
             canvasImgW: 826 * pix,
             pix,
+            userInfo: null,
         };
     },
     created() {},
@@ -658,17 +659,26 @@ export default {
             }).then((res) => {
                 const { status } = res;
                 if (status === 2) {
-                    if (this.activity_id === 6) {
-                        uni.navigateTo({
-                            url: '/pages/read/upload/modify',
-                        });
-                    } else if (this.activity_id === 8) {
+                    if (this.activity_id === 8) {
                         uni.navigateTo({
                             url: `/pages/activity-pages/upload/modify?activity_id=${this.activity_id}`,
                         });
                     } else {
-                        uni.navigateTo({
-                            url: `/activity/pages/upload/modify?activity_id=${this.activity_id}`,
+                        api.isLogin({ fr: this.fr }).then(() => {
+                            if (this.activity_id === 10) {
+                                if (this.userInfo) {
+                                    this.setEnroll();
+                                } else {
+                                    api.get('/api/user/info').then((data) => {
+                                        this.userInfo = data.user_info;
+                                        this.setEnroll();
+                                    });
+                                }
+                            } else {
+                                uni.navigateTo({
+                                    url: `/activity/pages/upload/modify?activity_id=${this.activity_id}`,
+                                });
+                            }
                         });
                     }
                 } else if (status === 1) {
@@ -680,6 +690,22 @@ export default {
                     uni.showToast({
                         icon: 'none',
                         title: '活动已结束',
+                    });
+                }
+            });
+        },
+        setEnroll() {
+            api.get('/api/activity/getenrollinfo', {
+                activity_id: this.activity_id,
+                user_id: this.userInfo.user_id,
+            }).then((data) => {
+                if (Array.isArray(data) && data.length === 0) {
+                    uni.navigateTo({
+                        url: '/activity/pages/brand/join',
+                    });
+                } else {
+                    uni.navigateTo({
+                        url: `/activity/pages/upload/modify?activity_id=${this.activity_id}`,
                     });
                 }
             });

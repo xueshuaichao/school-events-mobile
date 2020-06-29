@@ -574,6 +574,11 @@ export default {
             &.margin-0 {
                 margin-bottom: 0;
             }
+            &:nth-of-type(2),
+            &:nth-of-type(4) {
+                padding: 0 4upx;
+                box-sizing: border-box;
+            }
         }
         .item > image {
             width: 160upx;

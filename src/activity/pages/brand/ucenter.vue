@@ -234,7 +234,7 @@
                         <view v-if="isSelf">
                             <view v-if="allTotal === 0">
                                 <view>
-                                    您还没有上传作品<br>上传作品才能赢取代言人权益哦～
+                                    您还没有上传作品<br>上传作品才能参与代言人评比哦！
                                 </view>
                             </view>
                             <view v-else>
@@ -333,16 +333,16 @@ export default {
             myPoster: '',
             posterCommonConfig: {
                 pixelRatio: 2,
-                width: 569,
-                height: 820,
+                width: 568,
+                height: 818,
                 debug: false,
                 texts: [
                     {
                         text: '',
-                        height: 75,
+                        height: 30,
                         textAlign: 'center',
-                        y: 565,
-                        x: 207,
+                        y: 568,
+                        x: 233,
                         fontSize: '30',
                         color: '#fff',
                         lineNum: 1,
@@ -352,10 +352,10 @@ export default {
                     },
                     {
                         text: '',
-                        width: 562,
-                        height: 60,
+                        width: 570,
+                        height: 25,
                         textAlign: 'center',
-                        y: 652,
+                        y: 649,
                         x: 285,
                         fontSize: '24',
                         color: '#FFC953',
@@ -367,35 +367,34 @@ export default {
                 images: [
                     {
                         url:
-                            'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/brand_poster.jpg?x-oss-process=image/format,jpg/interlace,1/quality,Q_70/resize,m_pad,w_570,h_820',
+                            'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/brand_poster.jpg?x-oss-process=image/format,jpg/interlace,1/quality,Q_70/resize,m_pad,w_570,h_818',
                         width: 570,
-                        height: 820,
+                        height: 818,
                         y: 0,
                         x: 0,
                     },
                     {
                         url: '',
-                        width: 370,
+                        width: 372,
                         height: 500,
-                        y: 169,
+                        y: 168,
                         x: 99,
-                        borderRadius: 20,
+                        borderRadius: 40,
                     },
                     {
-                        url:
-                            'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/brand_poster_name.png',
+                        url: '',
                         width: 528,
                         height: 145,
-                        y: 527,
+                        y: 526,
                         x: 21,
                     },
                     {
                         url: '',
                         width: 122,
                         height: 122,
-                        y: 678,
+                        y: 677,
                         x: 428,
-                        borderRadius: 122,
+                        borderRadius: this.isH5 ? 0 : 122,
                     },
                 ],
             },
@@ -556,6 +555,7 @@ export default {
         createPoster() {
             const { image, name, slogan } = this.detail;
             this.posterCommonConfig.images[1].url = image;
+            this.posterCommonConfig.images[2].url = 'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/brand_poster_name.png';
             this.posterCommonConfig.texts[0].text = `我是${name}`;
             this.posterCommonConfig.texts[1].text = slogan;
             this.$refs.posterh5.createPoster(this.posterCommonConfig);
@@ -586,15 +586,6 @@ export default {
                                 ];
                             }
                             this.isSelf = data.is_self;
-                            if (!this.isSelf) {
-                                uni.setNavigationBarTitle({
-                                    title: '第二届青少年”爱挑战“寻找代言人',
-                                });
-                            } else {
-                                uni.setNavigationBarTitle({
-                                    title: '个人中心',
-                                });
-                            }
                         }
                         this.isLoading = false;
                     });
@@ -861,13 +852,14 @@ export default {
             // 来自页面内分享按钮
             console.log(res.target);
         }
-        const pages = getCurrentPages(); // eslint-disable-line
-        const { route } = pages[0];
-        const { activity_id: activityId, user_id: userId } = pages[0].options;
+        // const pages = getCurrentPages(); // eslint-disable-line
+        // const { route } = pages[2];
+        // const { user_id: userId } = pages[2].options;
+        // const noLogin = !this.detail || !Object.keys(this.detail).length;
         return {
             title: this.title,
             imageUrl: this.publicConfig.shareConfig.image,
-            path: `${route}?activity_id${activityId}&user_id=${userId}`,
+            path: this.publicConfig.shareConfig.path,
         };
     },
 };
@@ -959,7 +951,7 @@ export default {
             }
             .school {
                 margin-bottom: 40upx;
-                line-height: 40upx;
+                line-height: 36upx;
             }
             .teacher {
                 margin-bottom: 38upx;
@@ -1012,7 +1004,7 @@ export default {
     image {
         width: 300upx;
         height: 236upx;
-        margin-top: 80upx;
+        margin-top: 60upx;
     }
 
     view {

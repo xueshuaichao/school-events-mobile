@@ -73,13 +73,8 @@
                     </view>
                 </view>
                 <view class="qr-code">
-                    <image
-                        src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/atzqrcode.png"
-                        mode=""
-                    />
                     <view class="text">
-                        更多详情请参照<br>
-                        官方公众号活动通知
+                        本次活动最终解释权在法律允许的范围内过活动归举办方所有
                     </view>
                 </view>
             </view>
@@ -227,7 +222,7 @@ export default {
                             text: '复选：7月25日-28日，28日公布结果',
                         },
                         {
-                            text: '专家评选，7月28日-31日，31日公布结果',
+                            text: '专家评选：7月28日-31日，31日公布结果',
                         },
                     ],
                 },
@@ -243,10 +238,11 @@ export default {
                     title: '奖项设置',
                     list: [
                         {
-                            text: '1、所有参赛选手都将获得一张专属电子海报',
+                            text: '1、所有参赛选手都将获得1张专属电子海报',
                         },
                         {
-                            text: '2、复选前20名选手将获得组委会颁发的荣誉奖杯',
+                            text:
+                                '2、复选前20名选手将获得组委会颁发的荣誉奖杯，同时获得代言人的选手仅发代言人奖杯',
                         },
                         {
                             text: '3、形象代言人（8位）',
@@ -271,7 +267,7 @@ export default {
                         {
                             text: '6、伯乐奖（8位）',
                             children: [
-                                '8位代言人的推荐老师将获得“伯乐奖”奖杯及“精美官方定制礼盒一套”',
+                                '8位代言人的推荐老师将获得“伯乐奖”奖杯及“精美官方定制礼盒1套”',
                             ],
                         },
                     ],
@@ -316,15 +312,15 @@ export default {
                             icon: 0,
                         },
                         {
-                            text: '“形象代言人”奖荣誉奖杯',
+                            text: '“形象代言人”奖荣誉奖杯、证书',
                             icon: 1,
                         },
                         {
-                            text: '世界吉尼斯嘉年华特邀入场券',
+                            text: '世界吉尼斯嘉年华特邀入场券*3',
                             icon: 2,
                         },
                         {
-                            text: '世界吉尼斯嘉年华特邀入场券',
+                            text: '官方包装宣传及官方定制礼盒1套',
                             icon: 3,
                         },
                     ],
@@ -355,7 +351,7 @@ export default {
                     title: '8个伯乐奖',
                     list: [
                         {
-                            text: '伯乐奖证书及精美定制礼盒1套',
+                            text: '伯乐奖奖杯及精美定制礼盒1套',
                             icon: 3,
                         },
                     ],
@@ -390,10 +386,6 @@ export default {
         padding: 20upx;
         box-sizing: border-box;
         border-radius: 40upx;
-        background-image: url("https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/brand_modal_bg.png");
-        background-position: bottom center;
-        background-size: 100% auto;
-        background-repeat: no-repeat;
         &.rule {
             background: #8f6fff;
         }
@@ -406,7 +398,7 @@ export default {
             box-shadow: inset 0px 0px 24upx 0px rgba(151, 129, 255, 1);
             border-radius: 40upx;
             padding: 45upx 20upx 20upx;
-            height: 715upx;
+            height: 848upx;
             box-sizing: border-box;
             .item {
                 &:first-of-type {
@@ -486,14 +478,14 @@ export default {
             justify-content: center;
             color: #fff;
             font-size: 22upx;
-            margin-top: 28upx;
+            margin-top: 39upx;
             & > image {
                 width: 180upx;
                 height: 180upx;
                 margin-right: 30upx;
             }
             .text {
-                margin-top: 85upx;
+                margin-bottom: 39upx;
             }
         }
         .rule-content {
@@ -547,7 +539,7 @@ export default {
                     margin-right: 24upx;
                 }
                 .t {
-                    width: 370upx;
+                    width: 380upx;
                     text-align: left;
                     color: #666;
                 }

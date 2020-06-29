@@ -142,16 +142,6 @@
                                 </text>
                             </view>
                         </view>
-                        <imageCutter
-                            v-if="url"
-                            :url="url"
-                            :fixed="true"
-                            :blob="false"
-                            :width="380"
-                            :height="506"
-                            @ok="onok"
-                            @cancel="oncancle"
-                        />
                     </view>
                 </view>
                 <view class="uni-btn-v">
@@ -194,6 +184,18 @@
                 </view>
             </view>
         </view>
+        <view class="image-cutter-zindex">
+            <imageCutter
+                v-if="url"
+                :url="url"
+                :fixed="true"
+                :blob="false"
+                :width="380"
+                :height="506"
+                @ok="onok"
+                @cancel="oncancle"
+            />
+        </view>
     </div>
 </template>
 <script>
@@ -204,6 +206,7 @@ import imageCutter from '../../../components/image-cutter/image-cutter.vue';
 import config from '../../../common/config';
 import utils from '../../../common/utils';
 import posterh5 from './posterh5.vue';
+import share from '../../../common/share';
 
 export default {
     components: {
@@ -245,16 +248,16 @@ export default {
             posterPreview: false,
             posterCommonConfig: {
                 pixelRatio: 2,
-                width: 569,
-                height: 820,
+                width: 568,
+                height: 818,
                 debug: false,
                 texts: [
                     {
                         text: '',
-                        height: 70,
+                        height: 30,
                         textAlign: 'center',
-                        y: 565,
-                        x: 207,
+                        y: 568,
+                        x: 233,
                         fontSize: '30',
                         color: '#fff',
                         lineNum: 1,
@@ -264,10 +267,10 @@ export default {
                     },
                     {
                         text: '',
-                        width: 562,
-                        height: 60,
+                        width: 570,
+                        height: 25,
                         textAlign: 'center',
-                        y: 652,
+                        y: 649,
                         x: 285,
                         fontSize: '24',
                         color: '#FFC953',
@@ -279,32 +282,32 @@ export default {
                 images: [
                     {
                         url:
-                            'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/brand_poster.jpg?x-oss-process=image/format,jpg/interlace,1/quality,Q_70/resize,m_pad,w_570,h_820',
+                            'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/brand_poster.jpg?x-oss-process=image/format,jpg/interlace,1/quality,Q_70/resize,m_pad,w_570,h_818',
                         width: 570,
-                        height: 820,
+                        height: 818,
                         y: 0,
                         x: 0,
                     },
                     {
                         url: '',
-                        width: 370,
+                        width: 372,
                         height: 500,
-                        y: 169,
+                        y: 168,
                         x: 99,
-                        borderRadius: 20,
+                        borderRadius: 40,
                     },
                     {
                         url: '',
                         width: 528,
                         height: 145,
-                        y: 527,
+                        y: 526,
                         x: 21,
                     },
                     {
                         url: '',
                         width: 122,
                         height: 122,
-                        y: 678,
+                        y: 677,
                         x: 428,
                         borderRadius: this.isH5 ? 0 : 122,
                     },
@@ -314,8 +317,24 @@ export default {
     },
     created() {
         this.getUserInfo();
+        this.publicConfig = this.$store.getters.getPublicConfig(10);
+        this.initShare();
     },
     methods: {
+        initShare() {
+            const titleList = this.isH5
+                ? this.publicConfig.shareConfig.h5Title
+                : this.publicConfig.shareConfig.title;
+            const descList = this.publicConfig.shareConfig.desc;
+            const random = Math.floor(Math.random() * titleList.length);
+            this.title = titleList[random];
+            const desc = descList[0];
+            share({
+                title: this.title,
+                desc,
+                thumbnail: `${this.publicConfig.shareConfig.image}?x-oss-process=image/format,png/interlace,1/quality,Q_80/resize,m_pad,h_100`,
+            });
+        },
         initFormat(userInfo) {
             this.formData.name = userInfo.name.length > 6
                 ? userInfo.name.slice(0, 6)
@@ -564,6 +583,17 @@ export default {
             }
         },
     },
+    onShareAppMessage(res) {
+        if (res.from === 'button') {
+            // 来自页面内分享按钮
+            console.log(res.target);
+        }
+        return {
+            title: this.title,
+            imageUrl: this.publicConfig.shareConfig.image,
+            path: this.publicConfig.shareConfig.path,
+        };
+    },
 };
 </script>
 <style lang="less" scoped>
@@ -572,6 +602,10 @@ export default {
     background-color: #583ed4;
     &.join-page-login {
         background-color: #fff;
+    }
+    .image-cutter-zindex {
+        position: relative;
+        z-index: 100;
     }
     .canvas.pro {
         position: absolute;
