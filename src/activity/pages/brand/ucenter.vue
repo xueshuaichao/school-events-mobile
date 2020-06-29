@@ -234,7 +234,7 @@
                         <view v-if="isSelf">
                             <view v-if="allTotal === 0">
                                 <view>
-                                    您还没有上传作品<br>上传作品才能赢取代言人权益哦～
+                                    您还没有上传作品<br>上传作品才能参与代言人评比哦！
                                 </view>
                             </view>
                             <view v-else>
@@ -951,7 +951,7 @@ export default {
             }
             .school {
                 margin-bottom: 40upx;
-                line-height: 40upx;
+                line-height: 36upx;
             }
             .teacher {
                 margin-bottom: 38upx;
@@ -1004,7 +1004,7 @@ export default {
     image {
         width: 300upx;
         height: 236upx;
-        margin-top: 80upx;
+        margin-top: 60upx;
     }
 
     view {
