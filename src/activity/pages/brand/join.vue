@@ -143,6 +143,7 @@
                             </view>
                         </view>
                         <imageCutter
+                            v-if="url"
                             :url="url"
                             :fixed="true"
                             :blob="false"
@@ -319,7 +320,11 @@ export default {
             this.formData.name = userInfo.name.length > 6
                 ? userInfo.name.slice(0, 6)
                 : userInfo.name;
-            this.formData.school_name = userInfo.teacher_info.school_name;
+            if (userInfo.identity === 4) {
+                this.formData.school_name = userInfo.student_info.school_name || '';
+            } else {
+                this.formData.school_name = userInfo.teacher_info.school_name || '';
+            }
         },
         onLogin({ user_info: userInfo }) {
             this.userInfo = userInfo;
@@ -508,7 +513,7 @@ export default {
                         });
                         uni.setStorageSync('brand_first', true);
                         setTimeout(() => {
-                            uni.navigateTo({
+                            uni.reLaunch({
                                 url: '/activity/pages/index?activity_id=10',
                             });
                         }, 2000);

@@ -12,7 +12,7 @@
             <template v-else>
                 <!-- 未参与活动 -->
                 <view
-                    v-if="isSelf && (!detail || !Object.keys(detail).length)"
+                    v-if="!detail || !Object.keys(detail).length"
                     class="no-join"
                 >
                     <image
@@ -469,11 +469,11 @@ export default {
             });
         },
         submit(path) {
+            const detail = {};
             this.uploadFile(path).then((data) => {
-                console.log(this.detail);
-                this.detail[this.isH5 ? 'poster_h5' : 'poster_mp'] = data.path;
-                api.post('/api/activity/enroll', {
-                    detail: this.detail,
+                detail[this.isH5 ? 'poster_h5' : 'poster_mp'] = data.path;
+                api.post('/api/activity/editenroll', {
+                    detail,
                     activity_id: 10,
                 });
             });
@@ -795,7 +795,7 @@ export default {
             });
         },
         handleUpload() {
-            if (this.isSlef) {
+            if (!this.iself) {
                 return uni.navigateTo({
                     url: `/activity/pages/index?activity_id=${this.filter.activity_id}`,
                 });

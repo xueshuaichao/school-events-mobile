@@ -378,14 +378,14 @@ export default {
             if (this.showGuideMask) {
                 this.toggleGuideMask(false);
             }
-            // if (this.isH5 && this.canJoin === false) {
-            //     return uni.showToast({
-            //         title: '请在UP爱挑战小程序上传作品',
-            //         icon: 'none',
-            //     });
-            // }
+            if (this.isH5 && this.canJoin === false) {
+                return uni.showToast({
+                    title: '请在UP爱挑战小程序上传作品',
+                    icon: 'none',
+                });
+            }
             if (this.status === 2) {
-                this.isLogin().then(
+                api.isLogin().then(
                     () => {
                         if (this.canJoin) {
                             uni.navigateTo({
