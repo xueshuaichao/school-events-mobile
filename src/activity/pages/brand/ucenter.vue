@@ -588,7 +588,7 @@ export default {
                             this.isSelf = data.is_self;
                             if (!this.isSelf) {
                                 uni.setNavigationBarTitle({
-                                    title: '第二届青少年”爱挑战“寻找代言人',
+                                    title: '青少年”爱挑战“寻找代言人',
                                 });
                             } else {
                                 uni.setNavigationBarTitle({
@@ -862,12 +862,17 @@ export default {
             console.log(res.target);
         }
         const pages = getCurrentPages(); // eslint-disable-line
-        const { route } = pages[0];
-        const { activity_id: activityId, user_id: userId } = pages[0].options;
+        const { route } = pages[2];
+        const { activity_id: activityId, user_id: userId } = pages[2].options;
+        const noLogin = !this.detail || !Object.keys(this.detail).length;
         return {
             title: this.title,
             imageUrl: this.publicConfig.shareConfig.image,
-            path: `${route}?activity_id${activityId}&user_id=${userId}`,
+            path: `${
+                noLogin
+                    ? `${this.publicConfig.shareConfig.path}`
+                    : `${route}?activity_id${activityId}&user_id=${userId}`
+            }`,
         };
     },
 };

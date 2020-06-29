@@ -268,7 +268,7 @@ export default {
             {
                 activityId: 10,
                 publicConfig: {
-                    title: '我为爱挑战代言',
+                    title: '青少年”爱挑战“寻找代言人',
                     log: 'dyrhd',
                     sort: ['最新', '最热'],
                     catMenu: [], // 分组
