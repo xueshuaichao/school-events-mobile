@@ -309,7 +309,7 @@ export default {
     methods: {
         jumpIndex(item) {
             if (item.banner_url) {
-                if (!this.isH5) {
+                if (item.banner_url.indexOf('http') === -1) {
                     uni.navigateTo({
                         url: item.banner_url,
                     });
