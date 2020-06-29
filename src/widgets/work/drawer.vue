@@ -38,6 +38,7 @@
                         v-for="item in list"
                         :key="item.comment_id"
                         class="item-wrap"
+                        :class="{ 'no-margin': item.sub_count }"
                         @click.prevent="clickItem(item)"
                     >
                         <view class="item">
@@ -65,9 +66,10 @@
                         </view>
                         <template v-if="item.show">
                             <view
-                                v-for="subItem in item.subList"
+                                v-for="(subItem, index) in item.subListCache"
                                 :key="subItem.comment_id"
                                 class="sub-item item"
+                                :data-id="index"
                                 @click.stop="clickItem(subItem, item)"
                             >
                                 <view class="left">
@@ -109,29 +111,15 @@
                                 — 展开{{ item.sub_count }}条回复 —
                             </view>
                         </template>
-                        <template
-                            v-if="
-                                item.sub_count &&
-                                    item.show &&
-                                    item.subList &&
-                                    item.sub_count == item.subList.length
-                            "
-                        >
+                        <template v-if="item.show && showCloseItem(item)">
                             <view
                                 class="show-or-hide"
-                                @click="closeSubList(item)"
+                                @click.stop="closeSubList(item)"
                             >
                                 — 收起 —
                             </view>
                         </template>
-                        <template
-                            v-if="
-                                item.sub_count &&
-                                    item.show &&
-                                    item.subList &&
-                                    item.sub_count > item.subList.length
-                            "
-                        >
+                        <template v-if="openSubItem(item) && item.show">
                             <view
                                 class="show-or-hide"
                                 @click.stop="getMoreSubList(item, 'more')"
@@ -175,6 +163,7 @@
                 <view
                     v-if="showKeybord"
                     class="fabu fl-r"
+                    :class="{ disable: !changeVal }"
                     @click="bindconfirm"
                 >
                     发布
@@ -287,6 +276,8 @@ export default {
             this.loading = false;
             this.filter.last_id = 0;
             this.subFilter.last_id = 0;
+            this.subFilter.to_comment_id = 0;
+            this.subFilter.topic_id = this.pageData.resource_id;
             this.resetInitVal();
             this.list = [];
             this.getList();
@@ -353,7 +344,6 @@ export default {
                 to_user_id: item.from_user_id,
                 to_comment_id: items ? items.comment_id : item.comment_id,
             };
-            console.log(item);
             this.selItem.to_user_id = item.from_user_id;
             this.selItem.to_user_name = item.user_info.name;
         },
@@ -366,17 +356,52 @@ export default {
                 this.selItem.from_user_id = data.user_info.user_id;
             });
         },
+        showCloseItem(item) {
+            let show = false;
+            const conut = Math.ceil(item.sub_count / 10) + 1;
+            console.log(conut, item.showCount, item.sub_count);
+            if (item.showCount && item.sub_count <= 3) {
+                show = true;
+            } else if (item.sub_count <= 10 && item.showCount === 2) {
+                show = true;
+            } else if (conut === item.showCount && item.sub_count > 10) {
+                show = true;
+            }
+            return show;
+        },
+        openSubItem(item) {
+            let show = false;
+            if (item.subListCache.length !== item.sub_count) {
+                if (
+                    (item.sub_count > 10 || item.sub_count > 3)
+                    && item.showCount > 0
+                ) {
+                    show = true;
+                }
+            }
+            return show;
+        },
         getMoreSubList(item, more) {
             // 展开更多，数据已经加载，不重复获取数据
             let List = [];
-            if (item.sub_count > item.subList.length) {
+
+            let getNew = false;
+            if (!item.subList.length) {
+                getNew = true;
+            } else if (
+                item.sub_count > item.subList.length
+                && item.sub_count > 10
+                && item.showCount >= 2
+            ) {
+                getNew = true;
+            }
+            if (getNew) {
                 if (item.subList && item.subList.length) {
                     this.subFilter.last_id = item.subList[item.subList.length - 1].comment_id;
                 }
 
                 this.subFilter.to_comment_id = item.comment_id;
                 this.subFilter.page_num = Math.floor(item.subList.length / 10) + 1;
-
                 // 获取分页下的列表
                 api.post('/api/comment/list', this.subFilter).then(
                     ({ list }) => {
@@ -394,23 +419,40 @@ export default {
         },
         openSublist(item, List, more) {
             // 展开评论
+            console.log('item', item.showCount);
             this.list = this.list.map((D) => {
                 const d = D;
                 if (d.comment_id === item.comment_id) {
+                    d.showCount += 1;
                     d.show = true;
                     if (more || d.subList.length) {
                         d.subList = d.subList.concat(List);
                     } else {
                         d.subList = List;
                     }
+                    this.setCacheSublist(d);
                 }
                 return d;
             });
+        },
+        setCacheSublist(D) {
+            // 显示3条评论，显示10条评论，
+            const d = D;
+            if (d.showCount === 0) {
+                d.subListCache = [];
+            } else if (d.showCount === 1) {
+                d.subListCache = d.subList.slice(0, 3);
+            } else if (d.showCount === 2) {
+                d.subListCache = d.subList.slice(0, 10);
+            } else {
+                d.subListCache = d.subList.slice(0, (d.showCount - 1) * 10);
+            }
         },
         closeSubList(item) {
             this.list = this.list.map((D) => {
                 const d = D;
                 if (d.comment_id === item.comment_id) {
+                    d.showCount = 0;
                     d.show = false;
                 }
                 return d;
@@ -432,7 +474,9 @@ export default {
                     const D = d;
                     D.created_at = D.created_at.slice(5, 16);
                     D.subList = [];
+                    D.subListCache = [];
                     D.show = false;
+                    D.showCount = 0;
                     return D;
                 });
                 if (this.filter.page_num === 1) {
@@ -477,7 +521,6 @@ export default {
                 comment_type: 1,
                 ...this.addObj,
             };
-            console.log(params, 'add,,,,comment-----', this.addObj);
             api.post('/api/comment/add', params).then((id) => {
                 uni.showToast({
                     title: '已提交',
@@ -490,7 +533,10 @@ export default {
         setListData(id, content, params) {
             // 无刷新数据，更新列表。
             const date = new Date();
-            const time = `${date.getMonth()}-${date.getDate()} ${date.getHours()}:${date.getMinutes()}`;
+            let time = `${this.joinDate(date.getMonth() + 1)}-`;
+            time += `${this.joinDate(date.getDate())} `;
+            time += `${this.joinDate(date.getHours())}:`;
+            time += `${this.joinDate(date.getMinutes())}`;
             const obj = {
                 ...this.selItem,
                 comment_id: id,
@@ -499,8 +545,13 @@ export default {
                 content,
             };
             if (!this.selItem.to_user_id) {
+                obj.subList = [];
+                obj.subListCache = [];
+                obj.show = false;
+                obj.showCount = 0;
                 this.list.unshift(obj);
                 this.total += 1;
+                console.log('llalal', this.list);
             } else {
                 this.list = this.list.map((D) => {
                     const d = D;
@@ -512,6 +563,7 @@ export default {
                             d.subList = [obj];
                             d.sub_count = 1;
                         }
+                        this.setCacheSublist(d);
                     }
                     return d;
                 });
@@ -520,6 +572,10 @@ export default {
             this.$emit('getcommentTotal', this.allNum);
 
             this.resetInitVal();
+        },
+        joinDate(time) {
+            const Time = time < 10 ? `0${time}` : time;
+            return Time;
         },
         resetInitVal() {
             // reset for init value;
@@ -532,7 +588,6 @@ export default {
             this.isFocus = false;
         },
         toLower() {
-            console.log('toLower---');
             if (this.filter.page_num * this.filter.page_size < this.total) {
                 this.filter.page_num += 1;
                 this.getList();
@@ -623,6 +678,9 @@ export default {
                     display: flex;
                     justify-content: space-between;
                 }
+                &.no-margin {
+                    margin-bottom: 0;
+                }
                 .img-box {
                     width: 72rpx;
                     height: 72rpx;
@@ -638,6 +696,8 @@ export default {
                     font-size: 30rpx;
                     line-height: 38rpx;
                     font-weight: 500;
+                    word-break: break-all;
+                    width: 400rpx;
                 }
                 .content {
                     font-size: 28rpx;
@@ -663,7 +723,7 @@ export default {
             color: #b0b5bf;
             font-size: 28rpx;
             text-align: center;
-            margin-top: 20rpx;
+            padding: 20rpx 0;
             line-height: 40rpx;
         }
         .message-add {
@@ -693,6 +753,9 @@ export default {
                 font-size: 28rpx;
                 line-height: 80rpx;
                 margin-left: 14rpx;
+                &.disable {
+                    color: #b0b5bf;
+                }
             }
 
             input {

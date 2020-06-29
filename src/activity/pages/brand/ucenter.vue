@@ -65,10 +65,16 @@
                                 <view class="name">
                                     {{ detail.name }}
                                 </view>
-                                <view class="school">
+                                <view
+                                    v-if="detail.school_name"
+                                    class="school"
+                                >
                                     {{ detail.school_name }}
                                 </view>
-                                <view class="teacher">
+                                <view
+                                    v-if="detail.teacher"
+                                    class="teacher"
+                                >
                                     推荐老师：{{ detail.teacher }}
                                 </view>
                                 <view class="slogan">
@@ -76,7 +82,10 @@
                                 </view>
                             </view>
                         </view>
-                        <view class="user-desc">
+                        <view
+                            v-if="detail.desc"
+                            class="user-desc"
+                        >
                             <view>自我介绍：</view>
                             <view class="user-desc-text">
                                 {{ detail.desc }}
@@ -241,7 +250,7 @@
                         class="goUpload"
                         @click="handleUpload"
                     >
-                        上传作品
+                        {{ isSelf ? "上传作品" : "查看活动" }}
                     </view>
                 </view>
             </template>
@@ -333,7 +342,7 @@ export default {
                         height: 75,
                         textAlign: 'center',
                         y: 565,
-                        x: 182,
+                        x: 207,
                         fontSize: '30',
                         color: '#fff',
                         lineNum: 1,
@@ -370,7 +379,7 @@ export default {
                         height: 500,
                         y: 169,
                         x: 99,
-                        borderRadius: 55,
+                        borderRadius: 20,
                     },
                     {
                         url:
@@ -386,7 +395,7 @@ export default {
                         height: 122,
                         y: 678,
                         x: 428,
-                        borderRadius: this.isH5 ? 0 : 122,
+                        borderRadius: 122,
                     },
                 ],
             },
@@ -460,12 +469,14 @@ export default {
             });
         },
         submit(path) {
+            const detail = {};
             this.uploadFile(path).then((data) => {
-                console.log(this.detail);
-                this.detail[this.isH5 ? 'poster_h5' : 'poster_mp'] = data.path;
-                api.post('/api/activity/enroll', {
-                    detail: this.detail,
+                detail[this.isH5 ? 'poster_h5' : 'poster_mp'] = data.path;
+                api.post('/api/activity/editenroll', {
+                    detail,
                     activity_id: 10,
+                }).then(() => {
+                    this.detail[this.isH5 ? 'poster_h5' : 'poster_mp'] = data.path;
                 });
             });
         },
@@ -478,9 +489,10 @@ export default {
         },
         getH5QrCode() {
             const uCenterUrl = `${window.location.origin}/activity/pages/brand/ucenter?activity_id=10&user_id=${this.userInfo.user_id}&w=244`;
-            this.posterCommonConfig.images[3].url = `http://aitiaozhan.my.dev.wdyclass.com:1024/api/common/qrcode?url=${encodeURI(
-                uCenterUrl,
-            )}`;
+            this.posterCommonConfig.images[3].url = `${
+                window.location.origin
+            }/api/common/qrcode?url=${encodeURI(uCenterUrl)}`;
+            this.posterCommonConfig.images[3].borderRadius = 0;
         },
         getMpQrCode() {
             // 小程序二维码
@@ -544,7 +556,7 @@ export default {
         createPoster() {
             const { image, name, slogan } = this.detail;
             this.posterCommonConfig.images[1].url = image;
-            this.posterCommonConfig.texts[0].text = name;
+            this.posterCommonConfig.texts[0].text = `我是${name}`;
             this.posterCommonConfig.texts[1].text = slogan;
             this.$refs.posterh5.createPoster(this.posterCommonConfig);
         },
@@ -574,6 +586,15 @@ export default {
                                 ];
                             }
                             this.isSelf = data.is_self;
+                            if (!this.isSelf) {
+                                uni.setNavigationBarTitle({
+                                    title: '第二届青少年”爱挑战“寻找代言人',
+                                });
+                            } else {
+                                uni.setNavigationBarTitle({
+                                    title: '个人中心',
+                                });
+                            }
                         }
                         this.isLoading = false;
                     });
@@ -777,6 +798,11 @@ export default {
             });
         },
         handleUpload() {
+            if (!this.iself) {
+                return uni.navigateTo({
+                    url: `/activity/pages/index?activity_id=${this.filter.activity_id}`,
+                });
+            }
             if (this.isH5) {
                 return uni.showToast({
                     title: '请在UP爱挑战小程序上传作品',
@@ -933,6 +959,7 @@ export default {
             }
             .school {
                 margin-bottom: 40upx;
+                line-height: 40upx;
             }
             .teacher {
                 margin-bottom: 38upx;
@@ -955,7 +982,7 @@ export default {
         word-break: break-all;
         font-size: 26upx;
         .user-desc-text {
-            height: 96upx;
+            max-height: 96upx;
             overflow-y: auto;
             word-break: break-all;
         }

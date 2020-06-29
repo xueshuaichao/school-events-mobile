@@ -13,10 +13,16 @@
                     />
                 </view>
                 <template v-if="isH5">
-                    <!-- <view class="brand-btn btn">
+                    <view
+                        v-if="isWechat"
+                        class="brand-btn btn"
+                    >
                         长按图片保存到本地
-                    </view> -->
-                    <view class="brand-btn btn">
+                    </view>
+                    <view
+                        v-else
+                        class="brand-btn btn"
+                    >
                         <a
                             :href="image"
                             download
@@ -65,11 +71,13 @@ export default {
         return {
             // #ifdef H5
             isH5: true,
+            isWechat:
+                navigator.userAgent.toLowerCase().match(/MicroMessenger/i)
+                === 'micromessenger',
             // #endif
             imgAuthBtn: false,
             showPosterMask: false,
             canvasImg: '',
-            isWechat: false,
         };
     },
     created() {

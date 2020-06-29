@@ -524,6 +524,7 @@ export default {
         height: 510rpx;
         background: url(../../static/images/uc/my-bg.png);
         background-size: 100% 100%;
+        position: relative;
 
         .user-info {
             padding: 54rpx 60rpx;
@@ -562,6 +563,11 @@ export default {
             color: #fff;
             justify-content: space-evenly;
             padding: 50rpx;
+            position: absolute;
+            width: 100%;
+            box-sizing: border-box;
+            left: 0;
+            bottom: 86rpx;
             .user-data {
                 font-size: 28rpx;
                 line-height: 40rpx;
@@ -620,6 +626,7 @@ export default {
         margin-top: -90rpx;
         background: #f8f8f8;
         border-radius: 50rpx 50rpx 0 0;
+        position: relative;
         .honor-block {
             padding: 60rpx 30rpx 20rpx;
             background: #fff;

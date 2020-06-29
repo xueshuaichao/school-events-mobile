@@ -83,7 +83,7 @@
                 </view>
                 <view class="uni-form-item uni-column">
                     <view class="title">
-                        <text>*</text>自我介绍
+                        自我介绍
                     </view>
                     <view class="input-box textarea">
                         <textarea
@@ -143,11 +143,12 @@
                             </view>
                         </view>
                         <imageCutter
+                            v-if="url"
                             :url="url"
                             :fixed="true"
                             :blob="false"
-                            :width="width"
-                            :height="height"
+                            :width="380"
+                            :height="506"
                             @ok="onok"
                             @cancel="oncancle"
                         />
@@ -178,7 +179,10 @@
                             {{ formData.slogan }}
                         </view>
                     </view>
-                    <image class="qr-code" />
+                    <image
+                        src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/applet-code-10.png"
+                        class="qr-code"
+                    />
                 </view>
                 <view
                     class="close-btn"
@@ -212,7 +216,7 @@ export default {
             // #ifdef H5
             isH5: true,
             // #endif
-            userInfo: null,
+            userInfo: {},
             formData: {
                 school_name: '',
                 name: '',
@@ -227,7 +231,7 @@ export default {
             validateRule: [
                 {
                     type: 'name',
-                    errorMsg: '请填写学校联系人',
+                    errorMsg: '请填写您的姓名',
                 },
                 {
                     type: 'slogan',
@@ -247,7 +251,7 @@ export default {
                 texts: [
                     {
                         text: '',
-                        height: 75,
+                        height: 70,
                         textAlign: 'center',
                         y: 565,
                         x: 207,
@@ -287,7 +291,7 @@ export default {
                         height: 500,
                         y: 169,
                         x: 99,
-                        borderRadius: 55,
+                        borderRadius: 20,
                     },
                     {
                         url: '',
@@ -312,8 +316,21 @@ export default {
         this.getUserInfo();
     },
     methods: {
+        initFormat(userInfo) {
+            this.formData.name = userInfo.name.length > 6
+                ? userInfo.name.slice(0, 6)
+                : userInfo.name;
+            if (userInfo.identity === 4) {
+                this.formData.school_name = userInfo.student_info.school_name || '';
+            } else {
+                this.formData.school_name = userInfo.teacher_info.school_name || '';
+            }
+        },
         onLogin({ user_info: userInfo }) {
             this.userInfo = userInfo;
+            if (this.userInfo.identity !== 1) {
+                this.initFormat(this.userInfo);
+            }
             this.getQrCode();
         },
         onPosterSuccess(detail) {
@@ -330,6 +347,9 @@ export default {
         getUserInfo() {
             api.get('/api/user/info').then((res) => {
                 this.userInfo = res.user_info;
+                if (this.userInfo.identity !== 1) {
+                    this.initFormat(this.userInfo);
+                }
                 this.getQrCode();
             });
         },
@@ -342,9 +362,10 @@ export default {
         },
         getH5QrCode() {
             const uCenterUrl = `${window.location.origin}/activity/pages/brand/ucenter?activity_id=10&user_id=${this.userInfo.user_id}&w=244`;
-            this.posterCommonConfig.images[3].url = `http://aitiaozhan.my.dev.wdyclass.com:1024/api/common/qrcode?url=${decodeURI(
-                uCenterUrl,
-            )}`;
+            this.posterCommonConfig.images[3].url = `${
+                window.location.origin
+            }/api/common/qrcode?url=${decodeURI(uCenterUrl)}`;
+            this.posterCommonConfig.images[3].borderRadius = 0;
         },
         getMpQrCode() {
             // 小程序二维码
@@ -493,7 +514,7 @@ export default {
                         });
                         uni.setStorageSync('brand_first', true);
                         setTimeout(() => {
-                            uni.navigateTo({
+                            uni.reLaunch({
                                 url: '/activity/pages/index?activity_id=10',
                             });
                         }, 2000);
@@ -534,7 +555,13 @@ export default {
             });
         },
         togglePreview(status) {
-            this.posterPreview = status;
+            if (!this.lock) {
+                this.lock = true;
+                if (this.validate()) {
+                    this.posterPreview = status;
+                    this.lock = false;
+                }
+            }
         },
     },
 };
@@ -676,6 +703,7 @@ export default {
         right: 0;
         bottom: 0;
         background-color: rgba(0, 0, 0, 0.8);
+        z-index: 10;
         .poster-preview-box {
             position: absolute;
             top: 50%;

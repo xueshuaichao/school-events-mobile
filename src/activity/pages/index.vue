@@ -37,7 +37,7 @@ export default {
                 },
                 {
                     id: 10,
-                    title: '代言人',
+                    title: '第二届青少年”爱挑战“寻找代言人',
                 },
             ],
             canvasImg: '',

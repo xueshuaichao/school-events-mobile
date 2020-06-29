@@ -376,10 +376,11 @@ export default {
         getNewActivityStatus() {
             // 1未开始，2进行中，3已结束
             api.get('/api/activity/activitystatus', {
-                activity_id: 9,
+                activity_id: 10,
             }).then((data) => {
-                this.status = data.status;
-                // 1显示  0不显示
+                if (data.status) {
+                    this.status = data.status;
+                }
             });
         },
         thirdEntryPrompt() {
@@ -440,6 +441,7 @@ export default {
 
         getData(refresh) {
             this.getHotActivity();
+            this.getBannerList();
             this.getWorkList('atz');
             this.getWorkList('guiness');
             this.getWorkList('talent', refresh);
