@@ -297,6 +297,7 @@ export default {
                         that.$emit('success', res.tempFilePath);
                     },
                     fail(err) {
+                        console.log(111111);
                         uni.hideLoading();
                         that.$emit('fail', err);
                     },
