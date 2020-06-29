@@ -128,6 +128,20 @@
                             </view>
                         </template>
                     </view>
+                    <view>
+                        <view>
+                            hahahh
+                        </view>
+                        <view>
+                            hahahh
+                        </view>
+                        <view>
+                            hahahh
+                        </view>
+                        <view>
+                            hahahh
+                        </view>
+                    </view>
                     <template
                         v-if="
                             total === list.length && loading && list.length > 10
@@ -156,6 +170,7 @@
                         maxlength="40"
                         :adjust-position="false"
                         :focus="isFocus"
+                        @blur="blur"
                         @focus="onFoucs"
                         @confirm="bindconfirm"
                     >
@@ -486,18 +501,22 @@ export default {
                 }
             });
         },
+        blur() {
+            this.resetInitVal();
+        },
         bindconfirm() {
             this.showKeybord = false;
             this.isFocus = false;
             if (this.changeVal.trim()) {
                 const content = this.changeVal.trim();
-                if (this.isLogin) {
+                if (this.hasLogin) {
                     this.addComment(content);
                 } else {
                     api.isLogin({
                         fr: this.fr,
                     }).then(
                         () => {
+                            this.hasLogin = true;
                             this.getUserDate();
                             this.addComment(content);
                         },
@@ -551,7 +570,6 @@ export default {
                 obj.showCount = 0;
                 this.list.unshift(obj);
                 this.total += 1;
-                console.log('llalal', this.list);
             } else {
                 this.list = this.list.map((D) => {
                     const d = D;
@@ -697,7 +715,7 @@ export default {
                     line-height: 38rpx;
                     font-weight: 500;
                     word-break: break-all;
-                    width: 400rpx;
+                    width: 350rpx;
                 }
                 .content {
                     font-size: 28rpx;

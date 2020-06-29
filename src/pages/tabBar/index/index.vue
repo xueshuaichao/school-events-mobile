@@ -309,9 +309,13 @@ export default {
     methods: {
         jumpIndex(item) {
             if (item.banner_url) {
-                uni.navigateTo({
-                    url: item.banner_url,
-                });
+                if (!this.isH5) {
+                    uni.navigateTo({
+                        url: item.banner_url,
+                    });
+                } else {
+                    window.location.href = item.banner_url;
+                }
             }
         },
         getBannerList() {
