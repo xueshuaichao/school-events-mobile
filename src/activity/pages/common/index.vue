@@ -38,7 +38,13 @@
                     <!-- work show -->
                     <view class="menu-list">
                         <view class="cansai-text">
-                            —— 活动作品 ——
+                            ——
+                            {{
+                                publicConfig.activityId === 10
+                                    ? "参赛作品"
+                                    : "活动作品"
+                            }}
+                            ——
                         </view>
                         <view class="search-box">
                             <button

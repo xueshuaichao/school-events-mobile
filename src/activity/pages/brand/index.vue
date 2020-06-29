@@ -182,10 +182,10 @@ export default {
             const width = 80;
             const height = 80;
             if (val.indexOf('?') !== -1) {
-                newUrl = `${val}&x-oss-process=image/format,png/interlace,1/quality,Q_80/resize,m_fixed,h_${height
+                newUrl = `${val}&x-oss-process=image/format,png/interlace,1/quality,Q_80/resize,m_fill,h_${height
                     * 2},w_${width * 2}`;
             } else {
-                newUrl = `${val}?x-oss-process=image/format,png/interlace,1/quality,Q_80/resize,m_fixed,h_${height
+                newUrl = `${val}?x-oss-process=image/format,png/interlace,1/quality,Q_80/resize,m_fill,h_${height
                     * 2},w_${width * 2}`;
             }
             return newUrl;
@@ -221,7 +221,7 @@ export default {
             maskType: 0,
             prizeList: [
                 {
-                    desc: ['为爱挑战代言！', '登世界吉尼斯舞台'],
+                    desc: ['为爱挑战代言', '登世界吉尼斯舞台'],
                 },
                 {
                     desc: ['“形象代言人”奖杯', '荣誉证书'],

@@ -8,6 +8,7 @@
                 width: target.width + 'px',
                 height: target.height + 'px'
             }"
+            class="privew-canvas"
             canvas-id="target"
         />
         <view class="body">
@@ -18,7 +19,8 @@
                     left: image.left + 'px',
                     top: image.top + 'px',
                     width: image.width + 'px',
-                    height: image.height + 'px'
+                    height: image.height + 'px',
+                    opacity: showDom ? 1 : 0
                 }"
                 :src="url"
                 @load="imageLoad"
@@ -40,7 +42,8 @@
                         left: frame.left + 'px',
                         top: frame.top + 'px',
                         width: frame.width + 'px',
-                        height: frame.height + 'px'
+                        height: frame.height + 'px',
+                        opacity: showDom ? 1 : 0
                     }"
                     @touchstart="touchStart($event, 'frame')"
                     @touchstart.stop.prevent="touchHandle"
@@ -156,6 +159,7 @@ export default {
             mask: {
                 show: false,
             },
+            showDom: false,
             frame: {
                 left: 50,
                 top: 50,
@@ -207,7 +211,6 @@ export default {
     },
     methods: {
         imageLoad(ev) {
-            this.mask.show = true;
             this.real.width = ev.detail.width;
             this.real.height = ev.detail.height;
             this.image.width = ev.detail.width;
@@ -260,6 +263,8 @@ export default {
                     }, 100);
                 })
                 .exec();
+            this.mask.show = true;
+            this.showDom = true;
         },
         touchHandle() {},
         touchStart(ev, type) {
@@ -601,6 +606,12 @@ export default {
 </script>
 
 <style scoped>
+.privew-canvas {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    transform: translate3d(-9999px, 0, 0);
+}
 .ksp-image-cutter {
     position: fixed;
     width: 100%;
@@ -674,6 +685,7 @@ export default {
     display: block;
     left: 0px;
     top: 0px;
+    transform: translate3d(-9999px, 0, 0);
 }
 .rect {
     position: absolute;

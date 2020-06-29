@@ -147,8 +147,8 @@
                             :url="url"
                             :fixed="true"
                             :blob="false"
-                            :width="width"
-                            :height="height"
+                            :width="380"
+                            :height="506"
                             @ok="onok"
                             @cancel="oncancle"
                         />
@@ -251,7 +251,7 @@ export default {
                 texts: [
                     {
                         text: '',
-                        height: 75,
+                        height: 70,
                         textAlign: 'center',
                         y: 565,
                         x: 207,
@@ -291,7 +291,7 @@ export default {
                         height: 500,
                         y: 169,
                         x: 99,
-                        borderRadius: 55,
+                        borderRadius: 20,
                     },
                     {
                         url: '',
@@ -703,6 +703,7 @@ export default {
         right: 0;
         bottom: 0;
         background-color: rgba(0, 0, 0, 0.8);
+        z-index: 10;
         .poster-preview-box {
             position: absolute;
             top: 50%;
