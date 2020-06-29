@@ -64,45 +64,43 @@
                                 {{ item.created_at }}
                             </view>
                         </view>
-                        <template v-if="item.show">
-                            <view
-                                v-for="(subItem, index) in item.subListCache"
-                                :key="subItem.comment_id"
-                                class="sub-item item"
-                                :data-id="index"
-                                @click.stop="clickItem(subItem, item)"
-                            >
-                                <view class="left">
-                                    <view class="img-box">
-                                        <image
-                                            :src="
-                                                subItem.user_info.avatar_url ||
-                                                    '/static/images/uc/avatar.png'
-                                            "
-                                        />
-                                    </view>
-                                    <view>
-                                        <view class="name">
-                                            {{ subItem.user_info.name }}
-                                        </view>
-                                        <view class="content">
-                                            <template
-                                                v-if="subItem.to_user_name"
-                                            >
-                                                回复
-                                                <text class="bold">
-                                                    {{ subItem.to_user_name }}
-                                                </text>
-                                            </template>
-                                            {{ subItem.content }}
-                                        </view>
-                                    </view>
+                        <view
+                            v-for="(subItem, index) in item.subListCache"
+                            :key="subItem.comment_id"
+                            :style="item.show ? '' : 'display:none;'"
+                            :data-index="index"
+                            class="sub-item item"
+                            @click.stop="clickItem(subItem, item)"
+                        >
+                            <view class="left">
+                                <view class="img-box">
+                                    <image
+                                        :src="
+                                            subItem.user_info.avatar_url ||
+                                                '/static/images/uc/avatar.png'
+                                        "
+                                    />
                                 </view>
-                                <view class="right">
-                                    {{ subItem.created_at }}
+                                <view>
+                                    <view class="name">
+                                        {{ subItem.user_info.name }}
+                                    </view>
+                                    <view class="content">
+                                        <template v-if="subItem.to_user_name">
+                                            回复
+                                            <text class="bold">
+                                                {{ subItem.to_user_name }}
+                                            </text>
+                                        </template>
+                                        {{ subItem.content }}
+                                    </view>
                                 </view>
                             </view>
-                        </template>
+                            <view class="right">
+                                {{ subItem.created_at }}
+                            </view>
+                        </view>
+
                         <template v-if="item.sub_count && !item.show">
                             <view
                                 class="show-or-hide"
@@ -450,6 +448,8 @@ export default {
             }
         },
         closeSubList(item) {
+            console.log('list--122---');
+            // this.goTop();
             this.list = this.list.map((D) => {
                 const d = D;
                 if (d.comment_id === item.comment_id) {
@@ -458,6 +458,7 @@ export default {
                 }
                 return d;
             });
+            console.log('list--222222---');
         },
         getList() {
             if (this.list.length) {
@@ -657,12 +658,12 @@ export default {
             color: #b0b5bf;
             font-size: 28rpx;
             line-height: 40rpx;
+            padding-bottom: 20rpx;
         }
-
         .scroll-context {
-            margin-top: 20rpx;
-            padding: 20rpx 30rpx;
+            padding: 120rpx 30rpx 20rpx;
             box-sizing: border-box;
+            background: #fff;
             .no-data {
                 font-size: 28rpx;
                 line-height: 100rpx;
