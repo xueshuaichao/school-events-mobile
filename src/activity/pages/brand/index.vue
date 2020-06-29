@@ -378,29 +378,48 @@ export default {
             if (this.showGuideMask) {
                 this.toggleGuideMask(false);
             }
-            if (this.isH5 && this.canJoin === false) {
-                return uni.showToast({
-                    title: '请在UP爱挑战小程序上传作品',
-                    icon: 'none',
-                });
-            }
+
             if (this.status === 2) {
-                api.isLogin().then(
-                    () => {
-                        if (this.canJoin) {
-                            uni.navigateTo({
-                                url: '/activity/pages/brand/join',
-                            });
-                        } else {
-                            uni.navigateTo({
-                                url: `/activity/pages/upload/modify?activity_id=${this.activityId}`,
-                            });
-                        }
-                    },
-                    () => {
-                        this.userInfo = {};
-                    },
-                );
+                if (
+                    (this.isIOS || this.isAndroid)
+                    && !this.userkey
+                    && this.isH5
+                ) {
+                    api.appLogin(
+                        this.isIOS ? 'ios' : 'android',
+                        'upload',
+                        (userkey) => {
+                            this.userkey = userkey;
+                            this.isLogin().then(
+                                (res) => {
+                                    this.userInfo = res.user_info;
+                                    this.myWorkPath = `/activity/pages/brand/ucenter?activity_id=10&user_id=${this.userInfo.user_id}`;
+                                    this.getenrollinfo();
+                                },
+                                () => {
+                                    this.canJoin = true;
+                                },
+                            );
+                        },
+                    );
+                } else {
+                    api.isLogin().then(
+                        () => {
+                            if (this.canJoin) {
+                                uni.navigateTo({
+                                    url: '/activity/pages/brand/join',
+                                });
+                            } else {
+                                uni.navigateTo({
+                                    url: `/activity/pages/upload/modify?activity_id=${this.activityId}`,
+                                });
+                            }
+                        },
+                        () => {
+                            this.userInfo = {};
+                        },
+                    );
+                }
             } else {
                 uni.showToast({
                     title:
