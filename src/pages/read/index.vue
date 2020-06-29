@@ -260,10 +260,18 @@
                     </view>
                 </view>
                 <view
-                    :class="status === 2 || isH5 ? 'upload' : 'upload-disable'"
+                    :class="status === 2 ? 'upload' : 'upload-disable'"
                     @click="handleUpload"
                 >
-                    上传作品
+                    <template v-if="status === 1">
+                        活动未开始
+                    </template>
+                    <template v-else-if="status === 2">
+                        上传作品
+                    </template>
+                    <template v-else>
+                        活动已结束
+                    </template>
                 </view>
             </view>
         </view>
@@ -489,12 +497,6 @@ export default {
             });
         },
         handleUpload() {
-            if (this.isH5) {
-                return uni.showToast({
-                    title: '请在UP爱挑战小程序上传作品',
-                    icon: 'none',
-                });
-            }
             if (this.status === 2) {
                 api.isLogin({
                     fr: this.fr,

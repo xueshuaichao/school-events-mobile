@@ -235,9 +235,15 @@ export default {
             ],
             expertList: [],
             myWorkPath: '',
+            userkey: '',
+            isIOS: false,
+            isAndroid: false,
         };
     },
     created() {
+        const u = navigator.userAgent;
+        this.isIOS = u.toLowerCase().indexOf('wd-atz-ios') !== -1;
+        this.isAndroid = u.toLowerCase().indexOf('wd-atz-android') !== -1;
         this.publicConfig = {
             ...this.$store.getters.getPublicConfig(this.activityId),
             ...this.$store.getters.getColorConfig({
@@ -378,7 +384,6 @@ export default {
             if (this.showGuideMask) {
                 this.toggleGuideMask(false);
             }
-
             if (this.status === 2) {
                 if (
                     (this.isIOS || this.isAndroid)
@@ -388,18 +393,12 @@ export default {
                     api.appLogin(
                         this.isIOS ? 'ios' : 'android',
                         'upload',
-                        (userkey) => {
-                            this.userkey = userkey;
-                            this.isLogin().then(
-                                (res) => {
-                                    this.userInfo = res.user_info;
-                                    this.myWorkPath = `/activity/pages/brand/ucenter?activity_id=10&user_id=${this.userInfo.user_id}`;
-                                    this.getenrollinfo();
-                                },
-                                () => {
-                                    this.canJoin = true;
-                                },
-                            );
+                        (info) => {
+                            const userInfo = JSON.parse(info);
+                            this.userkey = userInfo.userkey;
+                            this.userInfo = userInfo;
+                            this.myWorkPath = `/activity/pages/brand/ucenter?activity_id=10&user_id=${this.userInfo.userid}`;
+                            this.getenrollinfo();
                         },
                     );
                 } else {

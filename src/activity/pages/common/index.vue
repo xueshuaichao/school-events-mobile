@@ -255,6 +255,7 @@ export default {
             status: 2,
             crouselList: [],
             setId: '',
+            userkey: '',
             isIOS: false,
             isAndroid: false,
         };
@@ -330,8 +331,9 @@ export default {
                     api.appLogin(
                         this.isIOS ? 'ios' : 'android',
                         'upload',
-                        (userkey) => {
-                            this.userkey = userkey;
+                        (info) => {
+                            const userInfo = JSON.parse(info);
+                            this.userkey = userInfo.userkey;
                             uni.navigateTo({
                                 url: `/activity/pages/upload/modify?activity_id=${this.filter.activity_id}`,
                             });
@@ -394,18 +396,15 @@ export default {
         },
         handleMywork() {
             if ((this.isIOS || this.isAndroid) && !this.userkey && this.isH5) {
-                api.appLogin(
-                    this.isIOS ? 'ios' : 'android',
-                    'mywork',
-                    (userkey) => {
-                        this.userkey = userkey;
-                        uni.navigateTo({
-                            url: this.workPath
-                                ? this.workPath
-                                : `/activity/pages/mywork/mywork?type=myWork&activity_id=${this.filter.activity_id}`,
-                        });
-                    },
-                );
+                api.appLogin(this.isIOS ? 'ios' : 'android', 'mywork', (info) => {
+                    const userInfo = JSON.parse(info);
+                    this.userkey = userInfo.userkey;
+                    uni.navigateTo({
+                        url: this.workPath
+                            ? this.workPath
+                            : `/activity/pages/mywork/mywork?type=myWork&activity_id=${this.filter.activity_id}`,
+                    });
+                });
             } else {
                 api.isLogin({
                     fr: this.fr,

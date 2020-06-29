@@ -112,9 +112,9 @@ function appLogin(type = 'ios', path = null, callback) {
     callBackFn = callback;
 }
 
-window.getAppUserkey = function (userkey) {
-    if (userkey) {
-        callBackFn(userkey);
+window.getAppUserkey = function (info) {
+    if (info) {
+        callBackFn(info);
     }
 };
 // #endif

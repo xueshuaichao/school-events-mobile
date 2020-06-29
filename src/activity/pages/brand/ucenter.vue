@@ -794,12 +794,6 @@ export default {
                     url: `/activity/pages/index?activity_id=${this.filter.activity_id}`,
                 });
             }
-            if (this.isH5) {
-                return uni.showToast({
-                    title: '请在UP爱挑战小程序上传作品',
-                    icon: 'none',
-                });
-            }
             if (this.status === 2) {
                 api.isLogin().then(
                     () => {
