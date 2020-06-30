@@ -100,7 +100,10 @@
                                         {{ item.name }}
                                     </view>
                                     <view class="expert-title">
-                                        {{ item.title }}
+                                        {{ item.title.split(" ")[0] }}
+                                    </view>
+                                    <view class="expert-title">
+                                        {{ item.title.split(" ")[1] || "" }}
                                     </view>
                                 </view>
                             </view>
@@ -570,19 +573,19 @@ export default {
             width: 33.3333%;
             margin-bottom: 40upx;
             font-size: 22upx;
+            padding: 0 4upx;
+            box-sizing: border-box;
             &.margin-0 {
                 margin-bottom: 0;
-            }
-            &:nth-of-type(2),
-            &:nth-of-type(4) {
-                padding: 0 4upx;
-                box-sizing: border-box;
             }
         }
         .item > image {
             width: 160upx;
             height: 160upx;
             border-radius: 50%;
+        }
+        .expert-name {
+            font-weight: bold;
         }
         .expert-title {
             overflow: hidden;

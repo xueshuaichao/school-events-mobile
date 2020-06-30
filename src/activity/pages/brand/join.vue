@@ -86,7 +86,22 @@
                         自我介绍
                     </view>
                     <view class="input-box textarea">
+                        <view
+                            v-if="posterPreview"
+                            class="uni-textarea"
+                        >
+                            <view
+                                v-if="!formData.desc"
+                                class="placeholder-text"
+                            >
+                                如有获奖经历可描述
+                            </view>
+                            <view v-else>
+                                {{ formData.desc }}
+                            </view>
+                        </view>
                         <textarea
+                            v-else
                             v-model="formData.desc"
                             class="uni-textarea"
                             maxlength="150"
@@ -281,8 +296,7 @@ export default {
                 ],
                 images: [
                     {
-                        url:
-                            'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/brand_poster.jpg?x-oss-process=image/format,jpg/interlace,1/quality,Q_70/resize,m_pad,w_570,h_818',
+                        url: '/activity/static/children_img/brand_poster.jpg',
                         width: 570,
                         height: 818,
                         y: 0,
@@ -362,6 +376,7 @@ export default {
                 duration: 2000,
                 icon: 'none',
             });
+            this.lock = false;
         },
         getUserInfo() {
             api.get('/api/user/info').then((res) => {
@@ -513,7 +528,14 @@ export default {
         },
         createPoster() {
             this.posterCommonConfig.images[1].url = this.formData.image;
-            this.posterCommonConfig.images[2].url = 'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/brand_poster_name.png';
+            if (this.isH5) {
+                this.posterCommonConfig.images[0].url = '/activity/static/children_img/brand_poster.jpg';
+                this.posterCommonConfig.images[2].url = '/activity/static/children_img/brand_poster_name.png';
+            } else {
+                this.posterCommonConfig.images[0].url = 'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/brand_poster.jpg';
+                this.posterCommonConfig.images[2].url = 'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/brand_poster_name.png';
+            }
+
             this.posterCommonConfig.texts[0].text = `我是${this.formData.name}`;
             this.posterCommonConfig.texts[1].text = `${this.formData.slogan}`;
             this.$refs.posterh5.createPoster(this.posterCommonConfig);
@@ -655,6 +677,9 @@ export default {
             padding: 0 110upx 0 24upx;
             box-sizing: border-box;
             background-color: #fff;
+            .placeholder-text {
+                color: #999;
+            }
         }
         .uni-textarea {
             width: 100%;
@@ -737,7 +762,7 @@ export default {
         right: 0;
         bottom: 0;
         background-color: rgba(0, 0, 0, 0.8);
-        z-index: 10;
+        z-index: 999;
         .poster-preview-box {
             position: absolute;
             top: 50%;

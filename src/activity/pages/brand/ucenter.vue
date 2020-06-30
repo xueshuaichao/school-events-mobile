@@ -366,8 +366,7 @@ export default {
                 ],
                 images: [
                     {
-                        url:
-                            'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/brand_poster.jpg?x-oss-process=image/format,jpg/interlace,1/quality,Q_70/resize,m_pad,w_570,h_818',
+                        url: '',
                         width: 570,
                         height: 818,
                         y: 0,
@@ -555,7 +554,13 @@ export default {
         createPoster() {
             const { image, name, slogan } = this.detail;
             this.posterCommonConfig.images[1].url = image;
-            this.posterCommonConfig.images[2].url = 'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/brand_poster_name.png';
+            if (this.isH5) {
+                this.posterCommonConfig.images[0].url = '/activity/static/children_img/brand_poster.jpg';
+                this.posterCommonConfig.images[2].url = '/activity/static/children_img/brand_poster_name.png';
+            } else {
+                this.posterCommonConfig.images[0].url = 'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/brand_poster.jpg';
+                this.posterCommonConfig.images[2].url = 'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/brand_poster_name.png';
+            }
             this.posterCommonConfig.texts[0].text = `我是${name}`;
             this.posterCommonConfig.texts[1].text = slogan;
             this.$refs.posterh5.createPoster(this.posterCommonConfig);
@@ -642,7 +647,6 @@ export default {
         setTabActive(i) {
             this.filter.page_num = 1;
             this.tabActiveIndex = i;
-            console.log(111);
             uni.pageScrollTo({ scrollTop: 0, duration: 300 });
             this.getWorkData();
         },
@@ -849,11 +853,13 @@ export default {
         // const pages = getCurrentPages(); // eslint-disable-line
         // const { route } = pages[2];
         // const { user_id: userId } = pages[2].options;
-        // const noLogin = !this.detail || !Object.keys(this.detail).length;
+        const noJoin = !this.detail || !Object.keys(this.detail).length;
         return {
             title: this.title,
             imageUrl: this.publicConfig.shareConfig.image,
-            path: this.publicConfig.shareConfig.path,
+            path: noJoin
+                ? this.publicConfig.shareConfig.path
+                : `/activity/pages/brand/ucenter?id=${this.filter.user_id}&activity_id=10`,
         };
     },
 };
@@ -937,6 +943,7 @@ export default {
         .user-info {
             color: #333;
             line-height: 28upx;
+            flex: 1;
             .name {
                 font-size: 30upx;
                 font-weight: 500;

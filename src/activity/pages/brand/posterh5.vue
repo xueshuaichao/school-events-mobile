@@ -92,7 +92,7 @@ export default {
                 this.ctx.draw(false, () => {
                     setTimeout(() => {
                         this.saveCanvas(config);
-                    }, 300);
+                    }, 500);
                 });
             });
         },
@@ -297,8 +297,8 @@ export default {
                         that.$emit('success', res.tempFilePath);
                     },
                     fail(err) {
-                        console.log(111111);
                         uni.hideLoading();
+                        console.log(JSON.stringify(err));
                         that.$emit('fail', err);
                     },
                 },

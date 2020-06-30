@@ -24,6 +24,7 @@
             <scroll-view
                 scroll-y
                 :style="{ height: drawerHeight + 'px' }"
+                :scroll-into-view="intoIndex"
                 class="scroll-context"
                 @scrolltolower="toLower"
             >
@@ -35,13 +36,13 @@
                 </view>
                 <template v-if="loading && list.length">
                     <view
-                        v-for="item in list"
+                        v-for="(item, idx) in list"
                         :key="item.comment_id"
                         class="item-wrap"
                         :class="{ 'no-margin': item.sub_count }"
                         @click.prevent="clickItem(item)"
                     >
-                        <view class="item">
+                        <view class="item father-item">
                             <view class="left">
                                 <view class="img-box">
                                     <image
@@ -64,47 +65,46 @@
                                 {{ item.created_at }}
                             </view>
                         </view>
-                        <template v-if="item.show">
-                            <view
-                                v-for="(subItem, index) in item.subListCache"
-                                :key="subItem.comment_id"
-                                class="sub-item item"
-                                :data-id="index"
-                                @click.stop="clickItem(subItem, item)"
-                            >
-                                <view class="left">
-                                    <view class="img-box">
-                                        <image
-                                            :src="
-                                                subItem.user_info.avatar_url ||
-                                                    '/static/images/uc/avatar.png'
-                                            "
-                                        />
-                                    </view>
-                                    <view>
-                                        <view class="name">
-                                            {{ subItem.user_info.name }}
-                                        </view>
-                                        <view class="content">
-                                            <template
-                                                v-if="subItem.to_user_name"
-                                            >
-                                                回复
-                                                <text class="bold">
-                                                    {{ subItem.to_user_name }}
-                                                </text>
-                                            </template>
-                                            {{ subItem.content }}
-                                        </view>
-                                    </view>
+                        <view
+                            v-for="(subItem, index) in item.subListCache"
+                            :key="subItem.comment_id"
+                            :style="item.show ? '' : 'display:none;'"
+                            :data-index="index"
+                            class="sub-item item"
+                            @click.stop="clickItem(subItem, item)"
+                        >
+                            <view class="left">
+                                <view class="img-box">
+                                    <image
+                                        :src="
+                                            subItem.user_info.avatar_url ||
+                                                '/static/images/uc/avatar.png'
+                                        "
+                                    />
                                 </view>
-                                <view class="right">
-                                    {{ subItem.created_at }}
+                                <view>
+                                    <view class="name">
+                                        {{ subItem.user_info.name }}
+                                    </view>
+                                    <view class="content">
+                                        <template v-if="subItem.to_user_name">
+                                            回复
+                                            <text class="bold">
+                                                {{ subItem.to_user_name }}
+                                            </text>
+                                        </template>
+                                        {{ subItem.content }}
+                                    </view>
                                 </view>
                             </view>
-                        </template>
+                            <view class="right">
+                                {{ subItem.created_at }}
+                            </view>
+                        </view>
+
                         <template v-if="item.sub_count && !item.show">
                             <view
+                                :id="'more' + idx"
                                 class="show-or-hide"
                                 @click.stop="getMoreSubList(item)"
                             >
@@ -114,7 +114,7 @@
                         <template v-if="item.show && showCloseItem(item)">
                             <view
                                 class="show-or-hide"
-                                @click.stop="closeSubList(item)"
+                                @click.stop="closeSubList(item, idx)"
                             >
                                 — 收起 —
                             </view>
@@ -140,11 +140,11 @@
                 </template>
             </scroll-view>
             <view
-                class="message-add clearfix"
+                class="message-add"
                 :class="{ absolute: showKeybord }"
                 :style="{ top: (showKeybord ? inputTop : 0) + 'px' }"
             >
-                <view class="add-ctx fl-l">
+                <view class="add-ctx">
                     <image
                         src="/static/images/work/write.png"
                         class="write-icon"
@@ -163,7 +163,7 @@
                 </view>
                 <view
                     v-if="showKeybord"
-                    class="fabu fl-r"
+                    class="fabu"
                     :class="{ disable: !changeVal }"
                     @click="bindconfirm"
                 >
@@ -222,7 +222,7 @@ export default {
             inputTop: 100,
             pix: 1,
             isFocus: false,
-            markerheight: 100,
+            markerheight: 0,
             screenHeight: 0,
             hasLogin: false,
             hasKeybordEnterUp: false,
@@ -240,6 +240,7 @@ export default {
                     name: '',
                 },
             },
+            intoIndex: '',
         };
     },
     watch: {
@@ -265,6 +266,7 @@ export default {
                 }
             } else {
                 this.hide();
+                this.resetInitVal();
                 setTimeout(() => {
                     that.showDraw = false;
                 }, 300);
@@ -334,7 +336,6 @@ export default {
             this.animationData = this.animation.export();
         },
         clickWrap() {
-            this.resetInitVal();
             this.$emit('doAction', 'showMessage');
         },
         clickNull() {},
@@ -360,7 +361,6 @@ export default {
         showCloseItem(item) {
             let show = false;
             const conut = Math.ceil(item.sub_count / 10) + 1;
-            console.log(conut, item.showCount, item.sub_count);
             if (item.showCount && item.sub_count <= 3) {
                 show = true;
             } else if (item.sub_count <= 10 && item.showCount === 2) {
@@ -399,6 +399,8 @@ export default {
             if (getNew) {
                 if (item.subList && item.subList.length) {
                     this.subFilter.last_id = item.subList[item.subList.length - 1].comment_id;
+                } else {
+                    this.subFilter.last_id = 0;
                 }
 
                 this.subFilter.to_comment_id = item.comment_id;
@@ -420,7 +422,6 @@ export default {
         },
         openSublist(item, List, more) {
             // 展开评论
-            console.log('item', item.showCount);
             this.list = this.list.map((D) => {
                 const d = D;
                 if (d.comment_id === item.comment_id) {
@@ -449,7 +450,9 @@ export default {
                 d.subListCache = d.subList.slice(0, (d.showCount - 1) * 10);
             }
         },
-        closeSubList(item) {
+        closeSubList(item, idx) {
+            console.log('list--122---', idx);
+            // this.goTop();
             this.list = this.list.map((D) => {
                 const d = D;
                 if (d.comment_id === item.comment_id) {
@@ -458,6 +461,11 @@ export default {
                 }
                 return d;
             });
+            // this.$nextTick(() => {
+            //     this.intoIndex = `more${idx}`;
+            //     console.log(this.intoIndex, 'this.intoIndex-------');
+            // });
+            // this.intoIndex = '';
         },
         getList() {
             if (this.list.length) {
@@ -488,7 +496,9 @@ export default {
             });
         },
         blur() {
-            this.resetInitVal();
+            if (this.isFocus) {
+                this.resetInitVal();
+            }
         },
         bindconfirm() {
             this.showKeybord = false;
@@ -535,7 +545,7 @@ export default {
                 this.setListData(id, content, params);
             });
         },
-        setListData(id, content, params) {
+        setListData(id, content) {
             // 无刷新数据，更新列表。
             const date = new Date();
             let time = `${this.joinDate(date.getMonth() + 1)}-`;
@@ -549,7 +559,12 @@ export default {
                 created_at: time,
                 content,
             };
-            if (!this.selItem.to_user_id) {
+            console.log(
+                obj.to_user_id,
+                obj.to_comment_id,
+                this.addObj.to_comment_id,
+            );
+            if (!obj.to_user_id) {
                 obj.subList = [];
                 obj.subListCache = [];
                 obj.show = false;
@@ -559,7 +574,7 @@ export default {
             } else {
                 this.list = this.list.map((D) => {
                     const d = D;
-                    if (params.to_comment_id === d.comment_id) {
+                    if (this.addObj.to_comment_id === d.comment_id) {
                         if (d.sub_count) {
                             d.sub_count += 1;
                             d.subList.unshift(obj);
@@ -582,6 +597,7 @@ export default {
             return Time;
         },
         resetInitVal() {
+            console.log('reseting--------');
             // reset for init value;
             this.selItem.to_user_id = 0;
             this.selItem.to_user_name = '';
@@ -590,6 +606,7 @@ export default {
             this.placeholder = '写评论';
             this.showKeybord = false;
             this.isFocus = false;
+            this.changeVal = '';
         },
         toLower() {
             if (this.filter.page_num * this.filter.page_size < this.total) {
@@ -658,11 +675,13 @@ export default {
             font-size: 28rpx;
             line-height: 40rpx;
         }
-
         .scroll-context {
-            margin-top: 20rpx;
-            padding: 20rpx 30rpx;
+            padding: 20rpx 30rpx 30rpx;
             box-sizing: border-box;
+            background: #fff;
+            margin-top: 40rpx;
+            position: relative;
+            z-index: 200;
             .no-data {
                 font-size: 28rpx;
                 line-height: 100rpx;
@@ -677,6 +696,9 @@ export default {
                     margin-bottom: 20rpx;
                     margin-top: 20rpx;
                 }
+                // .father-item {
+                //     background: pink;
+                // }
                 .item,
                 .left {
                     display: flex;
@@ -735,6 +757,7 @@ export default {
             position: relative;
             top: 0;
             background: #fff;
+            display: flex;
             .add-ctx {
                 background: #f0f0f2;
                 border-radius: 40rpx;
@@ -767,12 +790,14 @@ export default {
                 border: none;
                 width: 100%;
                 padding-left: 70rpx;
+                padding-right: 30rpx;
                 box-sizing: border-box;
             }
             &.absolute {
                 position: absolute;
                 left: 30rpx;
                 padding: 30rpx;
+                z-index: 201;
                 .add-ctx {
                     width: 560rpx;
                 }

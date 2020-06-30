@@ -7,7 +7,7 @@ const { location } = window;
 function initWechatShare(config, params) {
     try {
         const conf = {
-            debug: true,
+            debug: false,
             appId: config.appId,
             timestamp: config.timestamp,
             nonceStr: config.nonceStr,
@@ -152,7 +152,7 @@ function h5InitShare(customShareConfig) {
     } else {
         params = Object.assign(defaultParams, customShareConfig);
     }
-    console.log(params, 'before--share--');
+    // console.log(params, 'before--share--');
     // if (!h5InitShare.config) {
     api.get('/api/weixin/getshareconfig', {
         url: location.href,
