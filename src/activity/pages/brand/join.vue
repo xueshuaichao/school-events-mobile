@@ -379,13 +379,18 @@ export default {
             this.lock = false;
         },
         getUserInfo() {
-            api.get('/api/user/info').then((res) => {
-                this.userInfo = res.user_info;
-                if (this.userInfo.identity !== 1) {
-                    this.initFormat(this.userInfo);
-                }
-                this.getQrCode();
-            });
+            api.get('/api/user/info').then(
+                (res) => {
+                    this.userInfo = res.user_info;
+                    if (this.userInfo.identity !== 1) {
+                        this.initFormat(this.userInfo);
+                    }
+                    this.getQrCode();
+                },
+                () => {
+                    this.userInfo = null;
+                },
+            );
         },
         getQrCode() {
             if (this.isH5) {
