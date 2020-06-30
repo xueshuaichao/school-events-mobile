@@ -829,14 +829,14 @@ export default {
     },
     onLoad(query) {
         const { type, status } = query;
-        const activityId = query.activity_id;
-        const userId = query.user_id;
+        const activityId = utils.getParam(query, 'activity_id');
+        const userId = utils.getParam(query, 'user_id');
         this.userId = userId;
         this.type = type;
         if (status) {
             this.tabActiveIndex = Number(status);
         }
-        this.publicConfig = this.$store.getters.getPublicConfig(activityId);
+        this.publicConfig = this.$store.getters.getPublicConfig(10);
         this.filter.activity_id = activityId;
         this.filter.user_id = userId || '';
         this.getData();
