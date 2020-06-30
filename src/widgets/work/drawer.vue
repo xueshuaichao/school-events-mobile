@@ -400,6 +400,8 @@ export default {
             if (getNew) {
                 if (item.subList && item.subList.length) {
                     this.subFilter.last_id = item.subList[item.subList.length - 1].comment_id;
+                } else {
+                    this.subFilter.last_id = 0;
                 }
 
                 this.subFilter.to_comment_id = item.comment_id;
