@@ -296,7 +296,7 @@ export default {
                 ],
                 images: [
                     {
-                        url: '/activity/static/children_img/brand_poster.jpg',
+                        url: '',
                         width: 570,
                         height: 818,
                         y: 0,
@@ -464,7 +464,7 @@ export default {
         onok(ev) {
             this.uploadFile(ev.path).then((data) => {
                 this.url = '';
-                this.formData.image = utils.mapHttpToHttps(data.path);
+                this.formData.image = data.path;
                 console.log(data);
             });
         },
@@ -527,7 +527,10 @@ export default {
             }
         },
         createPoster() {
-            this.posterCommonConfig.images[1].url = this.formData.image;
+            // eslint-disable-next-line max-len
+            this.posterCommonConfig.images[1].url = this.isH5
+                ? this.formData.image
+                : utils.mapHttpToHttps(this.formData.image);
             if (this.isH5) {
                 this.posterCommonConfig.images[0].url = '/activity/static/children_img/brand_poster.jpg';
                 this.posterCommonConfig.images[2].url = '/activity/static/children_img/brand_poster_name.png';
@@ -542,9 +545,7 @@ export default {
         },
         submit(path) {
             this.uploadFile(path).then((data) => {
-                this.formData[
-                    this.isH5 ? 'poster_h5' : 'poster_mp'
-                ] = utils.mapHttpToHttps(data.path);
+                this.formData[this.isH5 ? 'poster_h5' : 'poster_mp'] = data.path;
                 api.post('/api/activity/enroll', {
                     detail: this.formData,
                     activity_id: 10,
