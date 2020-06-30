@@ -600,6 +600,7 @@ export default {
             this.placeholder = '写评论';
             this.showKeybord = false;
             this.isFocus = false;
+            this.changeVal = '';
         },
         toLower() {
             if (this.filter.page_num * this.filter.page_size < this.total) {
