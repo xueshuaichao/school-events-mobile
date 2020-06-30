@@ -298,7 +298,7 @@ export default {
                     },
                     fail(err) {
                         uni.hideLoading();
-                        console.log(err);
+                        console.log(JSON.stringify(err));
                         that.$emit('fail', err);
                     },
                 },
