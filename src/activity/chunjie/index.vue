@@ -474,9 +474,15 @@ export default {
             status: 2,
             crouselList: [],
             setId: '',
+            userkey: '',
+            isIOS: false,
+            isAndroid: false,
         };
     },
     created() {
+        const u = navigator.userAgent;
+        this.isIOS = u.toLowerCase().indexOf('wd-atz-ios') !== -1;
+        this.isAndroid = u.toLowerCase().indexOf('wd-atz-android') !== -1;
         this.getData();
         this.chunjieStatus();
         this.getCrouselList();
@@ -624,13 +630,23 @@ export default {
             this.prompt = true;
         },
         handleMywork() {
-            api.isLogin({
-                fr: this.fr,
-            }).then(() => {
-                uni.navigateTo({
-                    url: '/activity/chunjie/myWork/myWork?type=myWork',
+            if ((this.isIOS || this.isAndroid) && !this.userkey && this.isH5) {
+                api.appLogin(this.isIOS ? 'ios' : 'android', (info) => {
+                    const userInfo = JSON.parse(info);
+                    this.userkey = userInfo.userkey;
+                    uni.navigateTo({
+                        url: '/activity/chunjie/myWork/myWork?type=myWork',
+                    });
                 });
-            });
+            } else {
+                api.isLogin({
+                    fr: this.fr,
+                }).then(() => {
+                    uni.navigateTo({
+                        url: '/activity/chunjie/myWork/myWork?type=myWork',
+                    });
+                });
+            }
         },
         handleClose() {
             this.prompt = false;
