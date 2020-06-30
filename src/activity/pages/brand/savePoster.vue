@@ -88,7 +88,7 @@ export default {
         if (ua.match(/MicroMessenger/i) === 'micromessenger') {
             this.isWechat = true;
         } else {
-            this.isWechat = true;
+            this.isWechat = false;
         }
     },
     methods: {
