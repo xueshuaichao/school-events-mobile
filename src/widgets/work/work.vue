@@ -24,7 +24,7 @@
                     <view
                         v-if="item.id !== 7 || (item.id === 7 && !isH5)"
                         class="hot-act-card clearfix"
-                        @click="jumpRoute(item.url)"
+                        @click="jumpRoute(item.url, item.status)"
                     >
                         <view class="img-box fl-l">
                             <view class="going">
@@ -156,8 +156,8 @@ export default {
     },
     methods: {
         // scroll() {},
-        jumpRoute(url) {
-            if (!url) {
+        jumpRoute(url, status) {
+            if (!url || status === 1) {
                 uni.showToast({
                     title: '正在为您准备精彩活动',
                     icon: 'none',
