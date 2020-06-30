@@ -404,7 +404,7 @@ export default {
         getMpQrCode() {
             // 小程序二维码
             const url = '/activity/pages/brand/ucenter';
-            const scene = `activity_id=10&user_id=${this.userInfo.user_id}`;
+            const scene = `a_id=10&u_id=${this.userInfo.user_id}`;
             api.post('/api/weixin/getminiqrcode', {
                 path: url,
                 scene,
