@@ -855,11 +855,13 @@ export default {
         // const pages = getCurrentPages(); // eslint-disable-line
         // const { route } = pages[2];
         // const { user_id: userId } = pages[2].options;
-        // const noLogin = !this.detail || !Object.keys(this.detail).length;
+        const noJoin = !this.detail || !Object.keys(this.detail).length;
         return {
             title: this.title,
             imageUrl: this.publicConfig.shareConfig.image,
-            path: this.publicConfig.shareConfig.path,
+            path: noJoin
+                ? this.publicConfig.shareConfig.path
+                : `/activity/pages/brand/ucenter?id=${this.filter.user_id}&activity_id=10`,
         };
     },
 };

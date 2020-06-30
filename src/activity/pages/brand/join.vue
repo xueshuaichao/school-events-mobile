@@ -737,7 +737,7 @@ export default {
         right: 0;
         bottom: 0;
         background-color: rgba(0, 0, 0, 0.8);
-        z-index: 10;
+        z-index: 999;
         .poster-preview-box {
             position: absolute;
             top: 50%;
