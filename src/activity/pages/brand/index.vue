@@ -566,6 +566,9 @@ export default {
             height: 160upx;
             border-radius: 50%;
         }
+        .expert-name {
+            font-weight: bold;
+        }
         .expert-title {
             overflow: hidden;
             text-overflow: ellipsis;

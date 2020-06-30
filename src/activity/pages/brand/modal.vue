@@ -74,7 +74,7 @@
                 </view>
                 <view class="qr-code">
                     <view class="text">
-                        本次活动最终解释权在法律允许的范围内过活动归举办方所有
+                        本次活动最终解释权在法律允许的范围内归活动举办方所有
                     </view>
                 </view>
             </view>

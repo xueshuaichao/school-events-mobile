@@ -86,7 +86,22 @@
                         自我介绍
                     </view>
                     <view class="input-box textarea">
+                        <view
+                            v-if="posterPreview"
+                            class="uni-textarea"
+                        >
+                            <view
+                                v-if="!formData.desc"
+                                class="placeholder-text"
+                            >
+                                如有获奖经历可描述
+                            </view>
+                            <view v-else>
+                                {{ formData.desc }}
+                            </view>
+                        </view>
                         <textarea
+                            v-else
                             v-model="formData.desc"
                             class="uni-textarea"
                             maxlength="150"
@@ -655,6 +670,9 @@ export default {
             padding: 0 110upx 0 24upx;
             box-sizing: border-box;
             background-color: #fff;
+            .placeholder-text {
+                color: #999;
+            }
         }
         .uni-textarea {
             width: 100%;
