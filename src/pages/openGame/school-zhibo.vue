@@ -3,28 +3,29 @@
         <navigator
             v-for="(item, k) in list"
             :key="k"
-            url="/pages/openGame/zhibo"
+            @click="jumpZhibo(item)"
         >
             <view class="main-box">
                 <image
                     class="school-logo"
-                    src="/static/images/uc/avatar.png"
+                    :src="item.img ? item.img : '/static/images/uc/avatar.png'"
                 />
                 <view>
                     <view class="name">
-                        {{ item.name }}
+                        {{ item.live_name }}
                     </view>
                     <view class="time">
-                        直播时间：2020.04.20 11:30-14:30
+                        直播时间：{{ item.start_time }}
                     </view>
                 </view>
                 <view class="badge">
-                    进行中
+                    {{ item.status_name }}
                 </view>
             </view>
         </navigator>
 
         <uni-load-more
+            v-if="total > filter.page_size"
             class="loadMore"
             :status="loadMoreStatus"
             :content-text="{
@@ -48,58 +49,30 @@ export default {
     data() {
         return {
             loadMoreStatus: 'more',
-            list: [
-                {
-                    name: '西安市第二中学复赛直播进行时',
-                    type: '四阶魔方六面复原',
-                    date: '2020年5月10日',
-                    time: '20:00:00',
-                },
-                {
-                    name: '西安市第二中学复赛直播进行时',
-                    type: '四阶魔方六面复原',
-                    date: '2020年5月10日',
-                    time: '20:00:00',
-                },
-                {
-                    name: '西安市第二中学复赛直播进行时',
-                    type: '四阶魔方六面复原',
-                    date: '2020年5月10日',
-                    time: '20:00:00',
-                },
-                {
-                    name: '西安市第二中学复赛直播进行时',
-                    type: '四阶魔方六面复原',
-                    date: '2020年5月10日',
-                    time: '20:00:00',
-                },
-                {
-                    name: '西安市第二中学复赛直播进行时',
-                    type: '四阶魔方六面复原',
-                    date: '2020年5月10日',
-                    time: '20:00:00',
-                },
-                {
-                    name: '西安市第二中学复赛直播进行时',
-                    type: '四阶魔方六面复原',
-                    date: '2020年5月10日',
-                    time: '20:00:00',
-                },
-            ],
+            list: [],
             filter: {
                 page_num: 1,
                 page_size: 10,
             },
+            total: 0,
         };
     },
     methods: {
+        jumpZhibo(item) {
+            // 已经开始未结束的直播，可以跳转。
+            if (item.status === 2) {
+                uni.navigateTo({
+                    url: `/pages/openGame/zhibo?id=${item.id}`,
+                });
+            }
+        },
         getData(title) {
             api.get('/api/live/list', this.filter).then(({ list, total }) => {
                 this.isLoading = false;
                 if (title === 'reachBottom') {
-                    this.addressList = this.addressList.concat(list);
+                    this.list = this.list.concat(list);
                 } else {
-                    this.addressList = list;
+                    this.list = list;
                 }
 
                 this.total = total;
