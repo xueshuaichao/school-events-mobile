@@ -464,7 +464,7 @@ export default {
         onok(ev) {
             this.uploadFile(ev.path).then((data) => {
                 this.url = '';
-                this.formData.image = data.path;
+                this.formData.image = utils.mapHttpToHttps(data.path);
                 console.log(data);
             });
         },
@@ -542,7 +542,9 @@ export default {
         },
         submit(path) {
             this.uploadFile(path).then((data) => {
-                this.formData[this.isH5 ? 'poster_h5' : 'poster_mp'] = data.path;
+                this.formData[
+                    this.isH5 ? 'poster_h5' : 'poster_mp'
+                ] = utils.mapHttpToHttps(data.path);
                 api.post('/api/activity/enroll', {
                     detail: this.formData,
                     activity_id: 10,

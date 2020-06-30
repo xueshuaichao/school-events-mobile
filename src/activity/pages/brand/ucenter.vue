@@ -469,12 +469,16 @@ export default {
         submit(path) {
             const detail = {};
             this.uploadFile(path).then((data) => {
-                detail[this.isH5 ? 'poster_h5' : 'poster_mp'] = data.path;
+                detail[
+                    this.isH5 ? 'poster_h5' : 'poster_mp'
+                ] = utils.mapHttpToHttps(data.path);
                 api.post('/api/activity/editenroll', {
                     detail,
                     activity_id: 10,
                 }).then(() => {
-                    this.detail[this.isH5 ? 'poster_h5' : 'poster_mp'] = data.path;
+                    this.detail[
+                        this.isH5 ? 'poster_h5' : 'poster_mp'
+                    ] = utils.mapHttpToHttps(data.path);
                 });
             });
         },
@@ -553,7 +557,7 @@ export default {
         },
         createPoster() {
             const { image, name, slogan } = this.detail;
-            this.posterCommonConfig.images[1].url = image;
+            this.posterCommonConfig.images[1].url = utils.mapHttpToHttps(image);
             if (this.isH5) {
                 this.posterCommonConfig.images[0].url = '/activity/static/children_img/brand_poster.jpg';
                 this.posterCommonConfig.images[2].url = '/activity/static/children_img/brand_poster_name.png';
