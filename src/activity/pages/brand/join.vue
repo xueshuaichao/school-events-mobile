@@ -528,7 +528,14 @@ export default {
         },
         createPoster() {
             this.posterCommonConfig.images[1].url = this.formData.image;
-            this.posterCommonConfig.images[2].url = '/activity/static/children_img/brand_poster_name.png';
+            if (this.isH5) {
+                this.posterCommonConfig.images[0].url = '/activity/static/children_img/brand_poster.jpg';
+                this.posterCommonConfig.images[2].url = '/activity/static/children_img/brand_poster_name.png';
+            } else {
+                this.posterCommonConfig.images[0].url = 'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/brand_poster.jpg';
+                this.posterCommonConfig.images[2].url = 'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/brand_poster_name.png';
+            }
+
             this.posterCommonConfig.texts[0].text = `我是${this.formData.name}`;
             this.posterCommonConfig.texts[1].text = `${this.formData.slogan}`;
             this.$refs.posterh5.createPoster(this.posterCommonConfig);
