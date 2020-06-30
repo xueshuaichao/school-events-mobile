@@ -140,11 +140,11 @@
                 </template>
             </scroll-view>
             <view
-                class="message-add clearfix"
+                class="message-add"
                 :class="{ absolute: showKeybord }"
                 :style="{ top: (showKeybord ? inputTop : 0) + 'px' }"
             >
-                <view class="add-ctx fl-l">
+                <view class="add-ctx">
                     <image
                         src="/static/images/work/write.png"
                         class="write-icon"
@@ -163,7 +163,7 @@
                 </view>
                 <view
                     v-if="showKeybord"
-                    class="fabu fl-r"
+                    class="fabu"
                     :class="{ disable: !changeVal }"
                     @click="bindconfirm"
                 >
@@ -222,7 +222,7 @@ export default {
             inputTop: 100,
             pix: 1,
             isFocus: false,
-            markerheight: 100,
+            markerheight: 0,
             screenHeight: 0,
             hasLogin: false,
             hasKeybordEnterUp: false,
@@ -463,11 +463,11 @@ export default {
                 }
                 return d;
             });
-            this.$nextTick(() => {
-                this.intoIndex = `more${idx}`;
-                console.log(this.intoIndex, 'this.intoIndex-------');
-            });
-            this.intoIndex = '';
+            // this.$nextTick(() => {
+            //     this.intoIndex = `more${idx}`;
+            //     console.log(this.intoIndex, 'this.intoIndex-------');
+            // });
+            // this.intoIndex = '';
         },
         getList() {
             if (this.list.length) {
@@ -674,7 +674,7 @@ export default {
             background: #fff;
             margin-top: 40rpx;
             position: relative;
-            z-index: 9999;
+            z-index: 200;
             .no-data {
                 font-size: 28rpx;
                 line-height: 100rpx;
@@ -750,6 +750,7 @@ export default {
             position: relative;
             top: 0;
             background: #fff;
+            display: flex;
             .add-ctx {
                 background: #f0f0f2;
                 border-radius: 40rpx;
@@ -788,6 +789,7 @@ export default {
                 position: absolute;
                 left: 30rpx;
                 padding: 30rpx;
+                z-index: 201;
                 .add-ctx {
                     width: 560rpx;
                 }
