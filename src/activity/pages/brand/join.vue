@@ -377,6 +377,7 @@ export default {
                 duration: 2000,
                 icon: 'none',
             });
+            this.lock = false;
         },
         getUserInfo() {
             api.get('/api/user/info').then((res) => {
