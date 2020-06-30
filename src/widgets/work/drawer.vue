@@ -784,6 +784,7 @@ export default {
                 border: none;
                 width: 100%;
                 padding-left: 70rpx;
+                padding-right: 30rpx;
                 box-sizing: border-box;
             }
             &.absolute {
