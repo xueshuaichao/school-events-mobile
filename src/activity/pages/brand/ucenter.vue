@@ -489,13 +489,13 @@ export default {
             const uCenterUrl = `${window.location.origin}/activity/pages/brand/ucenter?activity_id=10&user_id=${this.userInfo.user_id}&w=244`;
             this.posterCommonConfig.images[3].url = `${
                 window.location.origin
-            }/api/common/qrcode?url=${encodeURI(uCenterUrl)}`;
+            }/api/common/qrcode?url=${encodeURIComponent(uCenterUrl)}`;
             this.posterCommonConfig.images[3].borderRadius = 0;
         },
         getMpQrCode() {
             // 小程序二维码
-            const url = '/activity/pages/brand/ucenter';
-            const scene = `a_id=10&u_id=${this.userInfo.user_id}`;
+            const url = 'activity/pages/brand/ucenter';
+            const scene = `activity_id=10&user_id=${this.userInfo.user_id}`;
             api.post('/api/weixin/getminiqrcode', {
                 path: url,
                 scene,
@@ -829,8 +829,8 @@ export default {
     },
     onLoad(query) {
         const { type, status } = query;
-        const activityId = query.activity_id || query.a_id;
-        const userId = query.user_id || query.u_id;
+        const activityId = query.activity_id;
+        const userId = query.user_id;
         this.userId = userId;
         this.type = type;
         if (status) {
