@@ -667,7 +667,7 @@ export default {
             line-height: 40rpx;
         }
         .scroll-context {
-            padding: 20rpx 30rpx 20rpx;
+            padding: 20rpx 30rpx 30rpx;
             box-sizing: border-box;
             background: #fff;
             margin-top: 40rpx;
