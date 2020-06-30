@@ -944,6 +944,7 @@ export default {
         .user-info {
             color: #333;
             line-height: 28upx;
+            flex: 1;
             .name {
                 font-size: 30upx;
                 font-weight: 500;

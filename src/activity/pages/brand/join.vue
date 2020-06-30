@@ -318,14 +318,14 @@ export default {
                         y: 526,
                         x: 21,
                     },
-                    // {
-                    //     url: '',
-                    //     width: 122,
-                    //     height: 122,
-                    //     y: 677,
-                    //     x: 428,
-                    //     borderRadius: this.isH5 ? 0 : 122,
-                    // },
+                    {
+                        url: '',
+                        width: 122,
+                        height: 122,
+                        y: 677,
+                        x: 428,
+                        borderRadius: this.isH5 ? 0 : 122,
+                    },
                 ],
             },
         };
@@ -389,7 +389,7 @@ export default {
         },
         getQrCode() {
             if (this.isH5) {
-                // this.getH5QrCode();
+                this.getH5QrCode();
             } else {
                 this.getMpQrCode();
             }
