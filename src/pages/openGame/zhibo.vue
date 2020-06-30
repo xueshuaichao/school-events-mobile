@@ -66,6 +66,12 @@
                     </view>
                 </view>
             </template>
+            <view
+                v-if="loading && !commentList.length"
+                class="no-comment"
+            >
+                暂无评论，快来抢沙发吧！
+            </view>
         </scroll-view>
         <view
             class="input-wrap"
@@ -78,6 +84,7 @@
                 placeholder="快来留下评论吧"
                 maxlength="80"
                 :adjust-position="false"
+                @blur="blur"
                 @focus="onFoucs"
                 @confirm="bindconfirm"
             >
@@ -137,7 +144,18 @@ export default {
             screenHeight: 500,
             pix: 1,
             inputBtm: 0,
+            loading: false,
+            kbHeight: 0,
         };
+    },
+    watch: {
+        showKeybord(val) {
+            console.log(val, 'showKeybord------');
+            if (!val) {
+                this.inputBtm = 0;
+                this.showKeybord = false;
+            }
+        },
     },
     mounted() {
         const that = this;
@@ -147,8 +165,6 @@ export default {
                 that.pix = pix;
                 that.screenHeight = res.windowHeight;
                 that.scrollHeight = res.windowHeight - 776 * pix;
-                that.inputBtm = 30 * pix;
-                console.log(that.scrollHeight, that.screenHeight, 'height----');
             },
         });
     },
@@ -161,7 +177,10 @@ export default {
     methods: {
         getDetail() {
             api.get('/api/live/detail', { id: this.id }).then(
-                (detail) => {
+                (Detail) => {
+                    const detail = Detail;
+                    detail.start_time = detail.start_time.slice(0, 16);
+                    detail.end_time = detail.end_time.slice(11, 16);
                     this.pageDetail = detail;
                     uni.setNavigationBarTitle({
                         title: detail.live_name,
@@ -209,11 +228,22 @@ export default {
                 this.showKeybord = true;
                 if (!this.hasKeybordEnterUp) {
                     e.detail.height = e.detail.height || 180;
-                    this.inputBtm = e.detail.height + 30 * this.pix;
-                    this.markerheight = this.screenHeight - e.detail.height - this.pix * 110;
+                    this.inputBtm = e.detail.height;
+                    this.kbHeight = e.detail.height;
+                    this.markerheight = this.screenHeight - e.detail.height - this.pix * 124;
                     this.hasKeybordEnterUp = true;
+                } else {
+                    this.inputBtm = this.kbHeight;
                 }
             }
+        },
+        blur() {
+            this.initSetInput();
+        },
+        initSetInput() {
+            this.showKeybord = false;
+            this.isFocus = false;
+            this.inputBtm = 0;
         },
         bindconfirm() {
             this.showKeybord = false;
@@ -228,13 +258,16 @@ export default {
                     }).then(
                         () => {
                             this.addComment(content);
+                            this.changeVal = '';
                         },
-                        () => uni.showToast({
-                            icon: 'none',
-                            title: '请先登录',
-                        }),
+                        () => {
+                            this.changeVal = '';
+                            uni.showToast({
+                                icon: 'none',
+                                title: '请先登录',
+                            });
+                        },
                     );
-                    this.changeVal = '';
                 }
             } else {
                 this.changeVal = '';
@@ -250,6 +283,7 @@ export default {
             };
             api.post('/api/comment/add', params).then(() => {
                 this.toUper();
+                this.initSetInput();
                 uni.showToast({
                     title: '已提交',
                     icon: 'none',
@@ -261,6 +295,7 @@ export default {
                 ({ list, total }) => {
                     this.commentList = list;
                     this.total = total;
+                    this.loading = true;
                     if (this.filter.page_num === 1) {
                         this.commentList = list;
                     } else {
@@ -366,17 +401,25 @@ export default {
                 }
             }
         }
+        .no-comment {
+            margin-top: 100upx;
+            text-align: center;
+            color: #fff;
+            font-size: 28upx;
+        }
     }
     .input-wrap {
         display: flex;
         justify-content: space-between;
         position: absolute;
-        bottom: 30upx;
+        bottom: 0;
         left: 0;
-        padding: 30upx 30upx 0;
+        padding: 30upx;
         width: 100%;
         box-sizing: border-box;
         line-height: 64upx;
+        z-index: 102;
+        background: #000;
 
         .like-img {
             width: 40upx;
@@ -393,7 +436,9 @@ export default {
             height: 64upx;
             border-radius: 32upx;
             background: rgba(255, 255, 255, 0.25);
-            text-indent: 30upx;
+            text-indent: 40upx;
+            padding-right: 40upx;
+            box-sizing: border-box;
         }
         .placeholderStyle {
             color: #fff;

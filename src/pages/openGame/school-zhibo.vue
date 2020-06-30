@@ -1,29 +1,30 @@
 <template>
     <view class="main">
-        <navigator
+        <view
             v-for="(item, k) in list"
             :key="k"
+            class="main-box"
             @click="jumpZhibo(item)"
         >
-            <view class="main-box">
-                <image
-                    class="school-logo"
-                    :src="item.img ? item.img : '/static/images/uc/avatar.png'"
-                />
-                <view>
-                    <view class="name">
-                        {{ item.live_name }}
-                    </view>
-                    <view class="time">
-                        直播时间：{{ item.start_time }}
-                    </view>
+            <image
+                class="school-logo"
+                :src="item.img ? item.img : '/static/images/uc/avatar.png'"
+            />
+            <view>
+                <view class="name">
+                    {{ item.live_name }}
                 </view>
-                <view class="badge">
-                    {{ item.status_name }}
+                <view class="time">
+                    直播时间：{{ item.start_time }}
                 </view>
             </view>
-        </navigator>
-
+            <view
+                class="badge"
+                :class="{ run: item.status === 1, over: item.status === 3 }"
+            >
+                {{ item.status_name }}
+            </view>
+        </view>
         <uni-load-more
             v-if="total > filter.page_size"
             class="loadMore"
@@ -60,11 +61,11 @@ export default {
     methods: {
         jumpZhibo(item) {
             // 已经开始未结束的直播，可以跳转。
-            if (item.status === 2) {
-                uni.navigateTo({
-                    url: `/pages/openGame/zhibo?id=${item.id}`,
-                });
-            }
+            // if (item.status === 2) {
+            uni.navigateTo({
+                url: `/pages/openGame/zhibo?id=${item.id}`,
+            });
+            // }
         },
         getData(title) {
             api.get('/api/live/list', this.filter).then(({ list, total }) => {
