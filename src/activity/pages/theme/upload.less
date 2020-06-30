@@ -1,76 +1,16 @@
-.labor-page {
-    .page-upload {
-        .uni-input,
-        .uni-textarea {
-            background: #ff9f73;
-            border-color: transparent;
-            color: #fff;
-        }
-        .selection {
-            .label {
-                color: #db4e0e;
-            }
-            .select-item {
-                border-color: #db4e0e;
-                color: #db4e0e;
-                &.active {
-                    background-color: #db4e0e;
-                    color: #fff;
-                }
-            }
-        }
-    }
-    /deep/ .page-upload .comp-upload {
-        .comp-title,
-        .desc,
-        .tips {
-            color: #db4e0e;
-        }
-        .cover-wrap {
-            background-color: #ff9f73;
-        }
-        .normal-text {
-            background-color: #db4e0e;
-        }
-    }
-    /deep/ .prompt {
-        color: #db4e0e;
-    }
-    .page-upload .btn {
-        background-color: #db4e0e;
-    }
-    .page-read-upload-result {
-        background-color: #ff9f73;
-        .main-title {
-            color: #db4e0e;
-            font-size: 34upx;
-        }
-        .sub-title {
-            .tips {
-                color: #db4e0e;
-            }
-            .link {
-                &.btn {
-                    color: #db4e0e;
-                    border-color: #db4e0e;
-                }
-                &.blue-bg {
-                    background-color: #db4e0e;
-                    border-color: #db4e0e;
-                    color: #fff;
-                }
-            }
-        }
-    }
-}
-
 .children-page {
     .page-upload {
+        .main {
+            background-color: #fff;
+        }
         .uni-input,
         .uni-textarea {
             background: #fff;
             border: 1px solid #c790ff;
             color: #333;
+            &.placeholder {
+                color: #999;
+            }
         }
         .selection {
             .label {
@@ -103,7 +43,7 @@
         color: #999;
     }
     .page-upload .btn {
-        background-color: #c790ff;
+        background-color: #bb77ff;
     }
     // 上传结果
     .page-read-upload-result {
@@ -124,6 +64,79 @@
                 &.blue-bg {
                     background-color: #bb77ff;
                     border-color: #bb77ff;
+                    color: #fff;
+                }
+            }
+        }
+    }
+}
+
+.brand-page {
+    .page-upload {
+        .main {
+            background: #583ed4;
+        }
+        .uni-input,
+        .uni-textarea {
+            background: #fff;
+            color: #333;
+        }
+        .selection {
+            .label {
+                color: #fff;
+            }
+            .select-item {
+                border-color: #ff685c;
+                color: #ff685c;
+                &.active {
+                    background-color: #ff685c;
+                    color: #fff;
+                }
+                &.for-disable.disabled {
+                    color: #694fe6;
+                    border-color: #694fe6;
+                }
+            }
+        }
+    }
+    /deep/ .page-upload .comp-upload {
+        .comp-title,
+        .desc,
+        .tips {
+            color: #fff;
+        }
+        .cover-wrap {
+            background-color: #9882ff;
+        }
+        .normal-text {
+            background-color: #ff685c;
+        }
+    }
+    /deep/ .prompt {
+        color: #fff;
+    }
+    .page-upload .btn {
+        background-color: #ff685c;
+    }
+    // 上传结果
+    .page-read-upload-result {
+        background-color: #583ed4;
+        .main-title {
+            color: #ff685c;
+            font-size: 34upx;
+        }
+        .sub-title {
+            .tips {
+                color: #fff;
+            }
+            .link {
+                &.btn {
+                    color: #ff685c;
+                    border-color: #ff685c;
+                }
+                &.blue-bg {
+                    background-color: #ff685c;
+                    border-color: #ff685c;
                     color: #fff;
                 }
             }

@@ -305,8 +305,9 @@ export default {
                         } catch (e) {
                             // error
                         }
-
-                        this.$emit('login', res);
+                        // console.log(res)
+                        // this.$emit('login', res);
+                        this.getUserInfo();
                     },
                     (err) => {
                         uni.hideLoading();
@@ -464,6 +465,7 @@ export default {
                 success({ code }) {
                     // console.log(5454545);
                     _this.jscode = code;
+                    console.log(code);
                     if (fn) {
                         fn();
                     }

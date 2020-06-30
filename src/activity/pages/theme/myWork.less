@@ -1,34 +1,10 @@
-.labor-page {
-    .page-read-work .panel .panel-hd .panel-title {
-        color: #db4e0e;
-        &.active {
-            background-color: #db4e0e;
-            color: #fff;
-        }
-    }
-    .media-content {
-        background-color: #db4e0e;
-    }
-    .media-content .work-info .btn-item {
-        background-color: #ff9f73;
-    }
-    .work-empty view,
-    .empty view {
-        color: #db4e0e;
-    }
-    .work-empty .goUpload {
-        color: #fff;
-    }
-    .goHome {
-        color: #db4e0e !important;
-        &::before {
-            border-top: 1rpx solid #db4e0e;
-            border-right: 1rpx solid #db4e0e;
-        }
-    }
-}
-
 .children-page {
+    .page-read-work {
+        background-color: #ebe1ff;
+    }
+    .page-read-work .panel .panel-hd {
+        background-color: #ebe1ff;
+    }
     .page-read-work .panel .panel-hd .panel-title {
         color: #666;
         &.active {
@@ -36,13 +12,26 @@
             color: #fff;
         }
     }
-    .page-read-work .search-box button {
-        border: 1px solid #c790ff;
-        width: 120upx;
-        &:first-of-type {
-            margin-right: 12upx;
+
+    .page-read-work .search-box {
+        background-color: #ebe1ff;
+        .search {
+            background-color: #dcc0ff;
+        }
+        button {
+            border: 1px solid #c790ff;
+            width: 120upx;
+            color: #bb77ff;
+            &.active {
+                background-color: #bb77ff;
+                color: #fff;
+            }
+            &:first-of-type {
+                margin-right: 12upx;
+            }
         }
     }
+
     .media-content {
         background-color: #fff;
         box-shadow: inset 0px 0px 24upx 0px rgba(182, 146, 255, 1);
@@ -65,16 +54,96 @@
     }
     .work-empty .goUpload {
         color: #fff;
+        background-color: #bb77ff;
     }
     .event-craft-cover .tag {
         background: #ffe79c;
         color: #bb77ff;
     }
     .goHome {
-        color: #c790ff !important;
+        color: #c790ff;
         &::before {
             border-top: 1rpx solid #c790ff !important;
             border-right: 1rpx solid #c790ff !important;
+        }
+    }
+}
+
+.brand-page {
+    .page-read-work {
+        background-color: #583ed4;
+    }
+    .page-read-work .panel .panel-hd {
+        background-color: #583ed4;
+    }
+    .page-read-work .panel .panel-hd .panel-title {
+        color: #fff;
+        &.active {
+            background-color: #ff685c;
+            color: #fff;
+        }
+    }
+
+    .page-read-work .search-box {
+        background-color: #583ed4;
+        .search {
+            background-color: #9882ff;
+        }
+        button {
+            width: 120upx;
+            color: #ff685c;
+            &.active {
+                background-color: #ff685c;
+                color: #fff;
+            }
+            &:first-of-type {
+                margin-right: 12upx;
+            }
+        }
+    }
+
+    .media-content {
+        background-color: #fff;
+        box-shadow: inset 0px 0px 24upx 0px rgba(152, 130, 255, 1);
+        .work-info {
+            .resource-name {
+                color: #343434;
+                font-size: 28upx;
+                margin-bottom: 29upx;
+                word-break: break-all;
+            }
+            .media-name {
+                color: #666;
+            }
+            .media-time {
+                color: #666;
+                display: none;
+            }
+            .vote-num {
+                color: #9882ff;
+            }
+        }
+    }
+    .media-content .work-info .btn-item {
+        background-color: #ff685c;
+    }
+    .work-empty view,
+    .empty view {
+        color: #fff;
+    }
+    .work-empty .goUpload {
+        color: #fff;
+        background-color: #ff685c;
+    }
+    /deep/ .event-craft-cover .tag {
+        background: #ffe79c;
+        color: #583ed4;
+    }
+    .goHome {
+        color: #583ed4;
+        &::before {
+            border-top: 1rpx solid #583ed4;
+            border-right: 1rpx solid #583ed4;
         }
     }
 }

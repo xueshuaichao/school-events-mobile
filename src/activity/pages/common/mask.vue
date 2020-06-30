@@ -310,9 +310,7 @@
                                         <view class="name">
                                             <view>
                                                 {{ myDraw.name
-                                                }}<text
-                                                    class="num"
-                                                >
+                                                }}<text class="num">
                                                     x1
                                                 </text>
                                             </view>
@@ -419,10 +417,8 @@ export default {
     data() {
         return {
             luckyListArr: this.luckyList.list || [],
-            luckyTotal: this.luckyList.list.lenght || 0,
             luckyAllTotal: -1,
             luckyNum: 1,
-            lotteryType: this.lotteryNum.type || [],
             myDraw: {},
         };
     },
@@ -433,7 +429,6 @@ export default {
                 for (let i = 1; i < val.list.length + 1; i += 1) {
                     list.push(i);
                 }
-                this.luckyTotal = list.reverse();
                 this.luckyListArr = val.list;
                 this.luckyAllTotal = val.total;
             },

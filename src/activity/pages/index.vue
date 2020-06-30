@@ -1,11 +1,10 @@
 <template>
     <view>
-        <children
-            v-if="activityId === 9"
+        <brand
+            v-if="activityId === 10"
             ref="myChildren"
             :activity-id="activityId"
             :canvas-image="canvasImg"
-            @createPoster="createPoster"
         />
         <poster
             v-if="!isH5 && showPoster"
@@ -18,20 +17,27 @@
     </view>
 </template>
 <script>
-import children from './children/demo.vue';
+import brand from './brand/index.vue';
 import share from '../../common/share';
 
 export default {
     components: {
-        children,
+        brand,
     },
     data() {
         return {
+            // #ifdef H5
+            isH5: true,
+            // #endif
             activityId: '',
             activityName: [
                 {
                     id: 9,
                     title: '七彩童年，快乐成长秀风采',
+                },
+                {
+                    id: 10,
+                    title: '青少年”爱挑战“寻找代言人',
                 },
             ],
             canvasImg: '',
@@ -47,20 +53,6 @@ export default {
         };
     },
     methods: {
-        createPoster(config) {
-            this.posterCommonConfig = config;
-            this.showPoster = true;
-            this.$nextTick(() => {
-                this.poster = this.selectComponent('#poster');
-                this.poster.onCreate(this.posterCommonConfig);
-            });
-        },
-        onPosterSuccess({ detail }) {
-            this.$refs.myChildren.onPosterSuccess(detail);
-        },
-        onPosterFail(err) {
-            this.$refs.myChildren.onPosterFail(err);
-        },
         initShare() {
             const titleList = this.isH5
                 ? this.publicConfig.shareConfig.h5Title
@@ -75,10 +67,19 @@ export default {
                 thumbnail: `${this.publicConfig.shareConfig.image}?x-oss-process=image/format,png/interlace,1/quality,Q_80/resize,m_pad,h_100`,
             });
         },
+        onReachBottom() {
+            uni.$emit('onReachBottom');
+        },
     },
     onUnload() {
-        console.log(this.$refs.myChildren);
-        this.$refs.myChildren.unload();
+        if (this.$refs.myChildren) {
+            this.$refs.myChildren.unload();
+        }
+    },
+    onShow() {
+        if (this.$refs.myChildren) {
+            this.$refs.myChildren.onshow();
+        }
     },
     onLoad(params) {
         this.activityId = Number(params.activity_id);

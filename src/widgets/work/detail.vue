@@ -485,6 +485,9 @@ export default {
             if (this.activityId === 5) {
                 url = '/pages/yiqing/index';
             }
+            if (this.activityId === 10) {
+                url = '/activity/pages/index?activity_id=10';
+            }
             uni.navigateTo({
                 url,
             });
@@ -502,11 +505,30 @@ export default {
             });
         },
         jumpUc() {
-            api.isLogin().then(() => {
+            if (this.activityId && this.activityId > 9) {
+                api.get('/api/activity/activitystatus', {
+                    activity_id: this.activityId,
+                }).then((data) => {
+                    if (data.status === 2) {
+                        this.jumpUcUrl('activity');
+                    } else {
+                        this.jumpUcUrl();
+                    }
+                });
+            } else {
+                this.jumpUcUrl();
+            }
+        },
+        jumpUcUrl(activity) {
+            if (activity && this.activityId === 10) {
+                uni.navigateTo({
+                    url: `/activity/pages/brand/ucenter?activity_id=10&user_id=${this.pageData.create_by}`,
+                });
+            } else {
                 uni.navigateTo({
                     url: `/pages/uc/uc/index?uid=${this.pageData.create_by}`,
                 });
-            });
+            }
         },
     },
 };

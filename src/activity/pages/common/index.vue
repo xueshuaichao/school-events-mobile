@@ -1,26 +1,9 @@
 <template>
-    <view
-        :class="['activity-page-index', className]"
-        :style="{ 'background-color': publicConfig.mainBgColor }"
-    >
+    <view :class="['activity-page-index', className]">
         <official-account v-if="!isH5" />
         <view
-            :class="[
-                'page-index',
-                { 'stop-scroll': prompt || prizePrompt || isStopScroll }
-            ]"
+            :class="['page-index', { 'stop-scroll': prompt || isStopScroll }]"
         >
-            <!-- 奖品说明 -->
-            <prize-desc
-                v-if="prizePrompt"
-                :prizes-detail="indexConfig.prizesDetail"
-                :theme="{
-                    bgColor: publicConfig.primaryBgColor,
-                    titleColor: publicConfig.titleColor
-                }"
-                :name="publicConfig.activityName"
-                @close="handleClose"
-            />
             <view class="main-swiper">
                 <view class="banner">
                     <view>
@@ -46,33 +29,22 @@
                     </view>
                     <template v-show="publicConfig.time !== ''">
                         <i class="active-time">
-                            活动时间：{{ publicConfig.time }}
+                            {{ publicConfig.time }}
                         </i>
                     </template>
                 </view>
                 <view class="main-content">
-                    <slot name="prize">
-                        <!-- 奖品 -->
-                        <prize
-                            :name="publicConfig.activityName"
-                            :text-color="publicConfig.primaryColor"
-                            :border-color="publicConfig.primaryBgColor"
-                            :prize-list="indexConfig.prizes"
-                            @handleActiveprize="handleActiveprize"
-                        />
-                    </slot>
-                    <slot name="rank" />
-                    <!-- 跑马灯 -->
-                    <tipsList
-                        :text="
-                            `${filter.activity_id === 9 ? '抽中了' : '发布了'}`
-                        "
-                        :crousel-list="crouselList"
-                    />
+                    <slot name="main-data" />
                     <!-- work show -->
                     <view class="menu-list">
                         <view class="cansai-text">
-                            —— 活动作品 ——
+                            ——
+                            {{
+                                publicConfig.activityId === 10
+                                    ? "参赛作品"
+                                    : "活动作品"
+                            }}
+                            ——
                         </view>
                         <view class="search-box">
                             <button
@@ -134,10 +106,16 @@
                                     :bg-color="publicConfig.primaryBgColor"
                                     @click.native="viewDetail(item, index)"
                                 />
-
+                                <view
+                                    v-if="publicConfig.activityId === 10"
+                                    class="media-name create-by text-one-line"
+                                >
+                                    {{ `${item.user_name}` }}
+                                </view>
                                 <view class="media-name text-one-line">
                                     {{ `${item.resource_name}` }}
                                 </view>
+
                                 <text class="vote-num">
                                     {{ item.ticket }}赞
                                 </text>
@@ -174,6 +152,7 @@
                     </view>
                 </view>
                 <view
+                    v-if="!hideButton"
                     :class="
                         status === 2 || status === 1 || isH5
                             ? 'upload'
@@ -196,14 +175,10 @@
         </view>
     </view>
 </template>
-
 <script>
 import api from '../../../common/api';
-import prizeDesc from './prize-desc.vue';
-import prize from './prize.vue';
-import tipsList from './tips-list.vue';
+
 import uniLoadMore from '../../../components/uni-load-more/uni-load-more.vue';
-// import share from '../../../common/share';
 import EventCraftCover from '../../../components/event-craft-cover/index.vue';
 
 export default {
@@ -217,9 +192,6 @@ export default {
     },
     components: {
         uniLoadMore,
-        prizeDesc,
-        prize,
-        tipsList,
         EventCraftCover,
     },
     props: {
@@ -253,34 +225,24 @@ export default {
             type: String,
             default: '',
         },
+        hideButton: {
+            type: Boolean,
+            default: false,
+        },
+        myWorkPath: {
+            type: String,
+            default: '',
+        },
     },
     data() {
         return {
             // #ifdef H5
             isH5: true,
             // #endif
-            prizeList: [
-                {
-                    text: ['一等奖', '护眼仪'],
-                },
-                {
-                    text: ['二等奖', '护眼灯'],
-                },
-                {
-                    text: ['三等奖', '书包'],
-                },
-                {
-                    text: ['四等奖', '奖状'],
-                },
-            ],
-            shareDesc: '',
             changeValue: '',
-            activeMenuIndex: 1,
             loadMoreStatus: 'more',
             prompt: false,
-            prizePrompt: false,
             isPlayed: false,
-            newsTabActiveIndex: 0,
             dataList: [],
             filter: {
                 cat_id: this.publicConfig.catId,
@@ -295,6 +257,11 @@ export default {
             setId: '',
         };
     },
+    computed: {
+        workPath() {
+            return this.myWorkPath;
+        },
+    },
     mounted() {
         uni.$on('onReachBottom', () => {
             if (this.loadMoreStatus === 'more') {
@@ -306,8 +273,9 @@ export default {
     },
     created() {
         this.getData();
-        this.activityStatus();
-        this.getCrouselList();
+        if (!this.hideButton) {
+            this.activityStatus();
+        }
     },
     onShow() {},
     onHide() {
@@ -317,31 +285,6 @@ export default {
         clearInterval(this.setId);
     },
     methods: {
-        getCrouselList() {
-            this.postCrouselList();
-            this.setId = setInterval(() => {
-                this.postCrouselList();
-            }, 1000 * 60 * 5);
-        },
-        postCrouselList() {
-            if (this.filter.activity_id === 9) {
-                // 六一活动显示 中奖信息
-                api.post('/api/activity/drawlist', {
-                    page_num: 1,
-                    page_size: 10,
-                }).then(({ list }) => {
-                    this.crouselList = list;
-                });
-            } else {
-                api.post('/api/activity/resourcelist', {
-                    activity_id: this.filter.activity_id,
-                    page_num: 1,
-                    page_size: 10,
-                }).then(({ list }) => {
-                    this.crouselList = list;
-                });
-            }
-        },
         getData(title) {
             api.post('/api/activity/resourcelist', this.filter).then(
                 ({ list, total }) => {
@@ -373,12 +316,12 @@ export default {
             });
         },
         handleUpload() {
-            if (this.isH5) {
-                return uni.showToast({
-                    title: '请在UP爱挑战小程序上传作品',
-                    icon: 'none',
-                });
-            }
+            // if (this.isH5) {
+            //     return uni.showToast({
+            //         title: '请在UP爱挑战小程序上传作品',
+            //         icon: 'none',
+            //     });
+            // }
             if (this.status === 2) {
                 api.isLogin({
                     fr: this.fr,
@@ -398,10 +341,6 @@ export default {
             }
             return true;
         },
-
-        // onReachBottom() {
-
-        // },
         bindconfirm() {
             uni.navigateTo({
                 url: `/activity/pages/mywork/mywork?type=search&name=${this.changeValue.trim()}&activity_id=${
@@ -437,31 +376,16 @@ export default {
             // this.prompt = true;
             this.$emit('showMask', { title: '活动规则', type: 0 });
         },
-        handleActiveprize() {
-            this.prizePrompt = true;
-        },
         handleMywork() {
             api.isLogin({
                 fr: this.fr,
             }).then(() => {
                 uni.navigateTo({
-                    url: `/activity/pages/mywork/mywork?type=myWork&activity_id=${this.filter.activity_id}`,
+                    url: this.workPath
+                        ? this.workPath
+                        : `/activity/pages/mywork/mywork?type=myWork&activity_id=${this.filter.activity_id}`,
                 });
             });
-        },
-        handleClose() {
-            this.prompt = false;
-            this.prizePrompt = false;
-        },
-
-        onPlay() {
-            if (!this.isPlayed) {
-                api.get('/api/works/playcount', {
-                    id: this.id,
-                });
-            }
-
-            this.isPlayed = true;
         },
         handleVote(item) {
             if (this.status === 2) {
@@ -501,16 +425,6 @@ export default {
                 });
             }
         },
-    },
-    onShareAppMessage(res) {
-        if (res.from === 'button') {
-            // 来自页面内分享按钮
-            console.log(res.target);
-        }
-        return {
-            title: this.shareDesc,
-            path: '/pages/read/index',
-        };
     },
 };
 </script>
@@ -703,10 +617,7 @@ body.dialog-open {
         .like-icon {
             width: 27upx;
             height: 27upx;
-            position: absolute;
-            top: 50%;
-            left: 20upx;
-            transform: translateY(-50%);
+            margin-right: 5upx;
         }
         .vote {
             float: right;
@@ -717,9 +628,9 @@ body.dialog-open {
             color: rgba(255, 255, 255, 1);
             font-size: 28upx;
             line-height: 60upx;
-            position: relative;
-            padding-left: 52upx;
-            box-sizing: border-box;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
         .media-icon {
             width: 40upx;

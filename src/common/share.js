@@ -152,11 +152,12 @@ function h5InitShare(customShareConfig) {
     } else {
         params = Object.assign(defaultParams, customShareConfig);
     }
+    // console.log(params, 'before--share--');
     // if (!h5InitShare.config) {
     api.get('/api/weixin/getshareconfig', {
         url: location.href,
     }).then((data) => {
-        // console.log(params);
+        console.log(params);
         h5InitShare.config = data;
         initWechatShare(data, params);
     });
