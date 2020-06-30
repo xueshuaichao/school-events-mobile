@@ -5,11 +5,10 @@
     >
         <view
             class="page-read-work"
-            :style="{ 'background-color': publicConfig.mainBgColor }"
-            :class="{ login: userInfo === null }"
+            :class="{ login: userInfo === null && type === 'myWork' }"
         >
             <login
-                v-if="userInfo === null"
+                v-if="type === 'myWork' && userInfo === null"
                 @login="onLogin"
             />
             <!-- my works -->
@@ -20,7 +19,6 @@
                 <view
                     v-if="type === 'myWork'"
                     class="panel-hd"
-                    :style="{ 'background-color': publicConfig.mainBgColor }"
                 >
                     <text
                         class="panel-title"
@@ -47,23 +45,12 @@
                 <view
                     v-else
                     class="search-box"
-                    :style="{ 'background-color': publicConfig.mainBgColor }"
                 >
                     <button
                         v-for="(item, index) in publicConfig.catMenu"
                         :key="index"
                         :class="{
                             active: filter.activity_cat === index + 1
-                        }"
-                        :style="{
-                            'background-color':
-                                filter.activity_cat === index + 1
-                                    ? publicConfig.primaryColor
-                                    : '',
-                            color:
-                                filter.activity_cat === index + 1
-                                    ? '#fff'
-                                    : publicConfig.primaryColor
                         }"
                         @click="toggle(index + 1)"
                     >
@@ -72,26 +59,15 @@
                     <button
                         v-for="(item, index) in publicConfig.sort"
                         :key="index"
-                        :style="{
-                            'background-color':
+                        :class="{
+                            active:
                                 filter.sort === (index === 0 ? 'new' : 'hot')
-                                    ? publicConfig.primaryColor
-                                    : '',
-                            color:
-                                filter.sort === (index === 0 ? 'new' : 'hot')
-                                    ? '#fff'
-                                    : publicConfig.primaryColor
                         }"
                         @click="toggle(index === 0 ? 'new' : 'hot')"
                     >
                         {{ item }}
                     </button>
-                    <view
-                        class="search"
-                        :style="{
-                            'background-color': publicConfig.primaryBgColor
-                        }"
-                    >
+                    <view class="search">
                         <image
                             :src="
                                 `https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/${publicConfig.activityName}_search.png`
@@ -183,7 +159,7 @@
                             v-else
                             class="work-info"
                         >
-                            <view class="text-two-line">
+                            <view class="text-two-line resource-name">
                                 {{ item.resource_name }}
                             </view>
                             <view class="media-name">
@@ -240,21 +216,12 @@
                             `/activity/pages/upload/modify?activity_id=${filter.activity_id}`
                         "
                     >
-                        <view
-                            class="goUpload"
-                            :style="{
-                                'background-color': publicConfig.primaryColor
-                            }"
-                        >
+                        <view class="goUpload">
                             去上传
                         </view>
                     </navigator>
                 </view>
-                <goHome
-                    :path="publicConfig.homePath"
-                    :text-color="publicConfig.primaryColor"
-                    :name="publicConfig.activityName"
-                />
+                <goHome :path="publicConfig.homePath" />
             </view>
         </view>
     </view>
@@ -296,6 +263,9 @@ export default {
     },
     data() {
         return {
+            // #ifdef H5
+            isH5: true,
+            // #endif
             isLoading: true,
             userInfo: null,
             publicConfig: {},
@@ -331,20 +301,19 @@ export default {
     },
     methods: {
         onLogin() {
-            this.getData();
-        },
-        getData() {
-            api.get('/api/user/info').then(
+            this.getData().then(
                 (res) => {
                     this.userInfo = res.user_info;
                     this.isLoading = false;
-                    this.initShare();
                 },
                 () => {
                     this.isLoading = false;
                     this.userInfo = null;
                 },
             );
+        },
+        getData() {
+            return api.get('/api/user/info');
         },
         toggle(k) {
             uni.showLoading();
@@ -569,12 +538,9 @@ export default {
     },
     onLoad(query) {
         const {
-            type,
-            name,
-            status,
-            activity_id: activityId,
-            user_id: userId,
+            type, name, status, user_id: userId,
         } = query;
+        const activityId = Number(query.activity_id);
         this.userId = userId;
         this.type = type;
         if (status) {
@@ -587,7 +553,19 @@ export default {
             page: 'myWorkConfig',
         });
         this.filter.activity_id = activityId;
-        this.getData();
+        this.getData().then(
+            (res) => {
+                this.userInfo = res.user_info;
+                this.isLoading = false;
+                if (type === 'myWork' && activityId === 10) {
+                    this.userId = this.userInfo.user_id;
+                }
+            },
+            () => {
+                this.isLoading = false;
+                this.userInfo = null;
+            },
+        );
         if (type === 'myWork') {
             this.getWorkData();
         } else if (type === 'search') {
@@ -600,6 +578,7 @@ export default {
             this.changeValue = name;
             this.searchWorkData();
         }
+        this.initShare();
     },
     onShareAppMessage(res) {
         if (res.from === 'button') {
@@ -616,6 +595,87 @@ export default {
 </script>
 
 <style lang="less">
+.user-detail {
+    box-shadow: inset 0 0 24upx 0 rgba(152, 130, 255, 1);
+    background-color: #fff;
+    padding: 20upx;
+    border-radius: 20upx;
+    margin-bottom: 40upx;
+    position: relative;
+    .poster-btn {
+        position: absolute;
+        right: -11upx;
+        top: 20upx;
+        background-color: #ff574a;
+        border-radius: 24upx 0 0 24upx;
+        padding: 0upx 23upx;
+        height: 48upx;
+        line-height: 48upx;
+        color: #fff;
+        font-size: 22upx;
+        &::after {
+            content: "";
+            position: absolute;
+            bottom: -9upx;
+            right: 6upx;
+            width: 0;
+            height: 0;
+            border-top: 6upx solid transparent;
+            border-bottom: 6upx solid transparent;
+            border-right: 6upx solid #c40d00;
+            transform: rotate(44deg);
+        }
+    }
+    .user-image-info {
+        display: flex;
+        .user-image {
+            width: 220upx;
+            height: 292upx;
+            margin-right: 40upx;
+        }
+        .user-info {
+            color: #333;
+            line-height: 28upx;
+            .name {
+                font-size: 30upx;
+                font-weight: 500;
+                margin-bottom: 19upx;
+                padding-top: 8upx;
+            }
+            .school {
+                margin-bottom: 40upx;
+            }
+            .teacher {
+                margin-bottom: 38upx;
+                font-size: 28upx;
+            }
+            .slogan {
+                color: #583ed4;
+                font-weight: 500;
+                font-size: 26upx;
+                line-height: 40upx;
+                word-break: break-all;
+            }
+        }
+    }
+    .user-desc {
+        padding: 20upx;
+        color: #333;
+        background-color: #ddd6ff;
+        border-radius: 10upx;
+        word-break: break-all;
+        .user-desc-text {
+            height: 186upx;
+            overflow-y: auto;
+        }
+    }
+    .user-tips {
+        padding-top: 20upx;
+        color: #9882ff;
+        font-size: 26upx;
+        text-align: center;
+    }
+}
 .empty {
     text-align: center;
     image {
@@ -702,6 +762,7 @@ export default {
             margin-bottom: 15upx;
             &.text-two-line {
                 height: 63upx;
+                word-break: break-all;
             }
         }
         .media-time {

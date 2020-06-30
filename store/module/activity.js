@@ -10,17 +10,13 @@ export default {
                     log: 'wyhd',
                     sort: ['最新', '最热'],
                     catMenu: [], // 分组
-                    mainBgColor: '#FFCE99',
                     activityName: 'labor',
                     activityId: 8,
                     catId: 20, // 所属分类
                     showAllCat: false,
-                    time: '4月27日--5月31日',
+                    time: '活动时间：4月27日--5月31日',
                     primaryColor: '#DB4E0E', // 主色调
-                    // darkPrimaryColor: '#451600', // 深一些
                     primaryBgColor: '#FF9F73', // 主要的背景颜色
-                    // infoColor: '#AB3500', // 浅一些
-                    // titleColor: '#FFE179', // 规则的title
                     placeholderColor: 'rgba(255,255,255,.6)',
                     homePath: '/pages/activity-pages/labor/index',
                     shareConfig: {
@@ -127,7 +123,6 @@ export default {
                     nameMaxLength: 11,
                     descMaxLength: 150,
                 },
-                myWorkColorConfig: {},
                 indexColorConfig: {},
                 uploadColorConfig: {},
             },
@@ -138,7 +133,6 @@ export default {
                     log: 'lyhd',
                     sort: ['最新', '最热'],
                     catMenu: [], // 分组
-                    mainBgColor: '#EBE1FF',
                     activityName: 'children',
                     activityId: 9,
                     catId: '', // 所属分类
@@ -185,12 +179,9 @@ export default {
                             cat_id: 102,
                         },
                     ],
-                    time: '5月29日--6月20日',
+                    time: '活动时间：5月29日--6月20日',
                     primaryColor: '#BB77FF', // 主色调
-                    darkPrimaryColor: '#C790FF', // 深一些 （按钮的颜色）
                     primaryBgColor: '#DCC0FF', // 主要的背景颜色 （图片背景）
-                    infoColor: '#333333', // 浅一些
-                    ruleTitleColor: '#666', // 规则的title
                     placeholderColor: 'rgba(255,255,255,.6)',
                     homePath: '/activity/pages/children/index',
                     shareConfig: {
@@ -266,22 +257,54 @@ export default {
                     nameMaxLength: 11,
                     descMaxLength: 80,
                 },
-                myWorkColorConfig: {
-                    // primaryColor: '#C790FF', // 主色调
-                },
                 indexColorConfig: {
                     maskBgColor: '#fff',
                     placeholderColor: '#999',
                 },
                 uploadColorConfig: {
-                    mainBgColor: '#fff',
-                    // primaryColor: '#C790FF', // 主色调
-                    // tipsColor: '#999', // 提示文字
-                    // titleColor: '#333',
                     placeholderColor: '#999',
-                    // inputBgColor: '#fff',
-                    // inputColor: '#333',
-                    // inputBorderColor: '#C790FF',
+                },
+            },
+            {
+                activityId: 10,
+                publicConfig: {
+                    title: '青少年”爱挑战“寻找代言人',
+                    log: 'dyrhd',
+                    sort: ['最新', '最热'],
+                    catMenu: [], // 分组
+                    activityName: 'brand',
+                    activityId: 10,
+                    catId: '', // 所属分类
+                    showAllCat: true,
+                    time: '海选时间：7月1日--7月24日',
+                    primaryColor: '#FF8E85', // 主色调
+                    primaryBgColor: '#9882FF', // 主要的背景颜色 （图片背景）
+                    placeholderColor: 'rgba(255,255,255,.6)',
+                    homePath: '/activity/pages/index?activity_id=10',
+                    shareConfig: {
+                        title: ['秀我风采，为青少年代言！'],
+                        h5Title: ['秀我风采，为青少年代言！'],
+                        desc: ['不要迟疑，为我点赞！我要做“爱挑战”代言人！'],
+                        image:
+                            'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/brand_share.png',
+                        path: '/activity/pages/index?activity_id=10',
+                    },
+                },
+                uploadConfig: {
+                    // 上传作品页
+                    activityCat: [], // 表现形式
+                    uploadMode: ['video', 'image'], // 上传类型 只传1个值时（['video']）不显示表现形式
+                    placeholderNameText: '*作品名称（不超过11字）',
+                    placeholderDescText: '作品介绍(不超过80个字符)',
+                    nameMaxLength: 11,
+                    descMaxLength: 80,
+                },
+                indexColorConfig: {
+                    maskBgColor: '#fff',
+                    placeholderColor: '#d1c7ff',
+                },
+                uploadColorConfig: {
+                    placeholderColor: '#999',
                 },
             },
         ],

@@ -69,7 +69,6 @@
                     <view
                         v-if="url"
                         class="normal-text"
-                        :style="{ 'background-color': theme.primaryColor }"
                     >
                         更换视频
                     </view>
@@ -84,7 +83,6 @@
                     <view
                         v-if="url && preview"
                         class="normal-text"
-                        :style="{ 'background-color': theme.primaryColor }"
                     >
                         更换封面
                     </view>

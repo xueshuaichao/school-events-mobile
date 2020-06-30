@@ -7,7 +7,6 @@
             <view
                 v-if="!needBindMobile"
                 class="main"
-                :style="{ background: publicConfig.mainBgColor }"
             >
                 <view
                     v-if="publicConfig.showAllCat"
@@ -133,14 +132,12 @@
                     <image-drag-sort
                         v-show="images.length"
                         ref="preview"
-                        :text-color="publicConfig.primaryColor"
                         :list="images"
                     />
                 </template>
 
                 <view
                     class="btn"
-                    :style="{ background: publicConfig.primaryColor }"
                     @click="upload"
                 >
                     上传
@@ -198,7 +195,6 @@
                 <view class="form-item-wrap">
                     <view
                         class="btn"
-                        :style="{ background: publicConfig.primaryColor }"
                         @click="bindMobile"
                     >
                         确定
@@ -404,6 +400,13 @@ export default {
                 api.get('/api/works/childcat', {
                     cat_id: 3,
                 }).then((res) => {
+                    if (this.formData.activity_id) {
+                        const index = res.findIndex(
+                            item => item.cat_id === 102,
+                        );
+                        // eslint-disable-next-line no-param-reassign
+                        res[index].name = '体育竞技';
+                    }
                     this.catData = res;
                     this.getItemData();
                 });
@@ -627,7 +630,7 @@ export default {
     }
     .uni-textarea {
         height: 160upx;
-        padding: 30upx 20upx 38upx;
+        padding: 16upx 20upx 38upx;
         width: 100%;
         box-sizing: border-box;
         line-height: 42upx;

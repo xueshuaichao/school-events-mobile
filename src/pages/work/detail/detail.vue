@@ -11,7 +11,8 @@
                 { chunjie: activity_id === 3 || activity_id === 4 },
                 { wuyi: activity_id === 8 },
                 { openGame: from === 'openGame' },
-                { liuyi: activity_id === 9 }
+                { liuyi: activity_id === 9 },
+                { qiyi: activity_id === 10 }
             ]"
         >
             <view class="activerule">
@@ -256,6 +257,7 @@ export default {
             canvasImgH: 570 * pix,
             canvasImgW: 826 * pix,
             pix,
+            userInfo: null,
         };
     },
     created() {},
@@ -476,7 +478,6 @@ export default {
                 this.activity_id = res.activity_id || 0;
             }
             this.id = res.id;
-
             // activity_id,  没有7..
             if (this.activity_id) {
                 // wyhd 五一活动
@@ -488,6 +489,7 @@ export default {
                     '',
                     'wyhd',
                     'lyhd',
+                    'qyhd',
                 ];
                 const type = arr[this.activity_id - 3];
                 this.fr = logger.getFr(type, {});
@@ -514,19 +516,25 @@ export default {
                     ...detailConf[6].posterConfig,
                 };
             }
-            this.posterConfig.images[1].url = `${res.video_img_url}?x-oss-process=image/resize,m_pad,w_460,h_300`;
+            let bgColor = 'ffffff';
+            if (this.activity_id === 10) {
+                bgColor = '9882ff';
+            }
+            this.posterConfig.images[1].url = `${res.video_img_url}?x-oss-process=image/format,jpg/interlace,1/quality,Q_80/resize,m_pad,w_460,h_300,color_${bgColor}`;
             this.canvasImgW = this.posterConfig.width * this.pix;
             this.canvasImgH = this.posterConfig.height * this.pix;
             if (this.from === 'openGame') {
-                this.posterConfig.texts[0].text[0].text = `${
-                    res.resource_name
-                }${
+                this.posterConfig.texts[0].text = `${res.resource_name}${
                     res.achievement
                         ? `|${res.achievement}${res.achievement_unit}`
                         : ''
                 }`;
             } else {
-                this.posterConfig.texts[0].text[0].text = res.resource_name;
+                this.posterConfig.texts[0].text = res.resource_name;
+            }
+            if (this.activity_id === 10) {
+                // 作者
+                this.posterConfig.texts[1].text = `我是${res.create_name}`;
             }
             this.pageData.video_img_url = res.video_img_url;
 
@@ -655,17 +663,26 @@ export default {
             }).then((res) => {
                 const { status } = res;
                 if (status === 2) {
-                    if (this.activity_id === 6) {
-                        uni.navigateTo({
-                            url: '/pages/read/upload/modify',
-                        });
-                    } else if (this.activity_id === 8) {
+                    if (this.activity_id === 8) {
                         uni.navigateTo({
                             url: `/pages/activity-pages/upload/modify?activity_id=${this.activity_id}`,
                         });
                     } else {
-                        uni.navigateTo({
-                            url: `/activity/pages/upload/modify?activity_id=${this.activity_id}`,
+                        api.isLogin({ fr: this.fr }).then(() => {
+                            if (this.activity_id === 10) {
+                                if (this.userInfo) {
+                                    this.setEnroll();
+                                } else {
+                                    api.get('/api/user/info').then((data) => {
+                                        this.userInfo = data.user_info;
+                                        this.setEnroll();
+                                    });
+                                }
+                            } else {
+                                uni.navigateTo({
+                                    url: `/activity/pages/upload/modify?activity_id=${this.activity_id}`,
+                                });
+                            }
                         });
                     }
                 } else if (status === 1) {
@@ -677,6 +694,22 @@ export default {
                     uni.showToast({
                         icon: 'none',
                         title: '活动已结束',
+                    });
+                }
+            });
+        },
+        setEnroll() {
+            api.get('/api/activity/getenrollinfo', {
+                activity_id: this.activity_id,
+                user_id: this.userInfo.user_id,
+            }).then((data) => {
+                if (Array.isArray(data) && data.length === 0) {
+                    uni.navigateTo({
+                        url: '/activity/pages/brand/join',
+                    });
+                } else {
+                    uni.navigateTo({
+                        url: `/activity/pages/upload/modify?activity_id=${this.activity_id}`,
                     });
                 }
             });
@@ -693,8 +726,6 @@ export default {
                 this.toggleLike();
             }
             if (action === 'showMessage') {
-                // this.showDrawer = true;
-                console.log(action, '12121212action');
                 this.showDrawer = !this.showDrawer;
             }
         },
@@ -1148,6 +1179,24 @@ export default {
             .close {
                 background: transparent;
                 border: 2rpx solid #fff;
+            }
+        }
+        &.qiyi {
+            .saveBtn {
+                width: 570upx;
+                background: linear-gradient(
+                    180deg,
+                    rgba(255, 142, 133, 1),
+                    rgba(255, 87, 74, 1)
+                );
+                box-shadow: 0 4upx 6upx 0 rgba(0, 0, 0, 0.4);
+            }
+            .close {
+                background: linear-gradient(
+                    180deg,
+                    rgba(255, 142, 133, 1),
+                    rgba(255, 87, 74, 1)
+                );
             }
         }
     }

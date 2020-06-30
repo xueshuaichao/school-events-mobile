@@ -1,7 +1,6 @@
 <template>
     <button
         class="btn goHome"
-        :style="{ color: textColor }"
         @click="goHome"
     >
         返回首页
@@ -11,14 +10,6 @@
 <script>
 export default {
     props: {
-        name: {
-            type: String,
-            default: '',
-        },
-        textColor: {
-            type: String,
-            default: '',
-        },
         path: {
             type: String,
             default: '',
