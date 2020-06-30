@@ -516,7 +516,11 @@ export default {
                     ...detailConf[6].posterConfig,
                 };
             }
-            this.posterConfig.images[1].url = `${res.video_img_url}?x-oss-process=image/resize,m_pad,w_460,h_300`;
+            let bgColor = 'ffffff';
+            if (this.activity_id === 10) {
+                bgColor = '9882ff';
+            }
+            this.posterConfig.images[1].url = `${res.video_img_url}?x-oss-process=image/format,jpg/interlace,1/quality,Q_80/resize,m_pad,w_460,h_300,color_${bgColor}`;
             this.canvasImgW = this.posterConfig.width * this.pix;
             this.canvasImgH = this.posterConfig.height * this.pix;
             if (this.from === 'openGame') {
