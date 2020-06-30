@@ -334,11 +334,13 @@ export default {
             });
         },
         getenrollinfo() {
+            uni.showLoading();
             api.get('/api/activity/getenrollinfo', {
                 activity_id: this.activityId,
                 user_id: this.userInfo.user_id,
             }).then(
                 (data) => {
+                    uni.hideLoading();
                     if (Array.isArray(data) && data.length === 0) {
                         // 参赛
                         this.canJoin = true;
@@ -357,6 +359,7 @@ export default {
                     }
                 },
                 () => {
+                    uni.hideLoading();
                     this.canJoin = true;
                 },
             );
