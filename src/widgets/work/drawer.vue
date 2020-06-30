@@ -266,6 +266,7 @@ export default {
                 }
             } else {
                 this.hide();
+                this.resetInitVal();
                 setTimeout(() => {
                     that.showDraw = false;
                 }, 300);
@@ -335,7 +336,6 @@ export default {
             this.animationData = this.animation.export();
         },
         clickWrap() {
-            this.resetInitVal();
             this.$emit('doAction', 'showMessage');
         },
         clickNull() {},
@@ -361,7 +361,6 @@ export default {
         showCloseItem(item) {
             let show = false;
             const conut = Math.ceil(item.sub_count / 10) + 1;
-            console.log(conut, item.showCount, item.sub_count);
             if (item.showCount && item.sub_count <= 3) {
                 show = true;
             } else if (item.sub_count <= 10 && item.showCount === 2) {
@@ -423,7 +422,6 @@ export default {
         },
         openSublist(item, List, more) {
             // 展开评论
-            console.log('item', item.showCount);
             this.list = this.list.map((D) => {
                 const d = D;
                 if (d.comment_id === item.comment_id) {
@@ -498,7 +496,9 @@ export default {
             });
         },
         blur() {
-            this.resetInitVal();
+            if (this.isFocus) {
+                this.resetInitVal();
+            }
         },
         bindconfirm() {
             this.showKeybord = false;
@@ -545,7 +545,7 @@ export default {
                 this.setListData(id, content, params);
             });
         },
-        setListData(id, content, params) {
+        setListData(id, content) {
             // 无刷新数据，更新列表。
             const date = new Date();
             let time = `${this.joinDate(date.getMonth() + 1)}-`;
@@ -559,7 +559,12 @@ export default {
                 created_at: time,
                 content,
             };
-            if (!this.selItem.to_user_id) {
+            console.log(
+                obj.to_user_id,
+                obj.to_comment_id,
+                this.addObj.to_comment_id,
+            );
+            if (!obj.to_user_id) {
                 obj.subList = [];
                 obj.subListCache = [];
                 obj.show = false;
@@ -569,7 +574,7 @@ export default {
             } else {
                 this.list = this.list.map((D) => {
                     const d = D;
-                    if (params.to_comment_id === d.comment_id) {
+                    if (this.addObj.to_comment_id === d.comment_id) {
                         if (d.sub_count) {
                             d.sub_count += 1;
                             d.subList.unshift(obj);
@@ -592,6 +597,7 @@ export default {
             return Time;
         },
         resetInitVal() {
+            console.log('reseting--------');
             // reset for init value;
             this.selItem.to_user_id = 0;
             this.selItem.to_user_name = '';
