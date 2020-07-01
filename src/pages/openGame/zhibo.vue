@@ -21,10 +21,17 @@
                 </view>
             </view>
         </view>
+        <cover-view
+            v-if="isFullScreen"
+            class="mp-weixin-full-screen-title"
+        >
+            {{ pageDetail.live_name }}
+        </cover-view>
         <video
             class="video"
             :src="pageDetail.live_uri"
             @error="error"
+            @fullscreenchange="onFullScreenChange"
         />
         <view class="title">
             精彩评论
@@ -57,7 +64,7 @@
                                 {{ item.user_info.name }}
                             </view>
                             <view class="time">
-                                12-11 18:30
+                                {{ item.created_at }}
                             </view>
                         </view>
                         <view class="content">
@@ -146,11 +153,11 @@ export default {
             inputBtm: 0,
             loading: false,
             kbHeight: 0,
+            isFullScreen: false,
         };
     },
     watch: {
         showKeybord(val) {
-            console.log(val, 'showKeybord------');
             if (!val) {
                 this.inputBtm = 0;
                 this.showKeybord = false;
@@ -167,6 +174,15 @@ export default {
                 that.scrollHeight = res.windowHeight - 776 * pix;
             },
         });
+
+        // hack for html5 video size notwoking
+        // #ifdef H5
+        window.removeEventListener(
+            'orientationchange',
+            this.html5VideoAutoAdjust,
+        );
+        window.addEventListener('orientationchange', this.html5VideoAutoAdjust);
+        // #endif
     },
     onLoad({ id }) {
         this.id = id;
@@ -175,6 +191,14 @@ export default {
         this.getCommentList();
     },
     methods: {
+        onFullScreenChange(e) {
+            const isFullScreenMode = e.detail.fullScreen;
+            this.isFullScreen = isFullScreenMode;
+        },
+        html5VideoAutoAdjust() {
+            document.querySelector('.uni-video-type-fullscreen').style = '';
+            window.screen.orientation.lock('natural');
+        },
         getDetail() {
             api.get('/api/live/detail', { id: this.id }).then(
                 (Detail) => {
@@ -212,6 +236,7 @@ export default {
                     api.get(url, param).then(
                         () => {
                             // 点赞成功了，
+                            this.is_like = 1;
                             this.pageDetail.like_num += 1;
                         },
                         () => {},
@@ -293,13 +318,19 @@ export default {
         getCommentList() {
             api.post('/api/comment/list', this.filter).then(
                 ({ list, total }) => {
-                    this.commentList = list;
+                    let List = list;
+                    List = List.map((D) => {
+                        const d = D;
+                        d.created_at = d.created_at.slice(5, 16);
+                        return d;
+                    });
+                    this.commentList = List;
                     this.total = total;
                     this.loading = true;
                     if (this.filter.page_num === 1) {
-                        this.commentList = list;
+                        this.commentList = List;
                     } else {
-                        this.commentList = this.commentList.concat(list);
+                        this.commentList = this.commentList.concat(List);
                     }
                 },
             );
@@ -335,7 +366,7 @@ export default {
     }
 
     .video {
-        width: 750upx;
+        width: 100%;
         height: 420upx;
     }
     .page-top {
@@ -444,6 +475,17 @@ export default {
             color: #fff;
             font-size: 28upx;
         }
+    }
+    .mp-weixin-full-screen-title {
+        position: absolute;
+        top: 46upx;
+        width: 100%;
+        z-index: 10000;
+        color: #fff;
+        box-sizing: border-box;
+        padding: 0 30upx 0 100upx;
+        color: #fff;
+        font-size: 28upx;
     }
 }
 </style>

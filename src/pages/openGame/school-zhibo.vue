@@ -1,5 +1,14 @@
 <template>
     <view class="main">
+        <view v-if="loading && !list.length">
+            <image
+                class="no-video"
+                src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/school-events-mobile/no-video.png"
+            />
+            <view class="no-video-txt">
+                暂无直播
+            </view>
+        </view>
         <view
             v-for="(item, k) in list"
             :key="k"
@@ -56,20 +65,21 @@ export default {
                 page_size: 10,
             },
             total: 0,
+            loading: false,
         };
     },
     methods: {
         jumpZhibo(item) {
             // 已经开始未结束的直播，可以跳转。
-            // if (item.status === 2) {
-            uni.navigateTo({
-                url: `/pages/openGame/zhibo?id=${item.id}`,
-            });
-            // }
+            if (item.status === 2) {
+                uni.navigateTo({
+                    url: `/pages/openGame/zhibo?id=${item.id}`,
+                });
+            }
         },
         getData(title) {
             api.get('/api/live/list', this.filter).then(({ list, total }) => {
-                this.isLoading = false;
+                this.loading = true;
                 if (title === 'reachBottom') {
                     this.list = this.list.concat(list);
                 } else {
@@ -110,6 +120,16 @@ export default {
     padding: 30upx;
     .loadMore {
         width: 100%;
+    }
+    .no-video {
+        width: 310upx;
+        height: 310upx;
+        margin: 200upx 190upx 0;
+    }
+    .no-video-txt {
+        text-align: center;
+        font-size: 30upx;
+        color: #666;
     }
     .main-box {
         width: 690upx;

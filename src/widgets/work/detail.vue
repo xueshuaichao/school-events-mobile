@@ -82,8 +82,8 @@
             </template>
         </view>
         <view class="content">
-            <view class="author-info clearfix">
-                <view class="author-name text-one-line fl-l">
+            <view class="author-info">
+                <view class="author-name text-one-line">
                     {{ pageData.create_name }}
                 </view>
             </view>
