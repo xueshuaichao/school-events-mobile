@@ -44,9 +44,11 @@ const common = {
     onLoad: () => {
         console.log('on<<<<<');
         logger.onPageView();
+        // #ifdef H5
         if (['/activity/chunjie/index'].indexOf(location.pathname) === -1) {
             share();
         }
+        // #endif
     },
 };
 

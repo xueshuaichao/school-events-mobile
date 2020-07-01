@@ -787,14 +787,16 @@ export default {
             this.title = titleList[random];
             const desc = descList[random];
             const noJoin = !this.detail || !Object.keys(this.detail).length;
-            share({
-                title: noJoin ? this.title : '秀我风采，为青少年代言！',
-                desc,
-                thumbnail: `${this.publicConfig.shareConfig.image}?x-oss-process=image/format,png/interlace,1/quality,Q_80/resize,m_pad,h_100`,
-                url: noJoin
-                    ? `${window.location.origin}${this.publicConfig.shareConfig.path}`
-                    : `${window.location.href}`,
-            });
+            if (this.isH5) {
+                share({
+                    title: noJoin ? this.title : '秀我风采，为青少年代言！',
+                    desc,
+                    thumbnail: `${this.publicConfig.shareConfig.image}?x-oss-process=image/format,png/interlace,1/quality,Q_80/resize,m_pad,h_100`,
+                    url: noJoin
+                        ? `${window.location.origin}${this.publicConfig.shareConfig.path}`
+                        : `${window.location.href}`,
+                });
+            }
         },
         handleUpload() {
             if (!this.isSelf) {
