@@ -82,9 +82,23 @@ function isOverDate() {
     return 20200530235959 - parseFloat(myArray) > 0;
 }
 
+function mapHttpToHttps(rawUrl) {
+    if (rawUrl.indexOf(':') < 0) {
+        return rawUrl;
+    }
+    const urlComponent = rawUrl.split(':');
+    if (urlComponent.length === 2) {
+        if (urlComponent[0] === 'http') {
+            urlComponent[0] = 'https';
+            return `${urlComponent[0]}:${urlComponent[1]}`;
+        }
+    }
+    return rawUrl;
+}
 export default {
     getToken,
     store,
     getParam,
     isOverDate,
+    mapHttpToHttps,
 };

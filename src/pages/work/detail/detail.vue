@@ -625,7 +625,7 @@ export default {
                 title,
                 desc,
                 thumbnail: res.video_img_url,
-                url: scene,
+                url: `${window.location.origin}${window.location.pathname}?${scene}`,
             });
             uni.setNavigationBarTitle({
                 title: res.resource_name || '',

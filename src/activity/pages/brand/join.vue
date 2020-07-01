@@ -296,7 +296,7 @@ export default {
                 ],
                 images: [
                     {
-                        url: '/activity/static/children_img/brand_poster.jpg',
+                        url: '',
                         width: 570,
                         height: 818,
                         y: 0,
@@ -379,13 +379,18 @@ export default {
             this.lock = false;
         },
         getUserInfo() {
-            api.get('/api/user/info').then((res) => {
-                this.userInfo = res.user_info;
-                if (this.userInfo.identity !== 1) {
-                    this.initFormat(this.userInfo);
-                }
-                this.getQrCode();
-            });
+            api.get('/api/user/info').then(
+                (res) => {
+                    this.userInfo = res.user_info;
+                    if (this.userInfo.identity !== 1) {
+                        this.initFormat(this.userInfo);
+                    }
+                    this.getQrCode();
+                },
+                () => {
+                    this.userInfo = null;
+                },
+            );
         },
         getQrCode() {
             if (this.isH5) {
@@ -527,7 +532,10 @@ export default {
             }
         },
         createPoster() {
-            this.posterCommonConfig.images[1].url = this.formData.image;
+            // eslint-disable-next-line max-len
+            this.posterCommonConfig.images[1].url = this.isH5
+                ? this.formData.image
+                : utils.mapHttpToHttps(this.formData.image);
             if (this.isH5) {
                 this.posterCommonConfig.images[0].url = '/activity/static/children_img/brand_poster.jpg';
                 this.posterCommonConfig.images[2].url = '/activity/static/children_img/brand_poster_name.png';

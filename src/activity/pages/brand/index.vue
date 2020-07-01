@@ -3,7 +3,10 @@
     <div
         :class="[
             'activity-init-page',
-            { 'stop-scroll': maskPrompt || userInfo === null }
+            {
+                'stop-scroll':
+                    (maskPrompt || userInfo === null) && maskType !== 2
+            }
         ]"
     >
         <login

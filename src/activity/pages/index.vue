@@ -59,7 +59,9 @@ export default {
                 : this.publicConfig.shareConfig.title;
             const descList = this.publicConfig.shareConfig.desc;
             const random = Math.floor(Math.random() * titleList.length);
+
             this.title = titleList[random];
+            console.log(random, this.title);
             const desc = descList[0];
             share({
                 title: this.title,
@@ -83,6 +85,7 @@ export default {
     },
     onLoad(params) {
         this.activityId = Number(params.activity_id);
+        console.log(this.activityId);
         const title = this.activityName.filter(v => v.id === this.activityId)[0].title
             || '活动';
         uni.setNavigationBarTitle({ title });

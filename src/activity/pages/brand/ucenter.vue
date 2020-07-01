@@ -78,7 +78,7 @@
                                     推荐老师：{{ detail.teacher }}
                                 </view>
                                 <view class="slogan">
-                                    我的代言：{{ detail.slogan }}
+                                    我的宣言：{{ detail.slogan }}
                                 </view>
                             </view>
                         </view>
@@ -458,13 +458,16 @@ export default {
             this.submit(detail);
             this.togglePoster(true);
         },
-        onPosterFail(err) {
-            console.log(err);
-            uni.showToast({
-                title: '生成失败，稍后再试',
-                duration: 2000,
-                icon: 'none',
-            });
+        onPosterFail() {
+            this.myPoster = this.detail[this.isH5 ? 'poster_h5' : 'poster_mp'];
+            if (this.myPoster) {
+                this.togglePoster(true);
+            } else {
+                uni.showToast({
+                    title: '海报获取失败，请稍后再试',
+                    icon: 'none',
+                });
+            }
         },
         submit(path) {
             const detail = {};
@@ -553,7 +556,9 @@ export default {
         },
         createPoster() {
             const { image, name, slogan } = this.detail;
-            this.posterCommonConfig.images[1].url = image;
+            this.posterCommonConfig.images[1].url = this.isH5
+                ? `${image}?v=${new Date().getTime()}`
+                : utils.mapHttpToHttps(image);
             if (this.isH5) {
                 this.posterCommonConfig.images[0].url = '/activity/static/children_img/brand_poster.jpg';
                 this.posterCommonConfig.images[2].url = '/activity/static/children_img/brand_poster_name.png';
@@ -593,6 +598,7 @@ export default {
                             this.isSelf = data.is_self;
                         }
                         this.isLoading = false;
+                        this.initShare();
                     });
                 },
                 () => {
@@ -779,18 +785,21 @@ export default {
             const titleList = this.isH5
                 ? this.publicConfig.shareConfig.h5Title
                 : this.publicConfig.shareConfig.title;
-
             const descList = this.publicConfig.shareConfig.desc;
             const random = Math.floor(Math.random() * titleList.length);
             this.title = titleList[random];
             const desc = descList[random];
-
-            share({
-                title: this.title,
-                desc,
-                thumbnail: `${this.publicConfig.shareConfig.image}?x-oss-process=image/format,png/interlace,1/quality,Q_80/resize,m_pad,h_100`,
-                url: `${this.isH5 ? window.location.href : ''}`,
-            });
+            const noJoin = !this.detail || !Object.keys(this.detail).length;
+            if (this.isH5) {
+                share({
+                    title: noJoin ? this.title : '秀我风采，为青少年代言！',
+                    desc,
+                    thumbnail: `${this.publicConfig.shareConfig.image}?x-oss-process=image/format,png/interlace,1/quality,Q_80/resize,m_pad,h_100`,
+                    url: noJoin
+                        ? `${window.location.origin}${this.publicConfig.shareConfig.path}`
+                        : `${window.location.href}`,
+                });
+            }
         },
         handleUpload() {
             if (!this.isSelf) {
@@ -835,7 +844,6 @@ export default {
         this.filter.user_id = userId || '';
         this.getData();
         this.activityStatus();
-        this.initShare();
     },
     onShow() {
         if (!this.isH5 && this.$refs.savePoster) {
@@ -852,11 +860,11 @@ export default {
         // const { user_id: userId } = pages[2].options;
         const noJoin = !this.detail || !Object.keys(this.detail).length;
         return {
-            title: this.title,
+            title: noJoin ? this.title : '秀我风采，为青少年代言！',
             imageUrl: this.publicConfig.shareConfig.image,
             path: noJoin
                 ? this.publicConfig.shareConfig.path
-                : `/activity/pages/brand/ucenter?id=${this.filter.user_id}&activity_id=10`,
+                : `/activity/pages/brand/ucenter?user_id=${this.filter.user_id}&activity_id=10`,
         };
     },
 };
@@ -924,7 +932,6 @@ export default {
     }
     .user-image-info {
         display: flex;
-        margin-bottom: 20upx;
         .user-image {
             width: 220upx;
             height: 292upx;
@@ -948,8 +955,10 @@ export default {
                 padding-top: 8upx;
             }
             .school {
-                margin-bottom: 40upx;
+                margin-bottom: 36upx;
                 line-height: 36upx;
+                font-size: 28upx;
+                word-break: break-all;
             }
             .teacher {
                 margin-bottom: 38upx;
@@ -971,6 +980,7 @@ export default {
         border-radius: 10upx;
         word-break: break-all;
         font-size: 26upx;
+        margin-top: 20upx;
         .user-desc-text {
             max-height: 96upx;
             overflow-y: auto;

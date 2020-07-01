@@ -1,6 +1,5 @@
 <template>
     <view>
-        <official-account />
         <view :class="['page-index', { 'stop-scroll': prompt }]">
             <!-- 活动规则 -->
             <view
