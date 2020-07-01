@@ -1,6 +1,5 @@
 <template>
     <view :class="['activity-page-index', className]">
-        <official-account v-if="!isH5" />
         <view
             :class="['page-index', { 'stop-scroll': prompt || isStopScroll }]"
         >
@@ -210,12 +209,6 @@ export default {
             },
         },
         publicConfig: {
-            type: Object,
-            default() {
-                return {};
-            },
-        },
-        shareConfig: {
             type: Object,
             default() {
                 return {};

@@ -3,7 +3,6 @@
         :class="['activity-page-index', className]"
         :style="{ 'background-color': publicConfig.mainBgColor }"
     >
-        <official-account v-if="!isH5" />
         <view
             :class="[
                 'page-index',

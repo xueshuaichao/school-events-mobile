@@ -60,6 +60,8 @@
     </view>
 </template>
 <script>
+import utils from '../../../common/utils';
+
 export default {
     props: {
         image: {
@@ -84,11 +86,13 @@ export default {
         }
     },
     mounted() {
-        const ua = window.navigator.userAgent.toLowerCase();
-        if (ua.match(/MicroMessenger/i) === 'micromessenger') {
-            this.isWechat = true;
-        } else {
-            this.isWechat = false;
+        if (this.isH5) {
+            const ua = window.navigator.userAgent.toLowerCase();
+            if (ua.match(/MicroMessenger/i) === 'micromessenger') {
+                this.isWechat = true;
+            } else {
+                this.isWechat = false;
+            }
         }
     },
     methods: {
@@ -138,7 +142,7 @@ export default {
             const that = this;
             // eslint-disable-next-line no-undef
             wx.getImageInfo({
-                src: that.image,
+                src: utils.mapHttpToHttps(that.image),
                 success(res) {
                     // eslint-disable-next-line no-undef
                     wx.saveImageToPhotosAlbum({

@@ -621,12 +621,14 @@ export default {
             const scene = `id=${this.id}&aid=${this.activity_id}&y=${
                 this.from === 'openGame' ? '2' : '1'
             }` || 'id=325';
+            // #ifdef H5
             share({
                 title,
                 desc,
                 thumbnail: res.video_img_url,
-                url: scene,
+                url: `${window.location.origin}${window.location.pathname}?${scene}`,
             });
+            // #endif
             uni.setNavigationBarTitle({
                 title: res.resource_name || '',
             });
