@@ -214,12 +214,6 @@ export default {
                 return {};
             },
         },
-        shareConfig: {
-            type: Object,
-            default() {
-                return {};
-            },
-        },
         fr: {
             type: String,
             default: '',

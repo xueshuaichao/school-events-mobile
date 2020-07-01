@@ -554,7 +554,7 @@ export default {
         createPoster() {
             const { image, name, slogan } = this.detail;
             this.posterCommonConfig.images[1].url = this.isH5
-                ? image
+                ? `${image}?v=${new Date().getTime()}`
                 : utils.mapHttpToHttps(image);
             if (this.isH5) {
                 this.posterCommonConfig.images[0].url = '/activity/static/children_img/brand_poster.jpg';
@@ -595,6 +595,7 @@ export default {
                             this.isSelf = data.is_self;
                         }
                         this.isLoading = false;
+                        this.initShare();
                     });
                 },
                 () => {
@@ -781,17 +782,18 @@ export default {
             const titleList = this.isH5
                 ? this.publicConfig.shareConfig.h5Title
                 : this.publicConfig.shareConfig.title;
-
             const descList = this.publicConfig.shareConfig.desc;
             const random = Math.floor(Math.random() * titleList.length);
             this.title = titleList[random];
             const desc = descList[random];
-
+            const noJoin = !this.detail || !Object.keys(this.detail).length;
             share({
-                title: this.title,
+                title: noJoin ? this.title : '秀我风采，为青少年代言！',
                 desc,
                 thumbnail: `${this.publicConfig.shareConfig.image}?x-oss-process=image/format,png/interlace,1/quality,Q_80/resize,m_pad,h_100`,
-                url: `${this.isH5 ? window.location.href : ''}`,
+                url: noJoin
+                    ? `${window.location.origin}${this.publicConfig.shareConfig.path}`
+                    : `${window.location.href}`,
             });
         },
         handleUpload() {
@@ -843,7 +845,6 @@ export default {
         this.filter.user_id = userId || '';
         this.getData();
         this.activityStatus();
-        this.initShare();
     },
     onShow() {
         if (!this.isH5 && this.$refs.savePoster) {
@@ -860,7 +861,7 @@ export default {
         // const { user_id: userId } = pages[2].options;
         const noJoin = !this.detail || !Object.keys(this.detail).length;
         return {
-            title: this.title,
+            title: noJoin ? this.title : '秀我风采，为青少年代言！',
             imageUrl: this.publicConfig.shareConfig.image,
             path: noJoin
                 ? this.publicConfig.shareConfig.path
