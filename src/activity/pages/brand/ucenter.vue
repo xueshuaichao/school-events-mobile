@@ -865,7 +865,7 @@ export default {
             imageUrl: this.publicConfig.shareConfig.image,
             path: noJoin
                 ? this.publicConfig.shareConfig.path
-                : `/activity/pages/brand/ucenter?id=${this.filter.user_id}&activity_id=10`,
+                : `/activity/pages/brand/ucenter?user_id=${this.filter.user_id}&activity_id=10`,
         };
     },
 };
