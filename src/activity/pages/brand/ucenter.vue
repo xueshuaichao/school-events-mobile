@@ -458,13 +458,16 @@ export default {
             this.submit(detail);
             this.togglePoster(true);
         },
-        onPosterFail(err) {
-            console.log(err);
-            uni.showToast({
-                title: '生成失败，稍后再试',
-                duration: 2000,
-                icon: 'none',
-            });
+        onPosterFail() {
+            this.myPoster = this.detail[this.isH5 ? 'poster_h5' : 'poster_mp'];
+            if (this.myPoster) {
+                this.togglePoster(true);
+            } else {
+                uni.showToast({
+                    title: '海报获取失败，请稍后再试',
+                    icon: 'none',
+                });
+            }
         },
         submit(path) {
             const detail = {};
