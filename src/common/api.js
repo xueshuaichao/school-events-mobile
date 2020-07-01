@@ -1,6 +1,7 @@
 /* eslint-disable func-names */
 /* eslint-disable no-unused-vars */
 import { http } from './third-party/request';
+import utils from './utils';
 
 function get(url, data) {
     return http.get(url, data).then(
@@ -62,11 +63,48 @@ function post(url, data) {
     );
 }
 
+// let callBackFn = null;
+// function appLogin(type = 'ios', path = null, callback) {
+//     const getData = (info) => {
+
+//     };
+//     // if (type === 'ios') {
+//     //     window.webkit.messageHandlers.appLogin.postMessage(path);
+//     // } else {
+//     //     // eslint-disable-next-line no-undef
+//     //     androidApp.appLogin(path);
+//     // }
+//     callBackFn = callback;
+// }
+
 function isLogin(params = {}) {
+    let isH5 = false;
+    const appType = utils.getAppType();
+    // #ifdef H5
+    isH5 = true;
+    // #endif
+
     const { fr } = params;
     let query = '';
     if (fr) {
         query = `?fr=${fr}`;
+    }
+    if (isH5 && typeof appType !== 'object') {
+        return new Promise((resolve, reject) => {
+            const getData = (info) => {
+                if (info) {
+                    resolve(info);
+                } else {
+                    reject();
+                }
+            };
+            if (appType === 'ios') {
+                window.webkit.messageHandlers.appLogin.postMessage(getData);
+            } else {
+                // eslint-disable-next-line no-undef
+                androidApp.appLogin(null, getData);
+            }
+        });
     }
     return new Promise((resolve, reject) => {
         if (isLogin.userInfo) {
@@ -101,22 +139,16 @@ function isLogin(params = {}) {
     });
 }
 // #ifdef H5
-let callBackFn = null;
-function appLogin(type = 'ios', path = null, callback) {
-    if (type === 'ios') {
-        window.webkit.messageHandlers.appLogin.postMessage(path);
-    } else {
-        // eslint-disable-next-line no-undef
-        androidApp.appLogin(path);
-    }
-    callBackFn = callback;
-}
 
-window.getAppUserkey = function (info) {
-    if (info) {
-        callBackFn(info);
-    }
-};
+// setTimeout(() => {
+//     getAppUserkey('{"userkey":"434343434","user_id":"3433","user_name":"ddd","user_avata":"img", "identity":"XXX"}');
+// }, 5000);
+
+// window.getAppUserkey = function (info) {
+//     if (info) {
+//         callBackFn(info);
+//     }
+// };
 // #endif
 
 function logout() {
@@ -135,7 +167,4 @@ export default {
     post,
     isLogin,
     logout,
-    // #ifdef H5
-    appLogin,
-    // #endif
 };

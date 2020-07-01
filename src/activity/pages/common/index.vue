@@ -180,6 +180,7 @@ import api from '../../../common/api';
 
 import uniLoadMore from '../../../components/uni-load-more/uni-load-more.vue';
 import EventCraftCover from '../../../components/event-craft-cover/index.vue';
+// import utils from '../../../common/utils';
 
 export default {
     filters: {
@@ -256,8 +257,6 @@ export default {
             crouselList: [],
             setId: '',
             userkey: '',
-            isIOS: false,
-            isAndroid: false,
         };
     },
     computed: {
@@ -325,31 +324,13 @@ export default {
         },
         handleUpload() {
             if (this.status === 2) {
-                if (
-                    (this.isIOS || this.isAndroid)
-                    && !this.userkey
-                    && this.isH5
-                ) {
-                    api.appLogin(
-                        this.isIOS ? 'ios' : 'android',
-                        'upload',
-                        (info) => {
-                            const userInfo = JSON.parse(info);
-                            this.userkey = userInfo.userkey;
-                            uni.navigateTo({
-                                url: `/activity/pages/upload/modify?activity_id=${this.filter.activity_id}`,
-                            });
-                        },
-                    );
-                } else {
-                    api.isLogin({
-                        fr: this.fr,
-                    }).then(() => {
-                        uni.navigateTo({
-                            url: `/activity/pages/upload/modify?activity_id=${this.filter.activity_id}`,
-                        });
+                api.isLogin({
+                    fr: this.fr,
+                }).then(() => {
+                    uni.navigateTo({
+                        url: `/activity/pages/upload/modify?activity_id=${this.filter.activity_id}`,
                     });
-                }
+                });
             } else {
                 uni.showToast({
                     title:
@@ -397,27 +378,15 @@ export default {
             this.$emit('showMask', { title: '活动规则', type: 0 });
         },
         handleMywork() {
-            if ((this.isIOS || this.isAndroid) && !this.userkey && this.isH5) {
-                api.appLogin(this.isIOS ? 'ios' : 'android', 'mywork', (info) => {
-                    const userInfo = JSON.parse(info);
-                    this.userkey = userInfo.userkey;
-                    uni.navigateTo({
-                        url: this.workPath
-                            ? this.workPath
-                            : `/activity/pages/mywork/mywork?type=myWork&activity_id=${this.filter.activity_id}`,
-                    });
+            api.isLogin({
+                fr: this.fr,
+            }).then(() => {
+                uni.navigateTo({
+                    url: this.workPath
+                        ? this.workPath
+                        : `/activity/pages/mywork/mywork?type=myWork&activity_id=${this.filter.activity_id}`,
                 });
-            } else {
-                api.isLogin({
-                    fr: this.fr,
-                }).then(() => {
-                    uni.navigateTo({
-                        url: this.workPath
-                            ? this.workPath
-                            : `/activity/pages/mywork/mywork?type=myWork&activity_id=${this.filter.activity_id}`,
-                    });
-                });
-            }
+            });
         },
         handleVote(item) {
             if (this.status === 2) {
