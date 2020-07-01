@@ -242,16 +242,9 @@ export default {
             expertList: [],
             myWorkPath: '',
             userkey: '',
-            isIOS: false,
-            isAndroid: false,
         };
     },
     created() {
-        if (this.isH5) {
-            const u = navigator.userAgent;
-            this.isIOS = u.toLowerCase().indexOf('wd-atz-ios') !== -1;
-            this.isAndroid = u.toLowerCase().indexOf('wd-atz-android') !== -1;
-        }
         this.publicConfig = {
             ...this.$store.getters.getPublicConfig(this.activityId),
             ...this.$store.getters.getColorConfig({
@@ -266,6 +259,7 @@ export default {
         this.fr = logger.getFr(this.publicConfig.log, {});
         this.getStatus();
         this.activityStatus();
+
         this.isLogin().then(
             (res) => {
                 this.userInfo = res.user_info;
@@ -396,40 +390,55 @@ export default {
                 this.toggleGuideMask(false);
             }
             if (this.status === 2) {
-                if (
-                    (this.isIOS || this.isAndroid)
-                    && !this.userkey
-                    && this.isH5
-                ) {
-                    api.appLogin(
-                        this.isIOS ? 'ios' : 'android',
-                        'upload',
-                        (info) => {
-                            const userInfo = JSON.parse(info);
-                            this.userkey = userInfo.userkey;
+                api.isLogin({}).then(
+                    (res) => {
+                        if (res) {
+                            const userInfo = JSON.parse(res);
                             this.userInfo = userInfo;
                             this.myWorkPath = `/activity/pages/brand/ucenter?activity_id=10&user_id=${this.userInfo.userid}`;
-                            this.getenrollinfo();
-                        },
-                    );
-                } else {
-                    api.isLogin().then(
-                        () => {
-                            if (this.canJoin) {
-                                uni.navigateTo({
-                                    url: '/activity/pages/brand/join',
-                                });
-                            } else {
-                                uni.navigateTo({
-                                    url: `/activity/pages/upload/modify?activity_id=${this.activityId}`,
-                                });
-                            }
-                        },
-                        () => {
-                            this.userInfo = {};
-                        },
-                    );
-                }
+                            uni.showLoading();
+                            api.get('/api/activity/getenrollinfo', {
+                                activity_id: this.activityId,
+                                user_id: this.userInfo.user_id,
+                            }).then(
+                                (data) => {
+                                    uni.hideLoading();
+                                    if (
+                                        Array.isArray(data)
+                                        && data.length === 0
+                                    ) {
+                                        // 参赛
+                                        this.canJoin = true;
+                                        uni.navigateTo({
+                                            url: '/activity/pages/brand/join',
+                                        });
+                                    } else {
+                                        // 上传作品
+                                        this.canJoin = false;
+                                        uni.navigateTo({
+                                            url: `/activity/pages/upload/modify?activity_id=${this.activityId}`,
+                                        });
+                                    }
+                                },
+                                () => {
+                                    uni.hideLoading();
+                                    this.canJoin = false;
+                                },
+                            );
+                        } else if (this.canJoin) {
+                            uni.navigateTo({
+                                url: '/activity/pages/brand/join',
+                            });
+                        } else {
+                            uni.navigateTo({
+                                url: `/activity/pages/upload/modify?activity_id=${this.activityId}`,
+                            });
+                        }
+                    },
+                    () => {
+                        this.userInfo = {};
+                    },
+                );
             } else {
                 uni.showToast({
                     title:
