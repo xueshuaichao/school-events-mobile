@@ -78,7 +78,7 @@
                                     推荐老师：{{ detail.teacher }}
                                 </view>
                                 <view class="slogan">
-                                    我的代言：{{ detail.slogan }}
+                                    我的宣言：{{ detail.slogan }}
                                 </view>
                             </view>
                         </view>
@@ -932,7 +932,6 @@ export default {
     }
     .user-image-info {
         display: flex;
-        margin-bottom: 20upx;
         .user-image {
             width: 220upx;
             height: 292upx;
@@ -956,8 +955,10 @@ export default {
                 padding-top: 8upx;
             }
             .school {
-                margin-bottom: 40upx;
+                margin-bottom: 36upx;
                 line-height: 36upx;
+                font-size: 28upx;
+                word-break: break-all;
             }
             .teacher {
                 margin-bottom: 38upx;
@@ -979,6 +980,7 @@ export default {
         border-radius: 10upx;
         word-break: break-all;
         font-size: 26upx;
+        margin-top: 20upx;
         .user-desc-text {
             max-height: 96upx;
             overflow-y: auto;
