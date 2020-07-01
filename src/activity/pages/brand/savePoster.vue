@@ -60,6 +60,8 @@
     </view>
 </template>
 <script>
+import utils from '../../../common/utils';
+
 export default {
     props: {
         image: {
@@ -71,9 +73,7 @@ export default {
         return {
             // #ifdef H5
             isH5: true,
-            isWechat:
-                navigator.userAgent.toLowerCase().match(/MicroMessenger/i)
-                === 'micromessenger',
+            isWechat: false,
             // #endif
             imgAuthBtn: false,
             showPosterMask: false,
@@ -83,6 +83,16 @@ export default {
     created() {
         if (!this.isH5) {
             this.getAuthStatus();
+        }
+    },
+    mounted() {
+        if (this.isH5) {
+            const ua = window.navigator.userAgent.toLowerCase();
+            if (ua.match(/MicroMessenger/i) === 'micromessenger') {
+                this.isWechat = true;
+            } else {
+                this.isWechat = false;
+            }
         }
     },
     methods: {
@@ -132,7 +142,7 @@ export default {
             const that = this;
             // eslint-disable-next-line no-undef
             wx.getImageInfo({
-                src: that.image,
+                src: utils.mapHttpToHttps(that.image),
                 success(res) {
                     // eslint-disable-next-line no-undef
                     wx.saveImageToPhotosAlbum({
