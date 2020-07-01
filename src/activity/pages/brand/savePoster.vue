@@ -71,9 +71,7 @@ export default {
         return {
             // #ifdef H5
             isH5: true,
-            isWechat:
-                navigator.userAgent.toLowerCase().match(/MicroMessenger/i)
-                === 'micromessenger',
+            isWechat: false,
             // #endif
             imgAuthBtn: false,
             showPosterMask: false,
@@ -83,6 +81,14 @@ export default {
     created() {
         if (!this.isH5) {
             this.getAuthStatus();
+        }
+    },
+    mounted() {
+        const ua = window.navigator.userAgent.toLowerCase();
+        if (ua.match(/MicroMessenger/i) === 'micromessenger') {
+            this.isWechat = true;
+        } else {
+            this.isWechat = false;
         }
     },
     methods: {

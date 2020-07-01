@@ -489,12 +489,12 @@ export default {
             const uCenterUrl = `${window.location.origin}/activity/pages/brand/ucenter?activity_id=10&user_id=${this.userInfo.user_id}&w=244`;
             this.posterCommonConfig.images[3].url = `${
                 window.location.origin
-            }/api/common/qrcode?url=${encodeURI(uCenterUrl)}`;
+            }/api/common/qrcode?url=${encodeURIComponent(uCenterUrl)}`;
             this.posterCommonConfig.images[3].borderRadius = 0;
         },
         getMpQrCode() {
             // 小程序二维码
-            const url = '/activity/pages/brand/ucenter';
+            const url = 'activity/pages/brand/ucenter';
             const scene = `activity_id=10&user_id=${this.userInfo.user_id}`;
             api.post('/api/weixin/getminiqrcode', {
                 path: url,
@@ -793,7 +793,7 @@ export default {
             });
         },
         handleUpload() {
-            if (!this.iself) {
+            if (!this.isSelf) {
                 return uni.navigateTo({
                     url: `/activity/pages/index?activity_id=${this.filter.activity_id}`,
                 });
@@ -822,18 +822,15 @@ export default {
         },
     },
     onLoad(query) {
-        const {
-            type,
-            status,
-            activity_id: activityId,
-            user_id: userId,
-        } = query;
+        const { type, status } = query;
+        const activityId = utils.getParam(query, 'activity_id');
+        const userId = utils.getParam(query, 'user_id');
         this.userId = userId;
         this.type = type;
         if (status) {
             this.tabActiveIndex = Number(status);
         }
-        this.publicConfig = this.$store.getters.getPublicConfig(activityId);
+        this.publicConfig = this.$store.getters.getPublicConfig(10);
         this.filter.activity_id = activityId;
         this.filter.user_id = userId || '';
         this.getData();

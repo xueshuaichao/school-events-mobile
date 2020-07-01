@@ -238,6 +238,10 @@ export default {
             bannerlist: [],
             confList: [
                 {
+                    id: 11,
+                    url: '/pages/openGame/school-zhibo',
+                },
+                {
                     id: 10,
                     url: '/activity/pages/index?activity_id=10',
                 },
