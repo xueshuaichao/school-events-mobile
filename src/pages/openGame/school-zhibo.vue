@@ -71,11 +71,11 @@ export default {
     methods: {
         jumpZhibo(item) {
             // 已经开始未结束的直播，可以跳转。
-            // if (item.status === 2) {
-            uni.navigateTo({
-                url: `/pages/openGame/zhibo?id=${item.id}`,
-            });
-            // }
+            if (item.status === 2) {
+                uni.navigateTo({
+                    url: `/pages/openGame/zhibo?id=${item.id}`,
+                });
+            }
         },
         getData(title) {
             api.get('/api/live/list', this.filter).then(({ list, total }) => {

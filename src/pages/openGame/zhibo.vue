@@ -1,5 +1,8 @@
 <template>
-    <view class="main">
+    <view
+        class="main"
+        :class="{ 'h5-main': isH5 }"
+    >
         <view
             v-if="showKeybord"
             class="marker"
@@ -47,7 +50,7 @@
         >
             <template v-for="item in commentList">
                 <view
-                    :key="item.comment_id"
+                    :key="item.id"
                     class="comment-item"
                 >
                     <view class="avatar">
@@ -85,6 +88,12 @@
             :class="{ absolute: showKeybord }"
             :style="{ bottom: inputBtm + 'px' }"
         >
+            <template v-if="showKeybord">
+                <image
+                    src="/static/images/work/write.png"
+                    class="write-icon"
+                />
+            </template>
             <input
                 v-model="changeVal"
                 placeholder-class="placeholderStyle"
@@ -96,18 +105,28 @@
                 @focus="onFoucs"
                 @confirm="bindconfirm"
             >
-            <image
-                class="like-img"
-                :src="
-                    pageDetail.is_like === 0
-                        ? '/static/images/yiqing/detail/like.png'
-                        : '/static/images/yiqing/detail/like-ac.png'
-                "
-                @click="clickLike"
-            />
-            <view class="num">
-                {{ pageDetail.like_num }}
+            <view
+                v-if="showKeybord"
+                class="fabu"
+                :class="{ disable: !changeVal }"
+                @click="bindconfirm"
+            >
+                发布
             </view>
+            <template v-if="!showKeybord">
+                <image
+                    class="like-img"
+                    :src="
+                        pageDetail.is_like === 0
+                            ? '/static/images/yiqing/detail/like.png'
+                            : '/static/images/yiqing/detail/like-ac.png'
+                    "
+                    @click="clickLike"
+                />
+                <view class="num">
+                    {{ pageDetail.like_num }}
+                </view>
+            </template>
         </view>
     </view>
 </template>
@@ -183,6 +202,10 @@ export default {
             this.html5VideoAutoAdjust,
         );
         window.addEventListener('orientationchange', this.html5VideoAutoAdjust);
+        this.$nextTick(() => {
+            document.querySelector('.uni-video-cover-duration').style.display = 'none';
+        });
+
         // #endif
     },
     onLoad({ id }) {
@@ -206,6 +229,7 @@ export default {
                     const detail = Detail;
                     detail.start_time = detail.start_time.slice(0, 16);
                     detail.end_time = detail.end_time.slice(11, 16);
+                    detail.like_num = this.setLikeNum(detail.like_num + 1);
                     this.pageDetail = detail;
                     uni.setNavigationBarTitle({
                         title: detail.live_name,
@@ -231,19 +255,32 @@ export default {
                     object_id: this.id,
                     object_type: 2,
                 };
-                api.isLogin({
-                    fr: this.fr,
-                }).then(() => {
+                api.isLogin().then(() => {
                     api.get(url, param).then(
                         () => {
                             // 点赞成功了，
                             this.is_like = 1;
                             this.pageDetail.like_num += 1;
+                            this.pageDetail.like_num = this.setLikeNum(
+                                this.pageDetail.like_num + 1,
+                            );
                         },
                         () => {},
                     );
                 });
             }
+        },
+        setLikeNum(value) {
+            let val = value;
+            if (value > 100000) {
+                val = Math.floor(value / 10000);
+                if (val > 9999) {
+                    val = '9999W+';
+                } else {
+                    val += 'W+';
+                }
+            }
+            return val;
         },
         error(e) {
             console.log(e.target.errMsg);
@@ -264,7 +301,11 @@ export default {
             }
         },
         blur() {
-            this.initSetInput();
+            if (this.changeVal.trim()) {
+                this.bindconfirm();
+            } else {
+                this.initSetInput();
+            }
         },
         initSetInput() {
             this.showKeybord = false;
@@ -279,12 +320,9 @@ export default {
                 if (this.hasLogin) {
                     this.addComment(content);
                 } else {
-                    api.isLogin({
-                        fr: this.fr,
-                    }).then(
+                    api.isLogin().then(
                         () => {
                             this.addComment(content);
-                            this.changeVal = '';
                         },
                         () => {
                             this.changeVal = '';
@@ -315,6 +353,7 @@ export default {
                     icon: 'none',
                 });
             });
+            this.changeVal = '';
         },
         getCommentList() {
             api.post('/api/comment/list', this.filter).then(
@@ -325,7 +364,6 @@ export default {
                         d.created_at = d.created_at.slice(5, 16);
                         return d;
                     });
-                    this.commentList = List;
                     this.total = total;
                     this.loading = true;
                     if (this.filter.page_num === 1) {
@@ -357,6 +395,9 @@ export default {
     position: relative;
     background: #000;
     color: #fff;
+    &.h5-main {
+        height: 100%;
+    }
     .marker {
         position: absolute;
         top: 0;
@@ -449,9 +490,17 @@ export default {
         line-height: 64upx;
         z-index: 102;
         background: #000;
+        position: relative;
         &.absolute {
             position: absolute;
             left: 0;
+            background: #fff;
+            input {
+                width: 600upx;
+                background: #f0f0f2;
+                color: #666;
+                padding-left: 74upx;
+            }
         }
 
         .like-img {
@@ -462,20 +511,37 @@ export default {
         }
         .num {
             font-size: 30upx;
-            min-width: 60rpx;
+            min-width: 40rpx;
         }
         input {
             width: 530upx;
             height: 64upx;
             border-radius: 32upx;
             background: rgba(255, 255, 255, 0.25);
-            text-indent: 40upx;
+            padding-left: 40upx;
             padding-right: 40upx;
             box-sizing: border-box;
         }
         .placeholderStyle {
             color: #fff;
             font-size: 28upx;
+        }
+        .write-icon {
+            width: 48rpx;
+            height: 48rpx;
+            position: absolute;
+            left: 56rpx;
+            top: 50%;
+            margin-top: -24rpx;
+        }
+        .fabu {
+            color: #2f3033;
+            font-size: 28rpx;
+            line-height: 64rpx;
+            margin-left: 14rpx;
+            &.disable {
+                color: #b0b5bf;
+            }
         }
     }
     .mp-weixin-full-screen-title {
