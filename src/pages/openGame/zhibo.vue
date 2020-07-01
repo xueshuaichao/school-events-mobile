@@ -82,6 +82,7 @@
         </scroll-view>
         <view
             class="input-wrap"
+            :class="{ absolute: showKeybord }"
             :style="{ bottom: inputBtm + 'px' }"
         >
             <input
@@ -442,15 +443,16 @@ export default {
     .input-wrap {
         display: flex;
         justify-content: space-between;
-        position: absolute;
-        bottom: 0;
-        left: 0;
         padding: 30upx;
         width: 100%;
         box-sizing: border-box;
         line-height: 64upx;
         z-index: 102;
         background: #000;
+        &.absolute {
+            position: absolute;
+            left: 0;
+        }
 
         .like-img {
             width: 40upx;
