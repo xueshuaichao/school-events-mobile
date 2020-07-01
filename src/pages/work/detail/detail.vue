@@ -621,7 +621,7 @@ export default {
             const scene = `id=${this.id}&aid=${this.activity_id}&y=${
                 this.from === 'openGame' ? '2' : '1'
             }` || 'id=325';
-            // #ifndef H5
+            // #ifdef H5
             share({
                 title,
                 desc,
