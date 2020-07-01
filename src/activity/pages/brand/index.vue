@@ -168,7 +168,6 @@ import modal from './modal.vue';
 import api from '../../../common/api';
 import savePoster from './savePoster.vue';
 import login from '../../../widgets/login/login.vue';
-import utils from '../../../common/utils';
 
 export default {
     components: {
@@ -388,45 +387,42 @@ export default {
                 this.toggleGuideMask(false);
             }
             if (this.status === 2) {
-                let callBack = null;
-                if (this.isH5 && utils.getAppType()) {
-                    callBack = (info) => {
-                        const userInfo = JSON.parse(info);
-                        this.userkey = userInfo.userkey;
-                        this.userInfo = userInfo;
-                        this.myWorkPath = `/activity/pages/brand/ucenter?activity_id=10&user_id=${this.userInfo.userid}`;
-                        uni.showLoading();
-                        api.get('/api/activity/getenrollinfo', {
-                            activity_id: this.activityId,
-                            user_id: this.userInfo.user_id,
-                        }).then(
-                            (data) => {
-                                uni.hideLoading();
-                                if (Array.isArray(data) && data.length === 0) {
-                                    // 参赛
-                                    this.canJoin = true;
-                                    uni.navigateTo({
-                                        url: '/activity/pages/brand/join',
-                                    });
-                                } else {
-                                    // 上传作品
-                                    this.canJoin = false;
-                                    uni.navigateTo({
-                                        url: `/activity/pages/upload/modify?activity_id=${this.activityId}`,
-                                    });
-                                }
-                            },
-                            () => {
-                                uni.hideLoading();
-                                this.canJoin = false;
-                            },
-                        );
-                    };
-                }
-                api.isLogin({}, callBack).then(
+                api.isLogin({}).then(
                     (res) => {
-                        if (!res) return;
-                        if (this.canJoin) {
+                        if (res) {
+                            const userInfo = JSON.parse(res);
+                            this.userInfo = userInfo;
+                            this.myWorkPath = `/activity/pages/brand/ucenter?activity_id=10&user_id=${this.userInfo.userid}`;
+                            uni.showLoading();
+                            api.get('/api/activity/getenrollinfo', {
+                                activity_id: this.activityId,
+                                user_id: this.userInfo.user_id,
+                            }).then(
+                                (data) => {
+                                    uni.hideLoading();
+                                    if (
+                                        Array.isArray(data)
+                                        && data.length === 0
+                                    ) {
+                                        // 参赛
+                                        this.canJoin = true;
+                                        uni.navigateTo({
+                                            url: '/activity/pages/brand/join',
+                                        });
+                                    } else {
+                                        // 上传作品
+                                        this.canJoin = false;
+                                        uni.navigateTo({
+                                            url: `/activity/pages/upload/modify?activity_id=${this.activityId}`,
+                                        });
+                                    }
+                                },
+                                () => {
+                                    uni.hideLoading();
+                                    this.canJoin = false;
+                                },
+                            );
+                        } else if (this.canJoin) {
                             uni.navigateTo({
                                 url: '/activity/pages/brand/join',
                             });

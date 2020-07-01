@@ -632,13 +632,6 @@ export default {
             });
         },
         joinGame() {
-            if (this.isH5) {
-                uni.showToast({
-                    icon: 'none',
-                    title: '请在UP青少年爱挑战小程序或爱挑战PC官网上传作品',
-                });
-                return;
-            }
             api.isLogin({
                 fr: this.fr,
             }).then(

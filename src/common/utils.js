@@ -88,7 +88,7 @@ function getAppType() {
     if (isIOS || isAndroid) {
         return isIOS ? 'ios' : 'android';
     }
-    return 'ios';
+    return null;
 }
 
 export default {

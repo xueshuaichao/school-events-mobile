@@ -91,18 +91,19 @@ function isLogin(params = {}) {
     }
     if (isH5 && typeof appType !== 'object') {
         return new Promise((resolve, reject) => {
-            const getData = (info) => {
+            window.getAppUserkey = (info) => {
                 if (info) {
                     resolve(info);
                 } else {
                     reject();
                 }
             };
+
             if (appType === 'ios') {
-                window.webkit.messageHandlers.appLogin.postMessage(getData);
+                window.webkit.messageHandlers.appLogin.postMessage(null);
             } else {
                 // eslint-disable-next-line no-undef
-                androidApp.appLogin(null, getData);
+                androidApp.appLogin(null);
             }
         });
     }
@@ -138,18 +139,6 @@ function isLogin(params = {}) {
         );
     });
 }
-// #ifdef H5
-
-// setTimeout(() => {
-//     getAppUserkey('{"userkey":"434343434","user_id":"3433","user_name":"ddd","user_avata":"img", "identity":"XXX"}');
-// }, 5000);
-
-// window.getAppUserkey = function (info) {
-//     if (info) {
-//         callBackFn(info);
-//     }
-// };
-// #endif
 
 function logout() {
     try {
