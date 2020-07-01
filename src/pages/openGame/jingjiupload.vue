@@ -364,7 +364,7 @@ export default {
                 school_name: '',
                 grade_id: 1,
                 grade_name: '',
-                create_info: [],
+                create_info: '',
                 city: '',
                 county: '',
             },
@@ -454,7 +454,7 @@ export default {
                 this.achievement_unit = data.achievement_unit;
 
                 this.teacherInput = data.teacher || '';
-                this.createInput = data.create_name;
+                this.createInput = data.create_name || '';
                 this.attestationInput = data.attestation_name || '';
 
                 this.formData.education_name = this.educationData[
