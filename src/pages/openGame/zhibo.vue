@@ -12,7 +12,11 @@
         <view class="page-top">
             <image
                 class="logo"
-                src="/static/images/uc/avatar.png"
+                :src="
+                    pageDetail.img
+                        ? pageDetail.img
+                        : '/static/images/uc/avatar.png'
+                "
             />
             <view>
                 <view class="school">
@@ -158,8 +162,8 @@ export default {
                 page_num: 1,
                 topic_id: 0,
                 topic_type: 6,
-                to_comment_id: 0,
                 last_id: 0,
+                // to_comment_id: 0,
             },
             // #ifdef H5
             isH5: true,
@@ -210,8 +214,9 @@ export default {
         // #endif
     },
     onLoad({ id }) {
-        this.id = id;
-        this.filter.topic_id = this.id;
+        const Id = Number(id);
+        this.id = Id;
+        this.filter.topic_id = this.Id;
         this.getDetail();
         this.getCommentList();
     },
@@ -377,11 +382,15 @@ export default {
         },
         toUper() {
             this.filter.page_num = 1;
+            this.filter.last_id = 0;
             this.getCommentList();
         },
         toLower() {
             if (this.filter.page_num * this.filter.page_size < this.total) {
                 this.filter.page_num += 1;
+                this.filter.last_id = this.commentList[
+                    this.commentList.length - 1
+                ].comment_id;
                 this.getCommentList();
             }
         },
