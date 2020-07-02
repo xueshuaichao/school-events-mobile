@@ -451,6 +451,10 @@ export default {
         }
         .school {
             font-size: 28upx;
+            width: 588upx;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
         }
         .time {
             font-size: 22upx;
