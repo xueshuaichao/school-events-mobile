@@ -176,9 +176,12 @@ function saveImage(id, path) {
                 html2canvas(document.getElementById(`${id}`), {
                     useCORS: true,
                 }).then(canvas => new Promise((resolve) => {
-                    resolve(canvas.toDataURL());
+                    resolve(
+                        canvas
+                            .toDataURL()
+                            .replace(/^data:image\/(png|jpg);base64,/, ''),
+                    );
                 }).then((res) => {
-                    console.log(res);
                     window.webkit.messageHandlers.appSavePhoto.postMessage({
                         savePhoto: res,
                     });
