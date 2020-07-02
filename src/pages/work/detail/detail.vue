@@ -633,7 +633,7 @@ export default {
             });
             this.shareConfig = {
                 ...this.shareConfig,
-                share_url: scene,
+                share_url: `${window.location.origin}${window.location.pathname}?${scene}`,
                 share_image: res.video_img_url,
                 share_title: title,
                 share_desc: desc,
