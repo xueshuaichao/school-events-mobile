@@ -68,7 +68,7 @@ function post(url, data) {
 
 let isH5 = false;
 // #ifdef H5
-const appType = 'ios' || utils.getAppType();
+const appType = utils.getAppType();
 isH5 = true;
 // #endif
 
@@ -152,9 +152,12 @@ function Permissions(type) {
                         null,
                     );
                 }
+            } else if (type === 'image') {
+                // eslint-disable-next-line no-undef
+                androidApp.appPhotoLibraryPermissions(null);
             } else {
                 // eslint-disable-next-line no-undef
-                androidApp.appLogin(null);
+                androidApp.appCameraPermissions.postMessage(null);
             }
         });
     }
@@ -175,19 +178,14 @@ function saveImage(id, path) {
                 }
             };
             if (appType === 'ios') {
-                html2canvas(document.getElementById(`${id}`), {
-                    useCORS: true,
-                }).then(canvas => new Promise((resolve) => {
-                    resolve(canvas.toDataURL());
-                }).then((res) => {
-                    console.log(res);
-                    window.webkit.messageHandlers.appSavePhoto.postMessage({
-                        savePhoto: res,
-                    });
-                }));
+                window.webkit.messageHandlers.appSavePhoto.postMessage({
+                    savePhoto: path,
+                });
             } else {
                 // eslint-disable-next-line no-undef
-                androidApp.appLogin(null);
+                androidApp.appSavePhoto({
+                    savePhoto: path,
+                });
             }
         });
     }
@@ -226,7 +224,7 @@ function appShare(config) {
                 window.webkit.messageHandlers.appShare.postMessage(config);
             } else {
                 // eslint-disable-next-line no-undef
-                androidApp.appLogin(null);
+                androidApp.appShare(config);
             }
         });
     }
