@@ -287,8 +287,8 @@ export default {
                     y: 0,
                     width, // 截取的画布的宽
                     height, // 截取的画布的高
-                    destWidth: width * that.ratio, // 保存图片的宽
-                    destHeight: height * that.ratio, // 保存图片的height
+                    destWidth: width, // 保存图片的宽
+                    destHeight: height, // 保存图片的height
                     fileType: 'png', // 保存成的文件类型
                     quality: 1, // 图片质量
                     canvasId: 'firstCanvas', // 画布ID

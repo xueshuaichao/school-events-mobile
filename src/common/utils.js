@@ -91,6 +91,19 @@ function getAppType() {
     return null;
 }
 
+function mapHttpToHttps(rawUrl) {
+    if (rawUrl.indexOf(':') < 0) {
+        return rawUrl;
+    }
+    const urlComponent = rawUrl.split(':');
+    if (urlComponent.length === 2) {
+        if (urlComponent[0] === 'http') {
+            urlComponent[0] = 'https';
+            return `${urlComponent[0]}:${urlComponent[1]}`;
+        }
+    }
+    return rawUrl;
+}
 export default {
     getToken,
     store,
@@ -99,4 +112,5 @@ export default {
     // #ifdef H5
     getAppType,
     // #endif
+    mapHttpToHttps,
 };

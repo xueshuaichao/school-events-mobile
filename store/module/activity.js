@@ -283,7 +283,7 @@ export default {
                     homePath: '/activity/pages/index?activity_id=10',
                     shareConfig: {
                         title: ['秀我风采，为青少年代言！'],
-                        h5Title: ['秀我风采，为青少年代言！'],
+                        h5Title: ['青少年“爱挑战”寻找代言'],
                         desc: ['不要迟疑，为我点赞！我要做“爱挑战”代言人！'],
                         image:
                             'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/brand_share.png',

@@ -296,7 +296,7 @@ export default {
                 ],
                 images: [
                     {
-                        url: '/activity/static/children_img/brand_poster.jpg',
+                        url: '',
                         width: 570,
                         height: 818,
                         y: 0,
@@ -379,13 +379,18 @@ export default {
             this.lock = false;
         },
         getUserInfo() {
-            api.get('/api/user/info').then((res) => {
-                this.userInfo = res.user_info;
-                if (this.userInfo.identity !== 1) {
-                    this.initFormat(this.userInfo);
-                }
-                this.getQrCode();
-            });
+            api.get('/api/user/info').then(
+                (res) => {
+                    this.userInfo = res.user_info;
+                    if (this.userInfo.identity !== 1) {
+                        this.initFormat(this.userInfo);
+                    }
+                    this.getQrCode();
+                },
+                () => {
+                    this.userInfo = null;
+                },
+            );
         },
         getQrCode() {
             if (this.isH5) {
@@ -398,12 +403,12 @@ export default {
             const uCenterUrl = `${window.location.origin}/activity/pages/brand/ucenter?activity_id=10&user_id=${this.userInfo.user_id}&w=244`;
             this.posterCommonConfig.images[3].url = `${
                 window.location.origin
-            }/api/common/qrcode?url=${decodeURI(uCenterUrl)}`;
+            }/api/common/qrcode?url=${encodeURIComponent(uCenterUrl)}`;
             this.posterCommonConfig.images[3].borderRadius = 0;
         },
         getMpQrCode() {
             // 小程序二维码
-            const url = '/activity/pages/brand/ucenter';
+            const url = 'activity/pages/brand/ucenter';
             const scene = `activity_id=10&user_id=${this.userInfo.user_id}`;
             api.post('/api/weixin/getminiqrcode', {
                 path: url,
@@ -527,7 +532,10 @@ export default {
             }
         },
         createPoster() {
-            this.posterCommonConfig.images[1].url = this.formData.image;
+            // eslint-disable-next-line max-len
+            this.posterCommonConfig.images[1].url = this.isH5
+                ? this.formData.image
+                : utils.mapHttpToHttps(this.formData.image);
             if (this.isH5) {
                 this.posterCommonConfig.images[0].url = '/activity/static/children_img/brand_poster.jpg';
                 this.posterCommonConfig.images[2].url = '/activity/static/children_img/brand_poster_name.png';

@@ -65,7 +65,7 @@ function post(url, data) {
 }
 
 let isH5 = false;
-const appType = utils.getAppType();
+const appType = 'ios' || utils.getAppType();
 // #ifdef H5
 isH5 = true;
 // #endif
@@ -182,6 +182,7 @@ function saveImage(id, path) {
                             .replace(/^data:image\/(png|jpg);base64,/, ''),
                     );
                 }).then((res) => {
+                    console.log(res);
                     window.webkit.messageHandlers.appSavePhoto.postMessage({
                         savePhoto: res,
                     });

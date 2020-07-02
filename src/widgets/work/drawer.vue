@@ -23,7 +23,10 @@
             </view>
             <scroll-view
                 scroll-y
-                :style="{ height: drawerHeight + 'px' }"
+                :style="{
+                    height: drawerHeight + 'px',
+                    overflow: isAuto ? 'hidden auto' : ''
+                }"
                 :scroll-into-view="intoIndex"
                 class="scroll-context"
                 @scrolltolower="toLower"
@@ -241,6 +244,7 @@ export default {
                 },
             },
             intoIndex: '',
+            isAuto: true,
         };
     },
     watch: {
@@ -453,6 +457,7 @@ export default {
         closeSubList(item, idx) {
             console.log('list--122---', idx);
             // this.goTop();
+
             this.list = this.list.map((D) => {
                 const d = D;
                 if (d.comment_id === item.comment_id) {
@@ -461,10 +466,12 @@ export default {
                 }
                 return d;
             });
-            // this.$nextTick(() => {
-            //     this.intoIndex = `more${idx}`;
-            //     console.log(this.intoIndex, 'this.intoIndex-------');
-            // });
+            this.isAuto = false;
+            this.$nextTick(() => {
+                this.isAuto = true;
+                // this.intoIndex = `more${idx}`;
+                // console.log(this.intoIndex, 'this.intoIndex-------');
+            });
             // this.intoIndex = '';
         },
         getList() {
@@ -681,7 +688,7 @@ export default {
             background: #fff;
             margin-top: 40rpx;
             position: relative;
-            z-index: 200;
+            // z-index: 200;
             .no-data {
                 font-size: 28rpx;
                 line-height: 100rpx;
@@ -797,7 +804,7 @@ export default {
                 position: absolute;
                 left: 30rpx;
                 padding: 30rpx;
-                z-index: 201;
+                // z-index: 201;
                 .add-ctx {
                     width: 560rpx;
                 }
