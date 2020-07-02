@@ -2,6 +2,7 @@
     <view
         v-if="!isLoading"
         class="page-work-detail"
+        :style="{ height: pageHeight + 'px' }"
     >
         <view
             v-if="prompt"
@@ -258,9 +259,17 @@ export default {
             canvasImgW: 826 * pix,
             pix,
             userInfo: null,
+            pageHeight: 500,
         };
     },
-    created() {},
+    created() {
+        const that = this;
+        uni.getSystemInfo({
+            success(res) {
+                that.pageHeight = res.windowHeight;
+            },
+        });
+    },
     methods: {
         getcommentTotal(val) {
             this.commentTotal = val;
@@ -1035,14 +1044,14 @@ export default {
 <style lang="less">
 .page-work-detail {
     background: #000;
-    height: 100vh;
+    height: 100%;
     #poster {
         // position: absolute;
         // left:-999upx;
     }
     .out-swiper {
         width: 100%;
-        height: 100vh;
+        height: 100%;
     }
     .activerulebox {
         position: fixed;

@@ -537,7 +537,7 @@ export default {
 <style lang="less">
 .swiper-detail-box {
     width: 100%;
-    height: 100vh;
+    height: 100%;
     position: relative;
 }
 .yellow {
@@ -617,7 +617,7 @@ export default {
 .swiper {
     width: 750rpx;
     // height: 1334rpx;
-    height: 100vh;
+    height: 100%;
 }
 
 .main-swiper {
@@ -626,7 +626,7 @@ export default {
     top: 0;
 
     uni-swiper {
-        height: 100vh;
+        height: 100%;
 
         .swiper-item {
             img {
@@ -638,7 +638,7 @@ export default {
 
     .banner-image {
         width: 750rpx;
-        height: 100vh;
+        height: 100%;
     }
 }
 .content {

@@ -2,6 +2,7 @@
     <view
         v-if="showDraw"
         class="topic-drawer-box"
+        :class="{ 'h5-main': isH5 }"
         @click="clickWrap"
     >
         <view
@@ -12,6 +13,7 @@
         <view
             class="topic-drawer"
             :animation="animationData"
+            :style="{ height: pannelHeight + 'px' }"
             @click.stop.prevent="clickNull"
         >
             <view
@@ -147,7 +149,10 @@
                 :class="{ absolute: showKeybord }"
                 :style="{ top: (showKeybord ? inputTop : 0) + 'px' }"
             >
-                <view class="add-ctx">
+                <view
+                    class="add-ctx"
+                    :class="{ short: isFocus }"
+                >
                     <image
                         src="/static/images/work/write.png"
                         class="write-icon"
@@ -161,11 +166,10 @@
                         :focus="isFocus"
                         @blur="blur"
                         @focus="onFoucs"
-                        @confirm="bindconfirm"
                     >
                 </view>
                 <view
-                    v-if="showKeybord"
+                    v-if="isFocus"
                     class="fabu"
                     :class="{ disable: !changeVal }"
                     @click="bindconfirm"
@@ -245,6 +249,7 @@ export default {
             },
             intoIndex: '',
             isAuto: true,
+            pannelHeight: 0,
         };
     },
     watch: {
@@ -307,7 +312,8 @@ export default {
             success(res) {
                 that.pix = res.screenWidth / 750;
                 that.screenHeight = res.windowHeight;
-                that.drawerHeight = res.windowHeight * 0.74 - that.pix * 220;
+                that.drawerHeight = res.windowHeight * 0.7 - that.pix * 250;
+                that.pannelHeight = res.windowHeight * 0.7;
             },
             fail() {
                 that.drawerHeight = 320;
@@ -323,7 +329,7 @@ export default {
                 this.showKeybord = true;
                 if (!this.hasKeybordEnterUp) {
                     e.detail.height = e.detail.height || 180;
-                    this.inputTop = this.screenHeight * 0.74
+                    this.inputTop = this.screenHeight * 0.7
                         - e.detail.height
                         - this.pix * 130;
                     this.markerheight = this.screenHeight - e.detail.height - this.pix * 130;
@@ -336,7 +342,7 @@ export default {
             this.animationData = this.animation.export();
         },
         hide() {
-            this.animation.bottom('-74%').step({ duration: 300 });
+            this.animation.bottom('-70%').step({ duration: 300 });
             this.animationData = this.animation.export();
         },
         clickWrap() {
@@ -503,7 +509,9 @@ export default {
             });
         },
         blur() {
-            if (this.isFocus) {
+            if (this.changeVal.trim()) {
+                this.bindconfirm();
+            } else {
                 this.resetInitVal();
             }
         },
@@ -628,9 +636,14 @@ export default {
 .topic-drawer-box {
     width: 100%;
     height: 100vh;
-    position: absolute;
+    position: fixed;
     left: 0;
     top: 0;
+    box-sizing: border-box;
+    overflow: hidden;
+    &.h5-main {
+        height: 100%;
+    }
     .marker {
         position: absolute;
         top: 0;
@@ -640,8 +653,7 @@ export default {
         z-index: 101;
     }
     .topic-drawer {
-        padding: 30rpx 0;
-        height: 74vh;
+        padding: 30rpx 0 0;
         width: 100%;
         box-sizing: border-box;
         position: absolute;
@@ -681,12 +693,12 @@ export default {
             color: #b0b5bf;
             font-size: 28rpx;
             line-height: 40rpx;
+            padding-bottom: 40upx;
         }
         .scroll-context {
             padding: 20rpx 30rpx 30rpx;
             box-sizing: border-box;
             background: #fff;
-            margin-top: 40rpx;
             position: relative;
             // z-index: 200;
             .no-data {
@@ -760,7 +772,7 @@ export default {
             line-height: 40rpx;
         }
         .message-add {
-            padding: 0 30rpx;
+            padding: 30rpx;
             position: relative;
             top: 0;
             background: #fff;
@@ -779,6 +791,9 @@ export default {
                     width: 100%;
                     height: 100%;
                     z-index: 1;
+                }
+                &.short {
+                    width: 600rpx;
                 }
             }
 
@@ -803,11 +818,7 @@ export default {
             &.absolute {
                 position: absolute;
                 left: 30rpx;
-                padding: 30rpx;
                 // z-index: 201;
-                .add-ctx {
-                    width: 560rpx;
-                }
             }
             .write-icon {
                 width: 48rpx;
