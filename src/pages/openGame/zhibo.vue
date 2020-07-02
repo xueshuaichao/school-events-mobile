@@ -138,6 +138,7 @@
 
 <script>
 import api from '../../common/api';
+import share from '../../common/share';
 
 export default {
     data() {
@@ -219,6 +220,15 @@ export default {
         this.filter.topic_id = this.Id;
         this.getDetail();
         this.getCommentList();
+        // #ifdef H5
+        share({
+            title: '青少年爱挑战',
+            desc: '青少年“爱挑战”校园网络赛',
+            thumbnail:
+                'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/images/logo.png?x-oss-process=image/format,png/interlace,1/quality,Q_80',
+            url: `${window.location.origin}/pages/openGame/school-zhibo`,
+        });
+        // #endif
     },
     methods: {
         onFullScreenChange(e) {
@@ -394,6 +404,16 @@ export default {
             }
         },
     },
+    onShareAppMessage(res) {
+        if (res.from === 'button') {
+            // 来自页面内分享按钮
+            console.log(res.target);
+        }
+        return {
+            title: '青少年“爱挑战”校园网络赛',
+            path: '/pages/openGame/school-zhibo',
+        };
+    },
 };
 </script>
 
@@ -427,6 +447,7 @@ export default {
             width: 72upx;
             height: 72upx;
             margin-right: 24upx;
+            border-radius: 36upx;
         }
         .school {
             font-size: 28upx;
