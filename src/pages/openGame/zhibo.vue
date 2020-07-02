@@ -19,8 +19,9 @@
                     {{ pageDetail.live_name }}
                 </view>
                 <view class="time">
-                    直播时间： {{ pageDetail.start_time }}
-                    {{ pageDetail.end_time }}
+                    直播时间： {{ pageDetail.start_time }}-{{
+                        pageDetail.end_time
+                    }}
                 </view>
             </view>
         </view>

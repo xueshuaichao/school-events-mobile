@@ -24,7 +24,7 @@
                     {{ item.live_name }}
                 </view>
                 <view class="time">
-                    直播时间：{{ item.start_time }}
+                    直播时间：{{ item.start_time }}-{{ item.end_time }}
                 </view>
             </view>
             <view
