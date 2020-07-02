@@ -175,12 +175,15 @@ function saveImage(id, path) {
             if (appType === 'ios') {
                 html2canvas(document.getElementById(`${id}`), {
                     useCORS: true,
-                }).then((canvas) => {
+                }).then(canvas => new Promise((resolve) => {
+                    resolve(canvas.toDataURL());
+                }).then((res) => {
+                    console.log(res);
                     window.webkit.messageHandlers.appSavePhoto.postMessage({
-                        savePhoto: canvas.toDataURL(),
+                        savePhoto: res,
                     });
-                });
-                window.webkit.messageHandlers.appSavePhoto.postMessage(path);
+                }));
+                // window.webkit.messageHandlers.appSavePhoto.postMessage(path);
             } else {
                 // eslint-disable-next-line no-undef
                 androidApp.appLogin(null);
