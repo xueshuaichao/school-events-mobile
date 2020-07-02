@@ -1064,8 +1064,8 @@ export default {
             position: relative;
             width: 520upx;
             height: 96upx;
-            left: 50%;
-            transform: translateX(-50%);
+            // left: 50%;
+            // transform: translateX(-50%);
             // top: 938upx;
             background: linear-gradient(
                 180deg,
@@ -1079,7 +1079,7 @@ export default {
             line-height: 96upx;
             text-align: center;
             letter-spacing: 2rpx;
-            margin-top: 30rpx;
+            margin: 30rpx auto 0;
         }
         .close {
             position: relative;
