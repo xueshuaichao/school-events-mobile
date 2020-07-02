@@ -157,7 +157,7 @@ function Permissions(type) {
                 androidApp.appPhotoLibraryPermissions();
             } else {
                 // eslint-disable-next-line no-undef
-                ndroidApp.appCameraPermissions();
+                androidApp.appCameraPermissions();
             }
         });
     }
