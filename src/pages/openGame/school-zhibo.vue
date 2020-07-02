@@ -71,19 +71,25 @@ export default {
     methods: {
         jumpZhibo(item) {
             // 已经开始未结束的直播，可以跳转。
-            // if (item.status === 2) {
-            uni.navigateTo({
-                url: `/pages/openGame/zhibo?id=${item.id}`,
-            });
-            // }
+            if (item.status === 2) {
+                uni.navigateTo({
+                    url: `/pages/openGame/zhibo?id=${item.id}`,
+                });
+            }
         },
         getData(title) {
             api.get('/api/live/list', this.filter).then(({ list, total }) => {
                 this.loading = true;
+                const lists = list.map((D) => {
+                    const d = D;
+                    d.end_time = d.end_time.slice(11, 16);
+                    d.start_time = d.start_time.slice(0, 16);
+                    return d;
+                });
                 if (title === 'reachBottom') {
-                    this.list = this.list.concat(list);
+                    this.list = this.list.concat(lists);
                 } else {
-                    this.list = list;
+                    this.list = lists;
                 }
 
                 this.total = total;
