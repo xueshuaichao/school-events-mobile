@@ -200,7 +200,7 @@
                     <view>{{ commentTotal }}</view>
                 </view>
                 <view
-                    v-if="isWechat || isApp"
+                    v-if="isWechat || isApp || !isH5"
                     class="item"
                     @click="handleCanvass"
                 >

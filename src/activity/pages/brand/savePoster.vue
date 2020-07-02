@@ -58,7 +58,6 @@
 </template>
 <script>
 import api from '../../../common/api';
-import utils from '../../../common/utils';
 
 export default {
     props: {
@@ -136,7 +135,7 @@ export default {
             const that = this;
             // eslint-disable-next-line no-undef
             wx.getImageInfo({
-                src: utils.mapHttpToHttps(that.image),
+                src: that.image,
                 success(res) {
                     // eslint-disable-next-line no-undef
                     wx.saveImageToPhotosAlbum({

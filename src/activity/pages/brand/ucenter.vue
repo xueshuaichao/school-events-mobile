@@ -61,6 +61,7 @@
                             <view class="user-image">
                                 <img
                                     v-if="isH5"
+                                    crossorigin="anonymous"
                                     :src="detail.image"
                                     alt=""
                                 >
@@ -418,11 +419,11 @@ export default {
         },
         uploadFile(tempFilePath) {
             this.tempFilePath = tempFilePath;
-            // uni.showToast({
-            //     icon: 'loading',
-            //     title: '上传中',
-            //     duration: 200000,
-            // });
+            uni.showToast({
+                icon: 'loading',
+                title: '上传中',
+                duration: 200000,
+            });
             return new Promise((resolve, reject) => {
                 uni.uploadFile({
                     url: `${config.host}/api/file/uploadfile`, // 仅为示例，非真实的接口地址
@@ -813,6 +814,12 @@ export default {
             if (!this.isSelf) {
                 return uni.navigateTo({
                     url: `/activity/pages/index?activity_id=${this.filter.activity_id}`,
+                });
+            }
+            if (this.isH5) {
+                return uni.showToast({
+                    title: '请在UP爱挑战小程序上传作品',
+                    icon: 'none',
                 });
             }
             if (this.status === 2) {

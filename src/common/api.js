@@ -1,6 +1,8 @@
 /* eslint-disable func-names */
 /* eslint-disable no-unused-vars */
+// #ifdef H5
 import html2canvas from 'html2canvas';
+// #endif
 import { http } from './third-party/request';
 import utils from './utils';
 
@@ -65,8 +67,8 @@ function post(url, data) {
 }
 
 let isH5 = false;
-const appType = utils.getAppType();
 // #ifdef H5
+const appType = 'ios' || utils.getAppType();
 isH5 = true;
 // #endif
 
@@ -176,18 +178,13 @@ function saveImage(id, path) {
                 html2canvas(document.getElementById(`${id}`), {
                     useCORS: true,
                 }).then(canvas => new Promise((resolve) => {
-                    resolve(
-                        canvas
-                            .toDataURL()
-                            .replace(/^data:image\/(png|jpg);base64,/, ''),
-                    );
+                    resolve(canvas.toDataURL());
                 }).then((res) => {
                     console.log(res);
                     window.webkit.messageHandlers.appSavePhoto.postMessage({
                         savePhoto: res,
                     });
                 }));
-                // window.webkit.messageHandlers.appSavePhoto.postMessage(path);
             } else {
                 // eslint-disable-next-line no-undef
                 androidApp.appLogin(null);
@@ -195,6 +192,7 @@ function saveImage(id, path) {
         });
     }
     return new Promise((resolve) => {
+        // #ifdef H5
         html2canvas(document.getElementById(`${id}`), {
             useCORS: true,
         }).then((canvas) => {
@@ -206,6 +204,10 @@ function saveImage(id, path) {
             link.click();
             resolve();
         });
+        // #endif
+        // #ifndef H5
+        resolve();
+        // #endif
     });
 }
 function appShare(config) {
