@@ -179,13 +179,6 @@ function saveImage(id, path) {
                     window.webkit.messageHandlers.appSavePhoto.postMessage(
                         canvas.toDataURL(),
                     );
-                    // const link = document.createElement('a');
-                    // link.href = canvas.toDataURL();
-                    // link.setAttribute('download', 'poster.png');
-                    // link.style.display = 'none';
-                    // document.body.appendChild(link);
-                    // link.click();
-                    // resolve();
                 });
                 window.webkit.messageHandlers.appSavePhoto.postMessage(path);
             } else {
