@@ -326,6 +326,10 @@ export default {
                         this.$emit("change", data);
                     });
                     [this.src] = res.tempFilePaths;
+                },
+                fail: res => {
+                    alert(5);
+                    alert(res);
                 }
             });
         },
