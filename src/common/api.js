@@ -13,11 +13,9 @@ function get(url, data) {
             if (res.statusCode !== 200) {
                 throw new Error('服务器开小差了~');
             }
-
             if (res.data.status === 200) {
                 return res.data.data;
             }
-
             throw new Error(res.data.msg);
         },
         (err) => {
@@ -183,9 +181,11 @@ function saveImage(id, path) {
                 });
             } else {
                 // eslint-disable-next-line no-undef
-                androidApp.appSavePhoto({
-                    savePhoto: path,
-                });
+                androidApp.appSavePhoto(
+                    JSON.stringify({
+                        savePhoto: path,
+                    }),
+                );
             }
         });
     }
@@ -211,7 +211,6 @@ function saveImage(id, path) {
 function appShare(config) {
     // app 分享
     if (isH5 && typeof appType !== 'object') {
-        // alert(111);
         return new Promise((resolve, reject) => {
             window.getShareInfo = (info) => {
                 if (Number(info)) {
@@ -224,7 +223,7 @@ function appShare(config) {
                 window.webkit.messageHandlers.appShare.postMessage(config);
             } else {
                 // eslint-disable-next-line no-undef
-                androidApp.appShare(config);
+                androidApp.appShare(JSON.stringify(config));
             }
         });
     }

@@ -9,6 +9,11 @@
             :style="{ color: theme.textColor }"
         >
             上传视频
+            <input
+                type="file"
+                :style="{ height: '100px', width: '100px', background: '#f00' }"
+                accept="image/*"
+            >
         </view>
         <view
             v-if="type === 'image'"
@@ -319,6 +324,9 @@ export default {
                         this.$emit("change", data);
                     });
                     [this.src] = res.tempFilePaths;
+                },
+                fail: res => {
+                    alert(res);
                 }
             });
         },
@@ -334,21 +342,28 @@ export default {
                     const filePath = res.tempFilePath;
                     this.src = filePath;
                     return this.uploadVideo(filePath, res);
-                    // console.log(res);
-                    // const fileList = e.target.files;
-                    // this.uploader.cleanList();
                 }
             });
         },
         chooseResource() {
+            const isAndroid =
+                this.isH5 && utils.getAppType() === "android" ? true : false;
             if (this.type === "image") {
-                api.Permissions("image").then(() => {
+                if (isAndroid) {
                     this.chooseImage();
-                });
+                } else {
+                    api.Permissions("image").then(() => {
+                        this.chooseImage();
+                    });
+                }
             } else if (this.type === "video") {
-                api.Permissions("video").then(() => {
+                if (isAndroid) {
                     this.chooseVideo();
-                });
+                } else {
+                    api.Permissions("video").then(() => {
+                        this.chooseVideo();
+                    });
+                }
             }
         }
     }
