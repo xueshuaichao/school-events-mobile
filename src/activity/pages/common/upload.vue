@@ -9,6 +9,11 @@
             :style="{ color: theme.textColor }"
         >
             上传视频
+            <input
+                type="file"
+                :style="{ height: '100px', width: '100px', background: '#f00' }"
+                accept="image/*"
+            >
         </view>
         <view
             v-if="type === 'image'"

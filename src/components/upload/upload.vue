@@ -9,10 +9,7 @@
         >
             上传视频
         </view>
-        <input
-            type="file"
-            accept="image/png, image/jpeg"
-        >
+
         <view
             v-if="type === 'image' && name"
             class="comp-title"
@@ -335,37 +332,47 @@ export default {
                 }
             });
         },
+        chooseImage() {
+            uni.chooseImage({
+                count: this.count,
+                success: res => {
+                    Promise.all(
+                        res.tempFilePaths.map(filePath =>
+                            this.uploadFile(filePath)
+                        )
+                    ).then(data => {
+                        this.$emit("change", data);
+                    });
+                    [this.src] = res.tempFilePaths;
+                }
+            });
+        },
+        chooseVideo() {
+            uni.chooseVideo({
+                success: res => {
+                    if (res.size / 1000 / 1000 > 200) {
+                        return uni.showToast({
+                            title: "视频规格过大，请在PC官网上传",
+                            icon: "none"
+                        });
+                    }
+                    const filePath = res.tempFilePath;
+                    this.src = filePath;
+                    return this.uploadVideo(filePath, res);
+                    // console.log(res);
+                    // const fileList = e.target.files;
+                    // this.uploader.cleanList();
+                }
+            });
+        },
         chooseResource() {
             if (this.type === "image") {
-                uni.chooseImage({
-                    count: this.count,
-                    success: res => {
-                        Promise.all(
-                            res.tempFilePaths.map(filePath =>
-                                this.uploadFile(filePath)
-                            )
-                        ).then(data => {
-                            this.$emit("change", data);
-                        });
-                        [this.src] = res.tempFilePaths;
-                    }
+                api.Permissions("image").then(() => {
+                    this.chooseImage();
                 });
             } else if (this.type === "video") {
-                uni.chooseVideo({
-                    success: res => {
-                        if (res.size / 1000 / 1000 > 200) {
-                            return uni.showToast({
-                                title: "视频规格过大，请在PC官网上传",
-                                icon: "none"
-                            });
-                        }
-                        const filePath = res.tempFilePath;
-                        this.src = filePath;
-                        return this.uploadVideo(filePath, res);
-                        // console.log(res);
-                        // const fileList = e.target.files;
-                        // this.uploader.cleanList();
-                    }
+                api.Permissions("video").then(() => {
+                    this.chooseVideo();
                 });
             }
 
