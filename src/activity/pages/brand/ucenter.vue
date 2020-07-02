@@ -59,7 +59,16 @@
                         </view>
                         <view class="user-image-info">
                             <view class="user-image">
-                                <image :src="detail.image" />
+                                <img
+                                    v-if="isH5"
+                                    crossorigin="anonymous"
+                                    :src="detail.image"
+                                    alt=""
+                                >
+                                <image
+                                    v-else
+                                    :src="detail.image"
+                                />
                             </view>
                             <view class="user-info">
                                 <view class="name">
@@ -941,7 +950,8 @@ export default {
         .user-image {
             width: 220upx;
             height: 292upx;
-            image {
+            image,
+            img {
                 width: 100%;
                 height: 100%;
                 border-radius: 10upx;

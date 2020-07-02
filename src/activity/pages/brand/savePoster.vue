@@ -88,11 +88,7 @@ export default {
     mounted() {
         if (this.isH5) {
             const ua = window.navigator.userAgent.toLowerCase();
-            if (ua.match(/MicroMessenger/i) === 'micromessenger') {
-                this.isWechat = true;
-            } else {
-                this.isWechat = false;
-            }
+            this.isWechat = ua.indexOf('micromessenger') !== -1;
         }
     },
     methods: {
