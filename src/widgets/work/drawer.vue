@@ -76,7 +76,7 @@
                             :style="item.show ? '' : 'display:none;'"
                             :data-index="index"
                             class="sub-item item"
-                            @click.stop="clickItem(subItem, item)"
+                            @click.stop="clickItem(item, subItem)"
                         >
                             <view class="left">
                                 <view class="img-box">
@@ -234,9 +234,9 @@ export default {
             hasLogin: false,
             hasKeybordEnterUp: false,
             placeholder: '写评论',
-            addObj: {},
+            addSubItemObj: {},
             allNum: 0,
-            selItem: {
+            curItem: {
                 comment_id: 0,
                 content: '',
                 from_user_id: 0,
@@ -349,23 +349,24 @@ export default {
             this.$emit('doAction', 'showMessage');
         },
         clickNull() {},
-        clickItem(item, items) {
+        clickItem(item, subItem) {
+            console.log(item, subItem, 12121212);
             this.placeholder = `回复@${item.user_info.name}`;
             this.isFocus = true;
-            this.addObj = {
-                to_user_id: item.from_user_id,
-                to_comment_id: items ? items.comment_id : item.comment_id,
+            this.addSubItemObj = {
+                to_user_id: subItem ? subItem.from_user_id : 0,
+                to_comment_id: item.comment_id,
             };
-            this.selItem.to_user_id = item.from_user_id;
-            this.selItem.to_user_name = item.user_info.name;
+            this.curItem.to_user_id = this.addSubItemObj.to_user_id;
+            this.curItem.to_user_name = subItem ? subItem.user_info.name : '';
         },
         getUserDate() {
             // 获取用户信息
             return api.get('/api/user/info').then((data) => {
-                this.selItem.user_info.avatar_url = data.user_info.avatar_url;
-                this.selItem.user_info.name = data.user_info.name;
-                this.selItem.create_user_class = data.user_info.class_name;
-                this.selItem.from_user_id = data.user_info.user_id;
+                this.curItem.user_info.avatar_url = data.user_info.avatar_url;
+                this.curItem.user_info.name = data.user_info.name;
+                this.curItem.create_user_class = data.user_info.class_name;
+                this.curItem.from_user_id = data.user_info.user_id;
             });
         },
         showCloseItem(item) {
@@ -475,10 +476,7 @@ export default {
             this.isAuto = false;
             this.$nextTick(() => {
                 this.isAuto = true;
-                // this.intoIndex = `more${idx}`;
-                // console.log(this.intoIndex, 'this.intoIndex-------');
             });
-            // this.intoIndex = '';
         },
         getList() {
             if (this.list.length) {
@@ -549,7 +547,7 @@ export default {
                 topic_type: 3,
                 topic_id: this.pageData.resource_id,
                 comment_type: 1,
-                ...this.addObj,
+                ...this.addSubItemObj,
             };
             api.post('/api/comment/add', params).then((id) => {
                 uni.showToast({
@@ -568,7 +566,7 @@ export default {
             time += `${this.joinDate(date.getHours())}:`;
             time += `${this.joinDate(date.getMinutes())}`;
             const obj = {
-                ...this.selItem,
+                ...this.curItem,
                 comment_id: id,
                 sub_count: 0,
                 created_at: time,
@@ -577,9 +575,17 @@ export default {
             console.log(
                 obj.to_user_id,
                 obj.to_comment_id,
-                this.addObj.to_comment_id,
+                this.addSubItemObj,
+                this.addSubItemObj.to_comment_id,
             );
-            if (!obj.to_user_id) {
+
+            if (
+                !Object.prototype.hasOwnProperty.call(
+                    this.addSubItemObj,
+                    'to_comment_id',
+                )
+            ) {
+                console.log('asas');
                 obj.subList = [];
                 obj.subListCache = [];
                 obj.show = false;
@@ -589,7 +595,7 @@ export default {
             } else {
                 this.list = this.list.map((D) => {
                     const d = D;
-                    if (this.addObj.to_comment_id === d.comment_id) {
+                    if (this.addSubItemObj.to_comment_id === d.comment_id) {
                         if (d.sub_count) {
                             d.sub_count += 1;
                             d.subList.unshift(obj);
@@ -614,9 +620,9 @@ export default {
         resetInitVal() {
             console.log('reseting--------');
             // reset for init value;
-            this.selItem.to_user_id = 0;
-            this.selItem.to_user_name = '';
-            this.addObj = {};
+            this.curItem.to_user_id = 0;
+            this.curItem.to_user_name = '';
+            this.addSubItemObj = {};
             this.filter.page_num = 1;
             this.placeholder = '写评论';
             this.showKeybord = false;
