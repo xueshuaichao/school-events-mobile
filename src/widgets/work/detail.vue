@@ -200,6 +200,7 @@
                     <view>{{ commentTotal }}</view>
                 </view>
                 <view
+                    v-if="isWechat || isApp || !isH5"
                     class="item"
                     @click="handleCanvass"
                 >
@@ -315,6 +316,8 @@ export default {
             recordTxts: ['校级记录', '市级记录', '省级记录'],
             // #ifdef H5
             isH5: true,
+            isWechat: false,
+            isApp: false,
             // #endif
             canAutoPlay: false,
             isPaused: false,
@@ -410,6 +413,10 @@ export default {
             this.html5VideoAutoAdjust,
         );
         window.addEventListener('orientationchange', this.html5VideoAutoAdjust);
+        const ua = window.navigator.userAgent.toLowerCase();
+        this.isWechat = ua.indexOf('micromessenger') !== -1;
+        this.isApp = ua.toLowerCase().indexOf('wd-atz-ios') !== -1
+            || ua.toLowerCase().indexOf('wd-atz-android') !== -1;
         // #endif
     },
     methods: {

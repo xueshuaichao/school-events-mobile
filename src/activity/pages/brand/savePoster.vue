@@ -5,6 +5,7 @@
             <view class="poster-img-mask-box">
                 <view
                     v-if="image"
+                    id="canvas-img"
                     class="canvas-img"
                 >
                     <image
@@ -22,13 +23,9 @@
                     <view
                         v-else
                         class="brand-btn btn"
+                        @click="saveImage"
                     >
-                        <a
-                            :href="image"
-                            download
-                        >
-                            保存图片
-                        </a>
+                        保存图片
                     </view>
                 </template>
                 <template v-else>
@@ -60,7 +57,7 @@
     </view>
 </template>
 <script>
-import utils from '../../../common/utils';
+import api from '../../../common/api';
 
 export default {
     props: {
@@ -88,11 +85,7 @@ export default {
     mounted() {
         if (this.isH5) {
             const ua = window.navigator.userAgent.toLowerCase();
-            if (ua.match(/MicroMessenger/i) === 'micromessenger') {
-                this.isWechat = true;
-            } else {
-                this.isWechat = false;
-            }
+            this.isWechat = ua.indexOf('micromessenger') !== -1;
         }
     },
     methods: {
@@ -142,7 +135,7 @@ export default {
             const that = this;
             // eslint-disable-next-line no-undef
             wx.getImageInfo({
-                src: utils.mapHttpToHttps(that.image),
+                src: that.image,
                 success(res) {
                     // eslint-disable-next-line no-undef
                     wx.saveImageToPhotosAlbum({
@@ -206,6 +199,15 @@ export default {
                         },
                     });
                 },
+            });
+        },
+        saveImage() {
+            uni.showLoading();
+            api.saveImage('canvas-img', this.image).then(() => {
+                uni.hideLoading();
+                uni.showToast({
+                    title: '保存成功',
+                });
             });
         },
         togglePoster(status) {

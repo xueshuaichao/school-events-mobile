@@ -227,8 +227,8 @@ export default {
 
             // #ifdef H5
             isH5: true,
+            isWechat: false,
             // #endif
-
             shareDesc: '',
             fr: '',
             posterConfig: detailConf[0].posterConfig,
@@ -258,9 +258,16 @@ export default {
             canvasImgW: 826 * pix,
             pix,
             userInfo: null,
+            shareConfig: {},
         };
     },
     created() {},
+    mounted() {
+        if (this.isH5) {
+            const ua = window.navigator.userAgent.toLowerCase();
+            this.isWechat = ua.indexOf('micromessenger') !== -1;
+        }
+    },
     methods: {
         getcommentTotal(val) {
             this.commentTotal = val;
@@ -307,25 +314,21 @@ export default {
             }
         },
         handleCanvass() {
-            // #ifdef H5
-            this.showShareMask = true;
-            // #endif
-
-            if (
-                this.pageData.resource_scope === 3
-                && this.from !== 'openGame'
-                && !this.activity_id
-            ) {
-                this.posterConfig.images[0].url = 'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/h5/aitiaozhan-poster2.png';
-            }
-            console.log(
-                this.activity_id,
-                this.pageData.resource_scope,
-                '---handleCanvass',
-            );
-            // #ifndef H5
-            this.handleTicketMask();
-            // #endif
+            api.appShare(this.shareConfig).then(() => {
+                // #ifdef H5
+                this.showShareMask = true;
+                // #endif
+                // #ifndef H5
+                if (
+                    this.pageData.resource_scope === 3
+                    && this.from !== 'openGame'
+                    && !this.activity_id
+                ) {
+                    this.posterConfig.images[0].url = 'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/h5/aitiaozhan-poster2.png';
+                }
+                this.handleTicketMask();
+                // #endif
+            });
         },
         // 生成二维码，并弹出mask
         handleTicketMask() {
@@ -628,6 +631,13 @@ export default {
                 thumbnail: res.video_img_url,
                 url: `${window.location.origin}${window.location.pathname}?${scene}`,
             });
+            this.shareConfig = {
+                ...this.shareConfig,
+                share_url: `${window.location.origin}${window.location.pathname}?${scene}`,
+                share_image: res.video_img_url,
+                share_title: title,
+                share_desc: desc,
+            };
             // #endif
             uni.setNavigationBarTitle({
                 title: res.resource_name || '',

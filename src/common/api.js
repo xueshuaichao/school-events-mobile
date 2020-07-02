@@ -1,5 +1,8 @@
 /* eslint-disable func-names */
 /* eslint-disable no-unused-vars */
+// #ifdef H5
+import html2canvas from 'html2canvas';
+// #endif
 import { http } from './third-party/request';
 import utils from './utils';
 
@@ -63,37 +66,24 @@ function post(url, data) {
     );
 }
 
-// let callBackFn = null;
-// function appLogin(type = 'ios', path = null, callback) {
-//     const getData = (info) => {
-
-//     };
-//     // if (type === 'ios') {
-//     //     window.webkit.messageHandlers.appLogin.postMessage(path);
-//     // } else {
-//     //     // eslint-disable-next-line no-undef
-//     //     androidApp.appLogin(path);
-//     // }
-//     callBackFn = callback;
-// }
+let isH5 = false;
+// #ifdef H5
+const appType = 'ios' || utils.getAppType();
+isH5 = true;
+// #endif
 
 function isLogin(params = {}) {
-    let isH5 = false;
-    const appType = utils.getAppType();
-    // #ifdef H5
-    isH5 = true;
-    // #endif
-
     const { fr } = params;
     let query = '';
     if (fr) {
         query = `?fr=${fr}`;
     }
+    // app 登录
     if (isH5 && typeof appType !== 'object') {
         return new Promise((resolve, reject) => {
-            window.getAppUserkey = (info) => {
+            window.getAppUserInfo = (info) => {
                 if (info) {
-                    resolve(info);
+                    resolve(JSON.parse(info));
                 } else {
                     reject();
                 }
@@ -109,13 +99,11 @@ function isLogin(params = {}) {
     }
     return new Promise((resolve, reject) => {
         if (isLogin.userInfo) {
-            return resolve(isLogin.user_info);
+            return resolve(isLogin.userInfo);
         }
-
         return pureGet('/api/user/info').then(
             (res) => {
                 const { data, status, msg } = res;
-
                 if (status === 200) {
                     isLogin.userInfo = data.user_info;
                     resolve(data.user_info);
@@ -139,6 +127,113 @@ function isLogin(params = {}) {
         );
     });
 }
+function Permissions(type) {
+    let fn = 'getAppCameraPermissions';
+    if (type === 'image') {
+        fn = 'getAppPhotoLibraryPermissions';
+    }
+    // app 获取上传权限
+    if (isH5 && typeof appType !== 'object') {
+        return new Promise((resolve, reject) => {
+            window[fn] = (info) => {
+                if (Number(info)) {
+                    resolve(info);
+                } else {
+                    reject();
+                }
+            };
+            if (appType === 'ios') {
+                if (type === 'image') {
+                    window.webkit.messageHandlers.appPhotoLibraryPermissions.postMessage(
+                        null,
+                    );
+                } else {
+                    window.webkit.messageHandlers.appCameraPermissions.postMessage(
+                        null,
+                    );
+                }
+            } else {
+                // eslint-disable-next-line no-undef
+                androidApp.appLogin(null);
+            }
+        });
+    }
+    return new Promise((resolve) => {
+        resolve();
+    });
+}
+
+function saveImage(id, path) {
+    // app 获取上传权限
+    if (isH5 && typeof appType !== 'object') {
+        return new Promise((resolve, reject) => {
+            window.getSaveImageInfo = (info) => {
+                if (Number(info)) {
+                    resolve(info);
+                } else {
+                    reject();
+                }
+            };
+            if (appType === 'ios') {
+                html2canvas(document.getElementById(`${id}`), {
+                    useCORS: true,
+                }).then(canvas => new Promise((resolve) => {
+                    resolve(canvas.toDataURL());
+                }).then((res) => {
+                    console.log(res);
+                    window.webkit.messageHandlers.appSavePhoto.postMessage({
+                        savePhoto: res,
+                    });
+                }));
+            } else {
+                // eslint-disable-next-line no-undef
+                androidApp.appLogin(null);
+            }
+        });
+    }
+    return new Promise((resolve) => {
+        // #ifdef H5
+        html2canvas(document.getElementById(`${id}`), {
+            useCORS: true,
+        }).then((canvas) => {
+            const link = document.createElement('a');
+            link.href = canvas.toDataURL();
+            link.setAttribute('download', 'poster.png');
+            link.style.display = 'none';
+            document.body.appendChild(link);
+            link.click();
+            resolve();
+        });
+        // #endif
+        // #ifndef H5
+        resolve();
+        // #endif
+    });
+}
+function appShare(config) {
+    // app 分享
+    if (isH5 && typeof appType !== 'object') {
+        // alert(111);
+        return new Promise((resolve, reject) => {
+            window.getShareInfo = (info) => {
+                if (Number(info)) {
+                    resolve(info);
+                } else {
+                    reject();
+                }
+            };
+            if (appType === 'ios') {
+                window.webkit.messageHandlers.appShare.postMessage(config);
+            } else {
+                // eslint-disable-next-line no-undef
+                androidApp.appLogin(null);
+            }
+        });
+    }
+    return new Promise((resolve) => {
+        resolve();
+    });
+}
 
 function logout() {
     try {
@@ -156,4 +251,7 @@ export default {
     post,
     isLogin,
     logout,
+    Permissions,
+    saveImage,
+    appShare,
 };

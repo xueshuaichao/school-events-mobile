@@ -483,23 +483,13 @@ export default {
             this.prompt = true;
         },
         handleMywork() {
-            if ((this.isIOS || this.isAndroid) && !this.userkey && this.isH5) {
-                api.appLogin(this.isIOS ? 'ios' : 'android', (info) => {
-                    const userInfo = JSON.parse(info);
-                    this.userkey = userInfo.userkey;
-                    uni.navigateTo({
-                        url: '/pages/yiqing/myWork/myWork?type=myWork',
-                    });
+            api.isLogin({
+                fr: this.fr,
+            }).then(() => {
+                uni.navigateTo({
+                    url: '/pages/yiqing/myWork/myWork?type=myWork',
                 });
-            } else {
-                api.isLogin({
-                    fr: this.fr,
-                }).then(() => {
-                    uni.navigateTo({
-                        url: '/pages/yiqing/myWork/myWork?type=myWork',
-                    });
-                });
-            }
+            });
         },
         handleClose() {
             this.prompt = false;

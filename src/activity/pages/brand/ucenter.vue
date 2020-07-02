@@ -59,7 +59,16 @@
                         </view>
                         <view class="user-image-info">
                             <view class="user-image">
-                                <image :src="detail.image" />
+                                <img
+                                    v-if="isH5"
+                                    crossorigin="anonymous"
+                                    :src="detail.image"
+                                    alt=""
+                                >
+                                <image
+                                    v-else
+                                    :src="detail.image"
+                                />
                             </view>
                             <view class="user-info">
                                 <view class="name">
@@ -410,11 +419,11 @@ export default {
         },
         uploadFile(tempFilePath) {
             this.tempFilePath = tempFilePath;
-            // uni.showToast({
-            //     icon: 'loading',
-            //     title: '上传中',
-            //     duration: 200000,
-            // });
+            uni.showToast({
+                icon: 'loading',
+                title: '上传中',
+                duration: 200000,
+            });
             return new Promise((resolve, reject) => {
                 uni.uploadFile({
                     url: `${config.host}/api/file/uploadfile`, // 仅为示例，非真实的接口地址
@@ -807,6 +816,12 @@ export default {
                     url: `/activity/pages/index?activity_id=${this.filter.activity_id}`,
                 });
             }
+            if (this.isH5) {
+                return uni.showToast({
+                    title: '请在UP爱挑战小程序上传作品',
+                    icon: 'none',
+                });
+            }
             if (this.status === 2) {
                 api.isLogin().then(
                     () => {
@@ -935,7 +950,8 @@ export default {
         .user-image {
             width: 220upx;
             height: 292upx;
-            image {
+            image,
+            img {
                 width: 100%;
                 height: 100%;
                 border-radius: 10upx;
