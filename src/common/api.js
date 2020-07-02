@@ -13,11 +13,9 @@ function get(url, data) {
             if (res.statusCode !== 200) {
                 throw new Error('服务器开小差了~');
             }
-
             if (res.data.status === 200) {
                 return res.data.data;
             }
-
             throw new Error(res.data.msg);
         },
         (err) => {
@@ -183,9 +181,11 @@ function saveImage(id, path) {
                 });
             } else {
                 // eslint-disable-next-line no-undef
-                androidApp.appSavePhoto({
-                    savePhoto: path,
-                });
+                androidApp.appSavePhoto(
+                    JSON.stringify({
+                        savePhoto: path,
+                    }),
+                );
             }
         });
     }
@@ -222,7 +222,6 @@ function appShare(config) {
             if (appType === 'ios') {
                 window.webkit.messageHandlers.appShare.postMessage(config);
             } else {
-                alert(JSON.stringify(config));
                 // eslint-disable-next-line no-undef
                 androidApp.appShare(JSON.stringify(config));
             }
