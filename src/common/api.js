@@ -65,7 +65,7 @@ function post(url, data) {
 }
 
 let isH5 = false;
-const appType = 'ios' || utils.getAppType();
+const appType = utils.getAppType();
 // #ifdef H5
 isH5 = true;
 // #endif
