@@ -65,7 +65,7 @@ function post(url, data) {
 }
 
 let isH5 = false;
-const appType = 'ios';
+const appType = utils.getAppType();
 // #ifdef H5
 isH5 = true;
 // #endif
@@ -173,6 +173,20 @@ function saveImage(id, path) {
                 }
             };
             if (appType === 'ios') {
+                html2canvas(document.getElementById(`${id}`), {
+                    useCORS: true,
+                }).then((canvas) => {
+                    window.webkit.messageHandlers.appSavePhoto.postMessage(
+                        canvas.toDataURL(),
+                    );
+                    // const link = document.createElement('a');
+                    // link.href = canvas.toDataURL();
+                    // link.setAttribute('download', 'poster.png');
+                    // link.style.display = 'none';
+                    // document.body.appendChild(link);
+                    // link.click();
+                    // resolve();
+                });
                 window.webkit.messageHandlers.appSavePhoto.postMessage(path);
             } else {
                 // eslint-disable-next-line no-undef
