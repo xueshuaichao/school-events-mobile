@@ -314,7 +314,7 @@ export default {
             }
         },
         handleCanvass() {
-            api.share(this.shareConfig).then(() => {
+            api.appShare(this.shareConfig).then(() => {
                 // #ifdef H5
                 this.showShareMask = true;
                 // #endif

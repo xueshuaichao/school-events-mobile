@@ -65,7 +65,7 @@ function post(url, data) {
 }
 
 let isH5 = false;
-const appType = utils.getAppType();
+const appType = 'ios';
 // #ifdef H5
 isH5 = true;
 // #endif
@@ -197,6 +197,7 @@ function saveImage(id, path) {
 function appShare(config) {
     // app 分享
     if (isH5 && typeof appType !== 'object') {
+        // alert(111);
         return new Promise((resolve, reject) => {
             window.getShareInfo = (info) => {
                 if (Number(info)) {
