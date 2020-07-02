@@ -364,6 +364,12 @@
             }
         },
         {
+            "path": "pages/openGame/school-zhibo",
+            "style": {
+                "navigationBarTitleText": "爱挑战网络公开赛直播"
+            }
+        },
+        {
             "path": "pages/uc/reported/result",
             "style": {
                 "navigationBarTitleText": "上报成功"
