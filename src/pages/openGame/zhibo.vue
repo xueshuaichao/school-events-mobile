@@ -217,7 +217,7 @@ export default {
     onLoad({ id }) {
         const Id = Number(id);
         this.id = Id;
-        this.filter.topic_id = this.Id;
+        this.filter.topic_id = this.id;
         this.getDetail();
         this.getCommentList();
         // #ifdef H5
