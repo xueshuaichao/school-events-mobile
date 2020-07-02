@@ -136,7 +136,9 @@ function Permissions(type) {
     if (isH5 && typeof appType !== 'object') {
         return new Promise((resolve, reject) => {
             window[fn] = (info) => {
+                alert(info);
                 if (Number(info)) {
+                    alert('1');
                     resolve(info);
                 } else {
                     reject();

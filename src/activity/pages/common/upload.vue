@@ -313,9 +313,11 @@ export default {
             });
         },
         chooseImage() {
+            alert(3);
             uni.chooseImage({
                 count: this.count,
                 success: res => {
+                    alert(4);
                     Promise.all(
                         res.tempFilePaths.map(filePath =>
                             this.uploadFile(filePath)
@@ -348,6 +350,7 @@ export default {
         chooseResource() {
             if (this.type === "image") {
                 api.Permissions("image").then(() => {
+                    alert(2);
                     this.chooseImage();
                 });
             } else if (this.type === "video") {
