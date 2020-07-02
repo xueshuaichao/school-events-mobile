@@ -194,7 +194,7 @@ function saveImage(id) {
         });
     });
 }
-function appShare() {
+function appShare(config) {
     // app 分享
     if (isH5 && typeof appType !== 'object') {
         return new Promise((resolve, reject) => {
@@ -206,7 +206,7 @@ function appShare() {
                 }
             };
             if (appType === 'ios') {
-                window.webkit.messageHandlers.appShare.postMessage(null);
+                window.webkit.messageHandlers.appShare.postMessage(config);
             } else {
                 // eslint-disable-next-line no-undef
                 androidApp.appLogin(null);
