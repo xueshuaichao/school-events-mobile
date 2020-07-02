@@ -235,7 +235,7 @@ export default {
                     const detail = Detail;
                     detail.start_time = detail.start_time.slice(0, 16);
                     detail.end_time = detail.end_time.slice(11, 16);
-                    detail.like_num = this.setLikeNum(detail.like_num + 1);
+                    detail.like_num = this.setLikeNum(detail.like_num);
                     this.pageDetail = detail;
                     uni.setNavigationBarTitle({
                         title: detail.live_name,
@@ -265,8 +265,7 @@ export default {
                     api.get(url, param).then(
                         () => {
                             // 点赞成功了，
-                            this.is_like = 1;
-                            this.pageDetail.like_num += 1;
+                            this.pageDetail.is_like = 1;
                             this.pageDetail.like_num = this.setLikeNum(
                                 this.pageDetail.like_num + 1,
                             );
