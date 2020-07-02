@@ -203,7 +203,7 @@ export default {
         },
         saveImage() {
             uni.showLoading();
-            api.saveImage('canvas-img').then(() => {
+            api.saveImage('canvas-img', this.image).then(() => {
                 uni.hideLoading();
                 uni.showToast({
                     title: '保存成功',

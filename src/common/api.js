@@ -161,7 +161,7 @@ function Permissions(type) {
     });
 }
 
-function saveImage(id) {
+function saveImage(id, path) {
     // app 获取上传权限
     if (isH5 && typeof appType !== 'object') {
         return new Promise((resolve, reject) => {
@@ -173,7 +173,7 @@ function saveImage(id) {
                 }
             };
             if (appType === 'ios') {
-                window.webkit.messageHandlers.appSavePhoto.postMessage(null);
+                window.webkit.messageHandlers.appSavePhoto.postMessage(path);
             } else {
                 // eslint-disable-next-line no-undef
                 androidApp.appLogin(null);
