@@ -222,9 +222,9 @@ function appShare(config) {
             if (appType === 'ios') {
                 window.webkit.messageHandlers.appShare.postMessage(config);
             } else {
-                alert(Object.keys(config).length);
+                alert(JSON.stringify(config));
                 // eslint-disable-next-line no-undef
-                androidApp.appShare(config);
+                androidApp.appShare(JSON.stringify(config));
             }
         });
     }
