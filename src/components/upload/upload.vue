@@ -9,6 +9,10 @@
         >
             上传视频
         </view>
+        <input
+            type="file"
+            accept="image/png, image/jpeg"
+        >
         <view
             v-if="type === 'image' && name"
             class="comp-title"
