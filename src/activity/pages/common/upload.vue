@@ -353,10 +353,11 @@ export default {
         },
         chooseResource() {
             if (this.type === "image") {
-                api.Permissions("image").then(() => {
-                    alert(2);
-                    this.chooseImage();
-                });
+                // api.Permissions("image").then(() => {
+                //     alert(2);
+                //     this.chooseImage();
+                // });
+                this.chooseImage();
             } else if (this.type === "video") {
                 api.Permissions("video").then(() => {
                     this.chooseVideo();
