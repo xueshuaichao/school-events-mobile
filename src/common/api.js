@@ -154,10 +154,10 @@ function Permissions(type) {
                 }
             } else if (type === 'image') {
                 // eslint-disable-next-line no-undef
-                androidApp.appPhotoLibraryPermissions(null);
+                androidApp.appPhotoLibraryPermissions();
             } else {
                 // eslint-disable-next-line no-undef
-                androidApp.appCameraPermissions.postMessage(null);
+                ndroidApp.appCameraPermissions();
             }
         });
     }
