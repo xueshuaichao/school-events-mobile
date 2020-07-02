@@ -136,9 +136,7 @@ function Permissions(type) {
     if (isH5 && typeof appType !== 'object') {
         return new Promise((resolve, reject) => {
             window[fn] = (info) => {
-                alert(info);
                 if (Number(info)) {
-                    alert('1');
                     resolve(info);
                 } else {
                     reject();
@@ -213,7 +211,6 @@ function saveImage(id, path) {
 function appShare(config) {
     // app 分享
     if (isH5 && typeof appType !== 'object') {
-        // alert(111);
         return new Promise((resolve, reject) => {
             window.getShareInfo = (info) => {
                 if (Number(info)) {
@@ -225,6 +222,7 @@ function appShare(config) {
             if (appType === 'ios') {
                 window.webkit.messageHandlers.appShare.postMessage(config);
             } else {
+                alert(Object.keys(config).length);
                 // eslint-disable-next-line no-undef
                 androidApp.appShare(config);
             }

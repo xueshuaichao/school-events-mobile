@@ -227,11 +227,13 @@ export default {
                 suffix = tempFilePath.split(".").pop();
                 // eslint-disable-next-line no-empty
             } catch {}
-            if (["jpg", "jpeg", "png", "gif"].indexOf(suffix) === -1) {
-                return uni.showToast({
-                    icon: "none",
-                    title: "图片规格不正确"
-                });
+            if (!this.isH5) {
+                if (["jpg", "jpeg", "png", "gif"].indexOf(suffix) === -1) {
+                    return uni.showToast({
+                        icon: "none",
+                        title: "图片规格不正确"
+                    });
+                }
             }
 
             uni.showToast({
@@ -366,24 +368,25 @@ export default {
             });
         },
         chooseResource() {
+            const isAndroid =
+                this.isH5 && utils.getAppType() === "android" ? true : false;
             if (this.type === "image") {
-                api.Permissions("image").then(() => {
+                if (isAndroid) {
                     this.chooseImage();
-                });
+                } else {
+                    api.Permissions("image").then(() => {
+                        this.chooseImage();
+                    });
+                }
             } else if (this.type === "video") {
-                api.Permissions("video").then(() => {
+                if (isAndroid) {
                     this.chooseVideo();
-                });
+                } else {
+                    api.Permissions("video").then(() => {
+                        this.chooseVideo();
+                    });
+                }
             }
-
-            // let fn = this.type === 'image' ? uni.chooseImage : uni.chooseVideo;
-
-            // fn({
-            //     success: (res) => {
-            //         this.src = res.tempFilePath;
-            //         this.uploadFile(res.tempFilePath);
-            //     }
-            // });
         }
     }
 };

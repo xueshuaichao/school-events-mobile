@@ -313,11 +313,9 @@ export default {
             });
         },
         chooseImage() {
-            alert(3);
             uni.chooseImage({
                 count: this.count,
                 success: res => {
-                    alert(4);
                     Promise.all(
                         res.tempFilePaths.map(filePath =>
                             this.uploadFile(filePath)
@@ -328,7 +326,6 @@ export default {
                     [this.src] = res.tempFilePaths;
                 },
                 fail: res => {
-                    alert(5);
                     alert(res);
                 }
             });
@@ -345,23 +342,28 @@ export default {
                     const filePath = res.tempFilePath;
                     this.src = filePath;
                     return this.uploadVideo(filePath, res);
-                    // console.log(res);
-                    // const fileList = e.target.files;
-                    // this.uploader.cleanList();
                 }
             });
         },
         chooseResource() {
+            const isAndroid =
+                this.isH5 && utils.getAppType() === "android" ? true : false;
             if (this.type === "image") {
-                // api.Permissions("image").then(() => {
-                //     alert(2);
-                //     this.chooseImage();
-                // });
-                this.chooseImage();
+                if (isAndroid) {
+                    this.chooseImage();
+                } else {
+                    api.Permissions("image").then(() => {
+                        this.chooseImage();
+                    });
+                }
             } else if (this.type === "video") {
-                api.Permissions("video").then(() => {
+                if (isAndroid) {
                     this.chooseVideo();
-                });
+                } else {
+                    api.Permissions("video").then(() => {
+                        this.chooseVideo();
+                    });
+                }
             }
         }
     }
