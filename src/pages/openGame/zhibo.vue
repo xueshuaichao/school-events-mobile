@@ -108,7 +108,6 @@
                 :adjust-position="false"
                 @blur="blur"
                 @focus="onFoucs"
-                @confirm="bindconfirm"
             >
             <view
                 v-if="showKeybord"
