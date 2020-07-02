@@ -61,7 +61,6 @@
                             <view class="user-image">
                                 <img
                                     v-if="isH5"
-                                    crossorigin="anonymous"
                                     :src="detail.image"
                                     alt=""
                                 >
