@@ -176,9 +176,9 @@ function saveImage(id, path) {
                 html2canvas(document.getElementById(`${id}`), {
                     useCORS: true,
                 }).then((canvas) => {
-                    window.webkit.messageHandlers.appSavePhoto.postMessage(
-                        canvas.toDataURL(),
-                    );
+                    window.webkit.messageHandlers.appSavePhoto.postMessage({
+                        savePhoto: canvas.toDataURL(),
+                    });
                 });
                 window.webkit.messageHandlers.appSavePhoto.postMessage(path);
             } else {
