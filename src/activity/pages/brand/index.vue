@@ -389,48 +389,35 @@ export default {
             if (this.status === 2) {
                 api.isLogin({}).then(
                     (res) => {
-                        if (res) {
-                            const userInfo = JSON.parse(res);
-                            this.userInfo = userInfo;
-                            this.myWorkPath = `/activity/pages/brand/ucenter?activity_id=10&user_id=${this.userInfo.userid}`;
-                            uni.showLoading();
-                            api.get('/api/activity/getenrollinfo', {
-                                activity_id: this.activityId,
-                                user_id: this.userInfo.user_id,
-                            }).then(
-                                (data) => {
-                                    uni.hideLoading();
-                                    if (
-                                        Array.isArray(data)
-                                        && data.length === 0
-                                    ) {
-                                        // 参赛
-                                        this.canJoin = true;
-                                        uni.navigateTo({
-                                            url: '/activity/pages/brand/join',
-                                        });
-                                    } else {
-                                        // 上传作品
-                                        this.canJoin = false;
-                                        uni.navigateTo({
-                                            url: `/activity/pages/upload/modify?activity_id=${this.activityId}`,
-                                        });
-                                    }
-                                },
-                                () => {
-                                    uni.hideLoading();
+                        console.log(res);
+                        this.userInfo = res;
+                        this.myWorkPath = `/activity/pages/brand/ucenter?activity_id=10&user_id=${this.userInfo.userid}`;
+                        uni.showLoading();
+                        api.get('/api/activity/getenrollinfo', {
+                            activity_id: this.activityId,
+                            user_id: this.userInfo.user_id,
+                        }).then(
+                            (data) => {
+                                uni.hideLoading();
+                                if (Array.isArray(data) && data.length === 0) {
+                                    // 参赛
+                                    this.canJoin = true;
+                                    uni.navigateTo({
+                                        url: '/activity/pages/brand/join',
+                                    });
+                                } else {
+                                    // 上传作品
                                     this.canJoin = false;
-                                },
-                            );
-                        } else if (this.canJoin) {
-                            uni.navigateTo({
-                                url: '/activity/pages/brand/join',
-                            });
-                        } else {
-                            uni.navigateTo({
-                                url: `/activity/pages/upload/modify?activity_id=${this.activityId}`,
-                            });
-                        }
+                                    uni.navigateTo({
+                                        url: `/activity/pages/upload/modify?activity_id=${this.activityId}`,
+                                    });
+                                }
+                            },
+                            () => {
+                                uni.hideLoading();
+                                this.canJoin = false;
+                            },
+                        );
                     },
                     () => {
                         this.userInfo = {};

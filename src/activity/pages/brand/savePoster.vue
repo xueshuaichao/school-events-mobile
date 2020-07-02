@@ -5,6 +5,7 @@
             <view class="poster-img-mask-box">
                 <view
                     v-if="image"
+                    id="canvas-img"
                     class="canvas-img"
                 >
                     <image
@@ -22,13 +23,9 @@
                     <view
                         v-else
                         class="brand-btn btn"
+                        @click="saveImage"
                     >
-                        <a
-                            :href="image"
-                            download
-                        >
-                            保存图片
-                        </a>
+                        保存图片
                     </view>
                 </template>
                 <template v-else>
@@ -60,6 +57,8 @@
     </view>
 </template>
 <script>
+import api from '../../../common/api';
+
 export default {
     props: {
         image: {
@@ -71,9 +70,7 @@ export default {
         return {
             // #ifdef H5
             isH5: true,
-            isWechat:
-                navigator.userAgent.toLowerCase().match(/MicroMessenger/i)
-                === 'micromessenger',
+            isWechat: false,
             // #endif
             imgAuthBtn: false,
             showPosterMask: false,
@@ -83,6 +80,12 @@ export default {
     created() {
         if (!this.isH5) {
             this.getAuthStatus();
+        }
+    },
+    mounted() {
+        if (this.isH5) {
+            const ua = window.navigator.userAgent.toLowerCase();
+            this.isWechat = ua.indexOf('micromessenger') !== -1;
         }
     },
     methods: {
@@ -196,6 +199,15 @@ export default {
                         },
                     });
                 },
+            });
+        },
+        saveImage() {
+            uni.showLoading();
+            api.saveImage('canvas-img').then(() => {
+                uni.hideLoading();
+                uni.showToast({
+                    title: '保存成功',
+                });
             });
         },
         togglePoster(status) {
