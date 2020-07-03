@@ -150,12 +150,6 @@ function Permissions(type) {
                         null,
                     );
                 }
-            } else if (type === 'image') {
-                // eslint-disable-next-line no-undef
-                androidApp.appPhotoLibraryPermissions();
-            } else {
-                // eslint-disable-next-line no-undef
-                androidApp.appCameraPermissions();
             }
         });
     }

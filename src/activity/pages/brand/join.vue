@@ -455,16 +455,34 @@ export default {
             });
             return '';
         },
-        chooseImage() {
+        chooseImageFn() {
             uni.chooseImage({
                 count: 1,
                 sourceType: ['album'],
                 success: (res) => {
+                    const size = res.size || res.tempFiles[0].size;
+                    if (size / 1000 / 1000 > 2) {
+                        return uni.showToast({
+                            title: '请选择小于2M的图片',
+                            icon: 'none',
+                        });
+                    }
                     console.log(res);
                     // 设置url的值，显示控件
                     [this.url] = res.tempFilePaths;
+                    return true;
                 },
             });
+        },
+        chooseImage() {
+            const isAndroid = !!(this.isH5 && utils.getAppType() === 'android');
+            if (isAndroid) {
+                this.chooseImageFn();
+            } else {
+                api.Permissions('image').then(() => {
+                    this.chooseImageFn();
+                });
+            }
         },
         onok(ev) {
             this.uploadFile(ev.path).then((data) => {

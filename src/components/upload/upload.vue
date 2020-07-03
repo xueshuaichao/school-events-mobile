@@ -161,6 +161,9 @@ export default {
     },
     data() {
         return {
+            // #ifdef H5
+            isH5: true,
+            // #endif
             src: "",
             tempFilePath: "",
             url: this.source,
