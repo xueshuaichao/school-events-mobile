@@ -457,11 +457,10 @@ export default {
         },
         chooseImageFn() {
             uni.chooseImage({
-                count: 1,
-                sourceType: ['album'],
                 success: (res) => {
+                    console.log(res);
                     const size = res.size || res.tempFiles[0].size;
-                    if (size / 1000 / 1000 > 2) {
+                    if (size / 1024 / 1024 > 2) {
                         return uni.showToast({
                             title: '请选择小于2M的图片',
                             icon: 'none',

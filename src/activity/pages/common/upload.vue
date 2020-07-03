@@ -314,6 +314,7 @@ export default {
             uni.chooseImage({
                 count: this.count,
                 success: res => {
+                    console.log(res.type);
                     Promise.all(
                         res.tempFilePaths.map(filePath =>
                             this.uploadFile(filePath)
