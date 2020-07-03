@@ -14,9 +14,7 @@
             <view class="step1">
                 <text class="step-icon" />
             </view>
-            <view
-                class="step2"
-            >
+            <view class="step2">
                 <text>1、点击右上角</text><text class="step-icon" />
             </view>
             <view class="step3">
@@ -56,9 +54,19 @@ export default {
                 if (isWechat) {
                     this.isWechat = true;
                 } else {
-                    window.location = 'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/apk/app-andriod.apk';
+                    window.location.href = `https://aitiaozhan.oss-cn-beijing.aliyuncs.com/apk/app-andriod.apk${
+                        new Date()}`;
                 }
             } else if (isIos) {
+                if (isWechat) {
+                    this.isWechat = true;
+                } else {
+                    console.log('ios------');
+                    window.open(
+                        `https://apps.apple.com/cn/app/up%E7%88%B1%E6%8C%91%E6%88%98/id1495615436?date=${
+                            new Date()}`,
+                    );
+                }
                 this.type = 'ios';
             } else {
                 this.type = 'other';
