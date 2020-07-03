@@ -482,7 +482,6 @@ export default {
             }
         },
         onok(ev) {
-            this.image = ev.path;
             this.uploadFile(ev.path).then((data) => {
                 this.url = '';
                 this.formData.image = data.path;
@@ -550,8 +549,9 @@ export default {
         createPoster() {
             const that = this;
             uni.getImageInfo({
-                src: this.image,
-                success() {
+                src: this.formData.image,
+                success(res) {
+                    that.posterCommonConfig.images[1].url = res.path;
                     if (that.isH5) {
                         that.posterCommonConfig.images[0].url = '/activity/static/children_img/brand_poster.jpg';
                         that.posterCommonConfig.images[2].url = '/activity/static/children_img/brand_poster_name.png';
