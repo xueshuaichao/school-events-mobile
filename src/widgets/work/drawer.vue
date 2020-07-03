@@ -249,6 +249,7 @@ export default {
             },
             isAuto: true,
             pannelHeight: 0,
+            isConfirm: false,
         };
     },
     watch: {
@@ -517,7 +518,7 @@ export default {
             });
         },
         blur() {
-            if (!this.isH5) {
+            if (!this.isH5 && !this.isConfirm) {
                 this.resetInitVal();
             }
         },
@@ -525,6 +526,7 @@ export default {
             this.showKeybord = false;
             this.isFocus = false;
             if (this.changeVal.trim()) {
+                this.isConfirm = true;
                 const content = this.changeVal.trim();
                 if (this.hasLogin) {
                     this.addComment(content);
@@ -631,6 +633,7 @@ export default {
             this.showKeybord = false;
             this.isFocus = false;
             this.changeVal = '';
+            this.isConfirm = false;
         },
         toLower() {
             if (this.filter.page_num * this.filter.page_size < this.total) {
