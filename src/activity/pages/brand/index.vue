@@ -32,6 +32,10 @@
                     @showMask="showMask"
                 >
                     <template v-slot:main-data>
+                        <result
+                            v-if="rosterData.status"
+                            :data-list="resultList"
+                        />
                         <!-- 复赛名单 -->
                         <view
                             v-if="rosterData.text"
@@ -171,6 +175,7 @@ import modal from './modal.vue';
 import api from '../../../common/api';
 import savePoster from './savePoster.vue';
 import login from '../../../widgets/login/login.vue';
+import result from './result.vue';
 
 export default {
     components: {
@@ -178,6 +183,7 @@ export default {
         modal,
         savePoster,
         login,
+        result,
     },
     filters: {
         setAvatarSize: (val) => {
@@ -241,6 +247,7 @@ export default {
             ],
             expertList: [],
             myWorkPath: '',
+            resultList: {},
         };
     },
     created() {
@@ -370,7 +377,18 @@ export default {
         getStatus() {
             // 获取按钮状态
             api.get('/api/activity/buttonstatus').then((data) => {
-                console.log(data);
+                this.rosterData = data;
+                // this.rosterData. = true;
+                this.$set(this.rosterData, 'status', true);
+                // if (this.rosterData.status) {
+                this.getResult();
+                // }
+            });
+        },
+        getResult() {
+            // 获取名单
+            api.get('/api/activity/spokesresult').then((data) => {
+                this.resultList = data;
             });
         },
         jumpRosterList(status) {
