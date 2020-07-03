@@ -458,7 +458,6 @@ export default {
         chooseImageFn() {
             uni.chooseImage({
                 success: (res) => {
-                    console.log(res);
                     const size = res.size || res.tempFiles[0].size;
                     if (size / 1024 / 1024 > 2) {
                         return uni.showToast({
@@ -466,7 +465,6 @@ export default {
                             icon: 'none',
                         });
                     }
-                    console.log(res);
                     // 设置url的值，显示控件
                     [this.url] = res.tempFilePaths;
                     return true;
@@ -549,21 +547,25 @@ export default {
             }
         },
         createPoster() {
-            // eslint-disable-next-line max-len
-            this.posterCommonConfig.images[1].url = this.isH5
-                ? this.formData.image
-                : utils.mapHttpToHttps(this.formData.image);
-            if (this.isH5) {
-                this.posterCommonConfig.images[0].url = '/activity/static/children_img/brand_poster.jpg';
-                this.posterCommonConfig.images[2].url = '/activity/static/children_img/brand_poster_name.png';
-            } else {
-                this.posterCommonConfig.images[0].url = 'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/brand_poster.jpg';
-                this.posterCommonConfig.images[2].url = 'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/brand_poster_name.png';
-            }
-
-            this.posterCommonConfig.texts[0].text = `我是${this.formData.name}`;
-            this.posterCommonConfig.texts[1].text = `${this.formData.slogan}`;
-            this.$refs.posterh5.createPoster(this.posterCommonConfig);
+            const that = this;
+            uni.getImageInfo({
+                src: this.isH5
+                    ? this.formData.image
+                    : utils.mapHttpToHttps(this.formData.image),
+                success(res) {
+                    that.posterCommonConfig.images[1].url = res.path;
+                    if (that.isH5) {
+                        that.posterCommonConfig.images[0].url = '/activity/static/children_img/brand_poster.jpg';
+                        that.posterCommonConfig.images[2].url = '/activity/static/children_img/brand_poster_name.png';
+                    } else {
+                        that.posterCommonConfig.images[0].url = 'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/brand_poster.jpg';
+                        that.posterCommonConfig.images[2].url = 'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/brand_poster_name.png';
+                    }
+                    that.posterCommonConfig.texts[0].text = `我是${that.formData.name}`;
+                    that.posterCommonConfig.texts[1].text = `${that.formData.slogan}`;
+                    that.$refs.posterh5.createPoster(that.posterCommonConfig);
+                },
+            });
         },
         submit(path) {
             this.uploadFile(path).then((data) => {

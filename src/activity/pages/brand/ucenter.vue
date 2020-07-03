@@ -568,7 +568,7 @@ export default {
             const { image, name, slogan } = this.detail;
             const that = this;
             uni.getImageInfo({
-                src: image,
+                src: this.isH5 ? image : utils.mapHttpToHttps(image),
                 success(res) {
                     that.posterCommonConfig.images[1].url = res.path;
                     if (that.isH5) {
