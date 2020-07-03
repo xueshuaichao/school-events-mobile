@@ -555,14 +555,14 @@ export default {
             return '';
         },
         getMyPoster() {
-            // if (
-            //     (this.isH5 && !this.detail.poster_h5)
-            //     || (!this.isH5 && !this.detail.poster_mp)
-            // ) {
-            this.createPoster();
-            // } else {
-            //     this.togglePoster(true);
-            // }
+            if (
+                (this.isH5 && !this.detail.poster_h5)
+                || (!this.isH5 && !this.detail.poster_mp)
+            ) {
+                this.createPoster();
+            } else {
+                this.togglePoster(true);
+            }
         },
         createPoster() {
             const { image, name, slogan } = this.detail;
