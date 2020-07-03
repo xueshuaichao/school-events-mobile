@@ -468,7 +468,8 @@ export default {
             this.togglePoster(true);
         },
         onPosterFail() {
-            this.myPoster = this.detail[this.isH5 ? 'poster_h5' : 'poster_mp'];
+            // 如果生成失败 取现在有的海报
+            this.myPoster = this.detail[this.isH5 ? 'poster_mp' : 'poster_h5'];
             if (this.myPoster) {
                 this.togglePoster(true);
             } else {
