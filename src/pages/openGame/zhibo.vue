@@ -106,6 +106,8 @@
                 placeholder="快来留下评论吧"
                 maxlength="80"
                 :adjust-position="false"
+                confirm-type="send"
+                @confirm="bindConfirm"
                 @blur="blur"
                 @focus="onFoucs"
             >
