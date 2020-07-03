@@ -633,11 +633,13 @@ export default {
     position: absolute;
     width: 100%;
     top: 0;
+    height: 100vh;
 
     uni-swiper {
         height: 100%;
 
         .swiper-item {
+            height: 100%;
             img {
                 width: 100%;
                 height: 100%;
