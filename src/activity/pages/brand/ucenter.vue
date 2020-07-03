@@ -756,7 +756,8 @@ export default {
             if (this.status === 2) {
                 api.isLogin({
                     fr: this.fr,
-                }).then(() => {
+                }).then((res) => {
+                    this.userInfo = res;
                     api.post('/api/activity/vote', {
                         id: item.id,
                         activity_id: this.filter.activity_id,
@@ -818,7 +819,8 @@ export default {
             }
             if (this.status === 2) {
                 api.isLogin().then(
-                    () => {
+                    (res) => {
+                        this.userInfo = res;
                         uni.navigateTo({
                             url: `/activity/pages/upload/modify?activity_id=${this.filter.activity_id}`,
                         });

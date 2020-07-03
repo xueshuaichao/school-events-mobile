@@ -442,17 +442,9 @@ export default {
             status: 2,
             crouselList: [],
             setId: '',
-            userkey: '',
-            isIOS: false,
-            isAndroid: false,
         };
     },
     created() {
-        if (this.isH5) {
-            const u = navigator.userAgent;
-            this.isIOS = u.toLowerCase().indexOf('wd-atz-ios') !== -1;
-            this.isAndroid = u.toLowerCase().indexOf('wd-atz-android') !== -1;
-        }
         this.getData();
         this.chunjieStatus();
         this.getCrouselList();

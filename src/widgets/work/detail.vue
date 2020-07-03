@@ -512,19 +512,21 @@ export default {
             });
         },
         jumpUc() {
-            if (this.activityId && this.activityId > 9) {
-                api.get('/api/activity/activitystatus', {
-                    activity_id: this.activityId,
-                }).then((data) => {
-                    if (data.status === 2) {
-                        this.jumpUcUrl('activity');
-                    } else {
-                        this.jumpUcUrl();
-                    }
-                });
-            } else {
-                this.jumpUcUrl();
-            }
+            api.isLogin().then(() => {
+                if (this.activityId && this.activityId > 9) {
+                    api.get('/api/activity/activitystatus', {
+                        activity_id: this.activityId,
+                    }).then((data) => {
+                        if (data.status === 2) {
+                            this.jumpUcUrl('activity');
+                        } else {
+                            this.jumpUcUrl();
+                        }
+                    });
+                } else {
+                    this.jumpUcUrl();
+                }
+            });
         },
         jumpUcUrl(activity) {
             if (activity && this.activityId === 10) {
