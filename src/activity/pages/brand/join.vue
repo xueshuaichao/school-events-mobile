@@ -549,7 +549,9 @@ export default {
         createPoster() {
             const that = this;
             uni.getImageInfo({
-                src: this.formData.image,
+                src: this.isH5
+                    ? this.formData.image
+                    : utils.mapHttpToHttps(this.formData.image),
                 success(res) {
                     that.posterCommonConfig.images[1].url = res.path;
                     if (that.isH5) {
