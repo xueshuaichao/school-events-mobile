@@ -38,6 +38,7 @@
         <video
             class="video"
             :src="pageDetail.live_uri"
+            :duration="1"
             @error="error"
             @fullscreenchange="onFullScreenChange"
         />

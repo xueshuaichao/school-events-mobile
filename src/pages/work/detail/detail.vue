@@ -2,6 +2,7 @@
     <view
         v-if="!isLoading"
         class="page-work-detail"
+        :style="{ height: pageHeight + 'px' }"
     >
         <view
             v-if="prompt"
@@ -259,14 +260,22 @@ export default {
             pix,
             userInfo: null,
             shareConfig: {},
+            pageHeight: 500,
         };
     },
-    created() {},
     mounted() {
         if (this.isH5) {
             const ua = window.navigator.userAgent.toLowerCase();
             this.isWechat = ua.indexOf('micromessenger') !== -1;
         }
+    },
+    created() {
+        const that = this;
+        uni.getSystemInfo({
+            success(res) {
+                that.pageHeight = res.windowHeight;
+            },
+        });
     },
     methods: {
         getcommentTotal(val) {
@@ -1039,14 +1048,14 @@ export default {
 <style lang="less">
 .page-work-detail {
     background: #000;
-    height: 100vh;
+    height: 100%;
     #poster {
         // position: absolute;
         // left:-999upx;
     }
     .out-swiper {
         width: 100%;
-        height: 100vh;
+        height: 100%;
     }
     .activerulebox {
         position: fixed;
