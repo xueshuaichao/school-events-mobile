@@ -67,8 +67,9 @@
                             :class="{
                                 active: formData.resource_type === k + 1,
                                 disabled:
-                                    formData.cat_id === 18 ||
-                                    formData.cat_id === 16 ||
+                                    ((formData.cat_id === 18 ||
+                                    formData.cat_id === 16) &&
+                                    item === 'image') ||
                                     id
                             }"
                             @click="setNewsTabActive(k + 1)"
