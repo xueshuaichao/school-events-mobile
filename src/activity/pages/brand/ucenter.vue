@@ -419,11 +419,6 @@ export default {
         },
         uploadFile(tempFilePath) {
             this.tempFilePath = tempFilePath;
-            uni.showToast({
-                icon: 'loading',
-                title: '上传中',
-                duration: 200000,
-            });
             return new Promise((resolve, reject) => {
                 uni.uploadFile({
                     url: `${config.host}/api/file/uploadfile`, // 仅为示例，非真实的接口地址
@@ -463,9 +458,7 @@ export default {
             });
         },
         onPosterSuccess(detail) {
-            this.myPoster = detail;
             this.submit(detail);
-            this.togglePoster(true);
         },
         onPosterFail() {
             // 如果生成失败 取现在有的海报
@@ -478,6 +471,7 @@ export default {
                     icon: 'none',
                 });
             }
+            uni.hideLoading();
         },
         submit(path) {
             const detail = {};
@@ -487,7 +481,10 @@ export default {
                     detail,
                     activity_id: 10,
                 }).then(() => {
+                    uni.hideLoading();
                     this.detail[this.isH5 ? 'poster_h5' : 'poster_mp'] = data.path;
+                    this.myPoster = data.path;
+                    this.togglePoster(true);
                 });
             });
         },
@@ -555,19 +552,23 @@ export default {
             return '';
         },
         getMyPoster() {
+            uni.showLoading();
             if (
                 (this.isH5 && !this.detail.poster_h5)
                 || (!this.isH5 && !this.detail.poster_mp)
             ) {
                 this.createPoster();
             } else {
+                uni.hideLoading();
                 this.togglePoster(true);
             }
         },
         createPoster() {
             const { image, name, slogan } = this.detail;
             const that = this;
-            that.posterCommonConfig.images[1].url = image;
+            that.posterCommonConfig.images[1].url = this.isH5
+                ? image
+                : utils.mapHttpToHttps(image);
             if (that.isH5) {
                 that.posterCommonConfig.images[0].url = '/activity/static/children_img/brand_poster.jpg';
                 that.posterCommonConfig.images[2].url = '/activity/static/children_img/brand_poster_name.png';
