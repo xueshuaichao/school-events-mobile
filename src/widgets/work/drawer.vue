@@ -352,7 +352,9 @@ export default {
         clickItem(item, subItem) {
             this.changeVal = '';
             if (!this.isFocus) {
-                this.placeholder = `回复@${item.user_info.name}`;
+                this.placeholder = `回复@${
+                    subItem ? subItem.user_info.name : item.user_info.name
+                }`;
                 this.isFocus = true;
                 this.addSubItemObj = {
                     to_user_id: subItem ? subItem.from_user_id : 0,
