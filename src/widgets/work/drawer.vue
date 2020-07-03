@@ -29,7 +29,6 @@
                     height: drawerHeight + 'px',
                     overflow: isAuto ? 'hidden auto' : ''
                 }"
-                :scroll-into-view="intoIndex"
                 class="scroll-context"
                 @scrolltolower="toLower"
             >
@@ -166,6 +165,7 @@
                         :focus="isFocus"
                         @blur="blur"
                         @focus="onFoucs"
+                        @confirm="bindconfirm"
                     >
                 </view>
                 <view
@@ -247,7 +247,6 @@ export default {
                     name: '',
                 },
             },
-            intoIndex: '',
             isAuto: true,
             pannelHeight: 0,
         };
@@ -350,15 +349,19 @@ export default {
         },
         clickNull() {},
         clickItem(item, subItem) {
-            console.log(item, subItem, 12121212);
-            this.placeholder = `回复@${item.user_info.name}`;
-            this.isFocus = true;
-            this.addSubItemObj = {
-                to_user_id: subItem ? subItem.from_user_id : 0,
-                to_comment_id: item.comment_id,
-            };
-            this.curItem.to_user_id = this.addSubItemObj.to_user_id;
-            this.curItem.to_user_name = subItem ? subItem.user_info.name : '';
+            this.changeVal = '';
+            if (!this.isFocus) {
+                this.placeholder = `回复@${item.user_info.name}`;
+                this.isFocus = true;
+                this.addSubItemObj = {
+                    to_user_id: subItem ? subItem.from_user_id : 0,
+                    to_comment_id: item.comment_id,
+                };
+                this.curItem.to_user_id = this.addSubItemObj.to_user_id;
+                this.curItem.to_user_name = subItem
+                    ? subItem.user_info.name
+                    : '';
+            }
         },
         getUserDate() {
             // 获取用户信息
@@ -371,25 +374,21 @@ export default {
         },
         showCloseItem(item) {
             let show = false;
-            const conut = Math.ceil(item.sub_count / 10) + 1;
-            if (item.showCount && item.sub_count <= 3) {
-                show = true;
-            } else if (item.sub_count <= 10 && item.showCount === 2) {
-                show = true;
-            } else if (conut === item.showCount && item.sub_count > 10) {
+            if (
+                item.subListCache.length
+                && item.sub_count === item.subListCache.length
+            ) {
                 show = true;
             }
             return show;
         },
         openSubItem(item) {
             let show = false;
-            if (item.subListCache.length !== item.sub_count) {
-                if (
-                    (item.sub_count > 10 || item.sub_count > 3)
-                    && item.showCount > 0
-                ) {
-                    show = true;
-                }
+            if (
+                item.subListCache.length
+                && item.subListCache.length !== item.sub_count
+            ) {
+                show = true;
             }
             return show;
         },
@@ -397,16 +396,21 @@ export default {
             // 展开更多，数据已经加载，不重复获取数据
             let List = [];
 
+            // 获取更多的条件
             let getNew = false;
-            if (!item.subList.length) {
+            if (
+                item.subList.length === item.sub_add_count
+                || !item.subList.length
+            ) {
                 getNew = true;
             } else if (
                 item.sub_count > item.subList.length
-                && item.sub_count > 10
+                && item.sub_count - item.sub_add_count > 10
                 && item.showCount >= 2
             ) {
                 getNew = true;
             }
+
             if (getNew) {
                 if (item.subList && item.subList.length) {
                     this.subFilter.last_id = item.subList[item.subList.length - 1].comment_id;
@@ -449,26 +453,31 @@ export default {
             });
         },
         setCacheSublist(D) {
-            // 显示3条评论，显示10条评论，
             const d = D;
-            if (d.showCount === 0) {
-                d.subListCache = [];
-            } else if (d.showCount === 1) {
-                d.subListCache = d.subList.slice(0, 3);
-            } else if (d.showCount === 2) {
-                d.subListCache = d.subList.slice(0, 10);
-            } else {
-                d.subListCache = d.subList.slice(0, (d.showCount - 1) * 10);
+            // 显示3条评论，显示10条评论,
+            if (d.sub_count !== d.subListCache.length) {
+                if (d.showCount === 0) {
+                    if (d.subList.length) {
+                        d.subListCache = d.subList.slice(0, D.sub_add_count);
+                    } else {
+                        d.subListCache = [];
+                    }
+                } else if (d.showCount === 1) {
+                    d.subListCache = d.subList.slice(0, 3 + D.sub_add_count);
+                } else if (d.showCount === 2) {
+                    d.subListCache = d.subList.slice(0, 10 + D.sub_add_count);
+                } else {
+                    d.subListCache = d.subList.slice(
+                        0,
+                        (d.showCount - 1) * 10 + D.sub_add_count,
+                    );
+                }
             }
         },
-        closeSubList(item, idx) {
-            console.log('list--122---', idx);
-            // this.goTop();
-
+        closeSubList(item) {
             this.list = this.list.map((D) => {
                 const d = D;
                 if (d.comment_id === item.comment_id) {
-                    d.showCount = 0;
                     d.show = false;
                 }
                 return d;
@@ -495,6 +504,7 @@ export default {
                     D.created_at = D.created_at.slice(5, 16);
                     D.subList = [];
                     D.subListCache = [];
+                    D.sub_add_count = 0;
                     D.show = false;
                     D.showCount = 0;
                     return D;
@@ -507,9 +517,7 @@ export default {
             });
         },
         blur() {
-            if (this.changeVal.trim()) {
-                this.bindconfirm();
-            } else {
+            if (!this.isH5) {
                 this.resetInitVal();
             }
         },
@@ -526,15 +534,15 @@ export default {
                     }).then(
                         () => {
                             this.hasLogin = true;
-                            this.getUserDate();
-                            this.addComment(content);
+                            this.getUserDate().then(() => {
+                                this.addComment(content);
+                            });
                         },
                         () => uni.showToast({
                             icon: 'none',
                             title: '请先登录',
                         }),
                     );
-                    this.changeVal = '';
                 }
             } else {
                 this.changeVal = '';
@@ -572,12 +580,6 @@ export default {
                 created_at: time,
                 content,
             };
-            console.log(
-                obj.to_user_id,
-                obj.to_comment_id,
-                this.addSubItemObj,
-                this.addSubItemObj.to_comment_id,
-            );
 
             if (
                 !Object.prototype.hasOwnProperty.call(
@@ -585,11 +587,11 @@ export default {
                     'to_comment_id',
                 )
             ) {
-                console.log('asas');
                 obj.subList = [];
                 obj.subListCache = [];
                 obj.show = false;
                 obj.showCount = 0;
+                obj.sub_add_count = 0;
                 this.list.unshift(obj);
                 this.total += 1;
             } else {
@@ -603,6 +605,8 @@ export default {
                             d.subList = [obj];
                             d.sub_count = 1;
                         }
+                        d.sub_add_count += 1;
+                        d.show = true;
                         this.setCacheSublist(d);
                     }
                     return d;
@@ -610,7 +614,6 @@ export default {
             }
             this.allNum += 1;
             this.$emit('getcommentTotal', this.allNum);
-
             this.resetInitVal();
         },
         joinDate(time) {
@@ -783,6 +786,7 @@ export default {
             top: 0;
             background: #fff;
             display: flex;
+            justify-content: space-between;
             .add-ctx {
                 background: #f0f0f2;
                 border-radius: 40rpx;
@@ -799,7 +803,7 @@ export default {
                     z-index: 1;
                 }
                 &.short {
-                    width: 600rpx;
+                    width: 590rpx;
                 }
             }
 
