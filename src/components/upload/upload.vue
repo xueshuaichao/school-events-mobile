@@ -355,7 +355,7 @@ export default {
         chooseVideo() {
             uni.chooseVideo({
                 success: res => {
-                    alert(res.size);
+                    // alert(res.size);
                     if (res.size / 1000 / 1000 > 200) {
                         return uni.showToast({
                             title: "视频规格过大，请在PC官网上传",

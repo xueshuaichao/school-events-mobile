@@ -325,7 +325,7 @@ export default {
                     [this.src] = res.tempFilePaths;
                 },
                 fail: res => {
-                    alert(res);
+                    // alert(res);
                 }
             });
         },
