@@ -637,16 +637,14 @@ export default {
 
     uni-swiper {
         height: 100%;
-
-        .swiper-item {
+    }
+    .swiper-item {
+        height: 100%;
+        img {
+            width: 100%;
             height: 100%;
-            img {
-                width: 100%;
-                height: 100%;
-            }
         }
     }
-
     .banner-image {
         width: 750rpx;
         height: 100%;
