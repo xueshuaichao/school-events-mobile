@@ -567,22 +567,17 @@ export default {
         createPoster() {
             const { image, name, slogan } = this.detail;
             const that = this;
-            uni.getImageInfo({
-                src: this.isH5 ? image : utils.mapHttpToHttps(image),
-                success(res) {
-                    that.posterCommonConfig.images[1].url = res.path;
-                    if (that.isH5) {
-                        that.posterCommonConfig.images[0].url = '/activity/static/children_img/brand_poster.jpg';
-                        that.posterCommonConfig.images[2].url = '/activity/static/children_img/brand_poster_name.png';
-                    } else {
-                        that.posterCommonConfig.images[0].url = 'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/brand_poster.jpg';
-                        that.posterCommonConfig.images[2].url = 'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/brand_poster_name.png';
-                    }
-                    that.posterCommonConfig.texts[0].text = `我是${name}`;
-                    that.posterCommonConfig.texts[1].text = slogan;
-                    that.$refs.posterh5.createPoster(that.posterCommonConfig);
-                },
-            });
+            that.posterCommonConfig.images[1].url = image;
+            if (that.isH5) {
+                that.posterCommonConfig.images[0].url = '/activity/static/children_img/brand_poster.jpg';
+                that.posterCommonConfig.images[2].url = '/activity/static/children_img/brand_poster_name.png';
+            } else {
+                that.posterCommonConfig.images[0].url = 'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/brand_poster.jpg';
+                that.posterCommonConfig.images[2].url = 'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/brand_poster_name.png';
+            }
+            that.posterCommonConfig.texts[0].text = `我是${name}`;
+            that.posterCommonConfig.texts[1].text = slogan;
+            that.$refs.posterh5.createPoster(that.posterCommonConfig);
         },
         togglePoster(status) {
             this.showPosterMask = status;
