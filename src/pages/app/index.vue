@@ -1,14 +1,14 @@
 <template>
     <view class="page-download-app">
-        <view
+        <!-- <view
             v-if="type !== 'android'"
             class="ios-text text"
         >
             <view>爱挑战{{ type === "ios" ? "IOS版" : "相关版本" }}</view>
             <view>近期上线，敬请期待!</view>
-        </view>
+        </view> -->
         <view
-            v-else-if="isWechat"
+            v-if="isWechat"
             class="android-mask"
         >
             <view class="step1">
@@ -54,8 +54,7 @@ export default {
                 if (isWechat) {
                     this.isWechat = true;
                 } else {
-                    window.location.href = `https://aitiaozhan.oss-cn-beijing.aliyuncs.com/apk/app-andriod.apk${
-                        new Date()}`;
+                    window.location.href = `https://aitiaozhan.oss-cn-beijing.aliyuncs.com/apk/app-andriod.apk${new Date()}`;
                 }
             } else if (isIos) {
                 if (isWechat) {
@@ -63,8 +62,7 @@ export default {
                 } else {
                     console.log('ios------');
                     window.open(
-                        `https://apps.apple.com/cn/app/up%E7%88%B1%E6%8C%91%E6%88%98/id1495615436?date=${
-                            new Date()}`,
+                        `https://apps.apple.com/cn/app/up%E7%88%B1%E6%8C%91%E6%88%98/id1495615436?date=${new Date()}`,
                     );
                 }
                 this.type = 'ios';
