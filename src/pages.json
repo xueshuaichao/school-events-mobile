@@ -441,7 +441,7 @@
                     }
                 },
                 {
-                    "path": "pages/rematch/list",
+                    "path": "pages/brand/rematch",
                     "style": {
                         "navigationBarTitleText": "复赛名单"
                     }

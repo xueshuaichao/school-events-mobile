@@ -9,7 +9,8 @@
                         <image
                             class="banner-image"
                             :src="
-                                `https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/${publicConfig.activityName}_main.jpg`
+                                mainImage ||
+                                    `https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/${publicConfig.activityName}_main.jpg`
                             "
                         />
                     </view>
@@ -198,6 +199,10 @@ export default {
         className: {
             type: String,
             default: '',
+        },
+        mainImage: {
+            type: String,
+            default: '43434',
         },
         isStopScroll: {
             type: Boolean,

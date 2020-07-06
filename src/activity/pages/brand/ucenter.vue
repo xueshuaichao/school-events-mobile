@@ -49,7 +49,17 @@
                         :image="myPoster"
                         @togglePoster="togglePoster"
                     />
-                    <view class="user-detail">
+                    <view
+                        class="user-detail"
+                        :class="{ 'p-t': isSelf }"
+                    >
+                        <view
+                            v-if="isSelf && rosterData.status === 0"
+                            class="poster-btn edit"
+                            @click="editJoinInfo()"
+                        >
+                            完善信息
+                        </view>
                         <view
                             v-if="isSelf"
                             class="poster-btn"
@@ -254,12 +264,28 @@
                             TA还没有上传作品，去看看其他作品吧~
                         </view>
                     </view>
-
                     <view
                         class="goUpload"
                         @click="handleUpload"
                     >
-                        {{ isSelf ? "上传作品" : "查看活动" }}
+                        <!-- // 1未开始，2进行中，3已结束 -->
+                        <template v-if="status === 1">
+                            活动未开始
+                        </template>
+                        <template v-else-if="status === 2">
+                            <template v-if="rosterData.status === 1">
+                                评审中
+                            </template>
+                            <template v-else-if="rosterData.status === 2">
+                                活动已结束
+                            </template>
+                            <template v-else>
+                                {{ isSelf ? "上传作品" : "查看活动" }}
+                            </template>
+                        </template>
+                        <template v-else>
+                            活动已结束
+                        </template>
                     </view>
                 </view>
             </template>
@@ -314,6 +340,7 @@ export default {
             // #ifdef H5
             isH5: true,
             // #endif
+            rosterData: {},
             status: 2,
             isLoading: true,
             userInfo: null,
@@ -416,6 +443,12 @@ export default {
     methods: {
         onLogin() {
             this.getData();
+        },
+        getStatus() {
+            // 获取按钮状态
+            api.get('/api/activity/buttonstatus').then((data) => {
+                this.rosterData = data;
+            });
         },
         uploadFile(tempFilePath) {
             this.tempFilePath = tempFilePath;
@@ -550,6 +583,11 @@ export default {
                 },
             });
             return '';
+        },
+        editJoinInfo() {
+            uni.redirectTo({
+                url: '/activity/pages/brand/join?type=edit',
+            });
         },
         getMyPoster() {
             uni.showLoading();
@@ -822,9 +860,11 @@ export default {
                 api.isLogin().then(
                     (res) => {
                         this.userInfo = res;
-                        uni.navigateTo({
-                            url: `/activity/pages/upload/modify?activity_id=${this.filter.activity_id}`,
-                        });
+                        if (this.rosterData.status === 0) {
+                            uni.navigateTo({
+                                url: `/activity/pages/upload/modify?activity_id=${this.filter.activity_id}`,
+                            });
+                        }
                     },
                     () => {
                         this.userInfo = null;
@@ -856,6 +896,7 @@ export default {
         this.filter.user_id = userId || '';
         this.getData();
         this.activityStatus();
+        this.getStatus();
     },
     onShow() {
         if (!this.isH5 && this.$refs.savePoster) {
@@ -918,6 +959,9 @@ export default {
     border-radius: 20upx;
     position: relative;
     margin-bottom: 40upx;
+    &.p-t {
+        padding-top: 89upx;
+    }
     .poster-btn {
         position: absolute;
         right: -11upx;
@@ -929,6 +973,16 @@ export default {
         line-height: 48upx;
         color: #fff;
         font-size: 22upx;
+        &.edit {
+            left: -11upx;
+            right: auto;
+            border-radius: 0 24upx 24upx 0;
+            &::after {
+                left: 6upx;
+                right: auto;
+                transform: rotate(134deg);
+            }
+        }
         &::after {
             content: "";
             position: absolute;

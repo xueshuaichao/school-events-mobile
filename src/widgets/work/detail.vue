@@ -83,8 +83,11 @@
         </view>
         <view class="content">
             <view class="author-info">
-                <view class="author-name text-one-line">
-                    {{ pageData.create_name }}
+                <view
+                    class="author-name text-one-line"
+                    @click="jumpUc"
+                >
+                    @{{ pageData.create_name }}
                 </view>
             </view>
             <view
