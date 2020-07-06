@@ -44,7 +44,9 @@
                 >
                     <view class="item-index">
                         {{ (index + 1) | setNum }}
-                        <image :src="item.image" />
+                        <view class="image">
+                            <image :src="item.image" />
+                        </view>
                     </view>
                     <view class="item-info">
                         <view class="name text-one-line">
@@ -230,28 +232,67 @@ export default {
             &:nth-child(even) {
                 background-color: #a592ff;
             }
-            &:nth-of-type(1) {
-                .item-index,
-                .item-value {
-                    color: #ffc214;
-                }
-            }
             &:nth-of-type(2) {
                 .item-index,
                 .item-value {
                     color: #ffc214;
                 }
+                .image {
+                    border: 4upx solid #ffc214;
+                }
+                ::before {
+                    background-image: url("https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/brand_star_1.png");
+                }
             }
             &:nth-of-type(3) {
                 .item-index,
                 .item-value {
+                    color: #b1c8ec;
+                }
+                .image {
+                    border: 4upx solid #b1c8ec;
+                }
+                ::before {
+                    background-image: url("https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/brand_star_2.png");
+                }
+            }
+            &:nth-of-type(4) {
+                .item-index,
+                .item-value {
                     color: #ffa158;
+                }
+                image {
+                    border: 4upx solid #ffa158;
+                    ::before {
+                        background-image: url("https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/brand_star_3.png");
+                    }
+                }
+            }
+            &:nth-of-type(1),
+            &:nth-of-type(2),
+            &:nth-of-type(3) {
+                .image {
+                    position: relative;
+                    box-sizing: border-box;
+                    &::before {
+                        content: "";
+                        position: absolute;
+                        top: -26upx;
+                        left: 50%;
+                        transform: translateX(-50%);
+                        width: 44upx;
+                        height: 24upx;
+                        background-size: 100% 100%;
+                    }
                 }
             }
             .item-index {
                 font-weight: 500;
-                & > image {
+                .image {
                     margin-left: 37upx;
+                    border-radius: 50%;
+                    width: 70upx;
+                    height: 70upx;
                 }
             }
             .item-index,
@@ -289,8 +330,8 @@ export default {
                 font-weight: 500;
             }
             image {
-                width: 70upx;
-                height: 70upx;
+                width: 100%;
+                height: 100%;
                 border-radius: 50%;
             }
             .name,
