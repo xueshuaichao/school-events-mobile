@@ -5,7 +5,7 @@
             'activity-init-page',
             {
                 'stop-scroll':
-                    (maskPrompt || userInfo === null) && maskType !== 2
+                    (maskPrompt || userInfo === null) && maskType === 0
             }
         ]"
     >

@@ -49,7 +49,17 @@
                         :image="myPoster"
                         @togglePoster="togglePoster"
                     />
-                    <view class="user-detail">
+                    <view
+                        class="user-detail"
+                        :class="{ 'p-t': isSelf }"
+                    >
+                        <view
+                            v-if="isSelf"
+                            class="poster-btn edit"
+                            @click="editJoinInfo()"
+                        >
+                            完善信息
+                        </view>
                         <view
                             v-if="isSelf"
                             class="poster-btn"
@@ -552,6 +562,11 @@ export default {
             });
             return '';
         },
+        editJoinInfo() {
+            uni.redirectTo({
+                url: '/activity/pages/brand/join?type=edit',
+            });
+        },
         getMyPoster() {
             if (
                 (this.isH5 && !this.detail.poster_h5)
@@ -920,6 +935,9 @@ export default {
     border-radius: 20upx;
     position: relative;
     margin-bottom: 40upx;
+    &.p-t {
+        padding-top: 89upx;
+    }
     .poster-btn {
         position: absolute;
         right: -11upx;
@@ -931,6 +949,16 @@ export default {
         line-height: 48upx;
         color: #fff;
         font-size: 22upx;
+        &.edit {
+            left: -11upx;
+            right: auto;
+            border-radius: 0 24upx 24upx 0;
+            &::after {
+                left: 6upx;
+                right: auto;
+                transform: rotate(134deg);
+            }
+        }
         &::after {
             content: "";
             position: absolute;

@@ -329,11 +329,6 @@ export default {
             },
         };
     },
-    created() {
-        this.getUserInfo();
-        this.publicConfig = this.$store.getters.getPublicConfig(10);
-        this.initShare();
-    },
     methods: {
         initShare() {
             const titleList = this.isH5
@@ -391,6 +386,13 @@ export default {
                     this.userInfo = null;
                 },
             );
+        },
+        getJoinInfo() {
+            api.get('/api/activity/getenrollinfo', {
+                activity_id: 10,
+            }).then((res) => {
+                this.formData = res.detail;
+            });
         },
         getQrCode() {
             if (this.isH5) {
@@ -561,10 +563,15 @@ export default {
                             title: '提交成功',
                             icon: 'success',
                         });
-                        uni.setStorageSync('brand_first', true);
+                        if (!this.type) {
+                            uni.setStorageSync('brand_first', true);
+                        }
                         setTimeout(() => {
-                            uni.reLaunch({
-                                url: '/activity/pages/index?activity_id=10',
+                            const url = this.type === 'edit'
+                                ? `/activity/pages/brand/ucenter?activity_id=10&user_id=${this.userInfo.user_id}`
+                                : '/activity/pages/index?activity_id=10';
+                            return uni.reLaunch({
+                                url,
                             });
                         }, 2000);
                     },
@@ -612,6 +619,17 @@ export default {
                 }
             }
         },
+    },
+    onLoad(parms) {
+        this.type = parms.type;
+        this.publicConfig = this.$store.getters.getPublicConfig(10);
+        this.initShare();
+        console.log(this.type);
+        if (this.type) {
+            this.getJoinInfo();
+        } else {
+            this.getUserInfo();
+        }
     },
     onShareAppMessage(res) {
         if (res.from === 'button') {
