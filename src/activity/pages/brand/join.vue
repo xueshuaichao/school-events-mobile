@@ -119,20 +119,29 @@
                     </view>
                     <view class="content">
                         <view class="image-box">
-                            <image
-                                v-if="formData.image"
-                                class="user-img"
-                                :src="formData.image"
-                            />
-                            <view
-                                v-else
-                                class="choose-image-box"
-                                @tap="chooseImage()"
-                            >
+                            <template v-if="formData.image">
+                                <img
+                                    v-if="isH5"
+                                    class="user-img"
+                                    :src="formData.image"
+                                    crossorigin="anonymous"
+                                >
                                 <image
-                                    src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/brand_upload_bg.png"
+                                    v-else
+                                    class="user-img"
+                                    :src="formData.image"
                                 />
-                            </view>
+                            </template>
+                            <template v-else>
+                                <view
+                                    class="choose-image-box"
+                                    @tap="chooseImage()"
+                                >
+                                    <image
+                                        src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/brand_upload_bg.png"
+                                    />
+                                </view>
+                            </template>
                         </view>
 
                         <view class="tips-box">
@@ -548,24 +557,19 @@ export default {
         },
         createPoster() {
             const that = this;
-            uni.getImageInfo({
-                src: this.isH5
-                    ? this.formData.image
-                    : utils.mapHttpToHttps(this.formData.image),
-                success(res) {
-                    that.posterCommonConfig.images[1].url = res.path;
-                    if (that.isH5) {
-                        that.posterCommonConfig.images[0].url = '/activity/static/children_img/brand_poster.jpg';
-                        that.posterCommonConfig.images[2].url = '/activity/static/children_img/brand_poster_name.png';
-                    } else {
-                        that.posterCommonConfig.images[0].url = 'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/brand_poster.jpg';
-                        that.posterCommonConfig.images[2].url = 'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/brand_poster_name.png';
-                    }
-                    that.posterCommonConfig.texts[0].text = `我是${that.formData.name}`;
-                    that.posterCommonConfig.texts[1].text = `${that.formData.slogan}`;
-                    that.$refs.posterh5.createPoster(that.posterCommonConfig);
-                },
-            });
+            that.posterCommonConfig.images[1].url = this.isH5
+                ? this.formData.image
+                : utils.mapHttpToHttps(this.formData.image);
+            if (that.isH5) {
+                that.posterCommonConfig.images[0].url = '/activity/static/children_img/brand_poster.jpg';
+                that.posterCommonConfig.images[2].url = '/activity/static/children_img/brand_poster_name.png';
+            } else {
+                that.posterCommonConfig.images[0].url = 'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/brand_poster.jpg';
+                that.posterCommonConfig.images[2].url = 'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/brand_poster_name.png';
+            }
+            that.posterCommonConfig.texts[0].text = `我是${that.formData.name}`;
+            that.posterCommonConfig.texts[1].text = `${that.formData.slogan}`;
+            that.$refs.posterh5.createPoster(that.posterCommonConfig);
         },
         submit(path) {
             this.uploadFile(path).then((data) => {
