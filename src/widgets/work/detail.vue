@@ -83,8 +83,11 @@
         </view>
         <view class="content">
             <view class="author-info">
-                <view class="author-name text-one-line">
-                    {{ pageData.create_name }}
+                <view
+                    class="author-name text-one-line"
+                    @click="jumpUc"
+                >
+                    @{{ pageData.create_name }}
                 </view>
             </view>
             <view
@@ -200,6 +203,7 @@
                     <view>{{ commentTotal }}</view>
                 </view>
                 <view
+                    v-if="isWechat || isApp || !isH5"
                     class="item"
                     @click="handleCanvass"
                 >
@@ -315,6 +319,8 @@ export default {
             recordTxts: ['校级记录', '市级记录', '省级记录'],
             // #ifdef H5
             isH5: true,
+            isWechat: false,
+            isApp: false,
             // #endif
             canAutoPlay: false,
             isPaused: false,
@@ -410,6 +416,10 @@ export default {
             this.html5VideoAutoAdjust,
         );
         window.addEventListener('orientationchange', this.html5VideoAutoAdjust);
+        const ua = window.navigator.userAgent.toLowerCase();
+        this.isWechat = ua.indexOf('micromessenger') !== -1;
+        this.isApp = ua.toLowerCase().indexOf('wd-atz-ios') !== -1
+            || ua.toLowerCase().indexOf('wd-atz-android') !== -1;
         // #endif
     },
     methods: {
@@ -505,19 +515,21 @@ export default {
             });
         },
         jumpUc() {
-            if (this.activityId && this.activityId > 9) {
-                api.get('/api/activity/activitystatus', {
-                    activity_id: this.activityId,
-                }).then((data) => {
-                    if (data.status === 2) {
-                        this.jumpUcUrl('activity');
-                    } else {
-                        this.jumpUcUrl();
-                    }
-                });
-            } else {
-                this.jumpUcUrl();
-            }
+            api.isLogin().then(() => {
+                if (this.activityId && this.activityId > 9) {
+                    api.get('/api/activity/activitystatus', {
+                        activity_id: this.activityId,
+                    }).then((data) => {
+                        if (data.status === 2) {
+                            this.jumpUcUrl('activity');
+                        } else {
+                            this.jumpUcUrl();
+                        }
+                    });
+                } else {
+                    this.jumpUcUrl();
+                }
+            });
         },
         jumpUcUrl(activity) {
             if (activity && this.activityId === 10) {
@@ -537,7 +549,7 @@ export default {
 <style lang="less">
 .swiper-detail-box {
     width: 100%;
-    height: 100vh;
+    height: 100%;
     position: relative;
 }
 .yellow {
@@ -617,28 +629,28 @@ export default {
 .swiper {
     width: 750rpx;
     // height: 1334rpx;
-    height: 100vh;
+    height: 100%;
 }
 
 .main-swiper {
     position: absolute;
     width: 100%;
     top: 0;
+    height: 100vh;
 
     uni-swiper {
-        height: 100vh;
-
-        .swiper-item {
-            img {
-                width: 100%;
-                height: 100%;
-            }
+        height: 100%;
+    }
+    .swiper-item {
+        height: 100%;
+        img {
+            width: 100%;
+            height: 100%;
         }
     }
-
     .banner-image {
         width: 750rpx;
-        height: 100vh;
+        height: 100%;
     }
 }
 .content {

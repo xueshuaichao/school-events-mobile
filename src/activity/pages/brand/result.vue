@@ -80,10 +80,10 @@
                     </view>
                     <view class="item-info">
                         <view class="school text-two-line">
-                            {{ item.school_name }}434543543534543543543432423443
+                            {{ item.school_name }}
                         </view>
                     </view>
-                    <view class="item-value text-one-line">
+                    <view class="item-value">
                         <text>{{ item.student }}</text>
                     </view>
                 </view>
@@ -133,7 +133,7 @@ export default {
         position: relative;
         border: 3upx solid #ff8e85;
         border-radius: 20upx;
-        margin-bottom: 71upx;
+        margin-bottom: 64upx;
         .title {
             position: absolute;
             left: 50%;
@@ -149,9 +149,11 @@ export default {
                 rgba(255, 142, 133, 1),
                 rgba(255, 87, 74, 1)
             );
+            background-image: url("https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/brand_result_title.png");
+            background-size: 100% 100%;
         }
         &.spokes-man {
-            padding: 61upx 25upx 39upx;
+            padding: 61upx 20upx 39upx;
             box-sizing: border-box;
         }
         &.mood-man {
@@ -168,15 +170,17 @@ export default {
         .box {
             display: flex;
             justify-content: center;
+            flex-wrap: wrap;
         }
         .item {
             width: 190upx;
-            margin: 39upx 15upx 0;
+            margin: 39upx 14upx 0;
             &:nth-child(-n + 3) {
                 margin-top: 0;
             }
         }
         .item-img {
+            width: 190upx;
             height: 253upx;
             margin-bottom: 19upx;
 
@@ -190,6 +194,7 @@ export default {
         .school {
             font-size: 22upx;
             color: #fff;
+            word-break: break-all;
         }
         .name {
             line-height: 1;
@@ -300,7 +305,7 @@ export default {
             display: flex;
             align-items: center;
             justify-content: start;
-            height: 150upx;
+            height: 111upx;
             color: #fff;
             padding: 0 41upx;
             &:first-of-type {
@@ -327,7 +332,7 @@ export default {
             }
             .item-info,
             & > text:nth-of-type(2) {
-                width: 223upx;
+                width: 220upx;
                 margin-right: 45upx;
             }
             .item-value,

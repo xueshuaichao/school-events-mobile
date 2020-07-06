@@ -119,20 +119,29 @@
                     </view>
                     <view class="content">
                         <view class="image-box">
-                            <image
-                                v-if="formData.image"
-                                class="user-img"
-                                :src="formData.image"
-                            />
-                            <view
-                                v-else
-                                class="choose-image-box"
-                                @tap="chooseImage()"
-                            >
+                            <template v-if="formData.image">
+                                <img
+                                    v-if="isH5"
+                                    class="user-img"
+                                    :src="formData.image"
+                                    crossorigin="anonymous"
+                                >
                                 <image
-                                    src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/brand_upload_bg.png"
+                                    v-else
+                                    class="user-img"
+                                    :src="formData.image"
                                 />
-                            </view>
+                            </template>
+                            <template v-else>
+                                <view
+                                    class="choose-image-box"
+                                    @tap="chooseImage()"
+                                >
+                                    <image
+                                        src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/brand_upload_bg.png"
+                                    />
+                                </view>
+                            </template>
                         </view>
 
                         <view class="tips-box">
@@ -356,7 +365,9 @@ export default {
         },
         onLogin({ user_info: userInfo }) {
             this.userInfo = userInfo;
-            if (this.userInfo.identity !== 1) {
+            if (this.type === 'edit') {
+                this.getJoinInfo();
+            } else if (this.userInfo.identity !== 1) {
                 this.initFormat(this.userInfo);
             }
             this.getQrCode();
@@ -377,7 +388,9 @@ export default {
             api.get('/api/user/info').then(
                 (res) => {
                     this.userInfo = res.user_info;
-                    if (this.userInfo.identity !== 1) {
+                    if (this.type === 'edit') {
+                        this.getJoinInfo();
+                    } else if (this.userInfo.identity !== 1) {
                         this.initFormat(this.userInfo);
                     }
                     this.getQrCode();
@@ -457,16 +470,31 @@ export default {
             });
             return '';
         },
-        chooseImage() {
+        chooseImageFn() {
             uni.chooseImage({
-                count: 1,
-                sourceType: ['album'],
                 success: (res) => {
-                    console.log(res);
+                    const size = res.size || res.tempFiles[0].size;
+                    if (size / 1024 / 1024 > 2) {
+                        return uni.showToast({
+                            title: '请选择小于2M的图片',
+                            icon: 'none',
+                        });
+                    }
                     // 设置url的值，显示控件
                     [this.url] = res.tempFilePaths;
+                    return true;
                 },
             });
+        },
+        chooseImage() {
+            const isAndroid = !!(this.isH5 && utils.getAppType() === 'android');
+            if (isAndroid) {
+                this.chooseImageFn();
+            } else {
+                api.Permissions('image').then(() => {
+                    this.chooseImageFn();
+                });
+            }
         },
         onok(ev) {
             this.uploadFile(ev.path).then((data) => {
@@ -534,21 +562,20 @@ export default {
             }
         },
         createPoster() {
-            // eslint-disable-next-line max-len
-            this.posterCommonConfig.images[1].url = this.isH5
+            const that = this;
+            that.posterCommonConfig.images[1].url = this.isH5
                 ? this.formData.image
                 : utils.mapHttpToHttps(this.formData.image);
-            if (this.isH5) {
-                this.posterCommonConfig.images[0].url = '/activity/static/children_img/brand_poster.jpg';
-                this.posterCommonConfig.images[2].url = '/activity/static/children_img/brand_poster_name.png';
+            if (that.isH5) {
+                that.posterCommonConfig.images[0].url = '/activity/static/children_img/brand_poster.jpg';
+                that.posterCommonConfig.images[2].url = '/activity/static/children_img/brand_poster_name.png';
             } else {
-                this.posterCommonConfig.images[0].url = 'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/brand_poster.jpg';
-                this.posterCommonConfig.images[2].url = 'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/brand_poster_name.png';
+                that.posterCommonConfig.images[0].url = 'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/brand_poster.jpg';
+                that.posterCommonConfig.images[2].url = 'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/brand_poster_name.png';
             }
-
-            this.posterCommonConfig.texts[0].text = `我是${this.formData.name}`;
-            this.posterCommonConfig.texts[1].text = `${this.formData.slogan}`;
-            this.$refs.posterh5.createPoster(this.posterCommonConfig);
+            that.posterCommonConfig.texts[0].text = `我是${that.formData.name}`;
+            that.posterCommonConfig.texts[1].text = `${that.formData.slogan}`;
+            that.$refs.posterh5.createPoster(that.posterCommonConfig);
         },
         submit(path) {
             this.uploadFile(path).then((data) => {
@@ -625,11 +652,7 @@ export default {
         this.publicConfig = this.$store.getters.getPublicConfig(10);
         this.initShare();
         console.log(this.type);
-        if (this.type) {
-            this.getJoinInfo();
-        } else {
-            this.getUserInfo();
-        }
+        this.getUserInfo();
     },
     onShareAppMessage(res) {
         if (res.from === 'button') {

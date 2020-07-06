@@ -103,6 +103,7 @@
 /* eslint-disable */
 import config from "../../../common/config";
 import utils from "../../../common/utils";
+import api from "../../../common/api";
 
 export default {
     props: {
@@ -136,6 +137,9 @@ export default {
     data() {
         console.log(this.preview);
         return {
+            // #ifdef H5
+            isH5: true,
+            // #endif
             src: "",
             tempFilePath: "",
             url: this.source,
@@ -202,12 +206,13 @@ export default {
                 suffix = tempFilePath.split(".").pop();
                 // eslint-disable-next-line no-empty
             } catch {}
-            if (["jpg", "jpeg", "png", "gif"].indexOf(suffix) === -1) {
-                return uni.showToast({
-                    icon: "none",
-                    title: "图片规格不正确"
-                });
-            }
+            console.log(1111, tempFilePath);
+            // if (["jpg", "jpeg", "png", "gif"].indexOf(suffix) === -1) {
+            //     return uni.showToast({
+            //         icon: "none",
+            //         title: "图片规格不正确"
+            //     });
+            // }
 
             uni.showToast({
                 icon: "loading",
@@ -305,48 +310,60 @@ export default {
                 }
             });
         },
-        chooseResource() {
-            if (this.type === "image") {
-                uni.chooseImage({
-                    count: this.count,
-                    success: res => {
-                        Promise.all(
-                            res.tempFilePaths.map(filePath =>
-                                this.uploadFile(filePath)
-                            )
-                        ).then(data => {
-                            this.$emit("change", data);
+        chooseImage() {
+            uni.chooseImage({
+                count: this.count,
+                success: res => {
+                    console.log(res.type);
+                    Promise.all(
+                        res.tempFilePaths.map(filePath =>
+                            this.uploadFile(filePath)
+                        )
+                    ).then(data => {
+                        this.$emit("change", data);
+                    });
+                    [this.src] = res.tempFilePaths;
+                },
+                fail: res => {
+                    // alert(res);
+                }
+            });
+        },
+        chooseVideo() {
+            uni.chooseVideo({
+                success: res => {
+                    if (res.size / 1000 / 1000 > 200) {
+                        return uni.showToast({
+                            title: "视频规格过大，请在PC官网上传",
+                            icon: "none"
                         });
-                        [this.src] = res.tempFilePaths;
                     }
-                });
+                    const filePath = res.tempFilePath;
+                    this.src = filePath;
+                    return this.uploadVideo(filePath, res);
+                }
+            });
+        },
+        chooseResource() {
+            const isAndroid =
+                this.isH5 && utils.getAppType() === "android" ? true : false;
+            if (this.type === "image") {
+                if (isAndroid) {
+                    this.chooseImage();
+                } else {
+                    api.Permissions("image").then(() => {
+                        this.chooseImage();
+                    });
+                }
             } else if (this.type === "video") {
-                uni.chooseVideo({
-                    success: res => {
-                        if (res.size / 1000 / 1000 > 200) {
-                            return uni.showToast({
-                                title: "视频规格过大，请在PC官网上传",
-                                icon: "none"
-                            });
-                        }
-                        const filePath = res.tempFilePath;
-                        this.src = filePath;
-                        return this.uploadVideo(filePath, res);
-                        // console.log(res);
-                        // const fileList = e.target.files;
-                        // this.uploader.cleanList();
-                    }
-                });
+                if (isAndroid) {
+                    this.chooseVideo();
+                } else {
+                    api.Permissions("video").then(() => {
+                        this.chooseVideo();
+                    });
+                }
             }
-
-            // let fn = this.type === 'image' ? uni.chooseImage : uni.chooseVideo;
-
-            // fn({
-            //     success: (res) => {
-            //         this.src = res.tempFilePath;
-            //         this.uploadFile(res.tempFilePath);
-            //     }
-            // });
         }
     }
 };

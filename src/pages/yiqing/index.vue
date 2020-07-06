@@ -250,6 +250,7 @@
 
                 <view
                     class="upload"
+                    :class="{ 'upload-disable': isH5 }"
                     @click="handleUpload"
                 >
                     点击领取你的证书
@@ -298,6 +299,9 @@ export default {
     data() {
         return {
             fr: '',
+            // #ifdef H5
+            isH5: true,
+            // #endif
             shareDesc: '',
             changeValue: '',
             activeMenuIndex: '1',
@@ -315,6 +319,7 @@ export default {
             status: 2,
             crouselList: [],
             setId: '',
+            userkey: '',
         };
     },
     created() {
@@ -382,6 +387,12 @@ export default {
         },
         handleUpload() {
             // if (this.status === 2) {
+            if (this.isH5) {
+                return uni.showToast({
+                    title: '请在UP爱挑战小程序上领取证书',
+                    icon: 'none',
+                });
+            }
             api.isLogin({
                 fr: this.fr,
             }).then(() => {
@@ -389,6 +400,7 @@ export default {
                     url: '/pages/yiqing/myWork/myWork?type=myWork',
                 });
             });
+            return true;
             // } else {
             //     uni.showToast({
             //         title:

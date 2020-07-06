@@ -2,6 +2,7 @@
     <view
         v-if="!isLoading"
         class="page-work-detail"
+        :style="{ height: pageHeight + 'px' }"
     >
         <view
             v-if="prompt"
@@ -227,8 +228,8 @@ export default {
 
             // #ifdef H5
             isH5: true,
+            isWechat: false,
             // #endif
-
             shareDesc: '',
             fr: '',
             posterConfig: detailConf[0].posterConfig,
@@ -258,9 +259,24 @@ export default {
             canvasImgW: 826 * pix,
             pix,
             userInfo: null,
+            shareConfig: {},
+            pageHeight: 500,
         };
     },
-    created() {},
+    mounted() {
+        if (this.isH5) {
+            const ua = window.navigator.userAgent.toLowerCase();
+            this.isWechat = ua.indexOf('micromessenger') !== -1;
+        }
+    },
+    created() {
+        const that = this;
+        uni.getSystemInfo({
+            success(res) {
+                that.pageHeight = res.windowHeight;
+            },
+        });
+    },
     methods: {
         getcommentTotal(val) {
             this.commentTotal = val;
@@ -307,25 +323,22 @@ export default {
             }
         },
         handleCanvass() {
-            // #ifdef H5
-            this.showShareMask = true;
-            // #endif
-
-            if (
-                this.pageData.resource_scope === 3
-                && this.from !== 'openGame'
-                && !this.activity_id
-            ) {
-                this.posterConfig.images[0].url = 'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/h5/aitiaozhan-poster2.png';
-            }
-            console.log(
-                this.activity_id,
-                this.pageData.resource_scope,
-                '---handleCanvass',
-            );
-            // #ifndef H5
-            this.handleTicketMask();
-            // #endif
+            // alert(Object.keys(this.shareConfig).length);
+            api.appShare(this.shareConfig).then(() => {
+                // #ifdef H5
+                this.showShareMask = true;
+                // #endif
+                // #ifndef H5
+                if (
+                    this.pageData.resource_scope === 3
+                    && this.from !== 'openGame'
+                    && !this.activity_id
+                ) {
+                    this.posterConfig.images[0].url = 'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/h5/aitiaozhan-poster2.png';
+                }
+                this.handleTicketMask();
+                // #endif
+            });
         },
         // 生成二维码，并弹出mask
         handleTicketMask() {
@@ -628,19 +641,19 @@ export default {
                 thumbnail: res.video_img_url,
                 url: `${window.location.origin}${window.location.pathname}?${scene}`,
             });
+            this.shareConfig = {
+                ...this.shareConfig,
+                share_url: `${window.location.origin}${window.location.pathname}?${scene}`,
+                share_image: res.video_img_url,
+                share_title: title,
+                share_desc: desc,
+            };
             // #endif
             uni.setNavigationBarTitle({
                 title: res.resource_name || '',
             });
         },
         joinGame() {
-            if (this.isH5) {
-                uni.showToast({
-                    icon: 'none',
-                    title: '请在UP青少年爱挑战小程序或爱挑战PC官网上传作品',
-                });
-                return;
-            }
             api.isLogin({
                 fr: this.fr,
             }).then(
@@ -1035,14 +1048,14 @@ export default {
 <style lang="less">
 .page-work-detail {
     background: #000;
-    height: 100vh;
+    height: 100%;
     #poster {
         // position: absolute;
         // left:-999upx;
     }
     .out-swiper {
         width: 100%;
-        height: 100vh;
+        height: 100%;
     }
     .activerulebox {
         position: fixed;

@@ -5,36 +5,10 @@
             class="inner"
         >
             <movable-area class="movable-area">
-                <movable-view
-                    v-show="active"
-                    class="movable-view"
-                    :x="x"
-                    :y="y"
-                    direction="all"
-                    damping="5000"
-                    friction="1"
-                >
-                    <view
-                        class="item-move"
-                        :class="{ 'item-move-active': active }"
-                    >
-                        <image
-                            class="img"
-                            :src="lists[beginIndex]"
-                            mode="aspectFill"
-                        />
-                    </view>
-                </movable-view>
-                <movable-view
+                <view
                     v-for="(item, index) in lists"
                     :key="index"
                     class="item"
-                    :class="{
-                        'm-t': index > 2,
-                        'n-m-r': (index + 1) % 3 === 0
-                    }"
-                    direction="none"
-                    :disabled="true"
                     @longpress="longtap"
                     @touchend="touchend"
                     @touchmove.stop="touchm"
@@ -55,6 +29,26 @@
                         class="tag"
                     >
                         封面
+                    </view>
+                </view>
+                <movable-view
+                    v-show="active"
+                    class="movable-view"
+                    :x="x"
+                    :y="y"
+                    direction="all"
+                    damping="5000"
+                    friction="1"
+                >
+                    <view
+                        class="item-move"
+                        :class="{ 'item-move-active': active }"
+                    >
+                        <image
+                            class="img"
+                            :src="lists[beginIndex]"
+                            mode="aspectFill"
+                        />
                     </view>
                 </movable-view>
             </movable-area>
@@ -126,12 +120,11 @@ export default {
                 .in(this)
                 .select('#inner');
             wrap.boundingClientRect((data) => {
-                console.log(data);
                 wrapW = data.width; // 设置拖拽范围的总宽度
                 wrapH = data.height; // 设置拖拽范围的总高度
                 wrapTop = data.top; // 设置拖拽范围的上边界坐标
                 wrapLeft = data.left; // 设置拖拽范围的左边界坐标
-                this.setNodeWH();
+                // this.setNodeWH();
             }).exec();
         },
         reset() {
@@ -154,7 +147,6 @@ export default {
             // 设置拖拽区域及元素配置
             wrapDragTop = wrapTop + itemH / 2; // 设置拖拽范围上边距
             wrapDragLeft = wrapLeft + itemW / 2; // 设置可拖拽范围左边距
-            console.log(wrapDragTop, wrapDragLeft);
             wrapW2 = wrapW - itemW; // 设置可拖拽区域宽度
             wrapH2 = wrapH - itemH; // 设置可拖拽区域高度
             itemXNun = Math.round(wrapW / itemW) - 1; // 设置拖拽元素的列数
@@ -168,7 +160,6 @@ export default {
             this.y = top;
             this.active = true;
             this.flag = true;
-            console.log(left, top);
         },
         computationIndex(e) {
             // 计算元素索引
@@ -189,7 +180,6 @@ export default {
             return index;
         },
         touchm(e) {
-            console.log(e, wrapDragLeft, wrapDragTop);
             // 拖拽过程
             if (this.flag) {
                 let x = e.touches[0].pageX - wrapDragLeft;
@@ -327,7 +317,7 @@ export default {
 
 .movable-area {
     width: 100%;
-    height: auto;
+    height: 100upx;
     display: flex;
     flex-flow: wrap;
 }
@@ -338,20 +328,16 @@ export default {
     /* overflow: hidden; */
     border-radius: 12upx;
     position: relative;
-    left: auto;
-    top: auto;
 }
 
-.item {
+.item:not(:nth-child(3n + 3)) {
     margin-right: 3.4%;
-    margin-top: 0;
 }
-.item.m-t {
+
+.item:nth-child(n + 4) {
     margin-top: 3.4%;
 }
-.item.n-m-r {
-    margin-right: 0;
-}
+
 .img-upload-btn {
     display: flex;
     flex-direction: column;
@@ -374,8 +360,6 @@ export default {
 .movable-view {
     width: 31%;
     height: calc(31vw * 0.7);
-    position: absolute !important;
-    z-index: 1;
 }
 
 .item-move {

@@ -81,6 +81,15 @@ function isOverDate() {
     console.log(parseFloat(myArray));
     return 20200530235959 - parseFloat(myArray) > 0;
 }
+function getAppType() {
+    const u = navigator.userAgent;
+    const isIOS = u.toLowerCase().indexOf('wd-atz-ios') !== -1;
+    const isAndroid = u.toLowerCase().indexOf('wd-atz-android') !== -1;
+    if (isIOS || isAndroid) {
+        return isIOS ? 'ios' : 'android';
+    }
+    return null;
+}
 
 function mapHttpToHttps(rawUrl) {
     if (rawUrl.indexOf(':') < 0) {
@@ -101,4 +110,7 @@ export default {
     getParam,
     isOverDate,
     mapHttpToHttps,
+    // #ifdef H5
+    getAppType,
+    // #endif
 };

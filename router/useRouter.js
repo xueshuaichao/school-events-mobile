@@ -110,9 +110,7 @@ const routesConfig = {
         {
             path: '/pages/address/edit',
         },
-        {
-            path: '/activity/pages/rematch/list',
-        },
+
         {
             path: '/activity/chunjie/upload/upload',
         },
@@ -168,12 +166,14 @@ const routesConfig = {
         {
             path: '/activity/pages/children/index',
         },
-
         {
             path: '/activity/pages/mywork/mywork',
         },
         {
             path: '/activity/pages/upload/modify',
+        },
+        {
+            path: '/activity/pages/upload/result',
         },
         {
             path: '/activity/pages/brand/ucenter',
@@ -184,7 +184,9 @@ const routesConfig = {
         {
             path: '/activity/pages/brand/join',
         },
-
+        {
+            path: '/activity/pages/brand/rematch',
+        },
         {
             path: '/pages/activity-pages/mywork/mywork',
         },

@@ -1096,16 +1096,9 @@ export default {
                         fr: this.fr,
                     }).then(() => {
                         this.maskPrompt = false;
-                        if (this.isH5) {
-                            uni.showToast({
-                                title: '请在UP爱挑战小程序上传作品',
-                                icon: 'none',
-                            });
-                        } else {
-                            uni.navigateTo({
-                                url: `/activity/pages/upload/modify?activity_id=${this.activityId}`,
-                            });
-                        }
+                        uni.navigateTo({
+                            url: `/activity/pages/upload/modify?activity_id=${this.activityId}`,
+                        });
                     });
                     break;
             }
