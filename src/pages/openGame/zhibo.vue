@@ -38,6 +38,7 @@
         <video
             class="video"
             :src="pageDetail.live_uri"
+            :duration="1"
             @error="error"
             @fullscreenchange="onFullScreenChange"
         />
@@ -106,6 +107,7 @@
                 placeholder="快来留下评论吧"
                 maxlength="80"
                 :adjust-position="false"
+                @keydown.enter="bindconfirm"
                 @blur="blur"
                 @focus="onFoucs"
             >

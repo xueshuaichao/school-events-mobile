@@ -5,6 +5,7 @@
             <view class="poster-img-mask-box">
                 <view
                     v-if="image"
+                    id="canvas-img"
                     class="canvas-img"
                 >
                     <image
@@ -22,13 +23,9 @@
                     <view
                         v-else
                         class="brand-btn btn"
+                        @click="saveImage"
                     >
-                        <a
-                            :href="image"
-                            download
-                        >
-                            保存图片
-                        </a>
+                        保存图片
                     </view>
                 </template>
                 <template v-else>
@@ -60,6 +57,7 @@
     </view>
 </template>
 <script>
+import api from '../../../common/api';
 import utils from '../../../common/utils';
 
 export default {
@@ -138,7 +136,7 @@ export default {
             const that = this;
             // eslint-disable-next-line no-undef
             wx.getImageInfo({
-                src: utils.mapHttpToHttps(that.image),
+                src: this.isH5 ? that.image : utils.mapHttpToHttps(that.image),
                 success(res) {
                     // eslint-disable-next-line no-undef
                     wx.saveImageToPhotosAlbum({
@@ -202,6 +200,15 @@ export default {
                         },
                     });
                 },
+            });
+        },
+        saveImage() {
+            uni.showLoading();
+            api.saveImage('canvas-img', this.image).then(() => {
+                uni.hideLoading();
+                uni.showToast({
+                    title: '保存成功',
+                });
             });
         },
         togglePoster(status) {

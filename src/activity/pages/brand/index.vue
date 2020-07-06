@@ -241,6 +241,7 @@ export default {
             ],
             expertList: [],
             myWorkPath: '',
+            userkey: '',
         };
     },
     created() {
@@ -258,6 +259,7 @@ export default {
         this.fr = logger.getFr(this.publicConfig.log, {});
         this.getStatus();
         this.activityStatus();
+
         this.isLogin().then(
             (res) => {
                 this.userInfo = res.user_info;
@@ -331,11 +333,13 @@ export default {
             });
         },
         getenrollinfo() {
+            uni.showLoading();
             api.get('/api/activity/getenrollinfo', {
                 activity_id: this.activityId,
                 user_id: this.userInfo.user_id,
             }).then(
                 (data) => {
+                    uni.hideLoading();
                     if (Array.isArray(data) && data.length === 0) {
                         // 参赛
                         this.canJoin = true;
@@ -354,6 +358,7 @@ export default {
                     }
                 },
                 () => {
+                    uni.hideLoading();
                     this.canJoin = true;
                 },
             );
@@ -384,24 +389,38 @@ export default {
             if (this.showGuideMask) {
                 this.toggleGuideMask(false);
             }
-            if (this.isH5 && this.canJoin === false) {
-                return uni.showToast({
-                    title: '请在UP爱挑战小程序上传作品',
-                    icon: 'none',
-                });
-            }
             if (this.status === 2) {
-                api.isLogin().then(
-                    () => {
-                        if (this.canJoin) {
-                            uni.navigateTo({
-                                url: '/activity/pages/brand/join',
-                            });
-                        } else {
-                            uni.navigateTo({
-                                url: `/activity/pages/upload/modify?activity_id=${this.activityId}`,
-                            });
-                        }
+                api.isLogin({}).then(
+                    (res) => {
+                        console.log(res);
+                        this.userInfo = res;
+                        this.myWorkPath = `/activity/pages/brand/ucenter?activity_id=10&user_id=${this.userInfo.userid}`;
+                        uni.showLoading();
+                        api.get('/api/activity/getenrollinfo', {
+                            activity_id: this.activityId,
+                            user_id: this.userInfo.user_id,
+                        }).then(
+                            (data) => {
+                                uni.hideLoading();
+                                if (Array.isArray(data) && data.length === 0) {
+                                    // 参赛
+                                    this.canJoin = true;
+                                    uni.navigateTo({
+                                        url: '/activity/pages/brand/join',
+                                    });
+                                } else {
+                                    // 上传作品
+                                    this.canJoin = false;
+                                    uni.navigateTo({
+                                        url: `/activity/pages/upload/modify?activity_id=${this.activityId}`,
+                                    });
+                                }
+                            },
+                            () => {
+                                uni.hideLoading();
+                                this.canJoin = false;
+                            },
+                        );
                     },
                     () => {
                         this.userInfo = {};

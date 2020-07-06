@@ -168,12 +168,14 @@ const routesConfig = {
         {
             path: '/activity/pages/children/index',
         },
-
         {
             path: '/activity/pages/mywork/mywork',
         },
         {
             path: '/activity/pages/upload/modify',
+        },
+        {
+            path: '/activity/pages/upload/result',
         },
         {
             path: '/activity/pages/brand/ucenter',

@@ -2,6 +2,7 @@
     <view
         v-if="showDraw"
         class="topic-drawer-box"
+        :class="{ 'h5-main': isH5 }"
         @click="clickWrap"
     >
         <view
@@ -12,6 +13,7 @@
         <view
             class="topic-drawer"
             :animation="animationData"
+            :style="{ height: pannelHeight + 'px' }"
             @click.stop.prevent="clickNull"
         >
             <view
@@ -27,7 +29,6 @@
                     height: drawerHeight + 'px',
                     overflow: isAuto ? 'hidden auto' : ''
                 }"
-                :scroll-into-view="intoIndex"
                 class="scroll-context"
                 @scrolltolower="toLower"
             >
@@ -74,7 +75,7 @@
                             :style="item.show ? '' : 'display:none;'"
                             :data-index="index"
                             class="sub-item item"
-                            @click.stop="clickItem(subItem, item)"
+                            @click.stop="clickItem(item, subItem)"
                         >
                             <view class="left">
                                 <view class="img-box">
@@ -147,7 +148,10 @@
                 :class="{ absolute: showKeybord }"
                 :style="{ top: (showKeybord ? inputTop : 0) + 'px' }"
             >
-                <view class="add-ctx">
+                <view
+                    class="add-ctx"
+                    :class="{ short: isFocus }"
+                >
                     <image
                         src="/static/images/work/write.png"
                         class="write-icon"
@@ -165,7 +169,7 @@
                     >
                 </view>
                 <view
-                    v-if="showKeybord"
+                    v-if="isFocus"
                     class="fabu"
                     :class="{ disable: !changeVal }"
                     @click="bindconfirm"
@@ -230,9 +234,9 @@ export default {
             hasLogin: false,
             hasKeybordEnterUp: false,
             placeholder: '写评论',
-            addObj: {},
+            addSubItemObj: {},
             allNum: 0,
-            selItem: {
+            curItem: {
                 comment_id: 0,
                 content: '',
                 from_user_id: 0,
@@ -243,8 +247,9 @@ export default {
                     name: '',
                 },
             },
-            intoIndex: '',
             isAuto: true,
+            pannelHeight: 0,
+            isConfirm: false,
         };
     },
     watch: {
@@ -307,7 +312,8 @@ export default {
             success(res) {
                 that.pix = res.screenWidth / 750;
                 that.screenHeight = res.windowHeight;
-                that.drawerHeight = res.windowHeight * 0.74 - that.pix * 220;
+                that.drawerHeight = res.windowHeight * 0.7 - that.pix * 250;
+                that.pannelHeight = res.windowHeight * 0.7;
             },
             fail() {
                 that.drawerHeight = 320;
@@ -323,7 +329,7 @@ export default {
                 this.showKeybord = true;
                 if (!this.hasKeybordEnterUp) {
                     e.detail.height = e.detail.height || 180;
-                    this.inputTop = this.screenHeight * 0.74
+                    this.inputTop = this.screenHeight * 0.7
                         - e.detail.height
                         - this.pix * 130;
                     this.markerheight = this.screenHeight - e.detail.height - this.pix * 130;
@@ -336,53 +342,56 @@ export default {
             this.animationData = this.animation.export();
         },
         hide() {
-            this.animation.bottom('-74%').step({ duration: 300 });
+            this.animation.bottom('-70%').step({ duration: 300 });
             this.animationData = this.animation.export();
         },
         clickWrap() {
             this.$emit('doAction', 'showMessage');
         },
         clickNull() {},
-        clickItem(item, items) {
-            this.placeholder = `回复@${item.user_info.name}`;
-            this.isFocus = true;
-            this.addObj = {
-                to_user_id: item.from_user_id,
-                to_comment_id: items ? items.comment_id : item.comment_id,
-            };
-            this.selItem.to_user_id = item.from_user_id;
-            this.selItem.to_user_name = item.user_info.name;
+        clickItem(item, subItem) {
+            this.changeVal = '';
+            if (!this.isFocus) {
+                this.placeholder = `回复@${
+                    subItem ? subItem.user_info.name : item.user_info.name
+                }`;
+                this.isFocus = true;
+                this.addSubItemObj = {
+                    to_user_id: subItem ? subItem.from_user_id : 0,
+                    to_comment_id: item.comment_id,
+                };
+                this.curItem.to_user_id = this.addSubItemObj.to_user_id;
+                this.curItem.to_user_name = subItem
+                    ? subItem.user_info.name
+                    : '';
+            }
         },
         getUserDate() {
             // 获取用户信息
             return api.get('/api/user/info').then((data) => {
-                this.selItem.user_info.avatar_url = data.user_info.avatar_url;
-                this.selItem.user_info.name = data.user_info.name;
-                this.selItem.create_user_class = data.user_info.class_name;
-                this.selItem.from_user_id = data.user_info.user_id;
+                this.curItem.user_info.avatar_url = data.user_info.avatar_url;
+                this.curItem.user_info.name = data.user_info.name;
+                this.curItem.create_user_class = data.user_info.class_name;
+                this.curItem.from_user_id = data.user_info.user_id;
             });
         },
         showCloseItem(item) {
             let show = false;
-            const conut = Math.ceil(item.sub_count / 10) + 1;
-            if (item.showCount && item.sub_count <= 3) {
-                show = true;
-            } else if (item.sub_count <= 10 && item.showCount === 2) {
-                show = true;
-            } else if (conut === item.showCount && item.sub_count > 10) {
+            if (
+                item.subListCache.length
+                && item.sub_count === item.subListCache.length
+            ) {
                 show = true;
             }
             return show;
         },
         openSubItem(item) {
             let show = false;
-            if (item.subListCache.length !== item.sub_count) {
-                if (
-                    (item.sub_count > 10 || item.sub_count > 3)
-                    && item.showCount > 0
-                ) {
-                    show = true;
-                }
+            if (
+                item.subListCache.length
+                && item.subListCache.length !== item.sub_count
+            ) {
+                show = true;
             }
             return show;
         },
@@ -390,16 +399,21 @@ export default {
             // 展开更多，数据已经加载，不重复获取数据
             let List = [];
 
+            // 获取更多的条件
             let getNew = false;
-            if (!item.subList.length) {
+            if (
+                item.subList.length === item.sub_add_count
+                || !item.subList.length
+            ) {
                 getNew = true;
             } else if (
                 item.sub_count > item.subList.length
-                && item.sub_count > 10
+                && item.sub_count - item.sub_add_count > 10
                 && item.showCount >= 2
             ) {
                 getNew = true;
             }
+
             if (getNew) {
                 if (item.subList && item.subList.length) {
                     this.subFilter.last_id = item.subList[item.subList.length - 1].comment_id;
@@ -442,26 +456,31 @@ export default {
             });
         },
         setCacheSublist(D) {
-            // 显示3条评论，显示10条评论，
             const d = D;
-            if (d.showCount === 0) {
-                d.subListCache = [];
-            } else if (d.showCount === 1) {
-                d.subListCache = d.subList.slice(0, 3);
-            } else if (d.showCount === 2) {
-                d.subListCache = d.subList.slice(0, 10);
-            } else {
-                d.subListCache = d.subList.slice(0, (d.showCount - 1) * 10);
+            // 显示3条评论，显示10条评论,
+            if (d.sub_count !== d.subListCache.length) {
+                if (d.showCount === 0) {
+                    if (d.subList.length) {
+                        d.subListCache = d.subList.slice(0, D.sub_add_count);
+                    } else {
+                        d.subListCache = [];
+                    }
+                } else if (d.showCount === 1) {
+                    d.subListCache = d.subList.slice(0, 3 + D.sub_add_count);
+                } else if (d.showCount === 2) {
+                    d.subListCache = d.subList.slice(0, 10 + D.sub_add_count);
+                } else {
+                    d.subListCache = d.subList.slice(
+                        0,
+                        (d.showCount - 1) * 10 + D.sub_add_count,
+                    );
+                }
             }
         },
-        closeSubList(item, idx) {
-            console.log('list--122---', idx);
-            // this.goTop();
-
+        closeSubList(item) {
             this.list = this.list.map((D) => {
                 const d = D;
                 if (d.comment_id === item.comment_id) {
-                    d.showCount = 0;
                     d.show = false;
                 }
                 return d;
@@ -469,10 +488,7 @@ export default {
             this.isAuto = false;
             this.$nextTick(() => {
                 this.isAuto = true;
-                // this.intoIndex = `more${idx}`;
-                // console.log(this.intoIndex, 'this.intoIndex-------');
             });
-            // this.intoIndex = '';
         },
         getList() {
             if (this.list.length) {
@@ -491,6 +507,7 @@ export default {
                     D.created_at = D.created_at.slice(5, 16);
                     D.subList = [];
                     D.subListCache = [];
+                    D.sub_add_count = 0;
                     D.show = false;
                     D.showCount = 0;
                     return D;
@@ -503,7 +520,7 @@ export default {
             });
         },
         blur() {
-            if (this.isFocus) {
+            if (!this.isH5 && !this.isConfirm) {
                 this.resetInitVal();
             }
         },
@@ -511,6 +528,7 @@ export default {
             this.showKeybord = false;
             this.isFocus = false;
             if (this.changeVal.trim()) {
+                this.isConfirm = true;
                 const content = this.changeVal.trim();
                 if (this.hasLogin) {
                     this.addComment(content);
@@ -520,15 +538,15 @@ export default {
                     }).then(
                         () => {
                             this.hasLogin = true;
-                            this.getUserDate();
-                            this.addComment(content);
+                            this.getUserDate().then(() => {
+                                this.addComment(content);
+                            });
                         },
                         () => uni.showToast({
                             icon: 'none',
                             title: '请先登录',
                         }),
                     );
-                    this.changeVal = '';
                 }
             } else {
                 this.changeVal = '';
@@ -541,7 +559,7 @@ export default {
                 topic_type: 3,
                 topic_id: this.pageData.resource_id,
                 comment_type: 1,
-                ...this.addObj,
+                ...this.addSubItemObj,
             };
             api.post('/api/comment/add', params).then((id) => {
                 uni.showToast({
@@ -560,28 +578,30 @@ export default {
             time += `${this.joinDate(date.getHours())}:`;
             time += `${this.joinDate(date.getMinutes())}`;
             const obj = {
-                ...this.selItem,
+                ...this.curItem,
                 comment_id: id,
                 sub_count: 0,
                 created_at: time,
                 content,
             };
-            console.log(
-                obj.to_user_id,
-                obj.to_comment_id,
-                this.addObj.to_comment_id,
-            );
-            if (!obj.to_user_id) {
+
+            if (
+                !Object.prototype.hasOwnProperty.call(
+                    this.addSubItemObj,
+                    'to_comment_id',
+                )
+            ) {
                 obj.subList = [];
                 obj.subListCache = [];
                 obj.show = false;
                 obj.showCount = 0;
+                obj.sub_add_count = 0;
                 this.list.unshift(obj);
                 this.total += 1;
             } else {
                 this.list = this.list.map((D) => {
                     const d = D;
-                    if (this.addObj.to_comment_id === d.comment_id) {
+                    if (this.addSubItemObj.to_comment_id === d.comment_id) {
                         if (d.sub_count) {
                             d.sub_count += 1;
                             d.subList.unshift(obj);
@@ -589,6 +609,8 @@ export default {
                             d.subList = [obj];
                             d.sub_count = 1;
                         }
+                        d.sub_add_count += 1;
+                        d.show = true;
                         this.setCacheSublist(d);
                     }
                     return d;
@@ -596,7 +618,6 @@ export default {
             }
             this.allNum += 1;
             this.$emit('getcommentTotal', this.allNum);
-
             this.resetInitVal();
         },
         joinDate(time) {
@@ -606,14 +627,15 @@ export default {
         resetInitVal() {
             console.log('reseting--------');
             // reset for init value;
-            this.selItem.to_user_id = 0;
-            this.selItem.to_user_name = '';
-            this.addObj = {};
+            this.curItem.to_user_id = 0;
+            this.curItem.to_user_name = '';
+            this.addSubItemObj = {};
             this.filter.page_num = 1;
             this.placeholder = '写评论';
             this.showKeybord = false;
             this.isFocus = false;
             this.changeVal = '';
+            this.isConfirm = false;
         },
         toLower() {
             if (this.filter.page_num * this.filter.page_size < this.total) {
@@ -628,9 +650,14 @@ export default {
 .topic-drawer-box {
     width: 100%;
     height: 100vh;
-    position: absolute;
+    position: fixed;
     left: 0;
     top: 0;
+    box-sizing: border-box;
+    overflow: hidden;
+    &.h5-main {
+        height: 100%;
+    }
     .marker {
         position: absolute;
         top: 0;
@@ -640,8 +667,7 @@ export default {
         z-index: 101;
     }
     .topic-drawer {
-        padding: 30rpx 0;
-        height: 74vh;
+        padding: 30rpx 0 0;
         width: 100%;
         box-sizing: border-box;
         position: absolute;
@@ -681,12 +707,12 @@ export default {
             color: #b0b5bf;
             font-size: 28rpx;
             line-height: 40rpx;
+            padding-bottom: 40upx;
         }
         .scroll-context {
             padding: 20rpx 30rpx 30rpx;
             box-sizing: border-box;
             background: #fff;
-            margin-top: 40rpx;
             position: relative;
             // z-index: 200;
             .no-data {
@@ -760,11 +786,12 @@ export default {
             line-height: 40rpx;
         }
         .message-add {
-            padding: 0 30rpx;
+            padding: 30rpx;
             position: relative;
             top: 0;
             background: #fff;
             display: flex;
+            justify-content: space-between;
             .add-ctx {
                 background: #f0f0f2;
                 border-radius: 40rpx;
@@ -779,6 +806,9 @@ export default {
                     width: 100%;
                     height: 100%;
                     z-index: 1;
+                }
+                &.short {
+                    width: 590rpx;
                 }
             }
 
@@ -803,11 +833,7 @@ export default {
             &.absolute {
                 position: absolute;
                 left: 30rpx;
-                padding: 30rpx;
                 // z-index: 201;
-                .add-ctx {
-                    width: 560rpx;
-                }
             }
             .write-icon {
                 width: 48rpx;

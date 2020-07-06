@@ -61,6 +61,7 @@
                             <view class="user-image">
                                 <img
                                     v-if="isH5"
+                                    crossorigin="anonymous"
                                     :src="detail.image"
                                     alt=""
                                 >
@@ -418,11 +419,6 @@ export default {
         },
         uploadFile(tempFilePath) {
             this.tempFilePath = tempFilePath;
-            uni.showToast({
-                icon: 'loading',
-                title: '上传中',
-                duration: 200000,
-            });
             return new Promise((resolve, reject) => {
                 uni.uploadFile({
                     url: `${config.host}/api/file/uploadfile`, // 仅为示例，非真实的接口地址
@@ -462,12 +458,11 @@ export default {
             });
         },
         onPosterSuccess(detail) {
-            this.myPoster = detail;
             this.submit(detail);
-            this.togglePoster(true);
         },
         onPosterFail() {
-            this.myPoster = this.detail[this.isH5 ? 'poster_h5' : 'poster_mp'];
+            // 如果生成失败 取现在有的海报
+            this.myPoster = this.detail[this.isH5 ? 'poster_mp' : 'poster_h5'];
             if (this.myPoster) {
                 this.togglePoster(true);
             } else {
@@ -476,6 +471,7 @@ export default {
                     icon: 'none',
                 });
             }
+            uni.hideLoading();
         },
         submit(path) {
             const detail = {};
@@ -485,7 +481,10 @@ export default {
                     detail,
                     activity_id: 10,
                 }).then(() => {
+                    uni.hideLoading();
                     this.detail[this.isH5 ? 'poster_h5' : 'poster_mp'] = data.path;
+                    this.myPoster = data.path;
+                    this.togglePoster(true);
                 });
             });
         },
@@ -553,30 +552,33 @@ export default {
             return '';
         },
         getMyPoster() {
+            uni.showLoading();
             if (
                 (this.isH5 && !this.detail.poster_h5)
                 || (!this.isH5 && !this.detail.poster_mp)
             ) {
                 this.createPoster();
             } else {
+                uni.hideLoading();
                 this.togglePoster(true);
             }
         },
         createPoster() {
             const { image, name, slogan } = this.detail;
-            this.posterCommonConfig.images[1].url = this.isH5
-                ? `${image}?v=${new Date().getTime()}`
+            const that = this;
+            that.posterCommonConfig.images[1].url = this.isH5
+                ? image
                 : utils.mapHttpToHttps(image);
-            if (this.isH5) {
-                this.posterCommonConfig.images[0].url = '/activity/static/children_img/brand_poster.jpg';
-                this.posterCommonConfig.images[2].url = '/activity/static/children_img/brand_poster_name.png';
+            if (that.isH5) {
+                that.posterCommonConfig.images[0].url = '/activity/static/children_img/brand_poster.jpg';
+                that.posterCommonConfig.images[2].url = '/activity/static/children_img/brand_poster_name.png';
             } else {
-                this.posterCommonConfig.images[0].url = 'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/brand_poster.jpg';
-                this.posterCommonConfig.images[2].url = 'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/brand_poster_name.png';
+                that.posterCommonConfig.images[0].url = 'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/brand_poster.jpg';
+                that.posterCommonConfig.images[2].url = 'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/brand_poster_name.png';
             }
-            this.posterCommonConfig.texts[0].text = `我是${name}`;
-            this.posterCommonConfig.texts[1].text = slogan;
-            this.$refs.posterh5.createPoster(this.posterCommonConfig);
+            that.posterCommonConfig.texts[0].text = `我是${name}`;
+            that.posterCommonConfig.texts[1].text = slogan;
+            that.$refs.posterh5.createPoster(that.posterCommonConfig);
         },
         togglePoster(status) {
             this.showPosterMask = status;
@@ -755,7 +757,8 @@ export default {
             if (this.status === 2) {
                 api.isLogin({
                     fr: this.fr,
-                }).then(() => {
+                }).then((res) => {
+                    this.userInfo = res;
                     api.post('/api/activity/vote', {
                         id: item.id,
                         activity_id: this.filter.activity_id,
@@ -815,15 +818,10 @@ export default {
                     url: `/activity/pages/index?activity_id=${this.filter.activity_id}`,
                 });
             }
-            if (this.isH5) {
-                return uni.showToast({
-                    title: '请在UP爱挑战小程序上传作品',
-                    icon: 'none',
-                });
-            }
             if (this.status === 2) {
                 api.isLogin().then(
-                    () => {
+                    (res) => {
+                        this.userInfo = res;
                         uni.navigateTo({
                             url: `/activity/pages/upload/modify?activity_id=${this.filter.activity_id}`,
                         });

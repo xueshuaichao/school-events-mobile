@@ -69,8 +69,8 @@
                                 disabled:
                                     ((formData.cat_id === 18 ||
                                     formData.cat_id === 16) &&
-                                    item !== 'video') ||
-                                    id !== ''
+                                    item === 'image') ||
+                                    id
                             }"
                             @click="setNewsTabActive(k + 1)"
                         >
@@ -382,11 +382,12 @@ export default {
             this.formData.video_img_url = data[0] && data[0].path;
             if (this.uploadMode === 'image') {
                 data.forEach((item) => {
+                    console.log(item.path);
                     this.$refs.preview.add(item.path);
                 });
                 setTimeout(() => {
                     this.$refs.preview.init();
-                }, 100);
+                }, 300);
             }
         },
         getData() {

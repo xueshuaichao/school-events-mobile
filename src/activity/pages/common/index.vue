@@ -179,6 +179,7 @@ import api from '../../../common/api';
 
 import uniLoadMore from '../../../components/uni-load-more/uni-load-more.vue';
 import EventCraftCover from '../../../components/event-craft-cover/index.vue';
+// import utils from '../../../common/utils';
 
 export default {
     filters: {
@@ -248,6 +249,7 @@ export default {
             status: 2,
             crouselList: [],
             setId: '',
+            userkey: '',
         };
     },
     computed: {
@@ -309,12 +311,6 @@ export default {
             });
         },
         handleUpload() {
-            // if (this.isH5) {
-            //     return uni.showToast({
-            //         title: '请在UP爱挑战小程序上传作品',
-            //         icon: 'none',
-            //     });
-            // }
             if (this.status === 2) {
                 api.isLogin({
                     fr: this.fr,
