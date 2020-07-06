@@ -286,9 +286,6 @@ const routesConfig = {
             path: '/pages/activity/apply',
         },
         {
-            path: '/pages/app/index',
-        },
-        {
             path: '*',
             name: 'moddle',
             redirect: (to) => {
