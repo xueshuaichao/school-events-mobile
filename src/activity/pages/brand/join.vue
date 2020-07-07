@@ -404,14 +404,15 @@ export default {
             api.get('/api/activity/getenrollinfo', {
                 activity_id: 10,
             }).then((res) => {
-                this.$nextTick(() => {
-                    this.formData = {
-                        ...this.formData,
-                        ...res.detail,
-                    };
+                // this.$nextTick(() => {
+                //     this.formData = {
+                //         ...this.formData,
+                //         ...res.detail,
+                //     };
+                // });
+                Object.keys(this.formData).forEach((key) => {
+                    this.$set(this.formData, key, res.detail[key]);
                 });
-
-                console.log(this.formData, res.detail);
             });
         },
         getQrCode() {
