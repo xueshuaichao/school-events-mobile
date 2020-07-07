@@ -95,7 +95,7 @@
             "proxy": {
                 "/api": {
                     // "target": "http://aitiaozhan.wdyclass.com:8000/",
-                    "target": "http://aitiaozhan.test.wdyclass.com",
+                    "target": "http://aitiaozhan.dev.wdyclass.com",
                     // "target": "https://aitiaozhan.wdyedu.com",
                     "changeOrigin": true,
                     "secure": false,

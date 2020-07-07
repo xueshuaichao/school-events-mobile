@@ -2,17 +2,36 @@
     <view class="page-doc-list">
         <template v-if="type">
             <view class="menu-list">
-                <view
-                    v-for="(item, k) in conf.menu"
-                    :key="item"
-                    class="menu-item"
-                    :class="{
-                        active: activeMenuIndex === k
-                    }"
-                    @click="toggle(k)"
-                >
-                    {{ item }}
-                </view>
+                <template>
+                    <view
+                        v-for="(item, k) in conf.menu"
+                        :key="item"
+                        @click.prevent="toggle(k, item)"
+                    >
+                        <view
+                            class="menu-item"
+                            :class="{
+                                active: activeMenuIndex === k
+                            }"
+                        >
+                            {{ item.txt }}
+                        </view>
+
+                        <template v-if="type === 'challenge' && item.show">
+                            <view
+                                v-for="(subItem, index) in item.subLists"
+                                :key="subItem"
+                                class="sub-item"
+                                :class="{
+                                    active: activeSubMenuIndex === index
+                                }"
+                                @click.stop="toggleSubItem(k, index)"
+                            >
+                                {{ subItem }}
+                            </view>
+                        </template>
+                    </view>
+                </template>
             </view>
             <view class="content">
                 <template v-if="type === 'guinness'">
@@ -20,21 +39,40 @@
                         项目说明:
                     </view>
                 </template>
-                <view
-                    v-for="content in conf.content[activeMenuIndex]"
-                    :key="content.title"
-                    class="item"
-                >
+                <template v-if="type !== 'challenge'">
+                    <view
+                        v-for="content in conf.content[activeMenuIndex]"
+                        :key="content"
+                        class="item"
+                    >
+                        <view class="title">
+                            {{ content.title }}
+                        </view>
+                        <view class="text">
+                            {{ content.content }}
+                        </view>
+                    </view>
+                </template>
+                <template v-else>
                     <view class="title">
-                        <template v-if="type === 'challenge'">
-                            ·
-                        </template>
-                        {{ content.title }}
+                        {{
+                            conf.menu[activeMenuIndex].subLists[
+                                activeSubMenuIndex
+                            ]
+                        }}
                     </view>
-                    <view class="text">
-                        {{ content.content }}
+                    <view
+                        v-for="content in conf.content[activeMenuIndex]
+                            .children[activeSubMenuIndex].describe"
+                        :key="content"
+                        class="item"
+                    >
+                        <view class="text">
+                            {{ content }}
+                        </view>
                     </view>
-                </view>
+                </template>
+
                 <view>
                     <template v-if="type !== 'guinness'">
                         <view class="title">
@@ -110,12 +148,19 @@ export default {
             // #ifdef H5
             isH5: true,
             // #endif
+            activeSubMenuIndex: 0,
         };
     },
     methods: {
-        toggle(index) {
-            console.log(index);
+        toggle(index, item) {
             this.activeMenuIndex = index;
+            if (this.type === 'challenge') {
+                const Item = item;
+                Item.show = !Item.show;
+            }
+        },
+        toggleSubItem(index, subIndex) {
+            this.activeSubMenuIndex = subIndex;
         },
         getData() {
             api.get('/api/user/info').then(

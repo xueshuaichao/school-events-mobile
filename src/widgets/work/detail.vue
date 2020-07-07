@@ -82,27 +82,28 @@
             </template>
         </view>
         <view class="content">
-            <view class="author-info">
-                <view class="author-name text-one-line">
-                    {{ pageData.create_name }}
-                </view>
+            <view class="author-name text-one-line">
+                {{ pageData.create_name }}
             </view>
             <view
-                v-if="pageData.school_name || pageData.record"
+                v-if="pageData.school_name"
                 class="school-and-record"
             >
                 <text>{{ pageData.school_name }}</text>
-                <template v-if="pageData.record">
-                    <image
-                        class="icon-grail"
-                        :src="
-                            `/static/images/work/record-${pageData.record}.png`
-                        "
-                    />
-                    <text class="yellow">
-                        {{ recordTxts[pageData.record - 1] }}
-                    </text>
-                </template>
+            </view>
+            <view v-if="pageData.record">
+                <image
+                    class="icon-grail"
+                    :src="
+                        `/static/images/work/icon-rank-${pageData.record}.png`
+                    "
+                />
+                <text class="yellow">
+                    {{ recordTxts[pageData.record - 1] }}
+                </text>
+                <text class="yellow">
+                    （组别:{{ groupTxts[pageData.group_type - 1] }}）
+                </text>
             </view>
             <view class="work-name-wrap">
                 <text class="work-name">
@@ -314,6 +315,7 @@ export default {
         return {
             isFullScreen: false,
             recordTxts: ['校级记录', '市级记录', '省级记录'],
+            groupTxts: ['1-3年级', '4-6年级', '7-9年级', '高一-高三'],
             // #ifdef H5
             isH5: true,
             isWechat: false,
@@ -550,9 +552,10 @@ export default {
     position: relative;
 }
 .yellow {
-    color: #ff9b35;
+    color: #ffd339;
     text-shadow: 0 1upx 2upx #ff9b35;
-    font-size: 22upx;
+    font-size: 24upx;
+    line-height: 30upx;
 }
 .lightyellow {
     color: #ffd339;
@@ -661,34 +664,25 @@ export default {
     z-index: 10;
     text-shadow: 0 2upx 3upx rgba(0, 0, 0, 0.35);
 
-    .author-info {
+    .author-name {
+        color: #fff;
+        font-size: 30upx;
         position: relative;
-        height: 34rpx;
-        .author-name {
-            color: #fff;
-            font-size: 30upx;
-            position: relative;
-            line-height: 34upx;
-            display: inline-block;
-            width: 400rpx;
-            font-weight: 600;
-        }
+        line-height: 34upx;
+        display: inline-block;
+        width: 400rpx;
+        font-weight: 600;
     }
     .school-and-record {
         font-size: 26upx;
         margin: 6upx 0 24upx 0;
-    }
-
-    .author-from {
-        font-size: 24rpx;
-        margin-bottom: 10rpx;
     }
     .work-name-wrap {
         width: 90%;
         margin-top: 16upx;
     }
     .work-name {
-        font-size: 30upx;
+        font-size: 34upx;
         color: #fff;
         font-weight: 600;
         margin-right: 10upx;
@@ -732,10 +726,10 @@ export default {
     .icon-grail {
         display: inline-block;
         width: 24upx;
-        height: 22upx;
-        margin-left: 22upx;
-        margin-right: 2upx;
+        height: 32upx;
+        margin-right: 4upx;
         vertical-align: middle;
+        margin-top: 4upx;
     }
 }
 .fixed-panel {
