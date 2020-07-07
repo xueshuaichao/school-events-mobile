@@ -405,8 +405,9 @@ export default {
                 activity_id: 10,
             }).then((res) => {
                 Object.keys(this.formData).forEach((key) => {
-                    console.log(res.detail[key]);
-                    this.$set(this.formData, key, res.detail[key]);
+                    if (res.detail[key]) {
+                        this.$set(this.formData, key, res.detail[key]);
+                    }
                 });
                 console.log(res, this.formData);
             });
