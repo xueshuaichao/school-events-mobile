@@ -408,6 +408,7 @@ export default {
                     ...this.formData,
                     ...res.detail,
                 };
+                console.log(this.formData, res.detail);
             });
         },
         getQrCode() {
