@@ -404,10 +404,13 @@ export default {
             api.get('/api/activity/getenrollinfo', {
                 activity_id: 10,
             }).then((res) => {
-                this.formData = {
-                    ...this.formData,
-                    ...res.detail,
-                };
+                this.$nextTick(() => {
+                    this.formData = {
+                        ...this.formData,
+                        ...res.detail,
+                    };
+                });
+
                 console.log(this.formData, res.detail);
             });
         },
