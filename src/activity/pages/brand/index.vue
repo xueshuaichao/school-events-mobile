@@ -1,6 +1,6 @@
 <template>
     <!-- 代言人活动 -->
-    <div
+    <view
         :class="[
             'activity-init-page',
             {
@@ -144,12 +144,7 @@
                         活动未开始
                     </template>
                     <template v-else-if="status === 2">
-                        <template
-                            v-if="
-                                canJoin &&
-                                    typeof rosterData.status === 'undefind'
-                            "
-                        >
+                        <template v-if="canJoin && rosterData.status === 0">
                             我要参赛
                         </template>
                         <template v-else-if="rosterData.status === 1">
@@ -190,7 +185,7 @@
                 </view>
             </view>
         </template>
-    </div>
+    </view>
 </template>
 
 <script>

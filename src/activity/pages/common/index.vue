@@ -202,7 +202,7 @@ export default {
         },
         mainImage: {
             type: String,
-            default: '43434',
+            default: '',
         },
         isStopScroll: {
             type: Boolean,
