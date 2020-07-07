@@ -404,7 +404,6 @@ export default {
             api.get('/api/activity/getenrollinfo', {
                 activity_id: 10,
             }).then((res) => {
-                console.log(res.detail);
                 this.formData = {
                     ...this.formData,
                     ...res.detail,
