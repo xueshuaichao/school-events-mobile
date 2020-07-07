@@ -405,7 +405,10 @@ export default {
                 activity_id: 10,
             }).then((res) => {
                 console.log(res.detail);
-                this.formData = res.detail;
+                this.formData = {
+                    ...this.formData,
+                    ...res.detail,
+                };
             });
         },
         getQrCode() {
