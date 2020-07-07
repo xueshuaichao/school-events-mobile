@@ -238,7 +238,7 @@ export default {
                     color: #ffc214;
                 }
                 .image {
-                    border: 4upx solid #ffc214;
+                    border: 4upx solid #ffd125;
                 }
                 ::before {
                     background-image: url("https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/brand_star_1.png");
