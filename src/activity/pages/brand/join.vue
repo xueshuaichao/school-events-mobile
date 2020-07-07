@@ -15,7 +15,7 @@
             <form v-show="!url">
                 <view class="uni-form-item uni-column">
                     <view class="title">
-                        <text>*</text>姓名
+                        <text>*</text>姓名 {{ formData.name }}
                     </view>
                     <view class="input-box">
                         <input
@@ -404,12 +404,6 @@ export default {
             api.get('/api/activity/getenrollinfo', {
                 activity_id: 10,
             }).then((res) => {
-                // this.$nextTick(() => {
-                //     this.formData = {
-                //         ...this.formData,
-                //         ...res.detail,
-                //     };
-                // });
                 Object.keys(this.formData).forEach((key) => {
                     this.$set(this.formData, key, res.detail[key]);
                 });

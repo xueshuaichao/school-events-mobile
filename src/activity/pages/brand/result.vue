@@ -41,6 +41,7 @@
                     v-for="(item, index) in dataList.moodMan"
                     :key="index"
                     class="item"
+                    :class="{ 'm-t-0': index < 3 }"
                 >
                     <view class="item-index">
                         {{ (index + 1) | setNum }}
@@ -177,7 +178,7 @@ export default {
         .item {
             width: 190upx;
             margin: 39upx 14upx 0;
-            &:nth-child(-n + 3) {
+            &.m-t-0 {
                 margin-top: 0;
             }
         }
@@ -345,7 +346,7 @@ export default {
         .item {
             display: flex;
             align-items: center;
-            justify-content: start;
+            justify-content: flex-start;
             height: 111upx;
             color: #fff;
             padding: 0 41upx;
