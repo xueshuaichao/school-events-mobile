@@ -15,7 +15,7 @@
             <form v-show="!url">
                 <view class="uni-form-item uni-column">
                     <view class="title">
-                        <text>*</text>姓名 {{ formData.name }}
+                        <text>*</text>姓名
                     </view>
                     <view class="input-box">
                         <input
@@ -405,8 +405,10 @@ export default {
                 activity_id: 10,
             }).then((res) => {
                 Object.keys(this.formData).forEach((key) => {
+                    console.log(res.detail[key]);
                     this.$set(this.formData, key, res.detail[key]);
                 });
+                console.log(res, this.formData);
             });
         },
         getQrCode() {
@@ -502,7 +504,6 @@ export default {
             this.uploadFile(ev.path).then((data) => {
                 this.url = '';
                 this.formData.image = data.path;
-                console.log(data);
             });
         },
         oncancle() {
