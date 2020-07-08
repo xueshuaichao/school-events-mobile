@@ -54,7 +54,7 @@
                         :class="{ 'p-t': isSelf }"
                     >
                         <view
-                            v-if="isSelf && rosterData.status === 0"
+                            v-if="isSelf"
                             class="poster-btn edit"
                             @click="editJoinInfo()"
                         >
@@ -585,9 +585,16 @@ export default {
             return '';
         },
         editJoinInfo() {
-            uni.redirectTo({
-                url: '/activity/pages/brand/join?type=edit',
-            });
+            if (this.rosterData.status === 0) {
+                uni.redirectTo({
+                    url: '/activity/pages/brand/join?type=edit',
+                });
+            } else {
+                uni.showToast({
+                    title: '活动海选已结束',
+                    icon: 'none',
+                });
+            }
         },
         getMyPoster() {
             uni.showLoading();
