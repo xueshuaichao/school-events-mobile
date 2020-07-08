@@ -45,7 +45,7 @@
                     <template v-slot:main-data>
                         <result
                             v-if="
-                                rosterData.status &&
+                                rosterData.status === 2 &&
                                     Object.keys(resultList).length
                             "
                             :data-list="resultList"
