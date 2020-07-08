@@ -55,7 +55,7 @@ export default {
     },
     methods: {
         jumpUcCenter(item) {
-            uni.navigator({
+            uni.navigateTo({
                 url: `/activity/pages/brand/ucenter?activity_id=10&user_id=${item.user_id}`,
             });
         },

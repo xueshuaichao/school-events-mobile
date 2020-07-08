@@ -14,6 +14,14 @@
             @login="onLogin"
         />
         <template v-else>
+            <view
+                class="return-top"
+                @click="returnTop"
+            >
+                <image
+                    src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/brand_top.png"
+                />
+            </view>
             <!-- 我的海报 -->
             <savePoster
                 v-if="showPosterMask"
@@ -312,6 +320,12 @@ export default {
                 },
             );
         },
+        returnTop() {
+            uni.pageScrollTo({
+                scrollTop: 0,
+                duration: 300,
+            });
+        },
         isLogin() {
             return api.get('/api/user/info');
         },
@@ -501,6 +515,18 @@ export default {
     overflow: hidden;
 }
 .activity-init-page {
+    .return-top {
+        position: fixed;
+        z-index: 100;
+        right: 54upx;
+        bottom: 190upx;
+        width: 91upx;
+        height: 91upx;
+        image {
+            width: 100%;
+            height: 100%;
+        }
+    }
     .upload {
         position: fixed;
         bottom: 0upx;
