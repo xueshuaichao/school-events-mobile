@@ -91,7 +91,7 @@ export default {
         background: #583ed4;
     }
     .list-wrap {
-        padding: 0 30rpx;
+        padding: 0 30rpx 104upx;
         margin: 110rpx 0 104rpx;
         box-sizing: border-box;
         background: #583ed4;
