@@ -101,7 +101,10 @@
                 <text class="yellow">
                     {{ recordTxts[pageData.record - 1] }}
                 </text>
-                <text class="yellow">
+                <text
+                    v-if="pageData.group_type"
+                    class="yellow"
+                >
                     （组别:{{ groupTxts[pageData.group_type - 1] }}）
                 </text>
             </view>
@@ -111,10 +114,16 @@
                 </text>
                 <text
                     v-if="pageData.achievement"
-                    class="deatil-achievement lightyellow"
+                    class="detail-achievement"
                 >
-                    成绩:{{ pageData.achievement
-                    }}{{ pageData.achievement_unit }}
+                    成绩:
+                    <template v-if="pageData.achievement_unit !== '秒'">
+                        {{ pageData.achievement
+                        }}{{ pageData.achievement_unit }}
+                    </template>
+                    <template v-else>
+                        {{ setInfoTime(pageData.achievement) }}
+                    </template>
                 </text>
             </view>
             <view class="intro">
@@ -541,6 +550,21 @@ export default {
                 });
             }
         },
+        setInfoTime(time) {
+            let str = '';
+            let millseconds = '';
+            const times = String(time).split('.');
+            if (times.length === 2) {
+                [, millseconds] = times;
+            }
+            if (time < 59) {
+                str = `${times[0]}秒${millseconds}`;
+            } else {
+                const minutes = Math.floor(times[0] / 60);
+                str = `${minutes}分${times[0] - minutes * 60}秒${millseconds}`;
+            }
+            return str;
+        },
     },
 };
 </script>
@@ -556,10 +580,6 @@ export default {
     text-shadow: 0 1upx 2upx #ff9b35;
     font-size: 24upx;
     line-height: 30upx;
-}
-.lightyellow {
-    color: #ffd339;
-    text-shadow: 0 1upx 2upx #ffd339;
 }
 .h5-full-screen-title {
     position: fixed;
@@ -666,7 +686,7 @@ export default {
 
     .author-name {
         color: #fff;
-        font-size: 30upx;
+        font-size: 34upx;
         position: relative;
         line-height: 34upx;
         display: inline-block;
@@ -675,7 +695,7 @@ export default {
     }
     .school-and-record {
         font-size: 26upx;
-        margin: 6upx 0 24upx 0;
+        margin: 6upx 0 20upx 0;
     }
     .work-name-wrap {
         width: 90%;
@@ -688,9 +708,12 @@ export default {
         margin-right: 10upx;
         line-height: 40rpx;
     }
-    .deatil-achievement {
+    .detail-achievement {
         font-size: 24upx;
-        vertical-align: top;
+        color: #ffd339;
+        text-shadow: 0 1upx 2upx #ffd339;
+        position: relative;
+        bottom: 4upx;
     }
 
     .intro {
@@ -726,7 +749,7 @@ export default {
     .icon-grail {
         display: inline-block;
         width: 24upx;
-        height: 32upx;
+        height: 30upx;
         margin-right: 4upx;
         vertical-align: middle;
         margin-top: 4upx;
