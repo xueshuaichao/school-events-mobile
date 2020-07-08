@@ -188,6 +188,10 @@ const routesConfig = {
         },
 
         {
+            path: '/activity/pages/mall/index',
+        },
+
+        {
             path: '/pages/activity-pages/mywork/mywork',
         },
 
