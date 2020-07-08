@@ -42,7 +42,45 @@
                     </text>
                 </view>
                 <view class="list-item-box">
-                    <view class="item" />
+                    <view
+                        v-for="item in list"
+                        :key="item.id"
+                        class="item"
+                        @click="jumpDetail(item.id)"
+                    >
+                        <view class="item-image">
+                            <text
+                                v-if="item.status === 0"
+                                class="item-status"
+                            >
+                                已兑完
+                            </text>
+                            <image :src="item.image" />
+                        </view>
+                        <view class="item-info">
+                            <view class="tit text-one-line">
+                                {{ item.title }}
+                            </view>
+                            <view class="price-num">
+                                <view class="price text-one-line">
+                                    {{ item.price }}
+                                </view>
+                                <view class="num text-one-line">
+                                    剩余：{{ item.num }}
+                                </view>
+                            </view>
+                        </view>
+                    </view>
+                    <uni-load-more
+                        class="loadMore"
+                        :status="loadMoreStatus"
+                        :content-text="{
+                            contentdown: '上拉显示更多',
+                            contentrefresh: '正在加载...',
+                            contentnomore: '———— 已经到底了~ ————'
+                        }"
+                        color="#333"
+                    />
                 </view>
             </view>
         </view>
@@ -50,7 +88,75 @@
     </view>
 </template>
 <script>
-export default {};
+import api from '../../../common/api';
+import uniLoadMore from '../../../components/uni-load-more/uni-load-more.vue';
+
+export default {
+    components: {
+        uniLoadMore,
+    },
+    data() {
+        return {
+            loadMoreStatus: 'none',
+            list: [],
+            filter: {
+                page_size: 10,
+                page_num: 1,
+            },
+            integral: {},
+        };
+    },
+    created() {
+        // this.getList();
+    },
+    methods: {
+        onReachBottom() {
+            if (this.loadMoreStatus === 'more') {
+                this.filter.page_num = this.filter.page_num + 1;
+                this.loadMoreStatus = 'loading';
+                this.getList('reachBottom');
+            }
+        },
+        getIntegral() {
+            // 获取积分
+            api.get().then((res) => {
+                this.integral = res;
+            });
+        },
+        getList(type) {
+            // 商品列表
+            api.get()
+                .then((res) => {
+                    this.list = res.list;
+                    this.total = res.total;
+                })
+                .then(
+                    ({ list, total }) => {
+                        if (type === 'reachBottom') {
+                            this.list = this.list.concat(list);
+                        } else {
+                            this.list = list;
+                        }
+                        this.total = total;
+                        if (
+                            this.total
+                            <= this.filter.page_num * this.filter.page_size
+                        ) {
+                            this.loadMoreStatus = type === 'reachBottom' ? 'noMore' : 'none';
+                        } else {
+                            this.loadMoreStatus = 'more';
+                        }
+                    },
+                    () => {},
+                );
+        },
+        jumpDetail(id) {
+            uni.redirectTo({
+                url: `detail?id=${id}`,
+            });
+        },
+    },
+};
 </script>
 <style lang="less" scoped>
 .mall-page {
@@ -107,7 +213,7 @@ export default {};
         }
         .handel-content {
             width: 670upx;
-            padding: 16upx 39upx;
+            padding: 16upx 39upx 26upx;
             margin: 0 auto;
             display: flex;
             justify-content: space-between;
@@ -177,6 +283,81 @@ export default {};
                 &::after {
                     right: -64upx;
                     background-image: url("https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/mall_icon_tit_1.png");
+                }
+            }
+        }
+        .list-item-box {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            padding-top: 32upx;
+            .item {
+                box-shadow: 0 4upx 12upx 0 rgba(0, 0, 0, 0.15);
+                width: 345upx;
+                border-radius: 10upx;
+                margin-bottom: 32upx;
+            }
+            .item-image {
+                position: relative;
+                height: 196upx;
+                image {
+                    width: 100%;
+                    height: 100%;
+                    border-radius: 10upx 10upx 0 0;
+                }
+                .item-status {
+                    position: absolute;
+                    top: 18upx;
+                    left: 0;
+                    height: 44upx;
+                    line-height: 44upx;
+                    padding: 0 16upx;
+                    border-radius: 0 26upx 26upx 0;
+                    z-index: 1;
+                    color: #fff;
+                    font-size: 24upx;
+                    background: linear-gradient(
+                        231deg,
+                        rgba(255, 200, 44, 1) 0%,
+                        rgba(255, 172, 0, 1) 100%
+                    );
+                }
+            }
+            .item-info {
+                padding: 20upx 24upx;
+                .tit {
+                    font-size: 28upx;
+                    color: #333;
+                    line-height: 40upx;
+                    margin-bottom: 22upx;
+                }
+                .price-num {
+                    display: flex;
+                    justify-content: space-between;
+                    font-size: 24upx;
+                    line-height: 34upx;
+                    .price {
+                        color: #ffaf03;
+                        position: relative;
+                        padding-left: 40upx;
+                        max-width: 50%;
+                        box-sizing: border-box;
+                        &::before {
+                            content: "";
+                            position: absolute;
+                            top: 50%;
+                            left: 0;
+                            transform: translateY(-50%);
+                            width: 32upx;
+                            height: 32upx;
+                            background: url("https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/mall_icon_money.png")
+                                no-repeat center / 100% 100%;
+                        }
+                    }
+                    .num {
+                        max-width: 50%;
+                        color: #72777d;
+                    }
                 }
             }
         }
