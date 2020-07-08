@@ -266,6 +266,9 @@
                     </view>
                     <view
                         class="goUpload"
+                        :class="{
+                            disable: rosterData.status === 2 || status === 3
+                        }"
                         @click="handleUpload"
                     >
                         <!-- // 1未开始，2进行中，3已结束 -->
@@ -871,6 +874,11 @@ export default {
                             uni.navigateTo({
                                 url: `/activity/pages/upload/modify?activity_id=${this.filter.activity_id}`,
                             });
+                        } else {
+                            uni.showToast({
+                                title: '海选已结束',
+                                icon: 'none',
+                            });
                         }
                     },
                     () => {
@@ -1103,11 +1111,17 @@ export default {
     height: 116upx;
     background: #ff685c;
     font-size: 36upx;
-    font-weight: 600;
     color: #fff;
     line-height: 116upx;
     text-align: center;
     display: inline-block;
+    &.disable {
+        background: linear-gradient(
+            0deg,
+            rgba(133, 115, 102, 1),
+            rgba(179, 170, 152, 1)
+        );
+    }
 }
 .media-list {
     overflow-y: auto;

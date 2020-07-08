@@ -56,7 +56,7 @@
                                 rosterData.status === 2 &&
                                     Object.keys(resultList).length
                             "
-                            :data-list="resultList"
+                            :list="resultList"
                         />
                         <!-- 复赛名单 -->
                         <view
@@ -141,9 +141,9 @@
                 </indexPage>
                 <view
                     :class="
-                        status === 2 || status === 1
-                            ? 'upload'
-                            : 'upload-disable'
+                        status === 3 || rosterData.status === 2
+                            ? 'upload-disable'
+                            : 'upload'
                     "
                     @click="handleUpload"
                 >
@@ -473,6 +473,11 @@ export default {
                                     this.canJoin = false;
                                 },
                             );
+                        } else {
+                            uni.showToast({
+                                title: '海选已结束',
+                                icon: 'none',
+                            });
                         }
                     },
                     () => {

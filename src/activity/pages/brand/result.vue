@@ -118,7 +118,7 @@ export default {
         },
     },
     props: {
-        dataList: {
+        list: {
             type: Object,
             default() {
                 return {};
@@ -126,7 +126,18 @@ export default {
         },
     },
     data() {
-        return {};
+        return {
+            dataList: {},
+        };
+    },
+    watch: {
+        list: {
+            handler(val) {
+                this.dataList = val;
+            },
+            deep: true,
+            immediate: true,
+        },
     },
 };
 </script>
@@ -156,7 +167,7 @@ export default {
             background-size: 100% 100%;
         }
         &.spokes-man {
-            padding: 61upx 20upx 39upx;
+            padding: 61upx 16upx 39upx;
             box-sizing: border-box;
         }
         &.mood-man {

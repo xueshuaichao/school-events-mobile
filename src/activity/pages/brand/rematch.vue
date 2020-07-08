@@ -41,11 +41,13 @@
 </template>
 <script>
 import api from '../../../common/api';
+import share from '../../../common/share';
 
 export default {
     data() {
         return {
             list: [],
+            publicConfig: {},
         };
     },
     created() {
@@ -53,7 +55,36 @@ export default {
             this.list = list;
         });
     },
+    onLoad() {
+        this.publicConfig = this.$store.getters.getPublicConfig(10);
+        this.initShare();
+    },
+    onShareAppMessage(res) {
+        if (res.from === 'button') {
+            // 来自页面内分享按钮
+            console.log(res.target);
+        }
+        return {
+            title: this.title,
+            imageUrl: this.publicConfig.shareConfig.image,
+            path: this.publicConfig.shareConfig.path,
+        };
+    },
     methods: {
+        initShare() {
+            const titleList = this.isH5
+                ? this.publicConfig.shareConfig.h5Title
+                : this.publicConfig.shareConfig.title;
+            const descList = this.publicConfig.shareConfig.desc;
+            const random = Math.floor(Math.random() * titleList.length);
+            this.title = titleList[random];
+            const desc = descList[0];
+            share({
+                title: this.title,
+                desc,
+                thumbnail: `${this.publicConfig.shareConfig.image}?x-oss-process=image/format,png/interlace,1/quality,Q_80/resize,m_pad,h_100`,
+            });
+        },
         jumpUcCenter(item) {
             uni.navigateTo({
                 url: `/activity/pages/brand/ucenter?activity_id=10&user_id=${item.user_id}`,
