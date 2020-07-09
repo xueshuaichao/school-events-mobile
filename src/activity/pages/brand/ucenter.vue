@@ -208,7 +208,7 @@
                                 <view
                                     class="media-name create-by text-one-line"
                                 >
-                                    {{ detail.name }}
+                                    {{ item.user_name }}
                                 </view>
                                 <view class="media-name text-one-line">
                                     {{ `${item.resource_name}` }}
@@ -745,9 +745,20 @@ export default {
                     icon: 'none',
                 });
             }
-            return uni.navigateTo({
-                url: `/activity/pages/upload/modify?id=${id}&activity_id=${this.filter.activity_id}`,
+            api.get('/api/activity/buttonstatus').then((res) => {
+                if (res.status === 0) {
+                    uni.navigateTo({
+                        url: `/activity/pages/upload/modify?id=${id}&activity_id=${this.filter.activity_id}`,
+                    });
+                } else {
+                    uni.showToast({
+                        title: '作品征集已结束，不可再上传作品',
+                        icon: 'none',
+                    });
+                }
             });
+
+            return true;
         },
         onConfirmDelete(item) {
             uni.showModal({
@@ -1184,7 +1195,6 @@ export default {
     /deep/ .event-craft-cover,
     .event-craft-cover {
         .tag {
-            max-width: 130upx;
             background: #ffe79c;
             color: #bb77ff;
         }
