@@ -326,7 +326,7 @@ export default {
     data() {
         return {
             isFullScreen: false,
-            recordTxts: ['校级记录', '市级记录', '省级记录'],
+            recordTxts: ['省级记录', '市级记录', '校级记录'],
             groupTxts: ['1-3年级', '4-6年级', '7-9年级', '高一-高三'],
             // #ifdef H5
             isH5: true,
