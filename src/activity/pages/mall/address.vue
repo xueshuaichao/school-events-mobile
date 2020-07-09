@@ -29,8 +29,12 @@
                                 :checked="item.is_default === 1"
                             />默认地址</label>
                             <view class="handel-item">
-                                <text>修改</text>
-                                <text>删除</text>
+                                <text @click="editAddress(item.id)">
+                                    修改
+                                </text>
+                                <text @click="onConfirmDelete(item.id)">
+                                    删除
+                                </text>
                             </view>
                         </view>
                     </view>
@@ -134,6 +138,31 @@ export default {
                 },
             ];
         },
+        onConfirmDelete(id) {
+            if (!this.lock) {
+                uni.showModal({
+                    content: '确认删除地址吗',
+                    confirmText: '确定',
+                    cancelText: '取消',
+                    cancelColor: '#1166FF',
+                    confirmColor: '#999999',
+                    success: (res) => {
+                        if (res.confirm) {
+                            this.deleteAddress(id);
+                            // console.log('用户点击确定');
+                        } else if (res.cancel) {
+                            // console.log('用户点击取消');
+                        }
+                    },
+                });
+            }
+        },
+        deleteAddress() {},
+        editAddress(id) {
+            uni.redirectTo({
+                url: `address_edit?id=${id}`,
+            });
+        },
         setDefaulAddress(e) {
             // 设置默认地址
             console.log(e);
@@ -164,7 +193,7 @@ page {
         .name-mobile {
             line-height: 40upx;
             margin-bottom: 12upx;
-            &.text {
+            & > text {
                 margin-right: 16upx;
                 color: #333;
             }
