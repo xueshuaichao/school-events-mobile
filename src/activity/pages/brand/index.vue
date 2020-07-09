@@ -1,11 +1,11 @@
 <template>
     <!-- 代言人活动 -->
-    <div
+    <view
         :class="[
             'activity-init-page',
             {
                 'stop-scroll':
-                    (maskPrompt || userInfo === null) && maskType !== 2
+                    (maskPrompt || userInfo === null) && maskType === 0
             }
         ]"
     >
@@ -14,6 +14,14 @@
             @login="onLogin"
         />
         <template v-else>
+            <view
+                class="return-top"
+                @click="returnTop"
+            >
+                <image
+                    src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/brand_top.png"
+                />
+            </view>
             <!-- 我的海报 -->
             <savePoster
                 v-if="showPosterMask"
@@ -25,13 +33,31 @@
                     :index-config="indexConfig"
                     :public-config="publicConfig"
                     :is-stop-scroll="false"
-                    class-name="brand-page"
+                    :class-name="
+                        `brand-page ${
+                            rosterData.status === 2 ? 'brand-page-result' : ''
+                        }`
+                    "
+                    :main-image="
+                        `${
+                            rosterData.status === 2
+                                ? 'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/brand_result.jpg'
+                                : ''
+                        }`
+                    "
                     :fr="fr"
                     :hide-button="true"
                     :my-work-path="myWorkPath"
                     @showMask="showMask"
                 >
                     <template v-slot:main-data>
+                        <result
+                            v-if="
+                                rosterData.status === 2 &&
+                                    Object.keys(resultList).length
+                            "
+                            :list="resultList"
+                        />
                         <!-- 复赛名单 -->
                         <view
                             v-if="rosterData.text"
@@ -115,9 +141,9 @@
                 </indexPage>
                 <view
                     :class="
-                        status === 2 || status === 1 || isH5
-                            ? 'upload'
-                            : 'upload-disable'
+                        status === 3 || rosterData.status === 2
+                            ? 'upload-disable'
+                            : 'upload'
                     "
                     @click="handleUpload"
                 >
@@ -126,8 +152,14 @@
                         活动未开始
                     </template>
                     <template v-else-if="status === 2">
-                        <template v-if="canJoin">
+                        <template v-if="canJoin && rosterData.status === 0">
                             我要参赛
+                        </template>
+                        <template v-else-if="rosterData.status === 1">
+                            评审中
+                        </template>
+                        <template v-else-if="rosterData.status === 2">
+                            活动已结束
                         </template>
                         <template v-else>
                             上传作品
@@ -161,7 +193,7 @@
                 </view>
             </view>
         </template>
-    </div>
+    </view>
 </template>
 
 <script>
@@ -171,6 +203,7 @@ import modal from './modal.vue';
 import api from '../../../common/api';
 import savePoster from './savePoster.vue';
 import login from '../../../widgets/login/login.vue';
+import result from './result.vue';
 
 export default {
     components: {
@@ -178,6 +211,7 @@ export default {
         modal,
         savePoster,
         login,
+        result,
     },
     filters: {
         setAvatarSize: (val) => {
@@ -241,7 +275,7 @@ export default {
             ],
             expertList: [],
             myWorkPath: '',
-            userkey: '',
+            resultList: {},
         };
     },
     created() {
@@ -285,6 +319,12 @@ export default {
                     this.canJoin = true;
                 },
             );
+        },
+        returnTop() {
+            uni.pageScrollTo({
+                scrollTop: 0,
+                duration: 300,
+            });
         },
         isLogin() {
             return api.get('/api/user/info');
@@ -375,13 +415,22 @@ export default {
         getStatus() {
             // 获取按钮状态
             api.get('/api/activity/buttonstatus').then((data) => {
-                console.log(data);
+                this.rosterData = data;
+                if (this.rosterData.status) {
+                    this.getResult();
+                }
+            });
+        },
+        getResult() {
+            // 获取名单
+            api.get('/api/activity/spokesresult').then((data) => {
+                this.resultList = data;
             });
         },
         jumpRosterList(status) {
             if (status) {
                 uni.navigateTo({
-                    url: '/pages/rematch/list',
+                    url: '/activity/pages/brand/rematch',
                 });
             }
         },
@@ -392,35 +441,44 @@ export default {
             if (this.status === 2) {
                 api.isLogin({}).then(
                     (res) => {
-                        console.log(res);
                         this.userInfo = res;
                         this.myWorkPath = `/activity/pages/brand/ucenter?activity_id=10&user_id=${this.userInfo.userid}`;
-                        uni.showLoading();
-                        api.get('/api/activity/getenrollinfo', {
-                            activity_id: this.activityId,
-                            user_id: this.userInfo.user_id,
-                        }).then(
-                            (data) => {
-                                uni.hideLoading();
-                                if (Array.isArray(data) && data.length === 0) {
-                                    // 参赛
-                                    this.canJoin = true;
-                                    uni.navigateTo({
-                                        url: '/activity/pages/brand/join',
-                                    });
-                                } else {
-                                    // 上传作品
+                        if (this.rosterData.status === 0) {
+                            uni.showLoading();
+                            api.get('/api/activity/getenrollinfo', {
+                                activity_id: this.activityId,
+                                user_id: this.userInfo.user_id,
+                            }).then(
+                                (data) => {
+                                    uni.hideLoading();
+                                    if (
+                                        Array.isArray(data)
+                                        && data.length === 0
+                                    ) {
+                                        // 参赛
+                                        this.canJoin = true;
+                                        uni.navigateTo({
+                                            url: '/activity/pages/brand/join',
+                                        });
+                                    } else {
+                                        // 上传作品
+                                        this.canJoin = false;
+                                        uni.navigateTo({
+                                            url: `/activity/pages/upload/modify?activity_id=${this.activityId}`,
+                                        });
+                                    }
+                                },
+                                () => {
+                                    uni.hideLoading();
                                     this.canJoin = false;
-                                    uni.navigateTo({
-                                        url: `/activity/pages/upload/modify?activity_id=${this.activityId}`,
-                                    });
-                                }
-                            },
-                            () => {
-                                uni.hideLoading();
-                                this.canJoin = false;
-                            },
-                        );
+                                },
+                            );
+                        } else {
+                            uni.showToast({
+                                title: '海选已结束',
+                                icon: 'none',
+                            });
+                        }
                     },
                     () => {
                         this.userInfo = {};
@@ -462,6 +520,18 @@ export default {
     overflow: hidden;
 }
 .activity-init-page {
+    .return-top {
+        position: fixed;
+        z-index: 100;
+        right: 54upx;
+        bottom: 190upx;
+        width: 91upx;
+        height: 91upx;
+        image {
+            width: 100%;
+            height: 100%;
+        }
+    }
     .upload {
         position: fixed;
         bottom: 0upx;
@@ -495,8 +565,12 @@ export default {
     .roster-list {
         text-align: center;
         margin-bottom: 64upx;
+        display: flex;
+        justify-content: center;
+        align-items: center;
         .btn {
             display: flex;
+
             background: linear-gradient(
                 rgba(255, 142, 133, 1),
                 rgba(255, 87, 74, 1)
@@ -509,11 +583,10 @@ export default {
             font-weight: bold;
             height: 66upx;
             line-height: 66upx;
+            margin: 0 auto;
             justify-content: center;
             align-items: center;
-            min-width: 370upx;
-            max-width: 390upx;
-            margin: 0 auto;
+            padding: 0 95upx 0 92upx;
         }
         image {
             width: 48upx;
