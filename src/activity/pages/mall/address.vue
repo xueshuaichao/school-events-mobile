@@ -141,13 +141,14 @@ export default {
         onConfirmDelete(id) {
             if (!this.lock) {
                 uni.showModal({
+                    title: '删除提示',
                     content: '确认删除地址吗',
-                    confirmText: '确定',
-                    cancelText: '取消',
+                    confirmText: '取消',
+                    cancelText: '确定',
                     cancelColor: '#1166FF',
                     confirmColor: '#999999',
                     success: (res) => {
-                        if (res.confirm) {
+                        if (res.cancel) {
                             this.deleteAddress(id);
                             // console.log('用户点击确定');
                         } else if (res.cancel) {
