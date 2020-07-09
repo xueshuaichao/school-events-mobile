@@ -127,6 +127,7 @@
                             type="number"
                             placeholder="分"
                             maxlength="2"
+                            @input="achievementInputTime($event, 1)"
                         >
                         <text class="date-text">
                             分
@@ -137,20 +138,19 @@
                             type="number"
                             class="uni-input"
                             placeholder="秒"
+                            @input="achievementInputTime($event, 2)"
                         >
                         <text class="date-text">
                             秒
                         </text>
                         <input
                             v-model="achievementDateInfo.millisecond"
-                            maxlength="3"
+                            maxlength="2"
                             type="number"
                             class="uni-input"
-                            placeholder="毫秒"
+                            placeholder=""
+                            @input="achievementInputTime($event, 3)"
                         >
-                        <text class="date-text">
-                            毫秒
-                        </text>
                     </view>
                     <view
                         v-else
@@ -465,6 +465,7 @@ export default {
                 this.formData.file_name = data.video.file_name;
                 this.formData.file_suffix = data.video.file_suffix;
                 if (this.achievement_unit === '秒') {
+                    this.date = true;
                     this.formateSeconds(this.achivementInput);
                 }
                 console.log(data);
@@ -523,6 +524,32 @@ export default {
     },
     onShow() {},
     methods: {
+        achievementInputTime(e, type) {
+            console.log(e.target.value);
+            let val = e.target.value.match(/^\d*(\.?\d{0,3})/g)[0] || '';
+            switch (type) {
+                case 1:
+                    if (val > 59) {
+                        val = 59;
+                    }
+                    this.achievementDateInfo.minutes = val;
+                    break;
+                case 2:
+                    if (val > 59) {
+                        val = 59;
+                    }
+                    this.achievementDateInfo.seconds = val;
+                    break;
+                case 3:
+                    if (val > 99) {
+                        val = 59;
+                    }
+                    this.achievementDateInfo.millisecond = val;
+                    break;
+                default:
+                    break;
+            }
+        },
         initDistrictLabel(arr) {
             if (!this.formData.district) {
                 this.formData.district = `陕西省${arr[0]}${arr[1]}`;
@@ -624,14 +651,25 @@ export default {
             this.formData.achievement_unit = this.date ? '秒' : unit;
         },
         getTimeSeconds({ minutes, seconds, millisecond }) {
-            return Number(minutes) * 60 + Number(seconds) + millisecond / 1000;
+            return Number(minutes) * 60 + Number(seconds) + millisecond / 100;
         },
         formateSeconds(seconds) {
             const intNum = Math.floor(seconds);
-            const fraNum = seconds * 1000 - intNum * 1000;
+            // const fraNum = seconds * 100 - intNum * 100;
+            const times = String(seconds).split('.');
             this.achievementDateInfo.minutes = Math.floor(intNum / 60);
             this.achievementDateInfo.seconds = intNum % 60;
-            this.achievementDateInfo.millisecond = fraNum;
+            if (times.length === 2) {
+                if (times[1].length > 2) {
+                    this.achievementDateInfo.millisecond = Number(
+                        times[1].slice(0, 2),
+                    );
+                } else {
+                    this.achievementDateInfo.millisecond = Number(times[1]);
+                }
+            } else {
+                this.achievementDateInfo.millisecond = 0;
+            }
         },
         getallcategory(id) {
             return api.get(`/api/works/getallcategory?cid=${id}`).then(
@@ -669,6 +707,14 @@ export default {
                 return false;
             }
             if (this.date) {
+                const obj = this.achievementDateInfo;
+                if (obj.minutes + obj.seconds + obj.millisecond < 1) {
+                    uni.showToast({
+                        icon: 'none',
+                        title: '请输入有效的成绩',
+                    });
+                    return true;
+                }
                 this.formData.achievement = String(
                     this.getTimeSeconds(this.achievementDateInfo),
                 );

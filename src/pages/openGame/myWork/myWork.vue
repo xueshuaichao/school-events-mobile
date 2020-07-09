@@ -78,11 +78,22 @@
                                         ? item.resource_name
                                         : item.cat_name
                                 }}
-                                {{
+                                <template v-if="item.achievement">
+                                    <template
+                                        v-if="item.achievement_unit !== '秒'"
+                                    >
+                                        |{{ item.achievement
+                                        }}{{ item.achievement_unit }}
+                                    </template>
+                                    <template v-else>
+                                        {{ setInfoTime(item.achievement) }}
+                                    </template>
+                                </template>
+                                <!-- {{
                                     item.achievement
                                         ? `|${item.achievement}${item.achievement_unit}`
                                         : ""
-                                }}
+                                }} -->
                             </view>
                             <view class="media-time media-time-l">
                                 {{ item.created_at }}
@@ -130,11 +141,22 @@
                         >
                             <view class="media-name">
                                 {{ item.cat_name }}
-                                {{
+                                <!-- {{
                                     item.achievement
                                         ? `|${item.achievement}${item.achievement_unit}`
                                         : ""
-                                }}
+                                }} -->
+                                <template v-if="item.achievement">
+                                    <template
+                                        v-if="item.achievement_unit !== '秒'"
+                                    >
+                                        |{{ item.achievement
+                                        }}{{ item.achievement_unit }}
+                                    </template>
+                                    <template v-else>
+                                        {{ setInfoTime(item.achievement) }}
+                                    </template>
+                                </template>
                             </view>
                             <view class="nameAndSchool">
                                 <view class="name">
@@ -414,6 +436,21 @@ export default {
         },
     },
     methods: {
+        setInfoTime(time) {
+            let str = '';
+            let millseconds = '';
+            const times = String(time).split('.');
+            if (times.length === 2) {
+                [, millseconds] = times;
+            }
+            if (time < 59) {
+                str = `${times[0]}秒${millseconds}`;
+            } else {
+                const minutes = Math.floor(times[0] / 60);
+                str = `${minutes}分${times[0] - minutes * 60}秒${millseconds}`;
+            }
+            return str;
+        },
         handleVote(item) {
             if (this.act_status === 2) {
                 api.isLogin({
