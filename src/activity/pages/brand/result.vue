@@ -9,6 +9,7 @@
                     v-for="(item, index) in dataList.spokesman"
                     :key="index"
                     class="item"
+                    @click="jumpUcenter(item.user_id)"
                 >
                     <view class="item-img">
                         <image
@@ -42,6 +43,7 @@
                     :key="index"
                     class="item"
                     :class="{ 'm-t-0': index < 3 }"
+                    @click="jumpUcenter(item.user_id)"
                 >
                     <view class="item-index">
                         {{ (index + 1) | setNum }}
@@ -137,6 +139,13 @@ export default {
             },
             deep: true,
             immediate: true,
+        },
+    },
+    methods: {
+        jumpUcenter(id) {
+            uni.navigateTo({
+                url: `/activity/pages/brand/ucenter?activity_id=10&user_id=${id}`,
+            });
         },
     },
 };
@@ -251,9 +260,9 @@ export default {
                 }
                 .image {
                     border: 4upx solid #ffd125;
-                }
-                ::before {
-                    background-image: url("https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/brand_star_1.png");
+                    &::before {
+                        background-image: url("https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/brand_star_1.png");
+                    }
                 }
             }
             &:nth-of-type(3) {
@@ -263,9 +272,9 @@ export default {
                 }
                 .image {
                     border: 4upx solid #b1c8ec;
-                }
-                ::before {
-                    background-image: url("https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/brand_star_2.png");
+                    &::before {
+                        background-image: url("https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/brand_star_2.png");
+                    }
                 }
             }
             &:nth-of-type(4) {
@@ -273,16 +282,16 @@ export default {
                 .item-value {
                     color: #ffa158;
                 }
-                image {
+                .image {
                     border: 4upx solid #ffa158;
-                    ::before {
+                    &::before {
                         background-image: url("https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/brand_star_3.png");
                     }
                 }
             }
-            &:nth-of-type(1),
             &:nth-of-type(2),
-            &:nth-of-type(3) {
+            &:nth-of-type(3),
+            &:nth-of-type(4) {
                 .image {
                     position: relative;
                     box-sizing: border-box;
