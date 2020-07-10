@@ -461,6 +461,18 @@
                         "navigationBarTitleText": "积分商城"
                     }
                 },
+                {
+                    "path": "pages/mall/address",
+                    "style": {
+                        "navigationBarTitleText": "我的地址"
+                    }
+                },
+                {
+                    "path": "pages/mall/address_edit",
+                    "style": {
+                        "navigationBarTitleText": "添加收件地址"
+                    }
+                },
 
                 // ============== 春节 活动 =================
                 {

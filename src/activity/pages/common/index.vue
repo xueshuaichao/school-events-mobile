@@ -9,7 +9,9 @@
                         <image
                             class="banner-image"
                             :src="
-                                `https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/${publicConfig.activityName}_main.jpg`
+                                `https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/${
+                                    publicConfig.activityName
+                                }_main.${publicConfig.isPNG ? 'png' : 'jpg'}`
                             "
                         />
                     </view>
@@ -37,13 +39,18 @@
                     <!-- work show -->
                     <view class="menu-list">
                         <view class="cansai-text">
-                            ——
-                            {{
-                                publicConfig.activityId === 10
-                                    ? "参赛作品"
-                                    : "活动作品"
-                            }}
-                            ——
+                            <template v-if="publicConfig.activityId !== 12">
+                                ——
+                                {{
+                                    publicConfig.activityId === 10
+                                        ? "参赛作品"
+                                        : "活动作品"
+                                }}
+                                ——
+                            </template>
+                            <template v-else>
+                                活动作品
+                            </template>
                         </view>
                         <view class="search-box">
                             <button
@@ -103,6 +110,8 @@
                                 <event-craft-cover
                                     :info="item"
                                     :bg-color="publicConfig.primaryBgColor"
+                                    class="clocked-work"
+                                    :activity-id="publicConfig.activityId"
                                     @click.native="viewDetail(item, index)"
                                 />
                                 <view

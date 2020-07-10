@@ -314,14 +314,15 @@ export default {
                     log: '',
                     sort: ['最新', '最热'],
                     catMenu: [], // 分组
-                    activityName: 'brand', // 空作品的图片拼接地址
-                    activityId: 11,
+                    activityName: 'clocked', // 空作品的图片拼接地址
+                    activityId: 12,
+                    isPNG: true,
                     catId: '', // 所属分类
                     showAllCat: false,
-                    time: '海选时间：7月1日--7月24日',
-                    primaryColor: '#FF8E85', // 主色调
-                    primaryBgColor: '#9882FF', // 主要的背景颜色 （图片背景）
-                    placeholderColor: 'rgba(255,255,255,.6)',
+                    time: '活动日期：8月1日--8月31日',
+                    primaryColor: '#FF685C', // 主色调
+                    primaryBgColor: '#FFA69F', // 主要的背景颜色 （图片背景）
+                    placeholderColor: '#FFBBB5',
                     homePath: '/activity/pages/index?activity_id=11', // 我的作品页面返回首页的路径
                     shareConfig: {
                         title: ['秀我风采，为青少年代言！'],
@@ -343,7 +344,7 @@ export default {
                 },
                 indexColorConfig: {
                     maskBgColor: '#fff',
-                    placeholderColor: '#d1c7ff',
+                    placeholderColor: '#FFDADA',
                 },
                 uploadColorConfig: {
                     placeholderColor: '#999',

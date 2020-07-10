@@ -190,6 +190,13 @@ const routesConfig = {
         {
             path: '/activity/pages/mall/index',
         },
+        {
+            path: '/activity/pages/mall/address',
+        },
+
+        {
+            path: '/activity/pages/mall/address_edit',
+        },
 
         {
             path: '/pages/activity-pages/mywork/mywork',

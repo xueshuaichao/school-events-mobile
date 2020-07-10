@@ -15,7 +15,10 @@
                     </view>
                 </view>
                 <view class="handel-content">
-                    <view class="item">
+                    <view
+                        class="item"
+                        @click="jumpOrderList"
+                    >
                         <view class="icon icon-1" />
                         我的兑换
                     </view>
@@ -23,7 +26,10 @@
                         <view class="icon icon-2" />
                         积分规则
                     </view>
-                    <view class="item">
+                    <view
+                        class="item"
+                        @click="jumpIntegralList"
+                    >
                         <view class="icon icon-3" />
                         积分明细
                     </view>
@@ -46,7 +52,7 @@
                         v-for="item in list"
                         :key="item.id"
                         class="item"
-                        @click="jumpDetail(item.id)"
+                        @click="exchangeItem(item)"
                     >
                         <view class="item-image">
                             <text
@@ -84,7 +90,19 @@
                 </view>
             </view>
         </view>
-        <view class="model" />
+        <view
+            v-if="exchangeMask"
+            class="exchange-mask"
+        >
+            <view class="handel">
+                <view @click="toggleExchangeMask">
+                    取消
+                </view>
+                <view @click="confirmExchange">
+                    确定
+                </view>
+            </view>
+        </view>
     </view>
 </template>
 <script>
@@ -98,12 +116,18 @@ export default {
     data() {
         return {
             loadMoreStatus: 'none',
-            list: [],
+            list: [
+                {
+                    name: 23232,
+                },
+            ],
             filter: {
                 page_size: 10,
                 page_num: 1,
             },
             integral: {},
+            exchangeDetail: {},
+            exchangeMask: false,
         };
     },
     created() {
@@ -118,7 +142,13 @@ export default {
             }
         },
         getIntegral() {
-            // 获取积分
+            // 获取积分详情
+            api.get().then((res) => {
+                this.integral = res;
+            });
+        },
+        getExchangeDetail() {
+            // 兑换详情（活动时间、活动状态、兑换时间、兑换状态）
             api.get().then((res) => {
                 this.integral = res;
             });
@@ -150,9 +180,52 @@ export default {
                     () => {},
                 );
         },
-        jumpDetail(id) {
+        jumpOrderList() {
+            // 兑换列表
             uni.redirectTo({
-                url: `detail?id=${id}`,
+                url: 'order_list',
+            });
+        },
+        jumpIntegralList() {
+            // 积分明细
+            uni.redirectTo({
+                url: 'integral_list',
+            });
+        },
+        toggleExchangeMask() {
+            this.exchangeMask = !this.exchangeMask;
+        },
+        exchangeItem({
+            name, status, id, price, num,
+        }) {
+            // 兑换
+            this.integra = 100; // 可用积分
+            if (status === 0 || num <= 0) {
+                return false;
+            }
+            if (price > this.integra) {
+                return uni.showToast({
+                    title: '积分不足',
+                    icon: 'none',
+                });
+            }
+            if (this.status === 2) {
+                return uni.showToast({
+                    title: '兑换时间已结束',
+                    icon: 'none',
+                });
+            }
+            this.itemId = id;
+            this.exchangeDetail = {
+                ...this.exchangeDetail,
+                name,
+                price,
+            };
+            return this.toggleExchangeMask();
+        },
+        confirmExchange() {
+            uni.redirectTo({
+                url: `exchange_detail?id=${this.itemId}`,
             });
         },
     },

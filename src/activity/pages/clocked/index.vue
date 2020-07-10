@@ -12,7 +12,7 @@
             :index-config="indexConfig"
             :public-config="publicConfig"
             :is-stop-scroll="false"
-            class-name="brand-page"
+            class-name="clocked-page"
             :fr="fr"
             :hide-button="true"
             :my-work-path="myWorkPath"
