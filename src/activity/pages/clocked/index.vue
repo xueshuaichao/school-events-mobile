@@ -34,13 +34,18 @@ export default {
     components: {
         indexPage,
     },
+    props: {
+        activityId: {
+            type: Number,
+            default: 12,
+        },
+    },
     data() {
         return {
             publicConfig: {},
             indexConfig: {},
             fr: '',
             maskPrompt: false,
-            activityId: 10,
             myWorkPath: '',
         };
     },

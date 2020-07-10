@@ -307,6 +307,48 @@ export default {
                     placeholderColor: '#999',
                 },
             },
+            {
+                activityId: 12,
+                publicConfig: {
+                    title: '打卡一夏 记录暑假',
+                    log: '',
+                    sort: ['最新', '最热'],
+                    catMenu: [], // 分组
+                    activityName: 'brand', // 空作品的图片拼接地址
+                    activityId: 11,
+                    catId: '', // 所属分类
+                    showAllCat: false,
+                    time: '海选时间：7月1日--7月24日',
+                    primaryColor: '#FF8E85', // 主色调
+                    primaryBgColor: '#9882FF', // 主要的背景颜色 （图片背景）
+                    placeholderColor: 'rgba(255,255,255,.6)',
+                    homePath: '/activity/pages/index?activity_id=11', // 我的作品页面返回首页的路径
+                    shareConfig: {
+                        title: ['秀我风采，为青少年代言！'],
+                        h5Title: ['青少年“爱挑战”寻找代言'],
+                        desc: ['不要迟疑，为我点赞！我要做“爱挑战”代言人！'],
+                        image:
+                            'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/brand_share.png',
+                        path: '/activity/pages/index?activity_id=11',
+                    },
+                },
+                uploadConfig: {
+                    // 上传作品页
+                    activityCat: [], // 表现形式
+                    uploadMode: ['video', 'image'], // 上传类型 只传1个值时（['video']）不显示表现形式
+                    placeholderNameText: '*作品名称（不超过11字）',
+                    placeholderDescText: '作品介绍(不超过80个字符)',
+                    nameMaxLength: 11,
+                    descMaxLength: 80,
+                },
+                indexColorConfig: {
+                    maskBgColor: '#fff',
+                    placeholderColor: '#d1c7ff',
+                },
+                uploadColorConfig: {
+                    placeholderColor: '#999',
+                },
+            },
         ],
     },
     getters: {
