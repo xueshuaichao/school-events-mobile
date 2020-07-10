@@ -335,6 +335,7 @@
                         maxlength="2"
                         type="number"
                         class="uni-input"
+                        placeholder="毫秒"
                         @input="achievementInputTime($event, 3)"
                     >
                 </view>
@@ -720,7 +721,7 @@ export default {
                 class_id: '请选择班级',
                 video_id: '请上传视频',
                 create_info_array: '请选择参赛学生',
-                achievement: '请输入成绩',
+                achievement: '请输入有效成绩',
             };
             try {
                 Object.keys(validateObj).forEach((item) => {
@@ -728,6 +729,12 @@ export default {
                         if (this.formData[item].length === 0) {
                             throw Error(item);
                         }
+                    } else if (
+                        this.date
+                        && item === 'achievement'
+                        && Number(this.formData[item]) < 1
+                    ) {
+                        throw Error(item);
                     } else if (!this.formData[item]) {
                         throw Error(item);
                     }

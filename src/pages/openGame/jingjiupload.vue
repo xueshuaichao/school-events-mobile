@@ -148,7 +148,7 @@
                             maxlength="2"
                             type="number"
                             class="uni-input"
-                            placeholder=""
+                            placeholder="毫秒"
                             @input="achievementInputTime($event, 3)"
                         >
                     </view>
@@ -468,7 +468,6 @@ export default {
                     this.date = true;
                     this.formateSeconds(this.achivementInput);
                 }
-                console.log(data);
             });
         }
         let txt = '吉尼斯项目作品上传';
@@ -670,6 +669,7 @@ export default {
             } else {
                 this.achievementDateInfo.millisecond = 0;
             }
+            console.log(seconds, this.achievementDateInfo, 'time----');
         },
         getallcategory(id) {
             return api.get(`/api/works/getallcategory?cid=${id}`).then(
@@ -707,17 +707,16 @@ export default {
                 return false;
             }
             if (this.date) {
-                const obj = this.achievementDateInfo;
-                if (obj.minutes + obj.seconds + obj.millisecond < 1) {
+                this.formData.achievement = String(
+                    this.getTimeSeconds(this.achievementDateInfo),
+                );
+                if (this.formData.achievement < 1) {
                     uni.showToast({
                         icon: 'none',
                         title: '请输入有效的成绩',
                     });
                     return true;
                 }
-                this.formData.achievement = String(
-                    this.getTimeSeconds(this.achievementDateInfo),
-                );
             }
             const formData = Object.assign({}, this.formData);
             if (!formData.resource_name) {
