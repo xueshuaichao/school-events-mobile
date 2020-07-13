@@ -327,7 +327,7 @@
 <script>
 import api from '../../common/api';
 import upload from '../../components/upload/upload.vue';
-import simpleAddress from './simple-address/simple-address.vue';
+import simpleAddress from '../../components/simple-address/simple-address.vue';
 
 export default {
     components: {

@@ -55,7 +55,7 @@
                 class="address-none"
             >
                 <image
-                    src=""
+                    src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/mall_no_address.png"
                     mode=""
                 />
                 <view>暂时没有收货地址哦～</view>
@@ -97,7 +97,7 @@ export default {
         },
         getAddress(type) {
             // 地址列表
-            api.get()
+            api.get('/api/market/addresslist', this.filter)
                 .then((res) => {
                     this.list = res.list;
                     this.total = res.total;
@@ -121,28 +121,12 @@ export default {
                     },
                     () => {},
                 );
-            this.list = [
-                {
-                    name: '谋谟',
-                    mobile: '13370123965',
-                    address: '北京市 海北京市 海北京市 海北京市 海',
-                    id: 3111,
-                    is_default: 1,
-                },
-                {
-                    name: '谋谟',
-                    mobile: '13370123965',
-                    address: '北京市 海北京市 海北京市 海北京市 海',
-                    id: 311,
-                    is_default: 0,
-                },
-            ];
         },
         onConfirmDelete(id) {
             if (!this.lock) {
                 uni.showModal({
                     title: '删除提示',
-                    content: '确认删除地址吗',
+                    content: '确认要删除地址么',
                     confirmText: '取消',
                     cancelText: '确定',
                     cancelColor: '#1166FF',
@@ -158,7 +142,18 @@ export default {
                 });
             }
         },
-        deleteAddress() {},
+        deleteAddress(id) {
+            api.get('api/address/deleteaddress', {
+                id,
+            }).then(() => {
+                const index = this.list.findIndex(v => v.id === id);
+                const isDefault = this.list[index].is_default === 1;
+                this.list.splice(index, 1);
+                if (isDefault) {
+                    this.setDefaulAddress(this.list[0].id);
+                }
+            });
+        },
         editAddress(id) {
             uni.redirectTo({
                 url: `address_edit?id=${id}`,
@@ -166,10 +161,26 @@ export default {
         },
         setDefaulAddress(e) {
             // 设置默认地址
-            console.log(e);
-            api.post('', {
-                id: Number(e.detail.value),
+            const id = typeof e === 'number' ? e : Number(e.detail.value);
+            const index = this.list.findIndex(v => v.id === id);
+            this.list.forEach((item, i) => {
+                if (i !== index) {
+                    this.list[i].is_default = 0;
+                }
             });
+            api.post('', {
+                id,
+            }).then(
+                () => {
+                    this.list[index].is_default = 1;
+                },
+                () => {
+                    uni.showToast({
+                        title: '设置默认地址失败，请重新选择',
+                        icon: 'none',
+                    });
+                },
+            );
         },
     },
 };
@@ -179,6 +190,7 @@ page {
     background-color: #f0f0f3;
 }
 .address-page {
+    position: relative;
     .address-list {
         padding: 28upx 30upx 136upx;
         background-color: #f0f0f3;
@@ -219,6 +231,22 @@ page {
                 margin-left: 64upx;
             }
         }
+    }
+    .address-none {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -65%);
+        width: 100%;
+        & > image {
+            width: 268upx;
+            height: 288upx;
+            margin-bottom: 8upx;
+        }
+        text-align: center;
+        color: #666;
+        line-height: 42upx;
+        font-size: 30upx;
     }
     .add-btn {
         position: fixed;

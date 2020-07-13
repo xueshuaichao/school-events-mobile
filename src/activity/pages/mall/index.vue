@@ -4,13 +4,17 @@
             <view class="banner-content">
                 <view class="tips">
                     <view class="icon" />
-                    <view>亲，你有200积分，将于9月30日之前清零哦～</view>
+                    <view>
+                        亲，你有{{
+                            integral.useful_score
+                        }}积分，将于9月30日之前清零哦～
+                    </view>
                 </view>
                 <view class="integral-content">
                     <view class="text-content">
                         可用积分
                         <view class="num text-one-line">
-                            1000
+                            {{ integral.score }}
                         </view>
                     </view>
                 </view>
@@ -48,34 +52,42 @@
                     </text>
                 </view>
                 <view class="list-item-box">
+                    <template v-if="list.length">
+                        <view
+                            v-for="item in list"
+                            :key="item.id"
+                            class="item"
+                            @click="exchangeItem(item)"
+                        >
+                            <view class="item-image">
+                                <text
+                                    v-if="item.num <= 0"
+                                    class="item-status"
+                                >
+                                    已兑完
+                                </text>
+                                <image :src="item.img" />
+                            </view>
+                            <view class="item-info">
+                                <view class="tit text-one-line">
+                                    {{ item.name }}
+                                </view>
+                                <view class="price-num">
+                                    <view class="price text-one-line">
+                                        {{ item.price }}/{{ item.unit }}
+                                    </view>
+                                    <view class="num text-one-line">
+                                        剩余：{{ item.num }}
+                                    </view>
+                                </view>
+                            </view>
+                        </view>
+                    </template>
                     <view
-                        v-for="item in list"
-                        :key="item.id"
-                        class="item"
-                        @click="exchangeItem(item)"
+                        v-else
+                        class="no-data"
                     >
-                        <view class="item-image">
-                            <text
-                                v-if="item.status === 0"
-                                class="item-status"
-                            >
-                                已兑完
-                            </text>
-                            <image :src="item.image" />
-                        </view>
-                        <view class="item-info">
-                            <view class="tit text-one-line">
-                                {{ item.title }}
-                            </view>
-                            <view class="price-num">
-                                <view class="price text-one-line">
-                                    {{ item.price }}
-                                </view>
-                                <view class="num text-one-line">
-                                    剩余：{{ item.num }}
-                                </view>
-                            </view>
-                        </view>
+                        暂无可兑换商品～
                     </view>
                     <uni-load-more
                         class="loadMore"
@@ -91,15 +103,40 @@
             </view>
         </view>
         <view
-            v-if="exchangeMask"
             class="exchange-mask"
+            :class="`${exchangeMask ? 'slide-in' : 'slide-out'}`"
         >
-            <view class="handel">
-                <view @click="toggleExchangeMask">
-                    取消
+            <view class="mask" />
+            <view class="detail-panel">
+                <view class="detail-info">
+                    <view class="info-image">
+                        <image :src="itemDetail.img" />
+                    </view>
+                    <view class="info-text">
+                        <view class="title text-one-line">
+                            {{ itemDetail.name }}
+                        </view>
+                        <view class="price">
+                            {{ itemDetail.price }}
+                        </view>
+                        <view class="num">
+                            {{ itemDetail.num }}
+                        </view>
+                    </view>
                 </view>
-                <view @click="confirmExchange">
-                    确定
+                <view class="handel">
+                    <view
+                        class="btn-item"
+                        @click="toggleExchangeMask"
+                    >
+                        取消
+                    </view>
+                    <view
+                        class="btn-item"
+                        @click="confirmExchange(itemDetail.id)"
+                    >
+                        确定
+                    </view>
                 </view>
             </view>
         </view>
@@ -115,25 +152,25 @@ export default {
     },
     data() {
         return {
+            activityId: 11,
             loadMoreStatus: 'none',
-            list: [
-                {
-                    name: 23232,
-                },
-            ],
+            list: [],
             filter: {
                 page_size: 10,
                 page_num: 1,
             },
             integral: {},
             exchangeDetail: {},
+            itemDetail: {},
             exchangeMask: false,
         };
     },
-    created() {
-        // this.getList();
-    },
     methods: {
+        init() {
+            this.getList();
+            this.getIntegral();
+            this.getExchangeDetail();
+        },
         onReachBottom() {
             if (this.loadMoreStatus === 'more') {
                 this.filter.page_num = this.filter.page_num + 1;
@@ -142,43 +179,45 @@ export default {
             }
         },
         getIntegral() {
-            // 获取积分详情
-            api.get().then((res) => {
+            // 获取积分兑换详情
+            api.get('/api/market/userscoreinfo', {
+                activity_id: this.activityId,
+            }).then((res) => {
                 this.integral = res;
             });
         },
         getExchangeDetail() {
             // 兑换详情（活动时间、活动状态、兑换时间、兑换状态）
-            api.get().then((res) => {
-                this.integral = res;
+            api.get('/api/market/marketinfo', {
+                activity_id: this.activityId,
+            }).then((res) => {
+                this.exchangeDetail = res;
             });
         },
         getList(type) {
             // 商品列表
-            api.get()
-                .then((res) => {
-                    this.list = res.list;
-                    this.total = res.total;
-                })
-                .then(
-                    ({ list, total }) => {
-                        if (type === 'reachBottom') {
-                            this.list = this.list.concat(list);
-                        } else {
-                            this.list = list;
-                        }
-                        this.total = total;
-                        if (
-                            this.total
-                            <= this.filter.page_num * this.filter.page_size
-                        ) {
-                            this.loadMoreStatus = type === 'reachBottom' ? 'noMore' : 'none';
-                        } else {
-                            this.loadMoreStatus = 'more';
-                        }
-                    },
-                    () => {},
-                );
+            api.get('/api/market/giftlist', {
+                ...this.filter,
+                activity_id: this.activityId,
+            }).then(
+                ({ list, total }) => {
+                    if (type === 'reachBottom') {
+                        this.list = this.list.concat(list);
+                    } else {
+                        this.list = list;
+                    }
+                    this.total = total;
+                    if (
+                        this.total
+                        <= this.filter.page_num * this.filter.page_size
+                    ) {
+                        this.loadMoreStatus = type === 'reachBottom' ? 'noMore' : 'none';
+                    } else {
+                        this.loadMoreStatus = 'more';
+                    }
+                },
+                () => {},
+            );
         },
         jumpOrderList() {
             // 兑换列表
@@ -196,11 +235,10 @@ export default {
             this.exchangeMask = !this.exchangeMask;
         },
         exchangeItem({
-            name, status, id, price, num,
+            name, img, id, price, num,
         }) {
             // 兑换
-            this.integra = 100; // 可用积分
-            if (status === 0 || num <= 0) {
+            if (num <= 0) {
                 return false;
             }
             if (price > this.integra) {
@@ -216,18 +254,27 @@ export default {
                 });
             }
             this.itemId = id;
-            this.exchangeDetail = {
-                ...this.exchangeDetail,
+            this.itemDetail = {
+                ...this.itemDetail,
+                id,
                 name,
+                img,
+                num,
                 price,
             };
             return this.toggleExchangeMask();
         },
-        confirmExchange() {
+        confirmExchange(id) {
             uni.redirectTo({
-                url: `exchange_detail?id=${this.itemId}`,
+                url: `exchange_detail?id=${id}`,
             });
         },
+    },
+    onLoad() {
+        api.isLogin().then((res) => {
+            this.userInfo = res;
+            this.init();
+        });
     },
 };
 </script>
@@ -327,6 +374,12 @@ export default {
                 height: 100%;
             }
         }
+    }
+    .no-data {
+        text-align: center;
+        font-size: 28upx;
+        width: 100%;
+        margin-top: 40upx;
     }
     .list-content {
         padding: 0 20upx;
@@ -433,6 +486,138 @@ export default {
                     }
                 }
             }
+        }
+    }
+    .exchange-mask {
+        position: fixed;
+        z-index: 100;
+        position: fixed;
+        width: 100%;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        z-index: 101;
+        backface-visibility: hidden;
+        transform: translate(0, 100%);
+        transition: transform 0.3s;
+        .mask {
+            position: fixed;
+            z-index: 1;
+            top: 0;
+            right: 0;
+            left: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+        }
+        .detail-panel {
+            position: absolute;
+            height: 372upx;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: #fff;
+            z-index: 2;
+            padding: 30upx;
+            box-sizing: border-box;
+            .detail-info {
+                display: flex;
+                margin-bottom: 32upx;
+                .info-image {
+                    width: 280upx;
+                    height: 158upx;
+                    margin-right: 24upx;
+                    & > image {
+                        width: 100%;
+                        height: 100%;
+                    }
+                }
+                .info-text {
+                    .title {
+                        font-size: 28upx;
+                        color: #333;
+                        line-height: 40upx;
+                        margin-bottom: 20upx;
+                    }
+                    .price {
+                        color: #ffaf03;
+                        position: relative;
+                        padding-left: 40upx;
+                        max-width: 50%;
+                        box-sizing: border-box;
+                        margin-bottom: 20upx;
+                        &::before {
+                            content: "";
+                            position: absolute;
+                            top: 50%;
+                            left: 0;
+                            transform: translateY(-50%);
+                            width: 32upx;
+                            height: 32upx;
+                            background: url("https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/mall_icon_money.png")
+                                no-repeat center / 100% 100%;
+                        }
+                    }
+                    .num {
+                        color: #72777d;
+                        font-size: 24upx;
+                        line-height: 34upx;
+                    }
+                }
+            }
+            .handel {
+                display: flex;
+                justify-content: center;
+                .btn-item {
+                    border: 1px solid #ccc;
+                    height: 64upx;
+                    line-height: 64upx;
+                    box-sizing: border-box;
+                    color: #666;
+                    font-size: 28upx;
+                    background-color: #fff;
+                    margin: 0 44upx;
+                    padding: 0 48upx;
+                    border-radius: 32upx;
+                    &:last-of-type {
+                        background-color: #1166ff;
+                        border-color: #1166ff;
+                        color: #fff;
+                    }
+                }
+            }
+        }
+        &.slide-in {
+            animation: slideIn ease 0.3s forwards;
+        }
+        &.slide-out {
+            animation: slideOut ease 0.3s forwards;
+        }
+
+        @keyframes slideIn {
+            from {
+                -webkit-transform: translate3d(0, 100%, 0);
+                transform: translate3d(0, 100%, 0);
+            }
+            to {
+                -webkit-transform: translate3d(0, 0, 0);
+                transform: translate3d(0, 0, 0);
+            }
+        }
+        @keyframes slideOut {
+            from {
+                -webkit-transform: translate3d(0, 0, 0);
+                transform: translate3d(0, 0, 0);
+            }
+            to {
+                -webkit-transform: translate3d(0, 100%, 0);
+                transform: translate3d(0, 100%, 0);
+            }
+        }
+        .slide-in {
+            animation: slideIn ease 0.3s forwards;
+        }
+        .slide-out {
+            animation: slideOut ease 0.3s forwards;
         }
     }
 }
