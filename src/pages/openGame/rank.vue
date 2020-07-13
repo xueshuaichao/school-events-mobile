@@ -226,8 +226,8 @@
 <script>
 /* eslint-disable */
 // import provinceData from "./simple-address/city-data/province";
-import cityData from "./simple-address/city-data/city";
-import areaData from "./simple-address/city-data/area";
+import cityData from "../../components/simple-address/city-data/city";
+import areaData from "../../components/simple-address/city-data/area";
 import api from "../../common/api";
 export default {
     data() {
