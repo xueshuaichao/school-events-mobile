@@ -63,7 +63,9 @@
                 打卡得积分，积分兑好礼～
             </view>
             <view class="calendar-btn">
-                选择主题打卡
+                <view class="btn-txt">
+                    选择主题打卡
+                </view>
             </view>
         </view>
     </view>
@@ -154,6 +156,7 @@ export default {
                 padding: 0 8upx;
                 line-height: 54upx;
                 margin: 16upx 6upx 0;
+                border-radius: 4upx;
             }
         }
         .white-bg {
@@ -216,29 +219,34 @@ export default {
             font-size: 22upx;
             line-height: 60upx;
             color: #ff685c;
-            margin-top: 20upx;
         }
         .calendar-btn {
             width: 400upx;
             height: 68upx;
-            background: rgba(255, 228, 100, 1);
-            box-shadow: 0 2upx 4upx 0 rgba(255, 255, 255, 0.5) inset;
-            border-radius: 34upx;
-            line-height: 68upx;
-            text-align: center;
-            color: #ff5547;
-            font-weight: 500;
             margin-left: 144upx;
             position: relative;
-            &::before {
-                position: absolute;
+            .btn-txt {
+                position: relative;
                 width: 100%;
+                height: 100%;
+                z-index: 1;
+                background: rgba(255, 228, 100, 1);
+                border-radius: 34upx;
+                line-height: 68upx;
+                text-align: center;
+                color: #ff5547;
+                font-weight: 500;
+                box-shadow: 0 2upx 4upx 0 rgba(255, 255, 255, 0.5) inset;
+            }
+            &::after {
+                position: absolute;
+                width: 400upx;
                 content: "";
-                height: 4upx;
                 background: #ffd300;
                 left: 0;
                 bottom: -4upx;
-                border-radius: 2upx;
+                height: 34upx;
+                border-radius: 0 0 34upx 34upx;
             }
         }
     }

@@ -132,7 +132,10 @@
                             :key="index"
                             class="card"
                         >
-                            <view class="img-wrap" />
+                            <image
+                                :src="item.url"
+                                class="img-wrap"
+                            />
                             <view class="gift-name">
                                 {{ item.txt }}
                             </view>
@@ -141,12 +144,19 @@
                 </view>
             </template>
         </indexPage>
+        <image
+            class="fixed-mall"
+            src="/activity/static/locked/fixed-right.png"
+        />
     </view>
 </template>
 <script>
 import indexPage from '../common/index.vue';
 import logger from '../../../common/logger';
 import calendar from './calendar.vue';
+
+// 荣誉勋章的位置
+// https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/clocked/honor-1-1.png
 
 export default {
     components: {
@@ -167,9 +177,21 @@ export default {
             maskPrompt: false,
             myWorkPath: '',
             giftList: [
-                { txt: '华为儿童手表', url: '' },
-                { txt: '小度智能音响', url: '' },
-                { txt: '惠普打印复印一体机', url: '' },
+                {
+                    txt: '华为儿童手表',
+                    url:
+                        'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/clocked-gift-1.png',
+                },
+                {
+                    txt: '小度智能音响',
+                    url:
+                        'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/clocked-gift-2.png',
+                },
+                {
+                    txt: '惠普打印复印一体机',
+                    url:
+                        'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/clocked-gift-3.png',
+                },
             ],
         };
     },
@@ -205,6 +227,15 @@ export default {
     overflow: hidden;
 }
 .activity-init-page {
+    .fixed-mall {
+        position: fixed;
+        right: 20upx;
+        width: 115upx;
+        height: 105upx;
+        top: 50%;
+        margin-top: -48upx;
+        z-index: 100;
+    }
     .rule {
         position: relative;
         padding: 0 30upx;
@@ -303,6 +334,9 @@ export default {
                 background-size: 100% 100%;
                 .img-wrap {
                     height: 116upx;
+                    width: 136upx;
+                    margin-top: 6upx;
+                    margin-left: 26upx;
                 }
                 .gift-name {
                     margin-top: 28upx;
@@ -345,23 +379,24 @@ export default {
                 &::after {
                     content: "";
                     position: absolute;
-                    height: 6upx;
                 }
                 &::before {
                     background: rgba(255, 255, 255, 0.6);
                     box-shadow: 0 4upx 10upx 0 rgba(255, 218, 218, 0.5);
-                    border-radius: 10upx;
+                    border-radius: 0 0 10upx 10upx;
                     width: 280upx;
                     left: 10upx;
                     bottom: -6upx;
+                    height: 12upx;
                 }
                 &::after {
-                    width: 269upx;
+                    width: 260upx;
                     background: rgba(255, 255, 255, 0.4);
                     box-shadow: 0 4upx 10upx 0 rgba(255, 175, 175, 1);
-                    border-radius: 10upx;
+                    border-radius: 0 0 10upx 10upx;
                     bottom: -12upx;
                     left: 20upx;
+                    height: 6upx;
                 }
                 .task-status {
                     position: absolute;
