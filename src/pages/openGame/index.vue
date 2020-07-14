@@ -167,11 +167,21 @@
                             />
 
                             <view class="media-name text-one-line">
-                                {{
-                                    jingjiactiveMenuIndex === 3
-                                        ? `${item.cat_name} | ${item.name}`
-                                        : `${item.cat_name} | ${item.achievement}${item.achievement_unit}`
-                                }}
+                                {{ item.cat_name }}|
+                                <template v-if="jingjiactiveMenuIndex === 3">
+                                    {{ item.name }}
+                                </template>
+                                <template v-else>
+                                    <template
+                                        v-if="item.achievement_unit !== '秒'"
+                                    >
+                                        {{ item.achievement
+                                        }}{{ item.achievement_unit }}
+                                    </template>
+                                    <template v-else>
+                                        {{ setInfoTime(item.achievement) }}
+                                    </template>
+                                </template>
                             </view>
                             <view class="nameAndSchool">
                                 <view class="name text-one-line">
@@ -310,6 +320,21 @@ export default {
         clearInterval(this.setId);
     },
     methods: {
+        setInfoTime(time) {
+            let str = '';
+            let millseconds = '';
+            const times = String(time).split('.');
+            if (times.length === 2) {
+                [, millseconds] = times;
+            }
+            if (time < 59) {
+                str = `${times[0]}秒${millseconds}`;
+            } else {
+                const minutes = Math.floor(times[0] / 60);
+                str = `${minutes}分${times[0] - minutes * 60}秒${millseconds}`;
+            }
+            return str;
+        },
         getNewActivityStatus() {
             // 1未开始，2进行中，3已结束
             api.get('/api/activity/activitystatus', {

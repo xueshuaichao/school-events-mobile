@@ -82,30 +82,34 @@
             </template>
         </view>
         <view class="content">
-            <view class="author-info">
-                <view
-                    class="author-name text-one-line"
-                    @click="jumpUc"
-                >
-                    @{{ pageData.create_name }}
-                </view>
+            <view
+                class="author-name text-one-line"
+                @click="jumpUc"
+            >
+                @{{ pageData.create_name }}
             </view>
             <view
-                v-if="pageData.school_name || pageData.record"
+                v-if="pageData.school_name"
                 class="school-and-record"
             >
                 <text>{{ pageData.school_name }}</text>
-                <template v-if="pageData.record">
-                    <image
-                        class="icon-grail"
-                        :src="
-                            `/static/images/work/record-${pageData.record}.png`
-                        "
-                    />
-                    <text class="yellow">
-                        {{ recordTxts[pageData.record - 1] }}
-                    </text>
-                </template>
+            </view>
+            <view v-if="pageData.record">
+                <image
+                    class="icon-grail"
+                    :src="
+                        `/static/images/work/icon-rank-${pageData.record}.png`
+                    "
+                />
+                <text class="yellow">
+                    {{ recordTxts[pageData.record - 1] }}
+                </text>
+                <text
+                    v-if="pageData.group_type"
+                    class="yellow"
+                >
+                    （组别:{{ groupTxts[pageData.group_type - 1] }}）
+                </text>
             </view>
             <view class="work-name-wrap">
                 <text class="work-name">
@@ -113,10 +117,16 @@
                 </text>
                 <text
                     v-if="pageData.achievement"
-                    class="deatil-achievement lightyellow"
+                    class="detail-achievement"
                 >
-                    成绩:{{ pageData.achievement
-                    }}{{ pageData.achievement_unit }}
+                    成绩:
+                    <template v-if="pageData.achievement_unit !== '秒'">
+                        {{ pageData.achievement
+                        }}{{ pageData.achievement_unit }}
+                    </template>
+                    <template v-else>
+                        {{ setInfoTime(pageData.achievement) }}
+                    </template>
                 </text>
             </view>
             <view class="intro">
@@ -317,6 +327,7 @@ export default {
         return {
             isFullScreen: false,
             recordTxts: ['校级记录', '市级记录', '省级记录'],
+            groupTxts: ['1-3年级', '4-6年级', '7-9年级', '高一-高三'],
             // #ifdef H5
             isH5: true,
             isWechat: false,
@@ -542,6 +553,21 @@ export default {
                 });
             }
         },
+        setInfoTime(time) {
+            let str = '';
+            let millseconds = '';
+            const times = String(time).split('.');
+            if (times.length === 2) {
+                [, millseconds] = times;
+            }
+            if (time < 59) {
+                str = `${times[0]}秒${millseconds}`;
+            } else {
+                const minutes = Math.floor(times[0] / 60);
+                str = `${minutes}分${times[0] - minutes * 60}秒${millseconds}`;
+            }
+            return str;
+        },
     },
 };
 </script>
@@ -553,13 +579,10 @@ export default {
     position: relative;
 }
 .yellow {
-    color: #ff9b35;
-    text-shadow: 0 1upx 2upx #ff9b35;
-    font-size: 22upx;
-}
-.lightyellow {
     color: #ffd339;
-    text-shadow: 0 1upx 2upx #ffd339;
+    text-shadow: 0 1upx 2upx #ff9b35;
+    font-size: 24upx;
+    line-height: 30upx;
 }
 .h5-full-screen-title {
     position: fixed;
@@ -664,42 +687,36 @@ export default {
     z-index: 10;
     text-shadow: 0 2upx 3upx rgba(0, 0, 0, 0.35);
 
-    .author-info {
+    .author-name {
+        color: #fff;
+        font-size: 34upx;
         position: relative;
-        height: 34rpx;
-        .author-name {
-            color: #fff;
-            font-size: 30upx;
-            position: relative;
-            line-height: 34upx;
-            display: inline-block;
-            width: 400rpx;
-            font-weight: 600;
-        }
+        line-height: 34upx;
+        display: inline-block;
+        width: 400rpx;
+        font-weight: 600;
     }
     .school-and-record {
         font-size: 26upx;
-        margin: 6upx 0 24upx 0;
-    }
-
-    .author-from {
-        font-size: 24rpx;
-        margin-bottom: 10rpx;
+        margin: 6upx 0 20upx 0;
     }
     .work-name-wrap {
         width: 90%;
         margin-top: 16upx;
     }
     .work-name {
-        font-size: 30upx;
+        font-size: 34upx;
         color: #fff;
         font-weight: 600;
         margin-right: 10upx;
         line-height: 40rpx;
     }
-    .deatil-achievement {
+    .detail-achievement {
         font-size: 24upx;
-        vertical-align: top;
+        color: #ffd339;
+        text-shadow: 0 1upx 2upx #ffd339;
+        position: relative;
+        bottom: 4upx;
     }
 
     .intro {
@@ -735,10 +752,10 @@ export default {
     .icon-grail {
         display: inline-block;
         width: 24upx;
-        height: 22upx;
-        margin-left: 22upx;
-        margin-right: 2upx;
+        height: 30upx;
+        margin-right: 4upx;
         vertical-align: middle;
+        margin-top: 4upx;
     }
 }
 .fixed-panel {

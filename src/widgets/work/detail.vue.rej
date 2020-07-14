@@ -1,0 +1,263 @@
+diff a/src/widgets/work/detail.vue b/src/widgets/work/detail.vue	(rejected hunks)
+@@ -20 +20,4 @@
+-                    <swiper-item v-for="item in pageData.img" :key="item">
++                    <swiper-item
++                        v-for="item in pageData.img"
++                        :key="item"
++                    >
+@@ -31 +34,4 @@
+-        <view v-if="pageData.resource_type === 1" class="video-wrap">
++        <view
++            v-if="pageData.resource_type === 1"
++            class="video-wrap"
++        >
+@@ -39 +45,4 @@
+-                        <button class="mini-btn" open-type="share">
++                        <button
++                            class="mini-btn"
++                            open-type="share"
++                        >
+@@ -76 +85,4 @@
+-            <view class="author-name text-one-line" @click="jumpUc">
++            <view
++                class="author-name text-one-line"
++                @click="jumpUc"
++            >
+@@ -79 +91,4 @@
+-            <view v-if="pageData.school_name" class="school-and-record">
++            <view
++                v-if="pageData.school_name"
++                class="school-and-record"
++            >
+@@ -92 +107,4 @@
+-                <text v-if="pageData.group_type" class="yellow">
++                <text
++                    v-if="pageData.group_type"
++                    class="yellow"
++                >
+@@ -100 +118,4 @@
+-                <text v-if="pageData.achievement" class="detail-achievement">
++                <text
++                    v-if="pageData.achievement"
++                    class="detail-achievement"
++                >
+@@ -148 +169,4 @@
+-                <view class="item" @click="joinGame">
++                <view
++                    class="item"
++                    @click="joinGame"
++                >
+@@ -154 +178,4 @@
+-                <view class="item" @click="jumpUc">
++                <view
++                    class="item"
++                    @click="jumpUc"
++                >
+@@ -163 +190,4 @@
+-                <view class="item" @click="toggleLike">
++                <view
++                    class="item"
++                    @click="toggleLike"
++                >
+@@ -175 +205,4 @@
+-                <view class="item" @click.stop="showMessage">
++                <view
++                    class="item"
++                    @click.stop="showMessage"
++                >
+@@ -205 +238,4 @@
+-            <view class="uni-video-cover" @click="togglePlayStatus">
++            <view
++                class="uni-video-cover"
++                @click="togglePlayStatus"
++            >
+@@ -220 +256 @@
+-import api from "../../common/api";
++import api from '../../common/api';
+@@ -224,2 +260,2 @@ export default {
+-        optimizeImage: val => {
+-            let newUrl = "";
++        optimizeImage: (val) => {
++            let newUrl = '';
+@@ -236,3 +272,3 @@ export default {
+-            if (val.indexOf("?") !== -1) {
+-                newUrl = `${val}&x-oss-process=image/format,png/interlace,1/quality,Q_80/resize,m_pad,h_${height *
+-                    2},w_${width * 2},color_000000`;
++            if (val.indexOf('?') !== -1) {
++                newUrl = `${val}&x-oss-process=image/format,png/interlace,1/quality,Q_80/resize,m_pad,h_${height
++                    * 2},w_${width * 2},color_000000`;
+@@ -240,2 +276,2 @@ export default {
+-                newUrl = `${val}?x-oss-process=image/format,png/interlace,1/quality,Q_80/resize,m_pad,h_${height *
+-                    2},w_${width * 2},color_000000`;
++                newUrl = `${val}?x-oss-process=image/format,png/interlace,1/quality,Q_80/resize,m_pad,h_${height
++                    * 2},w_${width * 2},color_000000`;
+@@ -250,2 +286,2 @@ export default {
+-                show: false
+-            })
++                show: false,
++            }),
+@@ -255 +291 @@ export default {
+-            default: 0
++            default: 0,
+@@ -259 +295 @@ export default {
+-            default: 0
++            default: 0,
+@@ -263 +299 @@ export default {
+-            default: "1"
++            default: '1',
+@@ -267 +303 @@ export default {
+-            default: ""
++            default: '',
+@@ -271 +307 @@ export default {
+-            default: false
++            default: false,
+@@ -275 +311 @@ export default {
+-            default: 1
++            default: 1,
+@@ -279 +315 @@ export default {
+-            default: 1
++            default: 1,
+@@ -283 +319 @@ export default {
+-            default: 0
++            default: 0,
+@@ -287,2 +323,2 @@ export default {
+-            default: false
+-        }
++            default: false,
++        },
+@@ -293,2 +329,2 @@ export default {
+-            recordTxts: ["省级记录", "市级记录", "校级记录"],
+-            groupTxts: ["1-3年级", "4-6年级", "7-9年级", "高一-高三"],
++            recordTxts: ['省级记录', '市级记录', '校级记录'],
++            groupTxts: ['1-3年级', '4-6年级', '7-9年级', '高一-高三'],
+@@ -305 +341 @@ export default {
+-            introduce: this.pageData.introduce || "",
++            introduce: this.pageData.introduce || '',
+@@ -310 +346 @@ export default {
+-            togglePlatCounts: {}
++            togglePlatCounts: {},
+@@ -319 +355 @@ export default {
+-                        `#detail${this.swiperPage} video`
++                        `#detail${this.swiperPage} video`,
+@@ -335 +371 @@ export default {
+-                        `#detail${this.swiperPage} video`
++                        `#detail${this.swiperPage} video`,
+@@ -353,3 +389,3 @@ export default {
+-                this.swiperPage === this.isChangeSlide &&
+-                !this.toggleLikeObj[this.pageData.id] &&
+-                this.likeStatus
++                this.swiperPage === this.isChangeSlide
++                && !this.toggleLikeObj[this.pageData.id]
++                && this.likeStatus
+@@ -364,2 +400,2 @@ export default {
+-                this.introduce = this.pageData.introduce || "";
+-                this.catName = this.pageData.cat_name || "";
++                this.introduce = this.pageData.introduce || '';
++                this.catName = this.pageData.cat_name || '';
+@@ -373 +409 @@ export default {
+-            this
++            this,
+@@ -376,3 +412,3 @@ export default {
+-            !this.isH5 &&
+-            this.swiperPage === 1 &&
+-            this.pageData.resource_type === 1
++            !this.isH5
++            && this.swiperPage === 1
++            && this.pageData.resource_type === 1
+@@ -382 +418 @@ export default {
+-            console.log("mounted--play-----");
++            console.log('mounted--play-----');
+@@ -390,2 +426,2 @@ export default {
+-            "orientationchange",
+-            this.html5VideoAutoAdjust
++            'orientationchange',
++            this.html5VideoAutoAdjust,
+@@ -393 +429 @@ export default {
+-        window.addEventListener("orientationchange", this.html5VideoAutoAdjust);
++        window.addEventListener('orientationchange', this.html5VideoAutoAdjust);
+@@ -395,4 +431,3 @@ export default {
+-        this.isWechat = ua.indexOf("micromessenger") !== -1;
+-        this.isApp =
+-            ua.toLowerCase().indexOf("wd-atz-ios") !== -1 ||
+-            ua.toLowerCase().indexOf("wd-atz-android") !== -1;
++        this.isWechat = ua.indexOf('micromessenger') !== -1;
++        this.isApp = ua.toLowerCase().indexOf('wd-atz-ios') !== -1
++            || ua.toLowerCase().indexOf('wd-atz-android') !== -1;
+@@ -403 +438 @@ export default {
+-            document.querySelector(".uni-video-type-fullscreen").style = "";
++            document.querySelector('.uni-video-type-fullscreen').style = '';
+@@ -406,2 +441,2 @@ export default {
+-            api.post("/api/works/playcount", {
+-                id: this.pageData.id
++            api.post('/api/works/playcount', {
++                id: this.pageData.id,
+@@ -411 +446 @@ export default {
+-            this.$emit("doAction", "handleCanvass");
++            this.$emit('doAction', 'handleCanvass');
+@@ -414 +449 @@ export default {
+-            this.$emit("doAction", "toggleLike");
++            this.$emit('doAction', 'toggleLike');
+@@ -417 +452 @@ export default {
+-            this.$emit("doAction", "joinGame");
++            this.$emit('doAction', 'joinGame');
+@@ -420 +455 @@ export default {
+-            this.$emit("doAction", "showMessage");
++            this.$emit('doAction', 'showMessage');
+@@ -455 +490 @@ export default {
+-            let url = "/pages/read/index";
++            let url = '/pages/read/index';
+@@ -457 +492 @@ export default {
+-                url = "/pages/activity-pages/labor/index";
++                url = '/pages/activity-pages/labor/index';
+@@ -460 +495 @@ export default {
+-                url = "/activity/pages/children/index";
++                url = '/activity/pages/children/index';
+@@ -462,2 +497,2 @@ export default {
+-            if (this.from === "openGame") {
+-                url = "/pages/openGame/index";
++            if (this.from === 'openGame') {
++                url = '/pages/openGame/index';
+@@ -466 +501 @@ export default {
+-                url = "/activity/chunjie/index";
++                url = '/activity/chunjie/index';
+@@ -469 +504 @@ export default {
+-                url = "/activity/chunjiehao/index";
++                url = '/activity/chunjiehao/index';
+@@ -472 +507 @@ export default {
+-                url = "/pages/yiqing/index";
++                url = '/pages/yiqing/index';
+@@ -475 +510 @@ export default {
+-                url = "/activity/pages/index?activity_id=10";
++                url = '/activity/pages/index?activity_id=10';
+@@ -478 +513 @@ export default {
+-                url
++                url,
+@@ -486 +521 @@ export default {
+-                cat_name: catName
++                cat_name: catName,
+@@ -490 +525 @@ export default {
+-                url
++                url,
+@@ -496,3 +531,3 @@ export default {
+-                    api.get("/api/activity/activitystatus", {
+-                        activity_id: this.activityId
+-                    }).then(data => {
++                    api.get('/api/activity/activitystatus', {
++                        activity_id: this.activityId,
++                    }).then((data) => {
+@@ -500 +535 @@ export default {
+-                            this.jumpUcUrl("activity");
++                            this.jumpUcUrl('activity');
+@@ -513 +548 @@ export default {
+-                    url: `/activity/pages/brand/ucenter?activity_id=10&user_id=${this.pageData.create_by}`
++                    url: `/activity/pages/brand/ucenter?activity_id=10&user_id=${this.pageData.create_by}`,
+@@ -517 +552 @@ export default {
+-                    url: `/pages/uc/uc/index?uid=${this.pageData.create_by}`
++                    url: `/pages/uc/uc/index?uid=${this.pageData.create_by}`,
+@@ -522,3 +557,3 @@ export default {
+-            let str = "";
+-            let millseconds = "";
+-            const times = String(time).split(".");
++            let str = '';
++            let millseconds = '';
++            const times = String(time).split('.');
