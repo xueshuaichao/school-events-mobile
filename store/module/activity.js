@@ -344,7 +344,7 @@ export default {
                 },
                 indexColorConfig: {
                     maskBgColor: '#fff',
-                    placeholderColor: '#FFDADA',
+                    placeholderColor: '#FFBBB5',
                 },
                 uploadColorConfig: {
                     placeholderColor: '#999',
