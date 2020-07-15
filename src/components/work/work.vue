@@ -27,6 +27,16 @@
                 "
             />
             <view class="img-mask" />
+            <template v-if="info.record">
+                <view class="icon-record-warp">
+                    <image
+                        class="icon-record"
+                        :src="
+                            `/static/images/work/icon-rank-${info.record}.png`
+                        "
+                    />
+                </view>
+            </template>
             <view class="browse-num">
                 <image
                     class="icon-view"
@@ -57,7 +67,12 @@
                     v-if="info.achievement && mode === 'mini'"
                     class="achievement"
                 >
-                    | {{ info.achievement }}{{ info.achievement_unit }}
+                    <template v-if="info.achievement_unit !== '秒'">
+                        | {{ info.achievement }}{{ info.achievement_unit }}
+                    </template>
+                    <template v-else>
+                        | {{ setInfoTime(info.achievement) }}
+                    </template>
                 </text>
             </view>
 
@@ -93,7 +108,12 @@
                     v-if="showAchievement"
                     class="text-info"
                 >
-                    {{ info.achievement }}{{ info.achievement_unit }}
+                    <template v-if="info.achievement_unit !== '秒'">
+                        {{ info.achievement }}{{ info.achievement_unit }}
+                    </template>
+                    <template v-else>
+                        {{ setInfoTime(info.achievement) }}
+                    </template>
                 </view>
             </template>
         </view>
@@ -193,6 +213,21 @@ export default {
                 });
             }
         },
+        setInfoTime(time) {
+            let str = '';
+            let millseconds = '';
+            const times = String(time).split('.');
+            if (times.length === 2) {
+                [, millseconds] = times;
+            }
+            if (time < 59) {
+                str = `${times[0]}秒${millseconds}`;
+            } else {
+                const minutes = Math.floor(times[0] / 60);
+                str = `${minutes}分${times[0] - minutes * 60}秒${millseconds}`;
+            }
+            return str;
+        },
     },
 };
 </script>
@@ -264,19 +299,35 @@ export default {
                 rgba(0, 0, 0, 0.4)
             );
         }
-        .is-excellect {
+        .icon-record-warp {
             position: absolute;
-            width: 66upx;
-            height: 30upx;
-            background: rgba(17, 102, 255, 1);
-            border-radius: 0px 15upx 15upx 0px;
-            border: 1px solid rgba(255, 255, 255, 0.75);
-            left: 0;
+            left: 8upx;
             top: 8upx;
-            font-size: 20upx;
+            width: 40upx;
+            height: 40upx;
             text-align: center;
-            color: #fff;
+            background: #fff;
+            border-radius: 50%;
+            .icon-record {
+                margin-top: 6upx;
+                width: 24upx;
+                height: 30upx;
+            }
         }
+
+        // .is-excellect {
+        //     position: absolute;
+        //     width: 66upx;
+        //     height: 30upx;
+        //     background: rgba(17, 102, 255, 1);
+        //     border-radius: 0px 15upx 15upx 0px;
+        //     border: 1px solid rgba(255, 255, 255, 0.75);
+        //     left: 0;
+        //     top: 8upx;
+        //     font-size: 20upx;
+        //     text-align: center;
+        //     color: #fff;
+        // }
     }
 
     .work-name {

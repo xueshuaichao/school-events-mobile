@@ -270,7 +270,7 @@ export default {
                 const url = '/api/common/like';
                 const param = {
                     object_id: this.id,
-                    object_type: 2,
+                    object_type: 6,
                 };
                 api.isLogin().then(() => {
                     api.get(url, param).then(

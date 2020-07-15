@@ -314,6 +314,7 @@
                         type="number"
                         placeholder="分"
                         maxlength="2"
+                        @input="achievementInputTime($event, 1)"
                     >
                     <text class="date-text">
                         分
@@ -324,20 +325,19 @@
                         type="number"
                         class="uni-input"
                         placeholder="秒"
+                        @input="achievementInputTime($event, 2)"
                     >
                     <text class="date-text">
                         秒
                     </text>
                     <input
                         v-model="achievementDateInfo.millisecond"
-                        maxlength="3"
+                        maxlength="2"
                         type="number"
                         class="uni-input"
                         placeholder="毫秒"
+                        @input="achievementInputTime($event, 3)"
                     >
-                    <text class="date-text">
-                        毫秒
-                    </text>
                 </view>
                 <view
                     v-else
@@ -462,6 +462,32 @@ export default {
         };
     },
     methods: {
+        achievementInputTime(e, type) {
+            console.log(e.target.value);
+            let val = e.target.value.match(/^\d*(\.?\d{0,3})/g)[0] || '';
+            switch (type) {
+                case 1:
+                    if (val > 59) {
+                        val = 59;
+                    }
+                    this.achievementDateInfo.minutes = val;
+                    break;
+                case 2:
+                    if (val > 59) {
+                        val = 59;
+                    }
+                    this.achievementDateInfo.seconds = val;
+                    break;
+                case 3:
+                    if (val > 99) {
+                        val = 59;
+                    }
+                    this.achievementDateInfo.millisecond = val;
+                    break;
+                default:
+                    break;
+            }
+        },
         resetData() {
             this.formData = {
                 ...this.formData,
@@ -677,7 +703,7 @@ export default {
         },
 
         getTimeSeconds({ minutes, seconds, millisecond }) {
-            return (minutes / 1) * 60 + seconds / 1 + millisecond / 1000;
+            return (minutes / 1) * 60 + seconds / 1 + millisecond / 100;
         },
         onValidate() {
             let status = true;
@@ -695,7 +721,7 @@ export default {
                 class_id: '请选择班级',
                 video_id: '请上传视频',
                 create_info_array: '请选择参赛学生',
-                achievement: '请输入成绩',
+                achievement: '请输入有效成绩',
             };
             try {
                 Object.keys(validateObj).forEach((item) => {
@@ -703,6 +729,12 @@ export default {
                         if (this.formData[item].length === 0) {
                             throw Error(item);
                         }
+                    } else if (
+                        this.date
+                        && item === 'achievement'
+                        && Number(this.formData[item]) < 1
+                    ) {
+                        throw Error(item);
                     } else if (!this.formData[item]) {
                         throw Error(item);
                     }

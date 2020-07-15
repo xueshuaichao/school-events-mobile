@@ -23,6 +23,15 @@
             <image :src="mediaIconArr[info.resource_type]" />
         </view>
         <view
+            v-if="info.record"
+            class="icon-record-warp"
+        >
+            <image
+                class="icon-record"
+                :src="`/static/images/work/icon-rank-${info.record}.png`"
+            />
+        </view>
+        <view
             v-if="likeIcon"
             class="like-icon"
         >
@@ -139,6 +148,21 @@ export default {
         }
         text {
             vertical-align: middle;
+        }
+    }
+    .icon-record-warp {
+        position: absolute;
+        left: 8upx;
+        top: 8upx;
+        width: 40upx;
+        height: 40upx;
+        text-align: center;
+        background: #fff;
+        border-radius: 50%;
+        .icon-record {
+            margin-top: 6upx;
+            width: 24upx;
+            height: 30upx;
         }
     }
 

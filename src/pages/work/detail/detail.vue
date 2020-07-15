@@ -679,7 +679,11 @@ export default {
             }).then((res) => {
                 const { status } = res;
                 if (status === 2) {
-                    if (this.activity_id === 8) {
+                    if (this.activity_id === 10) {
+                        uni.navigateTo({
+                            url: `/activity/pages/index?activity_id=${this.activity_id}`,
+                        });
+                    } else if (this.activity_id === 8) {
                         uni.navigateTo({
                             url: `/pages/activity-pages/upload/modify?activity_id=${this.activity_id}`,
                         });

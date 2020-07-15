@@ -208,6 +208,10 @@ export default {
             type: String,
             default: '',
         },
+        mainImage: {
+            type: String,
+            default: '',
+        },
         isStopScroll: {
             type: Boolean,
             default: false,
