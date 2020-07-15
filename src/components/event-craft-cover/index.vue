@@ -69,6 +69,10 @@ export default {
             type: Boolean,
             default: true,
         },
+        activityId: {
+            type: Number,
+            default: 10,
+        },
     },
     data() {
         return {
@@ -84,8 +88,8 @@ export default {
                 return '';
             }
             let newUrl = '';
-            const width = 335;
-            const height = 225;
+            const width = this.activityId === 12 ? 306 : 335;
+            const height = this.activityId === 12 ? 205 : 225;
             const bgColor = this.bgColor.indexOf('#') !== -1
                 ? this.bgColor.replace('#', '')
                 : this.bgColor;

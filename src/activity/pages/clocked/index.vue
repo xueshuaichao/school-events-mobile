@@ -1,0 +1,462 @@
+<template>
+    <!--打卡活动-->
+    <view
+        :class="[
+            'activity-init-page',
+            {
+                'stop-scroll': maskPrompt
+            }
+        ]"
+    >
+        <indexPage
+            :index-config="indexConfig"
+            :public-config="publicConfig"
+            :is-stop-scroll="false"
+            class-name="clocked-page"
+            :fr="fr"
+            :hide-button="true"
+            :my-work-path="myWorkPath"
+            @showMask="showMask"
+        >
+            <template v-slot:main-data>
+                <calendar />
+                <view class="rule task">
+                    <image
+                        class="zhuzi zhuzi-1"
+                        src="/activity/static/locked/zhuzi.png"
+                    />
+                    <image
+                        class="zhuzi zhuzi-2"
+                        src="/activity/static/locked/zhuzi.png"
+                    />
+                    <view class="rule-title">
+                        <view class="txt">
+                            更多积分任务
+                        </view>
+                        <view class="more">
+                            积分攻略
+                        </view>
+                    </view>
+                    <view class="ctx-wrap">
+                        <view class="task-card video-bg">
+                            <view class="task-status">
+                                待完成
+                            </view>
+                            <view class="center">
+                                <view class="img-top video">
+                                    <image
+                                        src="/activity/static/locked/video-s.png"
+                                    />
+                                </view>
+                                <view class="txt">
+                                    上传作品
+                                </view>
+                                <view>
+                                    15积分
+                                </view>
+                            </view>
+                            <image
+                                class="next"
+                                src="/activity/static/locked/next.png"
+                            />
+                        </view>
+                        <view class="task-card praise-bg">
+                            <view class="task-status done">
+                                已完成
+                            </view>
+                            <view class="center">
+                                <view class="img-top praise">
+                                    <image
+                                        src="/activity/static/locked/praise-s.png"
+                                    />
+                                </view>
+                                <view class="txt">
+                                    作品获赞
+                                </view>
+                                <view>
+                                    10积分
+                                </view>
+                            </view>
+                            <image
+                                class="next"
+                                src="/activity/static/locked/next.png"
+                            />
+                        </view>
+                    </view>
+                </view>
+                <view class="rule lottery">
+                    <image
+                        class="zhuzi zhuzi-1"
+                        src="/activity/static/locked/zhuzi.png"
+                    />
+                    <image
+                        class="zhuzi zhuzi-2"
+                        src="/activity/static/locked/zhuzi.png"
+                    />
+                    <view class="circle-bg">
+                        <view class="lottery-ctx">
+                            <view class="txt">
+                                <view>
+                                    打卡抽好礼
+                                </view>
+                                <view>
+                                    连续打卡更可获取抽奖机会～
+                                </view>
+                            </view>
+                            <view class="lottery-btn">
+                                去抽奖
+                            </view>
+                        </view>
+                    </view>
+                </view>
+                <view class="rule gifted">
+                    <image
+                        class="zhuzi zhuzi-1"
+                        src="/activity/static/locked/zhuzi2.png"
+                    />
+                    <image
+                        class="zhuzi zhuzi-2"
+                        src="/activity/static/locked/zhuzi2.png"
+                    />
+                    <view class="rule-title">
+                        <view class="txt">
+                            精美礼品
+                        </view>
+                        <view class="more">
+                            更多
+                        </view>
+                    </view>
+                    <view class="ctx-wrap">
+                        <view
+                            v-for="(item, index) in giftList"
+                            :key="index"
+                            class="card"
+                        >
+                            <image
+                                :src="item.url"
+                                class="img-wrap"
+                            />
+                            <view class="gift-name">
+                                {{ item.txt }}
+                            </view>
+                        </view>
+                    </view>
+                </view>
+            </template>
+        </indexPage>
+        <image
+            class="fixed-mall"
+            src="/activity/static/locked/fixed-right.png"
+        />
+    </view>
+</template>
+<script>
+import indexPage from '../common/index.vue';
+import logger from '../../../common/logger';
+import calendar from './calendar.vue';
+
+// 荣誉勋章的位置
+// https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/clocked/honor-1-1.png
+
+export default {
+    components: {
+        indexPage,
+        calendar,
+    },
+    props: {
+        activityId: {
+            type: Number,
+            default: 12,
+        },
+    },
+    data() {
+        return {
+            publicConfig: {},
+            indexConfig: {},
+            fr: '',
+            maskPrompt: false,
+            myWorkPath: '',
+            giftList: [
+                {
+                    txt: '华为儿童手表',
+                    url:
+                        'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/clocked-gift-1.png',
+                },
+                {
+                    txt: '小度智能音响',
+                    url:
+                        'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/clocked-gift-2.png',
+                },
+                {
+                    txt: '惠普打印复印一体机',
+                    url:
+                        'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/clocked-gift-3.png',
+                },
+            ],
+        };
+    },
+    created() {
+        this.publicConfig = {
+            ...this.$store.getters.getPublicConfig(this.activityId),
+            ...this.$store.getters.getColorConfig({
+                activityId: this.activityId,
+                page: 'indexColorConfig',
+            }),
+        };
+        this.indexConfig = this.$store.getters.getActivityConfig({
+            activityId: this.activityId,
+            page: 'indexConfig',
+        });
+        this.fr = logger.getFr(this.publicConfig.log, {});
+        // this.myWorkPath = `/activity/pages/brand/ucenter?activity_id=10&user_id=${this.userInfo.userid}`;
+    },
+    methods: {
+        showMask({ title, type }) {
+            console.log(title, type);
+        },
+    },
+};
+</script>
+<style scoped lang="less">
+.stop-scroll {
+    position: fixed !important;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+.activity-init-page {
+    .fixed-mall {
+        position: fixed;
+        right: 20upx;
+        width: 115upx;
+        height: 105upx;
+        top: 50%;
+        margin-top: -48upx;
+        z-index: 100;
+    }
+    .rule {
+        position: relative;
+        padding: 0 30upx;
+        min-height: 50upx;
+        margin-top: 72upx;
+        &::before {
+            content: "";
+            width: 690upx;
+            height: 24upx;
+            background: #ffa19a;
+            position: absolute;
+            border-radius: 0 0 20upx 20upx;
+            bottom: -10upx;
+        }
+        &.lottery::before {
+            background: #ff867d;
+        }
+        .zhuzi {
+            position: absolute;
+            width: 22upx;
+            height: 68upx;
+            top: -68upx;
+            &.zhuzi-2 {
+                right: 130upx;
+            }
+            &.zhuzi-1 {
+                left: 130upx;
+            }
+        }
+        .rule-title {
+            display: flex;
+            height: 72upx;
+            background: linear-gradient(
+                180deg,
+                rgba(255, 162, 132, 1) 0%,
+                rgba(255, 104, 76, 1) 100%
+            );
+            box-shadow: 0px 2upx 4upx 0 rgba(255, 255, 255, 0.5);
+            border-radius: 20upx 20upx 0 0;
+            color: #fff;
+            line-height: 72upx;
+            padding: 0 30upx;
+            justify-content: space-between;
+            .txt {
+                font-size: 32upx;
+            }
+            .more {
+                font-size: 24upx;
+            }
+        }
+        .circle-bg {
+            padding: 20upx;
+            background-image: url(/activity/static/locked/circle-bg.png);
+            background-color: rgba(255, 161, 154, 1);
+            background-size: 100% 100%;
+            background-position: 0 4upx;
+            box-shadow: 0 2upx 4upx 0 rgba(255, 255, 255, 0.5);
+            border-radius: 20upx;
+            position: relative;
+            .lottery-ctx {
+                background: #ff5a4c;
+                border-radius: 10upx;
+                display: flex;
+                justify-content: space-between;
+                padding: 12upx 30upx 10upx;
+                .txt {
+                    font-size: 32upx;
+                    color: rgba(255, 228, 100, 1);
+                    line-height: 56upx;
+                    text-shadow: 0 4upx 4upx rgba(255, 20, 0, 1);
+                    text-align: center;
+                }
+                .lottery-btn {
+                    color: #ff5547;
+                    font-size: 32upx;
+                    line-height: 108upx;
+                    width: 144upx;
+                    text-align: center;
+                    background: #ffe464;
+                    border-radius: 20upx;
+                }
+            }
+        }
+
+        .ctx-wrap {
+            padding: 30upx;
+            background: #ffdada;
+            border-radius: 0 0 20upx 20upx;
+            position: relative;
+            display: flex;
+            justify-content: space-between;
+            .card {
+                width: 190upx;
+                height: 208upx;
+                background: url(/activity/static/locked/card-bg.png);
+                background-size: 100% 100%;
+                .img-wrap {
+                    height: 116upx;
+                    width: 136upx;
+                    margin-top: 6upx;
+                    margin-left: 26upx;
+                }
+                .gift-name {
+                    margin-top: 28upx;
+                    width: 170upx;
+                    height: 40upx;
+                    background: #ffe967;
+                    color: #ff685c;
+                    font-size: 18upx;
+                    text-align: center;
+                    line-height: 40upx;
+                    border-radius: 20upx;
+                    font-weight: 500;
+                    margin-left: 10upx;
+                }
+            }
+            .task-card {
+                width: 300upx;
+                height: 180upx;
+                display: flex;
+                border-radius: 10px;
+                background: #fff;
+                justify-content: flex-end;
+                color: #ff685c;
+                font-size: 24upx;
+                line-height: 48upx;
+                position: relative;
+                &.video-bg {
+                    background: url(/activity/static/locked/video-l.png) right
+                        top no-repeat;
+                    background-color: #fff;
+                    background-size: 156upx 180upx;
+                }
+                &.praise-bg {
+                    background: url(/activity/static/locked/praise-l.png) right
+                        top no-repeat;
+                    background-color: #fff;
+                    background-size: 156upx 180upx;
+                }
+                &::before,
+                &::after {
+                    content: "";
+                    position: absolute;
+                }
+                &::before {
+                    background: rgba(255, 255, 255, 0.6);
+                    box-shadow: 0 4upx 10upx 0 rgba(255, 218, 218, 0.5);
+                    border-radius: 0 0 10upx 10upx;
+                    width: 280upx;
+                    left: 10upx;
+                    bottom: -6upx;
+                    height: 12upx;
+                }
+                &::after {
+                    width: 260upx;
+                    background: rgba(255, 255, 255, 0.4);
+                    box-shadow: 0 4upx 10upx 0 rgba(255, 175, 175, 1);
+                    border-radius: 0 0 10upx 10upx;
+                    bottom: -12upx;
+                    left: 20upx;
+                    height: 6upx;
+                }
+                .task-status {
+                    position: absolute;
+                    left: 0;
+                    top: 0;
+                    background: #ff685c;
+                    width: 100upx;
+                    height: 40upx;
+                    font-size: 22upx;
+                    color: #fff;
+                    font-weight: 500;
+                    border-radius: 10upx 0 20upx 0;
+                    text-align: center;
+                    line-height: 40upx;
+                    &.done {
+                        background: #bababa;
+                    }
+                }
+                .txt {
+                    font-size: 26upx;
+                    font-weight: 500;
+                    line-height: 26upx;
+                    color: #666;
+                }
+                .next {
+                    width: 40upx;
+                    height: 40upx;
+                    margin: 70upx 20upx 0 28upx;
+                }
+                .center {
+                    text-align: center;
+                }
+                .img-top {
+                    width: 60upx;
+                    height: 60upx;
+                    margin: 20upx auto 18upx;
+                    &.video {
+                        background: linear-gradient(
+                            180deg,
+                            rgba(255, 228, 73, 1) 0%,
+                            rgba(255, 186, 0, 1) 100%
+                        );
+                        border-radius: 10upx;
+                    }
+                    &.praise {
+                        background: linear-gradient(
+                            180deg,
+                            rgba(120, 193, 255, 1) 0%,
+                            rgba(82, 127, 255, 1) 100%
+                        );
+                        border-radius: 10upx;
+                    }
+                    image {
+                        width: 44upx;
+                        height: 38upx;
+                        margin: 8upx 0 0 8upx;
+                    }
+                }
+            }
+        }
+    }
+}
+</style>

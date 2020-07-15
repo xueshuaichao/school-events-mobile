@@ -491,7 +491,7 @@ export default {
                 this.activity_id = res.activity_id || 0;
             }
             this.id = res.id;
-            // activity_id,  没有7..
+            // activity_id,  没有7..没有11
             if (this.activity_id) {
                 // wyhd 五一活动
                 const arr = [
@@ -503,6 +503,7 @@ export default {
                     'wyhd',
                     'lyhd',
                     'qyhd',
+                    '',
                 ];
                 const type = arr[this.activity_id - 3];
                 this.fr = logger.getFr(type, {});

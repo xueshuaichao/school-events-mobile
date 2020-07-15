@@ -540,6 +540,8 @@ const detailConf = [
             ['“爱挑战”代言人，非我莫属，快为我点赞吧！'],
         ],
     },
+    // 11是直播，没有作品详情
+    {},
 ];
 
 export default detailConf;
