@@ -197,7 +197,9 @@ const routesConfig = {
         {
             path: '/activity/pages/mall/address_edit',
         },
-
+        {
+            path: '/activity/pages/clocked/ucenter',
+        },
         {
             path: '/pages/activity-pages/mywork/mywork',
         },

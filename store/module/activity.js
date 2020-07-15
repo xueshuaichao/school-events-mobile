@@ -323,14 +323,14 @@ export default {
                     primaryColor: '#FF685C', // 主色调
                     primaryBgColor: '#FFA69F', // 主要的背景颜色 （图片背景）
                     placeholderColor: '#FFBBB5',
-                    homePath: '/activity/pages/index?activity_id=11', // 我的作品页面返回首页的路径
+                    homePath: '/activity/pages/index?activity_id=12', // 我的作品页面返回首页的路径
                     shareConfig: {
                         title: ['秀我风采，为青少年代言！'],
                         h5Title: ['青少年“爱挑战”寻找代言'],
                         desc: ['不要迟疑，为我点赞！我要做“爱挑战”代言人！'],
                         image:
                             'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/brand_share.png',
-                        path: '/activity/pages/index?activity_id=11',
+                        path: '/activity/pages/index?activity_id=12',
                     },
                 },
                 uploadConfig: {

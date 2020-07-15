@@ -399,6 +399,12 @@
             "root": "activity",
             "pages": [
                 {
+                    "path": "/pages/clocked/ucenter",
+                    "style": {
+                        "navigationBarTitleText": "打卡一下，记录暑假"
+                    }
+                },
+                {
                     "path": "pages/children/index",
                     "style": {
                         "navigationBarTitleText": "七彩童年，快乐成长秀风采",

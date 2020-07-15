@@ -33,12 +33,18 @@
                         <view class="txt">
                             更多积分任务
                         </view>
-                        <view class="more">
+                        <view
+                            class="more"
+                            @click="openModel"
+                        >
                             积分攻略
                         </view>
                     </view>
                     <view class="ctx-wrap">
-                        <view class="task-card video-bg">
+                        <view
+                            class="task-card video-bg"
+                            @click="toUpload"
+                        >
                             <view class="task-status">
                                 待完成
                             </view>
@@ -60,7 +66,10 @@
                                 src="/activity/static/locked/next.png"
                             />
                         </view>
-                        <view class="task-card praise-bg">
+                        <view
+                            class="task-card praise-bg"
+                            @click="toUcenter"
+                        >
                             <view class="task-status done">
                                 已完成
                             </view>
@@ -148,12 +157,21 @@
             class="fixed-mall"
             src="/activity/static/locked/fixed-right.png"
         />
+        <model
+            :show="maskPrompt"
+            :mask-title="maskTitle"
+            :mask-type="maskType"
+            @toggelModel="handleClose"
+        />
     </view>
 </template>
 <script>
 import indexPage from '../common/index.vue';
 import logger from '../../../common/logger';
 import calendar from './calendar.vue';
+import model from './model.vue';
+import api from '../../../common/api';
+// import login from '../../../widgets/login/login.vue';
 
 // 荣誉勋章的位置
 // https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/clocked/honor-1-1.png
@@ -162,6 +180,8 @@ export default {
     components: {
         indexPage,
         calendar,
+        model,
+        // login,
     },
     props: {
         activityId: {
@@ -175,6 +195,8 @@ export default {
             indexConfig: {},
             fr: '',
             maskPrompt: false,
+            maskTitle: '',
+            maskType: 0,
             myWorkPath: '',
             giftList: [
                 {
@@ -193,6 +215,8 @@ export default {
                         'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/clocked-gift-3.png',
                 },
             ],
+            showModal: false,
+            userInfo: null,
         };
     },
     created() {
@@ -208,11 +232,47 @@ export default {
             page: 'indexConfig',
         });
         this.fr = logger.getFr(this.publicConfig.log, {});
-        // this.myWorkPath = `/activity/pages/brand/ucenter?activity_id=10&user_id=${this.userInfo.userid}`;
+        this.isLogin().then(
+            (res) => {
+                this.userInfo = res.user_info;
+                this.myWorkPath = `/activity/pages/clocked/ucenter?activity_id=12&user_id=${this.userInfo.user_id}`;
+            },
+            () => {},
+        );
     },
     methods: {
         showMask({ title, type }) {
-            console.log(title, type);
+            this.maskTitle = title;
+            this.maskType = type;
+            this.maskPrompt = true;
+        },
+        openModel() {
+            this.maskTitle = '积分攻略';
+            this.maskType = 1;
+            this.maskPrompt = true;
+        },
+        handleClose() {
+            // 关闭弹窗
+            this.maskPrompt = false;
+        },
+        isLogin() {
+            return api.get('/api/user/info');
+        },
+        toUpload() {
+            api.isLogin().then((res) => {
+                this.userInfo = res;
+                uni.navigateTo({
+                    url: `/activity/pages/upload/modify?activity_id=${this.activityId}`,
+                });
+            });
+        },
+        toUcenter() {
+            api.isLogin().then((res) => {
+                this.userInfo = res;
+                uni.navigateTo({
+                    url: `/activity/pages/clocked/ucenter?activity_id=12&user_id=${this.userInfo.user_id}`,
+                });
+            });
         },
     },
 };

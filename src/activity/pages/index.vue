@@ -85,12 +85,12 @@ export default {
         },
     },
     onUnload() {
-        if (this.$refs.myChildren) {
+        if (this.$refs.myChildren && this.$refs.myChildren.unload) {
             this.$refs.myChildren.unload();
         }
     },
     onShow() {
-        if (this.$refs.myChildren) {
+        if (this.$refs.myChildren && this.$refs.myChildren.onshow) {
             this.$refs.myChildren.onshow();
         }
     },
