@@ -468,15 +468,39 @@
                     }
                 },
                 {
-                    "path": "pages/mall/address",
+                    "path": "pages/mall/detail",
+                    "style": {
+                        "navigationBarTitleText": "积分商城"
+                    }
+                },
+                {
+                    "path": "pages/mall/order/list",
+                    "style": {
+                        "navigationBarTitleText": "我的兑换"
+                    }
+                },
+                {
+                    "path": "pages/mall/order/detail",
+                    "style": {
+                        "navigationBarTitleText": "我的兑换"
+                    }
+                },
+                {
+                    "path": "pages/mall/address/list",
                     "style": {
                         "navigationBarTitleText": "我的地址"
                     }
                 },
                 {
-                    "path": "pages/mall/address_edit",
+                    "path": "pages/mall/address/edit",
                     "style": {
                         "navigationBarTitleText": "添加收件地址"
+                    }
+                },
+                {
+                    "path": "pages/mall/score/list",
+                    "style": {
+                        "navigationBarTitleText": "积分明细"
                     }
                 },
 

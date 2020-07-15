@@ -191,14 +191,28 @@ const routesConfig = {
             path: '/activity/pages/mall/index',
         },
         {
-            path: '/activity/pages/mall/address',
+            path: '/activity/pages/mall/detail',
         },
-
         {
-            path: '/activity/pages/mall/address_edit',
+            path: '/activity/pages/mall/address/list',
         },
         {
             path: '/activity/pages/clocked/ucenter',
+        },
+        {
+            path: '/activity/pages/mall/address/edit',
+        },
+        {
+            path: '/activity/pages/mall/order/edit',
+        },
+        {
+            path: '/activity/pages/mall/order/detail',
+        },
+        {
+            path: '/activity/pages/mall/order/list',
+        },
+        {
+            path: '/activity/pages/mall/score/list',
         },
         {
             path: '/pages/activity-pages/mywork/mywork',

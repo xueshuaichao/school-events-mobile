@@ -143,3 +143,78 @@
         }
     }
 }
+.clocked-page {
+    .page-upload {
+        .main {
+            background: #ffdada;
+        }
+        .uni-input,
+        .uni-textarea {
+            background: #fff;
+            color: #333;
+        }
+        .selection {
+            .label {
+                color: #333;
+            }
+            .select-item {
+                border-color: #ff685c;
+                color: #ff685c;
+                &.active {
+                    background-color: #ff685c;
+                    color: #fff;
+                }
+                &.for-disable.disabled {
+                    color: #999;
+                    border-color: #999;
+                }
+            }
+        }
+    }
+    /deep/ .page-upload .comp-upload {
+        .comp-title,
+        .desc,
+        .tips {
+            color: #999;
+        }
+        .comp-title {
+            color: #333;
+        }
+        .cover-wrap {
+            background-color: #ffa69f;
+        }
+        .normal-text {
+            background-color: #ff685c;
+        }
+    }
+    /deep/ .prompt {
+        color: #fff;
+    }
+    .page-upload .btn {
+        background-color: #ff685c;
+    }
+    // 上传结果
+    .page-read-upload-result {
+        background-color: #ffdada;
+        .main-title {
+            color: #ff685c;
+            font-size: 34upx;
+        }
+        .sub-title {
+            .tips {
+                color: #666;
+            }
+            .link {
+                &.btn {
+                    color: #ff685c;
+                    border-color: #ff685c;
+                }
+                &.blue-bg {
+                    background-color: #ff685c;
+                    border-color: #ff685c;
+                    color: #fff;
+                }
+            }
+        }
+    }
+}
