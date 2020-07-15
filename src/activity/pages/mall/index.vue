@@ -1,145 +1,219 @@
 <template>
-    <view class="mall-page">
-        <view class="main-content">
-            <view class="banner-content">
-                <view class="tips">
-                    <view class="icon" />
-                    <view>
-                        亲，你有{{
-                            integral.useful_score
-                        }}积分，将于9月30日之前清零哦～
-                    </view>
-                </view>
-                <view class="integral-content">
-                    <view class="text-content">
-                        可用积分
-                        <view class="num text-one-line">
-                            {{ integral.score }}
+    <view
+        v-if="loading"
+        class="mall-page"
+    >
+        <login
+            v-if="userInfo === null"
+            @login="onLogin"
+        />
+        <template v-else>
+            <view class="main-content">
+                <view class="banner-content">
+                    <view class="tips">
+                        <view class="icon" />
+                        <view>
+                            亲，你有{{ integral.useful_score }}积分，将于{{
+                                exchangeDetail.pay_end_time | setTime
+                            }}之前清零哦～
                         </view>
                     </view>
-                </view>
-                <view class="handel-content">
-                    <view
-                        class="item"
-                        @click="jumpOrderList"
-                    >
-                        <view class="icon icon-1" />
-                        我的兑换
+                    <view class="integral-content">
+                        <view class="text-content">
+                            可用积分
+                            <view class="num text-one-line">
+                                {{ integral.useful_score }}
+                            </view>
+                        </view>
                     </view>
-                    <view class="item">
-                        <view class="icon icon-2" />
-                        积分规则
-                    </view>
-                    <view
-                        class="item"
-                        @click="jumpIntegralList"
-                    >
-                        <view class="icon icon-3" />
-                        积分明细
-                    </view>
-                </view>
-                <view class="banner-cm">
-                    <image
-                        src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/mall_banner_cm.png"
-                    />
-                </view>
-            </view>
-
-            <view class="list-content">
-                <view class="title-content">
-                    <text class="text">
-                        好物兑换
-                    </text>
-                </view>
-                <view class="list-item-box">
-                    <template v-if="list.length">
+                    <view class="handel-content">
                         <view
-                            v-for="item in list"
-                            :key="item.id"
                             class="item"
-                            @click="exchangeItem(item)"
+                            @click="jumpOrderList"
                         >
-                            <view class="item-image">
-                                <text
-                                    v-if="item.num <= 0"
-                                    class="item-status"
-                                >
-                                    已兑完
-                                </text>
-                                <image :src="item.img" />
-                            </view>
-                            <view class="item-info">
-                                <view class="tit text-one-line">
-                                    {{ item.name }}
-                                </view>
-                                <view class="price-num">
-                                    <view class="price text-one-line">
-                                        {{ item.price }}/{{ item.unit }}
-                                    </view>
-                                    <view class="num text-one-line">
-                                        剩余：{{ item.num }}
-                                    </view>
-                                </view>
-                            </view>
+                            <view class="icon icon-1" />
+                            我的兑换
                         </view>
-                    </template>
-                    <view
-                        v-else
-                        class="no-data"
-                    >
-                        暂无可兑换商品～
+                        <view
+                            class="item"
+                            @click="toggleRule"
+                        >
+                            <view class="icon icon-2" />
+                            积分规则
+                        </view>
+                        <view
+                            class="item"
+                            @click="jumpIntegralList"
+                        >
+                            <view class="icon icon-3" />
+                            积分明细
+                        </view>
                     </view>
-                    <uni-load-more
-                        class="loadMore"
-                        :status="loadMoreStatus"
-                        :content-text="{
-                            contentdown: '上拉显示更多',
-                            contentrefresh: '正在加载...',
-                            contentnomore: '———— 已经到底了~ ————'
-                        }"
-                        color="#333"
-                    />
+                    <view class="banner-cm">
+                        <image
+                            src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/mall_banner_cm.png"
+                        />
+                    </view>
+                </view>
+
+                <view class="list-content">
+                    <view class="title-content">
+                        <text class="text">
+                            好物兑换
+                        </text>
+                    </view>
+                    <view class="list-item-box">
+                        <template v-if="list.length">
+                            <view
+                                v-for="item in list"
+                                :key="item.id"
+                                class="item"
+                                @click="exchangeItem(item)"
+                            >
+                                <view class="item-image">
+                                    <text
+                                        v-if="item.num <= 0"
+                                        class="item-status"
+                                    >
+                                        已兑完
+                                    </text>
+                                    <image :src="item.img" />
+                                </view>
+                                <view class="item-info">
+                                    <view class="tit text-one-line">
+                                        {{ item.name }}
+                                    </view>
+                                    <view class="price-num">
+                                        <view class="price text-one-line">
+                                            {{ item.price }}/{{ item.unit }}
+                                        </view>
+                                        <view class="num text-one-line">
+                                            剩余：{{ item.num }}
+                                        </view>
+                                    </view>
+                                </view>
+                            </view>
+                        </template>
+                        <view
+                            v-else
+                            class="no-data"
+                        >
+                            暂无可兑换商品～
+                        </view>
+                        <uni-load-more
+                            class="loadMore"
+                            :status="loadMoreStatus"
+                            :content-text="{
+                                contentdown: '上拉显示更多',
+                                contentrefresh: '正在加载...',
+                                contentnomore: '———— 已经到底了~ ————'
+                            }"
+                            color="#333"
+                        />
+                    </view>
                 </view>
             </view>
-        </view>
-        <view
-            class="exchange-mask"
-            :class="`${exchangeMask ? 'slide-in' : 'slide-out'}`"
-        >
-            <view class="mask" />
-            <view class="detail-panel">
-                <view class="detail-info">
-                    <view class="info-image">
-                        <image :src="itemDetail.img" />
-                    </view>
-                    <view class="info-text">
-                        <view class="title text-one-line">
-                            {{ itemDetail.name }}
+            <view
+                class="exchange-mask"
+                :class="{
+                    'slide-in': exchangeMask === 1,
+                    'slide-out': exchangeMask === 2
+                }"
+            >
+                <view class="mask" />
+                <view class="detail-panel">
+                    <view class="detail-info">
+                        <view class="info-image">
+                            <image :src="itemDetail.img" />
                         </view>
-                        <view class="price">
-                            {{ itemDetail.price }}
-                        </view>
-                        <view class="num">
-                            {{ itemDetail.num }}
+                        <view class="info-text">
+                            <view class="title text-one-line">
+                                {{ itemDetail.name }}
+                            </view>
+                            <view class="price">
+                                {{ itemDetail.price }}
+                            </view>
+                            <view class="num">
+                                {{ itemDetail.num }}
+                            </view>
                         </view>
                     </view>
-                </view>
-                <view class="handel">
-                    <view
-                        class="btn-item"
-                        @click="toggleExchangeMask"
-                    >
-                        取消
-                    </view>
-                    <view
-                        class="btn-item"
-                        @click="confirmExchange(itemDetail.id)"
-                    >
-                        确定
+                    <view class="handel">
+                        <view
+                            class="btn-item"
+                            @click="toggleExchangeMask(2)"
+                        >
+                            取消
+                        </view>
+                        <view
+                            class="btn-item"
+                            @click="confirmExchange(itemDetail.id)"
+                        >
+                            确定
+                        </view>
                     </view>
                 </view>
             </view>
-        </view>
+            <view
+                v-if="isShowRule"
+                class="model"
+            >
+                <view class="model-content">
+                    <view
+                        class="close"
+                        @click="toggleRule()"
+                    >
+                        <image
+                            src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/children_close.png"
+                            mode=""
+                        />
+                    </view>
+                    <view class="title">
+                        兑换规则
+                    </view>
+                    <view class="text-item">
+                        <text class="index">
+                            1
+                        </text>
+                        <view class="text">
+                            用户获得一定数量的积分后，可到积分商城进行消分兑换相应礼品。
+                        </view>
+                    </view>
+                    <view class="text-item">
+                        <text class="index">
+                            2
+                        </text>
+                        <view class="text">
+                            兑换完礼品扣除相应积分后，如果积分还有剩余，用户可继续兑换积分范围内的礼品，每人最多可兑换3次。
+                        </view>
+                    </view>
+                    <view class="text-item">
+                        <text class="index">
+                            3
+                        </text>
+                        <view class="text">
+                            提交兑换礼品申请后，工作人员将在3个工作日内进行审核，审核通过后，所兑礼品将于活动结束后统一寄出。
+                        </view>
+                    </view>
+                    <view class="text-item">
+                        <text class="index">
+                            4
+                        </text>
+                        <view class="text">
+                            积分商城的礼品数量有限，先兑先得，各类礼品兑完不再补货。
+                        </view>
+                    </view>
+                    <view class="text-item">
+                        <text class="index">
+                            5
+                        </text>
+                        <view class="text">
+                            礼品兑换截至日期为9月3日18:00，如果到截至日还有积分未兑换，则积分自动清零，视为自愿放弃兑换。
+                        </view>
+                    </view>
+                </view>
+            </view>
+        </template>
     </view>
 </template>
 <script>
@@ -150,9 +224,19 @@ export default {
     components: {
         uniLoadMore,
     },
+    filters: {
+        setTime(val) {
+            if (val) {
+                const time = val.split(' ')[0].split('-');
+                return `${time[1]}月${time[2]}日`;
+            }
+            return '';
+        },
+    },
     data() {
         return {
-            activityId: 11,
+            loading: false,
+            activityId: '',
             loadMoreStatus: 'none',
             list: [],
             filter: {
@@ -162,14 +246,26 @@ export default {
             integral: {},
             exchangeDetail: {},
             itemDetail: {},
-            exchangeMask: false,
+            exchangeMask: 0,
+            isShowRule: false,
+            userInfo: '',
         };
+    },
+    onShow() {
+        api.isLogin().then((res) => {
+            this.userInfo = res;
+            this.init();
+        });
     },
     methods: {
         init() {
-            this.getList();
-            this.getIntegral();
-            this.getExchangeDetail();
+            Promise.all([
+                this.getList(),
+                this.getIntegral(),
+                this.getExchangeDetail(),
+            ]).then(() => {
+                this.loading = true;
+            });
         },
         onReachBottom() {
             if (this.loadMoreStatus === 'more') {
@@ -180,59 +276,73 @@ export default {
         },
         getIntegral() {
             // 获取积分兑换详情
-            api.get('/api/market/userscoreinfo', {
-                activity_id: this.activityId,
-            }).then((res) => {
-                this.integral = res;
-            });
+            return api
+                .get('/api/market/userscoreinfo', {
+                    activity_id: this.activityId,
+                })
+                .then(
+                    (res) => {
+                        this.integral = res;
+                    },
+                    (err) => {
+                        console.log(err);
+                    },
+                );
         },
         getExchangeDetail() {
             // 兑换详情（活动时间、活动状态、兑换时间、兑换状态）
-            api.get('/api/market/marketinfo', {
-                activity_id: this.activityId,
-            }).then((res) => {
-                this.exchangeDetail = res;
-            });
+            return api
+                .get('/api/market/marketinfo', {
+                    activity_id: this.activityId,
+                })
+                .then((res) => {
+                    this.exchangeDetail = res;
+                });
         },
         getList(type) {
             // 商品列表
-            api.get('/api/market/giftlist', {
-                ...this.filter,
-                activity_id: this.activityId,
-            }).then(
-                ({ list, total }) => {
-                    if (type === 'reachBottom') {
-                        this.list = this.list.concat(list);
-                    } else {
-                        this.list = list;
-                    }
-                    this.total = total;
-                    if (
-                        this.total
-                        <= this.filter.page_num * this.filter.page_size
-                    ) {
-                        this.loadMoreStatus = type === 'reachBottom' ? 'noMore' : 'none';
-                    } else {
-                        this.loadMoreStatus = 'more';
-                    }
-                },
-                () => {},
-            );
+            return api
+                .get('/api/market/giftlist', {
+                    ...this.filter,
+                    activity_id: this.activityId,
+                })
+                .then(
+                    ({ list, total }) => {
+                        if (type === 'reachBottom') {
+                            this.list = this.list.concat(list);
+                        } else {
+                            this.list = list;
+                        }
+                        this.total = total;
+                        if (
+                            this.total
+                            <= this.filter.page_num * this.filter.page_size
+                        ) {
+                            this.loadMoreStatus = type === 'reachBottom' ? 'noMore' : 'none';
+                        } else {
+                            this.loadMoreStatus = 'more';
+                        }
+                    },
+                    () => {},
+                );
         },
         jumpOrderList() {
             // 兑换列表
-            uni.redirectTo({
-                url: 'order_list',
+            uni.navigateTo({
+                url: '/activity/pages/mall/order/list',
             });
+        },
+        toggleRule() {
+            this.isShowRule = !this.isShowRule;
         },
         jumpIntegralList() {
             // 积分明细
-            uni.redirectTo({
-                url: 'integral_list',
+            uni.navigateTo({
+                url: '/activity/pages/mall/score/list',
             });
         },
-        toggleExchangeMask() {
-            this.exchangeMask = !this.exchangeMask;
+        toggleExchangeMask(status) {
+            this.exchangeMask = status;
         },
         exchangeItem({
             name, img, id, price, num,
@@ -243,7 +353,7 @@ export default {
             }
             if (price > this.integra) {
                 return uni.showToast({
-                    title: '积分不足',
+                    title: '可用积分不足',
                     icon: 'none',
                 });
             }
@@ -262,19 +372,16 @@ export default {
                 num,
                 price,
             };
-            return this.toggleExchangeMask();
+            return this.toggleExchangeMask(1);
         },
         confirmExchange(id) {
-            uni.redirectTo({
-                url: `exchange_detail?id=${id}`,
+            uni.navigateTo({
+                url: `detail?id=${id}`,
             });
         },
     },
-    onLoad() {
-        api.isLogin().then((res) => {
-            this.userInfo = res;
-            this.init();
-        });
+    onLoad(parms) {
+        this.activityId = parms.activity_id || 12;
     },
 };
 </script>
@@ -501,7 +608,7 @@ export default {
         transform: translate(0, 100%);
         transition: transform 0.3s;
         .mask {
-            position: fixed;
+            position: absolute;
             z-index: 1;
             top: 0;
             right: 0;
@@ -532,6 +639,7 @@ export default {
                     }
                 }
                 .info-text {
+                    flex: 1;
                     .title {
                         font-size: 28upx;
                         color: #333;
@@ -588,6 +696,7 @@ export default {
         }
         &.slide-in {
             animation: slideIn ease 0.3s forwards;
+            display: block;
         }
         &.slide-out {
             animation: slideOut ease 0.3s forwards;
@@ -595,21 +704,17 @@ export default {
 
         @keyframes slideIn {
             from {
-                -webkit-transform: translate3d(0, 100%, 0);
                 transform: translate3d(0, 100%, 0);
             }
             to {
-                -webkit-transform: translate3d(0, 0, 0);
                 transform: translate3d(0, 0, 0);
             }
         }
         @keyframes slideOut {
             from {
-                -webkit-transform: translate3d(0, 0, 0);
                 transform: translate3d(0, 0, 0);
             }
             to {
-                -webkit-transform: translate3d(0, 100%, 0);
                 transform: translate3d(0, 100%, 0);
             }
         }
@@ -618,6 +723,79 @@ export default {
         }
         .slide-out {
             animation: slideOut ease 0.3s forwards;
+        }
+    }
+    .model {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.8);
+        .close {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60upx;
+            height: 60upx;
+            bottom: -103upx;
+            & > image {
+                width: 100%;
+                height: 100%;
+            }
+        }
+        .model-content {
+            width: 690upx;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 68upx 33upx 174upx;
+            background-color: #fff;
+            box-sizing: border-box;
+            border-radius: 20upx;
+            background-image: url("https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/mall-index-rule.png");
+            background-position: center bottom;
+            background-size: 100% auto;
+            background-repeat: no-repeat;
+        }
+        .title {
+            position: absolute;
+            top: -35upx;
+            left: 50%;
+            transform: translateX(-50%);
+            height: 70upx;
+            line-height: 70upx;
+            background: rgba(17, 102, 255, 1);
+            box-shadow: 0px 4upx 20upx 0px rgba(17, 102, 255, 0.3);
+            border-radius: 35upx;
+            color: #fff;
+            font-size: 32upx;
+            padding: 0 52upx;
+        }
+        .text-item {
+            margin-bottom: 48upx;
+            display: flex;
+            .index {
+                text-align: center;
+                width: 40upx;
+                height: 40upx;
+                line-height: 40upx;
+                background-color: #1166ff;
+                color: #fff;
+                margin-right: 14upx;
+                display: inline-block;
+                border-radius: 50%;
+            }
+            .text {
+                flex: 1;
+                color: #333;
+                font-size: 28upx;
+                line-height: 40upx;
+            }
+            &:last-of-type {
+                margin-bottom: 0;
+            }
         }
     }
 }

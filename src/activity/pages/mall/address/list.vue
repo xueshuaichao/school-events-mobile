@@ -1,44 +1,57 @@
 <template>
-    <view class="address-page">
-        <view class="address-content">
+    <view
+        v-if="loading"
+        class="address-page"
+    >
+        <login
+            v-if="userInfo === null"
+            @login="onLogin"
+        />
+        <view
+            v-else
+            class="address-content"
+        >
             <view
                 v-if="list.length"
                 class="address-list"
             >
-                <radio-group @change="setDefaulAddress">
-                    <view
-                        v-for="item in list"
-                        :key="item.id"
-                        class="item"
-                    >
-                        <view class="address-info">
-                            <view class="name-mobile">
-                                <text>{{ item.name }}</text>
-                                <text>{{ item.mobile }}</text>
-                            </view>
-                            <view class="address">
-                                {{ item.address }}
-                            </view>
+                <view
+                    v-for="item in list"
+                    :key="item.id"
+                    class="item"
+                    @click="selectAddress(item.id)"
+                >
+                    <view class="address-info">
+                        <view class="name-mobile">
+                            <text>{{ item.name }}</text>
+                            <text>{{ item.mobile }}</text>
                         </view>
-                        <view class="address-handel">
-                            <label
-                                class="radio"
-                            ><radio
-                                style="transform:scale(0.7)"
-                                :value="String(item.id)"
-                                :checked="item.is_default === 1"
-                            />默认地址</label>
-                            <view class="handel-item">
-                                <text @click="editAddress(item.id)">
-                                    修改
-                                </text>
-                                <text @click="onConfirmDelete(item.id)">
-                                    删除
-                                </text>
-                            </view>
+                        <view class="address">
+                            {{ item.address }}
                         </view>
                     </view>
-                </radio-group>
+                    <view class="address-handel">
+                        <view @click.stop="setDefaulAddress">
+                            <radio-group @change="setDefaulAddress">
+                                <label
+                                    class="radio"
+                                ><radio
+                                    style="transform:scale(0.7)"
+                                    :value="String(item.id)"
+                                    :checked="item.default === 1"
+                                />默认地址</label>
+                            </radio-group>
+                        </view>
+                        <view class="handel-item">
+                            <text @click.stop="editAddress(item.id)">
+                                修改
+                            </text>
+                            <text @click.stop="onConfirmDelete(item.id)">
+                                删除
+                            </text>
+                        </view>
+                    </view>
+                </view>
                 <uni-load-more
                     class="loadMore"
                     :status="loadMoreStatus"
@@ -61,21 +74,28 @@
                 <view>暂时没有收货地址哦～</view>
             </view>
         </view>
-        <view class="add-btn">
+        <view
+            class="add-btn"
+            @click="addAddress"
+        >
             添加地址
         </view>
     </view>
 </template>
 <script>
-import api from '../../../common/api';
-import uniLoadMore from '../../../components/uni-load-more/uni-load-more.vue';
+import api from '../../../../common/api';
+import login from '../../../../widgets/login/login.vue';
+import uniLoadMore from '../../../../components/uni-load-more/uni-load-more.vue';
 
 export default {
     components: {
         uniLoadMore,
+        login,
     },
     data() {
         return {
+            loading: false,
+            userInfo: '',
             loadMoreStatus: 'none',
             filter: {
                 page_size: 10,
@@ -84,10 +104,14 @@ export default {
             list: [],
         };
     },
-    created() {
+    onShow() {
         this.getAddress();
     },
     methods: {
+        onLogin({ user_info: userInfo }) {
+            this.userInfo = userInfo;
+            this.getAddress();
+        },
         onReachBottom() {
             if (this.loadMoreStatus === 'more') {
                 this.filter.page_num = this.filter.page_num + 1;
@@ -97,33 +121,37 @@ export default {
         },
         getAddress(type) {
             // 地址列表
-            api.get('/api/market/addresslist', this.filter)
-                .then((res) => {
-                    this.list = res.list;
-                    this.total = res.total;
-                })
-                .then(
-                    ({ list, total }) => {
-                        if (type === 'reachBottom') {
-                            this.list = this.list.concat(list);
-                        } else {
-                            this.list = list;
-                        }
-                        this.total = total;
-                        if (
-                            this.total
-                            <= this.filter.page_num * this.filter.page_size
-                        ) {
-                            this.loadMoreStatus = type === 'reachBottom' ? 'noMore' : 'none';
-                        } else {
-                            this.loadMoreStatus = 'more';
-                        }
-                    },
-                    () => {},
-                );
+            api.get('/api/market/addresslist', this.filter).then(
+                ({ list, total }) => {
+                    if (type === 'reachBottom') {
+                        this.list = this.list.concat(list);
+                    } else {
+                        this.list = list;
+                        this.loading = true;
+                    }
+                    this.total = total;
+                    if (
+                        this.total
+                        <= this.filter.page_num * this.filter.page_size
+                    ) {
+                        this.loadMoreStatus = type === 'reachBottom' ? 'noMore' : 'none';
+                    } else {
+                        this.loadMoreStatus = 'more';
+                    }
+                },
+                () => {},
+            );
+        },
+        selectAddress(addressid) {
+            if (this.detailId) {
+                uni.redirectTo({
+                    url: `/activity/pages/mall/detail?id=${this.detailId}&address_id=${addressid}`,
+                });
+            }
         },
         onConfirmDelete(id) {
             if (!this.lock) {
+                this.lock = true;
                 uni.showModal({
                     title: '删除提示',
                     content: '确认要删除地址么',
@@ -136,6 +164,7 @@ export default {
                             this.deleteAddress(id);
                             // console.log('用户点击确定');
                         } else if (res.cancel) {
+                            this.lock = false;
                             // console.log('用户点击取消');
                         }
                     },
@@ -143,36 +172,46 @@ export default {
             }
         },
         deleteAddress(id) {
-            api.get('api/address/deleteaddress', {
+            api.get('/api/market/deleteaddress', {
                 id,
-            }).then(() => {
-                const index = this.list.findIndex(v => v.id === id);
-                const isDefault = this.list[index].is_default === 1;
-                this.list.splice(index, 1);
-                if (isDefault) {
-                    this.setDefaulAddress(this.list[0].id);
-                }
-            });
+            }).then(
+                () => {
+                    const index = this.list.findIndex(v => v.id === id);
+                    const isDefault = this.list[index].default === 1;
+                    this.list.splice(index, 1);
+                    if (isDefault) {
+                        this.setDefaulAddress(this.list[0].id);
+                    }
+                    this.lock = false;
+                },
+                () => {
+                    this.lock = false;
+                },
+            );
         },
         editAddress(id) {
-            uni.redirectTo({
-                url: `address_edit?id=${id}`,
+            uni.navigateTo({
+                url: `edit?id=${id}`,
             });
         },
         setDefaulAddress(e) {
+            if (e.type === 'click') {
+                // 用来阻止事件冒泡
+                return false;
+            }
             // 设置默认地址
             const id = typeof e === 'number' ? e : Number(e.detail.value);
             const index = this.list.findIndex(v => v.id === id);
             this.list.forEach((item, i) => {
                 if (i !== index) {
-                    this.list[i].is_default = 0;
+                    this.list[i].default = 0;
                 }
             });
-            api.post('', {
+            api.post('/api/market/setdefaultaddress', {
                 id,
             }).then(
                 () => {
-                    this.list[index].is_default = 1;
+                    this.list[index].default = 1;
                 },
                 () => {
                     uni.showToast({
@@ -181,7 +220,16 @@ export default {
                     });
                 },
             );
+            return true;
         },
+        addAddress() {
+            uni.navigateTo({
+                url: 'edit',
+            });
+        },
+    },
+    onLoad(parms) {
+        this.detailId = parms.detail_id;
     },
 };
 </script>
@@ -214,6 +262,7 @@ page {
         .address {
             line-height: 36upx;
             color: #666;
+            word-break: break-all;
         }
         .address-handel {
             display: flex;

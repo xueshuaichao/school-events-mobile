@@ -5,11 +5,7 @@
         :default-value="defaultValue"
         @confirm="confirm($event)"
     >
-        <view>
-            <view class="uni-input placeholder fake-input">
-                请选择
-            </view>
-        </view>
+        <slot />
     </my-picker>
 </template>
 
@@ -73,10 +69,3 @@ export default {
     },
 };
 </script>
-
-<style lang="less">
-.form-item-cont {
-    width: 100%;
-    height: 100upx;
-}
-</style>
