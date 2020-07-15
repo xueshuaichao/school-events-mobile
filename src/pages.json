@@ -468,6 +468,12 @@
                     }
                 },
                 {
+                    "path": "pages/mall/result",
+                    "style": {
+                        "navigationBarTitleText": "积分商城"
+                    }
+                },
+                {
                     "path": "pages/mall/order/list",
                     "style": {
                         "navigationBarTitleText": "我的兑换"

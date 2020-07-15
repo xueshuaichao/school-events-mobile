@@ -9,13 +9,14 @@
         />
         <template v-else>
             <view class="status-content">
-                <view v-if="detailData.status === 1">
+                <!-- 1待审 2审核通过 3审核不通过 -->
+                <view v-if="detailData.status === 2">
                     <view class="text">
                         请添加官方工作人员微信号：aitiaozhan001<br>奖品会在活动结束后统一邮寄
                     </view>
                 </view>
                 <view
-                    v-else-if="detailData.status === 2"
+                    v-else-if="detailData.status === 1"
                     class="text"
                 >
                     离大奖只差一步啦，请耐心等待工作人员审核!

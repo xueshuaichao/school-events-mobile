@@ -194,6 +194,9 @@ const routesConfig = {
             path: '/activity/pages/mall/detail',
         },
         {
+            path: '/activity/pages/mall/result',
+        },
+        {
             path: '/activity/pages/mall/address/list',
         },
 

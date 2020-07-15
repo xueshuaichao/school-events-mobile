@@ -6,17 +6,18 @@
         />
         <template v-else>
             <view class="tab-view">
+                <!-- 1待审 2审核通过 3审核不通过 -->
                 <view
                     class="item"
-                    :class="{ active: status === 1 }"
-                    @click="changeStatus(1)"
+                    :class="{ active: status === 2 }"
+                    @click="changeStatus(2)"
                 >
                     兑换成功
                 </view>
                 <view
                     class="item"
-                    :class="{ active: status === 2 }"
-                    @click="changeStatus(2)"
+                    :class="{ active: status === 1 }"
+                    @click="changeStatus(1)"
                 >
                     兑换待审核
                 </view>
@@ -132,7 +133,7 @@ export default {
                 page_size: 10,
                 page_num: 1,
             },
-            status: 1,
+            status: 2,
             userInfo: '',
         };
     },
@@ -163,7 +164,7 @@ export default {
         },
         changeStatus(status) {
             this.status = status;
-            console.log(this.status);
+            uni.showLoading();
             this.filter.page_num = 1;
             this.getOrderList();
         },
@@ -172,22 +173,28 @@ export default {
                 ...this.filter,
                 status: this.status,
                 activity_id: this.activityId,
-            }).then(({ list, total }) => {
-                if (type === 'reachBottom') {
-                    this.list = this.list.concat(list);
-                } else {
-                    this.list = list;
-                }
-                this.total = total;
-                if (
-                    this.total
-                    <= this.filter.page_num * this.filter.page_size
-                ) {
-                    this.loadMoreStatus = type === 'reachBottom' ? 'noMore' : 'none';
-                } else {
-                    this.loadMoreStatus = 'more';
-                }
-            });
+            }).then(
+                ({ list, total }) => {
+                    uni.hideLoading();
+                    if (type === 'reachBottom') {
+                        this.list = this.list.concat(list);
+                    } else {
+                        this.list = list;
+                    }
+                    this.total = total;
+                    if (
+                        this.total
+                        <= this.filter.page_num * this.filter.page_size
+                    ) {
+                        this.loadMoreStatus = type === 'reachBottom' ? 'noMore' : 'none';
+                    } else {
+                        this.loadMoreStatus = 'more';
+                    }
+                },
+                () => {
+                    uni.hideLoading();
+                },
+            );
         },
         jumpDetail(id) {
             uni.navigateTo({
@@ -195,7 +202,10 @@ export default {
             });
         },
     },
-    onLoad() {
+    onLoad(parms) {
+        if (parms.status) {
+            this.status = Number(parms.status);
+        }
         this.isLogin();
     },
 };
