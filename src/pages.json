@@ -399,7 +399,7 @@
             "root": "activity",
             "pages": [
                 {
-                    "path": "/pages/clocked/ucenter",
+                    "path": "pages/clocked/ucenter",
                     "style": {
                         "navigationBarTitleText": "打卡一下，记录暑假"
                     }

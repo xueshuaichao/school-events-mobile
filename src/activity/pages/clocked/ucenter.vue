@@ -10,6 +10,78 @@
             />
             <!-- my works -->
             <template v-else>
+                <!--荣誉墙-->
+                <view class="honor-top">
+                    <view class="honor-top-box">
+                        <image
+                            class="avator"
+                            :src="userInfo.avatar_url"
+                        />
+                        <view>
+                            <view class="name">
+                                与果果
+                            </view>
+                            <view class="tx">
+                                我的勋章
+                            </view>
+                            <view class="flex-honor-all">
+                                <view class="item">
+                                    <view class="num">
+                                        2
+                                    </view>
+                                    <image
+                                        class="img"
+                                        src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/clocked/honor-2-2.png"
+                                    />
+                                    <view class="txt">
+                                        活力少年
+                                    </view>
+                                </view>
+                                <view class="item">
+                                    <view class="num">
+                                        2
+                                    </view>
+                                    <image
+                                        class="img"
+                                        src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/clocked/honor-2-2.png"
+                                    />
+                                    <view class="txt">
+                                        活力少年
+                                    </view>
+                                </view>
+                                <view class="item">
+                                    <view class="num">
+                                        2
+                                    </view>
+                                    <image
+                                        class="img"
+                                        src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/clocked/honor-2-2.png"
+                                    />
+                                    <view class="txt">
+                                        活力少年
+                                    </view>
+                                </view>
+                                <view class="item">
+                                    <view class="num">
+                                        2
+                                    </view>
+                                    <image
+                                        class="img"
+                                        src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/clocked/honor-2-2.png"
+                                    />
+                                    <view class="txt">
+                                        活力少年
+                                    </view>
+                                </view>
+                            </view>
+                        </view>
+                    </view>
+                </view>
+                <view class="bg-top" />
+                <calendar
+                    :show-btn="false"
+                    class="ucenter-calendar"
+                />
                 <view :class="['panel', isSelf ? 'is-self' : '']">
                     <!-- 生成海报 -->
                     <posterh5
@@ -26,6 +98,9 @@
                         :image="myPoster"
                         @togglePoster="togglePoster"
                     />
+                    <view class="top-bar">
+                        TA的作品
+                    </view>
                     <view
                         v-if="isSelf"
                         class="panel-hd"
@@ -178,12 +253,10 @@
                         class="goUpload"
                         @click="handleUpload"
                     >
-                        {{ isSelf ? "上传作品" : "查看活动" }}
+                        我要参与
                     </view>
                 </view>
             </template>
-
-            <goHome :path="publicConfig.homePath" />
         </view>
     </view>
 </template>
@@ -192,7 +265,6 @@
 // work.vue
 import api from '../../../common/api';
 import share from '../../../common/share';
-import goHome from '../common/goHome.vue';
 import login from '../../../widgets/login/login.vue';
 import uniLoadMore from '../../../components/uni-load-more/uni-load-more.vue';
 import EventCraftCover from '../../../components/event-craft-cover/index.vue';
@@ -200,15 +272,16 @@ import config from '../../../common/config';
 import utils from '../../../common/utils';
 import posterh5 from './posterh5.vue';
 import savePoster from './savePoster.vue';
+import calendar from './calendar.vue';
 
 export default {
     components: {
-        goHome,
         uniLoadMore,
         EventCraftCover,
         login,
         posterh5,
         savePoster,
+        calendar,
     },
     filters: {
         optimizeImage: (val) => {
@@ -255,7 +328,7 @@ export default {
             shareDesc: '',
             title: '',
             userId: '',
-            isSelf: false,
+            isSelf: true,
             detail: {},
             showPosterMask: false,
             myPoster: '',
@@ -519,12 +592,12 @@ export default {
                     this.getQrCode();
                     this.getEnrollInfo().then((data) => {
                         if (!Array.isArray(data)) {
-                            if (data.detail) {
-                                this.detail = data.detail;
-                                this.myPoster = data.detail[
-                                    this.isH5 ? 'poster_h5' : 'poster_mp'
-                                ];
-                            }
+                            // if (data.detail) {
+                            //     this.detail = data.detail;
+                            //     this.myPoster = data.detail[
+                            //         this.isH5 ? 'poster_h5' : 'poster_mp'
+                            //     ];
+                            // }
                             this.isSelf = data.is_self;
                         }
                         this.isLoading = false;
@@ -583,7 +656,7 @@ export default {
         setTabActive(i) {
             this.filter.page_num = 1;
             this.tabActiveIndex = i;
-            uni.pageScrollTo({ scrollTop: 0, duration: 300 });
+            // uni.pageScrollTo({ scrollTop: 0, duration: 300 });
             this.getWorkData();
         },
         viewDetail(item, index) {
@@ -800,21 +873,12 @@ export default {
 </script>
 
 <style lang="less">
-.empty {
-    text-align: center;
-    image {
-        width: 300upx;
-        height: 236upx;
-        margin-top: 174upx;
-    }
-    view {
-        color: #0f8c64;
-        font-size: 28upx;
-        margin-top: 30upx;
-    }
-}
 .work-empty {
     text-align: center;
+    background: #ffdada;
+    border-radius: 0 0 20upx 20upx;
+    position: relative;
+    padding-bottom: 80upx;
     image {
         width: 300upx;
         height: 236upx;
@@ -833,16 +897,23 @@ export default {
     right: 0;
     bottom: 0;
     height: 116upx;
-    background: #ff685c;
+    background: #ffe464;
     font-size: 36upx;
     font-weight: 600;
-    color: #fff;
+    color: #ff5547;
     line-height: 116upx;
     text-align: center;
     display: inline-block;
 }
+.ucenter-calendar {
+    margin-bottom: 40upx;
+}
 .media-list {
-    overflow-y: auto;
+    // overflow-y: auto;
+    background: #ffdada;
+    padding: 30upx;
+    border-radius: 0 0 20upx 20upx;
+    position: relative;
 }
 .media-box {
     display: flex;
@@ -851,13 +922,13 @@ export default {
     overflow: hidden;
 }
 .media-content {
-    width: 335upx;
+    width: 306upx;
     padding: 0;
     justify-items: space-betwen;
     position: relative;
     margin-bottom: 50upx;
     &.self {
-        width: 690upx;
+        width: 630upx;
         padding: 21upx;
         box-sizing: border-box;
         display: flex;
@@ -867,7 +938,7 @@ export default {
         margin-bottom: 20upx;
         border-radius: 20upx;
         background-color: #fff;
-        box-shadow: inset 0px 0px 24upx 0px rgba(152, 130, 255, 1);
+        box-shadow: inset 0px 0px 24upx 0px #ffdada;
         .work-info {
             color: #333;
             width: 300upx;
@@ -905,6 +976,10 @@ export default {
             max-width: 130upx;
             background: #ffe79c;
             color: #bb77ff;
+        }
+        .video {
+            width: 306upx;
+            height: 205upx;
         }
     }
 
@@ -985,14 +1060,127 @@ export default {
     box-sizing: border-box;
     width: 100%;
     min-height: 100vh;
-    background-color: #583ed4;
+    background-color: #ff685c;
     &.login {
         background-color: #fff !important;
     }
+    .bg-top {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 210upx;
+        background: #ffdada;
+        border-radius: 0 0 24% 24%;
+    }
+    .honor-top {
+        border-radius: 20upx;
+        margin: 0 30upx 50upx 30upx;
+        position: relative;
+        &::after {
+            position: absolute;
+            content: "";
+            width: 100%;
+            height: 24upx;
+            bottom: -10upx;
+            left: 0;
+            background: #ffa19a;
+            border-radius: 0 0 20upx 20upx;
+        }
+        .honor-top-box {
+            position: relative;
+            display: flex;
+            padding: 20upx 40upx 20upx 30upx;
+            width: 100%;
+            box-sizing: border-box;
+            border-radius: 20upx;
+            z-index: 1;
+            background: url(https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/clocked/honor-bg.png)
+                no-repeat;
+            background-color: #fff;
+            background-position: right 0;
+            background-size: 286upx 292upx;
+        }
+        .avator {
+            width: 100upx;
+            height: 100upx;
+            margin-right: 20upx;
+            border-radius: 50%;
+        }
+        .name {
+            font-size: 32upx;
+            color: #333;
+            line-height: 64upx;
+            font-weight: 500;
+        }
+        .txt {
+            font-size: 28upx;
+            color: #666;
+            line-height: 60upx;
+        }
+        .flex-honor-all {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40upx;
+            width: 500upx;
+            .item {
+                position: relative;
+                text-align: center;
+                .txt {
+                    color: #666;
+                    font-size: 22upx;
+                    line-height: 8upx;
+                }
+                .img {
+                    width: 94upx;
+                    height: 105upx;
+                }
+                .num {
+                    position: absolute;
+                    width: 20upx;
+                    height: 20upx;
+                    border-radius: 50%;
+                    background: #ff684c;
+                    color: #fff;
+                    font-size: 20upx;
+                    right: 0;
+                    top: 0;
+                    line-height: 20upx;
+                }
+            }
+        }
+    }
     .panel {
         padding: 0upx 30upx 0;
+        position: relative;
+        margin-bottom: 20upx;
         &.no-padding {
             padding-top: 10upx;
+        }
+        &::before {
+            position: absolute;
+            content: "";
+            height: 24upx;
+            width: 690upx;
+            left: 30upx;
+            bottom: -10upx;
+            background: #ffa19a;
+            border-radius: 0 0 20upx 20upx;
+        }
+        .top-bar {
+            height: 72upx;
+            background: linear-gradient(
+                180deg,
+                rgba(255, 162, 132, 1) 0%,
+                rgba(255, 104, 76, 1) 100%
+            );
+            box-shadow: 0 20upx 40upx 0 rgba(255, 255, 255, 0.5);
+            border-radius: 20upx 20upx 0 0;
+            font-size: 32upx;
+            font-weight: 500;
+            color: #fff;
+            text-align: center;
+            line-height: 72upx;
         }
     }
     .panel .panel-hd {
@@ -1002,8 +1190,8 @@ export default {
         justify-content: space-around;
         align-items: center;
         height: 68upx;
-        background-color: #583ed4;
-        padding: 0upx 0 30upx;
+        padding: 30upx;
+        background: #ffdada;
     }
 
     .panel .panel-hd .panel-title {
@@ -1054,18 +1242,6 @@ export default {
                 border-radius: 0;
             }
         }
-    }
-
-    .blank-wrap {
-        margin-top: 180upx;
-    }
-    .goHome {
-        color: #583ed4;
-        &::before {
-            border-top: 1rpx solid #583ed4 !important;
-            border-right: 1rpx solid #583ed4 !important;
-        }
-        bottom: 130upx;
     }
 }
 </style>

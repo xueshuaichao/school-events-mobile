@@ -4,7 +4,7 @@
         :class="[
             'activity-init-page',
             {
-                'stop-scroll': maskPrompt
+                'stop-scroll': maskPrompt || themePrompt
             }
         ]"
     >
@@ -19,7 +19,7 @@
             @showMask="showMask"
         >
             <template v-slot:main-data>
-                <calendar />
+                <calendar @toggleCalendar="toggleCalendar" />
                 <view class="rule task">
                     <image
                         class="zhuzi zhuzi-1"
@@ -163,6 +163,10 @@
             :mask-type="maskType"
             @toggelModel="handleClose"
         />
+        <theme
+            :show="themePrompt"
+            @toggelModel="handleClose"
+        />
     </view>
 </template>
 <script>
@@ -170,6 +174,7 @@ import indexPage from '../common/index.vue';
 import logger from '../../../common/logger';
 import calendar from './calendar.vue';
 import model from './model.vue';
+import theme from './theme.vue';
 import api from '../../../common/api';
 // import login from '../../../widgets/login/login.vue';
 
@@ -181,6 +186,7 @@ export default {
         indexPage,
         calendar,
         model,
+        theme,
         // login,
     },
     props: {
@@ -195,6 +201,7 @@ export default {
             indexConfig: {},
             fr: '',
             maskPrompt: false,
+            themePrompt: false,
             maskTitle: '',
             maskType: 0,
             myWorkPath: '',
@@ -241,6 +248,9 @@ export default {
         );
     },
     methods: {
+        toggleCalendar() {
+            this.themePrompt = true;
+        },
         showMask({ title, type }) {
             this.maskTitle = title;
             this.maskType = type;
@@ -251,9 +261,16 @@ export default {
             this.maskType = 1;
             this.maskPrompt = true;
         },
-        handleClose() {
+        handleClose(id) {
             // 关闭弹窗
             this.maskPrompt = false;
+            this.themePrompt = false;
+            if (id) {
+                // 选择主题后进行打卡。
+                uni.navigateTo({
+                    url: `/activity/pages/upload/modify?activity_id=${this.activityId}`,
+                });
+            }
         },
         isLogin() {
             return api.get('/api/user/info');
@@ -348,7 +365,7 @@ export default {
         }
         .circle-bg {
             padding: 20upx;
-            background-image: url(/activity/static/locked/circle-bg.png);
+            background-image: url(https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/clocked/circle-bg.png);
             background-color: rgba(255, 161, 154, 1);
             background-size: 100% 100%;
             background-position: 0 4upx;
@@ -390,7 +407,7 @@ export default {
             .card {
                 width: 190upx;
                 height: 208upx;
-                background: url(/activity/static/locked/card-bg.png);
+                background: url(https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/clocked/card-bg.png);
                 background-size: 100% 100%;
                 .img-wrap {
                     height: 116upx;
@@ -424,14 +441,14 @@ export default {
                 line-height: 48upx;
                 position: relative;
                 &.video-bg {
-                    background: url(/activity/static/locked/video-l.png) right
-                        top no-repeat;
+                    background: url(https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/clocked/video-l.png)
+                        right top no-repeat;
                     background-color: #fff;
                     background-size: 156upx 180upx;
                 }
                 &.praise-bg {
-                    background: url(/activity/static/locked/praise-l.png) right
-                        top no-repeat;
+                    background: url(https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/clocked/praise-l.png)
+                        right top no-repeat;
                     background-color: #fff;
                     background-size: 156upx 180upx;
                 }

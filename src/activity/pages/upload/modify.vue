@@ -260,7 +260,7 @@ export default {
     },
     onLoad(params) {
         this.id = params.id;
-        this.formData.activity_id = params.activity_id;
+        this.formData.activity_id = Number(params.activity_id);
         if (this.id) {
             uni.setNavigationBarTitle({ title: '编辑作品' });
         }

@@ -41,7 +41,7 @@ export default {
             this.h5DrawImage(config);
         },
         h5DrawImage(config) {
-            // h5 我的海报
+            // h5 wx 我的海报
             const wxGetImageInfo = this.promisify(uni.getImageInfo);
             const imageInfoArr = [];
             config.images.forEach((item) => {

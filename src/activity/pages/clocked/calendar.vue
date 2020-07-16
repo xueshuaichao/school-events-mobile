@@ -51,32 +51,84 @@
                         </view>
                         <view
                             v-for="(item, index) in list"
-                            :key="index"
+                            :key="index + 'index'"
                             class="item"
                         >
-                            12
+                            {{ item }}
                         </view>
                     </view>
                 </view>
             </view>
-            <view class="calendar-tip">
-                打卡得积分，积分兑好礼～
-            </view>
-            <view class="calendar-btn">
-                <view class="btn-txt">
-                    选择主题打卡
+            <template v-if="showBtn">
+                <view class="calendar-tip">
+                    打卡得积分，积分兑好礼～
                 </view>
-            </view>
+                <view class="calendar-btn">
+                    <view
+                        class="btn-txt"
+                        @click="toggleCalendar"
+                    >
+                        选择主题打卡
+                    </view>
+                </view>
+            </template>
         </view>
     </view>
 </template>
 <script>
 export default {
+    props: {
+        showBtn: {
+            type: Boolean,
+            default: true,
+        },
+    },
     data() {
         return {
             list2: ['日', '一', '二', '三', '四', '五', '六'],
-            list: new Array(31),
+            list: [
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9,
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9,
+                12,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9,
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9,
+            ],
         };
+    },
+    methods: {
+        toggleCalendar() {
+            this.$emit('toggleCalendar');
+        },
     },
 };
 </script>

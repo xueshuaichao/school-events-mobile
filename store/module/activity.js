@@ -317,7 +317,8 @@ export default {
                     activityName: 'clocked', // 空作品的图片拼接地址
                     activityId: 12,
                     isPNG: true,
-                    catId: '', // 所属分类
+                    catId: 20, // 所属分类
+                    catNames: ['劳动实践', '读书学习', '才艺展示', '体育锻炼'],
                     showAllCat: false,
                     time: '活动日期：8月1日--8月31日',
                     primaryColor: '#FF685C', // 主色调

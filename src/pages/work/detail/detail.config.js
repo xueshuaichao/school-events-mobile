@@ -542,6 +542,59 @@ const detailConf = [
     },
     // 11是直播，没有作品详情
     {},
+    {
+        posterConfig: {
+            width: 570,
+            height: 820,
+            debug: false,
+            texts: [
+                {
+                    x: 50,
+                    y: 600,
+                    text: '',
+                    fontSize: 28,
+                    color: '#FF574A',
+                    opacity: 1,
+                    lineHeight: 40,
+                    lineNum: 1,
+                    width: 600,
+                    textOverflow: 'ellipsis',
+                    textAlign: 'left',
+                    baseLine: 'middle',
+                },
+            ],
+            images: [
+                {
+                    url:
+                        'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/h5/cloced_poster.png',
+                    width: 570,
+                    height: 820,
+                    y: 0,
+                    x: 0,
+                },
+                {
+                    url: '',
+                    width: 470,
+                    height: 316,
+                    y: 254,
+                    x: 48,
+                    borderRadius: 20,
+                },
+                {
+                    url: '',
+                    width: 110,
+                    height: 110,
+                    y: 684,
+                    x: 434,
+                    borderRadius: 100,
+                },
+            ],
+        },
+        titleList: [
+            ['“爱挑战”代言人，舍我其谁！快为我点赞吧！'],
+            ['“爱挑战”代言人，非我莫属，快为我点赞吧！'],
+        ],
+    },
 ];
 
 export default detailConf;

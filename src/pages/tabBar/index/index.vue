@@ -226,7 +226,7 @@ export default {
                 talent: { list: [], total: 0 },
             },
             prompt: false,
-            isFirstLogin: 'hasQiyiPromt',
+            isFirstLogin: 'hasBayiPromt',
             status: 1,
             // show: 1,
             // #ifdef H5
@@ -237,6 +237,10 @@ export default {
             hotList: [],
             bannerlist: [],
             confList: [
+                {
+                    id: 12,
+                    url: '/activity/pages/index?activity_id=12',
+                },
                 {
                     id: 11,
                     url: '/pages/openGame/school-zhibo',
@@ -402,6 +406,9 @@ export default {
             if (uni.getStorageSync('hasLiuyiPromt')) {
                 uni.removeStorageSync('hasLiuyiPromt');
             }
+            if (uni.getStorageSync('hasQiyiPromt')) {
+                uni.removeStorageSync('hasQiyiPromt');
+            }
             if (!isFirstLogin) {
                 this.prompt = true;
             }
@@ -410,7 +417,7 @@ export default {
             uni.setStorageSync(this.isFirstLogin, true);
             this.prompt = false;
             uni.navigateTo({
-                url: '/activity/pages/index?activity_id=10',
+                url: '/activity/pages/index?activity_id=12',
             });
         },
         handleClose() {

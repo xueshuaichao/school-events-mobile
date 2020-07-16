@@ -75,6 +75,10 @@ export default {
             total: 0,
             confList: [
                 {
+                    id: 12,
+                    url: '/activity/pages/index?activity_id=12',
+                },
+                {
                     id: 11,
                     url: '/pages/openGame/school-zhibo',
                 },
