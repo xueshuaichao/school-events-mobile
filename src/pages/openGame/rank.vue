@@ -91,7 +91,7 @@
                         v-for="item in educationData"
                         :key="item.id"
                         class="cols"
-                        :class="{ active: item.id === filter.education_level }"
+                        :class="{ active: item.id === filter.group_type }"
                         @click.stop="selEducate(item)"
                     >
                         {{ item.label }}
@@ -236,22 +236,29 @@ export default {
             showMenu: false,
             showMenuType: 0,
             projectList: [],
+            // educationData: [
+            //     { label: "小学", id: 2 },
+            //     { label: "初中", id: 3 }
+            // ],
             educationData: [
-                { label: "小学", id: 2 },
-                { label: "初中", id: 3 }
+                { label: "1-3年级", id: 1 },
+                { label: "3-6年级", id: 2 },
+                { label: "7-9年级", id: 3 },
+                { label: "高一-高三", id: 4 }
             ],
             curCityIndex: -1,
             areaData,
             cityData,
             filter: {
                 city_id: 0,
-                education_level: 2,
+                // education_level: 2,
+                group_type: 1,
                 county_id: 0,
                 cat_id: 0
             },
             filterLabel: {
                 cat_label: "",
-                education_label: "小学",
+                education_label: "1-3年级",
                 city_label: "",
                 county_label: "全部",
                 old_city_id: 0,
@@ -278,7 +285,7 @@ export default {
         },
         selEducate(item) {
             this.filterLabel.education_label = item.label;
-            this.filter.education_level = item.id;
+            this.filter.group_type = item.id;
             this.showMenu = false;
             this.getData();
         },
@@ -414,7 +421,7 @@ export default {
                 text-overflow: ellipsis;
                 overflow: hidden;
                 position: relative;
-                padding-right: 20upx;
+                padding-right: 22upx;
                 box-sizing: border-box;
                 width: 200upx;
                 color: #9f1ff3;

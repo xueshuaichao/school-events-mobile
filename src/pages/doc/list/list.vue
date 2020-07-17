@@ -2,17 +2,45 @@
     <view class="page-doc-list">
         <template v-if="type">
             <view class="menu-list">
-                <view
-                    v-for="(item, k) in conf.menu"
-                    :key="item"
-                    class="menu-item"
-                    :class="{
-                        active: activeMenuIndex === k
-                    }"
-                    @click="toggle(k)"
-                >
-                    {{ item }}
-                </view>
+                <template>
+                    <view
+                        v-for="(item, k) in conf.menu"
+                        :key="k"
+                        @click.prevent="toggle(k)"
+                    >
+                        <view
+                            class="menu-item"
+                            :class="{
+                                change: type === 'challenge',
+                                active: item.show
+                            }"
+                        >
+                            {{ type === "challenge" ? item.txt : item }}
+                            <view
+                                v-if="type === 'challenge'"
+                                class="arror"
+                            />
+                        </view>
+
+                        <template v-if="type === 'challenge' && item.show">
+                            <view
+                                v-for="(subItem, index) in item.subLists"
+                                :key="index"
+                                class="sub-item"
+                                :class="{
+                                    active:
+                                        activeMenuIndex ===
+                                        activeOldMenuIndex &&
+                                        activeOldMenuIndex === k &&
+                                        activeSubMenuIndex === index
+                                }"
+                                @click.stop="toggleSubItem(k, index)"
+                            >
+                                {{ subItem }}
+                            </view>
+                        </template>
+                    </view>
+                </template>
             </view>
             <view class="content">
                 <template v-if="type === 'guinness'">
@@ -20,21 +48,35 @@
                         项目说明:
                     </view>
                 </template>
-                <view
-                    v-for="content in conf.content[activeMenuIndex]"
-                    :key="content.title"
-                    class="item"
-                >
+                <template v-if="type !== 'challenge'">
+                    <view
+                        v-for="(content, m) in conf.content[activeMenuIndex]"
+                        :key="m"
+                        class="item"
+                    >
+                        <view class="title">
+                            {{ content.title }}
+                        </view>
+                        <view class="text">
+                            {{ content.content }}
+                        </view>
+                    </view>
+                </template>
+                <template v-else>
                     <view class="title">
-                        <template v-if="type === 'challenge'">
-                            ·
-                        </template>
-                        {{ content.title }}
+                        {{ curtitle }}
                     </view>
-                    <view class="text">
-                        {{ content.content }}
+                    <view
+                        v-for="content in curContents"
+                        :key="content"
+                        class="item"
+                    >
+                        <view class="text">
+                            {{ content }}
+                        </view>
                     </view>
-                </view>
+                </template>
+
                 <view>
                     <template v-if="type !== 'guinness'">
                         <view class="title">
@@ -104,18 +146,41 @@ export default {
             conf: {},
             type: '',
             activeMenuIndex: 0,
+            activeOldMenuIndex: 0,
 
             userInfo: null,
 
             // #ifdef H5
             isH5: true,
             // #endif
+            activeSubMenuIndex: 0,
+            curtitle: '',
+            curContents: [],
         };
     },
     methods: {
         toggle(index) {
-            console.log(index);
+            if (this.type === 'challenge') {
+                this.conf.menu = this.conf.menu.map((D, idx) => {
+                    const d = D;
+                    if (index === idx) {
+                        d.show = !d.show;
+                    } else {
+                        d.show = false;
+                    }
+                    return d;
+                });
+            }
             this.activeMenuIndex = index;
+        },
+        toggleSubItem(index, subIndex) {
+            this.activeOldMenuIndex = index;
+            this.activeMenuIndex = index;
+            this.activeSubMenuIndex = subIndex;
+            this.curtitle = this.conf.content[index].children[subIndex].name;
+            this.curContents = this.conf.content[index].children[
+                subIndex
+            ].describe;
         },
         getData() {
             api.get('/api/user/info').then(
@@ -138,6 +203,14 @@ export default {
         this.type = type;
         this.conf = conf[type];
         this.activeMenuIndex = 0;
+        if (this.type === 'challenge') {
+            this.curtitle = this.conf.menu[this.activeMenuIndex].subLists[
+                this.activeSubMenuIndex
+            ];
+            this.curContents = this.conf.content[this.activeMenuIndex].children[
+                this.activeSubMenuIndex
+            ].describe;
+        }
 
         this.getData();
     },
@@ -150,7 +223,7 @@ export default {
     height: 100vh;
     overflow-y: hidden;
     .menu-list {
-        width: 220rpx;
+        width: 212rpx;
         background: rgba(245, 245, 245, 1);
         height: 100vh;
     }
@@ -158,13 +231,63 @@ export default {
     .menu-item {
         line-height: 32rpx;
         text-align: center;
-        font-size: 24rpx;
+        font-size: 28rpx;
         color: #3c3c3c;
         padding: 28rpx 8rpx;
+        position: relative;
+        &.change {
+            padding: 28rpx;
+            text-align: left;
+        }
 
         &.active {
             background: #268fff;
             color: #fff;
+            .arror {
+                transform: rotate(180deg);
+                &::before,
+                &::after {
+                    background: #fff;
+                }
+            }
+        }
+        .arror {
+            position: absolute;
+            width: 20upx;
+            height: 20upx;
+            right: 46upx;
+            top: 50%;
+            margin-top: -10upx;
+            &::before,
+            &::after {
+                content: "";
+                position: absolute;
+                display: block;
+                width: 15upx;
+                height: 4upx;
+                background: #777;
+                border-radius: 2upx;
+            }
+            &::before {
+                bottom: 8upx;
+                left: 0;
+                transform: rotate(-40deg);
+            }
+            &::after {
+                bottom: 8upx;
+                right: -2upx;
+                transform: rotate(40deg);
+            }
+        }
+    }
+    .sub-item {
+        font-size: 22rpx;
+        line-height: 1.5;
+        padding: 14rpx 30rpx;
+        color: #3c3c3c;
+        &.active {
+            color: #1166ff;
+            background: #cfe0ff;
         }
     }
 

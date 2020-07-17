@@ -145,7 +145,7 @@ export default {
         selectAddress(addressid) {
             if (this.detailId) {
                 uni.redirectTo({
-                    url: `/activity/pages/mall/detail?id=${this.detailId}&address_id=${addressid}`,
+                    url: `/activity/pages/mall/detail?id=${this.detailId}&address_id=${addressid}&activity_id=${this.activityId}`,
                 });
             }
         },
@@ -230,6 +230,7 @@ export default {
     },
     onLoad(parms) {
         this.detailId = parms.detail_id;
+        this.activityId = parms.activity_id;
     },
 };
 </script>

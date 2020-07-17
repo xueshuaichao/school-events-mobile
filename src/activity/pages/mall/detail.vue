@@ -69,47 +69,74 @@ export default {
             this.getDefaultAddress();
         }
     },
-
     methods: {
         getAddressInfo() {
             api.get('/api/market/getaddressinfo', {
                 id: this.addressId,
-            }).then((res) => {
-                this.addressDetail = res;
-            });
+            }).then(
+                (res) => {
+                    this.loading = true;
+                    this.addressDetail = res;
+                },
+                (err) => {
+                    this.loading = true;
+                    uni.showToast({
+                        icon: 'none',
+                        title: err.message,
+                    });
+                },
+            );
         },
         getDefaultAddress() {
-            api.get('/api/market/defaultaddress').then((res) => {
-                this.addressDetail = res;
-            });
+            api.get('/api/market/defaultaddress').then(
+                (res) => {
+                    this.loading = true;
+                    this.addressDetail = res;
+                },
+                (err) => {
+                    this.loading = true;
+                    uni.showToast({
+                        icon: 'none',
+                        title: err.message,
+                    });
+                },
+            );
         },
         getGiftInfo() {
             api.get('/api/market/getgiftinfo', {
                 id: this.id,
-            }).then((res) => {
-                if (Array.isArray(res) && !res.length) {
-                    uni.showToast({
-                        title: '该奖品已下架，暂不可兑换',
-                        icon: 'none',
-                    });
-                    setTimeout(() => {
-                        uni.redirectTo({
-                            url: 'index',
+            }).then(
+                (res) => {
+                    if (Array.isArray(res) && !res.length) {
+                        uni.showToast({
+                            title: '该奖品已下架，暂不可兑换',
+                            icon: 'none',
                         });
-                    }, 2000);
-                } else {
-                    this.giftInfo = res;
-                    this.loading = true;
-                }
-            });
+                        setTimeout(() => {
+                            uni.redirectTo({
+                                url: 'index',
+                            });
+                        }, 2000);
+                    } else {
+                        this.giftInfo = res;
+                    }
+                },
+                (err) => {
+                    uni.showToast({
+                        icon: 'none',
+                        title: err.message,
+                    });
+                },
+            );
         },
         jumpAddressList() {
             // 如果没有地址 跳至添加页面 否则跳到地址列表页
-            const url = !Object.keys(this.addressDetail).length
+            const url = Object.keys(this.addressDetail).length
                 ? `list?detail_id=${this.id}`
                 : `edit?detail_id=${this.id}`;
+            this.loading = false;
             uni.navigateTo({
-                url: `/activity/pages/mall/address/${url}`,
+                url: `/activity/pages/mall/address/${url}&activity_id=${this.activityId}`,
             });
         },
         submit() {
@@ -141,6 +168,9 @@ export default {
                                         title: '兑换成功',
                                         iocn: 'none',
                                     });
+                                    uni.navigateTo({
+                                        url: `result?activity_id=${this.activityId}`,
+                                    });
                                 },
                                 (err) => {
                                     uni.showToast({
@@ -161,6 +191,7 @@ export default {
     onLoad(parms) {
         this.id = parms.id || '';
         this.addressId = parms.address_id || '';
+        this.activityId = parms.activity_id;
         this.getGiftInfo();
     },
 };

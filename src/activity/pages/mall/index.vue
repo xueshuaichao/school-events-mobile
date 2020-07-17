@@ -85,7 +85,12 @@
                                     </view>
                                     <view class="price-num">
                                         <view class="price text-one-line">
-                                            {{ item.price }}/{{ item.unit }}
+                                            {{ item.price
+                                            }}<text
+                                                class="unit"
+                                            >
+                                                /{{ item.unit }}
+                                            </text>
                                         </view>
                                         <view class="num text-one-line">
                                             剩余：{{ item.num }}
@@ -130,11 +135,16 @@
                             <view class="title text-one-line">
                                 {{ itemDetail.name }}
                             </view>
-                            <view class="price">
-                                {{ itemDetail.price }}
+                            <view class="price text-one-line">
+                                {{ itemDetail.price
+                                }}<text
+                                    class="unit"
+                                >
+                                    /{{ itemDetail.unit }}
+                                </text>
                             </view>
                             <view class="num">
-                                {{ itemDetail.num }}
+                                兑换数量：1
                             </view>
                         </view>
                     </view>
@@ -329,7 +339,7 @@ export default {
         jumpOrderList() {
             // 兑换列表
             uni.navigateTo({
-                url: '/activity/pages/mall/order/list',
+                url: `/activity/pages/mall/order/list?activity_id=${this.activityId}`,
             });
         },
         toggleRule() {
@@ -338,14 +348,14 @@ export default {
         jumpIntegralList() {
             // 积分明细
             uni.navigateTo({
-                url: '/activity/pages/mall/score/list',
+                url: `/activity/pages/mall/score/list?activity_id=${this.activityId}`,
             });
         },
         toggleExchangeMask(status) {
             this.exchangeMask = status;
         },
         exchangeItem({
-            name, img, id, price, num,
+            name, img, id, price, num, unit,
         }) {
             // 兑换
             if (num <= 0) {
@@ -367,6 +377,7 @@ export default {
             this.itemDetail = {
                 ...this.itemDetail,
                 id,
+                unit,
                 name,
                 img,
                 num,
@@ -375,8 +386,9 @@ export default {
             return this.toggleExchangeMask(1);
         },
         confirmExchange(id) {
+            this.exchangeMask = 0;
             uni.navigateTo({
-                url: `detail?id=${id}`,
+                url: `detail?id=${id}&activity_id=${this.activityId}`,
             });
         },
     },
@@ -575,6 +587,13 @@ export default {
                         padding-left: 40upx;
                         max-width: 50%;
                         box-sizing: border-box;
+                        font-size: 24upx;
+                        .unit {
+                            color: #999;
+                            font-size: 24upx;
+                            margin-left: 8upx;
+                            display: inline-block;
+                        }
                         &::before {
                             content: "";
                             position: absolute;
@@ -590,6 +609,7 @@ export default {
                     .num {
                         max-width: 50%;
                         color: #72777d;
+                        font-size: 24upx;
                     }
                 }
             }
@@ -653,6 +673,12 @@ export default {
                         max-width: 50%;
                         box-sizing: border-box;
                         margin-bottom: 20upx;
+                        .unit {
+                            color: #999;
+                            font-size: 24upx;
+                            margin-left: 8upx;
+                            display: inline-block;
+                        }
                         &::before {
                             content: "";
                             position: absolute;

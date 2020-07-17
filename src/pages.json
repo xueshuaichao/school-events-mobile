@@ -447,7 +447,7 @@
                     }
                 },
                 {
-                    "path": "pages/rematch/list",
+                    "path": "pages/brand/rematch",
                     "style": {
                         "navigationBarTitleText": "复赛名单"
                     }
@@ -455,10 +455,7 @@
                 {
                     "path": "pages/brand/join",
                     "style": {
-                        "navigationBarTitleText": "青少年”爱挑战“寻找代言人",
-                        "usingComponents": {
-                            "poster": "/wxcomponents/third-party/poster/poster/index"
-                        }
+                        "navigationBarTitleText": "青少年”爱挑战“寻找代言人"
                     }
                 },
                 {
@@ -469,6 +466,12 @@
                 },
                 {
                     "path": "pages/mall/detail",
+                    "style": {
+                        "navigationBarTitleText": "积分商城"
+                    }
+                },
+                {
+                    "path": "pages/mall/result",
                     "style": {
                         "navigationBarTitleText": "积分商城"
                     }

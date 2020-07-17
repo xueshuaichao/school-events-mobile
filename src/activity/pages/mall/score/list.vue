@@ -1,112 +1,149 @@
 <template>
-    <view class="score-list-page">
-        <view class="main-content">
-            <view class="banner-content">
-                <view class="integral-content">
-                    <view class="text-content">
-                        可用积分
-                        <view class="num text-one-line">
-                            {{ integral.useful_score }}
+    <view
+        v-if="loading"
+        class="score-list-page"
+    >
+        <login
+            v-if="userInfo === null"
+            @login="onLogin"
+        />
+        <template v-else>
+            <view class="main-content">
+                <view class="banner-content">
+                    <view class="integral-content">
+                        <view class="text-content">
+                            可用积分
+                            <view class="num text-one-line">
+                                {{ integral.useful_score }}
+                            </view>
+                        </view>
+                    </view>
+                    <view class="handel-content">
+                        <view
+                            class="item"
+                            @click="jumpOrderList"
+                        >
+                            总积分<text>{{ integral.score }}</text>
+                        </view>
+                        <view class="line" />
+                        <view class="item">
+                            总消耗<text>{{ integral.last_score }}</text>
                         </view>
                     </view>
                 </view>
-                <view class="handel-content">
-                    <view
-                        class="item"
-                        @click="jumpOrderList"
-                    >
-                        总积分<text>{{ integral.score }}</text>
+                <view class="score-list-cont">
+                    <view class="tab">
+                        <view
+                            class="item"
+                            :class="{ active: tabIndex === 1 }"
+                            @click="changeTab(1)"
+                        >
+                            我的积分
+                        </view>
+                        <view
+                            class="item"
+                            :class="{ active: tabIndex === 2 }"
+                            @click="changeTab(2)"
+                        >
+                            积分扣除
+                        </view>
                     </view>
-                    <view class="line" />
-                    <view class="item">
-                        总消耗<text>{{ integral.last_score }}</text>
-                    </view>
-                </view>
-            </view>
-            <view class="score-list-cont">
-                <view class="tab">
-                    <view
-                        class="item"
-                        :class="{ active: tabIndex === 1 }"
-                        @click="changeTab(1)"
+                    <scroll-view
+                        v-if="list.length"
+                        class="list-scroll-view"
+                        scroll-y="true"
+                        :refresher-threshold="20"
+                        @scrolltolower="lower"
                     >
-                        我的积分
-                    </view>
+                        <view
+                            v-for="item in list"
+                            :key="item.id"
+                            class="list-item"
+                        >
+                            <view class="item-image">
+                                <view
+                                    :class="[
+                                        'icon',
+                                        `icon-score-${item.channel}`
+                                    ]"
+                                />
+                            </view>
+                            <view class="item-info">
+                                <view class="title">
+                                    {{ item.reason }}
+                                </view>
+                                <view class="time">
+                                    {{ item.created_at }}
+                                </view>
+                            </view>
+                            <view class="item-num">
+                                {{ tabIndex === 1 ? "+" : "-" }}{{ item.score }}
+                            </view>
+                        </view>
+                    </scroll-view>
                     <view
-                        class="item"
-                        :class="{ active: tabIndex === 2 }"
-                        @click="changeTab(2)"
+                        v-else
+                        class="no-data"
                     >
-                        积分扣除
-                    </view>
-                </view>
-                <scroll-view
-                    v-if="list.length"
-                    class="list-scroll-view"
-                    scroll-y="true"
-                    :refresher-threshold="20"
-                    @scrolltolower="lower"
-                >
-                    <view
-                        v-for="item in list"
-                        :key="item.id"
-                        class="list-item"
-                    >
-                        <view class="item-image">
-                            <view
-                                :class="['icon', `icon-score-${item.channel}`]"
+                        <view class="image">
+                            <image
+                                src=""
+                                mode=""
                             />
                         </view>
-                        <view class="item-info">
-                            <view class="title">
-                                {{ item.reason }}
-                            </view>
-                            <view class="time">
-                                {{ item.created_at }}
-                            </view>
-                        </view>
-                        <view class="item-num">
-                            {{ tabIndex === 1 ? "+" : "-" }}{{ item.score }}
-                        </view>
+                        <view>暂无积分记录</view>
                     </view>
-                </scroll-view>
-                <view
-                    v-else
-                    class="no-data"
-                >
-                    <view class="image">
-                        <image
-                            src=""
-                            mode=""
-                        />
-                    </view>
-                    <view>暂无积分记录</view>
                 </view>
             </view>
-        </view>
+        </template>
     </view>
 </template>
 <script>
 import api from '../../../../common/api';
+import login from '../../../../widgets/login/login.vue';
 
 export default {
+    components: {
+        login,
+    },
     data() {
         return {
+            loading: false,
             tabIndex: 1,
-            activityId: 12,
+            activityId: '',
             integral: {},
             list: [],
             filter: {
                 page_size: 10,
                 page_num: 1,
             },
+            userInfo: '',
         };
     },
-    onLoad() {
-        this.getIntegral();
-        this.getScoreList();
+    onLoad(parms) {
+        this.activityId = parms.activity_id;
+        this.isLogin();
     },
     methods: {
+        onLogin({ user_info: userInfo }) {
+            this.userInfo = userInfo;
+            this.getIntegral();
+            this.getScoreList();
+        },
+        isLogin() {
+            api.get('/api/user/info').then(
+                (res) => {
+                    this.userInfo = res.user_info;
+                    this.loading = true;
+                    this.getIntegral();
+                    this.getScoreList();
+                },
+                () => {
+                    this.loading = true;
+                    this.userInfo = null;
+                },
+            );
+        },
         getIntegral() {
             // 获取积分兑换详情
             api.get('/api/market/userscoreinfo', {

@@ -401,7 +401,7 @@ export default {
                 api.get('/api/works/childcat', {
                     cat_id: 3,
                 }).then((res) => {
-                    if (this.formData.activity_id) {
+                    if (this.formData.activity_id === '10') {
                         const index = res.findIndex(
                             item => item.cat_id === 102,
                         );
