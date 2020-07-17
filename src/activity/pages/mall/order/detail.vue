@@ -8,99 +8,113 @@
             @login="onLogin"
         />
         <template v-else>
-            <view class="status-content">
-                <!-- 1待审 2审核通过 3审核不通过 -->
-                <view v-if="detailData.status === 2">
-                    <view class="text">
-                        请添加官方工作人员微信号：aitiaozhan001<br>奖品会在活动结束后统一邮寄
-                    </view>
-                </view>
-                <view
-                    v-else-if="detailData.status === 1"
-                    class="text"
-                >
-                    离大奖只差一步啦，请耐心等待工作人员审核!
-                </view>
-                <view
-                    v-else-if="detailData.status === 3"
-                    class="text"
-                >
-                    兑换申请被驳回，扣除积分已返还至可用积分
-                </view>
-            </view>
-            <view class="address-content">
-                <view class="name-mobile">
-                    <text>{{ detailData.addressee }}</text>
-                    <text>{{ detailData.mobile }}</text>
-                </view>
-                <view class="address">
-                    {{ detailData.address }}
-                </view>
-            </view>
-            <view class="detail-content">
-                <view class="item">
-                    <view class="order-number">
-                        订单编号：{{ detailData.order_no }}
-                    </view>
-                    <view class="item-detail">
-                        <view class="image">
-                            <image
-                                :src="detailData.gift_img"
-                                mode=""
-                            />
-                        </view>
-                        <view class="title">
-                            {{ detailData.gift_name }}
-                        </view>
-                    </view>
-                    <view class="item-info">
-                        <view class="score">
-                            <text>消耗积分：{{ detailData.gift_price }}</text>
-
-                            <text>兑换数量</text><text>1{{ detailData.gift_unit || "" }}</text>
-                        </view>
-                        <view class="time">
-                            <view class="title">
-                                兑换时间：
-                            </view>
-                            <view class="text">
-                                {{ detailData.created_at }}
-                            </view>
-                        </view>
-                        <view
-                            v-if="detailData.status === 3"
-                            class="reason"
-                        >
-                            <view class="title">
-                                驳回原因：
-                            </view>
-                            <view class="text">
-                                {{ detailData.reason }}
-                            </view>
+            <error-page
+                v-if="showError"
+                message="订单不存在"
+                tips="商城首页"
+                :path="`/activity/pages/mall/index?activity_id=${activityId}`"
+            />
+            <template v-else-if="detailLoading">
+                <view class="status-content">
+                    <!-- 1待审 2审核通过 3审核不通过 -->
+                    <view v-if="detailData.status === 2">
+                        <view class="text">
+                            请添加官方工作人员微信号：aitiaozhan001<br>奖品会在活动结束后统一邮寄
                         </view>
                     </view>
                     <view
-                        v-if="detailData.delivery && detailData.delivery_code"
-                        class="item-delivery"
+                        v-else-if="detailData.status === 1"
+                        class="text"
                     >
-                        <text>物流信息：{{ detailData.delivery }}</text><text>{{ detailData.delivery_code }}</text>
-                        <text
-                            class="icon icon-copy"
-                            @click="copyDeliveryCode(detailData.delivery_code)"
-                        />
+                        离大奖只差一步啦，请耐心等待工作人员审核!
+                    </view>
+                    <view
+                        v-else-if="detailData.status === 3"
+                        class="text"
+                    >
+                        兑换申请被驳回，扣除积分已返还至可用积分
                     </view>
                 </view>
-            </view>
-            <view class="tips-content">
-                <template
-                    v-if="detailData.delivery && detailData.delivery_code"
-                >
-                    ～可复制快递单号到快递官网查询快递进度～
-                </template>
-                <template v-else>
-                    ～奖品寄出后将通过消息通知您～
-                </template>
-            </view>
+                <view class="address-content">
+                    <view class="name-mobile">
+                        <text>{{ detailData.addressee }}</text>
+                        <text>{{ detailData.mobile }}</text>
+                    </view>
+                    <view class="address">
+                        {{ detailData.address }}
+                    </view>
+                </view>
+                <view class="detail-content">
+                    <view class="item">
+                        <view class="order-number">
+                            订单编号：{{ detailData.order_no }}
+                        </view>
+                        <view class="item-detail">
+                            <view class="image">
+                                <image
+                                    :src="detailData.gift_img"
+                                    mode=""
+                                />
+                            </view>
+                            <view class="title">
+                                {{ detailData.gift_name }}
+                            </view>
+                        </view>
+                        <view class="item-info">
+                            <view class="score">
+                                <text>
+                                    消耗积分：{{ detailData.gift_price }}
+                                </text>
+
+                                <text>兑换数量</text><text>1{{ detailData.gift_unit || "" }}</text>
+                            </view>
+                            <view class="time">
+                                <view class="title">
+                                    兑换时间：
+                                </view>
+                                <view class="text">
+                                    {{ detailData.created_at }}
+                                </view>
+                            </view>
+                            <view
+                                v-if="detailData.status === 3"
+                                class="reason"
+                            >
+                                <view class="title">
+                                    驳回原因：
+                                </view>
+                                <view class="text">
+                                    {{ detailData.reason }}
+                                </view>
+                            </view>
+                        </view>
+                        <view
+                            v-if="
+                                detailData.delivery && detailData.delivery_code
+                            "
+                            class="item-delivery"
+                        >
+                            <text>物流信息：{{ detailData.delivery }}</text><text>{{ detailData.delivery_code }}</text>
+                            <text
+                                class="icon icon-copy"
+                                @click="
+                                    copyDeliveryCode(detailData.delivery_code)
+                                "
+                            />
+                        </view>
+                    </view>
+                </view>
+                <view class="tips-content">
+                    <template
+                        v-if="detailData.delivery && detailData.delivery_code"
+                    >
+                        ～可复制快递单号到快递官网查询快递进度～
+                    </template>
+                    <template v-else>
+                        ～奖品寄出后将通过消息通知您～
+                    </template>
+                </view>
+            </template>
         </template>
     </view>
 </template>
@@ -108,19 +122,25 @@
 import api from '../../../../common/api';
 import login from '../../../../widgets/login/login.vue';
 import utils from '../../../../common/utils';
+import share from '../shareMinxin';
+import errorPage from '../error.vue';
 
 export default {
     components: {
         login,
+        errorPage,
     },
+    mixins: [share.initShare],
     data() {
         return {
             // #ifdef H5
             isH5: true,
             // #endif
             loading: false,
+            detailLoading: false,
             detailData: {},
             userInfo: '',
+            showError: false,
         };
     },
     methods: {
@@ -144,9 +164,22 @@ export default {
         getData() {
             api.get('/api/market/recordinfo', {
                 id: this.id,
-            }).then((res) => {
-                this.detailData = res;
-            });
+            }).then(
+                (res) => {
+                    this.detailLoading = true;
+                    if (Array.isArray(res) && !res.length) {
+                        this.showError = true;
+                    } else {
+                        this.detailData = res;
+                    }
+                },
+                (err) => {
+                    uni.showToast({
+                        title: err.message,
+                        icon: 'none',
+                    });
+                },
+            );
         },
         copyDeliveryCode(data) {
             utils.handleClipboard(
@@ -171,14 +204,17 @@ export default {
     onLoad(parms) {
         this.id = parms.id;
         this.activityId = parms.activity_id;
+        this.getShareConfig();
         this.isLogin();
     },
 };
 </script>
-<style lang="less" scoped>
+<style lang="less">
 page {
     background-color: #f0f0f3;
 }
+</style>
+<style lang="less" scoped>
 .order-detail-page {
     .status-content {
         background-color: #dce8fb;

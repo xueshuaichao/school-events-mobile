@@ -187,6 +187,11 @@ const routesConfig = {
         {
             path: '/activity/pages/brand/rematch',
         },
+
+        {
+            path: '/activity/pages/clocked/lottery',
+        },
+
         {
             path: '/activity/pages/mall/index',
         },

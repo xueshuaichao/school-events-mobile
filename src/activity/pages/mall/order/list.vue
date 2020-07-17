@@ -35,7 +35,7 @@
             >
                 <view
                     v-for="item in list"
-                    :key="item.list"
+                    :key="item.id"
                     class="item"
                     @click="jumpDetail(item.id)"
                 >
@@ -95,7 +95,7 @@
                         contentrefresh: '正在加载...',
                         contentnomore: '———— 已经到底了~ ————'
                     }"
-                    color="#333"
+                    color="#666"
                 />
             </view>
             <view
@@ -118,15 +118,17 @@
 import api from '../../../../common/api';
 import login from '../../../../widgets/login/login.vue';
 import uniLoadMore from '../../../../components/uni-load-more/uni-load-more.vue';
+import share from '../shareMinxin';
 
 export default {
     components: {
         uniLoadMore,
         login,
     },
+    mixins: [share.initShare],
     data() {
         return {
-            activityId: 12,
+            activityId: '',
             loadMoreStatus: 'none',
             list: [],
             filter: {
@@ -203,17 +205,21 @@ export default {
         },
     },
     onLoad(parms) {
+        this.activityId = parms.activity_id;
         if (parms.status) {
             this.status = Number(parms.status);
         }
+        this.getShareConfig();
         this.isLogin();
     },
 };
 </script>
-<style lang="less" scoped>
+<style lang="less">
 page {
     background-color: #f0f0f3;
 }
+</style>
+<style lang="less" scoped>
 .order-list-page {
     padding-top: 80upx;
     .tab-view {

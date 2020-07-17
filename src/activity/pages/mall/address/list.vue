@@ -60,7 +60,7 @@
                         contentrefresh: '正在加载...',
                         contentnomore: '———— 已经到底了~ ————'
                     }"
-                    color="#333"
+                    color="#666"
                 />
             </view>
             <view
@@ -86,12 +86,14 @@
 import api from '../../../../common/api';
 import login from '../../../../widgets/login/login.vue';
 import uniLoadMore from '../../../../components/uni-load-more/uni-load-more.vue';
+import share from '../shareMinxin';
 
 export default {
     components: {
         uniLoadMore,
         login,
     },
+    mixins: [share.initShare],
     data() {
         return {
             loading: false,
@@ -144,7 +146,7 @@ export default {
         },
         selectAddress(addressid) {
             if (this.detailId) {
-                uni.redirectTo({
+                uni.navigateTo({
                     url: `/activity/pages/mall/detail?id=${this.detailId}&address_id=${addressid}&activity_id=${this.activityId}`,
                 });
             }
@@ -191,7 +193,7 @@ export default {
         },
         editAddress(id) {
             uni.navigateTo({
-                url: `edit?id=${id}`,
+                url: `edit?id=${id}&activity_id=${this.activityId}`,
             });
         },
         setDefaulAddress(e) {
@@ -231,13 +233,16 @@ export default {
     onLoad(parms) {
         this.detailId = parms.detail_id;
         this.activityId = parms.activity_id;
+        this.getShareConfig();
     },
 };
 </script>
-<style lang="less" scoped>
+<style lang="less">
 page {
     background-color: #f0f0f3;
 }
+</style>
+<style lang="less" scoped>
 .address-page {
     position: relative;
     .address-list {
