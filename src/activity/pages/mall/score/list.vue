@@ -101,11 +101,13 @@
 <script>
 import api from '../../../../common/api';
 import login from '../../../../widgets/login/login.vue';
+import share from '../shareMinxin';
 
 export default {
     components: {
         login,
     },
+    mixins: [share.initShare],
     data() {
         return {
             loading: false,
@@ -122,6 +124,7 @@ export default {
     },
     onLoad(parms) {
         this.activityId = parms.activity_id;
+        this.getShareConfig();
         this.isLogin();
     },
     methods: {
@@ -194,10 +197,12 @@ export default {
     },
 };
 </script>
-<style lang="less" scoped>
+<style lang="less">
 page {
-    min-height: 100%;
+    background-color: #f0f0f3;
 }
+</style>
+<style lang="less" scoped>
 .score-list-page {
     position: relative;
     min-height: 100vh;

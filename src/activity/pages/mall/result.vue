@@ -31,8 +31,10 @@
 
 <script>
 import api from '../../../common/api';
+import share from './shareMinxin';
 
 export default {
+    mixins: [share.initShare],
     data() {
         return {
             userInfo: {},
@@ -43,6 +45,7 @@ export default {
     },
     onLoad(parms) {
         this.activityId = parms.activity_id || 12;
+        this.getShareConfig(this.activityId);
         this.getUserInfo();
     },
     methods: {
@@ -57,28 +60,15 @@ export default {
             );
         },
         jumpOrderList() {
-            uni.reLaunch({
-                url: '/activity/pages/mall/order/list?status=1',
+            uni.redirectTo({
+                url: `/activity/pages/mall/order/list?status=1&activity_id=${this.activityId}`,
             });
         },
         jumpMallIndex() {
-            uni.reLaunch({
+            uni.redirectTo({
                 url: `index?activity_id=${this.activityId}`,
             });
         },
-    },
-    onShareAppMessage(res) {
-        if (res.from === 'button') {
-            // 来自页面内分享按钮
-            console.log(res.target);
-        }
-        // const titleList = this.publicConfig.shareConfig.title;
-        // const title = titleList[Math.floor(Math.random() * titleList.length)];
-        // return {
-        //     title,
-        //     imageUrl: this.publicConfig.shareConfig.image,
-        //     path: this.publicConfig.homePath,
-        // };
     },
 };
 </script>

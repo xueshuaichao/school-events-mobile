@@ -86,9 +86,7 @@
                                     <view class="price-num">
                                         <view class="price text-one-line">
                                             {{ item.price
-                                            }}<text
-                                                class="unit"
-                                            >
+                                            }}<text class="unit">
                                                 /{{ item.unit }}
                                             </text>
                                         </view>
@@ -105,17 +103,17 @@
                         >
                             暂无可兑换商品～
                         </view>
-                        <uni-load-more
-                            class="loadMore"
-                            :status="loadMoreStatus"
-                            :content-text="{
-                                contentdown: '上拉显示更多',
-                                contentrefresh: '正在加载...',
-                                contentnomore: '———— 已经到底了~ ————'
-                            }"
-                            color="#333"
-                        />
                     </view>
+                    <uni-load-more
+                        class="loadMore"
+                        :status="loadMoreStatus"
+                        :content-text="{
+                            contentdown: '上拉显示更多',
+                            contentrefresh: '正在加载...',
+                            contentnomore: '———— 已经到底了~ ————'
+                        }"
+                        color="#666"
+                    />
                 </view>
             </view>
             <view
@@ -137,9 +135,7 @@
                             </view>
                             <view class="price text-one-line">
                                 {{ itemDetail.price
-                                }}<text
-                                    class="unit"
-                                >
+                                }}<text class="unit">
                                     /{{ itemDetail.unit }}
                                 </text>
                             </view>
@@ -229,6 +225,7 @@
 <script>
 import api from '../../../common/api';
 import uniLoadMore from '../../../components/uni-load-more/uni-load-more.vue';
+import share from './shareMinxin';
 
 export default {
     components: {
@@ -243,6 +240,7 @@ export default {
             return '';
         },
     },
+    mixins: [share.initShare],
     data() {
         return {
             loading: false,
@@ -250,7 +248,7 @@ export default {
             loadMoreStatus: 'none',
             list: [],
             filter: {
-                page_size: 10,
+                page_size: 5,
                 page_num: 1,
             },
             integral: {},
@@ -394,6 +392,7 @@ export default {
     },
     onLoad(parms) {
         this.activityId = parms.activity_id || 12;
+        this.getShareConfig(this.activityId);
     },
 };
 </script>
@@ -585,7 +584,7 @@ export default {
                         color: #ffaf03;
                         position: relative;
                         padding-left: 40upx;
-                        max-width: 50%;
+                        max-width: 55%;
                         box-sizing: border-box;
                         font-size: 24upx;
                         .unit {
@@ -607,7 +606,7 @@ export default {
                         }
                     }
                     .num {
-                        max-width: 50%;
+                        max-width: 45%;
                         color: #72777d;
                         font-size: 24upx;
                     }

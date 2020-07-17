@@ -89,12 +89,14 @@
 import api from '../../../../common/api';
 import login from '../../../../widgets/login/login.vue';
 import selectAddress from '../../../../components/area/index.vue';
+import share from '../shareMinxin';
 
 export default {
     components: {
         selectAddress,
         login,
     },
+    mixins: [share.initShare],
     data() {
         return {
             loading: false,
@@ -226,6 +228,8 @@ export default {
     onLoad(parms) {
         this.id = parms.id;
         this.detailId = parms.detail_id;
+        this.activityId = parms.activity_id;
+        this.getShareConfig();
         this.isLogin().then(
             (res) => {
                 this.userInfo = res.user_info;
@@ -242,10 +246,12 @@ export default {
     },
 };
 </script>
-<style lang="less" scoped>
+<style lang="less">
 page {
     background-color: #f0f0f3;
 }
+</style>
+<style lang="less" scoped>
 .address-edit-page {
     .address-form {
         background-color: #fff;

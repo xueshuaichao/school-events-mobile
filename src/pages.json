@@ -453,6 +453,12 @@
                     }
                 },
                 {
+                    "path": "pages/clocked/lottery",
+                    "style": {
+                        "navigationBarTitleText": "抽奖"
+                    }
+                },
+                {
                     "path": "pages/mall/index",
                     "style": {
                         "navigationBarTitleText": "积分商城"
