@@ -566,7 +566,7 @@ const detailConf = [
             images: [
                 {
                     url:
-                        'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/h5/cloced_poster.png',
+                        'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/h5/clocked_poster.png',
                     width: 570,
                     height: 820,
                     y: 0,
@@ -591,8 +591,9 @@ const detailConf = [
             ],
         },
         titleList: [
-            ['“爱挑战”代言人，舍我其谁！快为我点赞吧！'],
-            ['“爱挑战”代言人，非我莫属，快为我点赞吧！'],
+            ['我在参加爱挑战暑期打卡活动，就差你的赞啦！'],
+            ['我这么努力打卡进步，你就给个赞鼓励下嘛！'],
+            ['我又发布新作品啦，快来看！'],
         ],
     },
 ];

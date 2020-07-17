@@ -2,7 +2,7 @@
     <view>
         <canvas
             class="canvas pro"
-            style="width: 570px; height: 820px;"
+            style="width: 630px; height: 866px;"
             canvas-id="firstCanvas"
         />
     </view>
@@ -42,6 +42,7 @@ export default {
         },
         h5DrawImage(config) {
             // h5 wx 我的海报
+            console.log(config, 'h5DrawImage-------');
             const wxGetImageInfo = this.promisify(uni.getImageInfo);
             const imageInfoArr = [];
             config.images.forEach((item) => {
@@ -83,7 +84,8 @@ export default {
                     }
                     this.ctx.restore();
                 });
-                const { texts } = config;
+                const { texts, fillRects, strokeRects } = config;
+                console.log(config, fillRects, strokeRects, 'config-------');
                 if (texts && texts.length > 0) {
                     texts.forEach((item) => {
                         this.drawText(item);
@@ -95,6 +97,20 @@ export default {
                     }, 500);
                 });
             });
+        },
+        drawFillRect(params) {
+            const {
+                x1, y1, x2, y2, color,
+            } = params;
+            this.ctx.setFillStyle(color);
+            this.ctx.fillRect(x1, y1, x2, y2);
+        },
+        drawStokeRect(params) {
+            const {
+                x1, y1, x2, y2, color,
+            } = params;
+            this.ctx.setStrokeStyle(color);
+            this.ctx.strokeRect(x1, y1, x2, y2);
         },
         drawText(params) {
             const {

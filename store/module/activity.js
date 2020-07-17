@@ -326,9 +326,17 @@ export default {
                     placeholderColor: '#FFBBB5',
                     homePath: '/activity/pages/index?activity_id=12', // 我的作品页面返回首页的路径
                     shareConfig: {
-                        title: ['秀我风采，为青少年代言！'],
-                        h5Title: ['青少年“爱挑战”寻找代言'],
-                        desc: ['不要迟疑，为我点赞！我要做“爱挑战”代言人！'],
+                        title: [
+                            '打卡一夏，记录暑假赢好礼！',
+                            '爱挑战素质教育养成计划，过充实又快乐的暑假！',
+                            '每日打卡一小步！成长提升一大步！',
+                        ],
+                        h5Title: [
+                            '打卡一夏，记录暑假赢好礼！',
+                            '爱挑战素质教育养成计划，过充实又快乐的暑假！',
+                            '每日打卡一小步！成长提升一大步！',
+                        ],
+                        desc: ['打卡一夏，记录暑假'],
                         image:
                             'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/brand_share.png',
                         path: '/activity/pages/index?activity_id=12',

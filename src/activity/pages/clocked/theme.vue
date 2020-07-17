@@ -8,11 +8,11 @@
                 选择你的打卡主题
                 <image
                     class="jiazi"
-                    src="/activity/static/locked/jiazi.png"
+                    src="/activity/static/clocked/jiazi.png"
                 />
                 <image
                     class="jiazi jiazi2"
-                    src="/activity/static/locked/jiazi.png"
+                    src="/activity/static/clocked/jiazi.png"
                 />
             </view>
             <view class="modal-body">
@@ -79,22 +79,22 @@ export default {
             list: [
                 {
                     txt: '劳动实践',
-                    url: '/activity/static/locked/1-theme.png',
+                    url: '/activity/static/clocked/1-theme.png',
                     id: 1,
                 },
                 {
                     txt: '读书学习',
-                    url: '/activity/static/locked/2-theme.png',
+                    url: '/activity/static/clocked/2-theme.png',
                     id: 2,
                 },
                 {
                     txt: '才艺展示',
-                    url: '/activity/static/locked/3-theme.png',
+                    url: '/activity/static/clocked/3-theme.png',
                     id: 3,
                 },
                 {
                     txt: '体育竞技',
-                    url: '/activity/static/locked/4-theme.png',
+                    url: '/activity/static/clocked/4-theme.png',
                     id: 4,
                 },
             ],

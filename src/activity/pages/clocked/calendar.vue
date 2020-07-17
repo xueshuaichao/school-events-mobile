@@ -9,19 +9,19 @@
             </view>
             <image
                 class="jiazi jiazi1"
-                src="/activity/static/locked/jiazi.png"
+                src="/activity/static/clocked/jiazi.png"
             />
             <image
                 class="jiazi jiazi2"
-                src="/activity/static/locked/jiazi.png"
+                src="/activity/static/clocked/jiazi.png"
             />
             <image
                 class="jiazi jiazi3"
-                src="/activity/static/locked/jiazi.png"
+                src="/activity/static/clocked/jiazi.png"
             />
             <image
                 class="jiazi jiazi4"
-                src="/activity/static/locked/jiazi.png"
+                src="/activity/static/clocked/jiazi.png"
             />
         </view>
         <view class="calendar-main">

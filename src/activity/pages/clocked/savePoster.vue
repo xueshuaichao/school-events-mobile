@@ -16,13 +16,13 @@
                 <template v-if="isH5">
                     <view
                         v-if="isWechat"
-                        class="brand-btn btn"
+                        class="clocked-btn btn"
                     >
                         长按图片保存到本地
                     </view>
                     <view
                         v-else
-                        class="brand-btn btn"
+                        class="clocked-btn btn"
                         @click="saveImage"
                     >
                         保存图片
@@ -31,7 +31,7 @@
                 <template v-else>
                     <template v-if="!imgAuthBtn">
                         <view
-                            class="brand-btn btn"
+                            class="clocked-btn btn"
                             @click="handleSave"
                         >
                             保存图片
@@ -40,16 +40,15 @@
                     <template v-else>
                         <button
                             open-type="openSetting"
-                            class="brand-btn btn"
+                            class="clocked-btn btn"
                             @opensetting="checkImgAuthFun"
                         >
                             授权相册并保存到本地
                         </button>
                     </template>
                 </template>
-                <image
+                <view
                     class="close"
-                    src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/brand_close.png"
                     @click="togglePoster(false)"
                 />
             </view>
@@ -243,8 +242,8 @@ export default {
         transform: translateY(-50%);
     }
     .canvas-img {
-        width: 570upx;
-        height: 820upx;
+        width: 630upx;
+        height: 866upx;
         margin: 0 auto 30upx;
         .image {
             width: 100%;
@@ -254,13 +253,13 @@ export default {
     }
     .btn {
         background: linear-gradient(
-            0deg,
-            rgba(255, 141, 133, 1),
-            rgba(255, 87, 73, 1)
+            180deg,
+            rgba(255, 162, 132, 1) 0%,
+            rgba(255, 104, 76, 1) 100%
         );
         box-shadow: 0 4upx 6upx 0 rgba(0, 0, 0, 0.4);
         line-height: 98upx;
-        width: 540upx;
+        width: 570upx;
         box-sizing: border-box;
         margin: 0 auto;
         border-radius: 55upx;
@@ -278,6 +277,32 @@ export default {
         margin: 37upx auto 0;
         width: 52upx;
         height: 52upx;
+        border-radius: 50%;
+        background: linear-gradient(
+            180deg,
+            rgba(255, 162, 132, 1) 0%,
+            rgba(255, 104, 76, 1) 100%
+        );
+        box-shadow: 0 4upx 6upx 0 rgba(0, 0, 0, 0.4);
+        position: relative;
+        &::before,
+        &::after {
+            content: "";
+            position: absolute;
+            display: block;
+            width: 22upx;
+            height: 4upx;
+            background: #fff;
+            left: 14upx;
+            top: 24upx;
+            border-radius: 2upx;
+        }
+        &:before {
+            transform: rotate(45deg);
+        }
+        &:after {
+            transform: rotate(-45deg);
+        }
     }
 }
 </style>

@@ -13,6 +13,12 @@
                 <!--荣誉墙-->
                 <view class="honor-top">
                     <view class="honor-top-box">
+                        <view
+                            class="to-open-honor"
+                            @click="getMyPoster"
+                        >
+                            炫耀下吧～
+                        </view>
                         <image
                             class="avator"
                             :src="userInfo.avatar_url"
@@ -131,89 +137,104 @@
                         v-if="total > 0"
                         :class="['media-list', isSelf ? '' : 'media-box']"
                     >
-                        <view
-                            v-for="(item, index) in dataList"
-                            :key="item.id"
-                            :class="['media-content', isSelf ? 'self' : '']"
-                        >
-                            <event-craft-cover
-                                :info="item"
-                                :media-icon="true"
-                                :like-icon="false"
-                                :best-icon="false"
-                                :bg-color="publicConfig.primaryBgColor"
-                                @click.native="viewDetail(item, index)"
-                            />
+                        <template v-for="(item, index) in dataList">
                             <view
-                                v-if="isSelf === true"
-                                class="work-info"
+                                v-if="getDate(item.created_at)"
+                                :key="item.id"
+                                class="time"
                             >
-                                <view class="media-name text-two-line">
-                                    {{ item.resource_name }}
-                                </view>
-                                <view class="media-time">
-                                    {{ item.created_at }}
-                                </view>
-                                <view class="btn">
-                                    <text
-                                        v-if="Number(tabActiveIndex) === 2"
-                                        class="btn-item"
-                                        @click="viewDetail(item, index)"
-                                    >
-                                        查看
-                                    </text>
-                                    <text
-                                        v-if="Number(tabActiveIndex) === 3"
-                                        class="btn-item big"
-                                        @click="reason(item)"
-                                    >
-                                        驳回原因
-                                    </text>
-                                    <text
-                                        v-if="Number(tabActiveIndex) === 3"
-                                        class="btn-item"
-                                        @click="modifyItem(item)"
-                                    >
-                                        编辑
-                                    </text>
-                                    <text
-                                        v-if="Number(tabActiveIndex) > 1"
-                                        class="btn-item"
-                                        @click="onConfirmDelete(item)"
-                                    >
-                                        删除
-                                    </text>
-                                </view>
-                            </view>
-                            <view
-                                v-else
-                                class="work-info"
-                            >
-                                <view
-                                    class="media-name create-by text-one-line"
-                                >
-                                    {{ detail.name }}
-                                </view>
-                                <view class="media-name text-one-line">
-                                    {{ `${item.resource_name}` }}
-                                </view>
-                                <text class="vote-num">
-                                    {{ item.ticket }}赞
-                                </text>
-                                <view
-                                    class="vote"
-                                    @click="handleVote(item)"
-                                >
+                                <view class="time-btn">
                                     <image
-                                        class="like-icon"
-                                        :src="
-                                            `https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/${publicConfig.activityName}_like_icon.png`
-                                        "
+                                        src="/activity/static/clocked/time.png"
                                     />
-                                    点赞
+                                    <text class="txt">
+                                        {{ item.created_at }}
+                                    </text>
                                 </view>
                             </view>
-                        </view>
+                            <view
+                                :key="item.id"
+                                :class="['media-content', isSelf ? 'self' : '']"
+                            >
+                                <event-craft-cover
+                                    :info="item"
+                                    :media-icon="true"
+                                    :like-icon="false"
+                                    :best-icon="false"
+                                    :bg-color="publicConfig.primaryBgColor"
+                                    @click.native="viewDetail(item, index)"
+                                />
+                                <view
+                                    v-if="isSelf === true"
+                                    class="work-info"
+                                >
+                                    <view class="media-name text-two-line">
+                                        {{ item.resource_name }}
+                                    </view>
+                                    <view class="media-time">
+                                        {{ item.created_at }}
+                                    </view>
+                                    <view class="btn">
+                                        <text
+                                            v-if="Number(tabActiveIndex) === 2"
+                                            class="btn-item"
+                                            @click="viewDetail(item, index)"
+                                        >
+                                            查看
+                                        </text>
+                                        <text
+                                            v-if="Number(tabActiveIndex) === 3"
+                                            class="btn-item big"
+                                            @click="reason(item)"
+                                        >
+                                            驳回原因
+                                        </text>
+                                        <text
+                                            v-if="Number(tabActiveIndex) === 3"
+                                            class="btn-item"
+                                            @click="modifyItem(item)"
+                                        >
+                                            编辑
+                                        </text>
+                                        <text
+                                            v-if="Number(tabActiveIndex) > 1"
+                                            class="btn-item"
+                                            @click="onConfirmDelete(item)"
+                                        >
+                                            删除
+                                        </text>
+                                    </view>
+                                </view>
+                                <view
+                                    v-else
+                                    class="work-info"
+                                >
+                                    <!-- <view
+                                        class="media-name create-by text-one-line"
+                                    >
+                                        {{ detail.name }}
+                                    </view> -->
+                                    <view class="media-name text-one-line">
+                                        {{ `${item.resource_name}` }}
+                                    </view>
+                                    <text class="vote-num">
+                                        {{ item.ticket }}赞
+                                    </text>
+                                    <view
+                                        class="vote"
+                                        @click="handleVote(item)"
+                                    >
+                                        <image
+                                            class="like-icon"
+                                            :src="
+                                                `https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/${publicConfig.activityName}_like_icon.png`
+                                            "
+                                        />
+                                        点赞
+                                    </view>
+                                </view>
+                            </view>
+                        </template>
                         <uni-load-more
                             class="loadMore"
                             :status="loadMoreStatus"
@@ -237,7 +258,7 @@
                         <view v-if="isSelf">
                             <view v-if="allTotal === 0">
                                 <view>
-                                    您还没有上传作品<br>上传作品才能参与代言人评比哦！
+                                    暂无作品，快去参与活动吧~
                                 </view>
                             </view>
                             <view v-else>
@@ -245,13 +266,13 @@
                             </view>
                         </view>
                         <view v-else>
-                            TA还没有上传作品，去看看其他作品吧~
+                            ~暂无作品，快去看看精彩活动吧~
                         </view>
                     </view>
 
                     <view
-                        class="goUpload"
-                        @click="handleUpload"
+                        class="goIndex"
+                        @click="handleIndex"
                     >
                         我要参与
                     </view>
@@ -334,18 +355,18 @@ export default {
             myPoster: '',
             posterCommonConfig: {
                 pixelRatio: 2,
-                width: 568,
-                height: 818,
+                width: 630,
+                height: 866,
                 debug: false,
                 texts: [
                     {
                         text: '',
-                        height: 30,
-                        textAlign: 'center',
-                        y: 568,
-                        x: 233,
-                        fontSize: '30',
-                        color: '#fff',
+                        // height: 40,
+                        textAlign: 'left',
+                        y: 264,
+                        x: 90,
+                        fontSize: '40',
+                        color: '#FF8B82',
                         lineNum: 1,
                         textOverflow: 'ellipsis',
                         fontWeight: 'bold',
@@ -353,13 +374,13 @@ export default {
                     },
                     {
                         text: '',
-                        width: 570,
-                        height: 25,
+                        // width: 570,
+                        // height: 25,
                         textAlign: 'center',
-                        y: 649,
-                        x: 285,
-                        fontSize: '24',
-                        color: '#FFC953',
+                        y: 680,
+                        x: 315,
+                        fontSize: '32',
+                        color: '#FF8300',
                         lineNum: 1,
                         textOverflow: 'ellipsis',
                         zIndex: 100,
@@ -368,36 +389,25 @@ export default {
                 images: [
                     {
                         url: '',
-                        width: 570,
-                        height: 818,
+                        width: 630,
+                        height: 866,
                         y: 0,
                         x: 0,
                     },
                     {
                         url: '',
-                        width: 372,
-                        height: 500,
-                        y: 168,
-                        x: 99,
-                        borderRadius: 40,
-                    },
-                    {
-                        url: '',
-                        width: 528,
-                        height: 145,
-                        y: 526,
-                        x: 21,
-                    },
-                    {
-                        url: '',
-                        width: 122,
-                        height: 122,
-                        y: 677,
-                        x: 428,
-                        borderRadius: this.isH5 ? 0 : 122,
+                        width: 126,
+                        height: 126,
+                        y: 750,
+                        x: 480,
+                        borderRadius: this.isH5 ? 0 : 126,
+                        zIndex: 100,
                     },
                 ],
+                fillRects: [],
+                strokeRects: [],
             },
+            allDate: {},
         };
     },
     computed: {
@@ -406,6 +416,14 @@ export default {
         },
     },
     methods: {
+        getDate(time) {
+            let flag = false;
+            if (!this.allDate[time]) {
+                this.allDate[time] = 1;
+                flag = true;
+            }
+            return flag;
+        },
         onLogin() {
             this.getData();
         },
@@ -453,31 +471,18 @@ export default {
             this.submit(detail);
         },
         onPosterFail() {
-            // 如果生成失败 取现在有的海报
-            this.myPoster = this.detail[this.isH5 ? 'poster_mp' : 'poster_h5'];
-            if (this.myPoster) {
-                this.togglePoster(true);
-            } else {
-                uni.showToast({
-                    title: '海报获取失败，请稍后再试',
-                    icon: 'none',
-                });
-            }
+            // 如果生成失败提示失败
+            uni.showToast({
+                title: '海报获取失败，请稍后再试',
+                icon: 'none',
+            });
             uni.hideLoading();
         },
         submit(path) {
-            const detail = {};
             this.uploadFile(path).then((data) => {
-                detail[this.isH5 ? 'poster_h5' : 'poster_mp'] = data.path;
-                api.post('/api/activity/editenroll', {
-                    detail,
-                    activity_id: 10,
-                }).then(() => {
-                    uni.hideLoading();
-                    this.detail[this.isH5 ? 'poster_h5' : 'poster_mp'] = data.path;
-                    this.myPoster = data.path;
-                    this.togglePoster(true);
-                });
+                uni.hideLoading();
+                this.myPoster = data.path;
+                this.togglePoster(true);
             });
         },
         getQrCode() {
@@ -488,16 +493,16 @@ export default {
             }
         },
         getH5QrCode() {
-            const uCenterUrl = `${window.location.origin}/activity/pages/clocked/ucenter?activity_id=10&user_id=${this.userInfo.user_id}&w=244`;
-            this.posterCommonConfig.images[3].url = `${
+            const uCenterUrl = `${window.location.origin}/activity/pages/clocked/ucenter?activity_id=12&user_id=${this.userInfo.user_id}&w=244`;
+            this.posterCommonConfig.images[1].url = `${
                 window.location.origin
             }/api/common/qrcode?url=${encodeURIComponent(uCenterUrl)}`;
-            this.posterCommonConfig.images[3].borderRadius = 0;
+            this.posterCommonConfig.images[1].borderRadius = 0;
         },
         getMpQrCode() {
             // 小程序二维码
             const url = 'activity/pages/clocked/ucenter';
-            const scene = `activity_id=10&user_id=${this.userInfo.user_id}`;
+            const scene = `activity_id=12&user_id=${this.userInfo.user_id}`;
             api.post('/api/weixin/getminiqrcode', {
                 path: url,
                 scene,
@@ -505,14 +510,14 @@ export default {
                 ({ url }) => {
                     if (url) {
                         this.base64src(url, (res) => {
-                            this.posterCommonConfig.images[3].url = res;
+                            this.posterCommonConfig.images[1].url = res;
                         });
                     } else {
-                        this.posterCommonConfig.images[3].url = 'http://aitiaozhan.oss-cn-beijing.aliyuncs.com/main-erweima.png';
+                        this.posterCommonConfig.images[1].url = 'http://aitiaozhan.oss-cn-beijing.aliyuncs.com/main-erweima.png';
                     }
                 },
                 () => {
-                    this.posterCommonConfig.images[3].url = 'http://aitiaozhan.oss-cn-beijing.aliyuncs.com/main-erweima.png';
+                    this.posterCommonConfig.images[1].url = 'http://aitiaozhan.oss-cn-beijing.aliyuncs.com/main-erweima.png';
                 },
             );
         },
@@ -546,32 +551,49 @@ export default {
         getMyPoster() {
             // 触发生成海报。
             uni.showLoading();
-            if (
-                (this.isH5 && !this.detail.poster_h5)
-                || (!this.isH5 && !this.detail.poster_mp)
-            ) {
-                this.createPoster();
-            } else {
-                uni.hideLoading();
-                this.togglePoster(true);
-            }
+            this.createPoster();
         },
         createPoster() {
-            const { image, name, slogan } = this.detail;
+            // 图片的处理。。。。。。。
+            // 中间的内容区域是多种排版显示，有多种图片。
+            // const image = 'http://open-storage-wdy.oss-cn-beijing.aliyuncs.com/12003/school_events/2020-07-09/file/10746/df0b77ec6bba2bdbb9a7db22c25c24e2.png';
             const that = this;
-            that.posterCommonConfig.images[1].url = this.isH5
-                ? image
-                : utils.mapHttpToHttps(image);
+            // that.posterCommonConfig.images[1].url = this.isH5
+            //     ? image
+            //     : utils.mapHttpToHttps(image);
             if (that.isH5) {
-                that.posterCommonConfig.images[0].url = '/activity/static/children_img/brand_poster.jpg';
-                that.posterCommonConfig.images[2].url = '/activity/static/children_img/brand_poster_name.png';
+                // that.posterCommonConfig.images[0].url = '/activity/static/children_img/brand_poster.jpg';
+                // that.posterCommonConfig.images[0].url = '/activity/static/clocked/clocked_honor_poster.png';
+                that.posterCommonConfig.images[0].url = 'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/clocked/clocked_honor_poster.png';
             } else {
-                that.posterCommonConfig.images[0].url = 'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/brand_poster.jpg';
-                that.posterCommonConfig.images[2].url = 'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/brand_poster_name.png';
+                that.posterCommonConfig.images[0].url = 'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/clocked/clocked_honor_poster.png';
             }
-            that.posterCommonConfig.texts[0].text = `我是${name}`;
-            that.posterCommonConfig.texts[1].text = slogan;
+
+            that.posterCommonConfig.texts[0].text = '我已经获得1枚勋章啦！';
+            that.setPosterConfig(1, []);
             that.$refs.posterh5.createPoster(that.posterCommonConfig);
+        },
+        setPosterConfig(type, list) {
+            // type: 1,2,3,4.设置排版
+            // list(d)=> d.num,d.name,d.url, d.id
+            let txts = [
+                '生命在于运动,健康在于锻炼！',
+                '最是书香能致远，腹有诗书气自华！',
+                '了解劳动乐趣！感受父母辛苦！',
+                '打卡进步展才艺，快乐成长秀风采',
+            ];
+            if (type > 1) {
+                txts = [
+                    '每天进步一点点，坚持带来大改变！',
+                    '你每天的小坚持，都会有大意义！',
+                    '每天打卡一小步！进步提升一大步！',
+                    '每天进步一点点, 成长足迹看得见！',
+                ];
+            }
+            const index = type === 1 ? 0 : Math.floor(Math.random() * 4);
+            const txt = txts[index];
+            console.log(list);
+            this.posterCommonConfig.texts[1].text = txt;
         },
         togglePoster(status) {
             this.showPosterMask = status;
@@ -590,19 +612,9 @@ export default {
                     this.userInfo = res.user_info;
                     this.getWorkData();
                     this.getQrCode();
-                    this.getEnrollInfo().then((data) => {
-                        if (!Array.isArray(data)) {
-                            // if (data.detail) {
-                            //     this.detail = data.detail;
-                            //     this.myPoster = data.detail[
-                            //         this.isH5 ? 'poster_h5' : 'poster_mp'
-                            //     ];
-                            // }
-                            this.isSelf = data.is_self;
-                        }
-                        this.isLoading = false;
-                        this.initShare();
-                    });
+                    this.isLoading = false;
+                    this.initShare();
+                    this.isSelf = res.user_id === this.userId;
                 },
                 () => {
                     this.isLoading = false;
@@ -620,10 +632,15 @@ export default {
                 })
                 .then(
                     ({ list, total, all_num: allNum }) => {
+                        const List = list.map((d) => {
+                            const D = d;
+                            D.created_at = D.created_at.slice(5, 10);
+                            return D;
+                        });
                         if (title === 'reachBottom') {
-                            this.dataList = this.dataList.concat(list);
+                            this.dataList = this.dataList.concat(List);
                         } else {
-                            this.dataList = list;
+                            this.dataList = List;
                         }
                         this.total = total;
                         this.allNum = allNum;
@@ -640,12 +657,6 @@ export default {
                     () => {},
                 );
         },
-        getEnrollInfo() {
-            return api.get('/api/activity/getenrollinfo', {
-                activity_id: this.filter.activity_id,
-                user_id: this.userId,
-            });
-        },
         onReachBottom() {
             if (this.loadMoreStatus === 'more') {
                 this.filter.page_num = this.filter.page_num + 1;
@@ -656,7 +667,7 @@ export default {
         setTabActive(i) {
             this.filter.page_num = 1;
             this.tabActiveIndex = i;
-            // uni.pageScrollTo({ scrollTop: 0, duration: 300 });
+            uni.pageScrollTo({ scrollTop: 0, duration: 300 });
             this.getWorkData();
         },
         viewDetail(item, index) {
@@ -805,34 +816,10 @@ export default {
                 });
             }
         },
-        handleUpload() {
-            if (!this.isSelf) {
-                return uni.navigateTo({
-                    url: `/activity/pages/index?activity_id=${this.filter.activity_id}`,
-                });
-            }
-            if (this.status === 2) {
-                api.isLogin().then(
-                    (res) => {
-                        this.userInfo = res;
-                        uni.navigateTo({
-                            url: `/activity/pages/upload/modify?activity_id=${this.filter.activity_id}`,
-                        });
-                    },
-                    () => {
-                        this.userInfo = null;
-                    },
-                );
-            } else {
-                uni.showToast({
-                    title:
-                        this.status === 1
-                            ? '活动未开始，敬请期待'
-                            : '活动已结束',
-                    icon: 'none',
-                });
-            }
-            return true;
+        handleIndex() {
+            uni.navigateTo({
+                url: `/activity/pages/index?activity_id=${this.filter.activity_id}`,
+            });
         },
     },
     onLoad(query) {
@@ -891,7 +878,7 @@ export default {
         margin-top: 30upx;
     }
 }
-.goUpload {
+.goIndex {
     position: fixed;
     left: 0;
     right: 0;
@@ -914,6 +901,31 @@ export default {
     padding: 30upx;
     border-radius: 0 0 20upx 20upx;
     position: relative;
+    .time {
+        width: 100%;
+        height: 50upx;
+        margin-bottom: 20upx;
+        .time-btn {
+            width: 170upx;
+            height: 50upx;
+            background: #42b6ff;
+            color: #fff;
+            font-size: 28upx;
+            line-height: 56upx;
+            border-radius: 0 26upx 26upx 0;
+            text-align: center;
+            margin-left: -30upx;
+            image {
+                width: 26upx;
+                height: 26upx;
+                margin-right: 6upx;
+            }
+            .txt {
+                position: relative;
+                bottom: 2upx;
+            }
+        }
+    }
 }
 .media-box {
     display: flex;
@@ -946,6 +958,18 @@ export default {
                 color: #666;
             }
         }
+        /deep/ .event-craft-cover,
+        .event-craft-cover {
+            .tag {
+                max-width: 130upx;
+                background: #ffe967;
+                color: #ff685c;
+            }
+            .video {
+                width: 280upx;
+                height: 210upx;
+            }
+        }
     }
     .work {
         width: 335upx;
@@ -974,8 +998,8 @@ export default {
     .event-craft-cover {
         .tag {
             max-width: 130upx;
-            background: #ffe79c;
-            color: #bb77ff;
+            background: #ffe967;
+            color: #ff685c;
         }
         .video {
             width: 306upx;
@@ -991,21 +1015,26 @@ export default {
             font-size: 28upx;
             line-height: 32upx;
             margin-bottom: 15upx;
+            color: #666;
             &.text-two-line {
                 height: 63upx;
+                word-break: break-all;
+                color: #333;
+                font-weight: 500;
             }
-            &.create-by {
-                font-size: 28upx;
-                line-height: 28upx;
-                margin-bottom: 9upx;
-            }
+            // &.create-by {
+            //     font-size: 28upx;
+            //     line-height: 28upx;
+            //     margin-bottom: 9upx;
+            // }
         }
 
         .media-time {
             color: #fff;
             font-size: 24upx;
             opacity: 0.7;
-            margin-bottom: 66upx;
+            margin-bottom: 40upx;
+            // top: 156upx;
         }
         .like-icon {
             width: 27upx;
@@ -1016,11 +1045,11 @@ export default {
             float: right;
             background-color: #ff685c;
             color: #fff;
-            width: 170upx;
-            height: 60upx;
+            width: 130upx;
+            height: 50upx;
             border-radius: 30upx;
-            font-size: 28upx;
-            line-height: 60upx;
+            font-size: 26upx;
+            line-height: 50upx;
             position: relative;
             box-sizing: border-box;
             display: flex;
@@ -1029,7 +1058,7 @@ export default {
         }
         .vote-num {
             font-size: 30upx;
-            color: #fff;
+            color: #ff685c;
         }
         .btn {
             display: flex;
@@ -1038,12 +1067,12 @@ export default {
         .btn-item {
             flex: 1;
             margin: 0 5upx;
-            height: 50upx;
+            height: 60upx;
             background-color: #ff685c;
-            border-radius: 25upx;
+            border-radius: 30upx;
             font-size: 24upx;
             color: rgba(255, 255, 255, 1);
-            line-height: 50upx;
+            line-height: 60upx;
             text-align: center;
             display: inline-block;
             min-width: 80upx;
@@ -1100,6 +1129,19 @@ export default {
             background-color: #fff;
             background-position: right 0;
             background-size: 286upx 292upx;
+            .to-open-honor {
+                position: absolute;
+                right: 0;
+                top: 10upx;
+                background: linear-gradient(#ffa284, #ff684c);
+                color: #fff;
+                font-size: 24upx;
+                width: 160upx;
+                height: 48upx;
+                border-radius: 24upx 0 0 24upx;
+                line-height: 48upx;
+                text-align: center;
+            }
         }
         .avator {
             width: 100upx;
@@ -1137,15 +1179,20 @@ export default {
                 }
                 .num {
                     position: absolute;
-                    width: 20upx;
-                    height: 20upx;
+                    width: 24upx;
+                    height: 24upx;
                     border-radius: 50%;
                     background: #ff684c;
                     color: #fff;
                     font-size: 20upx;
-                    right: 0;
+                    right: 20upx;
                     top: 0;
-                    line-height: 20upx;
+                    z-index: 1;
+                    line-height: 24upx;
+                    background: rgba(255, 104, 76, 1);
+                    box-shadow: 0 0 6upx 0 rgba(205, 205, 205, 1),
+                        0px 2px 4px 0px rgba(255, 255, 255, 0.5);
+                    text-shadow: 0 0 6upx rgba(205, 205, 205, 1);
                 }
             }
         }
@@ -1200,7 +1247,7 @@ export default {
         height: 68upx;
         line-height: 68upx;
         font-size: 30upx;
-        color: #fff;
+        color: #ff685c;
         &.active {
             background-color: #ff685c;
             color: #fff;
