@@ -91,6 +91,16 @@ export default {
                         this.drawText(item);
                     });
                 }
+                if (strokeRects && strokeRects.length > 0) {
+                    strokeRects.forEach((item) => {
+                        this.drawStokeRect(item);
+                    });
+                }
+                if (fillRects && fillRects.length > 0) {
+                    fillRects.forEach((item) => {
+                        this.drawFillRect(item);
+                    });
+                }
                 this.ctx.draw(false, () => {
                     setTimeout(() => {
                         this.saveCanvas(config);
@@ -103,6 +113,7 @@ export default {
                 x1, y1, x2, y2, color,
             } = params;
             this.ctx.setFillStyle(color);
+            console.log(params, 'drawFillRect-----');
             this.ctx.fillRect(x1, y1, x2, y2);
         },
         drawStokeRect(params) {

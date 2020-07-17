@@ -289,7 +289,6 @@ import share from '../../../common/share';
 import login from '../../../widgets/login/login.vue';
 import uniLoadMore from '../../../components/uni-load-more/uni-load-more.vue';
 import EventCraftCover from '../../../components/event-craft-cover/index.vue';
-import config from '../../../common/config';
 import utils from '../../../common/utils';
 import posterh5 from './posterh5.vue';
 import savePoster from './savePoster.vue';
@@ -377,11 +376,12 @@ export default {
                         // width: 570,
                         // height: 25,
                         textAlign: 'center',
-                        y: 680,
-                        x: 315,
+                        y: 660,
+                        x: 320,
                         fontSize: '32',
                         color: '#FF8300',
                         lineNum: 1,
+                        fontWeight: 600,
                         textOverflow: 'ellipsis',
                         zIndex: 100,
                     },
@@ -398,7 +398,7 @@ export default {
                         url: '',
                         width: 126,
                         height: 126,
-                        y: 750,
+                        y: 730,
                         x: 480,
                         borderRadius: this.isH5 ? 0 : 126,
                         zIndex: 100,
@@ -427,46 +427,6 @@ export default {
         onLogin() {
             this.getData();
         },
-        uploadFile(tempFilePath) {
-            this.tempFilePath = tempFilePath;
-            return new Promise((resolve, reject) => {
-                uni.uploadFile({
-                    url: `${config.host}/api/file/uploadfile`, // 仅为示例，非真实的接口地址
-                    filePath: tempFilePath,
-                    name: 'file',
-                    formData: {
-                        file_type: 'image',
-                    },
-                    header: {
-                        userKey: utils.getToken(),
-                    },
-                    success: (uploadFileRes) => {
-                        let resp;
-                        try {
-                            resp = JSON.parse(uploadFileRes.data);
-                        } catch (e) {
-                            uni.showToast({
-                                title: '服务器开小差了~',
-                                icon: 'none',
-                            });
-                            return reject(e);
-                        }
-                        if (resp.status === 200) {
-                            uni.hideToast();
-                            resolve(resp.data);
-                        } else {
-                            // fail
-                            uni.showToast({
-                                title: resp.msg,
-                                icon: 'none',
-                            });
-                            return reject(resp.msg);
-                        }
-                        return false;
-                    },
-                });
-            });
-        },
         onPosterSuccess(detail) {
             this.submit(detail);
         },
@@ -479,11 +439,9 @@ export default {
             uni.hideLoading();
         },
         submit(path) {
-            this.uploadFile(path).then((data) => {
-                uni.hideLoading();
-                this.myPoster = data.path;
-                this.togglePoster(true);
-            });
+            uni.hideLoading();
+            this.myPoster = path;
+            this.togglePoster(true);
         },
         getQrCode() {
             if (this.isH5) {
@@ -569,11 +527,10 @@ export default {
                 that.posterCommonConfig.images[0].url = 'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/clocked/clocked_honor_poster.png';
             }
 
-            that.posterCommonConfig.texts[0].text = '我已经获得1枚勋章啦！';
             that.setPosterConfig(1, []);
             that.$refs.posterh5.createPoster(that.posterCommonConfig);
         },
-        setPosterConfig(type, list) {
+        setPosterConfig(type) {
             // type: 1,2,3,4.设置排版
             // list(d)=> d.num,d.name,d.url, d.id
             let txts = [
@@ -592,8 +549,45 @@ export default {
             }
             const index = type === 1 ? 0 : Math.floor(Math.random() * 4);
             const txt = txts[index];
-            console.log(list);
             this.posterCommonConfig.texts[1].text = txt;
+            this.posterCommonConfig.texts[0].text = '我已经获得1枚勋章啦！';
+            // 只有一种勋章
+            if (type === 1) {
+                this.posterCommonConfig.images[2] = {
+                    width: 226,
+                    height: 226,
+                    url:
+                        'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/clocked/honor-1-2.png',
+                    x: 202,
+                    y: 314,
+                };
+                this.posterCommonConfig.texts[2] = {
+                    text: '阅读之星',
+                    textAlign: 'center',
+                    y: 560,
+                    x: 320,
+                    fontSize: '40',
+                    color: '#FF8300',
+                    lineNum: 1,
+                    textOverflow: 'ellipsis',
+                    fontWeight: 'bold',
+                    zIndex: 10,
+                };
+                this.posterCommonConfig.fillRects[0] = {
+                    x1: 156,
+                    y1: 560,
+                    X2: 292,
+                    y2: 620,
+                    color: '#FFF3DD',
+                };
+                this.posterCommonConfig.strokeRects[0] = {
+                    x1: 156,
+                    y1: 560,
+                    X2: 292,
+                    y2: 620,
+                    color: '#FFB363',
+                };
+            }
         },
         togglePoster(status) {
             this.showPosterMask = status;
