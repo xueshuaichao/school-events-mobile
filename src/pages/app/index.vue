@@ -54,7 +54,7 @@ export default {
                 if (isWechat) {
                     this.isWechat = true;
                 } else {
-                    window.location.href = `https://aitiaozhan.oss-cn-beijing.aliyuncs.com/apk/app-andriod.apk${new Date()}`;
+                    window.location.href = `https://aitiaozhan.oss-cn-beijing.aliyuncs.com/apk/app-andriod.apk?date=${new Date()}`;
                 }
             } else if (isIos) {
                 if (isWechat) {
