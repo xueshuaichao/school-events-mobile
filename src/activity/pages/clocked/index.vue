@@ -4,149 +4,198 @@
         :class="[
             'activity-init-page',
             {
-                'stop-scroll': maskPrompt
+                'stop-scroll': maskPrompt || themePrompt
             }
         ]"
     >
-        <indexPage
-            :index-config="indexConfig"
-            :public-config="publicConfig"
-            :is-stop-scroll="false"
-            class-name="clocked-page"
-            :fr="fr"
-            :hide-button="true"
-            :my-work-path="myWorkPath"
-            @showMask="showMask"
-        >
-            <template v-slot:main-data>
-                <calendar />
-                <view class="rule task">
-                    <image
-                        class="zhuzi zhuzi-1"
-                        src="/activity/static/locked/zhuzi.png"
+        <login
+            v-if="userInfo === null && toLogin"
+            @login="onLogin"
+        />
+        <template v-else>
+            <image
+                class="fixed-mall"
+                src="/activity/static/clocked/fixed-right.png"
+                @click="toMall"
+            />
+            <indexPage
+                :index-config="indexConfig"
+                :public-config="publicConfig"
+                :is-stop-scroll="false"
+                class-name="clocked-page"
+                :fr="fr"
+                :hide-button="true"
+                :my-work-path="myWorkPath"
+                @showMask="showMask"
+            >
+                <template v-slot:main-data>
+                    <calendar
+                        :calendar-data="calendarData"
+                        :signinfo="signinfo"
+                        :cur-theme-info="curThemeInfo"
+                        @toggleCalendar="toggleCalendar"
                     />
-                    <image
-                        class="zhuzi zhuzi-2"
-                        src="/activity/static/locked/zhuzi.png"
-                    />
-                    <view class="rule-title">
-                        <view class="txt">
-                            更多积分任务
-                        </view>
-                        <view class="more">
-                            积分攻略
-                        </view>
-                    </view>
-                    <view class="ctx-wrap">
-                        <view class="task-card video-bg">
-                            <view class="task-status">
-                                待完成
-                            </view>
-                            <view class="center">
-                                <view class="img-top video">
-                                    <image
-                                        src="/activity/static/locked/video-s.png"
-                                    />
-                                </view>
-                                <view class="txt">
-                                    上传作品
-                                </view>
-                                <view>
-                                    15积分
-                                </view>
-                            </view>
-                            <image
-                                class="next"
-                                src="/activity/static/locked/next.png"
-                            />
-                        </view>
-                        <view class="task-card praise-bg">
-                            <view class="task-status done">
-                                已完成
-                            </view>
-                            <view class="center">
-                                <view class="img-top praise">
-                                    <image
-                                        src="/activity/static/locked/praise-s.png"
-                                    />
-                                </view>
-                                <view class="txt">
-                                    作品获赞
-                                </view>
-                                <view>
-                                    10积分
-                                </view>
-                            </view>
-                            <image
-                                class="next"
-                                src="/activity/static/locked/next.png"
-                            />
-                        </view>
-                    </view>
-                </view>
-                <view class="rule lottery">
-                    <image
-                        class="zhuzi zhuzi-1"
-                        src="/activity/static/locked/zhuzi.png"
-                    />
-                    <image
-                        class="zhuzi zhuzi-2"
-                        src="/activity/static/locked/zhuzi.png"
-                    />
-                    <view class="circle-bg">
-                        <view class="lottery-ctx">
+                    <view class="rule task">
+                        <image
+                            class="zhuzi zhuzi-1"
+                            src="/activity/static/clocked/zhuzi.png"
+                        />
+                        <image
+                            class="zhuzi zhuzi-2"
+                            src="/activity/static/clocked/zhuzi.png"
+                        />
+                        <view class="rule-title">
                             <view class="txt">
-                                <view>
-                                    打卡抽好礼
+                                更多积分任务
+                            </view>
+                            <view
+                                class="more"
+                                @click="openModel"
+                            >
+                                积分攻略
+                            </view>
+                        </view>
+                        <view class="ctx-wrap">
+                            <view
+                                class="task-card video-bg"
+                                @click="toUpload"
+                            >
+                                <view
+                                    class="task-status"
+                                    :class="{ done: taskStatus.upload }"
+                                >
+                                    {{
+                                        taskStatus.upload ? "已完成" : "待完成"
+                                    }}
                                 </view>
-                                <view>
-                                    连续打卡更可获取抽奖机会～
+                                <view class="center">
+                                    <view class="img-top video">
+                                        <image
+                                            src="/activity/static/clocked/video-s.png"
+                                        />
+                                    </view>
+                                    <view class="txt">
+                                        上传作品
+                                    </view>
+                                    <view>
+                                        15积分
+                                    </view>
+                                </view>
+                                <image
+                                    class="next"
+                                    src="/activity/static/clocked/next.png"
+                                />
+                            </view>
+                            <view
+                                class="task-card praise-bg"
+                                @click="toUcenter"
+                            >
+                                <view
+                                    class="task-status"
+                                    :class="{ done: taskStatus.vote }"
+                                >
+                                    {{ taskStatus.vote ? "已完成" : "待完成" }}
+                                </view>
+                                <view class="center">
+                                    <view class="img-top praise">
+                                        <image
+                                            src="/activity/static/clocked/praise-s.png"
+                                        />
+                                    </view>
+                                    <view class="txt">
+                                        作品获赞
+                                    </view>
+                                    <view>
+                                        10积分
+                                    </view>
+                                </view>
+                                <image
+                                    class="next"
+                                    src="/activity/static/clocked/next.png"
+                                />
+                            </view>
+                        </view>
+                    </view>
+                    <view class="rule lottery">
+                        <image
+                            class="zhuzi zhuzi-1"
+                            src="/activity/static/clocked/zhuzi.png"
+                        />
+                        <image
+                            class="zhuzi zhuzi-2"
+                            src="/activity/static/clocked/zhuzi.png"
+                        />
+                        <view class="circle-bg">
+                            <view class="lottery-ctx">
+                                <view class="txt">
+                                    <view>
+                                        打卡抽好礼
+                                    </view>
+                                    <view>
+                                        连续打卡更可获取抽奖机会～
+                                    </view>
+                                </view>
+                                <view
+                                    class="lottery-btn"
+                                    @click="toLottery"
+                                >
+                                    {{
+                                        signinfo.draw
+                                            ? "抽奖X" + signinfo.draw
+                                            : "去抽奖"
+                                    }}
                                 </view>
                             </view>
-                            <view class="lottery-btn">
-                                去抽奖
+                        </view>
+                    </view>
+                    <view class="rule gifted">
+                        <image
+                            class="zhuzi zhuzi-1"
+                            src="/activity/static/clocked/zhuzi2.png"
+                        />
+                        <image
+                            class="zhuzi zhuzi-2"
+                            src="/activity/static/clocked/zhuzi2.png"
+                        />
+                        <view class="rule-title">
+                            <view class="txt">
+                                精美礼品
+                            </view>
+                            <view
+                                class="more"
+                                @click="toMall"
+                            >
+                                更多
+                            </view>
+                        </view>
+                        <view class="ctx-wrap">
+                            <view
+                                v-for="(item, index) in giftList"
+                                :key="index"
+                                class="card"
+                            >
+                                <image
+                                    :src="item.url"
+                                    class="img-wrap"
+                                />
+                                <view class="gift-name">
+                                    {{ item.txt }}
+                                </view>
                             </view>
                         </view>
                     </view>
-                </view>
-                <view class="rule gifted">
-                    <image
-                        class="zhuzi zhuzi-1"
-                        src="/activity/static/locked/zhuzi2.png"
-                    />
-                    <image
-                        class="zhuzi zhuzi-2"
-                        src="/activity/static/locked/zhuzi2.png"
-                    />
-                    <view class="rule-title">
-                        <view class="txt">
-                            精美礼品
-                        </view>
-                        <view class="more">
-                            更多
-                        </view>
-                    </view>
-                    <view class="ctx-wrap">
-                        <view
-                            v-for="(item, index) in giftList"
-                            :key="index"
-                            class="card"
-                        >
-                            <image
-                                :src="item.url"
-                                class="img-wrap"
-                            />
-                            <view class="gift-name">
-                                {{ item.txt }}
-                            </view>
-                        </view>
-                    </view>
-                </view>
-            </template>
-        </indexPage>
-        <image
-            class="fixed-mall"
-            src="/activity/static/locked/fixed-right.png"
+                </template>
+            </indexPage>
+        </template>
+        <model
+            :show="maskPrompt"
+            :mask-title="maskTitle"
+            :mask-type="maskType"
+            @toggelModel="handleClose"
+        />
+        <theme
+            :show="themePrompt"
+            @toggelModel="handleClose"
         />
     </view>
 </template>
@@ -154,6 +203,10 @@
 import indexPage from '../common/index.vue';
 import logger from '../../../common/logger';
 import calendar from './calendar.vue';
+import model from './model.vue';
+import theme from './theme.vue';
+import api from '../../../common/api';
+import login from '../../../widgets/login/login.vue';
 
 // 荣誉勋章的位置
 // https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/clocked/honor-1-1.png
@@ -162,6 +215,9 @@ export default {
     components: {
         indexPage,
         calendar,
+        model,
+        theme,
+        login,
     },
     props: {
         activityId: {
@@ -175,6 +231,9 @@ export default {
             indexConfig: {},
             fr: '',
             maskPrompt: false,
+            themePrompt: false,
+            maskTitle: '',
+            maskType: 0,
             myWorkPath: '',
             giftList: [
                 {
@@ -193,6 +252,29 @@ export default {
                         'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/clocked-gift-3.png',
                 },
             ],
+            showModal: false,
+            userInfo: null,
+            calendarData: {},
+            signinfo: {
+                draw: 0,
+                points: 0,
+                serial_day: 0,
+                skill: 0,
+                sports: 0,
+                study: 0,
+                work: 0,
+            },
+            btnStatus: 0,
+            hasLogin: false,
+            toLogin: false,
+            taskStatus: {
+                upload: false,
+                vote: false,
+            },
+            curThemeInfo: {
+                type: '',
+                status: 0,
+            },
         };
     },
     created() {
@@ -208,11 +290,155 @@ export default {
             page: 'indexConfig',
         });
         this.fr = logger.getFr(this.publicConfig.log, {});
-        // this.myWorkPath = `/activity/pages/brand/ucenter?activity_id=10&user_id=${this.userInfo.userid}`;
+        this.isLogin().then(
+            (res) => {
+                this.hasLogin = true;
+                this.userInfo = res.user_info;
+                this.myWorkPath = `/activity/pages/clocked/ucenter?activity_id=12&user_id=${this.userInfo.user_id}`;
+                this.getsigninfo();
+                this.getClockin();
+                this.getTheme();
+                this.getTaskStatus();
+            },
+            () => {},
+        );
     },
     methods: {
+        getTaskStatus() {
+            api.get('/api/activity/taskstatus', {
+                activity_id: 12,
+            }).then((tasks) => {
+                this.taskStatus = tasks;
+            });
+        },
+        getTheme() {
+            api.get('/api/activity/curtheme', {
+                activity_id: 12,
+            }).then(({ type, status }) => {
+                if (!type) {
+                    this.btnStatus = 0;
+                }
+                if (type && status === 1) {
+                    this.btnStatus = 2;
+                }
+                if (type && !status) {
+                    this.btnStatus = 1;
+                }
+                this.curThemeInfo.type = type;
+                this.curThemeInfo.status = status;
+            });
+        },
+        getsigninfo() {
+            api.get('/api/activity/signinfo', {
+                user_id: this.userInfo.user_id,
+                activity_id: 12,
+            }).then((signinfo) => {
+                this.signinfo = signinfo;
+            });
+        },
+        getClockin() {
+            api.get('/api/activity/clockin', {
+                user_id: this.userInfo.user_id,
+                activity_id: 12,
+            }).then(({ data }) => {
+                this.calendarData = data;
+            });
+        },
+        onLogin({ user_info: userInfo }) {
+            this.hasLogin = true;
+            this.userInfo = userInfo;
+            this.myWorkPath = `/activity/pages/clocked/ucenter?activity_id=12&user_id=${this.userInfo.user_id}`;
+            this.getsigninfo();
+            this.getClockin();
+            this.getTheme();
+            this.getTaskStatus();
+        },
+        toggleCalendar() {
+            if (this.btnStatus === 0) {
+                if (this.hasLogin) {
+                    this.themePrompt = true;
+                } else {
+                    this.toLogin = true;
+                }
+            } else if (this.btnStatus === 1) {
+                uni.navigateTo({
+                    url: `/activity/pages/upload/modify?activity_id=12&ac_type=${this.curThemeInfo.type}&status=${this.curThemeInfo.status}`,
+                });
+            } else {
+                uni.showToast({
+                    icon: 'none',
+                    title:
+                        '今日已完成打卡，可通过更多作品及作品获赞获取更多积分',
+                });
+            }
+        },
         showMask({ title, type }) {
-            console.log(title, type);
+            this.maskTitle = title;
+            this.maskType = type;
+            this.maskPrompt = true;
+        },
+        openModel() {
+            this.maskTitle = '积分攻略';
+            this.maskType = 1;
+            this.maskPrompt = true;
+        },
+        handleClose(id) {
+            // 关闭弹窗
+            this.maskPrompt = false;
+            this.themePrompt = false;
+            if (id) {
+                // 选择主题后进行打卡。
+                uni.navigateTo({
+                    url: `/activity/pages/upload/modify?activity_id=12&ac_type=${id}&status=0`,
+                });
+            }
+        },
+        isLogin() {
+            return api.get('/api/user/info');
+        },
+        toUpload() {
+            // 先查询今天的主题。
+            if (this.hasLogin) {
+                if (this.curThemeInfo.type) {
+                    uni.navigateTo({
+                        url: `/activity/pages/upload/modify?activity_id=12&ac_type=${this.curThemeInfo.type}&status=${this.curThemeInfo.status}`,
+                    });
+                } else {
+                    uni.showToast({
+                        icon: 'none',
+                        title: '请先完成打卡任务哦！',
+                    });
+                }
+            } else {
+                this.toLogin = true;
+            }
+        },
+        toUcenter() {
+            if (this.hasLogin) {
+                uni.navigateTo({
+                    url: `/activity/pages/clocked/ucenter?activity_id=12&user_id=${this.userInfo.user_id}`,
+                });
+            } else {
+                this.toLogin = true;
+            }
+        },
+        toMall() {
+            if (this.hasLogin) {
+                uni.navigateTo({
+                    url: '/activity/pages/mall/index?activity_id=12',
+                });
+            } else {
+                this.toLogin = true;
+            }
+        },
+        toLottery() {
+            if (this.hasLogin) {
+                uni.navigateTo({
+                    url: '/activity/pages/clocked/lottery',
+                });
+            } else {
+                this.toLogin = true;
+            }
         },
     },
 };
@@ -288,7 +514,7 @@ export default {
         }
         .circle-bg {
             padding: 20upx;
-            background-image: url(/activity/static/locked/circle-bg.png);
+            background-image: url(https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/clocked/circle-bg.png);
             background-color: rgba(255, 161, 154, 1);
             background-size: 100% 100%;
             background-position: 0 4upx;
@@ -316,6 +542,7 @@ export default {
                     text-align: center;
                     background: #ffe464;
                     border-radius: 20upx;
+                    font-weight: 500;
                 }
             }
         }
@@ -330,7 +557,7 @@ export default {
             .card {
                 width: 190upx;
                 height: 208upx;
-                background: url(/activity/static/locked/card-bg.png);
+                background: url(https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/clocked/card-bg.png);
                 background-size: 100% 100%;
                 .img-wrap {
                     height: 116upx;
@@ -364,14 +591,14 @@ export default {
                 line-height: 48upx;
                 position: relative;
                 &.video-bg {
-                    background: url(/activity/static/locked/video-l.png) right
-                        top no-repeat;
+                    background: url(https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/clocked/video-l.png)
+                        right top no-repeat;
                     background-color: #fff;
                     background-size: 156upx 180upx;
                 }
                 &.praise-bg {
-                    background: url(/activity/static/locked/praise-l.png) right
-                        top no-repeat;
+                    background: url(https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/clocked/praise-l.png)
+                        right top no-repeat;
                     background-color: #fff;
                     background-size: 156upx 180upx;
                 }

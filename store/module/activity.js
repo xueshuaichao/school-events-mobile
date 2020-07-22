@@ -311,26 +311,35 @@ export default {
                 activityId: 12,
                 publicConfig: {
                     title: '打卡一夏 记录暑假',
-                    log: '',
+                    log: 'byhd',
                     sort: ['最新', '最热'],
                     catMenu: [], // 分组
                     activityName: 'clocked', // 空作品的图片拼接地址
                     activityId: 12,
                     isPNG: true,
-                    catId: '', // 所属分类
+                    catId: 20, // 所属分类
+                    catNames: ['劳动实践', '读书学习', '才艺展示', '体育锻炼'],
                     showAllCat: false,
                     time: '活动日期：8月1日--8月31日',
                     primaryColor: '#FF685C', // 主色调
                     primaryBgColor: '#FFA69F', // 主要的背景颜色 （图片背景）
                     placeholderColor: '#FFBBB5',
-                    homePath: '/activity/pages/index?activity_id=11', // 我的作品页面返回首页的路径
+                    homePath: '/activity/pages/index?activity_id=12', // 我的作品页面返回首页的路径
                     shareConfig: {
-                        title: ['秀我风采，为青少年代言！'],
-                        h5Title: ['青少年“爱挑战”寻找代言'],
-                        desc: ['不要迟疑，为我点赞！我要做“爱挑战”代言人！'],
+                        title: [
+                            '打卡一夏，记录暑假赢好礼！',
+                            '爱挑战素质教育养成计划，过充实又快乐的暑假！',
+                            '每日打卡一小步！成长提升一大步！',
+                        ],
+                        h5Title: [
+                            '打卡一夏，记录暑假赢好礼！',
+                            '爱挑战素质教育养成计划，过充实又快乐的暑假！',
+                            '每日打卡一小步！成长提升一大步！',
+                        ],
+                        desc: ['打卡一夏，记录暑假'],
                         image:
                             'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/brand_share.png',
-                        path: '/activity/pages/index?activity_id=11',
+                        path: '/activity/pages/index?activity_id=12',
                     },
                 },
                 uploadConfig: {

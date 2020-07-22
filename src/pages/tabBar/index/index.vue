@@ -5,7 +5,7 @@
             class="cover"
         >
             <image
-                src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/h5/suspension-qiyi.png"
+                src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/h5/suspension-bayi.png"
             />
             <view
                 class="join-btn"
@@ -226,7 +226,7 @@ export default {
                 talent: { list: [], total: 0 },
             },
             prompt: false,
-            isFirstLogin: 'hasQiyiPromt',
+            isFirstLogin: 'hasBayiPromt',
             status: 1,
             // show: 1,
             // #ifdef H5
@@ -237,6 +237,10 @@ export default {
             hotList: [],
             bannerlist: [],
             confList: [
+                {
+                    id: 12,
+                    url: '/activity/pages/index?activity_id=12',
+                },
                 {
                     id: 11,
                     url: '/pages/openGame/school-zhibo',
@@ -402,6 +406,9 @@ export default {
             if (uni.getStorageSync('hasLiuyiPromt')) {
                 uni.removeStorageSync('hasLiuyiPromt');
             }
+            if (uni.getStorageSync('hasQiyiPromt')) {
+                uni.removeStorageSync('hasQiyiPromt');
+            }
             if (!isFirstLogin) {
                 this.prompt = true;
             }
@@ -410,7 +417,7 @@ export default {
             uni.setStorageSync(this.isFirstLogin, true);
             this.prompt = false;
             uni.navigateTo({
-                url: '/activity/pages/index?activity_id=10',
+                url: '/activity/pages/index?activity_id=12',
             });
         },
         handleClose() {
@@ -516,15 +523,15 @@ export default {
     text-align: center;
     font-size: 0;
     image:first-child {
-        width: 750rpx;
-        height: 620rpx;
+        width: 638rpx;
+        height: 700rpx;
         display: block;
         margin: 160upx auto 0;
     }
     .join-btn {
         width: 570upx;
         height: 110upx;
-        margin: 40upx auto 30upx;
+        margin: 50upx auto 30upx;
         border-radius: 60upx;
         color: #fff;
         font-size: 40upx;
@@ -532,10 +539,9 @@ export default {
         text-align: center;
         background: linear-gradient(
             180deg,
-            rgba(255, 142, 133, 1),
-            rgba(255, 87, 74, 1)
+            rgba(255, 162, 132, 1) 0%,
+            rgba(255, 104, 76, 1) 100%
         );
-        box-shadow: 0 4upx 6upx 0 rgba(0, 0, 0, 0.4);
     }
     .close {
         width: 52upx;
@@ -545,8 +551,8 @@ export default {
         position: relative;
         background: linear-gradient(
             180deg,
-            rgba(255, 142, 133, 1),
-            rgba(255, 87, 74, 1)
+            rgba(255, 162, 132, 1) 0%,
+            rgba(255, 104, 76, 1) 100%
         );
         &::before,
         &::after {

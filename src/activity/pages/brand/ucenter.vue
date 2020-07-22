@@ -600,6 +600,7 @@ export default {
             }
         },
         getMyPoster() {
+            console.log(this.isH5, this.detail);
             uni.showLoading();
             if (
                 (this.isH5 && !this.detail.poster_h5)
