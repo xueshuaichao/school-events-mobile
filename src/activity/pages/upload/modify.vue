@@ -4,10 +4,25 @@
         :class="[`${publicConfig.activityName}-page`]"
     >
         <view :class="['page-upload']">
+            <theme
+                :show="showtheme"
+                @toggelModel="toggelModel"
+            />
             <view
                 v-if="!needBindMobile"
                 class="main"
             >
+                <view
+                    v-if="formData.activity_id === 12"
+                    class="uni-list-cell-db"
+                >
+                    <view
+                        class="uni-input placeholder fake-input"
+                        @click="selTheme"
+                    >
+                        {{ themeTxts[ac_type] }}
+                    </view>
+                </view>
                 <view
                     v-if="publicConfig.showAllCat"
                     class="uni-list-cell-db"
@@ -209,11 +224,13 @@
 import api from '../../../common/api';
 import upload from '../common/upload.vue';
 import imageDragSort from '../../../components/image-drag-sort/index.vue';
+import theme from '../clocked/theme.vue';
 
 export default {
     components: {
         upload,
         imageDragSort,
+        theme,
     },
     data() {
         return {
@@ -251,6 +268,16 @@ export default {
             lock: true,
             // 编辑
             id: '',
+            ac_type: 0,
+            showtheme: false,
+            themeTxts: [
+                '选择分类',
+                '劳动实践',
+                '读书学习',
+                '才艺展示',
+                '体育竞技',
+            ],
+            preStatus: 0,
         };
     },
     computed: {
@@ -261,6 +288,8 @@ export default {
     onLoad(params) {
         this.id = params.id;
         this.formData.activity_id = Number(params.activity_id);
+        this.ac_type = Number(params.ac_type) || 0;
+        this.preStatus = Number(params.status) || 0;
         if (this.id) {
             uni.setNavigationBarTitle({ title: '编辑作品' });
         }
@@ -277,6 +306,13 @@ export default {
             page: 'uploadConfig',
         });
         this.formData.cat_id = this.publicConfig.catId;
+        if (this.formData.activity_id === 12) {
+            if (this.id) {
+                this.getTheme();
+            } else {
+                this.setClockedCatId(this.ac_type);
+            }
+        }
         this.formData.resource_type = this.uploadMode === 'video' ? 1 : 2;
         this.getData();
     },
@@ -553,6 +589,10 @@ export default {
                         return this.errTip('请上传作品图片');
                     }
                 }
+                if (formData.activity_id === 12) {
+                    formData.ac_type = this.ac_type;
+                }
+                console.log(formData, 'lklklklk');
 
                 uni.showLoading();
                 this.disabled = true;
@@ -566,7 +606,7 @@ export default {
                         this.disabled = false;
                         uni.hideLoading();
                         uni.navigateTo({
-                            url: `/activity/pages/upload/result?activity_id=${this.formData.activity_id}`,
+                            url: `/activity/pages/upload/result?activity_id=${this.formData.activity_id}&pre_type=${this.preStatus}`,
                         });
                         this.resetData();
                         this.lock = true;
@@ -583,6 +623,54 @@ export default {
                 );
             }
             return true;
+        },
+        selTheme() {
+            if (!this.ac_type) {
+                this.showtheme = true;
+            }
+        },
+        getTheme() {
+            // 打卡活动，需要ac_type,
+            api.get('/api/activity/curtheme', {
+                activity_id: 12,
+            }).then(({ type }) => {
+                if (!type) {
+                    // 选择打卡主题。
+                    this.showtheme = true;
+                    this.ac_type = 0;
+                } else {
+                    this.ac_type = type;
+                    this.setClockedCatId(type);
+                }
+            });
+        },
+        toggelModel(id) {
+            this.showtheme = false;
+            if (id) {
+                this.ac_type = id;
+                this.setClockedCatId(id);
+            } else {
+                this.ac_type = 0;
+            }
+        },
+        setClockedCatId(type) {
+            switch (type) {
+                case 1:
+                    this.formData.cat_id = 20;
+                    break;
+                case 2:
+                    this.formData.cat_id = 102;
+                    break;
+                case 3:
+                    this.formData.cat_id = 102;
+                    break;
+                case 4:
+                    this.formData.cat_id = 103;
+                    break;
+                default:
+                    this.formData.cat_id = '';
+                    break;
+            }
         },
     },
     onShareAppMessage(res) {

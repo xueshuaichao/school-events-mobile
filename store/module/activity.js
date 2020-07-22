@@ -311,7 +311,7 @@ export default {
                 activityId: 12,
                 publicConfig: {
                     title: '打卡一夏 记录暑假',
-                    log: '',
+                    log: 'byhd',
                     sort: ['最新', '最热'],
                     catMenu: [], // 分组
                     activityName: 'clocked', // 空作品的图片拼接地址

@@ -13,7 +13,8 @@
                 { wuyi: activity_id === 8 },
                 { openGame: from === 'openGame' },
                 { liuyi: activity_id === 9 },
-                { qiyi: activity_id === 10 }
+                { qiyi: activity_id === 10 },
+                { bayi: activity_id === 12 }
             ]"
         >
             <view class="activerule">
@@ -504,6 +505,7 @@ export default {
                     'lyhd',
                     'qyhd',
                     '',
+                    'byhd',
                 ];
                 const type = arr[this.activity_id - 3];
                 this.fr = logger.getFr(type, {});
@@ -530,10 +532,7 @@ export default {
                     ...detailConf[6].posterConfig,
                 };
             }
-            let bgColor = 'ffffff';
-            if (this.activity_id === 10) {
-                bgColor = '9882ff';
-            }
+            const bgColor = this.posterConfig.images[1].color || 'ffffff';
             this.posterConfig.images[1].url = `${res.video_img_url}?x-oss-process=image/format,jpg/interlace,1/quality,Q_80/resize,m_pad,w_460,h_300,color_${bgColor}`;
             this.canvasImgW = this.posterConfig.width * this.pix;
             this.canvasImgH = this.posterConfig.height * this.pix;
@@ -1216,6 +1215,24 @@ export default {
                     180deg,
                     rgba(255, 142, 133, 1),
                     rgba(255, 87, 74, 1)
+                );
+            }
+        }
+        &.bayi {
+            .saveBtn {
+                width: 570upx;
+                background: linear-gradient(
+                    180deg,
+                    rgba(255, 162, 132, 1),
+                    rgba(255, 104, 76, 1)
+                );
+                box-shadow: 0 4upx 6upx 0 rgba(0, 0, 0, 0.4);
+            }
+            .close {
+                background: linear-gradient(
+                    180deg,
+                    rgba(255, 162, 132, 1),
+                    rgba(255, 104, 76, 1)
                 );
             }
         }

@@ -524,6 +524,7 @@ const detailConf = [
                     y: 684,
                     x: 434,
                     borderRadius: 100,
+                    color: '9882ff',
                 },
                 {
                     url:
@@ -579,6 +580,7 @@ const detailConf = [
                     y: 254,
                     x: 48,
                     borderRadius: 20,
+                    color: 'FFA69F',
                 },
                 {
                     url: '',

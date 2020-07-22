@@ -21,7 +21,10 @@
                         </view>
                         <image
                             class="avator"
-                            :src="userInfo.avatar_url"
+                            :src="
+                                userInfo.avatar_url ||
+                                    '/static/images/uc/avatar.png'
+                            "
                         />
                         <view>
                             <view class="name">
@@ -31,52 +34,27 @@
                                 我的勋章
                             </view>
                             <view class="flex-honor-all">
-                                <view class="item">
-                                    <view class="num">
-                                        2
+                                <view
+                                    v-for="item in honorList"
+                                    :key="item.id"
+                                    class="item"
+                                >
+                                    <view
+                                        v-if="item.num"
+                                        class="num"
+                                    >
+                                        {{ item.num }}
                                     </view>
                                     <image
                                         class="img"
-                                        src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/clocked/honor-2-2.png"
+                                        :src="
+                                            `https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/clocked/honor-${
+                                                item.id
+                                            }-${item.num ? 1 : 0}.png`
+                                        "
                                     />
                                     <view class="txt">
-                                        活力少年
-                                    </view>
-                                </view>
-                                <view class="item">
-                                    <view class="num">
-                                        2
-                                    </view>
-                                    <image
-                                        class="img"
-                                        src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/clocked/honor-2-2.png"
-                                    />
-                                    <view class="txt">
-                                        活力少年
-                                    </view>
-                                </view>
-                                <view class="item">
-                                    <view class="num">
-                                        2
-                                    </view>
-                                    <image
-                                        class="img"
-                                        src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/clocked/honor-2-2.png"
-                                    />
-                                    <view class="txt">
-                                        活力少年
-                                    </view>
-                                </view>
-                                <view class="item">
-                                    <view class="num">
-                                        2
-                                    </view>
-                                    <image
-                                        class="img"
-                                        src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/clocked/honor-2-2.png"
-                                    />
-                                    <view class="txt">
-                                        活力少年
+                                        {{ item.txt }}
                                     </view>
                                 </view>
                             </view>
@@ -86,6 +64,7 @@
                 <view class="bg-top" />
                 <calendar
                     :show-btn="false"
+                    :signinfo="signinfo"
                     class="ucenter-calendar"
                 />
                 <view :class="['panel', isSelf ? 'is-self' : '']">
@@ -105,7 +84,7 @@
                         @togglePoster="togglePoster"
                     />
                     <view class="top-bar">
-                        TA的作品
+                        {{ isSelf ? "我" : "TA" }}的作品
                     </view>
                     <view
                         v-if="isSelf"
@@ -360,7 +339,6 @@ export default {
                 texts: [
                     {
                         text: '',
-                        // height: 40,
                         textAlign: 'left',
                         y: 264,
                         x: 90,
@@ -373,15 +351,13 @@ export default {
                     },
                     {
                         text: '',
-                        // width: 570,
-                        // height: 25,
                         textAlign: 'center',
                         y: 660,
                         x: 320,
                         fontSize: '32',
                         color: '#FF8300',
                         lineNum: 1,
-                        fontWeight: 600,
+                        fontWeight: 'bold',
                         textOverflow: 'ellipsis',
                         zIndex: 100,
                     },
@@ -396,18 +372,49 @@ export default {
                     },
                     {
                         url: '',
-                        width: 126,
-                        height: 126,
+                        width: 120,
+                        height: 120,
                         y: 730,
                         x: 480,
-                        borderRadius: this.isH5 ? 0 : 126,
+                        borderRadius: this.isH5 ? 0 : 120,
                         zIndex: 100,
                     },
                 ],
-                fillRects: [],
-                strokeRects: [],
+                radiusRects: [],
             },
             allDate: {},
+            signinfo: {
+                points: 0,
+                serial_day: 0,
+                skill: 0,
+                sports: 0,
+                study: 0,
+                work: 0,
+            },
+            honorList: {
+                work: {
+                    id: 1,
+                    num: 0,
+                    txt: '劳动标兵',
+                },
+                study: {
+                    id: 2,
+                    num: 0,
+                    txt: '阅读之星',
+                },
+                skill: {
+                    id: 3,
+                    num: 0,
+                    txt: '才艺达人',
+                },
+                sports: {
+                    id: 4,
+                    num: 0,
+                    txt: '活力少年',
+                },
+            },
+            honorInfo: {},
+            honorNums: 0,
         };
     },
     computed: {
@@ -416,7 +423,27 @@ export default {
         },
     },
     methods: {
+        getsigninfo() {
+            api.get('/api/activity/signinfo', {
+                user_id: this.userId,
+                activity_id: 12,
+            }).then((signinfo) => {
+                this.signinfo = signinfo;
+                const keys = Object.keys(signinfo);
+                console.log(keys);
+                keys.forEach((key) => {
+                    if (this.honorList[key]) {
+                        this.honorList[key].num = signinfo[key];
+                        if (signinfo[key]) {
+                            this.honorNums += signinfo[key];
+                            this.honorInfo[key] = this.honorList[key];
+                        }
+                    }
+                });
+            });
+        },
         getDate(time) {
+            // 设置作品时间
             let flag = false;
             if (!this.allDate[time]) {
                 this.allDate[time] = 1;
@@ -514,58 +541,84 @@ export default {
         createPoster() {
             // 图片的处理。。。。。。。
             // 中间的内容区域是多种排版显示，有多种图片。
-            // const image = 'http://open-storage-wdy.oss-cn-beijing.aliyuncs.com/12003/school_events/2020-07-09/file/10746/df0b77ec6bba2bdbb9a7db22c25c24e2.png';
             const that = this;
-            // that.posterCommonConfig.images[1].url = this.isH5
-            //     ? image
-            //     : utils.mapHttpToHttps(image);
             if (that.isH5) {
-                // that.posterCommonConfig.images[0].url = '/activity/static/children_img/brand_poster.jpg';
-                // that.posterCommonConfig.images[0].url = '/activity/static/clocked/clocked_honor_poster.png';
                 that.posterCommonConfig.images[0].url = 'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/clocked/clocked_honor_poster.png';
             } else {
                 that.posterCommonConfig.images[0].url = 'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/clocked/clocked_honor_poster.png';
             }
 
-            that.setPosterConfig(1, []);
+            that.setPosterConfig();
             that.$refs.posterh5.createPoster(that.posterCommonConfig);
         },
-        setPosterConfig(type) {
-            // type: 1,2,3,4.设置排版
-            // list(d)=> d.num,d.name,d.url, d.id
-            let txts = [
+        setPosterConfig() {
+            let txts = [];
+            const txts1 = [
                 '生命在于运动,健康在于锻炼！',
                 '最是书香能致远，腹有诗书气自华！',
                 '了解劳动乐趣！感受父母辛苦！',
                 '打卡进步展才艺，快乐成长秀风采',
             ];
-            if (type > 1) {
-                txts = [
-                    '每天进步一点点，坚持带来大改变！',
-                    '你每天的小坚持，都会有大意义！',
-                    '每天打卡一小步！进步提升一大步！',
-                    '每天进步一点点, 成长足迹看得见！',
-                ];
+            const txts2 = [
+                '每天进步一点点，坚持带来大改变！',
+                '你每天的小坚持，都会有大意义！',
+                '每天打卡一小步！进步提升一大步！',
+                '每天进步一点点, 成长足迹看得见！',
+            ];
+            let index = 0;
+
+            this.honorInfo.work = {
+                id: 1,
+                txt: '劳动标兵',
+                num: 2,
+            };
+            this.honorInfo.sports = {
+                id: 4,
+                txt: '活力少年',
+                num: 1,
+            };
+            this.honorInfo.study = {
+                id: 2,
+                txt: '阅读新型',
+                num: 1,
+            };
+            this.honorInfo.skill = {
+                id: 3,
+                txt: '才艺达人',
+                num: 2,
+            };
+            const keys = ['study', 'skill', 'sports', 'work'];
+            if (keys.length === 1) {
+                console.log(this.honorInfo[keys[0]], keys[0]);
+                index = this.honorInfo[keys[0]].id;
+                txts = txts1;
+            } else {
+                index = Math.floor(Math.random() * 4);
+                txts = txts2;
             }
-            const index = type === 1 ? 0 : Math.floor(Math.random() * 4);
             const txt = txts[index];
             this.posterCommonConfig.texts[1].text = txt;
-            this.posterCommonConfig.texts[0].text = '我已经获得1枚勋章啦！';
+            this.posterCommonConfig.texts[0].text = `我已经获得${this.honorNums}枚勋章啦！`;
             // 只有一种勋章
-            if (type === 1) {
+            if (keys.length === 1) {
                 this.posterCommonConfig.images[2] = {
                     width: 226,
                     height: 226,
-                    url:
-                        'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/clocked/honor-1-2.png',
+                    url: `https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/clocked/honor-l-${
+                        this.honorInfo[keys[0]].id
+                    }.png`,
                     x: 202,
                     y: 314,
                 };
                 this.posterCommonConfig.texts[2] = {
-                    text: '阅读之星',
+                    text: `${this.honorInfo[keys[0]].txt}${
+                        this.honorInfo[keys[0]].num === 1
+                            ? ''
+                            : `*${this.honorInfo[keys[0]].num}`
+                    }`,
                     textAlign: 'center',
-                    y: 560,
-                    x: 320,
+                    y: 584,
+                    x: 314,
                     fontSize: '40',
                     color: '#FF8300',
                     lineNum: 1,
@@ -573,20 +626,142 @@ export default {
                     fontWeight: 'bold',
                     zIndex: 10,
                 };
-                this.posterCommonConfig.fillRects[0] = {
-                    x1: 156,
-                    y1: 560,
-                    X2: 292,
-                    y2: 620,
+                // 282, 236
+                this.posterCommonConfig.radiusRects[0] = {
+                    x:
+                        this.honorInfo[keys[0]].num === 1
+                            ? 315 - 236 / 2
+                            : 315 - 282 / 2,
+                    y: 540,
+                    w: this.honorInfo[keys[0]].num === 1 ? 236 : 282,
+                    h: 60,
+                    br: 60,
                     color: '#FFF3DD',
+                    color2: '#FFB363',
                 };
-                this.posterCommonConfig.strokeRects[0] = {
-                    x1: 156,
-                    y1: 560,
-                    X2: 292,
-                    y2: 620,
-                    color: '#FFB363',
-                };
+            } else if (keys.length === 2) {
+                keys.forEach((key, i) => {
+                    this.posterCommonConfig.images[i + 2] = {
+                        width: 180,
+                        height: 180,
+                        url: `https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/clocked/honor-l-${this.honorInfo[key].id}.png`,
+                        x: 90 + i * 270,
+                        y: 314,
+                    };
+                    this.posterCommonConfig.texts[i + 2] = {
+                        text: `${this.honorInfo[key].txt}${
+                            this.honorInfo[key].num === 1
+                                ? ''
+                                : `*${this.honorInfo[key].num}`
+                        }`,
+                        textAlign: 'center',
+                        x: 180 + i * 270,
+                        y: 534,
+                        fontSize: '30',
+                        color: '#FF8300',
+                        lineNum: 1,
+                        textOverflow: 'ellipsis',
+                        fontWeight: 'bold',
+                        zIndex: 10,
+                    };
+                    // 198 164
+                    this.posterCommonConfig.radiusRects[i] = {
+                        x:
+                            this.honorInfo[key].num === 1
+                                ? 180 + i * 270 - 82
+                                : 180 + i * 270 - 99,
+                        y: 500,
+                        w: this.honorInfo[key].num === 1 ? 164 : 198,
+                        h: 50,
+                        br: 50,
+                        color: '#FFF3DD',
+                        color2: '#FFB363',
+                    };
+                });
+            } else if (keys.length === 3) {
+                keys.forEach((key, i) => {
+                    this.posterCommonConfig.images[i + 2] = {
+                        width: 100,
+                        height: 100,
+                        url: `https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/clocked/honor-l-${this.honorInfo[key].id}.png`,
+                        x: i > 1 ? 265 : 140 + i * 250,
+                        y: i > 1 ? 460 : 290,
+                    };
+                    this.posterCommonConfig.texts[i + 2] = {
+                        text: `${this.honorInfo[key].txt}${
+                            this.honorInfo[key].num === 1
+                                ? ''
+                                : `*${this.honorInfo[key].num}`
+                        }`,
+                        textAlign: 'center',
+                        x: i > 1 ? 320 : 190 + i * 250,
+                        y: i > 1 ? 594 : 434,
+                        fontSize: '26',
+                        color: '#FF8300',
+                        lineNum: 1,
+                        textOverflow: 'ellipsis',
+                        fontWeight: 'bold',
+                        zIndex: 10,
+                    };
+                    //  178 148
+                    const sx = 190 + i * 250 - 74;
+                    const lx = 190 + i * 250 - 89;
+                    const sx2 = 315 - 74;
+                    const lx2 = 315 - 89;
+                    const x1 = i > 1 ? sx2 : sx;
+                    const x2 = i > 1 ? lx2 : lx;
+                    this.posterCommonConfig.radiusRects[i] = {
+                        x: this.honorInfo[key].num === 1 ? x1 : x2,
+                        y: i > 1 ? 560 : 400,
+                        w: this.honorInfo[key].num === 1 ? 148 : 178,
+                        h: 46,
+                        br: 46,
+                        color: '#FFF3DD',
+                        color2: '#FFB363',
+                    };
+                });
+            } else if (keys.length === 4) {
+                keys.forEach((key, i) => {
+                    this.posterCommonConfig.images[i + 2] = {
+                        width: 100,
+                        height: 100,
+                        url: `https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/clocked/honor-l-${this.honorInfo[key].id}.png`,
+                        x: i > 1 ? 140 + (i - 2) * 250 : 140 + i * 250,
+                        y: i > 1 ? 460 : 290,
+                    };
+                    this.posterCommonConfig.texts[i + 2] = {
+                        text: `${this.honorInfo[key].txt}${
+                            this.honorInfo[key].num === 1
+                                ? ''
+                                : `*${this.honorInfo[key].num}`
+                        }`,
+                        textAlign: 'center',
+                        x: i > 1 ? 190 + (i - 2) * 250 : 190 + i * 250,
+                        y: i > 1 ? 594 : 434,
+                        fontSize: '26',
+                        color: '#FF8300',
+                        lineNum: 1,
+                        textOverflow: 'ellipsis',
+                        fontWeight: 'bold',
+                        zIndex: 10,
+                    };
+                    // // 178 148
+                    const sx = 190 + i * 250 - 74;
+                    const lx = 190 + i * 250 - 89;
+                    const sx2 = 190 + (i - 2) * 250 - 74;
+                    const lx2 = 190 + (i - 2) * 250 - 89;
+                    const x1 = i > 1 ? sx2 : sx;
+                    const x2 = i > 1 ? lx2 : lx;
+                    this.posterCommonConfig.radiusRects[i] = {
+                        x: this.honorInfo[key].num === 1 ? x1 : x2,
+                        y: i > 1 ? 560 : 400,
+                        w: this.honorInfo[key].num === 1 ? 148 : 178,
+                        h: 46,
+                        br: 46,
+                        color: '#FFF3DD',
+                        color2: '#FFB363',
+                    };
+                });
             }
         },
         togglePoster(status) {
@@ -604,11 +779,12 @@ export default {
             api.get('/api/user/info').then(
                 (res) => {
                     this.userInfo = res.user_info;
+                    this.isLoading = false;
+                    this.isSelf = res.user_info.user_id === Number(this.userId);
                     this.getWorkData();
                     this.getQrCode();
-                    this.isLoading = false;
                     this.initShare();
-                    this.isSelf = res.user_id === this.userId;
+                    this.getsigninfo();
                 },
                 () => {
                     this.isLoading = false;
@@ -867,7 +1043,7 @@ export default {
     }
 
     view {
-        color: #fff;
+        color: #ff685c;
         font-size: 28upx;
         margin-top: 30upx;
     }

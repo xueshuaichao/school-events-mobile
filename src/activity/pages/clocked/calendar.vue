@@ -28,11 +28,11 @@
             <view class="integral-txt">
                 <view>累计积分</view>
                 <view class="all-integral">
-                    100
+                    {{ signinfo.points }}
                 </view>
                 <view>积分|连续打卡</view>
                 <view class="max-day">
-                    28
+                    {{ signinfo.serial_day }}
                 </view>
                 <view>天</view>
             </view>
@@ -50,11 +50,28 @@
                             {{ item }}
                         </view>
                         <view
-                            v-for="(item, index) in list"
-                            :key="index + 'index'"
+                            v-for="(item, name, index) in list"
+                            :key="name"
                             class="item"
+                            :data-name="name"
+                            :data-key="index"
+                            :class="{
+                                grey: item.grey,
+                                passed: !item.type && !item.isToday
+                            }"
+                            @click="jumpUpload(item.isToday)"
                         >
-                            {{ item }}
+                            <template v-if="!item.type">
+                                <view class="item-txt">
+                                    {{ item.txt }}
+                                </view>
+                            </template>
+                            <template v-else>
+                                <image
+                                    :src="getPath(item)"
+                                    class="icon"
+                                />
+                            </template>
                         </view>
                     </view>
                 </view>
@@ -68,7 +85,13 @@
                         class="btn-txt"
                         @click="toggleCalendar"
                     >
-                        选择主题打卡
+                        {{
+                            status
+                                ? status === 1
+                                    ? "立即打卡"
+                                    : "今日已打卡"
+                                : "选择主题打卡"
+                        }}
                     </view>
                 </view>
             </template>
@@ -82,50 +105,112 @@ export default {
             type: Boolean,
             default: true,
         },
+        calendarData: {
+            type: Object,
+            default: () => {},
+        },
+        status: {
+            type: Number,
+            default: 0, // 0选择主题打卡，立即打卡，今日已打卡
+        },
+        signinfo: {
+            type: Object,
+            default: () => {},
+        },
+        curThemeInfo: {
+            type: Object,
+            default: () => {},
+        },
     },
     data() {
         return {
             list2: ['日', '一', '二', '三', '四', '五', '六'],
-            list: [
-                1,
-                2,
-                3,
-                4,
-                5,
-                6,
-                7,
-                8,
-                9,
-                1,
-                2,
-                3,
-                4,
-                5,
-                6,
-                7,
-                8,
-                9,
-                12,
-                3,
-                4,
-                5,
-                6,
-                7,
-                8,
-                9,
-                1,
-                2,
-                3,
-                4,
-                5,
-                6,
-                7,
-                8,
-                9,
-            ],
+            list: {},
         };
     },
+    watch: {
+        calendarData(list) {
+            if (list) {
+                this.setList();
+            }
+        },
+    },
+    created() {
+        this.setInitArgust();
+    },
     methods: {
+        jumpUpload(status) {
+            if (status === 1) {
+                this.$emit('toggleCalendar');
+            }
+        },
+        setList() {
+            const keys = Object.keys(this.calendarData);
+            keys.forEach((d) => {
+                if (this.list[d]) {
+                    this.list[d] = Object.assign(
+                        {},
+                        this.calendarData[d],
+                        this.list[d],
+                    );
+                }
+            });
+        },
+        getPath(item) {
+            const path = `/activity/static/clocked/ka/ka-${item.status}-${
+                item.draw
+            }-${item.type - 1}.png`;
+            return path;
+        },
+        isPassedDay(d) {
+            //  利用隐式转换，判断日期过去了没有。
+            const date = new Date();
+            const month = date.getMonth() + 1 > 10
+                ? date.getMonth() + 1
+                : `0${date.getMonth() + 1}`;
+            const time = `${date.getFullYear()}${month}${date.getDate()}`;
+            let passed = 0;
+            // 0 过去了 1，当天，2 未来。
+            if (d < time) {
+                passed = 0;
+            } else if (d === time) {
+                passed = 1;
+            } else if (d > time) {
+                passed = 2;
+            }
+            return passed;
+        },
+        setInitArgust() {
+            const july = {};
+            const august = {};
+            const september = {};
+            let key = '';
+            for (let i = 0; i < 42; i += 1) {
+                if (i > 36) {
+                    key = `202009${i > 45 ? i - 36 : `0${i - 36}`}`;
+                    september[key] = {
+                        grey: 1,
+                        txt: i - 36,
+                        isToday: this.isPassedDay(key),
+                    };
+                } else if (i > 5) {
+                    key = `202008${i > 14 ? i - 5 : `0${i - 5}`}`;
+                    august[key] = {
+                        grey: 0,
+                        txt: i - 5,
+                        isToday: this.isPassedDay(key),
+                    };
+                } else {
+                    key = `202007${i + 26}`;
+                    july[key] = {
+                        grey: 1,
+                        txt: i + 26,
+                        isToday: this.isPassedDay(key),
+                    };
+                }
+            }
+            this.list = Object.assign({}, august, july, september);
+        },
         toggleCalendar() {
             this.$emit('toggleCalendar');
         },
@@ -262,7 +347,27 @@ export default {
                     width: 90upx;
                     height: 60upx;
                     text-align: center;
-                    line-height: 60upx;
+                    .item-txt {
+                        margin: 0 auto;
+                        width: 50upx;
+                        height: 50upx;
+                        line-height: 50upx;
+                        box-sizing: border-box;
+                    }
+                    &.grey {
+                        color: #999;
+                    }
+                    &.passed {
+                        .item-txt {
+                            border-radius: 50%;
+                            border: 2upx solid #eee;
+                            color: #eee;
+                        }
+                    }
+                    .icon {
+                        width: 50upx;
+                        height: 50upx;
+                    }
                 }
             }
         }
@@ -288,6 +393,7 @@ export default {
                 text-align: center;
                 color: #ff5547;
                 font-weight: 500;
+                font-size: 32upx;
                 box-shadow: 0 2upx 4upx 0 rgba(255, 255, 255, 0.5) inset;
             }
             &::after {

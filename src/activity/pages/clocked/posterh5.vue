@@ -42,7 +42,6 @@ export default {
         },
         h5DrawImage(config) {
             // h5 wx 我的海报
-            console.log(config, 'h5DrawImage-------');
             const wxGetImageInfo = this.promisify(uni.getImageInfo);
             const imageInfoArr = [];
             config.images.forEach((item) => {
@@ -84,44 +83,36 @@ export default {
                     }
                     this.ctx.restore();
                 });
-                const { texts, fillRects, strokeRects } = config;
-                console.log(config, fillRects, strokeRects, 'config-------');
+                const { texts, radiusRects } = config;
+                if (radiusRects && radiusRects.length > 0) {
+                    radiusRects.forEach((item) => {
+                        this.ctx.save();
+                        this.drawRadiusRect(
+                            item.x,
+                            item.y,
+                            item.w,
+                            item.h,
+                            item.br,
+                        );
+                        this.ctx.fillStyle = item.color;
+                        this.ctx.strokeStyle = item.color2;
+                        this.ctx.fill();
+                        this.ctx.stroke();
+                        this.ctx.restore();
+                    });
+                }
                 if (texts && texts.length > 0) {
                     texts.forEach((item) => {
                         this.drawText(item);
                     });
                 }
-                if (strokeRects && strokeRects.length > 0) {
-                    strokeRects.forEach((item) => {
-                        this.drawStokeRect(item);
-                    });
-                }
-                if (fillRects && fillRects.length > 0) {
-                    fillRects.forEach((item) => {
-                        this.drawFillRect(item);
-                    });
-                }
+
                 this.ctx.draw(false, () => {
                     setTimeout(() => {
                         this.saveCanvas(config);
                     }, 500);
                 });
             });
-        },
-        drawFillRect(params) {
-            const {
-                x1, y1, x2, y2, color,
-            } = params;
-            this.ctx.setFillStyle(color);
-            console.log(params, 'drawFillRect-----');
-            this.ctx.fillRect(x1, y1, x2, y2);
-        },
-        drawStokeRect(params) {
-            const {
-                x1, y1, x2, y2, color,
-            } = params;
-            this.ctx.setStrokeStyle(color);
-            this.ctx.strokeRect(x1, y1, x2, y2);
         },
         drawText(params) {
             const {

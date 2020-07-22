@@ -38,6 +38,12 @@
                 >
                     查看作品
                 </text>
+                <text
+                    class="link btn"
+                    @click="toCreatePoster"
+                >
+                    查看海报
+                </text>
             </view>
             <view
                 v-if="addNum === 1"
@@ -49,14 +55,39 @@
                 />
             </view>
             <goHome :path="publicConfig.homePath" />
+            <template v-if="activityId === 12">
+                <posterh5
+                    ref="posterh5"
+                    :config="posterCommonConfig"
+                    :hide-loading="true"
+                    @success="onPosterSuccess"
+                    @fail="onPosterFail"
+                />
+                <!-- 我的海报 -->
+                <savePoster
+                    v-if="showPosterMask"
+                    ref="savePoster"
+                    :image="myPoster"
+                    @togglePoster="togglePoster"
+                />
+            </template>
+            <!-- 生成海报 -->
         </div>
     </view>
 </template>
 
 <script>
 import api from '../../../common/api';
+import posterh5 from '../clocked/posterh5.vue';
+import savePoster from '../clocked/savePoster.vue';
+import goHome from '../common/goHome.vue';
 
 export default {
+    components: {
+        savePoster,
+        posterh5,
+        goHome,
+    },
     data() {
         return {
             userInfo: {},
@@ -64,10 +95,148 @@ export default {
             publicConfig: {},
             resultConfig: {},
             addNum: 0, // 六一活动上传次数
+            showPosterMask: false,
+            myPoster: '',
+            posterCommonConfig: {
+                pixelRatio: 2,
+                width: 630,
+                height: 866,
+                debug: false,
+                texts: [
+                    {
+                        text: '每天进步一点点，坚持带来大改变！',
+                        textAlign: 'center',
+                        x: 314,
+                        y: 470,
+                        fontSize: '26',
+                        color: '#FF8300',
+                        lineNum: 1,
+                        textOverflow: 'ellipsis',
+                        fontWeight: 'bold',
+                        zIndex: 10,
+                    },
+                    {
+                        text: '我已经连续打卡',
+                        textAlign: 'left',
+                        x: 124,
+                        y: 320,
+                        fontSize: '34',
+                        color: '#FF685C',
+                        lineNum: 1,
+                        textOverflow: 'ellipsis',
+                        fontWeight: '400',
+                        zIndex: 10,
+                    },
+                    {
+                        text: '0',
+                        textAlign: 'left',
+                        x: 370,
+                        y: 320,
+                        fontSize: '40',
+                        color: '#FF8300',
+                        lineNum: 1,
+                        textOverflow: 'ellipsis',
+                        fontWeight: 'bold',
+                        zIndex: 10,
+                    },
+                    {
+                        text: '9',
+                        textAlign: 'left',
+                        x: 420,
+                        y: 320,
+                        fontSize: '40',
+                        color: '#FF8300',
+                        lineNum: 1,
+                        textOverflow: 'ellipsis',
+                        fontWeight: 'bold',
+                        zIndex: 10,
+                    },
+                    {
+                        text: '天！',
+                        textAlign: 'left',
+                        x: 460,
+                        y: 320,
+                        fontSize: '34',
+                        color: '#FF685C',
+                        lineNum: 1,
+                        textOverflow: 'ellipsis',
+                        fontWeight: '400',
+                        zIndex: 10,
+                    },
+                    {
+                        text: '超过',
+                        textAlign: 'left',
+                        x: 126,
+                        y: 400,
+                        fontSize: '34',
+                        color: '#FF685C',
+                        lineNum: 1,
+                        textOverflow: 'ellipsis',
+                        fontWeight: '400',
+                        zIndex: 10,
+                    },
+                    {
+                        text: '10%',
+                        textAlign: 'left',
+                        x: 200,
+                        y: 400,
+                        fontSize: '40',
+                        color: '#FF685C',
+                        lineNum: 1,
+                        textOverflow: 'ellipsis',
+                        fontWeight: 'bold',
+                        zIndex: 10,
+                    },
+                    {
+                        text: '的小伙伴啦',
+                        textAlign: 'left',
+                        x: 280,
+                        y: 400,
+                        fontSize: '34',
+                        color: '#FF685C',
+                        lineNum: 1,
+                        textOverflow: 'ellipsis',
+                        fontWeight: '400',
+                        zIndex: 10,
+                    },
+                ],
+                images: [
+                    {
+                        url:
+                            'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/clocked/bayi_upload_success.png',
+                        width: 630,
+                        height: 866,
+                        y: 0,
+                        x: 0,
+                    },
+                ],
+                radiusRects: [
+                    {
+                        x: 360,
+                        y: 270,
+                        w: 44,
+                        h: 64,
+                        br: 2,
+                        color: '#FFE464',
+                        color2: '#FFE464',
+                    },
+                    {
+                        x: 414,
+                        y: 270,
+                        w: 44,
+                        h: 64,
+                        br: 2,
+                        color: '#FFE464',
+                        color2: '#FFE464',
+                    },
+                ],
+            },
+            preStatus: 0,
         };
     },
     onLoad(params) {
         this.activityId = Number(params.activity_id);
+        this.preStatus = Number(params.pre_type) || 0; // 判断是否打卡了
         this.publicConfig = this.$store.getters.getPublicConfig(
             this.activityId,
         );
@@ -114,6 +283,33 @@ export default {
             uni.reLaunch({
                 url: '/activity/pages/children/index',
             });
+        },
+        togglePoster(status) {
+            this.showPosterMask = status;
+        },
+        onPosterSuccess(path) {
+            this.myPoster = path;
+            this.togglePoster(true);
+        },
+        onPosterFail() {
+            uni.showToast({
+                title: '海报获取失败，请稍后再试',
+                icon: 'none',
+            });
+            uni.hideLoading();
+        },
+        toCreatePoster() {
+            const txts = [
+                '每天进步一点点，坚持带来大改变！',
+                '你每天的小坚持，都会有大意义！',
+                '每天打卡一小步！成长提升一大步！',
+                '我在坚持打卡进步，你也快来参加吧！',
+                '坚持锻炼意志，努力收获成长！',
+                '每天进步一点点, 成长足迹看得见！',
+            ];
+            const index = Math.floor(Math.random() * 6);
+            this.posterCommonConfig.texts[0].text = txts[index];
+            this.$refs.posterh5.createPoster(this.posterCommonConfig);
         },
     },
     onShareAppMessage(res) {
