@@ -101,7 +101,7 @@
 <script>
 import api from '../../../../common/api';
 import login from '../../../../widgets/login/login.vue';
-import share from '../shareMinxin';
+import share from '../../common/shareMinxin';
 
 export default {
     components: {

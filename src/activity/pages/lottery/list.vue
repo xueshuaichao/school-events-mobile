@@ -1,34 +1,13 @@
 <template>
-    <view class="order-list-page">
+    <view
+        v-if="loading"
+        class="lottery-list-page"
+    >
         <login
             v-if="userInfo === null"
             @login="onLogin"
         />
         <template v-else>
-            <view class="tab-view">
-                <!-- 1待审 2审核通过 3审核不通过 -->
-                <view
-                    class="item"
-                    :class="{ active: status === 2 }"
-                    @click="changeStatus(2)"
-                >
-                    兑换成功
-                </view>
-                <view
-                    class="item"
-                    :class="{ active: status === 1 }"
-                    @click="changeStatus(1)"
-                >
-                    兑换待审核
-                </view>
-                <view
-                    class="item"
-                    :class="{ active: status === 3 }"
-                    @click="changeStatus(3)"
-                >
-                    兑换未通过
-                </view>
-            </view>
             <view
                 v-if="list.length"
                 class="list-content"
@@ -39,26 +18,18 @@
                     class="item"
                     @click="jumpDetail(item.id)"
                 >
-                    <view class="order-number">
-                        订单编号：{{ item.order_no }}
-                    </view>
                     <view class="item-detail">
                         <view class="image">
                             <image
-                                :src="item.gift_img"
+                                :src="item.image"
                                 mode=""
                             />
                         </view>
                         <view class="title">
-                            {{ item.gift_name }}
+                            {{ item.prize_name }}
                         </view>
                     </view>
                     <view class="item-info">
-                        <view class="score">
-                            <text>消耗积分：{{ item.gift_price }}</text>
-
-                            <text>兑换数量</text><text>1{{ item.gift_unit || "" }}</text>
-                        </view>
                         <view class="time">
                             <view class="title">
                                 兑换时间：
@@ -67,24 +38,22 @@
                                 {{ item.created_at }}
                             </view>
                         </view>
-                        <view
-                            v-if="status === 3"
-                            class="reason"
-                        >
-                            <view class="title">
-                                驳回原因：
-                            </view>
-                            <view class="text">
-                                {{ item.reason }}
-                            </view>
-                        </view>
                     </view>
                     <view class="address-detail">
-                        <text>{{ item.addressee }}</text>
-                        <text>{{ item.mobile }}</text>
-                        <text class="address text-one-line">
-                            {{ item.address }}
-                        </text>
+                        <template v-if="item.address">
+                            <view>{{ item.address.name }}</view>
+                            <view>{{ item.address.mobile }}</view>
+                            <view class="address text-one-line">
+                                {{ item.address.address }}
+                            </view>
+                        </template>
+                        <view
+                            v-else
+                            class="set-address"
+                            @click.stop="setAddress(item.id)"
+                        >
+                            还没有邮件地址，快去设置吧～
+                        </view>
                     </view>
                 </view>
                 <uni-load-more
@@ -104,21 +73,23 @@
             >
                 <view class="image">
                     <image
-                        src=""
+                        src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/lottery_icon_fail.png"
                         mode=""
                     />
                 </view>
-                <view>当前暂无兑换的商品</view>
-                <view>快去兑换吧！</view>
+                <view class="title">
+                    很遗憾！暂未中奖
+                </view>
+                <view>每天坚持打卡可赢取抽奖机会哦~</view>
             </view>
         </template>
     </view>
 </template>
 <script>
-import api from '../../../../common/api';
-import login from '../../../../widgets/login/login.vue';
-import uniLoadMore from '../../../../components/uni-load-more/uni-load-more.vue';
-import share from '../../common/shareMinxin';
+import api from '../../../common/api';
+import login from '../../../widgets/login/login.vue';
+import uniLoadMore from '../../../components/uni-load-more/uni-load-more.vue';
+import share from '../common/shareMinxin';
 
 export default {
     components: {
@@ -128,6 +99,7 @@ export default {
     mixins: [share.initShare],
     data() {
         return {
+            loading: false,
             activityId: '',
             loadMoreStatus: 'none',
             list: [],
@@ -135,21 +107,22 @@ export default {
                 page_size: 10,
                 page_num: 1,
             },
-            status: 2,
+            addressDetail: {},
             userInfo: '',
         };
     },
+    onShow() {},
     methods: {
         onLogin({ user_info: userInfo }) {
             this.userInfo = userInfo;
-            this.getOrderList();
+            this.getPrizeList();
         },
         isLogin() {
             api.get('/api/user/info').then(
                 (res) => {
                     this.userInfo = res.user_info;
                     this.loading = true;
-                    this.getOrderList();
+                    this.getPrizeList();
                 },
                 () => {
                     this.loading = true;
@@ -161,19 +134,12 @@ export default {
             if (this.loadMoreStatus === 'more') {
                 this.filter.page_num = this.filter.page_num + 1;
                 this.loadMoreStatus = 'loading';
-                this.getOrderList('reachBottom');
+                this.getPrizeList('reachBottom');
             }
         },
-        changeStatus(status) {
-            this.status = status;
-            uni.showLoading();
-            this.filter.page_num = 1;
-            this.getOrderList();
-        },
-        getOrderList(type) {
-            api.get('/api/market/recordlist', {
+        getPrizeList(type) {
+            api.get('/api/draw/getmyprize', {
                 ...this.filter,
-                status: this.status,
                 activity_id: this.activityId,
             }).then(
                 ({ list, total }) => {
@@ -182,6 +148,7 @@ export default {
                         this.list = this.list.concat(list);
                     } else {
                         this.list = list;
+                        this.loading = true;
                     }
                     this.total = total;
                     if (
@@ -195,8 +162,18 @@ export default {
                 },
                 () => {
                     uni.hideLoading();
+                    this.loading = true;
                 },
             );
+        },
+        setAddress(id) {
+            this.id = id;
+            // 如果没有地址 跳至添加页面 否则跳到地址列表页
+            const url = `edit?lottery_id=${this.id}`;
+            this.loading = false;
+            uni.navigateTo({
+                url: `/activity/pages/mall/address/${url}&activity_id=${this.activityId}`,
+            });
         },
         jumpDetail(id) {
             uni.navigateTo({
@@ -206,9 +183,6 @@ export default {
     },
     onLoad(parms) {
         this.activityId = parms.activity_id;
-        if (parms.status) {
-            this.status = Number(parms.status);
-        }
         this.getShareConfig();
         this.isLogin();
     },
@@ -220,37 +194,8 @@ page {
 }
 </style>
 <style lang="less" scoped>
-.order-list-page {
-    padding-top: 80upx;
-    .tab-view {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 80upx;
-        background-color: #fff;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        .item {
-            position: relative;
-            flex: 1;
-            text-align: center;
-            &.active {
-                color: #000;
-                &:after {
-                    content: "";
-                    width: 40upx;
-                    height: 2upx;
-                    background-color: #1166ff;
-                    position: absolute;
-                    bottom: -8upx;
-                    left: 50%;
-                    transform: translateX(-50%);
-                }
-            }
-        }
-    }
+.lottery-list-page {
+    padding-top: 10upx;
     .list-content {
         padding: 32upx 40upx;
         .item {
@@ -259,18 +204,33 @@ page {
             padding: 20upx 0 0;
             margin-bottom: 32upx;
         }
-        .order-number,
         .item-detail,
         .item-info,
         .item-reason,
         .address-detail {
             padding: 0 32upx;
         }
-        .order-number {
-            line-height: 36upx;
-            margin-bottom: 34upx;
-            font-size: 26upx;
+        .set-address {
             color: #666;
+            font-size: 26upx;
+            line-height: 80upx;
+            position: relative;
+            width: 100%;
+            text-align: center;
+            &:after {
+                content: "";
+                position: absolute;
+                top: 50%;
+                margin-top: -9upx;
+                right: 10upx;
+                width: 18upx;
+                height: 18upx;
+                border-top: 1px solid #9d9d9d;
+                border-right: 1px solid #9d9d9d;
+                -webkit-transform: rotate(45deg);
+                transform: rotate(45deg);
+                box-sizing: border-box;
+            }
         }
         .item-detail {
             display: flex;
@@ -297,25 +257,13 @@ page {
             color: #999;
             font-size: 24upx;
             margin-bottom: 32upx;
-            .score {
-                margin-bottom: 20upx;
-                line-height: 36upx;
-                & > text {
-                    display: inline-block;
-                    margin-right: 8upx;
-                    &:first-of-type {
-                        color: #333;
-                    }
-                }
-            }
             .text {
                 color: #333;
                 display: inline-block;
                 margin-right: 8upx;
                 font-size: 26upx;
             }
-            .time,
-            .reason {
+            .time {
                 line-height: 34upx;
                 display: flex;
                 margin-bottom: 20upx;
@@ -330,11 +278,11 @@ page {
         }
         .address-detail {
             border-top: 1px solid #d8d8d8;
-            line-height: 80upx;
             color: #333;
             font-size: 28upx;
+            line-height: 80upx;
             display: flex;
-            & > text {
+            & > view {
                 display: inline-block;
                 margin-right: 16upx;
             }
@@ -342,20 +290,29 @@ page {
                 color: #999999;
                 display: inline-block;
                 word-break: break-all;
+                flex: 1;
             }
         }
     }
     .no-data {
-        margin-top: 100upx;
+        margin-top: 200upx;
         line-height: 34upx;
         text-align: center;
         view {
             color: #999;
+            font-size: 30upx;
+        }
+        .title {
+            color: #000;
+            font-size: 36upx;
+            line-height: 1;
+            font-weight: bold;
+            margin-bottom: 43upx;
         }
         .image {
-            width: 200upx;
+            width: 208upx;
             height: 200upx;
-            margin: 0 auto 20upx;
+            margin: 0 auto 70upx;
             & > image {
                 width: 100%;
                 height: 100%;

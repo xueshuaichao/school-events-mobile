@@ -27,7 +27,11 @@
                             #{{ item.cat_name }}#
                         </text>
                         <text>
-                            {{ item.resource_name || item.draw }}
+                            {{
+                                item.resource_name ||
+                                    item.draw ||
+                                    item.prize_name
+                            }}
                         </text>
                     </view>
                     <text>刚刚</text>

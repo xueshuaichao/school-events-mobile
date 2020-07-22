@@ -86,7 +86,7 @@
 import api from '../../../../common/api';
 import login from '../../../../widgets/login/login.vue';
 import uniLoadMore from '../../../../components/uni-load-more/uni-load-more.vue';
-import share from '../shareMinxin';
+import share from '../../common/shareMinxin';
 
 export default {
     components: {
@@ -148,6 +148,10 @@ export default {
             if (this.detailId) {
                 uni.navigateTo({
                     url: `/activity/pages/mall/detail?id=${this.detailId}&address_id=${addressid}&activity_id=${this.activityId}`,
+                });
+            } else if (this.lotteryId) {
+                uni.navigateTo({
+                    url: `/activity/pages/lottery/list?id=${this.detailId}&address_id=${addressid}&activity_id=${this.activityId}`,
                 });
             }
         },
@@ -231,7 +235,8 @@ export default {
         },
     },
     onLoad(parms) {
-        this.detailId = parms.detail_id;
+        this.detailId = parms.detail_id || '';
+        this.lotteryId = parms.lottery_id;
         this.activityId = parms.activity_id;
         this.getShareConfig();
     },

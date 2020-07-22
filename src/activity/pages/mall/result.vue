@@ -31,7 +31,7 @@
 
 <script>
 import api from '../../../common/api';
-import share from './shareMinxin';
+import share from '../common/shareMinxin';
 
 export default {
     mixins: [share.initShare],

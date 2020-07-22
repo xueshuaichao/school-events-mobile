@@ -1,6 +1,27 @@
 <template>
     <view class="container">
         <view class="frame-view">
+            <view
+                v-for="item in 4"
+                :key="item"
+                class="bot-box"
+                :class="`row-${item}`"
+            >
+                <template v-if="item === 1 || item === 3">
+                    <view
+                        v-for="bot in 12"
+                        :key="bot"
+                        :class="`bot bot-${bot}`"
+                    />
+                </template>
+                <template v-else>
+                    <view
+                        v-for="bot in 9"
+                        :key="bot"
+                        :class="`bot bot-${bot}`"
+                    />
+                </template>
+            </view>
             <view class="frame-view-box">
                 <view
                     v-for="(item, index) in lotteryPostion"
@@ -13,25 +34,22 @@
                             v-if="item !== -1 && lotteryData[item].show"
                             class="active"
                         />
-                        <template v-if="item !== -1">
-                            <!-- <image :src="lotteryData[item].image" /> -->
-                            <template v-if="item === 7">
+                        <view>
+                            <template v-if="item !== -1">
+                                <image
+                                    class="image"
+                                    :src="lotteryData[item].image"
+                                />
                                 <view class="title">
-                                    谢谢参与
+                                    {{ lotteryData[item].name }}
                                 </view>
                             </template>
-                            <view
-                                v-else
-                                class="title"
-                            >
-                                {{ lotteryData[item].name }}
-                            </view>
-                        </template>
-                        <template v-else>
-                            <view @click="clickLucks()">
-                                抽奖X10
-                            </view>
-                        </template>
+                            <template v-else>
+                                <view @click="clickLucks()">
+                                    抽奖X10
+                                </view>
+                            </template>
+                        </view>
                     </view>
                 </view>
             </view>
@@ -47,7 +65,7 @@ let interval = null;
 const intime = 60;
 export default {
     props: {
-        image: {
+        lotteryData: {
             type: Array,
             default() {
                 return [];
@@ -57,42 +75,7 @@ export default {
     data() {
         return {
             lotteryPostion: [0, 1, 2, 7, -1, 3, 6, 5, 4],
-            lotteryData: [
-                {
-                    image: '',
-                    name: '111',
-                },
-                {
-                    image: '',
-                    name: '222',
-                },
-                {
-                    image: '',
-                    name: '333',
-                },
-                {
-                    image: '',
-                    name: '444',
-                },
-                {
-                    image: '',
-                    name: '555',
-                },
-                {
-                    image: '',
-                    name: '666',
-                },
-                {
-                    image: '',
-                    name: '777',
-                },
-                {
-                    image: '',
-                    name: '谢谢参与',
-                },
-            ],
             clickLuck: true,
-            luckPosition: 1,
         };
     },
     methods: {
@@ -101,54 +84,39 @@ export default {
             if (this.clickLuck) {
                 // 设置按钮不可点击
                 this.clickLuck = false;
+                this.$emit('initLottery');
                 api.isLogin().then(
                     (res) => {
                         this.userInfo = res;
                         // 清空计时器
                         clearInterval(interval);
-                        api.get('/api/user/info').then((res) => {
-                            // res.id = Math.floor((Math.random() * 7));
-                            let index = 0;
-                            // 循环设置每个奖项的选中、未选中状态
-                            interval = setInterval(() => {
-                                if (index > 7) {
-                                    index = 0;
-                                    this.$set(
-                                        this.lotteryData[7],
-                                        'show',
-                                        false,
-                                    );
-                                } else if (index !== 0) {
-                                    this.$set(
-                                        this.lotteryData[index - 1],
-                                        'show',
-                                        false,
-                                    );
-                                }
-                                this.$set(
-                                    this.lotteryData[index],
-                                    'show',
-                                    true,
-                                );
-                                index += 1;
-                            }, intime);
-
-                            if (Array.isArray(res) && res.length === 0) {
-                                // 未中奖
-                                this.stop(7);
-                            } else {
-                                this.luckPosition = this.lotteryData.findIndex(
-                                    v => v.id === res.id,
-                                );
-                                this.stop(res.id);
-                            }
-                        });
+                        this.$emit('start');
                     },
                     () => {
                         this.clickLuck = true;
                     },
                 );
             }
+        },
+        startLottery(id = '') {
+            // res.id = Math.floor((Math.random() * 7));
+            let index = 0;
+            // 循环设置每个奖项的选中、未选中状态
+            interval = setInterval(() => {
+                if (index > 7) {
+                    index = 0;
+                    this.$set(this.lotteryData[7], 'show', false);
+                } else if (index !== 0) {
+                    this.$set(this.lotteryData[index - 1], 'show', false);
+                }
+                this.$set(this.lotteryData[index], 'show', true);
+                index += 1;
+            }, intime);
+            // 如果未中奖 luckIndex 为7
+            const luckIndex = id === '' || !id
+                ? 7
+                : this.lotteryData.findIndex(v => v.id === id);
+            this.stop(luckIndex);
         },
         stop(which) {
             // 清空计数器
@@ -189,11 +157,10 @@ export default {
                     this.stopLuck(which, i, time, splittime);
                 } else {
                     if (which === 7) {
-                        this.$emit('notWinning', this.lotteryData[which]);
+                        this.$emit('notwinning', this.lotteryData[which]);
                     } else {
                         this.$emit('winning', this.lotteryData[which]);
                     }
-
                     this.reset();
                 }
             }, time);
@@ -206,6 +173,13 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.container {
+    width: 670upx;
+    margin: 0 auto;
+    padding-bottom: 10upx;
+    background-color: #ff867d;
+    border-radius: 30upx;
+}
 .frame-view {
     width: 670upx;
     height: 598upx;
@@ -216,6 +190,98 @@ export default {
     padding: 30upx;
     border-radius: 30upx;
     box-sizing: border-box;
+    position: relative;
+    .bot-box {
+        height: 30upx;
+        display: flex;
+        position: absolute;
+        top: 0;
+        left: -7upx;
+        right: -7upx;
+        align-items: center;
+        flex-direction: row;
+        .bot {
+            width: 19upx;
+            height: 19upx;
+            margin: 0 20upx;
+            border-radius: 50%;
+        }
+        &.row-1,
+        &.row-3,
+        &.row-4 {
+            .bot {
+                background: rgba(255, 198, 194, 1);
+                box-shadow: 0px 2upx 4upx 0px rgba(255, 105, 77, 1),
+                    0px 2upx 2upx 0px rgba(255, 255, 255, 0.5);
+                &:nth-child(even) {
+                    background: rgba(255, 228, 99, 1);
+                    box-shadow: 0px 2upx 4upx 0px rgba(255, 105, 77, 1),
+                        0upx 2upx 2upx 0px rgba(255, 255, 255, 0.5);
+                }
+            }
+        }
+        &.row-1,
+        &.row-3 {
+            .bot {
+                &:first-of-type {
+                    margin-left: 20upx;
+                }
+                &:last-of-type {
+                    margin-right: 20upx;
+                }
+            }
+        }
+        &.row-1 {
+            .bot {
+                &:first-of-type,
+                &:last-of-type {
+                    margin-top: 10upx;
+                }
+            }
+        }
+        &.row-3 {
+            .bot {
+                &:first-of-type,
+                &:last-of-type {
+                    margin-bottom: 10upx;
+                }
+            }
+        }
+
+        &.row-2 {
+            .bot {
+                background: rgba(255, 228, 99, 1);
+                box-shadow: 0px 2upx 4upx 0px rgba(255, 105, 77, 1),
+                    0upx 2upx 2upx 0px rgba(255, 255, 255, 0.5);
+                &:nth-child(even) {
+                    background: rgba(255, 198, 194, 1);
+                    box-shadow: 0px 2upx 4upx 0px rgba(255, 105, 77, 1),
+                        0px 2upx 2upx 0px rgba(255, 255, 255, 0.5);
+                }
+            }
+        }
+        &.row-2,
+        &.row-4 {
+            width: 30upx;
+            padding: 39upx 0;
+            left: 0;
+            right: auto;
+            flex-direction: column;
+            height: 100%;
+            box-sizing: border-box;
+            .bot {
+                margin: 20upx 0;
+            }
+        }
+        &.row-3 {
+            top: auto;
+            bottom: 0;
+        }
+        &.row-4 {
+            left: auto;
+            right: 0;
+        }
+    }
     .frame-view-box {
         background-color: #ff5a4c;
         border-radius: 30upx;
@@ -236,6 +302,16 @@ export default {
     box-shadow: 0px 2upx 6upx 0px rgba(245, 19, 0, 1);
     border-radius: 20upx;
     color: #c50e00;
+    .image {
+        width: 120upx;
+        height: 90upx;
+        display: block;
+        margin: 0 auto 10upx;
+    }
+    .title {
+        width: 100%;
+        text-align: center;
+    }
     .box {
         width: 190upx;
         height: 156upx;
@@ -257,27 +333,13 @@ export default {
         border-radius: 20upx;
     }
     &.btn {
+        background-color: #ffd300;
         .box {
             background-color: #ffe464;
             color: #ff5547;
+            font-size: 36upx;
+            font-weight: 600;
         }
     }
-}
-.frame-item > view {
-    display: block;
-    width: 100%;
-    font-size: 26upx;
-    text-align: center;
-}
-.frame-item > view.img {
-    width: 114upx;
-    height: 90upx;
-    line-height: 30upx;
-    margin: 0 auto;
-    margin-top: 20upx;
-}
-.frame-item > view.title {
-    line-height: 30upx;
-    padding-top: 40upx;
 }
 </style>
