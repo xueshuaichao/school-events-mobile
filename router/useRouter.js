@@ -223,6 +223,12 @@ const routesConfig = {
             path: '/activity/pages/mall/score/list',
         },
         {
+            path: '/activity/pages/lottery/list',
+        },
+        {
+            path: '/activity/pages/lottery/detail',
+        },
+        {
             path: '/pages/activity-pages/mywork/mywork',
         },
 

@@ -2,13 +2,23 @@
     <view>
         <canvas
             class="canvas pro"
-            style="width: 570px; height: 820px;"
+            :style="{ width: `${width}px`, height: `${height}px` }"
             canvas-id="firstCanvas"
         />
     </view>
 </template>
 <script>
 export default {
+    props: {
+        width: {
+            type: Number,
+            default: 570,
+        },
+        height: {
+            type: Number,
+            default: 818,
+        },
+    },
     data() {
         return {
             // #ifdef H5
@@ -42,12 +52,12 @@ export default {
         },
         h5DrawImage(config) {
             // h5 我的海报
-            const wxGetImageInfo = this.promisify(uni.getImageInfo);
+            const wxGetImageInfo = this.promisify(uni.downloadFile);
             const imageInfoArr = [];
             config.images.forEach((item) => {
                 imageInfoArr.push(
                     wxGetImageInfo({
-                        src: item.url, // 背景图片
+                        url: item.url, // 背景图片
                     }),
                 );
             });
@@ -66,7 +76,7 @@ export default {
                         this.ctx.stroke();
                         this.ctx.clip();
                         this.ctx.drawImage(
-                            item.path,
+                            item.tempFilePath,
                             config.images[index].x,
                             config.images[index].y,
                             config.images[index].width,
@@ -74,7 +84,7 @@ export default {
                         );
                     } else {
                         this.ctx.drawImage(
-                            item.path,
+                            item.tempFilePath,
                             config.images[index].x,
                             config.images[index].y,
                             config.images[index].width,

@@ -89,7 +89,7 @@
 import api from '../../../../common/api';
 import login from '../../../../widgets/login/login.vue';
 import selectAddress from '../../../../components/area/index.vue';
-import share from '../shareMinxin';
+import share from '../../common/shareMinxin';
 
 export default {
     components: {
@@ -158,6 +158,7 @@ export default {
                     if (this.id) {
                         this.formData.id = this.id;
                     }
+                    // name mobile address
                     const address = `${this.formData.district} ${this.formData.address}`;
                     this.$delete(this.formData, 'district');
                     api.post(url, { ...this.formData, address }).then(
@@ -170,6 +171,17 @@ export default {
                             if (this.detailId) {
                                 uni.redirectTo({
                                     url: `/activity/pages/mall/detail?id=${this.detailId}&address_id=${res}`,
+                                });
+                            } else if (this.lotteryId) {
+                                api.post('/api/draw/setaddress', {
+                                    ...this.formData,
+                                    address,
+                                    id: this.lotteryId,
+                                    activity_id: this.activityId,
+                                }).then(() => {
+                                    uni.redirectTo({
+                                        url: `/activity/pages/lottery/list?activity_id=${this.activityId}`,
+                                    });
                                 });
                             } else {
                                 uni.navigateBack();
@@ -228,6 +240,7 @@ export default {
     onLoad(parms) {
         this.id = parms.id;
         this.detailId = parms.detail_id;
+        this.lotteryId = parms.lottery_id;
         this.activityId = parms.activity_id;
         this.getShareConfig();
         this.isLogin().then(

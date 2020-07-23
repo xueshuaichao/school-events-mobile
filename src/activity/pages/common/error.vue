@@ -32,7 +32,7 @@ export default {
     },
     data() {
         return {
-            second: 3,
+            second: 5,
             timer: null,
         };
     },
@@ -60,7 +60,10 @@ export default {
 </script>
 <style lang="less" scoped>
 .error-page {
-    margin-top: 204upx;
+    padding-top: 204upx;
+    background-color: #fff;
+    min-height: 100vh;
+    box-sizing: border-box;
     & > image {
         width: 300upx;
         height: 204upx;

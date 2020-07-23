@@ -225,7 +225,7 @@
 <script>
 import api from '../../../common/api';
 import uniLoadMore from '../../../components/uni-load-more/uni-load-more.vue';
-import share from './shareMinxin';
+import share from '../common/shareMinxin';
 
 export default {
     components: {

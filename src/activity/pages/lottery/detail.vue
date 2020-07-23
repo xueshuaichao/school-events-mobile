@@ -10,64 +10,42 @@
         <template v-else>
             <error-page
                 v-if="showError"
-                message="订单不存在"
+                message="奖品不存在"
                 tips="商城首页"
                 :path="`/activity/pages/mall/index?activity_id=${activityId}`"
             />
             <template v-else-if="detailLoading">
-                <view class="status-content">
-                    <!-- 1待审 2审核通过 3审核不通过 -->
-                    <view v-if="detailData.status === 2">
-                        <view class="text">
-                            请添加官方工作人员微信号：aitiaozhan001<br>奖品会在活动结束后统一邮寄
-                        </view>
-                    </view>
-                    <view
-                        v-else-if="detailData.status === 1"
-                        class="text"
-                    >
-                        离大奖只差一步啦，请耐心等待工作人员审核!
-                    </view>
-                    <view
-                        v-else-if="detailData.status === 3"
-                        class="text"
-                    >
-                        兑换申请被驳回，扣除积分已返还至可用积分
-                    </view>
-                </view>
                 <view class="address-content">
-                    <view class="name-mobile">
-                        <text>{{ detailData.addressee }}</text>
-                        <text>{{ detailData.mobile }}</text>
+                    <view
+                        v-if="!detailData.address"
+                        class="text"
+                    >
+                        当前没有可用地址，快去设置收件信息吧～
                     </view>
-                    <view class="address">
-                        {{ detailData.address }}
-                    </view>
+                    <template v-else>
+                        <view class="name-mobile">
+                            <text>{{ detailData.address.name }}</text>
+                            <text>{{ detailData.address.mobile }}</text>
+                        </view>
+                        <view class="address">
+                            {{ detailData.address.address }}
+                        </view>
+                    </template>
                 </view>
                 <view class="detail-content">
                     <view class="item">
-                        <view class="order-number">
-                            订单编号：{{ detailData.order_no }}
-                        </view>
                         <view class="item-detail">
                             <view class="image">
                                 <image
-                                    :src="detailData.gift_img"
+                                    :src="detailData.image"
                                     mode=""
                                 />
                             </view>
                             <view class="title">
-                                {{ detailData.gift_name }}
+                                {{ detailData.prize_name }}
                             </view>
                         </view>
                         <view class="item-info">
-                            <view class="score">
-                                <text>
-                                    消耗积分：{{ detailData.gift_price }}
-                                </text>
-
-                                <text>兑换数量</text><text>1{{ detailData.gift_unit || "" }}</text>
-                            </view>
                             <view class="time">
                                 <view class="title">
                                     兑换时间：
@@ -89,25 +67,21 @@
                             </view>
                         </view>
                         <view
-                            v-if="
-                                detailData.delivery && detailData.delivery_code
-                            "
+                            v-if="detailData.logistics"
                             class="item-delivery"
                         >
-                            <text>物流信息：{{ detailData.delivery }}</text><text>{{ detailData.delivery_code }}</text>
+                            <text>
+                                物流信息：{{ detailData.logistics.name }}
+                            </text><text>{{ detailData.logistics.code }}</text>
                             <text
                                 class="icon icon-copy"
-                                @click="
-                                    copyDeliveryCode(detailData.delivery_code)
-                                "
+                                @click="copyDeliveryCode(detailData.code)"
                             />
                         </view>
                     </view>
                 </view>
                 <view class="tips-content">
-                    <template
-                        v-if="detailData.delivery && detailData.delivery_code"
-                    >
+                    <template v-if="detailData.logistics">
                         ～可复制快递单号到快递官网查询快递进度～
                     </template>
                     <template v-else>
@@ -119,11 +93,11 @@
     </view>
 </template>
 <script>
-import api from '../../../../common/api';
-import login from '../../../../widgets/login/login.vue';
-import utils from '../../../../common/utils';
-import share from '../../common/shareMinxin';
-import errorPage from '../../common/error.vue';
+import api from '../../../common/api';
+import login from '../../../widgets/login/login.vue';
+import utils from '../../../common/utils';
+import share from '../common/shareMinxin';
+import errorPage from '../common/error.vue';
 
 export default {
     components: {
@@ -162,7 +136,7 @@ export default {
             );
         },
         getData() {
-            api.get('/api/market/recordinfo', {
+            api.get('/api/draw/info', {
                 id: this.id,
             }).then(
                 (res) => {
@@ -228,21 +202,6 @@ page {
 </style>
 <style lang="less" scoped>
 .order-detail-page {
-    .status-content {
-        background-color: #dce8fb;
-        margin-bottom: 20upx;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 176upx;
-        .text {
-            color: #1166ff;
-            font-size: 28upx;
-            line-height: 40upx;
-            text-align: center;
-            flex: 1;
-        }
-    }
     .address-content {
         background-color: #ffffff;
         margin-bottom: 20upx;
@@ -270,7 +229,7 @@ page {
         .item {
             border-radius: 16upx;
             background-color: #fff;
-            padding: 20upx 42upx 0;
+            padding: 20upx 42upx 0upx;
             overflow: hidden;
         }
         .order-number {
@@ -348,6 +307,10 @@ page {
             }
             .icon {
                 margin-left: 8upx;
+                width: 32upx;
+                height: 32upx;
+                background-image: url("../../static/icon_copy.png");
+                background-size: 100% 100%;
             }
         }
     }

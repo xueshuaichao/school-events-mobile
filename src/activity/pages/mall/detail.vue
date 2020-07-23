@@ -64,8 +64,8 @@
 </template>
 <script>
 import api from '../../../common/api';
-import share from './shareMinxin';
-import errorPage from './error.vue';
+import share from '../common/shareMinxin';
+import errorPage from '../common/error.vue';
 
 export default {
     components: {
@@ -215,7 +215,7 @@ export default {
         this.id = parms.id || '';
         this.addressId = parms.address_id || '';
         this.activityId = parms.activity_id;
-        this.getShareConfig(this.activityId);
+        this.getShareConfig();
         this.getGiftInfo();
     },
 };
@@ -246,8 +246,8 @@ page {
             right: 38upx;
             width: 26upx;
             height: 26upx;
-            border-top: 1px solid #bfbfbf;
-            border-right: 1px solid #bfbfbf;
+            border-top: 1px solid #9d9d9d;
+            border-right: 1px solid #9d9d9d;
             -webkit-transform: rotate(45deg);
             transform: rotate(45deg);
             box-sizing: border-box;

@@ -512,6 +512,18 @@
                         "navigationBarTitleText": "积分明细"
                     }
                 },
+                {
+                    "path": "pages/lottery/list",
+                    "style": {
+                        "navigationBarTitleText": "我的中奖"
+                    }
+                },
+                {
+                    "path": "pages/lottery/detail",
+                    "style": {
+                        "navigationBarTitleText": "我的中奖"
+                    }
+                },
 
                 // ============== 春节 活动 =================
                 {
