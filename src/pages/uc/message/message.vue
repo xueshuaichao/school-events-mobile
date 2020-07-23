@@ -143,9 +143,30 @@ export default {
                 if (!item.is_read) {
                     this.handleMessage([item.msg_id]);
                 }
-                uni.navigateTo({
-                    url: `/pages/uc/myWork/myWork?type=${item.type}`,
-                });
+                if (item.detail) {
+                    let url = '';
+                    switch (item.detail.trans_type) {
+                        case 1:
+                            url = '/activity/pages/mall/order/list?activity_id=12';
+                            break;
+                        case 2:
+                            url = `/activity/pages/lottery/detail?id=${item.detail.gift_id}&activity_id=12`;
+                            break;
+                        case 3:
+                            url = '/activity/pages/mall/score/list?activity_id=12';
+                            break;
+                        default:
+                            url = `/activity/pages/mall/order/detail?id=${item.detail.gift_id}&activity_id=12`;
+                            break;
+                    }
+                    uni.navigateTo({
+                        url,
+                    });
+                } else {
+                    uni.navigateTo({
+                        url: `/pages/uc/myWork/myWork?type=${item.type}`,
+                    });
+                }
             } else if (item.detail && item.detail.resource_id) {
                 this.$store.commit('setFilterData', {
                     position: {
