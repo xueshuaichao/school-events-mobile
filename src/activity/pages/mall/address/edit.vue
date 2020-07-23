@@ -171,20 +171,19 @@ export default {
             if (!this.lock) {
                 this.lock = true;
                 if (this.validate()) {
-                    const url = this.id
-                        ? '/api/market/editaddress'
-                        : '/api/market/addaddress';
+                    let url = '/api/market/editaddress';
                     if (this.id) {
                         this.formData.id = this.id;
+                    } else {
+                        url = '/api/market/addaddress';
                     }
-                    // name mobile address
                     const address = `${this.formData.district} ${this.formData.address}`;
                     api.post(url, { ...this.formData, address }).then(
                         (res) => {
                             this.lock = false;
                             uni.showToast({
                                 title: '提交成功',
-                                icon: 'success',
+                                icon: 'none',
                             });
                             const pames = {
                                 address_id: res,
@@ -192,24 +191,9 @@ export default {
                                 detail: { ...this.formData, address },
                             };
                             if (this.detailId) {
-                                uni.$emit('setAddress', {
-                                    ...pames,
-                                    id: this.detailId,
-                                });
-                                uni.navigateBack();
+                                this.setMallAddress(pames);
                             } else if (this.lotteryId) {
-                                api.post('/api/draw/setaddress', {
-                                    ...this.formData,
-                                    address,
-                                    id: this.lotteryId,
-                                    activity_id: this.activityId,
-                                }).then(() => {
-                                    uni.$emit('addressDetail', {
-                                        ...pames,
-                                        id: this.lotteryId,
-                                    });
-                                    uni.navigateBack();
-                                });
+                                this.setLotteryAddress(pames, address);
                             } else {
                                 uni.$emit('addressDetail', {
                                     ...pames,
@@ -229,30 +213,51 @@ export default {
                 }
             }
         },
+        setMallAddress(pames) {
+            uni.$emit('setAddress', {
+                ...pames,
+                id: this.detailId,
+            });
+            uni.navigateBack();
+        },
+        setLotteryAddress(pames, address) {
+            api.post('/api/draw/setaddress', {
+                ...this.formData,
+                address,
+                id: this.lotteryId,
+                activity_id: this.activityId,
+            }).then(() => {
+                uni.$emit('addressDetail', {
+                    ...pames,
+                    id: this.lotteryId,
+                });
+                uni.navigateBack();
+            });
+        },
         validate() {
             let status = true;
             try {
                 this.validateRule.forEach((item) => {
+                    const val = this.formData[item.type].trim();
                     if (item.type === 'mobile') {
-                        if (this.formData[item.type].trim() === '') {
+                        if (val === '') {
                             throw Error(item.type);
                         } else if (!this.isMobile.test(this.formData.mobile)) {
                             throw Error('phoneReg');
                         }
-                    } else if (this.formData[item.type].trim() === '') {
+                    } else if (val === '') {
                         throw Error(item.type);
                     }
                 });
             } catch (e) {
                 this.lock = false;
                 status = false;
+                const msg = e.message === 'phoneReg'
+                    ? '手机号码格式不正确，请重新填写'
+                    : this.validateRule.filter(v => v.type === e.message)[0]
+                        .errorMsg;
                 uni.showToast({
-                    title:
-                        e.message === 'phoneReg'
-                            ? '手机号码格式不正确，请重新填写'
-                            : this.validateRule.filter(
-                                v => v.type === e.message,
-                            )[0].errorMsg,
+                    title: msg,
                     icon: 'none',
                 });
             }
