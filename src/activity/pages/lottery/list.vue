@@ -39,7 +39,10 @@
                             </view>
                         </view>
                     </view>
-                    <view class="address-detail">
+                    <view
+                        class="address-detail"
+                        @click.stop="setAddress(item)"
+                    >
                         <template v-if="item.address">
                             <view>{{ item.address.name }}</view>
                             <view>{{ item.address.mobile }}</view>
@@ -50,7 +53,6 @@
                         <view
                             v-else
                             class="set-address"
-                            @click.stop="setAddress(item.id)"
                         >
                             还没有邮件地址，快去设置吧～
                         </view>
@@ -111,7 +113,18 @@ export default {
             userInfo: '',
         };
     },
-    onShow() {},
+    onShow() {
+        uni.$once('addressDetail', (data) => {
+            const index = this.list.findIndex(v => v.id === Number(data.id));
+            const address = ['address', 'mobile', 'name'];
+            address.forEach((item) => {
+                this.$set(this.list[index].address, item, data.detail[item]);
+            });
+        });
+    },
+    onUnload() {
+        uni.$off('addressDetail');
+    },
     methods: {
         onLogin({ user_info: userInfo }) {
             this.userInfo = userInfo;
@@ -166,11 +179,11 @@ export default {
                 },
             );
         },
-        setAddress(id) {
-            this.id = id;
+        setAddress(item) {
             // 如果没有地址 跳至添加页面 否则跳到地址列表页
-            const url = `edit?lottery_id=${this.id}`;
-            this.loading = false;
+            const url = item.address
+                ? `list?lottery_id=${item.id}`
+                : `edit?lottery_id=${item.id}`;
             uni.navigateTo({
                 url: `/activity/pages/mall/address/${url}&activity_id=${this.activityId}`,
             });

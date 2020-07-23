@@ -12,6 +12,7 @@ const initShare = {
     },
     methods: {
         getShareConfig() {
+            if (!this.activityId) return false;
             new Promise((resolve) => {
                 this.shareConfig = store.getters.getShareConfig(
                     this.activityId,
@@ -20,22 +21,25 @@ const initShare = {
             }).then(() => {
                 this.initShare();
             });
+            return true;
         },
         initShare() {
-            const titleList = this.isH5
-                ? this.shareConfig.h5Title
-                : this.shareConfig.title;
-            const descList = this.shareConfig.desc;
-            const random = Math.floor(Math.random() * titleList.length);
-            this.title = titleList[random];
-            const desc = descList[0];
-            if (this.isH5) {
-                share({
-                    title: this.title,
-                    desc,
-                    thumbnail: this.shareConfig.image,
-                    url: `${window.location.origin}${this.shareConfig.path}`,
-                });
+            if (this.shareConfig) {
+                const titleList = this.isH5
+                    ? this.shareConfig.h5Title
+                    : this.shareConfig.title;
+                const descList = this.shareConfig.desc;
+                const random = Math.floor(Math.random() * titleList.length);
+                this.title = titleList[random];
+                const desc = descList[0];
+                if (this.isH5) {
+                    share({
+                        title: this.title,
+                        desc,
+                        thumbnail: this.shareConfig.image,
+                        url: `${window.location.origin}${this.shareConfig.path}`,
+                    });
+                }
             }
         },
     },
@@ -45,6 +49,7 @@ const initShare = {
             console.log(res.target);
         }
         console.log(this.activityId);
+        if (!this.shareConfig) return {};
         return {
             title: this.title,
             imageUrl: this.shareConfig.image,

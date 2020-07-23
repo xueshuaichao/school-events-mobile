@@ -10,7 +10,7 @@
         <template v-else-if="activityLoading">
             <error-page
                 v-if="showError"
-                message="活动未开始"
+                message="活动不存在"
                 tips="商城首页"
                 :path="`/activity/pages/mall/index?activity_id=${activityId}`"
             />
