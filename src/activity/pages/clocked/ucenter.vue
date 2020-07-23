@@ -880,14 +880,25 @@ export default {
         modifyItem({ id, activity_status: activityStatus }) {
             // activityStatus 1未开始 2进行中  3已过期
             if (activityStatus === 3) {
-                return uni.showToast({
+                uni.showToast({
                     title: '活动已结束！',
                     icon: 'none',
                 });
+            } else {
+                api.get('/api/activity/curtheme', {
+                    activity_id: 12,
+                }).then(({ type }) => {
+                    let acType = 0;
+                    let preStatus = 0;
+                    if (type) {
+                        acType = type;
+                        preStatus = 1;
+                    }
+                    uni.navigateTo({
+                        url: `/activity/pages/upload/modify?id=${id}&activity_id=${this.filter.activity_id}&status=${preStatus}&ac_type=${acType}`,
+                    });
+                });
             }
-            return uni.navigateTo({
-                url: `/activity/pages/upload/modify?id=${id}&activity_id=${this.filter.activity_id}`,
-            });
         },
         onConfirmDelete(item) {
             uni.showModal({

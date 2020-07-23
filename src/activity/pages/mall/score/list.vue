@@ -14,7 +14,7 @@
                         <view class="text-content">
                             可用积分
                             <view class="num text-one-line">
-                                {{ integral.useful_score }}
+                                {{ integral.useful_score || 0 }}
                             </view>
                         </view>
                     </view>
@@ -23,11 +23,11 @@
                             class="item"
                             @click="jumpOrderList"
                         >
-                            总积分<text>{{ integral.score }}</text>
+                            总积分<text>{{ integral.score || 0 }}</text>
                         </view>
                         <view class="line" />
                         <view class="item">
-                            总消耗<text>{{ integral.last_score }}</text>
+                            总消耗<text>{{ integral.last_score || 0 }}</text>
                         </view>
                     </view>
                 </view>
@@ -52,6 +52,7 @@
                         v-if="list.length"
                         class="list-scroll-view"
                         scroll-y="true"
+                        scroll-top="scrollTop"
                         :refresher-threshold="20"
                         @scrolltolower="lower"
                     >
@@ -82,16 +83,18 @@
                         </view>
                     </scroll-view>
                     <view
-                        v-else
+                        v-else-if="dataLoading"
                         class="no-data"
                     >
                         <view class="image">
                             <image
-                                src=""
+                                src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/mall_icon_nodata.png"
                                 mode=""
                             />
                         </view>
-                        <view>暂无积分记录</view>
+                        <view class="text">
+                            暂无积分记录
+                        </view>
                     </view>
                 </view>
             </view>
@@ -111,6 +114,8 @@ export default {
     data() {
         return {
             loading: false,
+            dataLoading: false,
+            scrollTop: 0,
             tabIndex: 1,
             activityId: '',
             integral: {},
@@ -124,70 +129,93 @@ export default {
     },
     onLoad(parms) {
         this.activityId = parms.activity_id;
+        this.tabIndex = Number(parms.status) || 1;
+        if (this.tabIndex !== 1) {
+            this.changeTab(this.tabIndex);
+        }
         this.getShareConfig();
         this.isLogin();
     },
     methods: {
+        init() {
+            uni.showLoading();
+            const hideLoading = () => {
+                uni.hideLoading();
+                this.loading = true;
+            };
+            Promise.all([this.getIntegral(), this.getScoreList()]).then(
+                () => {
+                    hideLoading();
+                },
+                () => {
+                    hideLoading();
+                },
+            );
+        },
         onLogin({ user_info: userInfo }) {
             this.userInfo = userInfo;
-            this.getIntegral();
-            this.getScoreList();
+            this.init();
         },
         isLogin() {
             api.get('/api/user/info').then(
                 (res) => {
                     this.userInfo = res.user_info;
-                    this.loading = true;
-                    this.getIntegral();
-                    this.getScoreList();
+                    this.init();
                 },
                 () => {
-                    this.loading = true;
                     this.userInfo = null;
                 },
             );
         },
         getIntegral() {
             // 获取积分兑换详情
-            api.get('/api/market/userscoreinfo', {
-                activity_id: this.activityId,
-            }).then((res) => {
-                this.integral = res;
-            });
+            return api
+                .get('/api/market/userscoreinfo', {
+                    activity_id: this.activityId,
+                })
+                .then((res) => {
+                    this.integral = res;
+                });
         },
         changeTab(index) {
             this.tabIndex = index;
             this.filter.page_num = 1;
+            this.dataLoading = false;
+            this.list = [];
             uni.showLoading();
             this.getScoreList();
         },
         getScoreList(type) {
-            api.get('/api/market/getscoredetail', {
-                ...this.filter,
-                activity_id: this.activityId,
-                type: this.tabIndex,
-            }).then(
-                ({ list, total }) => {
-                    uni.hideLoading();
-                    if (type === 'reachBottom') {
-                        this.list = this.list.concat(list);
-                    } else {
-                        this.list = list;
-                    }
-                    this.total = total;
-                    if (
-                        this.total
-                        <= this.filter.page_num * this.filter.page_size
-                    ) {
-                        this.loadMoreStatus = type === 'reachBottom' ? 'noMore' : 'none';
-                    } else {
-                        this.loadMoreStatus = 'more';
-                    }
-                },
-                () => {
-                    uni.hideLoading();
-                },
-            );
+            return api
+                .get('/api/market/getscoredetail', {
+                    ...this.filter,
+                    activity_id: this.activityId,
+                    type: this.tabIndex,
+                })
+                .then(
+                    ({ list, total }) => {
+                        uni.hideLoading();
+                        this.dataLoading = true;
+                        if (type === 'reachBottom') {
+                            this.list = this.list.concat(list);
+                        } else {
+                            this.list = list;
+                        }
+                        this.total = total;
+                        if (
+                            this.total
+                            <= this.filter.page_num * this.filter.page_size
+                        ) {
+                            this.loadMoreStatus = type === 'reachBottom' ? 'noMore' : 'none';
+                        } else {
+                            this.loadMoreStatus = 'more';
+                        }
+                    },
+                    () => {
+                        this.dataLoading = true;
+                        uni.hideLoading();
+                    },
+                );
         },
         lower(e) {
             console.log(e);
@@ -404,6 +432,10 @@ page {
                 width: 100%;
                 height: 100%;
             }
+        }
+        .text {
+            color: #999;
+            font-size: 30upx;
         }
     }
 }

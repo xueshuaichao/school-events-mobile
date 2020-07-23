@@ -38,12 +38,6 @@
                 >
                     查看作品
                 </text>
-                <text
-                    class="link btn"
-                    @click="toCreatePoster"
-                >
-                    查看海报
-                </text>
             </view>
             <view
                 v-if="addNum === 1"
@@ -60,6 +54,8 @@
                     ref="posterh5"
                     :config="posterCommonConfig"
                     :hide-loading="true"
+                    :width="630"
+                    :height="886"
                     @success="onPosterSuccess"
                     @fail="onPosterFail"
                 />
@@ -247,6 +243,11 @@ export default {
         if (this.activityId === '9') {
             this.getLotteryNum();
         }
+        if (this.activityId === 12 && !this.preStatus) {
+            this.$nextTick(() => {
+                this.toCreatePoster();
+            });
+        }
         this.getUserInfo();
     },
     methods: {
@@ -289,6 +290,7 @@ export default {
         },
         onPosterSuccess(path) {
             this.myPoster = path;
+            uni.hideLoading();
             this.togglePoster(true);
         },
         onPosterFail() {
@@ -299,6 +301,7 @@ export default {
             uni.hideLoading();
         },
         toCreatePoster() {
+            uni.showLoading();
             const txts = [
                 '每天进步一点点，坚持带来大改变！',
                 '你每天的小坚持，都会有大意义！',

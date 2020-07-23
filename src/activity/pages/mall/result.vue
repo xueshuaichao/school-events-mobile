@@ -46,7 +46,6 @@ export default {
     onLoad(parms) {
         this.activityId = parms.activity_id || 12;
         this.getShareConfig(this.activityId);
-        this.getUserInfo();
     },
     methods: {
         getUserInfo() {

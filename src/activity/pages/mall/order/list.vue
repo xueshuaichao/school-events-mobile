@@ -1,5 +1,8 @@
 <template>
-    <view class="order-list-page">
+    <view
+        v-if="loading"
+        class="order-list-page"
+    >
         <login
             v-if="userInfo === null"
             @login="onLogin"
@@ -128,6 +131,8 @@ export default {
     mixins: [share.initShare],
     data() {
         return {
+            loading: false,
+            dataLoading: false,
             activityId: '',
             loadMoreStatus: 'none',
             list: [],
@@ -177,6 +182,7 @@ export default {
                 activity_id: this.activityId,
             }).then(
                 ({ list, total }) => {
+                    this.dataLoading = true;
                     uni.hideLoading();
                     if (type === 'reachBottom') {
                         this.list = this.list.concat(list);
@@ -194,6 +200,7 @@ export default {
                     }
                 },
                 () => {
+                    this.dataLoading = true;
                     uni.hideLoading();
                 },
             );
@@ -232,6 +239,7 @@ page {
         display: flex;
         justify-content: center;
         align-items: center;
+        z-index: 1;
         .item {
             position: relative;
             flex: 1;

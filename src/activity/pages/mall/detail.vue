@@ -3,73 +3,81 @@
         v-if="loading"
         class="order-detail-page"
     >
-        <error-page
-            v-if="showError"
-            message="该奖品已下架，暂不可兑换"
-            tips="商城首页"
-            :path="`/activity/pages/mall/index?activity_id=${activityId}`"
+        <login
+            v-if="userInfo === null"
+            @login="onLogin"
         />
-        <template v-else>
-            <view
-                class="address-detail"
-                @click="jumpAddressList"
-            >
+        <template v-else-if="dataLoading">
+            <error-page
+                v-if="showError"
+                message="该奖品已下架，暂不可兑换"
+                tips="商城首页"
+                :path="`/activity/pages/mall/index?activity_id=${activityId}`"
+            />
+            <template v-else>
                 <view
-                    v-if="!Object.keys(addressDetail).length"
-                    class="text"
+                    class="address-detail"
+                    @click="setAddress"
                 >
-                    当前没有可用地址，快去设置收件信息吧～
+                    <view
+                        v-if="!Object.keys(addressDetail).length"
+                        class="text"
+                    >
+                        当前没有可用地址，快去设置收件信息吧～
+                    </view>
+                    <template v-else>
+                        <view class="address-info">
+                            <view class="name-mobile">
+                                <text>{{ addressDetail.name }}</text>
+                                <text>{{ addressDetail.mobile }}</text>
+                            </view>
+                            <view class="address">
+                                {{ addressDetail.address }}
+                            </view>
+                        </view>
+                    </template>
                 </view>
-                <template v-else>
-                    <view class="address-info">
-                        <view class="name-mobile">
-                            <text>{{ addressDetail.name }}</text>
-                            <text>{{ addressDetail.mobile }}</text>
+                <view class="shop-detail">
+                    <view class="detail-info">
+                        <view class="info-image">
+                            <image :src="giftInfo.img" />
                         </view>
-                        <view class="address">
-                            {{ addressDetail.address }}
-                        </view>
-                    </view>
-                </template>
-            </view>
-            <view class="shop-detail">
-                <view class="detail-info">
-                    <view class="info-image">
-                        <image :src="giftInfo.img" />
-                    </view>
-                    <view class="info-text">
-                        <view class="title text-one-line">
-                            {{ giftInfo.name }}
-                        </view>
-                        <view class="price">
-                            {{ giftInfo.price
-                            }}<text class="unit">
-                                /{{ giftInfo.unit }}
-                            </text>
-                        </view>
-                        <view class="num">
-                            兑换数量：1
+                        <view class="info-text">
+                            <view class="title text-one-line">
+                                {{ giftInfo.name }}
+                            </view>
+                            <view class="price">
+                                {{ giftInfo.price
+                                }}<text class="unit">
+                                    /{{ giftInfo.unit }}
+                                </text>
+                            </view>
+                            <view class="num">
+                                兑换数量：1
+                            </view>
                         </view>
                     </view>
                 </view>
-            </view>
-            <view
-                class="btn"
-                @click="submit"
-            >
-                提交
-            </view>
+                <view
+                    class="btn"
+                    @click="submit"
+                >
+                    提交
+                </view>
+            </template>
         </template>
     </view>
 </template>
 <script>
 import api from '../../../common/api';
 import share from '../common/shareMinxin';
+import login from '../../../widgets/login/login.vue';
 import errorPage from '../common/error.vue';
 
 export default {
     components: {
         errorPage,
+        login,
     },
     mixins: [share.initShare],
     data() {
@@ -78,42 +86,83 @@ export default {
             isH5: true,
             // #endif
             loading: false,
+            dataLoading: false,
             addressDetail: {},
             giftInfo: {},
             shareConfig: {},
             showError: false,
+            userInfo: '',
         };
     },
     onShow() {
-        if (this.addressId) {
-            this.getAddressInfo();
-        } else {
-            this.getDefaultAddress();
-        }
+        uni.$once('setAddress', (data) => {
+            this.id = data.id || '';
+            this.addressId = data.address_id || '';
+            this.activityId = data.activity_id;
+        });
+        this.isLogin();
+    },
+    onUnload() {
+        uni.$off('setAddress');
     },
     beforeDestroy() {
         clearInterval(this.timer);
     },
     methods: {
-        getAddressInfo() {
-            api.get('/api/market/getaddressinfo', {
-                id: this.addressId,
-            }).then(
+        onLogin({ user_info: userInfo }) {
+            this.userInfo = userInfo;
+            this.init();
+        },
+        isLogin() {
+            api.get('/api/user/info').then(
                 (res) => {
+                    this.userInfo = res.user_info;
                     this.loading = true;
-                    this.addressDetail = res;
+                    this.init();
                 },
-                (err) => {
+                () => {
                     this.loading = true;
-                    uni.showToast({
-                        icon: 'none',
-                        title: err.message,
-                    });
+                    this.userInfo = null;
                 },
             );
         },
+        init() {
+            uni.showLoading();
+            const addressFn = this.addressId
+                ? [this.getAddressInfo()]
+                : [this.getDefaultAddress()];
+            Promise.all([this.getGiftInfo()].concat(addressFn)).then(
+                () => {
+                    uni.hideLoading();
+                    this.dataLoading = true;
+                },
+                () => {
+                    uni.hideLoading();
+                    this.dataLoading = true;
+                },
+            );
+        },
+        getAddressInfo() {
+            return api
+                .get('/api/market/getaddressinfo', {
+                    id: this.addressId,
+                })
+                .then(
+                    (res) => {
+                        this.loading = true;
+                        this.addressDetail = res;
+                    },
+                    (err) => {
+                        this.loading = true;
+                        uni.showToast({
+                            icon: 'none',
+                            title: err.message,
+                        });
+                    },
+                );
+        },
         getDefaultAddress() {
-            api.get('/api/market/defaultaddress').then(
+            return api.get('/api/market/defaultaddress').then(
                 (res) => {
                     this.loading = true;
                     this.addressDetail = res;
@@ -128,35 +177,36 @@ export default {
             );
         },
         getGiftInfo() {
-            api.get('/api/market/getgiftinfo', {
-                id: this.id,
-            }).then(
-                (res) => {
-                    if (Array.isArray(res) && !res.length) {
-                        this.showError = true;
-                    } else {
-                        this.giftInfo = res;
-                    }
-                },
-                (err) => {
-                    uni.showToast({
-                        icon: 'none',
-                        title: err.message,
-                    });
-                },
-            );
+            return api
+                .get('/api/market/getgiftinfo', {
+                    id: this.id,
+                })
+                .then(
+                    (res) => {
+                        if (Array.isArray(res) && !res.length) {
+                            this.showError = true;
+                        } else {
+                            this.giftInfo = res;
+                        }
+                    },
+                    (err) => {
+                        uni.showToast({
+                            icon: 'none',
+                            title: err.message,
+                        });
+                    },
+                );
         },
         backHome() {
             uni.reLaunch({
                 url: `index?activity_id=${this.activityId}`,
             });
         },
-        jumpAddressList() {
+        setAddress() {
             // 如果没有地址 跳至添加页面 否则跳到地址列表页
             const url = Object.keys(this.addressDetail).length
                 ? `list?detail_id=${this.id}`
                 : `edit?detail_id=${this.id}`;
-            this.loading = false;
             uni.navigateTo({
                 url: `/activity/pages/mall/address/${url}&activity_id=${this.activityId}`,
             });
@@ -216,7 +266,7 @@ export default {
         this.addressId = parms.address_id || '';
         this.activityId = parms.activity_id;
         this.getShareConfig();
-        this.getGiftInfo();
+        this.initStatus = true;
     },
 };
 </script>

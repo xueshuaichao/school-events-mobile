@@ -434,7 +434,7 @@ export default {
         toLottery() {
             if (this.hasLogin) {
                 uni.navigateTo({
-                    url: '/activity/pages/clocked/lottery',
+                    url: '/activity/pages/clocked/lottery?activity_id=12',
                 });
             } else {
                 this.toLogin = true;

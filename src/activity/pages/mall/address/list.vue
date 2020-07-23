@@ -7,79 +7,78 @@
             v-if="userInfo === null"
             @login="onLogin"
         />
-        <view
-            v-else
-            class="address-content"
-        >
-            <view
-                v-if="list.length"
-                class="address-list"
-            >
+        <template v-else-if="dataLoading">
+            <view class="address-content">
                 <view
-                    v-for="item in list"
-                    :key="item.id"
-                    class="item"
-                    @click="selectAddress(item.id)"
+                    v-if="list.length"
+                    class="address-list"
                 >
-                    <view class="address-info">
-                        <view class="name-mobile">
-                            <text>{{ item.name }}</text>
-                            <text>{{ item.mobile }}</text>
+                    <view
+                        v-for="item in list"
+                        :key="item.id"
+                        class="item"
+                        @click="selectAddress(item)"
+                    >
+                        <view class="address-info">
+                            <view class="name-mobile">
+                                <text>{{ item.name }}</text>
+                                <text>{{ item.mobile }}</text>
+                            </view>
+                            <view class="address">
+                                {{ item.address }}
+                            </view>
                         </view>
-                        <view class="address">
-                            {{ item.address }}
+                        <view class="address-handel">
+                            <view @click.stop="setDefaulAddress">
+                                <radio-group @change="setDefaulAddress">
+                                    <label
+                                        class="radio"
+                                    ><radio
+                                        class="theme"
+                                        :value="String(item.id)"
+                                        :checked="item.default === 1"
+                                    />默认地址</label>
+                                </radio-group>
+                            </view>
+                            <view class="handel-item">
+                                <text @click.stop="editAddress(item.id)">
+                                    修改
+                                </text>
+                                <text @click.stop="onConfirmDelete(item.id)">
+                                    删除
+                                </text>
+                            </view>
                         </view>
                     </view>
-                    <view class="address-handel">
-                        <view @click.stop="setDefaulAddress">
-                            <radio-group @change="setDefaulAddress">
-                                <label
-                                    class="radio"
-                                ><radio
-                                    style="transform:scale(0.7)"
-                                    :value="String(item.id)"
-                                    :checked="item.default === 1"
-                                />默认地址</label>
-                            </radio-group>
-                        </view>
-                        <view class="handel-item">
-                            <text @click.stop="editAddress(item.id)">
-                                修改
-                            </text>
-                            <text @click.stop="onConfirmDelete(item.id)">
-                                删除
-                            </text>
-                        </view>
-                    </view>
+                    <uni-load-more
+                        class="loadMore"
+                        :status="loadMoreStatus"
+                        :content-text="{
+                            contentdown: '上拉显示更多',
+                            contentrefresh: '正在加载...',
+                            contentnomore: '———— 已经到底了~ ————'
+                        }"
+                        color="#666"
+                    />
                 </view>
-                <uni-load-more
-                    class="loadMore"
-                    :status="loadMoreStatus"
-                    :content-text="{
-                        contentdown: '上拉显示更多',
-                        contentrefresh: '正在加载...',
-                        contentnomore: '———— 已经到底了~ ————'
-                    }"
-                    color="#666"
-                />
+                <view
+                    v-else
+                    class="address-none"
+                >
+                    <image
+                        src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/mall_no_address.png"
+                        mode=""
+                    />
+                    <view>暂时没有收货地址哦～</view>
+                </view>
             </view>
             <view
-                v-else
-                class="address-none"
+                class="add-btn"
+                @click="addAddress"
             >
-                <image
-                    src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/mall_no_address.png"
-                    mode=""
-                />
-                <view>暂时没有收货地址哦～</view>
+                添加地址
             </view>
-        </view>
-        <view
-            class="add-btn"
-            @click="addAddress"
-        >
-            添加地址
-        </view>
+        </template>
     </view>
 </template>
 <script>
@@ -97,6 +96,7 @@ export default {
     data() {
         return {
             loading: false,
+            dataLoading: false,
             userInfo: '',
             loadMoreStatus: 'none',
             filter: {
@@ -107,12 +107,36 @@ export default {
         };
     },
     onShow() {
-        this.getAddress();
+        uni.$once('addressDetail', (data) => {
+            const index = this.list.findIndex(v => v.id === Number(data.id));
+            const address = ['address', 'mobile', 'name'];
+            address.forEach((item) => {
+                this.$set(this.list[index], item, data.detail[item]);
+            });
+        });
+    },
+    onUnload() {
+        uni.$off('addressDetail');
     },
     methods: {
         onLogin({ user_info: userInfo }) {
             this.userInfo = userInfo;
             this.getAddress();
+        },
+        isLogin() {
+            uni.showLoading();
+            api.get('/api/user/info').then(
+                (res) => {
+                    this.userInfo = res.user_info;
+                    this.loading = true;
+                    this.getAddress();
+                },
+                () => {
+                    uni.hideLoading();
+                    this.loading = true;
+                    this.userInfo = null;
+                },
+            );
         },
         onReachBottom() {
             if (this.loadMoreStatus === 'more') {
@@ -125,6 +149,8 @@ export default {
             // 地址列表
             api.get('/api/market/addresslist', this.filter).then(
                 ({ list, total }) => {
+                    uni.hideLoading();
+                    this.dataLoading = true;
                     if (type === 'reachBottom') {
                         this.list = this.list.concat(list);
                     } else {
@@ -141,17 +167,33 @@ export default {
                         this.loadMoreStatus = 'more';
                     }
                 },
-                () => {},
+                () => {
+                    this.dataLoading = true;
+                },
             );
         },
-        selectAddress(addressid) {
+        selectAddress(item) {
+            const pames = {
+                address_id: item.id,
+                activity_id: this.activityId,
+            };
             if (this.detailId) {
-                uni.navigateTo({
-                    url: `/activity/pages/mall/detail?id=${this.detailId}&address_id=${addressid}&activity_id=${this.activityId}`,
-                });
+                uni.$emit('setAddress', { ...pames, id: this.detailId });
+                uni.navigateBack();
             } else if (this.lotteryId) {
-                uni.navigateTo({
-                    url: `/activity/pages/lottery/list?id=${this.detailId}&address_id=${addressid}&activity_id=${this.activityId}`,
+                api.post('/api/draw/setaddress', {
+                    mobile: item.mobile,
+                    name: item.name,
+                    address: item.address,
+                    id: this.lotteryId,
+                    activity_id: this.activityId,
+                }).then(() => {
+                    uni.$emit('addressDetail', {
+                        ...pames,
+                        id: this.lotteryId,
+                        detail: item,
+                    });
+                    uni.navigateBack();
                 });
             }
         },
@@ -239,6 +281,7 @@ export default {
         this.lotteryId = parms.lottery_id;
         this.activityId = parms.activity_id;
         this.getShareConfig();
+        this.isLogin();
     },
 };
 </script>
@@ -250,6 +293,38 @@ page {
 <style lang="less" scoped>
 .address-page {
     position: relative;
+    /* #ifndef MP-ALIPAY */
+
+    /deep/radio::before {
+        margin-top: -8rpx;
+        right: 8rpx;
+        font-size: 36rpx;
+        line-height: 16rpx;
+    }
+
+    /deep/radio .wx-radio-input,
+    /deep/radio .uni-radio-input {
+        margin: 0;
+        width: 32rpx;
+        height: 32rpx;
+        margin-right: 10upx;
+        position: relative;
+        top: -4upx;
+    }
+    /* #endif */
+
+    /* 覆盖样式修改颜色 */
+    /deep/radio.theme[checked] .wx-radio-input,
+    /deep/radio.theme.checked .uni-radio-input {
+        background-color: #1166ff !important;
+        border-color: #1166ff !important;
+        color: #ffffff !important;
+    }
+
+    /* 鼠标移到上面的边框颜色 */
+    uni-radio:not([disabled]) .uni-radio-input:hover {
+        border-color: #d1d1d1 !important;
+    }
     .address-list {
         padding: 28upx 30upx 136upx;
         background-color: #f0f0f3;
@@ -283,6 +358,9 @@ page {
         .radio {
             line-height: 40upx;
             height: 40upx;
+            font-size: 28upx;
+            display: flex;
+            align-items: center;
         }
         .handel-item {
             color: #1166ff;

@@ -7,14 +7,14 @@
             v-if="userInfo === null"
             @login="onLogin"
         />
-        <template v-else>
+        <template v-else-if="dataLoading">
             <error-page
                 v-if="showError"
                 message="订单不存在"
                 tips="商城首页"
                 :path="`/activity/pages/mall/index?activity_id=${activityId}`"
             />
-            <template v-else-if="detailLoading">
+            <template v-else>
                 <view class="status-content">
                     <!-- 1待审 2审核通过 3审核不通过 -->
                     <view v-if="detailData.status === 2">
@@ -137,11 +137,14 @@ export default {
             isH5: true,
             // #endif
             loading: false,
-            detailLoading: false,
+            dataLoading: false,
             detailData: {},
             userInfo: '',
             showError: false,
         };
+    },
+    onShow() {
+        this.isLogin();
     },
     methods: {
         onLogin({ user_info: userInfo }) {
@@ -166,7 +169,7 @@ export default {
                 id: this.id,
             }).then(
                 (res) => {
-                    this.detailLoading = true;
+                    this.dataLoading = true;
                     if (Array.isArray(res) && !res.length) {
                         this.showError = true;
                     } else {
@@ -217,7 +220,6 @@ export default {
         this.id = parms.id;
         this.activityId = parms.activity_id;
         this.getShareConfig();
-        this.isLogin();
     },
 };
 </script>

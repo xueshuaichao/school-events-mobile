@@ -225,11 +225,13 @@
 <script>
 import api from '../../../common/api';
 import uniLoadMore from '../../../components/uni-load-more/uni-load-more.vue';
+import login from '../../../widgets/login/login.vue';
 import share from '../common/shareMinxin';
 
 export default {
     components: {
         uniLoadMore,
+        login,
     },
     filters: {
         setTime(val) {
@@ -248,7 +250,7 @@ export default {
             loadMoreStatus: 'none',
             list: [],
             filter: {
-                page_size: 5,
+                page_size: 10,
                 page_num: 1,
             },
             integral: {},
@@ -260,19 +262,34 @@ export default {
         };
     },
     onShow() {
-        api.isLogin().then((res) => {
-            this.userInfo = res;
-            this.init();
-        });
+        this.isLogin();
     },
     methods: {
+        onLogin({ user_info: userInfo }) {
+            this.userInfo = userInfo;
+            this.init();
+        },
+        isLogin() {
+            api.get('/api/user/info').then(
+                (res) => {
+                    this.userInfo = res.user_info;
+                    this.loading = true;
+                    this.init();
+                },
+                () => {
+                    this.loading = true;
+                    this.userInfo = null;
+                },
+            );
+        },
         init() {
+            uni.showLoading();
             Promise.all([
                 this.getList(),
                 this.getIntegral(),
                 this.getExchangeDetail(),
             ]).then(() => {
-                this.loading = true;
+                uni.hideLoading();
             });
         },
         onReachBottom() {

@@ -307,11 +307,7 @@ export default {
         });
         this.formData.cat_id = this.publicConfig.catId;
         if (this.formData.activity_id === 12) {
-            if (this.id) {
-                this.getTheme();
-            } else {
-                this.setClockedCatId(this.ac_type);
-            }
+            this.setClockedCatId(this.ac_type);
         }
         this.formData.resource_type = this.uploadMode === 'video' ? 1 : 2;
         this.getData();
@@ -628,21 +624,6 @@ export default {
             if (!this.ac_type) {
                 this.showtheme = true;
             }
-        },
-        getTheme() {
-            // 打卡活动，需要ac_type,
-            api.get('/api/activity/curtheme', {
-                activity_id: 12,
-            }).then(({ type }) => {
-                if (!type) {
-                    // 选择打卡主题。
-                    this.showtheme = true;
-                    this.ac_type = 0;
-                } else {
-                    this.ac_type = type;
-                    this.setClockedCatId(type);
-                }
-            });
         },
         toggelModel(id) {
             this.showtheme = false;

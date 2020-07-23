@@ -75,7 +75,9 @@
                             </text><text>{{ detailData.logistics.code }}</text>
                             <text
                                 class="icon icon-copy"
-                                @click="copyDeliveryCode(detailData.code)"
+                                @click="
+                                    copyDeliveryCode(detailData.logistics.code)
+                                "
                             />
                         </view>
                     </view>

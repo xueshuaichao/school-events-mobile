@@ -7,7 +7,7 @@
             v-if="userInfo === null"
             @login="onLogin"
         />
-        <template v-else>
+        <template v-else-if="dataLoading">
             <view class="address-form">
                 <form>
                     <view class="uni-form-item uni-column">
@@ -100,6 +100,7 @@ export default {
     data() {
         return {
             loading: false,
+            dataLoading: false,
             userInfo: '',
             formData: {
                 name: '',
@@ -132,15 +133,33 @@ export default {
             ],
         };
     },
+    onShow() {
+        this.isLogin();
+    },
     methods: {
-        onLogin({ user_info: userInfo }) {
-            this.userInfo = userInfo;
+        init() {
             if (this.id) {
                 this.getAddressInfo();
+            } else {
+                this.dataLoading = true;
             }
         },
+        onLogin({ user_info: userInfo }) {
+            this.userInfo = userInfo;
+            this.init();
+        },
         isLogin() {
-            return api.get('/api/user/info');
+            api.get('/api/user/info').then(
+                (res) => {
+                    this.userInfo = res.user_info;
+                    this.loading = true;
+                    this.init();
+                },
+                () => {
+                    this.loading = true;
+                    this.userInfo = null;
+                },
+            );
         },
         getAddress(detail) {
             this.$set(this.formData, 'district', detail.labels.join(''));
@@ -160,7 +179,6 @@ export default {
                     }
                     // name mobile address
                     const address = `${this.formData.district} ${this.formData.address}`;
-                    this.$delete(this.formData, 'district');
                     api.post(url, { ...this.formData, address }).then(
                         (res) => {
                             this.lock = false;
@@ -168,10 +186,17 @@ export default {
                                 title: '提交成功',
                                 icon: 'success',
                             });
+                            const pames = {
+                                address_id: res,
+                                activity_id: this.activityId,
+                                detail: { ...this.formData, address },
+                            };
                             if (this.detailId) {
-                                uni.redirectTo({
-                                    url: `/activity/pages/mall/detail?id=${this.detailId}&address_id=${res}`,
+                                uni.$emit('setAddress', {
+                                    ...pames,
+                                    id: this.detailId,
                                 });
+                                uni.navigateBack();
                             } else if (this.lotteryId) {
                                 api.post('/api/draw/setaddress', {
                                     ...this.formData,
@@ -179,11 +204,17 @@ export default {
                                     id: this.lotteryId,
                                     activity_id: this.activityId,
                                 }).then(() => {
-                                    uni.redirectTo({
-                                        url: `/activity/pages/lottery/list?activity_id=${this.activityId}`,
+                                    uni.$emit('addressDetail', {
+                                        ...pames,
+                                        id: this.lotteryId,
                                     });
+                                    uni.navigateBack();
                                 });
                             } else {
+                                uni.$emit('addressDetail', {
+                                    ...pames,
+                                    id: this.id,
+                                });
                                 uni.navigateBack();
                             }
                         },
@@ -231,6 +262,7 @@ export default {
             api.get('/api/market/getaddressinfo', {
                 id: this.id,
             }).then((res) => {
+                this.dataLoading = true;
                 this.formData = res;
                 const address = this.formData.address.split(' ');
                 [this.formData.district, this.formData.address] = address;
@@ -243,19 +275,6 @@ export default {
         this.lotteryId = parms.lottery_id;
         this.activityId = parms.activity_id;
         this.getShareConfig();
-        this.isLogin().then(
-            (res) => {
-                this.userInfo = res.user_info;
-                this.loading = true;
-                if (this.id) {
-                    this.getAddressInfo();
-                }
-            },
-            () => {
-                this.loading = true;
-                this.userInfo = null;
-            },
-        );
     },
 };
 </script>

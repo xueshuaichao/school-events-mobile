@@ -4,8 +4,7 @@
             <view
                 v-for="item in 4"
                 :key="item"
-                class="bot-box"
-                :class="[`row-${item}`]"
+                :class="['bot-box', `row-${item}`]"
             >
                 <template v-if="item === 1 || item === 3">
                     <view
