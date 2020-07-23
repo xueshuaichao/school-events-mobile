@@ -537,7 +537,7 @@ export default {
                 .lottery-btn {
                     color: #ff5547;
                     font-size: 32upx;
-                    line-height: 108upx;
+                    padding: 40upx 0;
                     width: 144upx;
                     text-align: center;
                     background: #ffe464;
