@@ -65,6 +65,8 @@
                 <calendar
                     :show-btn="false"
                     :signinfo="signinfo"
+                    :ismyself="isSelf"
+                    :calendar-data="calendarData"
                     class="ucenter-calendar"
                 />
                 <view :class="['panel', isSelf ? 'is-self' : '']">
@@ -73,6 +75,8 @@
                         ref="posterh5"
                         :config="posterCommonConfig"
                         :hide-loading="true"
+                        :width="630"
+                        :height="886"
                         @success="onPosterSuccess"
                         @fail="onPosterFail"
                     />
@@ -269,8 +273,8 @@ import login from '../../../widgets/login/login.vue';
 import uniLoadMore from '../../../components/uni-load-more/uni-load-more.vue';
 import EventCraftCover from '../../../components/event-craft-cover/index.vue';
 import utils from '../../../common/utils';
-import posterh5 from './posterh5.vue';
-import savePoster from './savePoster.vue';
+import posterh5 from '../brand/posterh5.vue';
+import savePoster from '../brand/savePoster.vue';
 import calendar from './calendar.vue';
 
 export default {
@@ -415,6 +419,7 @@ export default {
             },
             honorInfo: {},
             honorNums: 0,
+            calendarData: {},
         };
     },
     computed: {
@@ -423,6 +428,14 @@ export default {
         },
     },
     methods: {
+        getClockin() {
+            api.get('/api/activity/clockin', {
+                user_id: this.userId,
+                activity_id: 12,
+            }).then(({ data }) => {
+                this.calendarData = data;
+            });
+        },
         getsigninfo() {
             api.get('/api/activity/signinfo', {
                 user_id: this.userId,
@@ -430,7 +443,6 @@ export default {
             }).then((signinfo) => {
                 this.signinfo = signinfo;
                 const keys = Object.keys(signinfo);
-                console.log(keys);
                 keys.forEach((key) => {
                     if (this.honorList[key]) {
                         this.honorList[key].num = signinfo[key];
@@ -780,11 +792,13 @@ export default {
                 (res) => {
                     this.userInfo = res.user_info;
                     this.isLoading = false;
-                    this.isSelf = res.user_info.user_id === Number(this.userId);
+                    // this.isSelf = res.user_info.user_id === Number(this.userId);
+                    this.isSelf = false;
                     this.getWorkData();
                     this.getQrCode();
                     this.initShare();
                     this.getsigninfo();
+                    this.getClockin();
                 },
                 () => {
                     this.isLoading = false;
@@ -974,15 +988,12 @@ export default {
             const random = Math.floor(Math.random() * titleList.length);
             this.title = titleList[random];
             const desc = descList[random];
-            const noJoin = !this.detail || !Object.keys(this.detail).length;
             if (this.isH5) {
                 share({
-                    title: noJoin ? this.title : '秀我风采，为青少年代言！',
+                    title: this.title,
                     desc,
                     thumbnail: `${this.publicConfig.shareConfig.image}?x-oss-process=image/format,png/interlace,1/quality,Q_80/resize,m_pad,h_100`,
-                    url: noJoin
-                        ? `${window.location.origin}${this.publicConfig.shareConfig.path}`
-                        : `${window.location.href}`,
+                    url: window.location.href,
                 });
             }
         },
@@ -1017,13 +1028,10 @@ export default {
             // 来自页面内分享按钮
             console.log(res.target);
         }
-        const noJoin = !this.detail || !Object.keys(this.detail).length;
         return {
-            title: noJoin ? this.title : '秀我风采，为青少年代言！',
+            title: this.title,
             imageUrl: this.publicConfig.shareConfig.image,
-            path: noJoin
-                ? this.publicConfig.shareConfig.path
-                : `/activity/pages/clocked/ucenter?user_id=${this.filter.user_id}&activity_id=12`,
+            path: `/activity/pages/clocked/ucenter?user_id=${this.filter.user_id}&activity_id=12`,
         };
     },
 };

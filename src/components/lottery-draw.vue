@@ -5,20 +5,20 @@
                 v-for="item in 4"
                 :key="item"
                 class="bot-box"
-                :class="`row-${item}`"
+                :class="[`row-${item}`]"
             >
                 <template v-if="item === 1 || item === 3">
                     <view
                         v-for="bot in 12"
                         :key="bot"
-                        :class="`bot bot-${bot}`"
+                        :class="[`bot bot-${bot}`]"
                     />
                 </template>
                 <template v-else>
                     <view
                         v-for="bot in 9"
                         :key="bot"
-                        :class="`bot bot-${bot}`"
+                        :class="[`bot bot-${bot}`]"
                     />
                 </template>
             </view>

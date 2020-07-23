@@ -78,8 +78,8 @@
 
 <script>
 import api from '../../../common/api';
-import posterh5 from '../clocked/posterh5.vue';
-import savePoster from '../clocked/savePoster.vue';
+import posterh5 from '../brand/posterh5.vue';
+import savePoster from '../brand/savePoster.vue';
 import goHome from '../common/goHome.vue';
 
 export default {

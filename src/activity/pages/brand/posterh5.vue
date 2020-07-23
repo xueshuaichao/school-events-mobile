@@ -93,7 +93,24 @@ export default {
                     }
                     this.ctx.restore();
                 });
-                const { texts } = config;
+                const { texts, radiusRects } = config;
+                if (radiusRects && radiusRects.length > 0) {
+                    radiusRects.forEach((item) => {
+                        this.ctx.save();
+                        this.drawRadiusRect(
+                            item.x,
+                            item.y,
+                            item.w,
+                            item.h,
+                            item.br,
+                        );
+                        this.ctx.fillStyle = item.color;
+                        this.ctx.strokeStyle = item.color2;
+                        this.ctx.fill();
+                        this.ctx.stroke();
+                        this.ctx.restore();
+                    });
+                }
                 if (texts && texts.length > 0) {
                     texts.forEach((item) => {
                         this.drawText(item);

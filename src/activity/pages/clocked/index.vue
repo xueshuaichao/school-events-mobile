@@ -32,7 +32,7 @@
                     <calendar
                         :calendar-data="calendarData"
                         :signinfo="signinfo"
-                        :cur-theme-info="curThemeInfo"
+                        :status="btnStatus"
                         @toggleCalendar="toggleCalendar"
                     />
                     <view class="rule task">
