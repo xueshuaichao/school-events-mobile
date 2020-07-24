@@ -86,6 +86,9 @@ export default {
     },
     data() {
         return {
+            // #ifdef H5
+            isH5: true,
+            // #endif
             userInfo: {},
             activityId: '',
             publicConfig: {},
@@ -112,7 +115,7 @@ export default {
                         zIndex: 10,
                     },
                     {
-                        text: '我已经连续打卡',
+                        text: '我已连续打卡',
                         textAlign: 'left',
                         x: 124,
                         y: 320,
@@ -126,7 +129,7 @@ export default {
                     {
                         text: '0',
                         textAlign: 'left',
-                        x: 370,
+                        x: 350,
                         y: 320,
                         fontSize: '40',
                         color: '#FF8300',
@@ -138,7 +141,7 @@ export default {
                     {
                         text: '9',
                         textAlign: 'left',
-                        x: 420,
+                        x: 406,
                         y: 320,
                         fontSize: '40',
                         color: '#FF8300',
@@ -150,7 +153,7 @@ export default {
                     {
                         text: '天！',
                         textAlign: 'left',
-                        x: 460,
+                        x: 450,
                         y: 320,
                         fontSize: '34',
                         color: '#FF685C',
@@ -162,7 +165,7 @@ export default {
                     {
                         text: '超过',
                         textAlign: 'left',
-                        x: 126,
+                        x: 136,
                         y: 400,
                         fontSize: '34',
                         color: '#FF685C',
@@ -174,7 +177,7 @@ export default {
                     {
                         text: '10%',
                         textAlign: 'left',
-                        x: 200,
+                        x: 220,
                         y: 400,
                         fontSize: '40',
                         color: '#FF685C',
@@ -186,7 +189,7 @@ export default {
                     {
                         text: '的小伙伴啦',
                         textAlign: 'left',
-                        x: 280,
+                        x: 320,
                         y: 400,
                         fontSize: '34',
                         color: '#FF685C',
@@ -205,34 +208,44 @@ export default {
                         y: 0,
                         x: 0,
                     },
+                    {
+                        url: '',
+                        width: 100,
+                        height: 100,
+                        x: 490,
+                        y: 746,
+                        borderRadius: this.isH5 ? 0 : 100,
+                    },
                 ],
                 radiusRects: [
                     {
-                        x: 360,
+                        x: 340,
                         y: 270,
                         w: 44,
                         h: 64,
-                        br: 2,
+                        br: 4,
                         color: '#FFE464',
                         color2: '#FFE464',
                     },
                     {
-                        x: 414,
+                        x: 394,
                         y: 270,
                         w: 44,
                         h: 64,
-                        br: 2,
+                        br: 4,
                         color: '#FFE464',
                         color2: '#FFE464',
                     },
                 ],
             },
             preStatus: 0,
+            days: 0,
         };
     },
     onLoad(params) {
         this.activityId = Number(params.activity_id);
         this.preStatus = Number(params.pre_type) || 0; // 判断是否打卡了
+        const days = params.days || '0';
         this.publicConfig = this.$store.getters.getPublicConfig(
             this.activityId,
         );
@@ -243,11 +256,28 @@ export default {
         if (this.activityId === '9') {
             this.getLotteryNum();
         }
+
         if (this.activityId === 12 && !this.preStatus) {
+            if (days.length === 1) {
+                this.posterCommonConfig.texts[2].text = '0';
+                this.posterCommonConfig.texts[3].text = days;
+            } else if (days.length === 2) {
+                this.posterCommonConfig.texts[2].text = days.slice(0, 1);
+                this.posterCommonConfig.texts[3].text = days.slice(1);
+            }
+            // 60-90之间的数字
+            this.posterCommonConfig.texts[6].text = `${Math.floor(
+                Math.random() * 30,
+            ) + 60}%`;
             this.$nextTick(() => {
-                this.toCreatePoster();
+                if (this.isH5) {
+                    this.getH5QrCode();
+                } else {
+                    this.getMpQrCode();
+                }
             });
         }
+
         this.getUserInfo();
     },
     methods: {
@@ -313,6 +343,65 @@ export default {
             const index = Math.floor(Math.random() * 6);
             this.posterCommonConfig.texts[0].text = txts[index];
             this.$refs.posterh5.createPoster(this.posterCommonConfig);
+        },
+        getH5QrCode() {
+            const uCenterUrl = `${window.location.origin}/activity/pages/index?activity_id=12&wsaasaok=1`;
+            this.posterCommonConfig.images[1].url = `${
+                window.location.origin
+            }/api/common/qrcode?url=${encodeURIComponent(uCenterUrl)}`;
+            this.posterCommonConfig.images[1].borderRadius = 0;
+            this.toCreatePoster();
+        },
+        getMpQrCode() {
+            // 小程序二维码
+            const url = 'activity/pages/index/ucenter';
+            const scene = 'activity_id=12';
+            api.post('/api/weixin/getminiqrcode', {
+                path: url,
+                scene,
+            }).then(
+                ({ url }) => {
+                    if (url) {
+                        this.base64src(url, (res) => {
+                            this.posterCommonConfig.images[1].url = res;
+                            this.toCreatePoster();
+                        });
+                    } else {
+                        this.toCreatePoster();
+                        this.posterCommonConfig.images[1].url = 'http://aitiaozhan.oss-cn-beijing.aliyuncs.com/main-erweima.png';
+                    }
+                },
+                () => {
+                    this.posterCommonConfig.images[1].url = 'http://aitiaozhan.oss-cn-beijing.aliyuncs.com/main-erweima.png';
+                },
+            );
+        },
+        // base64转url
+        base64src(base64data, cb) {
+            // eslint-disable-next-line no-undef
+            const fsm = wx.getFileSystemManager();
+            // const FILE_BASE_NAME = 'tmp_base64src'; // 自定义文件名
+            const FILE_BASE_NAME = `tmp_base64src_${new Date() - 0}`; // 自定义文件名
+            const [, format, bodyData] = /data:image\/(\w+);base64,(.*)/.exec(base64data) || [];
+            if (!format) {
+                return new Error('ERROR_BASE64SRC_PARSE');
+            }
+            // eslint-disable-next-line no-undef
+            const filePath = `${wx.env.USER_DATA_PATH}/${FILE_BASE_NAME}.${format}`;
+            // eslint-disable-next-line no-undef
+            const buffer = wx.base64ToArrayBuffer(bodyData);
+            fsm.writeFile({
+                filePath,
+                data: buffer,
+                encoding: 'binary',
+                success() {
+                    cb(filePath);
+                },
+                fail() {
+                    return new Error('ERROR_BASE64SRC_WRITE');
+                },
+            });
+            return '';
         },
     },
     onShareAppMessage(res) {

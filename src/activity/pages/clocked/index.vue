@@ -341,6 +341,13 @@ export default {
                 user_id: this.userInfo.user_id,
                 activity_id: 12,
             }).then(({ data }) => {
+                // data = {
+                //     20200801: {
+                //         status: 1,
+                //         draw: 0,
+                //         type: 1,
+                //     },
+                // };
                 this.calendarData = data;
             });
         },
@@ -362,7 +369,7 @@ export default {
                 }
             } else if (this.btnStatus === 1) {
                 uni.navigateTo({
-                    url: `/activity/pages/upload/modify?activity_id=12&ac_type=${this.curThemeInfo.type}&status=${this.curThemeInfo.status}`,
+                    url: `/activity/pages/upload/modify?activity_id=12&ac_type=${this.curThemeInfo.type}&status=${this.curThemeInfo.status}&days=${this.signinfo.serial_day}`,
                 });
             } else {
                 uni.showToast({
@@ -401,7 +408,7 @@ export default {
             if (this.hasLogin) {
                 if (this.curThemeInfo.type) {
                     uni.navigateTo({
-                        url: `/activity/pages/upload/modify?activity_id=12&ac_type=${this.curThemeInfo.type}&status=${this.curThemeInfo.status}`,
+                        url: `/activity/pages/upload/modify?activity_id=12&ac_type=${this.curThemeInfo.type}&status=${this.curThemeInfo.status}&days=${this.signinfo.serial_day}`,
                     });
                 } else {
                     uni.showToast({

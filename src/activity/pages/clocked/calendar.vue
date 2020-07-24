@@ -228,6 +228,7 @@ export default {
                 }
             }
             this.list = Object.assign({}, august, july, september);
+            // 1 当月的第一天，
         },
         toggleCalendar() {
             this.$emit('toggleCalendar');

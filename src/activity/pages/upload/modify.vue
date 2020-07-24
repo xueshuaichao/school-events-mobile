@@ -278,6 +278,7 @@ export default {
                 '体育竞技',
             ],
             preStatus: 0,
+            days: 0,
         };
     },
     computed: {
@@ -290,6 +291,7 @@ export default {
         this.formData.activity_id = Number(params.activity_id);
         this.ac_type = Number(params.ac_type) || 0;
         this.preStatus = Number(params.status) || 0;
+        this.days = Number(params.days) || 0;
         if (this.id) {
             uni.setNavigationBarTitle({ title: '编辑作品' });
         }
@@ -588,7 +590,6 @@ export default {
                 if (formData.activity_id === 12) {
                     formData.ac_type = this.ac_type;
                 }
-                console.log(formData, 'lklklklk');
 
                 uni.showLoading();
                 this.disabled = true;
@@ -602,7 +603,7 @@ export default {
                         this.disabled = false;
                         uni.hideLoading();
                         uni.navigateTo({
-                            url: `/activity/pages/upload/result?activity_id=${this.formData.activity_id}&pre_type=${this.preStatus}`,
+                            url: `/activity/pages/upload/result?activity_id=${this.formData.activity_id}&pre_type=${this.preStatus}&days=${this.days}`,
                         });
                         this.resetData();
                         this.lock = true;

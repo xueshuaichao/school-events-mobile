@@ -1,7 +1,7 @@
 <template>
     <view v-if="!isLoading">
         <view
-            class="page-read-work"
+            class="page-read-work clocked-page"
             :class="{ login: userInfo === null }"
         >
             <login
@@ -14,6 +14,12 @@
                 <view class="honor-top">
                     <view class="honor-top-box">
                         <view
+                            v-if="
+                                signinfo.sports +
+                                    signinfo.skill +
+                                    signinfo.study +
+                                    signinfo.work
+                            "
                             class="to-open-honor"
                             @click="getMyPoster"
                         >
@@ -123,7 +129,7 @@
                         <template v-for="(item, index) in dataList">
                             <view
                                 v-if="getDate(item.created_at)"
-                                :key="item.id"
+                                :key="index"
                                 class="time"
                             >
                                 <view class="time-btn">
@@ -344,7 +350,7 @@ export default {
                     {
                         text: '',
                         textAlign: 'left',
-                        y: 264,
+                        y: 270,
                         x: 90,
                         fontSize: '40',
                         color: '#FF8B82',
@@ -356,7 +362,7 @@ export default {
                     {
                         text: '',
                         textAlign: 'center',
-                        y: 660,
+                        y: 670,
                         x: 320,
                         fontSize: '32',
                         color: '#FF8300',
@@ -554,11 +560,7 @@ export default {
             // 图片的处理。。。。。。。
             // 中间的内容区域是多种排版显示，有多种图片。
             const that = this;
-            if (that.isH5) {
-                that.posterCommonConfig.images[0].url = 'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/clocked/clocked_honor_poster.png';
-            } else {
-                that.posterCommonConfig.images[0].url = 'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/clocked/clocked_honor_poster.png';
-            }
+            that.posterCommonConfig.images[0].url = 'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/clocked/clocked_honor_poster.png';
 
             that.setPosterConfig();
             that.$refs.posterh5.createPoster(that.posterCommonConfig);
@@ -578,40 +580,40 @@ export default {
                 '每天进步一点点, 成长足迹看得见！',
             ];
             let index = 0;
+            // this.honorInfo.work = {
+            //     id: 1,
+            //     txt: '劳动标兵',
+            //     num: 2,
+            // };
+            // this.honorInfo.sports = {
+            //     id: 4,
+            //     txt: '活力少年',
+            //     num: 1,
+            // };
+            // this.honorInfo.study = {
+            //     id: 2,
+            //     txt: '阅读新型',
+            //     num: 1,
+            // };
+            // this.honorInfo.skill = {
+            //     id: 3,
+            //     txt: '才艺达人',
+            //     num: 2,
+            // };
 
-            this.honorInfo.work = {
-                id: 1,
-                txt: '劳动标兵',
-                num: 2,
-            };
-            this.honorInfo.sports = {
-                id: 4,
-                txt: '活力少年',
-                num: 1,
-            };
-            this.honorInfo.study = {
-                id: 2,
-                txt: '阅读新型',
-                num: 1,
-            };
-            this.honorInfo.skill = {
-                id: 3,
-                txt: '才艺达人',
-                num: 2,
-            };
-            const keys = ['study', 'skill', 'sports', 'work'];
+            const keys = Object.keys(this.honorInfo);
+            // const keys = ['sports'];
             if (keys.length === 1) {
-                console.log(this.honorInfo[keys[0]], keys[0]);
                 index = this.honorInfo[keys[0]].id;
                 txts = txts1;
             } else {
                 index = Math.floor(Math.random() * 4);
                 txts = txts2;
             }
-            const txt = txts[index];
+            const txt = txts[index - 1];
             this.posterCommonConfig.texts[1].text = txt;
             this.posterCommonConfig.texts[0].text = `我已经获得${this.honorNums}枚勋章啦！`;
-            // 只有一种勋章
+            // 根据勋章的种类，排版设计不同
             if (keys.length === 1) {
                 this.posterCommonConfig.images[2] = {
                     width: 226,
@@ -638,7 +640,7 @@ export default {
                     fontWeight: 'bold',
                     zIndex: 10,
                 };
-                // 282, 236
+                // 282, 236 长框，短框
                 this.posterCommonConfig.radiusRects[0] = {
                     x:
                         this.honorInfo[keys[0]].num === 1
@@ -668,7 +670,7 @@ export default {
                         }`,
                         textAlign: 'center',
                         x: 180 + i * 270,
-                        y: 534,
+                        y: 536,
                         fontSize: '30',
                         color: '#FF8300',
                         lineNum: 1,
@@ -697,7 +699,7 @@ export default {
                         height: 100,
                         url: `https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/clocked/honor-l-${this.honorInfo[key].id}.png`,
                         x: i > 1 ? 265 : 140 + i * 250,
-                        y: i > 1 ? 460 : 290,
+                        y: i > 1 ? 458 : 300,
                     };
                     this.posterCommonConfig.texts[i + 2] = {
                         text: `${this.honorInfo[key].txt}${
@@ -724,7 +726,7 @@ export default {
                     const x2 = i > 1 ? lx2 : lx;
                     this.posterCommonConfig.radiusRects[i] = {
                         x: this.honorInfo[key].num === 1 ? x1 : x2,
-                        y: i > 1 ? 560 : 400,
+                        y: i > 1 ? 560 : 402,
                         w: this.honorInfo[key].num === 1 ? 148 : 178,
                         h: 46,
                         br: 46,
@@ -739,7 +741,7 @@ export default {
                         height: 100,
                         url: `https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/clocked/honor-l-${this.honorInfo[key].id}.png`,
                         x: i > 1 ? 140 + (i - 2) * 250 : 140 + i * 250,
-                        y: i > 1 ? 460 : 290,
+                        y: i > 1 ? 470 : 300,
                     };
                     this.posterCommonConfig.texts[i + 2] = {
                         text: `${this.honorInfo[key].txt}${
@@ -766,7 +768,7 @@ export default {
                     const x2 = i > 1 ? lx2 : lx;
                     this.posterCommonConfig.radiusRects[i] = {
                         x: this.honorInfo[key].num === 1 ? x1 : x2,
-                        y: i > 1 ? 560 : 400,
+                        y: i > 1 ? 560 : 402,
                         w: this.honorInfo[key].num === 1 ? 148 : 178,
                         h: 46,
                         br: 46,
@@ -792,8 +794,7 @@ export default {
                 (res) => {
                     this.userInfo = res.user_info;
                     this.isLoading = false;
-                    // this.isSelf = res.user_info.user_id === Number(this.userId);
-                    this.isSelf = false;
+                    this.isSelf = res.user_info.user_id === Number(this.userId);
                     this.getWorkData();
                     this.getQrCode();
                     this.initShare();
@@ -851,6 +852,7 @@ export default {
         setTabActive(i) {
             this.filter.page_num = 1;
             this.tabActiveIndex = i;
+            this.allDate = {};
             uni.pageScrollTo({ scrollTop: 0, duration: 300 });
             this.getWorkData();
         },
@@ -895,7 +897,7 @@ export default {
                         preStatus = 1;
                     }
                     uni.navigateTo({
-                        url: `/activity/pages/upload/modify?id=${id}&activity_id=${this.filter.activity_id}&status=${preStatus}&ac_type=${acType}`,
+                        url: `/activity/pages/upload/modify?id=${id}&activity_id=${this.filter.activity_id}&status=${preStatus}&ac_type=${acType}&days=${this.signinfo.serial_day}`,
                     });
                 });
             }
@@ -951,6 +953,8 @@ export default {
                     this.allNum.no_pass -= 1;
                 }
             });
+            // 日期的显示，需要重新算一次。
+            this.allDate = {};
         },
         handleVote(item) {
             if (this.status === 2) {

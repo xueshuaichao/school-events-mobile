@@ -280,4 +280,12 @@ export default {
         height: 52upx;
     }
 }
+.clocked-page {
+    .poster-img-mask {
+        .canvas-img {
+            width: 630upx;
+            height: 886upx;
+        }
+    }
+}
 </style>
