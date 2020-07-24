@@ -30,7 +30,7 @@
                 >
                     <view class="box">
                         <view
-                            v-if="item !== -1 && lotteryData[item].show"
+                            v-if="lineHeight === item"
                             class="active"
                         />
                         <view>
@@ -45,7 +45,7 @@
                             </template>
                             <template v-else>
                                 <view @click="clickLucks()">
-                                    抽奖X10
+                                    抽奖X{{ num }}
                                 </view>
                             </template>
                         </view>
@@ -70,11 +70,17 @@ export default {
                 return [];
             },
         },
+        num: {
+            type: Number,
+            default: 0,
+        },
     },
     data() {
         return {
             lotteryPostion: [0, 1, 2, 7, -1, 3, 6, 5, 4],
             clickLuck: true,
+            start: false,
+            lineHeight: '',
         };
     },
     methods: {
@@ -98,17 +104,15 @@ export default {
             }
         },
         startLottery(id = '') {
+            this.start = true;
             // res.id = Math.floor((Math.random() * 7));
             let index = 0;
             // 循环设置每个奖项的选中、未选中状态
             interval = setInterval(() => {
                 if (index > 7) {
                     index = 0;
-                    this.$set(this.lotteryData[7], 'show', false);
-                } else if (index !== 0) {
-                    this.$set(this.lotteryData[index - 1], 'show', false);
                 }
-                this.$set(this.lotteryData[index], 'show', true);
+                this.lineHeight = index;
                 index += 1;
             }, intime);
             // 如果未中奖 luckIndex 为7
@@ -123,7 +127,7 @@ export default {
             // 初始化当前位置
             let current = -1;
             for (let i = 0; i < this.lotteryData.length; i += 1) {
-                if (this.lotteryData[i].show) {
+                if (i === this.lineHeight) {
                     current = i;
                 }
             }
@@ -137,12 +141,9 @@ export default {
             setTimeout(() => {
                 if (i > 7) {
                     i = 0;
-                    this.$set(this.lotteryData[7], 'show', false);
-                } else if (i !== 0) {
-                    this.$set(this.lotteryData[i - 1], 'show', false);
                 }
                 // 当前位置为选中状态
-                this.$set(this.lotteryData[i], 'show', true);
+                this.lineHeight = i;
                 // 如果旋转时间过短或者当前位置不等于中奖位置则递归执行
                 // 直到旋转至中奖位置
                 if (time < 400 || i !== which) {
@@ -330,6 +331,7 @@ export default {
         right: 0;
         background-color: rgba(255, 228, 100, 0.5);
         border-radius: 20upx;
+        z-index: 10;
     }
     &.btn {
         background-color: #ffd300;

@@ -74,6 +74,7 @@
                         v-if="lotteryData.length === 8"
                         ref="lottery"
                         :lottery-data="lotteryData"
+                        :num="num"
                         @winning="winning"
                         @notwinning="notWinning"
                         @start="startLottery"
@@ -105,7 +106,10 @@
                                 :src="prizeDetail.image"
                                 mode=""
                             />
-                            <view class="name">
+                            <view
+                                v-if="status === 1"
+                                class="name"
+                            >
                                 {{ prizeDetail.name }}
                             </view>
                             <image
@@ -209,6 +213,7 @@ export default {
             // #endif
             crouselList: [],
             lotteryData: [],
+            num: 0,
             failConfig: {
                 texts: [],
                 images: [
@@ -286,6 +291,7 @@ export default {
             canvasImage: '',
             showError: false,
             prizeDetail: {},
+            imgAuthBtn: false,
         };
     },
     mounted() {
@@ -326,6 +332,7 @@ export default {
                         this.showError = true;
                     } else {
                         this.lotteryData = res.list;
+                        this.num = Number(res.num);
                         // 如果配置奖品不足7个 自动补谢谢参与；另外需增加一个谢谢参与保证最终为8个奖品
                         if (this.lotteryData.length < 8) {
                             const len = this.lotteryData.length;
@@ -346,17 +353,23 @@ export default {
             );
         },
         startLottery() {
-            api.post('/api/draw/active', {
-                activity_id: this.activityId,
-            }).then(
-                (res) => {
-                    const { id } = res;
-                    this.$refs.lottery.startLottery(id);
-                },
-                () => {
-                    this.$refs.lottery.startLottery();
-                },
-            );
+            if (!this.lock) {
+                this.lock = true;
+                api.post('/api/draw/active', {
+                    activity_id: this.activityId,
+                }).then(
+                    (res) => {
+                        const { id, num } = res;
+                        this.num = Number(num);
+                        this.$refs.lottery.startLottery(id);
+                        this.lock = false;
+                    },
+                    () => {
+                        this.$refs.lottery.startLottery();
+                        this.lock = false;
+                    },
+                );
+            }
         },
         winning(detail) {
             this.prizeDetail = detail;
@@ -660,6 +673,7 @@ export default {
         justify-content: flex-end;
         .btn-item {
             margin-left: 20upx;
+            font-size: 26upx;
             height: 48upx;
             padding: 0 12upx;
             background-color: #0054b1;
