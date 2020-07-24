@@ -510,7 +510,7 @@ export default {
                     fr: this.fr,
                 }).then(() => {
                     uni.navigateTo({
-                        url: '/activity/chunjiehao/upload/upload',
+                        url: '/history/chunjiehao/upload/upload',
                     });
                 });
             } else {
@@ -540,7 +540,7 @@ export default {
                 return;
             }
             uni.navigateTo({
-                url: `/activity/chunjiehao/myWork/myWork?type=search&name=${this.changeValue.trim()}`,
+                url: `/history/chunjiehao/myWork/myWork?type=search&name=${this.changeValue.trim()}`,
             });
         },
         initShare() {
@@ -596,7 +596,7 @@ export default {
                 fr: this.fr,
             }).then(() => {
                 uni.navigateTo({
-                    url: '/activity/chunjiehao/myWork/myWork?type=myWork',
+                    url: '/history/chunjiehao/myWork/myWork?type=myWork',
                 });
             });
         },
@@ -656,7 +656,7 @@ export default {
         return {
             title: this.shareDesc,
             // imageUrl: '/static/images/index/banner.png',
-            path: '/activity/chunjiehao/index',
+            path: '/history/chunjiehao/index',
         };
     },
 };

@@ -156,7 +156,7 @@
                 </view>
                 <navigator
                     v-if="allTotal === 0"
-                    url="/activity/chunjie/upload/upload"
+                    url="/history/chunjie/upload/upload"
                 >
                     <view class="goUpload">
                         去上传
@@ -236,7 +236,7 @@ export default {
     methods: {
         goHome() {
             uni.reLaunch({
-                url: '/activity/chunjie/index',
+                url: '/history/chunjie/index',
             });
         },
         toggle(k) {
@@ -384,7 +384,7 @@ export default {
             title,
             imageUrl:
                 'http://aitiaozhan.oss-cn-beijing.aliyuncs.com/banner.png',
-            path: '/activity/chunjie/index',
+            path: '/history/chunjie/index',
         };
     },
 };

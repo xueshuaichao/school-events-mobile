@@ -120,13 +120,13 @@ export default {
                     id: 4,
                     img:
                         'http://aitiaozhan.oss-cn-beijing.aliyuncs.com/chunjiehao.png',
-                    url: '/activity/chunjiehao/index',
+                    url: '/history/chunjiehao/index',
                 },
                 {
                     id: 3,
                     img:
                         'http://aitiaozhan.oss-cn-beijing.aliyuncs.com/banner4.png',
-                    url: '/activity/chunjie/index',
+                    url: '/history/chunjie/index',
                 },
             ],
         };

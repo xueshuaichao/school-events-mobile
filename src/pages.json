@@ -396,6 +396,59 @@
     ],
     "subPackages": [
         {
+            "root": "history",
+            "pages": [
+                // ============== 春节 活动 =================
+                {
+                    "path": "chunjie/index",
+                    "style": {
+                        "navigationBarTitleText": "秀才艺，赢好礼",
+                        "softinputNavBar": "none"
+                    }
+                },
+                {
+                    "path": "chunjie/upload/upload",
+                    "style": {
+                        "navigationBarTitleText": "上传作品"
+                    }
+                },
+                {
+                    "path": "chunjie/myWork/myWork",
+                    "style": {
+                        "navigationBarTitleText": "我的作品"
+                    }
+                },
+                // ============== 春节 end ======================
+
+                // ============== 春节好 ========================
+                {
+                    "path": "chunjiehao/index",
+                    "style": {
+                        "navigationBarTitleText": "dou说新年好",
+                        "softinputNavBar": "none"
+                    }
+                },
+                {
+                    "path": "chunjiehao/upload/upload",
+                    "style": {
+                        "navigationBarTitleText": "上传作品"
+                    }
+                },
+                {
+                    "path": "chunjiehao/upload/result",
+                    "style": {
+                        "navigationBarTitleText": "上传结果"
+                    }
+                },
+                {
+                    "path": "chunjiehao/myWork/myWork",
+                    "style": {
+                        "navigationBarTitleText": "我的作品"
+                    }
+                }
+            ]
+        },
+        {
             "root": "activity",
             "pages": [
                 {
@@ -522,55 +575,6 @@
                     "path": "pages/lottery/detail",
                     "style": {
                         "navigationBarTitleText": "我的中奖"
-                    }
-                },
-
-                // ============== 春节 活动 =================
-                {
-                    "path": "chunjie/index",
-                    "style": {
-                        "navigationBarTitleText": "秀才艺，赢好礼",
-                        "softinputNavBar": "none"
-                    }
-                },
-                {
-                    "path": "chunjie/upload/upload",
-                    "style": {
-                        "navigationBarTitleText": "上传作品"
-                    }
-                },
-                {
-                    "path": "chunjie/myWork/myWork",
-                    "style": {
-                        "navigationBarTitleText": "我的作品"
-                    }
-                },
-                // ============== 春节 end ======================
-
-                // ============== 春节好 ========================
-                {
-                    "path": "chunjiehao/index",
-                    "style": {
-                        "navigationBarTitleText": "dou说新年好",
-                        "softinputNavBar": "none"
-                    }
-                },
-                {
-                    "path": "chunjiehao/upload/upload",
-                    "style": {
-                        "navigationBarTitleText": "上传作品"
-                    }
-                },
-                {
-                    "path": "chunjiehao/upload/result",
-                    "style": {
-                        "navigationBarTitleText": "上传结果"
-                    }
-                },
-                {
-                    "path": "chunjiehao/myWork/myWork",
-                    "style": {
-                        "navigationBarTitleText": "我的作品"
                     }
                 }
             ]

@@ -99,7 +99,7 @@ export default {
                 });
             } else if (this.from === 'festival') {
                 uni.reLaunch({
-                    url: '/activity/chunjie/upload/upload',
+                    url: '/history/chunjie/upload/upload',
                 });
             } else if (this.from === 'openGame') {
                 uni.reLaunch({
@@ -115,7 +115,7 @@ export default {
                 });
             } else if (this.from === 'festival') {
                 uni.reLaunch({
-                    url: '/activity/chunjie/myWork/myWork?type=myWork',
+                    url: '/history/chunjie/myWork/myWork?type=myWork',
                 });
             } else if (this.from === 'openGame') {
                 uni.reLaunch({

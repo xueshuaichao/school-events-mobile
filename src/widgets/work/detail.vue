@@ -498,10 +498,10 @@ export default {
                 url = '/pages/openGame/index';
             }
             if (this.activityId === 3) {
-                url = '/activity/chunjie/index';
+                url = '/history/chunjie/index';
             }
             if (this.activityId === 4) {
-                url = '/activity/chunjiehao/index';
+                url = '/history/chunjiehao/index';
             }
             if (this.activityId === 5) {
                 url = '/pages/yiqing/index';

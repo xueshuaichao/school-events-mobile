@@ -543,7 +543,7 @@ export default {
                     fr: this.fr,
                 }).then(() => {
                     uni.navigateTo({
-                        url: '/activity/chunjie/upload/upload',
+                        url: '/history/chunjie/upload/upload',
                     });
                 });
             } else {
@@ -576,7 +576,7 @@ export default {
                 return;
             }
             uni.navigateTo({
-                url: `/activity/chunjie/myWork/myWork?type=search&name=${this.changeValue.trim()}`,
+                url: `/history/chunjie/myWork/myWork?type=search&name=${this.changeValue.trim()}`,
             });
         },
         initShare() {
@@ -627,7 +627,7 @@ export default {
                 fr: this.fr,
             }).then(() => {
                 uni.navigateTo({
-                    url: '/activity/chunjie/myWork/myWork?type=myWork',
+                    url: '/history/chunjie/myWork/myWork?type=myWork',
                 });
             });
         },
@@ -701,7 +701,7 @@ export default {
         return {
             title: this.shareDesc,
             // imageUrl: '/static/images/index/banner.png',
-            path: '/activity/chunjie/index',
+            path: '/history/chunjie/index',
         };
     },
 };
