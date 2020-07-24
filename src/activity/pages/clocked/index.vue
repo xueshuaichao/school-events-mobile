@@ -32,7 +32,7 @@
                     <calendar
                         :calendar-data="calendarData"
                         :signinfo="signinfo"
-                        :cur-theme-info="curThemeInfo"
+                        :status="btnStatus"
                         @toggleCalendar="toggleCalendar"
                     />
                     <view class="rule task">
@@ -341,6 +341,13 @@ export default {
                 user_id: this.userInfo.user_id,
                 activity_id: 12,
             }).then(({ data }) => {
+                // data = {
+                //     20200801: {
+                //         status: 1,
+                //         draw: 0,
+                //         type: 1,
+                //     },
+                // };
                 this.calendarData = data;
             });
         },
@@ -362,7 +369,7 @@ export default {
                 }
             } else if (this.btnStatus === 1) {
                 uni.navigateTo({
-                    url: `/activity/pages/upload/modify?activity_id=12&ac_type=${this.curThemeInfo.type}&status=${this.curThemeInfo.status}`,
+                    url: `/activity/pages/upload/modify?activity_id=12&ac_type=${this.curThemeInfo.type}&status=${this.curThemeInfo.status}&days=${this.signinfo.serial_day}`,
                 });
             } else {
                 uni.showToast({
@@ -401,7 +408,7 @@ export default {
             if (this.hasLogin) {
                 if (this.curThemeInfo.type) {
                     uni.navigateTo({
-                        url: `/activity/pages/upload/modify?activity_id=12&ac_type=${this.curThemeInfo.type}&status=${this.curThemeInfo.status}`,
+                        url: `/activity/pages/upload/modify?activity_id=12&ac_type=${this.curThemeInfo.type}&status=${this.curThemeInfo.status}&days=${this.signinfo.serial_day}`,
                     });
                 } else {
                     uni.showToast({
@@ -434,7 +441,7 @@ export default {
         toLottery() {
             if (this.hasLogin) {
                 uni.navigateTo({
-                    url: '/activity/pages/clocked/lottery',
+                    url: '/activity/pages/clocked/lottery?activity_id=12',
                 });
             } else {
                 this.toLogin = true;
@@ -537,7 +544,7 @@ export default {
                 .lottery-btn {
                     color: #ff5547;
                     font-size: 32upx;
-                    line-height: 108upx;
+                    padding: 40upx 0;
                     width: 144upx;
                     text-align: center;
                     background: #ffe464;

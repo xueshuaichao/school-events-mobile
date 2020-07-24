@@ -30,7 +30,15 @@
                 <view class="all-integral">
                     {{ signinfo.points }}
                 </view>
-                <view>积分|连续打卡</view>
+                <view>
+                    积分
+                </view>
+                <view class="margin">
+                    |
+                </view>
+                <view>
+                    连续打卡
+                </view>
                 <view class="max-day">
                     {{ signinfo.serial_day }}
                 </view>
@@ -57,16 +65,26 @@
                             :data-key="index"
                             :class="{
                                 grey: item.grey,
-                                passed: !item.type && !item.isToday
+                                passed:
+                                    !item.status && !item.isToday && ismyself
                             }"
                             @click="jumpUpload(item.isToday)"
                         >
-                            <template v-if="!item.type">
+                            <template
+                                v-if="
+                                    !item.type ||
+                                        (!ismyself && item.status !== 1)
+                                "
+                            >
                                 <view class="item-txt">
                                     {{ item.txt }}
                                 </view>
                             </template>
-                            <template v-else>
+                            <template
+                                v-if="
+                                    ismyself || (!ismyself && item.status === 1)
+                                "
+                            >
                                 <image
                                     :src="getPath(item)"
                                     class="icon"
@@ -117,9 +135,9 @@ export default {
             type: Object,
             default: () => {},
         },
-        curThemeInfo: {
-            type: Object,
-            default: () => {},
+        ismyself: {
+            type: Boolean,
+            default: true,
         },
     },
     data() {
@@ -210,6 +228,7 @@ export default {
                 }
             }
             this.list = Object.assign({}, august, july, september);
+            // 1 当月的第一天，
         },
         toggleCalendar() {
             this.$emit('toggleCalendar');
@@ -292,8 +311,12 @@ export default {
                 height: 50upx;
                 padding: 0 8upx;
                 line-height: 54upx;
-                margin: 16upx 6upx 0;
+                margin: 16upx 8upx 0;
                 border-radius: 4upx;
+            }
+            .margin {
+                margin: 0 14upx;
+                color: #ffb4a6;
             }
         }
         .white-bg {

@@ -318,7 +318,6 @@ export default {
                     activityId: 12,
                     isPNG: true,
                     catId: 20, // 所属分类
-                    catNames: ['劳动实践', '读书学习', '才艺展示', '体育锻炼'],
                     showAllCat: false,
                     time: '活动日期：8月1日--8月31日',
                     primaryColor: '#FF685C', // 主色调
@@ -338,7 +337,7 @@ export default {
                         ],
                         desc: ['打卡一夏，记录暑假'],
                         image:
-                            'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/brand_share.png',
+                            'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/clocked/clocked_share.png',
                         path: '/activity/pages/index?activity_id=12',
                     },
                 },
