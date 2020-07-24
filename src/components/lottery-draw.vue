@@ -26,7 +26,10 @@
                     v-for="(item, index) in lotteryPostion"
                     :key="index"
                     class="frame-item"
-                    :class="{ btn: item === -1 }"
+                    :class="{
+                        btn: item === -1,
+                        disabled: item === -1 && status !== 2
+                    }"
                 >
                     <view class="box">
                         <view
@@ -44,9 +47,23 @@
                                 </view>
                             </template>
                             <template v-else>
-                                <view @click="clickLucks()">
-                                    抽奖X{{ num }}
-                                </view>
+                                <template v-if="status === 1">
+                                    <view>活动未开始</view>
+                                </template>
+                                <template v-else-if="status === 2">
+                                    <view
+                                        v-if="num > 0"
+                                        @click="clickLucks()"
+                                    >
+                                        抽奖X{{ num }}
+                                    </view>
+                                    <view v-else>
+                                        暂无机会
+                                    </view>
+                                </template>
+                                <template v-else-if="status === 3">
+                                    <view>活动已结束</view>
+                                </template>
                             </template>
                         </view>
                     </view>
@@ -73,6 +90,10 @@ export default {
         num: {
             type: Number,
             default: 0,
+        },
+        status: {
+            type: Number,
+            default: 1, // 1未开始 2进行中 3已结束
         },
     },
     data() {
@@ -311,6 +332,7 @@ export default {
     .title {
         width: 100%;
         text-align: center;
+        font-size: 26upx;
     }
     .box {
         width: 190upx;
@@ -335,6 +357,13 @@ export default {
     }
     &.btn {
         background-color: #ffd300;
+        &.disabled {
+            background-color: #ddd;
+            .box {
+                background-color: #ccc;
+                color: #fff;
+            }
+        }
         .box {
             background-color: #ffe464;
             color: #ff5547;

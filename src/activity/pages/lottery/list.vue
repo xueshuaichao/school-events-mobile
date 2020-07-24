@@ -21,7 +21,7 @@
                     <view class="item-detail">
                         <view class="image">
                             <image
-                                :src="item.image"
+                                :src="item.image | optimizeImage"
                                 mode=""
                             />
                         </view>
@@ -97,6 +97,24 @@ export default {
     components: {
         uniLoadMore,
         login,
+    },
+    filters: {
+        optimizeImage: (val) => {
+            if (!val) {
+                return '';
+            }
+            let newUrl = '';
+            const width = 228;
+            const height = 128;
+            if (val.indexOf('?') !== -1) {
+                newUrl = `${val}&x-oss-process=image/format,png/interlace,1/quality,Q_80/resize,m_pad,h_${height
+                    * 2},w_${width * 2}`;
+            } else {
+                newUrl = `${val}?x-oss-process=image/format,png/interlace,1/quality,Q_80/resize,m_pad,h_${height
+                    * 2},w_${width * 2}`;
+            }
+            return newUrl;
+        },
     },
     mixins: [share.initShare],
     data() {
@@ -227,23 +245,8 @@ page {
             color: #666;
             font-size: 26upx;
             line-height: 80upx;
-            position: relative;
             width: 100%;
             text-align: center;
-            &:after {
-                content: "";
-                position: absolute;
-                top: 50%;
-                margin-top: -9upx;
-                right: 10upx;
-                width: 18upx;
-                height: 18upx;
-                border-top: 1px solid #9d9d9d;
-                border-right: 1px solid #9d9d9d;
-                -webkit-transform: rotate(45deg);
-                transform: rotate(45deg);
-                box-sizing: border-box;
-            }
         }
         .item-detail {
             display: flex;
@@ -295,6 +298,21 @@ page {
             font-size: 28upx;
             line-height: 80upx;
             display: flex;
+            position: relative;
+            &:after {
+                content: "";
+                position: absolute;
+                top: 50%;
+                margin-top: -9upx;
+                right: 20upx;
+                width: 18upx;
+                height: 18upx;
+                border-top: 1px solid #9d9d9d;
+                border-right: 1px solid #9d9d9d;
+                -webkit-transform: rotate(45deg);
+                transform: rotate(45deg);
+                box-sizing: border-box;
+            }
             & > view {
                 display: inline-block;
                 margin-right: 16upx;

@@ -8,6 +8,12 @@
             @login="onLogin"
         />
         <template v-else>
+            <view
+                class="jump-address-btn"
+                @click="jumpAddressList"
+            >
+                <view class="icon-address" />收件地址
+            </view>
             <view class="tab-view">
                 <!-- 1待审 2审核通过 3审核不通过 -->
                 <view
@@ -48,7 +54,7 @@
                     <view class="item-detail">
                         <view class="image">
                             <image
-                                :src="item.gift_img"
+                                :src="item.gift_img | optimizeImage"
                                 mode=""
                             />
                         </view>
@@ -102,12 +108,12 @@
                 />
             </view>
             <view
-                v-else
+                v-else-if="dataLoading"
                 class="no-data"
             >
                 <view class="image">
                     <image
-                        src=""
+                        src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/mall_icon_nodata.png"
                         mode=""
                     />
                 </view>
@@ -128,6 +134,24 @@ export default {
         uniLoadMore,
         login,
     },
+    filters: {
+        optimizeImage: (val) => {
+            if (!val) {
+                return '';
+            }
+            let newUrl = '';
+            const width = 228;
+            const height = 128;
+            if (val.indexOf('?') !== -1) {
+                newUrl = `${val}&x-oss-process=image/format,png/interlace,1/quality,Q_80/resize,m_pad,h_${height
+                    * 2},w_${width * 2}`;
+            } else {
+                newUrl = `${val}?x-oss-process=image/format,png/interlace,1/quality,Q_80/resize,m_pad,h_${height
+                    * 2},w_${width * 2}`;
+            }
+            return newUrl;
+        },
+    },
     mixins: [share.initShare],
     data() {
         return {
@@ -147,6 +171,7 @@ export default {
     methods: {
         onLogin({ user_info: userInfo }) {
             this.userInfo = userInfo;
+            uni.showLoading();
             this.getOrderList();
         },
         isLogin() {
@@ -157,6 +182,7 @@ export default {
                     this.getOrderList();
                 },
                 () => {
+                    uni.hideLoading();
                     this.loading = true;
                     this.userInfo = null;
                 },
@@ -168,6 +194,11 @@ export default {
                 this.loadMoreStatus = 'loading';
                 this.getOrderList('reachBottom');
             }
+        },
+        jumpAddressList() {
+            uni.navigateTo({
+                url: `/activity/pages/mall/address/list?activity_id=${this.activityId}`,
+            });
         },
         changeStatus(status) {
             this.status = status;
@@ -217,6 +248,7 @@ export default {
             this.status = Number(parms.status);
         }
         this.getShareConfig();
+        uni.showLoading();
         this.isLogin();
     },
 };
@@ -229,6 +261,28 @@ page {
 <style lang="less" scoped>
 .order-list-page {
     padding-top: 80upx;
+    .jump-address-btn {
+        position: fixed;
+        right: 0;
+        bottom: 250upx;
+        height: 52upx;
+        padding: 0 24upx;
+        color: #1166ff;
+        line-height: 52upx;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: #fff;
+        border-radius: 200upx 0px 0px 200upx;
+        box-shadow: 0 4upx 20upx 0 rgba(0, 0, 0, 0.06);
+        .icon-address {
+            width: 32upx;
+            height: 32upx;
+            margin-right: 4upx;
+            background-image: url(https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/icon_address.png);
+            background-size: 100% 100%;
+        }
+    }
     .tab-view {
         position: fixed;
         top: 0;
@@ -354,7 +408,7 @@ page {
         }
     }
     .no-data {
-        margin-top: 100upx;
+        margin-top: 254upx;
         line-height: 34upx;
         text-align: center;
         view {

@@ -355,6 +355,7 @@ page {
                 max-width: 50%;
                 box-sizing: border-box;
                 margin-bottom: 20upx;
+                font-size: 24upx;
                 .unit {
                     color: #999;
                     font-size: 24upx;

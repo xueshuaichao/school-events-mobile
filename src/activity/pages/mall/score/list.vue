@@ -357,7 +357,7 @@ page {
             right: 0;
         }
         .list-item {
-            height: 142upx;
+            min-height: 142upx;
             padding: 32upx 40upx;
             display: flex;
             justify-content: flex-start;
@@ -367,6 +367,7 @@ page {
             &:last-of-type {
                 border: 0;
             }
+            // 发放方式（1兑换驳回，2上传作品，3作品获赞，4打卡奖励，5运营发放，6积分兑换，7作品驳回，8运营扣除
             .item-image {
                 width: 48upx;
                 height: 48upx;
@@ -379,20 +380,22 @@ page {
                     background-position: center center;
                     background-image: url(https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/mall-icon-score3.png);
                 }
+
                 .icon-score-2 {
                     background-image: url(https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/mall-icon-score1.png);
                 }
                 .icon-score-3 {
                     background-image: url(https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/mall-icon-score2.png);
                 }
-                .icon-score-4,
-                .icon-score-5 {
-                    background-image: url(https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/mall-icon-score3.png);
-                }
-                .icon-score-6,
-                .icon-score-7,
+                .icon-score-5,
                 .icon-score-8 {
-                    background-image: url(https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/mall-icon-score4.png);
+                    background-image: url(https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/mall-icon-score5.png);
+                }
+                .icon-score-6 {
+                    background-image: url(https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/mall-icon-score7.png);
+                }
+                .icon-score-7 {
+                    background-image: url(https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/mall-icon-score6.png);
                 }
             }
             .item-info {

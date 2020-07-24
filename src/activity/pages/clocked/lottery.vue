@@ -29,7 +29,7 @@
                         </view>
                         <view
                             class="btn-item"
-                            @click="toggleRule"
+                            @click="toggleModal"
                         >
                             <view class="icon icon-luck" />
                             抽奖攻略
@@ -75,6 +75,7 @@
                         ref="lottery"
                         :lottery-data="lotteryData"
                         :num="num"
+                        :status="lotteryStatus"
                         @winning="winning"
                         @notwinning="notWinning"
                         @start="startLottery"
@@ -115,7 +116,7 @@
                             <image
                                 class="qrcode"
                                 :class="{ h5: isH5 }"
-                                src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/activity_code_9.png"
+                                :src="codeUrl"
                                 mode=""
                             />
                         </view>
@@ -178,13 +179,42 @@
                     @fail="onPosterFail"
                 />
             </view>
+            <view
+                v-if="isShowModal"
+                class="modal"
+            >
+                <view class="modal-content">
+                    <view class="title">
+                        抽奖攻略
+                    </view>
+                    <view class="text-content">
+                        <view class="text-item">
+                            1、用户每天坚持打卡，达到一定天数，即可获得相应的抽奖次数，每个用户最多可获得10次抽奖机会。
+                        </view>
+                        <view class="text-item">
+                            2、连续打卡7天可获得1次抽奖机会；连续打卡14天可再获得2次抽奖机会；连续打卡21天可再获得3次抽奖机会；累计打卡28天可再获得4次抽奖机会。
+                        </view>
+                        <view class="text-item">
+                            3、用户可在抽奖后即时查看获奖情况，如果中奖，需在“我的中奖”页面填写自己的收货地址，奖品将于活动结束后统一发出。
+                        </view>
+                    </view>
+                    <view
+                        class="close"
+                        @click="toggleModal"
+                    >
+                        <image
+                            src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/children_close.png"
+                            mode=""
+                        />
+                    </view>
+                </view>
+            </view>
         </template>
     </view>
 </template>
 <script>
 import api from '../../../common/api';
 import lotteryDraw from '../../../components/lottery-draw.vue';
-// import utils from '../../../common/utils';
 import login from '../../../widgets/login/login.vue';
 import tipsList from '../common/tips-list.vue';
 import posterh5 from '../brand/posterh5.vue';
@@ -204,8 +234,10 @@ export default {
         return {
             loading: false,
             activityLoading: false,
+            codeUrl: '',
             userInfo: '',
             status: 0,
+            lotteryStatus: 1,
             previewMask: false,
             // #ifdef H5
             isH5: true,
@@ -226,13 +258,12 @@ export default {
                         x: 0,
                     },
                     {
-                        url:
-                            'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/activity_code_9.png',
+                        url: '',
                         width: 126,
                         height: 126,
                         y: 655,
                         x: 464,
-                        borderRadius: this.isH5 ? 0 : 126,
+                        borderRadius: 126,
                     },
                 ],
             },
@@ -262,21 +293,19 @@ export default {
                         x: 0,
                     },
                     {
-                        url:
-                            'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/brand_close.png',
+                        url: '',
                         width: 192,
                         height: 144,
                         y: 400,
                         x: 219,
                     },
                     {
-                        url:
-                            'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/activity_code_9.png',
+                        url: '',
                         width: 126,
                         height: 126,
                         y: 655,
                         x: 464,
-                        borderRadius: this.isH5 ? 0 : 126,
+                        borderRadius: 126,
                     },
                 ],
             },
@@ -292,6 +321,7 @@ export default {
             showError: false,
             prizeDetail: {},
             imgAuthBtn: false,
+            isShowModal: false,
         };
     },
     mounted() {
@@ -305,6 +335,7 @@ export default {
         onLogin({ user_info: userInfo }) {
             this.userInfo = userInfo;
             this.getCrouselList();
+            this.getLotteryData();
         },
         isLogin() {
             api.get('/api/user/info').then(
@@ -322,6 +353,9 @@ export default {
         initLottery() {
             this.status = 0;
         },
+        toggleModal() {
+            this.isShowModal = !this.isShowModal;
+        },
         getLotteryData() {
             api.get('/api/draw/getprize', {
                 activity_id: this.activityId,
@@ -333,6 +367,7 @@ export default {
                     } else {
                         this.lotteryData = res.list;
                         this.num = Number(res.num);
+                        this.lotteryStatus = Number(res.status);
                         // 如果配置奖品不足7个 自动补谢谢参与；另外需增加一个谢谢参与保证最终为8个奖品
                         if (this.lotteryData.length < 8) {
                             const len = this.lotteryData.length;
@@ -374,6 +409,7 @@ export default {
         winning(detail) {
             this.prizeDetail = detail;
             this.successConfig.images[1].url = this.prizeDetail.image;
+
             this.successConfig.texts[0].text = this.prizeDetail.name;
             this.togglePoster(true);
             this.posterCommonConfig = {
@@ -416,7 +452,7 @@ export default {
                                 duration: 2000,
                             });
                         },
-                        fail(err) {
+                        fail: (err) => {
                             console.log(err);
                             uni.hideLoading();
                             if (
@@ -543,12 +579,74 @@ export default {
     },
     onLoad(parms) {
         this.activityId = parms.activity_id;
+        this.codeUrl = this.isH5
+            ? `https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/applet-code-h5-${this.activityId}.png`
+            : `https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/applet-code-${this.activityId}.png`;
+        this.successConfig.images[2].url = this.codeUrl;
+        this.successConfig.images[2].borderRadius = this.isH5 ? 0 : 126;
+        this.failConfig.images[1].url = this.codeUrl;
+        this.failConfig.images[1].borderRadius = this.isH5 ? 0 : 126;
         this.isLogin();
         this.getShareConfig();
     },
 };
 </script>
 <style lang="less" scoped>
+.lottery-page {
+    .modal {
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background-color: rgba(0, 0, 0, 0.8);
+        z-index: 1;
+        .modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #ffdada;
+            border-radius: 20upx;
+            width: 690upx;
+            height: 968upx;
+
+            .title {
+                height: 72upx;
+                background: linear-gradient(
+                    rgba(255, 162, 132, 1) 0%,
+                    rgba(255, 104, 76, 1) 100%
+                );
+                box-shadow: 0 2upx 4upx 0 rgba(255, 255, 255, 0.5);
+                border-radius: 20upx 20upx 0 0;
+                line-height: 72upx;
+                color: #ffff;
+                text-align: center;
+            }
+            .close {
+                position: absolute;
+                left: 50%;
+                transform: translateX(-50%);
+                width: 63upx;
+                height: 63upx;
+                bottom: -103upx;
+                & > image {
+                    width: 100%;
+                    height: 100%;
+                }
+            }
+        }
+        .text-content {
+            padding: 40upx 30upx;
+            .text-item {
+                color: #ff5547;
+                font-size: 26upx;
+                margin-bottom: 20upx;
+                line-height: 40upx;
+            }
+        }
+    }
+}
 .lottery-content {
     background-color: #ff685c;
     padding-bottom: 40upx;
@@ -767,21 +865,24 @@ export default {
             margin-top: 0;
         }
         /deep/.page-section-spacing .swiper .swiper-item {
+            .icon-horn {
+                background-image: url("https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/icon-horn.png");
+            }
             & > text:last-child {
                 color: #999;
             }
             .swiper-info {
                 color: #ff685c;
             }
-        }
-        /deep/.page-section-spacing .swiper .swiper-item .swiper-info > text {
-            &:nth-child(1),
-            &:nth-child(3),
-            &:nth-child(4) {
-                color: #ff685c;
-            }
-            &:nth-child(2) {
-                color: #999;
+            .swiper-info > text {
+                &:nth-child(1),
+                &:nth-child(3),
+                &:nth-child(4) {
+                    color: #ff685c;
+                }
+                &:nth-child(2) {
+                    color: #999;
+                }
             }
         }
     }

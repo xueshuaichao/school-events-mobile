@@ -29,16 +29,13 @@
                             </view>
                         </view>
                         <view class="address-handel">
-                            <view @click.stop="setDefaulAddress">
-                                <radio-group @change="setDefaulAddress">
-                                    <label
-                                        class="radio"
-                                    ><radio
-                                        class="theme"
-                                        :value="String(item.id)"
-                                        :checked="item.default === 1"
-                                    />默认地址</label>
-                                </radio-group>
+                            <view @click.stop="setDefaulAddress(item.id)">
+                                <view class="radio">
+                                    <view
+                                        class="iocn icon-radio"
+                                        :class="{ checked: item.default === 1 }"
+                                    />默认地址
+                                </view>
                             </view>
                             <view class="handel-item">
                                 <text @click.stop="editAddress(item.id)">
@@ -66,7 +63,7 @@
                     class="address-none"
                 >
                     <image
-                        src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/mall_no_address.png"
+                        src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/mall_icon_noaddress.png"
                         mode=""
                     />
                     <view>暂时没有收货地址哦～</view>
@@ -107,7 +104,7 @@ export default {
         };
     },
     onShow() {
-        uni.$once('addressDetail', (data) => {
+        uni.$once('addressDetailList', (data) => {
             const index = this.list.findIndex(v => v.id === Number(data.id));
             const address = ['address', 'mobile', 'name'];
             address.forEach((item) => {
@@ -116,7 +113,7 @@ export default {
         });
     },
     onUnload() {
-        uni.$off('addressDetail');
+        uni.$off('addressDetailList');
     },
     methods: {
         onLogin({ user_info: userInfo }) {
@@ -176,6 +173,7 @@ export default {
             const pames = {
                 address_id: item.id,
                 activity_id: this.activityId,
+                detail: item,
             };
             if (this.detailId) {
                 uni.$emit('setAddress', { ...pames, id: this.detailId });
@@ -191,7 +189,6 @@ export default {
                     uni.$emit('addressDetail', {
                         ...pames,
                         id: this.lotteryId,
-                        detail: item,
                     });
                     uni.navigateBack();
                 });
@@ -202,7 +199,7 @@ export default {
                 this.lock = true;
                 uni.showModal({
                     title: '删除提示',
-                    content: '确认要删除地址么',
+                    content: '确认要删除地址吗？',
                     confirmText: '取消',
                     cancelText: '确定',
                     cancelColor: '#1166FF',
@@ -228,7 +225,7 @@ export default {
                     const isDefault = this.list[index].default === 1;
                     this.list.splice(index, 1);
                     if (isDefault) {
-                        this.setDefaulAddress(this.list[0].id);
+                        this.setDefaulAddress(this.list[0].id, false);
                     }
                     this.lock = false;
                 },
@@ -242,13 +239,31 @@ export default {
                 url: `edit?id=${id}&activity_id=${this.activityId}`,
             });
         },
-        setDefaulAddress(e) {
-            if (e.type === 'click') {
-                // 用来阻止事件冒泡
-                return false;
-            }
+        setDefaulAddress(id, handel = true) {
             // 设置默认地址
-            const id = typeof e === 'number' ? e : Number(e.detail.value);
+            if (handel) {
+                uni.showModal({
+                    title: '提示',
+                    content: '确认要更换默认地址吗？',
+                    confirmText: '取消',
+                    cancelText: '确定',
+                    cancelColor: '#1166FF',
+                    confirmColor: '#999999',
+                    success: (res) => {
+                        if (res.cancel) {
+                            this.setDefaulAddressFn(id);
+                            // console.log('用户点击确定');
+                        } else if (res.cancel) {
+                            this.lock = false;
+                            // console.log('用户点击取消');
+                        }
+                    },
+                });
+            } else {
+                this.setDefaulAddressFn(id);
+            }
+        },
+        setDefaulAddressFn(id) {
             const index = this.list.findIndex(v => v.id === id);
             this.list.forEach((item, i) => {
                 if (i !== index) {
@@ -268,7 +283,6 @@ export default {
                     });
                 },
             );
-            return true;
         },
         addAddress() {
             uni.navigateTo({
@@ -276,6 +290,7 @@ export default {
             });
         },
     },
+
     onLoad(parms) {
         this.detailId = parms.detail_id || '';
         this.lotteryId = parms.lottery_id;
@@ -293,38 +308,6 @@ page {
 <style lang="less" scoped>
 .address-page {
     position: relative;
-    /* #ifndef MP-ALIPAY */
-
-    /deep/radio::before {
-        margin-top: -8rpx;
-        right: 8rpx;
-        font-size: 36rpx;
-        line-height: 16rpx;
-    }
-
-    /deep/radio .wx-radio-input,
-    /deep/radio .uni-radio-input {
-        margin: 0;
-        width: 32rpx;
-        height: 32rpx;
-        margin-right: 10upx;
-        position: relative;
-        top: -4upx;
-    }
-    /* #endif */
-
-    /* 覆盖样式修改颜色 */
-    /deep/radio.theme[checked] .wx-radio-input,
-    /deep/radio.theme.checked .uni-radio-input {
-        background-color: #1166ff !important;
-        border-color: #1166ff !important;
-        color: #ffffff !important;
-    }
-
-    /* 鼠标移到上面的边框颜色 */
-    uni-radio:not([disabled]) .uni-radio-input:hover {
-        border-color: #d1d1d1 !important;
-    }
     .address-list {
         padding: 28upx 30upx 136upx;
         background-color: #f0f0f3;
@@ -361,6 +344,17 @@ page {
             font-size: 28upx;
             display: flex;
             align-items: center;
+            color: #333;
+            .icon-radio {
+                width: 34upx;
+                height: 34upx;
+                background-image: url(https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/icon_select_off.png);
+                background-size: 100% 100%;
+                margin-right: 16upx;
+                &.checked {
+                    background-image: url(https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/icon_select_on.png);
+                }
+            }
         }
         .handel-item {
             color: #1166ff;

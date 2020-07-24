@@ -195,7 +195,7 @@ export default {
                             } else if (this.lotteryId) {
                                 this.setLotteryAddress(pames, address);
                             } else {
-                                uni.$emit('addressDetail', {
+                                uni.$emit('addressDetailList', {
                                     ...pames,
                                     id: this.id,
                                 });

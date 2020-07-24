@@ -15,7 +15,10 @@
                 :path="`/activity/pages/mall/index?activity_id=${activityId}`"
             />
             <template v-else-if="detailLoading">
-                <view class="address-content">
+                <view
+                    class="address-content"
+                    @click="setAddress"
+                >
                     <view
                         v-if="!detailData.address"
                         class="text"
@@ -119,6 +122,17 @@ export default {
             showError: false,
         };
     },
+    onShow() {
+        uni.$once('addressDetail', (data) => {
+            const address = ['address', 'mobile', 'name'];
+            address.forEach((item) => {
+                this.$set(this.detailData.address, item, data.detail[item]);
+            });
+        });
+    },
+    onUnload() {
+        uni.$off('addressDetail');
+    },
     methods: {
         onLogin({ user_info: userInfo }) {
             this.userInfo = userInfo;
@@ -136,6 +150,15 @@ export default {
                     this.userInfo = null;
                 },
             );
+        },
+        setAddress() {
+            // 如果没有地址 跳至添加页面 否则跳到地址列表页
+            const url = this.detailData.address
+                ? `list?lottery_id=${this.id}`
+                : `edit?lottery_id=${this.id}`;
+            uni.navigateTo({
+                url: `/activity/pages/mall/address/${url}&activity_id=${this.activityId}`,
+            });
         },
         getData() {
             api.get('/api/draw/info', {
@@ -212,6 +235,22 @@ page {
         background-size: 76upx 6upx;
         background-repeat: repeat-x;
         background-position: left bottom;
+        position: relative;
+        &::after {
+            content: "";
+            position: absolute;
+            right: 2px;
+            top: 50%;
+            margin-top: -13upx;
+            right: 38upx;
+            width: 26upx;
+            height: 26upx;
+            border-top: 1px solid #9d9d9d;
+            border-right: 1px solid #9d9d9d;
+            -webkit-transform: rotate(45deg);
+            transform: rotate(45deg);
+            box-sizing: border-box;
+        }
         .name-mobile {
             line-height: 40upx;
             margin-bottom: 12upx;

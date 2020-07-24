@@ -12,7 +12,7 @@
                 <view class="banner-content">
                     <view class="tips">
                         <view class="icon" />
-                        <view>
+                        <view v-if="integral.useful_score">
                             亲，你有{{ integral.useful_score }}积分，将于{{
                                 exchangeDetail.pay_end_time | setTime
                             }}之前清零哦～
@@ -22,7 +22,7 @@
                         <view class="text-content">
                             可用积分
                             <view class="num text-one-line">
-                                {{ integral.useful_score }}
+                                {{ integral.useful_score || 0 }}
                             </view>
                         </view>
                     </view>
@@ -77,7 +77,7 @@
                                     >
                                         已兑完
                                     </text>
-                                    <image :src="item.img" />
+                                    <image :src="item.img | optimizeImage" />
                                 </view>
                                 <view class="item-info">
                                     <view class="tit text-one-line">
@@ -101,7 +101,7 @@
                             v-else
                             class="no-data"
                         >
-                            暂无可兑换商品～
+                            礼品正在飞奔而来，先去努力获得积分吧~
                         </view>
                     </view>
                     <uni-load-more
@@ -127,7 +127,7 @@
                 <view class="detail-panel">
                     <view class="detail-info">
                         <view class="info-image">
-                            <image :src="itemDetail.img" />
+                            <image :src="itemDetail.img | optimizeImage" />
                         </view>
                         <view class="info-text">
                             <view class="title text-one-line">
@@ -240,6 +240,22 @@ export default {
                 return `${time[1]}月${time[2]}日`;
             }
             return '';
+        },
+        optimizeImage: (val) => {
+            if (!val) {
+                return '';
+            }
+            let newUrl = '';
+            const width = 345;
+            const height = 196;
+            if (val.indexOf('?') !== -1) {
+                newUrl = `${val}&x-oss-process=image/format,png/interlace,1/quality,Q_80/resize,m_pad,h_${height
+                    * 2},w_${width * 2}`;
+            } else {
+                newUrl = `${val}?x-oss-process=image/format,png/interlace,1/quality,Q_80/resize,m_pad,h_${height
+                    * 2},w_${width * 2}`;
+            }
+            return newUrl;
         },
     },
     mixins: [share.initShare],
@@ -689,6 +705,7 @@ export default {
                         max-width: 50%;
                         box-sizing: border-box;
                         margin-bottom: 20upx;
+                        font-size: 24upx;
                         .unit {
                             color: #999;
                             font-size: 24upx;
