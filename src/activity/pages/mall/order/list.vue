@@ -404,6 +404,7 @@ page {
                 color: #999999;
                 display: inline-block;
                 word-break: break-all;
+                flex: 1;
             }
         }
     }

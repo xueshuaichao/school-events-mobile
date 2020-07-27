@@ -38,6 +38,7 @@ export default {
     data() {
         return {
             newArea: {},
+            provinceList: [],
             defaultValue: [],
         };
     },
@@ -47,6 +48,7 @@ export default {
                 this.defaultValue = val;
             },
             immediate: true,
+            deep: true,
         },
     },
     created() {
@@ -60,7 +62,9 @@ export default {
                 newArea[0].children.push(this.addData);
             }
             this.provinceList = newArea;
+            console.log(this.provinceList);
         }
+        console.log(this.provinceList);
     },
     methods: {
         confirm(picked) {

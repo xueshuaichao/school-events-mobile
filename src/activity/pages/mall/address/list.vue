@@ -17,9 +17,11 @@
                         v-for="item in list"
                         :key="item.id"
                         class="item"
-                        @click="selectAddress(item)"
                     >
-                        <view class="address-info">
+                        <view
+                            class="address-info"
+                            @click="selectAddress(item)"
+                        >
                             <view class="name-mobile">
                                 <text>{{ item.name }}</text>
                                 <text>{{ item.mobile }}</text>
@@ -105,11 +107,18 @@ export default {
     },
     onShow() {
         uni.$once('addressDetailList', (data) => {
-            const index = this.list.findIndex(v => v.id === Number(data.id));
-            const address = ['address', 'mobile', 'name'];
-            address.forEach((item) => {
-                this.$set(this.list[index], item, data.detail[item]);
-            });
+            if (data.id) {
+                const index = this.list.findIndex(
+                    v => v.id === Number(data.id),
+                );
+                const address = ['address', 'mobile', 'name'];
+                address.forEach((item) => {
+                    this.$set(this.list[index], item, data.detail[item]);
+                });
+            } else {
+                this.filter.page_num = 1;
+                this.getAddress();
+            }
         });
     },
     onUnload() {
@@ -208,8 +217,9 @@ export default {
                         if (res.cancel) {
                             this.deleteAddress(id);
                             // console.log('用户点击确定');
-                        } else if (res.cancel) {
+                        } else {
                             this.lock = false;
+                            console.log(this.lock);
                             // console.log('用户点击取消');
                         }
                     },
@@ -224,6 +234,10 @@ export default {
                     const index = this.list.findIndex(v => v.id === id);
                     const isDefault = this.list[index].default === 1;
                     this.list.splice(index, 1);
+                    this.total -= 1;
+                    if (this.list.length <= 5) {
+                        this.loadMoreStatus = 'none';
+                    }
                     if (isDefault) {
                         this.setDefaulAddress(this.list[0].id, false);
                     }
@@ -313,12 +327,12 @@ page {
         background-color: #f0f0f3;
         .item {
             background-color: #ffffff;
-            padding: 20upx 32upx;
             margin-bottom: 32upx;
+            box-shadow: 0px 4upx 28upx 0px rgba(0, 0, 0, 0.06);
             border-radius: 4upx;
         }
         .address-info {
-            margin-bottom: 32upx;
+            padding: 30upx 32upx 12upx;
         }
         .name-mobile {
             line-height: 40upx;
@@ -337,6 +351,7 @@ page {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            padding: 10upx 32upx 20upx;
         }
         .radio {
             line-height: 40upx;

@@ -180,7 +180,6 @@ export default {
                     const address = `${this.formData.district} ${this.formData.address}`;
                     api.post(url, { ...this.formData, address }).then(
                         (res) => {
-                            this.lock = false;
                             uni.showToast({
                                 title: '提交成功',
                                 icon: 'none',
@@ -201,6 +200,7 @@ export default {
                                 });
                                 uni.navigateBack();
                             }
+                            this.lock = false;
                         },
                         (err) => {
                             this.lock = false;
