@@ -235,6 +235,7 @@ export default {
         return {
             loading: false,
             activityLoading: false,
+            activityId: '',
             codeUrl: '',
             userInfo: '',
             status: 0,

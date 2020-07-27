@@ -115,6 +115,7 @@ export default {
             // #ifdef H5
             isH5: true,
             // #endif
+            activityId: '',
             loading: false,
             detailLoading: false,
             detailData: {},
