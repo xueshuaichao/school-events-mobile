@@ -12,7 +12,7 @@
                 v-if="showError"
                 message="活动不存在"
                 tips="商城首页"
-                :path="`//activity/pages/index?activity_id=${activityId}`"
+                :path="`/activity/pages/index?activity_id=${activityId}`"
             />
             <view
                 v-else
@@ -217,6 +217,7 @@ import api from '../../../common/api';
 import lotteryDraw from '../../../components/lottery-draw.vue';
 import login from '../../../widgets/login/login.vue';
 import tipsList from '../common/tips-list.vue';
+import utils from '../../../common/utils';
 import posterh5 from '../brand/posterh5.vue';
 import errorPage from '../common/error.vue';
 import share from '../common/shareMinxin';
@@ -408,7 +409,9 @@ export default {
         },
         winning(detail) {
             this.prizeDetail = detail;
-            this.successConfig.images[1].url = this.prizeDetail.image;
+            this.successConfig.images[1].url = this.isH5
+                ? this.prizeDetail.image
+                : utils.mapHttpToHttps(this.prizeDetail.image);
 
             this.successConfig.texts[0].text = this.prizeDetail.name;
             this.togglePoster(true);
