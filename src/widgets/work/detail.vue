@@ -509,6 +509,9 @@ export default {
             if (this.activityId === 10) {
                 url = '/activity/pages/index?activity_id=10';
             }
+            if (this.activityId === 12) {
+                url = '/activity/pages/index?activity_id=12';
+            }
             uni.navigateTo({
                 url,
             });
@@ -546,6 +549,10 @@ export default {
             if (activity && this.activityId === 10) {
                 uni.navigateTo({
                     url: `/activity/pages/brand/ucenter?activity_id=10&user_id=${this.pageData.create_by}`,
+                });
+            } else if (activity && this.activityId === 12) {
+                uni.navigateTo({
+                    url: `/activity/pages/clocked/ucenter?activity_id=12&user_id=${this.pageData.create_by}`,
                 });
             } else {
                 uni.navigateTo({

@@ -34,9 +34,9 @@
                         />
                         <view>
                             <view class="name">
-                                与果果
+                                {{ userInfo.name }}
                             </view>
-                            <view class="tx">
+                            <view class="txt">
                                 我的勋章
                             </view>
                             <view class="flex-honor-all">
@@ -128,7 +128,7 @@
                     >
                         <template v-for="(item, index) in dataList">
                             <view
-                                v-if="getDate(item.created_at)"
+                                v-if="item.dateCount === 1"
                                 :key="index"
                                 class="time"
                             >
@@ -137,7 +137,7 @@
                                         src="/activity/static/clocked/time.png"
                                     />
                                     <text class="txt">
-                                        {{ item.created_at }}
+                                        {{ item.created_at_date }}
                                     </text>
                                 </view>
                             </view>
@@ -147,8 +147,8 @@
                             >
                                 <event-craft-cover
                                     :info="item"
-                                    :media-icon="true"
-                                    :like-icon="false"
+                                    :media-icon="!isSelf"
+                                    :like-icon="isSelf"
                                     :best-icon="false"
                                     :bg-color="publicConfig.primaryBgColor"
                                     @click.native="viewDetail(item, index)"
@@ -459,15 +459,6 @@ export default {
                     }
                 });
             });
-        },
-        getDate(time) {
-            // 设置作品时间
-            let flag = false;
-            if (!this.allDate[time]) {
-                this.allDate[time] = 1;
-                flag = true;
-            }
-            return flag;
         },
         onLogin() {
             this.getData();
@@ -819,7 +810,14 @@ export default {
                     ({ list, total, all_num: allNum }) => {
                         const List = list.map((d) => {
                             const D = d;
-                            D.created_at = D.created_at.slice(5, 10);
+                            D.created_at_date = D.created_at.slice(5, 10);
+                            if (!this.allDate[D.created_at_date]) {
+                                this.allDate[D.created_at_date] = 1;
+                                D.dateCount = 1;
+                            } else {
+                                this.allDate[D.created_at_date] += 1;
+                                D.dateCount = this.allDate[D.created_at_date];
+                            }
                             return D;
                         });
                         if (title === 'reachBottom') {
@@ -928,6 +926,18 @@ export default {
                 if (index !== -1) {
                     this.dataList.splice(index, 1);
                     this.total -= 1;
+
+                    this.dataList = this.dataList.map((D) => {
+                        const d = D;
+                        if (
+                            d.created_at_date === item.created_at_date
+                            && d.dateCount > item.dateCount
+                        ) {
+                            d.dateCount -= 1;
+                        }
+                        return d;
+                    });
+                    this.allDate[item.created_at_date] -= 1;
                     if (
                         this.dataList.length <= this.filter.page_size
                         && this.total >= this.filter.page_size
@@ -939,6 +949,7 @@ export default {
                         this.getWorkData();
                     }
                 }
+
                 uni.showToast({
                     title: '删除成功',
                 });
@@ -953,8 +964,6 @@ export default {
                     this.allNum.no_pass -= 1;
                 }
             });
-            // 日期的显示，需要重新算一次。
-            this.allDate = {};
         },
         handleVote(item) {
             if (this.status === 2) {
@@ -1162,6 +1171,9 @@ export default {
                 width: 280upx;
                 height: 210upx;
             }
+            .like-icon {
+                top: 164upx;
+            }
         }
     }
     .work {
@@ -1169,24 +1181,7 @@ export default {
         height: 225upx;
         border-radius: 20upx;
     }
-    .media-icon {
-        width: 40upx;
-        height: 40upx;
-        background: rgba(0, 0, 0, 0.6);
-        border-radius: 20upx;
-        text-align: center;
-        line-height: 39upx;
-        // #ifdef H5
-        line-height: 42upx;
-        // #endif
-        position: absolute;
-        top: 175upx;
-        left: 290upx;
-        image {
-            width: 22upx;
-            height: 22upx;
-        }
-    }
+
     /deep/ .event-craft-cover,
     .event-craft-cover {
         .tag {
@@ -1197,6 +1192,24 @@ export default {
         .video {
             width: 306upx;
             height: 205upx;
+        }
+        .media-icon {
+            width: 40upx;
+            height: 40upx;
+            background: rgba(0, 0, 0, 0.6);
+            border-radius: 20upx;
+            text-align: center;
+            line-height: 39upx;
+            // #ifdef H5
+            line-height: 42upx;
+            // #endif
+            position: absolute;
+            top: 150upx;
+            left: 250upx;
+            image {
+                width: 22upx;
+                height: 22upx;
+            }
         }
     }
 
@@ -1356,7 +1369,7 @@ export default {
         .flex-honor-all {
             display: flex;
             justify-content: space-between;
-            margin-top: 40upx;
+            margin-top: 28upx;
             width: 500upx;
             .item {
                 position: relative;

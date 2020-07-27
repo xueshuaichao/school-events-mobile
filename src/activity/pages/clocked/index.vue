@@ -340,14 +340,7 @@ export default {
             api.get('/api/activity/clockin', {
                 user_id: this.userInfo.user_id,
                 activity_id: 12,
-            }).then(({ data }) => {
-                // data = {
-                //     20200801: {
-                //         status: 1,
-                //         draw: 0,
-                //         type: 1,
-                //     },
-                // };
+            }).then((data) => {
                 this.calendarData = data;
             });
         },
