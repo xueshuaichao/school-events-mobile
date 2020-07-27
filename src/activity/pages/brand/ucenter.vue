@@ -70,7 +70,7 @@
                         <view class="user-image-info">
                             <view class="user-image">
                                 <img
-                                    v-if="isH5"
+                                    v-if="isH5 && isSelf"
                                     crossorigin="anonymous"
                                     :src="detail.image"
                                     alt=""

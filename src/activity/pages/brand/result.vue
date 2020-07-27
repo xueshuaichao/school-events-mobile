@@ -12,9 +12,15 @@
                     @click="jumpUcenter(item.user_id)"
                 >
                     <view class="item-img">
-                        <image
+                        <img
+                            v-if="isH5"
+                            crossorigin="anonymous"
                             :src="item.image"
-                            mode=""
+                            alt=""
+                        >
+                        <image
+                            v-else
+                            :src="item.image"
                         />
                     </view>
                     <view class="item-name-school">
@@ -129,6 +135,9 @@ export default {
     },
     data() {
         return {
+            // #ifdef H5
+            isH5: true,
+            // #endif
             dataList: {},
         };
     },

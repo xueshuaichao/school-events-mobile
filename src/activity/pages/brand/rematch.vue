@@ -12,7 +12,16 @@
             >
                 <view class="avatar">
                     <template v-if="item.image">
-                        <image :src="item.image" />
+                        <img
+                            v-if="isH5"
+                            crossorigin="anonymous"
+                            :src="item.image"
+                            alt=""
+                        >
+                        <image
+                            v-else
+                            :src="item.image"
+                        />
                     </template>
                     <view
                         v-if="item.score"
@@ -46,6 +55,9 @@ import share from '../../../common/share';
 export default {
     data() {
         return {
+            // #ifdef H5
+            isH5: true,
+            // #endif
             list: [],
             publicConfig: {},
         };
