@@ -301,6 +301,9 @@ export default {
             if (this.activityId === 10) {
                 url = `/activity/pages/brand/ucenter?status=1&activity_id=${this.activityId}&user_id=${this.userInfo.user_id}`;
             }
+            if (this.activityId === 12) {
+                url = '/activity/pages/index?activity_id=12';
+            }
             uni.reLaunch({
                 url,
             });
@@ -354,7 +357,7 @@ export default {
         },
         getMpQrCode() {
             // 小程序二维码
-            const url = 'activity/pages/index/ucenter';
+            const url = 'activity/pages/index';
             const scene = 'activity_id=12';
             api.post('/api/weixin/getminiqrcode', {
                 path: url,

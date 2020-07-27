@@ -65,30 +65,27 @@
                             :data-key="index"
                             :class="{
                                 grey: item.grey,
-                                passed:
-                                    !item.status && !item.isToday && ismyself
+                                passed: item.type && !item.isToday && ismyself
                             }"
                             @click="jumpUpload(item.isToday)"
                         >
                             <template
                                 v-if="
-                                    !item.type ||
-                                        (!ismyself && item.status !== 1)
-                                "
-                            >
-                                <view class="item-txt">
-                                    {{ item.txt }}
-                                </view>
-                            </template>
-                            <template
-                                v-if="
-                                    ismyself || (!ismyself && item.status === 1)
+                                    (ismyself &&
+                                        ((!item.isToday && item.status) ||
+                                        (item.isToday && item.type))) ||
+                                        (!ismyself && item.status === 1)
                                 "
                             >
                                 <image
                                     :src="getPath(item)"
                                     class="icon"
                                 />
+                            </template>
+                            <template v-else>
+                                <view class="item-txt">
+                                    {{ item.txt }}
+                                </view>
                             </template>
                         </view>
                     </view>
@@ -164,8 +161,10 @@ export default {
         },
         setList() {
             const keys = Object.keys(this.calendarData);
+            console.log(keys);
             keys.forEach((d) => {
                 if (this.list[d]) {
+                    console.log(this.list[d]);
                     this.list[d] = Object.assign(
                         {},
                         this.calendarData[d],
