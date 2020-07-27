@@ -105,11 +105,18 @@ export default {
     },
     onShow() {
         uni.$once('addressDetailList', (data) => {
-            const index = this.list.findIndex(v => v.id === Number(data.id));
-            const address = ['address', 'mobile', 'name'];
-            address.forEach((item) => {
-                this.$set(this.list[index], item, data.detail[item]);
-            });
+            if (data.id) {
+                const index = this.list.findIndex(
+                    v => v.id === Number(data.id),
+                );
+                const address = ['address', 'mobile', 'name'];
+                address.forEach((item) => {
+                    this.$set(this.list[index], item, data.detail[item]);
+                });
+            } else {
+                this.filter.page_num = 1;
+                this.getAddress();
+            }
         });
     },
     onUnload() {
