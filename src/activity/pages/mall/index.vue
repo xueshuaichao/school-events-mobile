@@ -10,9 +10,12 @@
         <template v-else>
             <view class="main-content">
                 <view class="banner-content">
-                    <view class="tips">
+                    <view
+                        v-if="integral.useful_score"
+                        class="tips"
+                    >
                         <view class="icon" />
-                        <view v-if="integral.useful_score">
+                        <view>
                             亲，你有{{ integral.useful_score }}积分，将于{{
                                 exchangeDetail.pay_end_time | setTime
                             }}之前清零哦～
