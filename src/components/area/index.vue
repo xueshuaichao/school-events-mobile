@@ -46,7 +46,6 @@ export default {
         default: {
             handler(val) {
                 this.defaultValue = val;
-                console.log(val);
             },
             immediate: true,
             deep: true,

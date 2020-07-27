@@ -231,6 +231,10 @@ export default {
                     const index = this.list.findIndex(v => v.id === id);
                     const isDefault = this.list[index].default === 1;
                     this.list.splice(index, 1);
+                    this.total -= 1;
+                    if (this.list.length <= 5) {
+                        this.loadMoreStatus = 'none';
+                    }
                     if (isDefault) {
                         this.setDefaulAddress(this.list[0].id, false);
                     }
