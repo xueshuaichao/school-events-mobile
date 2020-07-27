@@ -37,7 +37,7 @@
                                 {{ userInfo.name }}
                             </view>
                             <view class="txt">
-                                我的勋章
+                                {{ isSelf ? "我" : "TA" }}的勋章
                             </view>
                             <view class="flex-honor-all">
                                 <view
@@ -438,8 +438,10 @@ export default {
             api.get('/api/activity/clockin', {
                 user_id: this.userId,
                 activity_id: 12,
-            }).then(({ data }) => {
-                this.calendarData = data;
+            }).then((data) => {
+                if (Object.keys(data).length) {
+                    this.calendarData = data;
+                }
             });
         },
         getsigninfo() {
@@ -781,11 +783,11 @@ export default {
             });
         },
         getData() {
-            api.get('/api/user/info').then(
-                (res) => {
-                    this.userInfo = res.user_info;
+            api.get(`/api/user/showinfo?uid=${this.userId}`).then(
+                (data) => {
                     this.isLoading = false;
-                    this.isSelf = res.user_info.user_id === Number(this.userId);
+                    this.isSelf = data.myself_page === 1;
+                    this.userInfo = data;
                     this.getWorkData();
                     this.getQrCode();
                     this.initShare();
@@ -984,7 +986,7 @@ export default {
                                 title: '已点赞',
                                 icon: 'none',
                             });
-                            this.$emit('voteCallBack');
+                            // this.$emit('voteCallBack');
                         },
                         (res) => {
                             uni.showToast({

@@ -379,15 +379,22 @@ export default {
             this.$emit('showMask', { title: '活动规则', type: 0 });
         },
         handleMywork() {
-            api.isLogin({
-                fr: this.fr,
-            }).then(() => {
-                uni.navigateTo({
-                    url: this.workPath
-                        ? this.workPath
-                        : `/activity/pages/mywork/mywork?type=myWork&activity_id=${this.filter.activity_id}`,
-                });
-            });
+            if (this.filter.activity_id !== 12) {
+                api.isLogin({
+                    fr: this.fr,
+                }).then(
+                    () => {
+                        uni.navigateTo({
+                            url: this.workPath
+                                ? this.workPath
+                                : `/activity/pages/mywork/mywork?type=myWork&activity_id=${this.filter.activity_id}`,
+                        });
+                    },
+                    () => {},
+                );
+            } else {
+                this.$emit('toUcenter');
+            }
         },
         handleVote(item) {
             if (this.status === 2) {

@@ -62,7 +62,7 @@
                             :key="name"
                             class="item"
                             :data-name="name"
-                            :data-key="index"
+                            :data-key="item.type + item.status + index"
                             :class="{
                                 grey: item.grey,
                                 passed: item.type && !item.isToday && ismyself
@@ -161,10 +161,8 @@ export default {
         },
         setList() {
             const keys = Object.keys(this.calendarData);
-            console.log(keys);
             keys.forEach((d) => {
                 if (this.list[d]) {
-                    console.log(this.list[d]);
                     this.list[d] = Object.assign(
                         {},
                         this.calendarData[d],

@@ -245,7 +245,8 @@ export default {
     onLoad(params) {
         this.activityId = Number(params.activity_id);
         this.preStatus = Number(params.pre_type) || 0; // 判断是否打卡了
-        const days = params.days || '0';
+        let days = Number(params.days) + 1 || '0';
+        days = String(days);
         this.publicConfig = this.$store.getters.getPublicConfig(
             this.activityId,
         );
@@ -302,7 +303,7 @@ export default {
                 url = `/activity/pages/brand/ucenter?status=1&activity_id=${this.activityId}&user_id=${this.userInfo.user_id}`;
             }
             if (this.activityId === 12) {
-                url = '/activity/pages/index?activity_id=12';
+                url = `/activity/pages/clocked/ucenter?status=1&activity_id=${this.activityId}&user_id=${this.userInfo.user_id}`;
             }
             uni.reLaunch({
                 url,

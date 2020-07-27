@@ -27,6 +27,7 @@
                 :hide-button="true"
                 :my-work-path="myWorkPath"
                 @showMask="showMask"
+                @toUcenter="toUcenter"
             >
                 <template v-slot:main-data>
                     <calendar
@@ -290,20 +291,23 @@ export default {
             page: 'indexConfig',
         });
         this.fr = logger.getFr(this.publicConfig.log, {});
-        this.isLogin().then(
-            (res) => {
-                this.hasLogin = true;
-                this.userInfo = res.user_info;
-                this.myWorkPath = `/activity/pages/clocked/ucenter?activity_id=12&user_id=${this.userInfo.user_id}`;
-                this.getsigninfo();
-                this.getClockin();
-                this.getTheme();
-                this.getTaskStatus();
-            },
-            () => {},
-        );
+        this.loginMyWork();
     },
     methods: {
+        loginMyWork() {
+            this.isLogin().then(
+                (res) => {
+                    this.hasLogin = true;
+                    this.userInfo = res.user_info;
+                    this.myWorkPath = `/activity/pages/clocked/ucenter?activity_id=12&user_id=${this.userInfo.user_id}`;
+                    this.getsigninfo();
+                    this.getClockin();
+                    this.getTheme();
+                    this.getTaskStatus();
+                },
+                () => {},
+            );
+        },
         getTaskStatus() {
             api.get('/api/activity/taskstatus', {
                 activity_id: 12,
@@ -341,12 +345,16 @@ export default {
                 user_id: this.userInfo.user_id,
                 activity_id: 12,
             }).then((data) => {
-                this.calendarData = data;
+                if (Object.keys(data).length) {
+                    this.calendarData = data;
+                }
             });
         },
         onLogin({ user_info: userInfo }) {
+            console.log('asasass', userInfo);
             this.hasLogin = true;
             this.userInfo = userInfo;
+            console.log(this.userInfo, 'hhhhhhh');
             this.myWorkPath = `/activity/pages/clocked/ucenter?activity_id=12&user_id=${this.userInfo.user_id}`;
             this.getsigninfo();
             this.getClockin();
