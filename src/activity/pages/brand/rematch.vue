@@ -152,7 +152,8 @@ export default {
                 height: 231rpx;
                 border-radius: 10rpx;
                 position: relative;
-                image {
+                image,
+                img {
                     width: 100%;
                     height: 100%;
                 }

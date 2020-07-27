@@ -216,7 +216,8 @@ export default {
             height: 253upx;
             margin-bottom: 19upx;
 
-            & > image {
+            & > image,
+            & > img {
                 width: 100%;
                 height: 100%;
                 border-radius: 10upx;
