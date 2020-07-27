@@ -215,6 +215,14 @@ export default {
         submit() {
             if (!this.lock) {
                 this.lock = true;
+                const { name, mobile, address } = this.addressDetail;
+                if (!name || !mobile || !address) {
+                    this.lock = false;
+                    return uni.showToast({
+                        title: '请选择兑换地址',
+                        icon: 'none',
+                    });
+                }
                 uni.showModal({
                     title: '兑换提示',
                     content: '最多可兑换3个奖品，确认兑换吗？',
@@ -224,11 +232,6 @@ export default {
                     confirmColor: '#1166FF',
                     success: (res) => {
                         if (res.confirm) {
-                            const {
-                                name,
-                                mobile,
-                                address,
-                            } = this.addressDetail;
                             api.post('/api/market/pay', {
                                 addressee: name,
                                 mobile,
@@ -259,6 +262,7 @@ export default {
                     },
                 });
             }
+            return true;
         },
     },
 
