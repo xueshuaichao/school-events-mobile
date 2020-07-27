@@ -12,7 +12,7 @@
                 v-if="showError"
                 message="活动不存在"
                 tips="商城首页"
-                :path="`/activity/pages/mall/index?activity_id=${activityId}`"
+                :path="`//activity/pages/index?activity_id=${activityId}`"
             />
             <view
                 v-else

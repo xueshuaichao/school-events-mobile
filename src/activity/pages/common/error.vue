@@ -51,7 +51,7 @@ export default {
     },
     methods: {
         backHome() {
-            uni.reLaunch({
+            uni.redirectTo({
                 url: this.path,
             });
         },
