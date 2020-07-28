@@ -396,9 +396,9 @@ export default {
                     activity_id: this.activityId,
                 }).then(
                     (res) => {
-                        const { id, num } = res;
+                        const { prize_id: prizeId, num } = res;
                         this.num = Number(num);
-                        this.$refs.lottery.startLottery(id);
+                        this.$refs.lottery.startLottery(prizeId);
                         this.lock = false;
                     },
                     () => {
