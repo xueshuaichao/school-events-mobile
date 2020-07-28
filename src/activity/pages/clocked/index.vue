@@ -269,8 +269,8 @@ export default {
             hasLogin: false,
             toLogin: false,
             taskStatus: {
-                upload: false,
-                vote: false,
+                upload: 15,
+                vote: 10,
             },
             curThemeInfo: {
                 type: '',
