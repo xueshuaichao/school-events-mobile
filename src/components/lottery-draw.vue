@@ -38,7 +38,14 @@
                         />
                         <view>
                             <template v-if="item !== -1">
+                                <img
+                                    v-if="isH5"
+                                    class="image"
+                                    crossorigin="anonymous"
+                                    :src="lotteryData[item].image"
+                                >
                                 <image
+                                    v-else
                                     class="image"
                                     :src="lotteryData[item].image"
                                 />
@@ -62,7 +69,7 @@
                                     </view>
                                 </template>
                                 <template v-else-if="status === 3">
-                                    <view>活动已结束</view>
+                                    <view>活动结束</view>
                                 </template>
                             </template>
                         </view>
@@ -98,6 +105,9 @@ export default {
     },
     data() {
         return {
+            // #ifdef H5
+            isH5: true,
+            // #endif
             lotteryPostion: [0, 1, 2, 7, -1, 3, 6, 5, 4],
             clickLuck: true,
             start: false,
@@ -357,9 +367,9 @@ export default {
     &.btn {
         background-color: #ffd300;
         &.disabled {
-            background-color: #ddd;
+            background-color: #a3a3a3;
             .box {
-                background-color: #ccc;
+                background-color: #bcb9ba;
                 color: #fff;
             }
         }

@@ -121,6 +121,7 @@ export default {
             detailData: {},
             userInfo: '',
             showError: false,
+            status: 1,
         };
     },
     onShow() {
@@ -137,6 +138,7 @@ export default {
     methods: {
         onLogin({ user_info: userInfo }) {
             this.userInfo = userInfo;
+            this.activityStatus();
             this.getData();
         },
         isLogin() {
@@ -152,14 +154,23 @@ export default {
                 },
             );
         },
+        activityStatus() {
+            // 1未开始，2进行中，3已结束
+            api.get('/api/activity/activitystatus', {
+                activity_id: this.activityId,
+            }).then((res) => {
+                this.status = res.status;
+            });
+        },
         setAddress() {
-            // 如果没有地址 跳至添加页面 否则跳到地址列表页
-            const url = this.detailData.address
-                ? `list?lottery_id=${this.id}`
-                : `edit?lottery_id=${this.id}`;
+            if (this.status === 3 && this.detailData.address) {
+                return false;
+            }
+            const url = `list?lottery_id=${this.id}`;
             uni.navigateTo({
                 url: `/activity/pages/mall/address/${url}&activity_id=${this.activityId}`,
             });
+            return true;
         },
         getData() {
             api.get('/api/draw/info', {
@@ -217,6 +228,7 @@ export default {
         this.id = parms.id;
         this.activityId = parms.activity_id;
         this.getShareConfig();
+        this.activityStatus();
         this.isLogin();
     },
 };

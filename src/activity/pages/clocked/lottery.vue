@@ -101,21 +101,11 @@
                             class="poster-main"
                             :class="{ no: status === 2 }"
                         >
-                            <template v-if="isH5">
-                                <img
-                                    v-if="status === 1"
-                                    class="image"
-                                    crossorigin="anonymous"
-                                    :src="prizeDetail.image"
-                                >
-                            </template>
-                            <template v-else>
-                                <image
-                                    v-if="status === 1"
-                                    class="image"
-                                    :src="prizeDetail.image"
-                                />
-                            </template>
+                            <image
+                                v-if="status === 1"
+                                class="image"
+                                :src="prizeDetail.image"
+                            />
 
                             <view
                                 v-if="status === 1"
@@ -714,9 +704,9 @@ export default {
             position: relative;
             background-size: 100% 100%;
             background-position: center center;
-            background-image: url(https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/lottery_poster.png);
+            background-image: url(https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/lottery_poster.png?id=1);
             &.no {
-                background-image: url(https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/lottery_poster_no.png);
+                background-image: url(https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/lottery_poster_no.png?id=1);
             }
             .image {
                 width: 192upx;
