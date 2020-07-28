@@ -70,7 +70,7 @@
                         <textarea
                             v-model="formData.address"
                             class="uni-input"
-                            placeholder-class="uni-placeholder"
+                            placeholder-style="color:#999"
                             maxlength="100"
                             placeholder="如街道、门牌号、小区、乡镇、村等"
                         />
