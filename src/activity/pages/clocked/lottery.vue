@@ -397,6 +397,7 @@ export default {
                 }).then(
                     (res) => {
                         const { prize_id: prizeId, num } = res;
+
                         this.num = Number(num);
                         this.$refs.lottery.startLottery(prizeId);
                         this.lock = false;
@@ -704,7 +705,6 @@ export default {
                 height: 144upx;
                 display: block;
                 margin: 400upx auto 0;
-                background-color: #f00;
             }
             .name {
                 height: 74upx;
