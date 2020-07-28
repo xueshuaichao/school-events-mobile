@@ -67,13 +67,13 @@
                         <view class="title">
                             详细地址
                         </view>
-                        <input
+                        <textarea
                             v-model="formData.address"
                             class="uni-input"
-                            placeholder-class="uni-placeholder"
+                            placeholder-style="color:#999"
                             maxlength="100"
                             placeholder="如街道、门牌号、小区、乡镇、村等"
-                        >
+                        />
                     </view>
                 </form>
             </view>
@@ -302,6 +302,10 @@ page {
         &:last-of-type {
             .uni-input {
                 border: 0;
+                min-height: 140upx;
+                padding: 20upx 24upx;
+                line-height: 50upx;
+                box-sizing: border-box;
             }
         }
         .title {
@@ -310,6 +314,7 @@ page {
             line-height: 80upx;
             margin-right: 64upx;
             width: 112upx;
+            align-self: flex-start;
         }
         .uni-input {
             border-bottom: 1px solid #ccc;
