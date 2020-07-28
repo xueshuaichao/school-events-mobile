@@ -148,7 +148,7 @@ export default {
     methods: {
         onLogin({ user_info: userInfo }) {
             this.userInfo = userInfo;
-            this.activityStatus();
+            this.drawStatus();
             this.getPrizeList();
         },
         isLogin() {
@@ -171,9 +171,9 @@ export default {
                 this.getPrizeList('reachBottom');
             }
         },
-        activityStatus() {
+        drawStatus() {
             // 1未开始，2进行中，3已结束
-            api.get('/api/activity/activitystatus', {
+            api.get('/api/activity/drawstatus', {
                 activity_id: this.activityId,
             }).then((res) => {
                 this.status = res.status;
@@ -227,7 +227,7 @@ export default {
     onLoad(parms) {
         this.activityId = parms.activity_id;
         this.getShareConfig();
-        this.activityStatus();
+        this.drawStatus();
         this.isLogin();
     },
 };
