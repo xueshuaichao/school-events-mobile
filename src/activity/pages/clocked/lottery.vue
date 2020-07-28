@@ -101,24 +101,42 @@
                             class="poster-main"
                             :class="{ no: status === 2 }"
                         >
-                            <image
-                                v-if="status === 1"
-                                class="image"
-                                :src="prizeDetail.image"
-                                mode=""
-                            />
+                            <template v-if="isH5">
+                                <img
+                                    v-if="status === 1"
+                                    class="image"
+                                    crossorigin="anonymous"
+                                    :src="prizeDetail.image"
+                                >
+                            </template>
+                            <template v-else>
+                                <image
+                                    v-if="status === 1"
+                                    class="image"
+                                    :src="prizeDetail.image"
+                                />
+                            </template>
+
                             <view
                                 v-if="status === 1"
                                 class="name"
                             >
                                 {{ prizeDetail.name }}
                             </view>
-                            <image
-                                class="qrcode"
-                                :class="{ h5: isH5 }"
-                                :src="codeUrl"
-                                mode=""
-                            />
+                            <template v-if="isH5">
+                                <img
+                                    class="qrcode h5"
+                                    crossorigin="anonymous"
+                                    :src="codeUrl"
+                                >
+                            </template>
+                            <template v-else>
+                                <image
+                                    class="qrcode"
+                                    :class="{ h5: isH5 }"
+                                    :src="codeUrl"
+                                />
+                            </template>
                         </view>
                         <template v-if="isH5">
                             <view
