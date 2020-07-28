@@ -240,13 +240,16 @@ export default {
             },
             preStatus: 0,
             days: 0,
+            ac_type: 0,
         };
     },
     onLoad(params) {
         this.activityId = Number(params.activity_id);
-        this.preStatus = Number(params.pre_type) || 0; // 判断是否打卡了
+        this.preStatus = Number(params.pre_status) || 0; // 判断是否打卡了
+        this.ac_type = Number(params.ac_type) || 0;
         let days = Number(params.days) + 1 || '0';
-        days = String(days);
+        days = String(this.days);
+        this.days = days;
         this.publicConfig = this.$store.getters.getPublicConfig(
             this.activityId,
         );
@@ -293,8 +296,12 @@ export default {
             );
         },
         reUpload() {
+            let params = '';
+            if (this.activityId === 12) {
+                params = `&pre_status=1&days=${this.days}&ac_type=${this.ac_type}`;
+            }
             uni.reLaunch({
-                url: `/activity/pages/upload/modify?activity_id=${this.activityId}`,
+                url: `/activity/pages/upload/modify?activity_id=${this.activityId}${params}`,
             });
         },
         goToUc() {

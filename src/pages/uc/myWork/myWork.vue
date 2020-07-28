@@ -195,7 +195,7 @@ export default {
             } else if (activityId === 8) {
                 urlPath = `/pages/activity-pages/upload/modify?id=${id}&activity_id=${activityId}`;
             } else if (activityId > 8) {
-                urlPath = `/activity/pages/upload/modify?id=${id}&activity_id=${activityId}`;
+                urlPath = `/activity/pages/upload/modify?id=${id}&activity_id=${activityId}&from=mywork`;
             }
             return uni.navigateTo({
                 url: urlPath,

@@ -292,6 +292,7 @@ export default {
         this.ac_type = Number(params.ac_type) || 0;
         this.preStatus = Number(params.status) || 0;
         this.days = Number(params.days) || 0;
+        const isFrommyWork = params.from || '';
         if (this.id) {
             uni.setNavigationBarTitle({ title: '编辑作品' });
         }
@@ -309,13 +310,37 @@ export default {
         });
         this.formData.cat_id = this.publicConfig.catId;
         if (this.formData.activity_id === 12) {
-            this.setClockedCatId(this.ac_type);
+            if (isFrommyWork) {
+                this.getTheme();
+            } else {
+                this.setClockedCatId(this.ac_type);
+            }
         }
         this.formData.resource_type = this.uploadMode === 'video' ? 1 : 2;
         this.getData();
     },
     created() {},
     methods: {
+        getTheme() {
+            api.get('/api/activity/curtheme', {
+                activity_id: 12,
+            }).then(({ type, status }) => {
+                this.preStatus = status;
+                if (type) {
+                    this.ac_type = type;
+                } else {
+                    this.ac_type = 0;
+                }
+            });
+        },
+        getsigninfo() {
+            api.get('/api/activity/signinfo', {
+                user_id: this.userInfo.user_id,
+                activity_id: 12,
+            }).then((signinfo) => {
+                this.days = signinfo.serial_day;
+            });
+        },
         // 编辑作品
         getItemData() {
             if (this.id) {
@@ -451,6 +476,9 @@ export default {
                     this.needBindMobile = res.user_info && res.user_info.is_bind_mobile === 0;
                     this.userInfo = res.user_info;
                     this.isLoading = false;
+                    if (this.formData.activity_id === 12) {
+                        this.getsigninfo();
+                    }
                 },
                 () => {
                     this.isLoading = false;
@@ -603,7 +631,7 @@ export default {
                         this.disabled = false;
                         uni.hideLoading();
                         uni.navigateTo({
-                            url: `/activity/pages/upload/result?activity_id=${this.formData.activity_id}&pre_type=${this.preStatus}&days=${this.days}`,
+                            url: `/activity/pages/upload/result?activity_id=${this.formData.activity_id}&pre_status=${this.preStatus}&days=${this.days}&ac_type=${this.ac_type}`,
                         });
                         this.resetData();
                         this.lock = true;
@@ -647,7 +675,7 @@ export default {
                     this.formData.cat_id = 102;
                     break;
                 case 4:
-                    this.formData.cat_id = 103;
+                    this.formData.cat_id = 132;
                     break;
                 default:
                     this.formData.cat_id = '';
