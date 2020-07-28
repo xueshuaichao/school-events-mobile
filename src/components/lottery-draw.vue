@@ -126,7 +126,6 @@ export default {
         },
         startLottery(id = '') {
             this.start = true;
-            // res.id = Math.floor((Math.random() * 7));
             let index = 0;
             // 循环设置每个奖项的选中、未选中状态
             interval = setInterval(() => {

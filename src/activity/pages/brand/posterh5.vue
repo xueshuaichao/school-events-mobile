@@ -58,6 +58,9 @@ export default {
                 imageInfoArr.push(
                     wxGetImageInfo({
                         url: item.url, // 背景图片
+                        header: {
+                            'Access-control-Allow-Origin': '*',
+                        },
                     }),
                 );
             });
