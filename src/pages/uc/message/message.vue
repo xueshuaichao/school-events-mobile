@@ -431,6 +431,7 @@ export default {
                 font-size: 30rpx;
                 color: #333;
                 line-height: 46rpx;
+                word-break: break-all;
             }
             .time {
                 color: #999;

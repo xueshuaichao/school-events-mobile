@@ -63,6 +63,7 @@
                 <savePoster
                     v-if="showPosterMask"
                     ref="savePoster"
+                    class="clocked"
                     :image="myPoster"
                     @togglePoster="togglePoster"
                 />
@@ -248,7 +249,7 @@ export default {
         this.preStatus = Number(params.pre_status) || 0; // 判断是否打卡了
         this.ac_type = Number(params.ac_type) || 0;
         let days = Number(params.days) + 1 || '0';
-        days = String(this.days);
+        days = String(days);
         this.days = days;
         this.publicConfig = this.$store.getters.getPublicConfig(
             this.activityId,
