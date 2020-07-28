@@ -198,10 +198,7 @@ export default {
             );
         },
         setAddress(item) {
-            // 如果没有地址 跳至添加页面 否则跳到地址列表页
-            const url = item.address
-                ? `list?lottery_id=${item.id}`
-                : `edit?lottery_id=${item.id}`;
+            const url = `list?lottery_id=${item.id}`;
             uni.navigateTo({
                 url: `/activity/pages/mall/address/${url}&activity_id=${this.activityId}`,
             });
