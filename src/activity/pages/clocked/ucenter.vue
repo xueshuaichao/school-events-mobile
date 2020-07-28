@@ -91,6 +91,7 @@
                         v-if="showPosterMask"
                         ref="savePoster"
                         :image="myPoster"
+                        class="clocked"
                         @togglePoster="togglePoster"
                     />
                     <view class="top-bar">

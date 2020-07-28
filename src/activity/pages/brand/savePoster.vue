@@ -287,5 +287,16 @@ export default {
             height: 886upx;
         }
     }
+    .btn {
+        background: linear-gradient(
+            180deg,
+            rgba(255, 162, 132, 1) 0%,
+            rgba(255, 104, 76, 1) 100%
+        );
+    }
+    // .close {
+    //     background: linear-gradient(180deg,rgba(255,162,132,1) 0%,rgba(255,104,76,1) 100%);
+    //     box-shadow:0 4upx 6upx 0 rgba(0,0,0,0.4);
+    // }
 }
 </style>

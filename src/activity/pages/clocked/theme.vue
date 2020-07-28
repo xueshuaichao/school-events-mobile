@@ -93,7 +93,7 @@ export default {
                     id: 3,
                 },
                 {
-                    txt: '体育竞技',
+                    txt: '体育锻炼',
                     url: '/activity/static/clocked/4-theme.png',
                     id: 4,
                 },
