@@ -129,14 +129,16 @@ export default {
             },
             addressDetail: {},
             userInfo: '',
+            status: 1,
         };
     },
     onShow() {
         uni.$once('addressDetail', (data) => {
+            console.log(data);
             const index = this.list.findIndex(v => v.id === Number(data.id));
-            const address = ['address', 'mobile', 'name'];
-            address.forEach((item) => {
-                this.$set(this.list[index].address, item, data.detail[item]);
+            this.$set(this.list, index, {
+                ...this.list[index],
+                address: data.detail,
             });
         });
     },
@@ -146,6 +148,7 @@ export default {
     methods: {
         onLogin({ user_info: userInfo }) {
             this.userInfo = userInfo;
+            this.activityStatus();
             this.getPrizeList();
         },
         isLogin() {
@@ -167,6 +170,14 @@ export default {
                 this.loadMoreStatus = 'loading';
                 this.getPrizeList('reachBottom');
             }
+        },
+        activityStatus() {
+            // 1未开始，2进行中，3已结束
+            api.get('/api/activity/activitystatus', {
+                activity_id: this.activityId,
+            }).then((res) => {
+                this.status = res.status;
+            });
         },
         getPrizeList(type) {
             api.get('/api/draw/getmyprize', {
@@ -198,10 +209,14 @@ export default {
             );
         },
         setAddress(item) {
+            if (this.status === 3 && item.address) {
+                return false;
+            }
             const url = `list?lottery_id=${item.id}`;
             uni.navigateTo({
                 url: `/activity/pages/mall/address/${url}&activity_id=${this.activityId}`,
             });
+            return true;
         },
         jumpDetail(id) {
             uni.navigateTo({
@@ -212,6 +227,7 @@ export default {
     onLoad(parms) {
         this.activityId = parms.activity_id;
         this.getShareConfig();
+        this.activityStatus();
         this.isLogin();
     },
 };
