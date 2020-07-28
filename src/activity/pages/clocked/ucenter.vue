@@ -233,7 +233,7 @@
                                 contentrefresh: '正在加载...',
                                 contentnomore: '———— 已经到底了~ ————'
                             }"
-                            color="#fff"
+                            :color="publicConfig.primaryColor"
                         />
                     </view>
                     <view
@@ -1446,7 +1446,7 @@ export default {
         justify-content: space-around;
         align-items: center;
         height: 68upx;
-        padding: 30upx;
+        padding: 30upx 30upx 0 30upx;
         background: #ffdada;
     }
 
