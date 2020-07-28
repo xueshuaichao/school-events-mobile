@@ -149,7 +149,7 @@ export default {
         position: relative;
         .jiazi {
             position: absolute;
-            width: 32upx;
+            width: 36upx;
             height: 80upx;
             left: 60upx;
             top: -10upx;
@@ -171,6 +171,7 @@ export default {
             font-size: 28upx;
             line-height: 88upx;
             text-align: center;
+            font-weight: 500;
         }
         .flex {
             display: flex;
@@ -251,6 +252,7 @@ export default {
                     background: url(https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/clocked/tixing.png);
                     background-size: cover;
                     position: absolute;
+                    font-weight: 500;
                 }
             }
 
@@ -259,6 +261,17 @@ export default {
                 font-size: 26upx;
                 margin-bottom: 20upx;
                 color: #666;
+                position: relative;
+                &::before {
+                    position: absolute;
+                    left: -24upx;
+                    top: 16upx;
+                    content: "";
+                    width: 10upx;
+                    height: 10upx;
+                    background: #d8d8d8;
+                    border-radius: 50%;
+                }
             }
         }
     }
