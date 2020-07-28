@@ -63,10 +63,10 @@
                             >
                                 <view
                                     class="task-status"
-                                    :class="{ done: taskStatus.upload }"
+                                    :class="{ done: !taskStatus.upload }"
                                 >
                                     {{
-                                        taskStatus.upload ? "已完成" : "待完成"
+                                        taskStatus.upload ? "待完成" : "已完成"
                                     }}
                                 </view>
                                 <view class="center">
@@ -78,8 +78,8 @@
                                     <view class="txt">
                                         上传作品
                                     </view>
-                                    <view>
-                                        15积分
+                                    <view v-if="taskStatus.upload">
+                                        {{ taskStatus.upload }}积分
                                     </view>
                                 </view>
                                 <image
@@ -93,9 +93,9 @@
                             >
                                 <view
                                     class="task-status"
-                                    :class="{ done: taskStatus.vote }"
+                                    :class="{ done: !taskStatus.vote }"
                                 >
-                                    {{ taskStatus.vote ? "已完成" : "待完成" }}
+                                    {{ taskStatus.vote ? "待完成" : "已完成" }}
                                 </view>
                                 <view class="center">
                                     <view class="img-top praise">
@@ -106,8 +106,8 @@
                                     <view class="txt">
                                         作品获赞
                                     </view>
-                                    <view>
-                                        10积分
+                                    <view v-if="taskStatus.vote">
+                                        {{ taskStatus.vote }}积分
                                     </view>
                                 </view>
                                 <image
