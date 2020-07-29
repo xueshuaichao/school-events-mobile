@@ -51,7 +51,6 @@ export default {
             this.h5DrawImage(config);
         },
         h5DrawImage(config) {
-            console.log(config, 'poster----create----');
             // h5 我的海报
             const wxGetImageInfo = this.promisify(uni.downloadFile);
             const imageInfoArr = [];
