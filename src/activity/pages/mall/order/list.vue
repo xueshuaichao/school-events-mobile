@@ -414,6 +414,8 @@ page {
         text-align: center;
         view {
             color: #999;
+            margin-bottom: 20upx;
+            font-size: 30upx;
         }
         .image {
             width: 200upx;

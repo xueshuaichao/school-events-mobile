@@ -156,6 +156,7 @@ export default {
                 (res) => {
                     this.userInfo = res.user_info;
                     this.loading = true;
+                    this.drawStatus();
                     this.getPrizeList();
                 },
                 () => {
@@ -227,7 +228,6 @@ export default {
     onLoad(parms) {
         this.activityId = parms.activity_id;
         this.getShareConfig();
-        this.drawStatus();
         this.isLogin();
     },
 };

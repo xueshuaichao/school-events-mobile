@@ -1,7 +1,12 @@
 <template>
     <view
         v-if="loading"
-        class="mall-page"
+        :class="[
+            'mall-page',
+            {
+                'stop-scroll': isShowRule
+            }
+        ]"
     >
         <login
             v-if="userInfo === null"
@@ -434,6 +439,14 @@ export default {
 </script>
 <style lang="less" scoped>
 .mall-page {
+    &.stop-scroll {
+        position: fixed !important;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+    }
     .banner-content {
         background-image: url("https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/mall_banner.png");
         background-position: top center;
