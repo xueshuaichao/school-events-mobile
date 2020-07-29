@@ -379,12 +379,13 @@ export default {
                             this.toCreatePoster();
                         });
                     } else {
-                        this.toCreatePoster();
                         this.posterCommonConfig.images[1].url = 'http://aitiaozhan.oss-cn-beijing.aliyuncs.com/main-erweima.png';
+                        this.toCreatePoster();
                     }
                 },
                 () => {
                     this.posterCommonConfig.images[1].url = 'http://aitiaozhan.oss-cn-beijing.aliyuncs.com/main-erweima.png';
+                    this.toCreatePoster();
                 },
             );
         },
