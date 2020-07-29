@@ -854,7 +854,7 @@ export default {
             this.filter.page_num = 1;
             this.tabActiveIndex = i;
             this.allDate = {};
-            uni.pageScrollTo({ scrollTop: 0, duration: 300 });
+            uni.pageScrollTo({ scrollTop: 260, duration: 300 });
             this.getWorkData();
         },
         viewDetail(item, index) {
