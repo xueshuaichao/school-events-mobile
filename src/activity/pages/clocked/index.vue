@@ -89,7 +89,7 @@
                             </view>
                             <view
                                 class="task-card praise-bg"
-                                @click="toUcenter"
+                                @click="toUcenter('task')"
                             >
                                 <view
                                     class="task-status"
@@ -407,7 +407,7 @@ export default {
         toUpload() {
             // 先查询今天的主题。
             if (this.hasLogin) {
-                if (this.curThemeInfo.type) {
+                if (this.curThemeInfo.type || !this.curThemeInfo.status) {
                     uni.navigateTo({
                         url: `/activity/pages/upload/modify?activity_id=12&ac_type=${this.curThemeInfo.type}&status=${this.curThemeInfo.status}&days=${this.signinfo.serial_day}`,
                     });
@@ -421,16 +421,22 @@ export default {
                 this.toLogin = true;
             }
         },
-        toUcenter() {
+        toUcenter(task) {
             if (this.hasLogin) {
-                if (this.curThemeInfo.type) {
+                if (task) {
+                    if (this.curThemeInfo.type || !this.curThemeInfo.status) {
+                        uni.navigateTo({
+                            url: `/activity/pages/clocked/ucenter?activity_id=12&user_id=${this.userInfo.user_id}`,
+                        });
+                    } else {
+                        uni.showToast({
+                            icon: 'none',
+                            title: '请先完成打卡任务哦！',
+                        });
+                    }
+                } else {
                     uni.navigateTo({
                         url: `/activity/pages/clocked/ucenter?activity_id=12&user_id=${this.userInfo.user_id}`,
-                    });
-                } else {
-                    uni.showToast({
-                        icon: 'none',
-                        title: '请先完成打卡任务哦！',
                     });
                 }
             } else {

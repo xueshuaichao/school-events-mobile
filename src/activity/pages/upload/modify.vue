@@ -219,7 +219,6 @@
         </view>
     </view>
 </template>
-
 <script>
 import api from '../../../common/api';
 import upload from '../common/upload.vue';
@@ -348,6 +347,7 @@ export default {
                     id: this.id,
                     activity_id: this.formData.activity_id,
                 }).then((res) => {
+                    console.log(this.formData, res);
                     let {
                         img,
                         resource_type: resourceType,
@@ -389,12 +389,14 @@ export default {
                     this.formData = {
                         ...this.formData,
                         ...res,
+                        introduce: res.introduce || '',
                         img,
                         resource_type: resourceType,
                         cat_id: catId,
                         cat_name: catName,
                         video_img_url: videoImgUrl,
                     };
+                    console.log(this.formData);
                     this.isLoading = false;
                 });
             }
@@ -465,7 +467,7 @@ export default {
                             item => item.cat_id === 102,
                         );
                         // eslint-disable-next-line no-param-reassign
-                        res[index].name = '体育竞技';
+                        res[index].name = '体育锻炼';
                     }
                     this.catData = res;
                     this.getItemData();

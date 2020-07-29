@@ -148,6 +148,7 @@ export default {
     },
     watch: {
         source(val) {
+            console.log(val, "souce0------");
             this.url = val;
         }
     },

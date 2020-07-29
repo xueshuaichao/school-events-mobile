@@ -131,7 +131,9 @@ export default {
                 wrapH = data.height; // 设置拖拽范围的总高度
                 wrapTop = data.top; // 设置拖拽范围的上边界坐标
                 wrapLeft = data.left; // 设置拖拽范围的左边界坐标
-                this.setNodeWH();
+                this.$nextTick(() => {
+                    this.setNodeWH();
+                });
             }).exec();
         },
         reset() {
