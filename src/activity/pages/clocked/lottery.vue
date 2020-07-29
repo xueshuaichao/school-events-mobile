@@ -43,17 +43,17 @@
                             <view class="line" />
                             <view class="item-content">
                                 <view
-                                    v-for="item in 4"
+                                    v-for="(item, index) in 4"
                                     :key="item"
                                     class="item"
                                 >
-                                    <view>抽奖X{{ item }}</view>
+                                    <view>抽奖X{{ index + 1 }}</view>
                                     <view class="icon icon-gifts" />
                                     <view>
                                         {{
-                                            item === 4
+                                            index === 3
                                                 ? "累计28天"
-                                                : `${item * 7}天`
+                                                : `${index + 1 * 7}天`
                                         }}
                                     </view>
                                 </view>
