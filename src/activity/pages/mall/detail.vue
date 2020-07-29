@@ -40,7 +40,7 @@
                 <view class="shop-detail">
                     <view class="detail-info">
                         <view class="info-image">
-                            <image :src="giftInfo.img" />
+                            <image :src="giftInfo.img | optimizeImage" />
                         </view>
                         <view class="info-text">
                             <view class="title text-one-line">
@@ -78,6 +78,24 @@ export default {
     components: {
         errorPage,
         login,
+    },
+    filters: {
+        optimizeImage: (val) => {
+            if (!val) {
+                return '';
+            }
+            let newUrl = '';
+            const width = 280;
+            const height = 158;
+            if (val.indexOf('?') !== -1) {
+                newUrl = `${val}&x-oss-process=image/format,png/interlace,1/quality,Q_80/resize,m_pad,h_${height
+                    * 2},w_${width * 2}`;
+            } else {
+                newUrl = `${val}?x-oss-process=image/format,png/interlace,1/quality,Q_80/resize,m_pad,h_${height
+                    * 2},w_${width * 2}`;
+            }
+            return newUrl;
+        },
     },
     mixins: [share.initShare],
     data() {
