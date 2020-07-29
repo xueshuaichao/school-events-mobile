@@ -82,15 +82,17 @@
 
                 <view>
                     <template v-if="type !== 'guinness'">
-                        <view class="title">
-                            参赛视频拍摄说明：
-                        </view>
-                        <view class="text">
-                            1、视频要求3-10分钟 <br>
-                            2、要求视频画质清晰可见（不低于720P) <br>
-                            <template v-if="type === 'challenge'">
-                                3、内容健康，符合爱挑战规则
-                            </template>
+                        <view class="item">
+                            <view class="title">
+                                参赛视频拍摄说明：
+                            </view>
+                            <view class="text">
+                                1、视频要求3-10分钟 <br>
+                                2、要求视频画质清晰可见（不低于720P) <br>
+                                <template v-if="type === 'challenge'">
+                                    3、内容健康，符合爱挑战规则
+                                </template>
+                            </view>
                         </view>
                     </template>
                     <template
@@ -100,13 +102,15 @@
                                 activeMenuIndex !== 2
                         "
                     >
-                        <view class="title">
-                            图片作品要求如下：
-                        </view>
-                        <view class="text">
-                            1、建议尺寸比例为16:9 <br>
-                            2、格式为JPG、PNG
-                            小于10M，用于在首页、列表和作品详情页展示
+                        <view class="item">
+                            <view class="title">
+                                图片作品要求如下：
+                            </view>
+                            <view class="text">
+                                1、建议尺寸比例为16:9 <br>
+                                2、格式为JPG、PNG
+                                小于10M，用于在首页、列表和作品详情页展示
+                            </view>
                         </view>
                     </template>
                     <template v-if="!isH5">
