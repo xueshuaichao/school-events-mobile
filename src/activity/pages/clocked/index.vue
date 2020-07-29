@@ -423,9 +423,16 @@ export default {
         },
         toUcenter() {
             if (this.hasLogin) {
-                uni.navigateTo({
-                    url: `/activity/pages/clocked/ucenter?activity_id=12&user_id=${this.userInfo.user_id}`,
-                });
+                if (this.curThemeInfo.type) {
+                    uni.navigateTo({
+                        url: `/activity/pages/clocked/ucenter?activity_id=12&user_id=${this.userInfo.user_id}`,
+                    });
+                } else {
+                    uni.showToast({
+                        icon: 'none',
+                        title: '请先完成打卡任务哦！',
+                    });
+                }
             } else {
                 this.toLogin = true;
             }
