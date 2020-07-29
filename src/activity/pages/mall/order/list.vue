@@ -238,7 +238,7 @@ export default {
         },
         jumpDetail(id) {
             uni.navigateTo({
-                url: `detail?id=${id}&activity_id=${this.activityId}`,
+                url: `/activity/pages/mall/order/detail?id=${id}&activity_id=${this.activityId}`,
             });
         },
     },
