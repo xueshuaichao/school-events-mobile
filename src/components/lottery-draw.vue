@@ -2,22 +2,22 @@
     <view class="container">
         <view class="frame-view">
             <view
-                v-for="item in 4"
+                v-for="(item, index) in 4"
                 :key="item"
-                :class="['bot-box', `row-${item}`]"
+                :class="['bot-box', `row-${index + 1}`]"
             >
-                <template v-if="item === 1 || item === 3">
+                <template v-if="index === 0 || index === 2">
                     <view
-                        v-for="bot in 12"
+                        v-for="(bot, k) in 12"
                         :key="bot"
-                        :class="[`bot bot-${bot}`]"
+                        :class="[`bot bot-${k + 1}`]"
                     />
                 </template>
                 <template v-else>
                     <view
-                        v-for="bot in 9"
+                        v-for="(bot, k) in 9"
                         :key="bot"
-                        :class="[`bot bot-${bot}`]"
+                        :class="[`bot bot-${k + 1}`]"
                     />
                 </template>
             </view>

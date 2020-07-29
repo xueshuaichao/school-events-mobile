@@ -286,6 +286,7 @@ export default {
         };
     },
     onShow() {
+        this.filter.page_num = 1;
         this.isLogin();
     },
     methods: {
