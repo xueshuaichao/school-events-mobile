@@ -427,7 +427,7 @@ export default {
         confirmExchange(id) {
             this.exchangeMask = 0;
             uni.navigateTo({
-                url: `detail?id=${id}&activity_id=${this.activityId}`,
+                url: `/activity/pages/mall/detail?id=${id}&activity_id=${this.activityId}`,
             });
         },
     },

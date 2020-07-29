@@ -191,17 +191,13 @@ export default {
                         }
                     },
                     (err) => {
+                        this.showError = true;
                         uni.showToast({
                             icon: 'none',
                             title: err.message,
                         });
                     },
                 );
-        },
-        backHome() {
-            uni.reLaunch({
-                url: `index?activity_id=${this.activityId}`,
-            });
         },
         setAddress() {
             // 如果没有地址 跳至添加页面 否则跳到地址列表页
@@ -245,7 +241,7 @@ export default {
                                         iocn: 'none',
                                     });
                                     uni.navigateTo({
-                                        url: `result?activity_id=${this.activityId}`,
+                                        url: `/activity/pages/mall/result?activity_id=${this.activityId}`,
                                     });
                                 },
                                 (err) => {

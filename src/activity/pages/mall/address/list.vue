@@ -250,7 +250,7 @@ export default {
         },
         editAddress(id) {
             uni.navigateTo({
-                url: `edit?id=${id}&activity_id=${this.activityId}`,
+                url: `/activity/pages/mall/address/edit?id=${id}&activity_id=${this.activityId}`,
             });
         },
         setDefaulAddress(id, handel = true) {
@@ -300,7 +300,7 @@ export default {
         },
         addAddress() {
             uni.navigateTo({
-                url: 'edit',
+                url: '/activity/pages/mall/address/edit',
             });
         },
     },
