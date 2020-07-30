@@ -396,6 +396,7 @@ export default {
             font-size: 22upx;
             line-height: 60upx;
             color: #ff685c;
+            font-weight: 500;
         }
         .calendar-btn {
             width: 400upx;
