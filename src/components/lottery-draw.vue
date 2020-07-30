@@ -59,7 +59,7 @@
                                 </template>
                                 <template v-else-if="status === 2">
                                     <view
-                                        v-if="num === 0"
+                                        v-if="num > 0"
                                         @click="clickLucks()"
                                     >
                                         抽奖X{{ num }}
@@ -126,8 +126,7 @@ export default {
                         this.userInfo = res;
                         // 清空计时器
                         clearInterval(interval);
-                        // this.$emit('start');
-                        this.startLottery();
+                        this.$emit('start');
                     },
                     () => {
                         this.clickLuck = true;
