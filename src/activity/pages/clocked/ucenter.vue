@@ -13,18 +13,20 @@
                 <!--荣誉墙-->
                 <view class="honor-top">
                     <view class="honor-top-box">
-                        <view
-                            v-if="
-                                signinfo.sports +
-                                    signinfo.skill +
-                                    signinfo.study +
-                                    signinfo.work
-                            "
-                            class="to-open-honor"
-                            @click="getMyPoster"
-                        >
-                            炫耀下吧～
-                        </view>
+                        <template v-if="isSelf">
+                            <view
+                                v-if="
+                                    signinfo.sports +
+                                        signinfo.skill +
+                                        signinfo.study +
+                                        signinfo.work
+                                "
+                                class="to-open-honor"
+                                @click="getMyPoster"
+                            >
+                                炫耀下吧～
+                            </view>
+                        </template>
                         <image
                             class="avator"
                             :src="
