@@ -133,7 +133,7 @@
                                         打卡抽好礼
                                     </view>
                                     <view>
-                                        连续打卡更可获取抽奖机会～
+                                        连续打卡可获取抽奖机会~
                                     </view>
                                 </view>
                                 <view
@@ -248,7 +248,7 @@ export default {
                         'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/clocked-gift-2.png',
                 },
                 {
-                    txt: '惠普打印复印一体机',
+                    txt: '无人机',
                     url:
                         'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/clocked-gift-3.png',
                 },
@@ -476,9 +476,9 @@ export default {
 .activity-init-page {
     .fixed-mall {
         position: fixed;
-        right: 20upx;
-        width: 115upx;
-        height: 105upx;
+        right: -10upx;
+        width: 150upx;
+        height: 136upx;
         top: 50%;
         margin-top: -48upx;
         z-index: 100;

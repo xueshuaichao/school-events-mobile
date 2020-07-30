@@ -211,7 +211,7 @@ export default {
         }
         .img {
             width: 630upx;
-            height: 156upx;
+            height: 253upx;
         }
     }
     .close {
