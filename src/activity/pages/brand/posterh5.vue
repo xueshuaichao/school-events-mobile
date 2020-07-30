@@ -52,19 +52,17 @@ export default {
         },
         h5DrawImage(config) {
             // h5 我的海报
-            const wxGetImageInfo = this.promisify(uni.downloadFile);
+            const wxGetImageInfo = this.promisify(uni.getImageInfo);
             const imageInfoArr = [];
             config.images.forEach((item) => {
                 imageInfoArr.push(
                     wxGetImageInfo({
-                        url: item.url, // 背景图片
-                        header: {
-                            'Access-control-Allow-Origin': '*',
-                        },
+                        src: item.url, // 背景图片
                     }),
                 );
             });
             Promise.all(imageInfoArr).then((res) => {
+                // console.log(res);
                 res.forEach((item, index) => {
                     this.ctx.save();
                     if (config.images[index].borderRadius) {
@@ -79,7 +77,7 @@ export default {
                         this.ctx.stroke();
                         this.ctx.clip();
                         this.ctx.drawImage(
-                            item.tempFilePath,
+                            item.path,
                             config.images[index].x,
                             config.images[index].y,
                             config.images[index].width,
@@ -87,7 +85,7 @@ export default {
                         );
                     } else {
                         this.ctx.drawImage(
-                            item.tempFilePath,
+                            item.path,
                             config.images[index].x,
                             config.images[index].y,
                             config.images[index].width,

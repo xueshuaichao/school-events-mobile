@@ -511,11 +511,11 @@ export default {
                             this.posterCommonConfig.images[1].url = res;
                         });
                     } else {
-                        this.posterCommonConfig.images[1].url = 'http://aitiaozhan.oss-cn-beijing.aliyuncs.com/main-erweima.png';
+                        this.posterCommonConfig.images[1].url = 'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/main-erweima.png';
                     }
                 },
                 () => {
-                    this.posterCommonConfig.images[1].url = 'http://aitiaozhan.oss-cn-beijing.aliyuncs.com/main-erweima.png';
+                    this.posterCommonConfig.images[1].url = 'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/main-erweima.png';
                 },
             );
         },
@@ -558,7 +558,7 @@ export default {
             this.posterCommonConfig.images[0].url = 'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/clocked/clocked_honor_poster.png';
             // this.posterCommonConfig.images[1].url = this.posterCommonConfig.images[1].url
             //     || 'http://aitiaozhan.oss-cn-beijing.aliyuncs.com/main-erweima.png';
-            this.posterCommonConfig.images[1].url = 'http://aitiaozhan.oss-cn-beijing.aliyuncs.com/main-erweima.png';
+            // this.posterCommonConfig.images[1].url = 'http://aitiaozhan.oss-cn-beijing.aliyuncs.com/main-erweima.png';
             this.setPosterConfig();
             console.log(this.posterCommonConfig.images);
             console.log(this.posterCommonConfig.texts, 'sasasa');
@@ -604,15 +604,15 @@ export default {
             const keys = Object.keys(this.honorInfo);
             // const keys = ['sports'];
             if (keys.length === 1) {
-                index = this.honorInfo[keys[0]].id;
+                index = this.honorInfo[keys[0]].id - 1;
                 txts = txts1;
             } else {
-                index = Math.floor(Math.random() * 4);
+                index = Math.floor(Math.random() * 3);
                 txts = txts2;
             }
-            const txt = txts[index - 1];
-            this.posterCommonConfig.texts[1].text = txt;
+            const txt = txts[index];
             this.posterCommonConfig.texts[0].text = `我已经获得${this.honorNums}枚勋章啦！`;
+            this.posterCommonConfig.texts[1].text = txt;
             // 根据勋章的种类，排版设计不同
             if (keys.length === 1) {
                 this.posterCommonConfig.images[2] = {
