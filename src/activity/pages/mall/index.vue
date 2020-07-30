@@ -274,7 +274,7 @@ export default {
             loadMoreStatus: 'none',
             list: [],
             filter: {
-                page_size: 10,
+                page_size: 20,
                 page_num: 1,
             },
             integral: {},
