@@ -174,7 +174,7 @@ export default {
         },
         drawStatus() {
             // 1未开始，2进行中，3已结束
-            api.get('/api/activity/drawstatus', {
+            api.get('/api/draw/status', {
                 activity_id: this.activityId,
             }).then((res) => {
                 this.status = res.status;
