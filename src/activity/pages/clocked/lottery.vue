@@ -101,32 +101,58 @@
                             class="poster-main"
                             :class="{ no: status === 2 }"
                         >
-                            <image
-                                v-if="status === 1"
-                                class="image"
-                                :src="prizeDetail.image"
-                            />
-
-                            <view
-                                v-if="status === 1"
-                                class="name"
+                            <img
+                                v-if="isH5"
+                                class="image-bg"
+                                crossorigin="anonymous"
+                                :src="
+                                    `https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/${
+                                        status === 1
+                                            ? 'lottery_poster'
+                                            : 'lottery_poster_no'
+                                    }.png`
+                                "
+                                alt=""
                             >
-                                {{ prizeDetail.name }}
-                            </view>
-                            <template v-if="isH5">
-                                <img
-                                    class="qrcode h5"
-                                    crossorigin="anonymous"
-                                    :src="codeUrl"
-                                >
-                            </template>
-                            <template v-else>
+                            <image
+                                v-else
+                                class="image-bg"
+                                :src="
+                                    `https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/${
+                                        status === 1
+                                            ? 'lottery_poster'
+                                            : 'lottery_poster_no'
+                                    }.png`
+                                "
+                            />
+                            <view class="image-detail">
                                 <image
-                                    class="qrcode"
-                                    :class="{ h5: isH5 }"
-                                    :src="codeUrl"
+                                    v-if="status === 1"
+                                    class="image"
+                                    :src="prizeDetail.image"
                                 />
-                            </template>
+
+                                <view
+                                    v-if="status === 1"
+                                    class="name"
+                                >
+                                    {{ prizeDetail.name }}
+                                </view>
+                                <template v-if="isH5">
+                                    <img
+                                        class="qrcode h5"
+                                        crossorigin="anonymous"
+                                        :src="codeUrl"
+                                    >
+                                </template>
+                                <template v-else>
+                                    <image
+                                        class="qrcode"
+                                        :class="{ h5: isH5 }"
+                                        :src="codeUrl"
+                                    />
+                                </template>
+                            </view>
                         </view>
                         <template v-if="isH5">
                             <view
@@ -707,9 +733,16 @@ export default {
             position: relative;
             background-size: 100% 100%;
             background-position: center center;
-            background-image: url(https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/lottery_poster.png?id=1);
-            &.no {
-                background-image: url(https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/lottery_poster_no.png?id=1);
+            .image-bg,
+            .image-detail {
+                width: 100%;
+                height: 100%;
+                position: absolute;
+                top: 0;
+                bottom: 0;
+            }
+            .image-detail {
+                z-index: 1;
             }
             .image {
                 width: 192upx;
