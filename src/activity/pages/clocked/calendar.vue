@@ -322,7 +322,7 @@ export default {
         .calendar-wrap {
             position: relative;
             background: #fff;
-            box-shadow: 0 4upx 10upx 0 rgba(255, 218, 218, 0.5);
+            box-shadow: 0 4upx 10upx 0 rgba(255, 218, 218, 0.5) inset;
             border-radius: 10upx;
             padding-top: 20upx;
             &::before,
