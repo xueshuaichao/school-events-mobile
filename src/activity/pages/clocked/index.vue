@@ -133,7 +133,7 @@
                                         打卡抽好礼
                                     </view>
                                     <view>
-                                        连续打卡更可获取抽奖机会～
+                                        连续打卡可获取抽奖机会~
                                     </view>
                                 </view>
                                 <view
@@ -248,7 +248,7 @@ export default {
                         'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/clocked-gift-2.png',
                 },
                 {
-                    txt: '惠普打印复印一体机',
+                    txt: '无人机',
                     url:
                         'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/clocked-gift-3.png',
                 },
@@ -424,7 +424,7 @@ export default {
         toUcenter(task) {
             if (this.hasLogin) {
                 if (task) {
-                    if (this.curThemeInfo.type || !this.curThemeInfo.status) {
+                    if (this.curThemeInfo.type && this.curThemeInfo.status) {
                         uni.navigateTo({
                             url: `/activity/pages/clocked/ucenter?activity_id=12&user_id=${this.userInfo.user_id}`,
                         });
@@ -476,9 +476,9 @@ export default {
 .activity-init-page {
     .fixed-mall {
         position: fixed;
-        right: 20upx;
-        width: 115upx;
-        height: 105upx;
+        right: -10upx;
+        width: 150upx;
+        height: 136upx;
         top: 50%;
         margin-top: -48upx;
         z-index: 100;
@@ -554,6 +554,8 @@ export default {
                     line-height: 56upx;
                     text-shadow: 0 4upx 4upx rgba(255, 20, 0, 1);
                     text-align: center;
+                    width: 70%;
+                    letter-spacing: 2upx;
                 }
                 .lottery-btn {
                     color: #ff5547;
