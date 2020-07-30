@@ -161,7 +161,7 @@ export default {
                     position: absolute;
                     left: -20rpx;
                     bottom: 32rpx;
-                    width: 170rpx;
+                    min-width: 192rpx;
                     height: 40rpx;
                     text-align: center;
                     line-height: 40rpx;
@@ -169,6 +169,8 @@ export default {
                     color: #fff;
                     font-size: 22rpx;
                     border-radius: 0 20rpx 20rpx 0;
+                    padding: 0 2upx;
+                    word-break: break-all;
                 }
             }
             .info {
