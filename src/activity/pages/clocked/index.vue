@@ -554,6 +554,8 @@ export default {
                     line-height: 56upx;
                     text-shadow: 0 4upx 4upx rgba(255, 20, 0, 1);
                     text-align: center;
+                    width: 70%;
+                    letter-spacing: 2upx;
                 }
                 .lottery-btn {
                     color: #ff5547;
