@@ -310,6 +310,7 @@ export default {
         this.formData.cat_id = this.publicConfig.catId;
         if (this.formData.activity_id === 12) {
             if (isFrommyWork) {
+                // 个人中心，没有直接获取 days ac_type status,
                 this.getTheme();
             } else {
                 this.setClockedCatId(this.ac_type);
@@ -618,6 +619,10 @@ export default {
                     }
                 }
                 if (formData.activity_id === 12) {
+                    if (!this.ac_type) {
+                        this.lock = true;
+                        return this.errTip('请选择分类');
+                    }
                     formData.ac_type = this.ac_type;
                 }
 

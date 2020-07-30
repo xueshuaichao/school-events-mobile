@@ -554,12 +554,16 @@ export default {
         createPoster() {
             // 图片的处理。。。。。。。
             // 中间的内容区域是多种排版显示，有多种图片。
-            const that = this;
-            that.posterCommonConfig.images[0].url = 'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/clocked/clocked_honor_poster.png';
-            that.posterCommonConfig.images[1].url = that.posterCommonConfig.images[1].url
-                || 'http://aitiaozhan.oss-cn-beijing.aliyuncs.com/main-erweima.png';
-            that.setPosterConfig();
-            that.$refs.posterh5.createPoster(that.posterCommonConfig);
+            console.log(this.posterCommonConfig.images[1], 'sasasa');
+            this.posterCommonConfig.images[0].url = 'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/clocked/clocked_honor_poster.png';
+            // this.posterCommonConfig.images[1].url = this.posterCommonConfig.images[1].url
+            //     || 'http://aitiaozhan.oss-cn-beijing.aliyuncs.com/main-erweima.png';
+            this.posterCommonConfig.images[1].url = 'http://aitiaozhan.oss-cn-beijing.aliyuncs.com/main-erweima.png';
+            this.setPosterConfig();
+            console.log(this.posterCommonConfig.images);
+            console.log(this.posterCommonConfig.texts, 'sasasa');
+            console.log(this.posterCommonConfig.radiusRects, 'sasasa');
+            this.$refs.posterh5.createPoster(this.posterCommonConfig);
         },
         setPosterConfig() {
             let txts = [];
