@@ -54,7 +54,16 @@
                     <view class="item-index">
                         {{ (index + 1) | setNum }}
                         <view class="image">
-                            <image :src="item.image" />
+                            <img
+                                v-if="isH5"
+                                crossorigin="anonymous"
+                                :src="item.image"
+                                alt=""
+                            >
+                            <image
+                                v-else
+                                :src="item.image"
+                            />
                         </view>
                     </view>
                     <view class="item-info">
@@ -360,7 +369,8 @@ export default {
                 font-size: 30upx;
                 font-weight: 500;
             }
-            image {
+            image,
+            img {
                 width: 100%;
                 height: 100%;
                 border-radius: 50%;
@@ -387,7 +397,8 @@ export default {
             }
             &:nth-of-type(1),
             &:nth-of-type(2),
-            &:nth-of-type(3) {
+            &:nth-of-type(3),
+            &:nth-of-type(4) {
                 .item-index,
                 .item-value {
                     color: #fff;
