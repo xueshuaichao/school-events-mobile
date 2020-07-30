@@ -424,7 +424,7 @@ export default {
         toUcenter(task) {
             if (this.hasLogin) {
                 if (task) {
-                    if (this.curThemeInfo.type || !this.curThemeInfo.status) {
+                    if (this.curThemeInfo.type && this.curThemeInfo.status) {
                         uni.navigateTo({
                             url: `/activity/pages/clocked/ucenter?activity_id=12&user_id=${this.userInfo.user_id}`,
                         });
