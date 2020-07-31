@@ -566,7 +566,11 @@ export default {
             });
             return true;
         },
-        onPosterFail() {},
+        onPosterFail() {
+            uni.showToast({
+                title: '图片生成失败，请稍后再试',
+            });
+        },
         jumpLotteryList() {
             uni.navigateTo({
                 url: `/activity/pages/lottery/list?activity_id=${this.activityId}`,
