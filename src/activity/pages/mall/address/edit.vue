@@ -52,7 +52,7 @@
                                     v-if="!formData.district"
                                     class="address-placeholder"
                                 >
-                                    请选择
+                                    请选择所在地区
                                 </view>
                                 <view
                                     v-else
@@ -302,9 +302,9 @@ page {
         &:last-of-type {
             .uni-input {
                 border: 0;
-                min-height: 140upx;
+                min-height: 128upx;
                 padding: 20upx 24upx;
-                line-height: 50upx;
+                line-height: 48upx;
                 box-sizing: border-box;
             }
         }

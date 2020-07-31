@@ -397,6 +397,9 @@ page {
                 .icon-score-7 {
                     background-image: url(https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/mall-icon-score6.png);
                 }
+                .icon-score-9 {
+                    background-image: url(https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/mall-icon-score8.png);
+                }
             }
             .item-info {
                 width: 364upx;
