@@ -86,8 +86,8 @@ export default {
     data() {
         return {
             mediaIconArr: {
-                1: '/history/static/images/chunjie/video-icon.png',
-                2: '/history/static/images/chunjie/img-icon.png',
+                1: '/static/images/work/video-icon.png',
+                2: '/static/images/work/img-icon.png',
             },
         };
     },

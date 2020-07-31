@@ -35,18 +35,6 @@
             }
         },
         {
-            "path": "pages/tabBar/mall/mall",
-            "style": {
-                "navigationBarTitleText": "挑战商城"
-            }
-        },
-        {
-            "path": "pages/mall/detail/detail",
-            "style": {
-                "navigationBarTitleText": "礼品详情"
-            }
-        },
-        {
             "path": "pages/tabBar/uc/uc",
             "style": {
                 "navigationBarTitleText": "我的",
@@ -149,31 +137,6 @@
             "path": "pages/upload/default/upload",
             "style": {
                 "navigationBarTitleText": "上传作品"
-            }
-        },
-        // 地址详情
-        {
-            "path": "pages/address/index",
-            "style": {
-                "navigationBarTitleText": "兑换确认"
-            }
-        },
-        {
-            "path": "pages/address/address",
-            "style": {
-                "navigationBarTitleText": "收货地址"
-            }
-        },
-        {
-            "path": "pages/address/exchangeRecord",
-            "style": {
-                "navigationBarTitleText": "兑换记录"
-            }
-        },
-        {
-            "path": "pages/address/edit",
-            "style": {
-                "navigationBarTitleText": "编辑收货地址"
             }
         },
         {
@@ -615,12 +578,7 @@
                 "selectedIconPath": "static/images/tab/upload_ac.png",
                 "text": "活动"
             },
-            // {
-            //     "pagePath": "pages/tabBar/mall/mall",
-            //     "iconPath": "static/images/tab/mall.png",
-            //     "selectedIconPath": "static/images/tab/mall_ac.png",
-            //     "text": "挑战商城"
-            // },
+
             {
                 "pagePath": "pages/tabBar/uc/uc",
                 "iconPath": "static/images/tab/uc.png",
