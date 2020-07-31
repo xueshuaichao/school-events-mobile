@@ -486,7 +486,10 @@ export default {
         },
         onPosterSuccess(detail) {
             this.canvasImage = detail;
-            if (this.isWechat) return false;
+            if (this.isWechat) {
+                uni.hideLoading();
+                return false;
+            }
             this.$nextTick(() => {
                 if (this.isH5) {
                     api.saveImage('lotteryCanvas', this.canvasImage).then(
@@ -564,6 +567,7 @@ export default {
             return true;
         },
         onPosterFail() {
+            uni.hideLoading();
             uni.showToast({
                 title: '图片生成失败，请稍后再试',
                 icon: 'none',
@@ -629,7 +633,9 @@ export default {
             this.previewMask = status;
         },
         createPoster() {
-            console.log(this.posterCommonConfig);
+            if (this.isWechat) {
+                uni.showLoading({ mask: true, title: '生成中' });
+            }
             this.$refs.posterh5.createPoster(this.posterCommonConfig);
         },
         postCrouselList() {
