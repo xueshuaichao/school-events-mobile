@@ -294,6 +294,8 @@ export default {
         this.loginMyWork();
     },
     methods: {
+        unload() {},
+        onshow() {},
         loginMyWork() {
             this.isLogin().then(
                 (res) => {
