@@ -106,10 +106,7 @@
                         :placeholder="uploadConfig.placeholderNameText"
                     >
                 </view>
-                <view
-                    class="textarea-view"
-                    :class="{ hide: showtheme }"
-                >
+                <view class="textarea-view">
                     <text class="max-length">
                         {{ formData.introduce.length || 0 }}/{{
                             uploadConfig.descMaxLength
@@ -119,6 +116,7 @@
                     <textarea
                         v-model="formData.introduce"
                         class="uni-textarea"
+                        :class="{ hide: showtheme }"
                         placeholder-class="placeholder"
                         :placeholder-style="
                             `color:${publicConfig.placeholderColor}`
@@ -728,9 +726,6 @@ export default {
     }
     .textarea-view {
         position: relative;
-        &.hide {
-            opacity: 0;
-        }
         .max-length {
             position: absolute;
             bottom: 10upx;
@@ -746,6 +741,9 @@ export default {
         width: 100%;
         box-sizing: border-box;
         line-height: 42upx;
+        &.hide {
+            display: none;
+        }
     }
 
     .fake-input {
