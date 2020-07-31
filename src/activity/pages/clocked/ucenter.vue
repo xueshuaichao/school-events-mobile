@@ -53,7 +53,19 @@
                                     >
                                         {{ item.num }}
                                     </view>
+                                    <img
+                                        v-if="isH5"
+                                        class="img"
+                                        crossorigin="anonymous"
+                                        :src="
+                                            `https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/clocked/honor-${
+                                                item.id
+                                            }-${item.num ? 1 : 0}.png`
+                                        "
+                                        alt=""
+                                    >
                                     <image
+                                        v-else
                                         class="img"
                                         :src="
                                             `https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/clocked/honor-${
