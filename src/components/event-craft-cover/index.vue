@@ -78,12 +78,16 @@ export default {
             type: Boolean,
             default: true,
         },
+        activityId: {
+            type: Number,
+            default: 10,
+        },
     },
     data() {
         return {
             mediaIconArr: {
-                1: '/static/images/chunjie/video-icon.png',
-                2: '/static/images/chunjie/img-icon.png',
+                1: '/static/images/work/video-icon.png',
+                2: '/static/images/work/img-icon.png',
             },
         };
     },
@@ -93,8 +97,8 @@ export default {
                 return '';
             }
             let newUrl = '';
-            const width = 335;
-            const height = 225;
+            const width = this.activityId === 12 ? 306 : 335;
+            const height = this.activityId === 12 ? 205 : 225;
             const bgColor = this.bgColor.indexOf('#') !== -1
                 ? this.bgColor.replace('#', '')
                 : this.bgColor;

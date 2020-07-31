@@ -4,10 +4,25 @@
         :class="[`${publicConfig.activityName}-page`]"
     >
         <view :class="['page-upload']">
+            <theme
+                :show="showtheme"
+                @toggelModel="toggelModel"
+            />
             <view
                 v-if="!needBindMobile"
                 class="main"
             >
+                <view
+                    v-if="formData.activity_id === 12"
+                    class="uni-list-cell-db"
+                >
+                    <view
+                        class="uni-input placeholder fake-input"
+                        @click="selTheme"
+                    >
+                        {{ themeTxts[ac_type] }}
+                    </view>
+                </view>
                 <view
                     v-if="publicConfig.showAllCat"
                     class="uni-list-cell-db"
@@ -101,6 +116,7 @@
                     <textarea
                         v-model="formData.introduce"
                         class="uni-textarea"
+                        :class="{ hide: showtheme }"
                         placeholder-class="placeholder"
                         :placeholder-style="
                             `color:${publicConfig.placeholderColor}`
@@ -204,16 +220,17 @@
         </view>
     </view>
 </template>
-
 <script>
 import api from '../../../common/api';
 import upload from '../common/upload.vue';
 import imageDragSort from '../../../components/image-drag-sort/index.vue';
+import theme from '../clocked/theme.vue';
 
 export default {
     components: {
         upload,
         imageDragSort,
+        theme,
     },
     data() {
         return {
@@ -251,6 +268,17 @@ export default {
             lock: true,
             // 编辑
             id: '',
+            ac_type: 0,
+            showtheme: false,
+            themeTxts: [
+                '选择分类',
+                '劳动实践',
+                '读书学习',
+                '才艺展示',
+                '体育锻炼',
+            ],
+            preStatus: 0,
+            days: 0,
         };
     },
     computed: {
@@ -260,7 +288,11 @@ export default {
     },
     onLoad(params) {
         this.id = params.id;
-        this.formData.activity_id = params.activity_id;
+        this.formData.activity_id = Number(params.activity_id);
+        this.ac_type = Number(params.ac_type) || 0;
+        this.preStatus = Number(params.status) || 0;
+        this.days = Number(params.days) || 0;
+        const isFrommyWork = params.from || '';
         if (this.id) {
             uni.setNavigationBarTitle({ title: '编辑作品' });
         }
@@ -277,11 +309,39 @@ export default {
             page: 'uploadConfig',
         });
         this.formData.cat_id = this.publicConfig.catId;
+        if (this.formData.activity_id === 12) {
+            if (isFrommyWork) {
+                // 个人中心，没有直接获取 days ac_type status,
+                this.getTheme();
+            } else {
+                this.setClockedCatId(this.ac_type);
+            }
+        }
         this.formData.resource_type = this.uploadMode === 'video' ? 1 : 2;
         this.getData();
     },
     created() {},
     methods: {
+        getTheme() {
+            api.get('/api/activity/curtheme', {
+                activity_id: 12,
+            }).then(({ type, status }) => {
+                this.preStatus = status;
+                if (type) {
+                    this.ac_type = type;
+                } else {
+                    this.ac_type = 0;
+                }
+            });
+        },
+        getsigninfo() {
+            api.get('/api/activity/signinfo', {
+                user_id: this.userInfo.user_id,
+                activity_id: 12,
+            }).then((signinfo) => {
+                this.days = signinfo.serial_day;
+            });
+        },
         // 编辑作品
         getItemData() {
             if (this.id) {
@@ -289,6 +349,7 @@ export default {
                     id: this.id,
                     activity_id: this.formData.activity_id,
                 }).then((res) => {
+                    console.log(this.formData, res);
                     let {
                         img,
                         resource_type: resourceType,
@@ -330,12 +391,14 @@ export default {
                     this.formData = {
                         ...this.formData,
                         ...res,
+                        introduce: res.introduce || '',
                         img,
                         resource_type: resourceType,
                         cat_id: catId,
                         cat_name: catName,
                         video_img_url: videoImgUrl,
                     };
+                    console.log(this.formData);
                     this.isLoading = false;
                 });
             }
@@ -406,7 +469,7 @@ export default {
                             item => item.cat_id === 102,
                         );
                         // eslint-disable-next-line no-param-reassign
-                        res[index].name = '体育竞技';
+                        res[index].name = '体育锻炼';
                     }
                     this.catData = res;
                     this.getItemData();
@@ -417,6 +480,9 @@ export default {
                     this.needBindMobile = res.user_info && res.user_info.is_bind_mobile === 0;
                     this.userInfo = res.user_info;
                     this.isLoading = false;
+                    if (this.formData.activity_id === 12) {
+                        this.getsigninfo();
+                    }
                 },
                 () => {
                     this.isLoading = false;
@@ -553,6 +619,13 @@ export default {
                         return this.errTip('请上传作品图片');
                     }
                 }
+                if (formData.activity_id === 12) {
+                    if (!this.ac_type) {
+                        this.lock = true;
+                        return this.errTip('请选择分类');
+                    }
+                    formData.ac_type = this.ac_type;
+                }
 
                 uni.showLoading();
                 this.disabled = true;
@@ -566,7 +639,7 @@ export default {
                         this.disabled = false;
                         uni.hideLoading();
                         uni.navigateTo({
-                            url: `/activity/pages/upload/result?activity_id=${this.formData.activity_id}`,
+                            url: `/activity/pages/upload/result?activity_id=${this.formData.activity_id}&pre_status=${this.preStatus}&days=${this.days}&ac_type=${this.ac_type}`,
                         });
                         this.resetData();
                         this.lock = true;
@@ -583,6 +656,39 @@ export default {
                 );
             }
             return true;
+        },
+        selTheme() {
+            if (!this.ac_type) {
+                this.showtheme = true;
+            }
+        },
+        toggelModel(id) {
+            this.showtheme = false;
+            if (id) {
+                this.ac_type = id;
+                this.setClockedCatId(id);
+            } else {
+                this.ac_type = 0;
+            }
+        },
+        setClockedCatId(type) {
+            switch (type) {
+                case 1:
+                    this.formData.cat_id = 20;
+                    break;
+                case 2:
+                    this.formData.cat_id = 102;
+                    break;
+                case 3:
+                    this.formData.cat_id = 102;
+                    break;
+                case 4:
+                    this.formData.cat_id = 132;
+                    break;
+                default:
+                    this.formData.cat_id = '';
+                    break;
+            }
         },
     },
     onShareAppMessage(res) {
@@ -635,6 +741,9 @@ export default {
         width: 100%;
         box-sizing: border-box;
         line-height: 42upx;
+        &.hide {
+            display: none;
+        }
     }
 
     .fake-input {

@@ -9,8 +9,9 @@
                         <image
                             class="banner-image"
                             :src="
-                                mainImage ||
-                                    `https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/${publicConfig.activityName}_main.jpg`
+                                `https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/${
+                                    publicConfig.activityName
+                                }_main.${publicConfig.isPNG ? 'png' : 'jpg'}`
                             "
                         />
                     </view>
@@ -38,13 +39,18 @@
                     <!-- work show -->
                     <view class="menu-list">
                         <view class="cansai-text">
-                            ——
-                            {{
-                                publicConfig.activityId === 10
-                                    ? "参赛作品"
-                                    : "活动作品"
-                            }}
-                            ——
+                            <template v-if="publicConfig.activityId !== 12">
+                                ——
+                                {{
+                                    publicConfig.activityId === 10
+                                        ? "参赛作品"
+                                        : "活动作品"
+                                }}
+                                ——
+                            </template>
+                            <template v-else>
+                                活动作品
+                            </template>
                         </view>
                         <view class="search-box">
                             <button
@@ -104,6 +110,8 @@
                                 <event-craft-cover
                                     :info="item"
                                     :bg-color="publicConfig.primaryBgColor"
+                                    class="clocked-work"
+                                    :activity-id="publicConfig.activityId"
                                     @click.native="viewDetail(item, index)"
                                 />
                                 <view
@@ -371,15 +379,22 @@ export default {
             this.$emit('showMask', { title: '活动规则', type: 0 });
         },
         handleMywork() {
-            api.isLogin({
-                fr: this.fr,
-            }).then(() => {
-                uni.navigateTo({
-                    url: this.workPath
-                        ? this.workPath
-                        : `/activity/pages/mywork/mywork?type=myWork&activity_id=${this.filter.activity_id}`,
-                });
-            });
+            if (this.filter.activity_id !== 12) {
+                api.isLogin({
+                    fr: this.fr,
+                }).then(
+                    () => {
+                        uni.navigateTo({
+                            url: this.workPath
+                                ? this.workPath
+                                : `/activity/pages/mywork/mywork?type=myWork&activity_id=${this.filter.activity_id}`,
+                        });
+                    },
+                    () => {},
+                );
+            } else {
+                this.$emit('toUcenter');
+            }
         },
         handleVote(item) {
             if (this.status === 2) {

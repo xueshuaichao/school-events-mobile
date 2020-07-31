@@ -185,17 +185,13 @@ function saveImage(id, path) {
     }
     return new Promise((resolve) => {
         // #ifdef H5
-        html2canvas(document.getElementById(`${id}`), {
-            useCORS: true,
-        }).then((canvas) => {
-            const link = document.createElement('a');
-            link.href = canvas.toDataURL();
-            link.setAttribute('download', 'poster.png');
-            link.style.display = 'none';
-            document.body.appendChild(link);
-            link.click();
-            resolve();
-        });
+        const link = document.createElement('a');
+        link.href = path;
+        link.setAttribute('download', 'poster.png');
+        link.style.display = 'none';
+        document.body.appendChild(link);
+        link.click();
+        resolve();
         // #endif
         // #ifndef H5
         resolve();

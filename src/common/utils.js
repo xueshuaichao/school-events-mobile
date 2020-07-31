@@ -1,3 +1,5 @@
+import Clipboard from 'clipboard';
+
 function getToken() {
     let userKey = null;
     try {
@@ -104,6 +106,26 @@ function mapHttpToHttps(rawUrl) {
     }
     return rawUrl;
 }
+function handleClipboard(text, event, onSuccess, onError) {
+    const e = event || {};
+    console.log(11111, e);
+    const clipboard = new Clipboard(event.target, {
+        text: () => text,
+    });
+    clipboard.on('success', () => {
+        onSuccess();
+        clipboard.off('error');
+        clipboard.off('success');
+        clipboard.destroy();
+    });
+    clipboard.on('error', () => {
+        onError();
+        clipboard.off('error');
+        clipboard.off('success');
+        clipboard.destroy();
+    });
+    clipboard.onClick(e);
+}
 export default {
     getToken,
     store,
@@ -113,4 +135,5 @@ export default {
     // #ifdef H5
     getAppType,
     // #endif
+    handleClipboard,
 };

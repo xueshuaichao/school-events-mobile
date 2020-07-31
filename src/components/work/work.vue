@@ -193,7 +193,6 @@ export default {
             if (this.info.status !== 1 && this.from && this.ableSlide) {
                 jump = false;
             }
-            console.log(this.info.status, this.from, this.ableSlide);
             if (jump) {
                 this.info.play_count = this.info.play_count + 1;
 

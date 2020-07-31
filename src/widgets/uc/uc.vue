@@ -273,14 +273,14 @@ export default {
     },
     watch: {
         refresh() {
-            this.filter.pass_num = 1;
+            this.filter.page_num = 1;
             this.getData('refreshMess');
         },
         pageShow() {
             try {
                 const value = uni.getStorageSync('doLogout');
-                if (value) {
-                    this.filter.pass_num = 1;
+                if (value || !this.userInfo.user_id) {
+                    this.filter.page_num = 1;
                     this.getData();
                 }
             } catch (e) {
@@ -326,7 +326,6 @@ export default {
                 (data) => {
                     this.isLoading = false;
                     this.userInfo = { ...this.userInfo, ...data };
-                    console.log(this.userInfo, 'getComeInUserInfo');
                     this.getHonor(uid);
                     this.getPraise(uid);
                     this.getWorkPassNum(uid);

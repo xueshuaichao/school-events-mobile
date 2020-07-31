@@ -524,6 +524,7 @@ const detailConf = [
                     y: 684,
                     x: 434,
                     borderRadius: 100,
+                    color: '9882ff',
                 },
                 {
                     url:
@@ -538,6 +539,63 @@ const detailConf = [
         titleList: [
             ['“爱挑战”代言人，舍我其谁！快为我点赞吧！'],
             ['“爱挑战”代言人，非我莫属，快为我点赞吧！'],
+        ],
+    },
+    // 11是直播，没有作品详情
+    {},
+    {
+        posterConfig: {
+            width: 570,
+            height: 820,
+            debug: false,
+            texts: [
+                {
+                    x: 50,
+                    y: 600,
+                    text: '',
+                    fontSize: 28,
+                    color: '#FF574A',
+                    opacity: 1,
+                    lineHeight: 40,
+                    lineNum: 1,
+                    width: 600,
+                    textOverflow: 'ellipsis',
+                    textAlign: 'left',
+                    baseLine: 'middle',
+                },
+            ],
+            images: [
+                {
+                    url:
+                        'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/h5/clocked_poster.png',
+                    width: 570,
+                    height: 820,
+                    y: 0,
+                    x: 0,
+                },
+                {
+                    url: '',
+                    width: 470,
+                    height: 316,
+                    y: 254,
+                    x: 48,
+                    borderRadius: 20,
+                    color: 'FFA69F',
+                },
+                {
+                    url: '',
+                    width: 110,
+                    height: 110,
+                    y: 684,
+                    x: 434,
+                    borderRadius: 100,
+                },
+            ],
+        },
+        titleList: [
+            ['我在参加爱挑战暑期打卡活动，就差你的赞啦！'],
+            ['我这么努力打卡进步，你就给个赞鼓励下嘛！'],
+            ['我又发布新作品啦，快来看！'],
         ],
     },
 ];

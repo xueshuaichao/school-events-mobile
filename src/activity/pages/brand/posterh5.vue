@@ -2,13 +2,23 @@
     <view>
         <canvas
             class="canvas pro"
-            style="width: 570px; height: 820px;"
+            :style="{ width: `${width}px`, height: `${height}px` }"
             canvas-id="firstCanvas"
         />
     </view>
 </template>
 <script>
 export default {
+    props: {
+        width: {
+            type: Number,
+            default: 570,
+        },
+        height: {
+            type: Number,
+            default: 818,
+        },
+    },
     data() {
         return {
             // #ifdef H5
@@ -52,6 +62,7 @@ export default {
                 );
             });
             Promise.all(imageInfoArr).then((res) => {
+                // console.log(res);
                 res.forEach((item, index) => {
                     this.ctx.save();
                     if (config.images[index].borderRadius) {
@@ -83,7 +94,24 @@ export default {
                     }
                     this.ctx.restore();
                 });
-                const { texts } = config;
+                const { texts, radiusRects } = config;
+                if (radiusRects && radiusRects.length > 0) {
+                    radiusRects.forEach((item) => {
+                        this.ctx.save();
+                        this.drawRadiusRect(
+                            item.x,
+                            item.y,
+                            item.w,
+                            item.h,
+                            item.br,
+                        );
+                        this.ctx.fillStyle = item.color;
+                        this.ctx.strokeStyle = item.color2;
+                        this.ctx.fill();
+                        this.ctx.stroke();
+                        this.ctx.restore();
+                    });
+                }
                 if (texts && texts.length > 0) {
                     texts.forEach((item) => {
                         this.drawText(item);
@@ -314,57 +342,5 @@ export default {
     bottom: 0;
     left: 0;
     transform: translate3d(-9999rpx, 0, 0);
-}
-.poster-img-mask {
-    position: fixed;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    padding: 0 93upx 0;
-    box-sizing: border-box;
-    background-color: rgba(0, 0, 0, 0.79);
-    text-align: center;
-    z-index: 50;
-    .poster-img-mask-box {
-        position: absolute;
-        left: 0;
-        right: 0;
-        top: 50%;
-        transform: translateY(-50%);
-    }
-    .canvas-img {
-        width: 570upx;
-        height: 820upx;
-        margin: 0 auto 30upx;
-        .image {
-            width: 100%;
-            height: 100%;
-            -webkit-touch-callout: default;
-        }
-    }
-    .btn {
-        background: linear-gradient(
-            0deg,
-            rgba(255, 141, 133, 1),
-            rgba(255, 87, 73, 1)
-        );
-        box-shadow: 0 4upx 6upx 0 rgba(0, 0, 0, 0.4);
-        line-height: 98upx;
-        width: 540upx;
-        box-sizing: border-box;
-        margin: 0 auto;
-        border-radius: 55upx;
-        color: #fff;
-        font-size: 36upx;
-        font-weight: 600;
-        margin-top: 37upx;
-    }
-    .close {
-        display: block;
-        margin: 37upx auto 0;
-        width: 52upx;
-        height: 52upx;
-    }
 }
 </style>

@@ -19,7 +19,7 @@
                 :key="item.id"
             >
                 <view class="swiper-item">
-                    <image src="/static/images/yiqing/horn.png" />
+                    <view class="icon-horn" />
                     <view class="swiper-info">
                         <text> 用户{{ item.user_name | plusXing }} </text>
                         <text>{{ text }}</text>
@@ -27,7 +27,11 @@
                             #{{ item.cat_name }}#
                         </text>
                         <text>
-                            {{ item.resource_name || item.draw }}
+                            {{
+                                item.resource_name ||
+                                    item.draw ||
+                                    item.prize_name
+                            }}
                         </text>
                     </view>
                     <text>刚刚</text>
@@ -82,13 +86,15 @@ export default {
             position: relative;
             height: 100%;
             padding-left: 82upx;
-            image {
+            .icon-horn {
                 position: absolute;
                 left: 30upx;
                 width: 31upx;
                 height: 26upx;
                 top: 50%;
                 transform: translateY(-50%);
+                background-image: url("/static/images/yiqing/horn.png");
+                background-size: 100% 100%;
             }
             .swiper-info {
                 float: left;

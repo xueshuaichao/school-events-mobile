@@ -35,18 +35,6 @@
             }
         },
         {
-            "path": "pages/tabBar/mall/mall",
-            "style": {
-                "navigationBarTitleText": "挑战商城"
-            }
-        },
-        {
-            "path": "pages/mall/detail/detail",
-            "style": {
-                "navigationBarTitleText": "礼品详情"
-            }
-        },
-        {
             "path": "pages/tabBar/uc/uc",
             "style": {
                 "navigationBarTitleText": "我的",
@@ -151,31 +139,6 @@
                 "navigationBarTitleText": "上传作品"
             }
         },
-        // 地址详情
-        {
-            "path": "pages/address/index",
-            "style": {
-                "navigationBarTitleText": "兑换确认"
-            }
-        },
-        {
-            "path": "pages/address/address",
-            "style": {
-                "navigationBarTitleText": "收货地址"
-            }
-        },
-        {
-            "path": "pages/address/exchangeRecord",
-            "style": {
-                "navigationBarTitleText": "兑换记录"
-            }
-        },
-        {
-            "path": "pages/address/edit",
-            "style": {
-                "navigationBarTitleText": "编辑收货地址"
-            }
-        },
         {
             "path": "pages/app/index",
             "style": {
@@ -183,72 +146,6 @@
             }
         },
         // ============== 春节好 end =====================
-        // ============== 疫情 ========================
-        {
-            "path": "pages/yiqing/index",
-            "style": {
-                "navigationBarTitleText": "抗击疫情“艺”起来"
-            }
-        },
-        {
-            "path": "pages/yiqing/upload/upload",
-            "style": {
-                "navigationBarTitleText": "上传作品"
-            }
-        },
-        {
-            "path": "pages/yiqing/upload/result",
-            "style": {
-                "navigationBarTitleText": "上传结果"
-            }
-        },
-        {
-            "path": "pages/yiqing/myWork/myWork",
-            "style": {
-                "navigationBarTitleText": "我的作品"
-            }
-        },
-        {
-            "path": "pages/yiqing/bind-mobile/index",
-            "style": {
-                "navigationBarTitleText": "绑定手机号"
-            }
-        },
-        {
-            "path": "pages/yiqing/prize/index",
-            "style": {
-                "navigationBarTitleText": "领取证书",
-                "usingComponents": {
-                    "poster": "/wxcomponents/third-party/poster/poster/index"
-                }
-            }
-        },
-        // ============== 疫情end ========================
-
-        {
-            "path": "pages/read/index",
-            "style": {
-                "navigationBarTitleText": "世界读书日"
-            }
-        },
-        {
-            "path": "pages/read/upload/modify",
-            "style": {
-                "navigationBarTitleText": "上传作品"
-            }
-        },
-        {
-            "path": "pages/read/upload/result",
-            "style": {
-                "navigationBarTitleText": "上传结果"
-            }
-        },
-        {
-            "path": "pages/read/myWork/myWork",
-            "style": {
-                "navigationBarTitleText": "我的作品"
-            }
-        },
 
         {
             "path": "pages/activity-pages/labor/index",
@@ -396,8 +293,134 @@
     ],
     "subPackages": [
         {
+            "root": "history",
+            "pages": [
+                // ============== 春节 活动 =================
+                {
+                    "path": "chunjie/index",
+                    "style": {
+                        "navigationBarTitleText": "秀才艺，赢好礼",
+                        "softinputNavBar": "none"
+                    }
+                },
+                {
+                    "path": "chunjie/upload/upload",
+                    "style": {
+                        "navigationBarTitleText": "上传作品"
+                    }
+                },
+                {
+                    "path": "chunjie/myWork/myWork",
+                    "style": {
+                        "navigationBarTitleText": "我的作品"
+                    }
+                },
+                // ============== 春节 end ======================
+
+                // ============== 春节好 ========================
+                {
+                    "path": "chunjiehao/index",
+                    "style": {
+                        "navigationBarTitleText": "dou说新年好",
+                        "softinputNavBar": "none"
+                    }
+                },
+                {
+                    "path": "chunjiehao/upload/upload",
+                    "style": {
+                        "navigationBarTitleText": "上传作品"
+                    }
+                },
+                {
+                    "path": "chunjiehao/upload/result",
+                    "style": {
+                        "navigationBarTitleText": "上传结果"
+                    }
+                },
+                {
+                    "path": "chunjiehao/myWork/myWork",
+                    "style": {
+                        "navigationBarTitleText": "我的作品"
+                    }
+                },
+                // ===========start===========世界读书日
+                {
+                    "path": "read/index",
+                    "style": {
+                        "navigationBarTitleText": "世界读书日"
+                    }
+                },
+                {
+                    "path": "read/upload/modify",
+                    "style": {
+                        "navigationBarTitleText": "上传作品"
+                    }
+                },
+                {
+                    "path": "read/upload/result",
+                    "style": {
+                        "navigationBarTitleText": "上传结果"
+                    }
+                },
+                {
+                    "path": "read/myWork/myWork",
+                    "style": {
+                        "navigationBarTitleText": "我的作品"
+                    }
+                },
+                // ================end 世界读书日
+                // ============== 疫情 ========================
+                {
+                    "path": "yiqing/index",
+                    "style": {
+                        "navigationBarTitleText": "抗击疫情“艺”起来"
+                    }
+                },
+                {
+                    "path": "yiqing/upload/upload",
+                    "style": {
+                        "navigationBarTitleText": "上传作品"
+                    }
+                },
+                {
+                    "path": "yiqing/upload/result",
+                    "style": {
+                        "navigationBarTitleText": "上传结果"
+                    }
+                },
+                {
+                    "path": "yiqing/myWork/myWork",
+                    "style": {
+                        "navigationBarTitleText": "我的作品"
+                    }
+                },
+                {
+                    "path": "yiqing/bind-mobile/index",
+                    "style": {
+                        "navigationBarTitleText": "绑定手机号"
+                    }
+                },
+                {
+                    "path": "yiqing/prize/index",
+                    "style": {
+                        "navigationBarTitleText": "领取证书",
+                        "usingComponents": {
+                            "poster": "/wxcomponents/third-party/poster/poster/index"
+                        }
+                    }
+                }
+                // ============== 疫情end ========================
+            ]
+        },
+        {
             "root": "activity",
             "pages": [
+                {
+                    "path": "pages/clocked/ucenter",
+                    "style": {
+                        "navigationBarTitleText": "打卡一下，记录暑假"
+                    }
+                },
                 {
                     "path": "pages/children/index",
                     "style": {
@@ -452,52 +475,70 @@
                         "navigationBarTitleText": "青少年”爱挑战“寻找代言人"
                     }
                 },
-                // ============== 春节 活动 =================
                 {
-                    "path": "chunjie/index",
+                    "path": "pages/clocked/lottery",
                     "style": {
-                        "navigationBarTitleText": "秀才艺，赢好礼",
-                        "softinputNavBar": "none"
+                        "navigationBarTitleText": "抽奖"
                     }
                 },
                 {
-                    "path": "chunjie/upload/upload",
+                    "path": "pages/mall/index",
                     "style": {
-                        "navigationBarTitleText": "上传作品"
+                        "navigationBarTitleText": "积分商城"
                     }
                 },
                 {
-                    "path": "chunjie/myWork/myWork",
+                    "path": "pages/mall/detail",
                     "style": {
-                        "navigationBarTitleText": "我的作品"
-                    }
-                },
-                // ============== 春节 end ======================
-
-                // ============== 春节好 ========================
-                {
-                    "path": "chunjiehao/index",
-                    "style": {
-                        "navigationBarTitleText": "dou说新年好",
-                        "softinputNavBar": "none"
+                        "navigationBarTitleText": "积分商城"
                     }
                 },
                 {
-                    "path": "chunjiehao/upload/upload",
+                    "path": "pages/mall/result",
                     "style": {
-                        "navigationBarTitleText": "上传作品"
+                        "navigationBarTitleText": "积分商城"
                     }
                 },
                 {
-                    "path": "chunjiehao/upload/result",
+                    "path": "pages/mall/order/list",
                     "style": {
-                        "navigationBarTitleText": "上传结果"
+                        "navigationBarTitleText": "我的兑换"
                     }
                 },
                 {
-                    "path": "chunjiehao/myWork/myWork",
+                    "path": "pages/mall/order/detail",
                     "style": {
-                        "navigationBarTitleText": "我的作品"
+                        "navigationBarTitleText": "我的兑换"
+                    }
+                },
+                {
+                    "path": "pages/mall/address/list",
+                    "style": {
+                        "navigationBarTitleText": "我的地址"
+                    }
+                },
+                {
+                    "path": "pages/mall/address/edit",
+                    "style": {
+                        "navigationBarTitleText": "添加收件地址"
+                    }
+                },
+                {
+                    "path": "pages/mall/score/list",
+                    "style": {
+                        "navigationBarTitleText": "积分明细"
+                    }
+                },
+                {
+                    "path": "pages/lottery/list",
+                    "style": {
+                        "navigationBarTitleText": "我的中奖"
+                    }
+                },
+                {
+                    "path": "pages/lottery/detail",
+                    "style": {
+                        "navigationBarTitleText": "我的中奖"
                     }
                 }
             ]
@@ -537,12 +578,7 @@
                 "selectedIconPath": "static/images/tab/upload_ac.png",
                 "text": "活动"
             },
-            // {
-            //     "pagePath": "pages/tabBar/mall/mall",
-            //     "iconPath": "static/images/tab/mall.png",
-            //     "selectedIconPath": "static/images/tab/mall_ac.png",
-            //     "text": "挑战商城"
-            // },
+
             {
                 "pagePath": "pages/tabBar/uc/uc",
                 "iconPath": "static/images/tab/uc.png",

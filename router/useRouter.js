@@ -7,10 +7,8 @@ Vue.use(Router);
 const whitelist = {
     '/pages/tabBar/index/index': 'tabbar-index',
     '/pages/tabBar/list/list': 'tabbar-list',
-    '/pages/address/index': 'address-index',
     '/pages/tabBar/upload/upload': 'tabbar-upload',
     '/pages/tabBar/uc/uc': 'tabbar-uc',
-    '/pages/tabBar/mall/mall': 'tabbar-mall',
     '/pages/work/detail/detail': 'work-detail',
     '/pages/news/list/list': 'news-list',
     '/pages/news/detail/detail': 'news-detail',
@@ -59,12 +57,6 @@ const routesConfig = {
             name: 'tabbar-upload',
         },
         {
-            path: '/pages/tabBar/mall/mall',
-            component: () => import('@/pages/tabBar/mall/mall.vue'),
-            aliasPath: '/mall',
-            name: 'tabbar-mall',
-        },
-        {
             path: '/pages/mall/detail/detail',
             component: () => import('@/pages/mall/detail/detail.vue'),
             aliasPath: '/mall/detail',
@@ -99,23 +91,10 @@ const routesConfig = {
             component: () => import('@/pages/doc/intro/intro.vue'),
         },
         {
-            path: '/pages/address/index',
-            component: () => import('@/pages/address/index.vue'),
-            aliasPath: '/mall/exchange',
-            name: 'address-index',
+            path: '/history/chunjie/upload/upload',
         },
         {
-            path: '/pages/address/address',
-        },
-        {
-            path: '/pages/address/edit',
-        },
-
-        {
-            path: '/activity/chunjie/upload/upload',
-        },
-        {
-            path: '/activity/chunjiehao/upload/upload',
+            path: '/history/chunjiehao/upload/upload',
         },
         {
             path: '/pages/upload/result/result',
@@ -124,40 +103,40 @@ const routesConfig = {
             path: '/pages/upload/modify/modify',
         },
         {
-            path: '/activity/chunjie/myWork/myWork',
+            path: '/history/chunjie/myWork/myWork',
         },
         {
-            path: '/activity/chunjiehao/myWork/myWork',
+            path: '/history/chunjiehao/myWork/myWork',
         },
         {
-            path: '/activity/chunjiehao/upload/result',
+            path: '/history/chunjiehao/upload/result',
         },
         {
-            path: '/activity/chunjie/index',
+            path: '/history/chunjie/index',
         },
         {
-            path: '/activity/chunjiehao/index',
+            path: '/history/chunjiehao/index',
         },
         {
-            path: '/pages/yiqing/index',
+            path: '/history/yiqing/index',
         },
         {
-            path: '/pages/yiqing/myWork/myWork',
+            path: '/history/yiqing/myWork/myWork',
         },
         {
-            path: '/pages/yiqing/upload/upload',
+            path: '/history/yiqing/upload/upload',
         },
         {
-            path: '/pages/yiqing/upload/result',
+            path: '/history/yiqing/upload/result',
         },
         {
-            path: '/pages/yiqing/bind-mobile/index',
+            path: '/history/yiqing/bind-mobile/index',
         },
         {
-            path: '/pages/read/index',
+            path: '/history/read/index',
         },
         {
-            path: '/pages/read/myWork/myWork',
+            path: '/history/read/myWork/myWork',
         },
         {
             path: '/pages/activity-pages/labor/index',
@@ -187,15 +166,53 @@ const routesConfig = {
         {
             path: '/activity/pages/brand/rematch',
         },
+
+        {
+            path: '/activity/pages/clocked/lottery',
+        },
+
+        {
+            path: '/activity/pages/mall/index',
+        },
+        {
+            path: '/activity/pages/mall/detail',
+        },
+        {
+            path: '/activity/pages/mall/result',
+        },
+        {
+            path: '/activity/pages/mall/address/list',
+        },
+        {
+            path: '/activity/pages/clocked/ucenter',
+        },
+        {
+            path: '/activity/pages/mall/address/edit',
+        },
+        {
+            path: '/activity/pages/mall/order/edit',
+        },
+        {
+            path: '/activity/pages/mall/order/detail',
+        },
+        {
+            path: '/activity/pages/mall/order/list',
+        },
+        {
+            path: '/activity/pages/mall/score/list',
+        },
+        {
+            path: '/activity/pages/lottery/list',
+        },
+        {
+            path: '/activity/pages/lottery/detail',
+        },
         {
             path: '/pages/activity-pages/mywork/mywork',
         },
 
         {
             path: '/pages/login/login',
-        },
-        {
-            path: '/pages/address/exchangeRecord',
         },
         {
             path: '/pages/doc/notice/notice',
