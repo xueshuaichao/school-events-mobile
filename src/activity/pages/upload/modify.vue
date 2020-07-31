@@ -106,7 +106,10 @@
                         :placeholder="uploadConfig.placeholderNameText"
                     >
                 </view>
-                <view class="textarea-view">
+                <view
+                    class="textarea-view"
+                    :class="{ hide: showtheme }"
+                >
                     <text class="max-length">
                         {{ formData.introduce.length || 0 }}/{{
                             uploadConfig.descMaxLength
@@ -725,6 +728,9 @@ export default {
     }
     .textarea-view {
         position: relative;
+        &.hide {
+            opacity: 0;
+        }
         .max-length {
             position: absolute;
             bottom: 10upx;
