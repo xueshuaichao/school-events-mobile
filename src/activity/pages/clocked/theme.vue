@@ -279,7 +279,7 @@ export default {
         width: 60upx;
         height: 60upx;
         margin-top: 40upx;
-        margin-left: 315upx;
+        margin-left: 345upx;
     }
 }
 </style>

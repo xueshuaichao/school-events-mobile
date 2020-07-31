@@ -186,9 +186,7 @@
                             成年组
                         </button>
                         <view class="search">
-                            <image
-                                src="../../static/images/yiqing/search.png"
-                            />
+                            <image src="/static/images/yiqing/search.png" />
                             <input
                                 v-model="changeValue"
                                 placeholder-style="color:#6691FF"
@@ -397,7 +395,7 @@ export default {
                 fr: this.fr,
             }).then(() => {
                 uni.navigateTo({
-                    url: '/pages/yiqing/myWork/myWork?type=myWork',
+                    url: '/history/yiqing/myWork/myWork?type=myWork',
                 });
             });
             return true;
@@ -428,7 +426,7 @@ export default {
                 return;
             }
             uni.navigateTo({
-                url: `/pages/yiqing/myWork/myWork?type=search&name=${this.changeValue.trim()}`,
+                url: `/history/yiqing/myWork/myWork?type=search&name=${this.changeValue.trim()}`,
             });
         },
         initShare() {
@@ -480,7 +478,7 @@ export default {
                 fr: this.fr,
             }).then(() => {
                 uni.navigateTo({
-                    url: '/pages/yiqing/myWork/myWork?type=myWork',
+                    url: '/history/yiqing/myWork/myWork?type=myWork',
                 });
             });
         },

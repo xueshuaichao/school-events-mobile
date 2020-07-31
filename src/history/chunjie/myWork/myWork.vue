@@ -33,7 +33,7 @@
                 <view class="search-box">
                     <view class="search">
                         <image
-                            src="../../../static/images/chunjie/search-icon.png"
+                            src="/history/static/images/chunjie/search-icon.png"
                         />
                         <form action="javascript:return true">
                             <input
@@ -141,7 +141,7 @@
                 v-show="searchEmpty"
                 class="empty"
             >
-                <image src="../../../static/images/chunjie/empty.png" />
+                <image src="/history/static/images/chunjie/empty.png" />
                 <view>搜索不到您要的结果，换个关键词试试吧～</view>
             </view>
             <view
@@ -209,8 +209,8 @@ export default {
             changeValue: '',
             loadMoreStatus: 'none',
             mediaIcon: {
-                1: '../../../static/images/chunjie/video-icon.png',
-                2: '../../../static/images/chunjie/img-icon.png',
+                1: '/history/static/images/chunjie/video-icon.png',
+                2: '/history/static/images/chunjie/img-icon.png',
             },
             tabActiveIndex: 2,
             filter: {
@@ -538,7 +538,7 @@ export default {
                 margin-left: 200upx;
             }
             &.active {
-                background: url("../../../static/images/chunjie/neworhot.png")
+                background: url("../../static/images/chunjie/neworhot.png")
                     no-repeat;
                 background-size: 100% 100%;
                 color: #ff3849;

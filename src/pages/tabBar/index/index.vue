@@ -271,13 +271,13 @@ export default {
                     id: 6,
                     img:
                         'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/h5/read-s-banner.png',
-                    url: '/pages/read/index',
+                    url: '/history/read/index',
                 },
                 {
                     id: 5,
                     img:
                         'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/h5/yiqing-s-banner.png',
-                    url: '/pages/yiqing/index',
+                    url: '/history/yiqing/index',
                 },
             ],
             isSearchWord: false, // 是否设置了关键词

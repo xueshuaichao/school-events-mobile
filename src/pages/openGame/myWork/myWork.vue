@@ -412,8 +412,8 @@ export default {
             changeValue: '',
             loadMoreStatus: 'none',
             mediaIcon: {
-                1: '../../../static/images/chunjie/video-icon.png',
-                2: '../../../static/images/chunjie/img-icon.png',
+                1: '/history/static/images/chunjie/video-icon.png',
+                2: '/history/static/images/chunjie/img-icon.png',
             },
             tabActiveIndex: 1,
             filter: {

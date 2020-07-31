@@ -306,7 +306,7 @@ export default {
                         this.disabled = false;
                         uni.hideLoading();
                         uni.navigateTo({
-                            url: '/pages/read/upload/result',
+                            url: '/history/read/upload/result',
                         });
                         this.resetData();
                         this.lock = true;
@@ -336,7 +336,7 @@ export default {
             title,
             imageUrl:
                 'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/read_share.png',
-            path: '/pages/read/index',
+            path: '/history/read/index',
         };
     },
 };

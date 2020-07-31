@@ -7,10 +7,8 @@ Vue.use(Router);
 const whitelist = {
     '/pages/tabBar/index/index': 'tabbar-index',
     '/pages/tabBar/list/list': 'tabbar-list',
-    '/pages/address/index': 'address-index',
     '/pages/tabBar/upload/upload': 'tabbar-upload',
     '/pages/tabBar/uc/uc': 'tabbar-uc',
-    '/pages/tabBar/mall/mall': 'tabbar-mall',
     '/pages/work/detail/detail': 'work-detail',
     '/pages/news/list/list': 'news-list',
     '/pages/news/detail/detail': 'news-detail',
@@ -59,12 +57,6 @@ const routesConfig = {
             name: 'tabbar-upload',
         },
         {
-            path: '/pages/tabBar/mall/mall',
-            component: () => import('@/pages/tabBar/mall/mall.vue'),
-            aliasPath: '/mall',
-            name: 'tabbar-mall',
-        },
-        {
             path: '/pages/mall/detail/detail',
             component: () => import('@/pages/mall/detail/detail.vue'),
             aliasPath: '/mall/detail',
@@ -99,19 +91,6 @@ const routesConfig = {
             component: () => import('@/pages/doc/intro/intro.vue'),
         },
         {
-            path: '/pages/address/index',
-            component: () => import('@/pages/address/index.vue'),
-            aliasPath: '/mall/exchange',
-            name: 'address-index',
-        },
-        {
-            path: '/pages/address/address',
-        },
-        {
-            path: '/pages/address/edit',
-        },
-
-        {
             path: '/history/chunjie/upload/upload',
         },
         {
@@ -139,25 +118,25 @@ const routesConfig = {
             path: '/history/chunjiehao/index',
         },
         {
-            path: '/pages/yiqing/index',
+            path: '/history/yiqing/index',
         },
         {
-            path: '/pages/yiqing/myWork/myWork',
+            path: '/history/yiqing/myWork/myWork',
         },
         {
-            path: '/pages/yiqing/upload/upload',
+            path: '/history/yiqing/upload/upload',
         },
         {
-            path: '/pages/yiqing/upload/result',
+            path: '/history/yiqing/upload/result',
         },
         {
-            path: '/pages/yiqing/bind-mobile/index',
+            path: '/history/yiqing/bind-mobile/index',
         },
         {
-            path: '/pages/read/index',
+            path: '/history/read/index',
         },
         {
-            path: '/pages/read/myWork/myWork',
+            path: '/history/read/myWork/myWork',
         },
         {
             path: '/pages/activity-pages/labor/index',
@@ -234,9 +213,6 @@ const routesConfig = {
 
         {
             path: '/pages/login/login',
-        },
-        {
-            path: '/pages/address/exchangeRecord',
         },
         {
             path: '/pages/doc/notice/notice',

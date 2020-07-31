@@ -123,7 +123,7 @@
                                 <view>
                                     <text>一等奖</text>
                                     <image
-                                        src="../../static/images/chunjie/chunjiehao-prize01.png"
+                                        src="/history/static/images/chunjie/chunjiehao-prize01.png"
                                     />
                                     <text>空气炸锅*1</text>
                                 </view>
@@ -137,14 +137,14 @@
                                 <view>
                                     <text>三等奖</text>
                                     <image
-                                        src="../../static/images/chunjie/chunjiehao-prize03.png"
+                                        src="/history/static/images/chunjie/chunjiehao-prize03.png"
                                     />
                                     <text>欧普护眼台灯*3</text>
                                 </view>
                                 <view>
                                     <text>四等奖</text>
                                     <image
-                                        src="../../static/images/chunjie/chunjiehao-prize04.png"
+                                        src="/history/static/images/chunjie/chunjiehao-prize04.png"
                                     />
                                     <text>小熊加湿器*4</text>
                                 </view>
@@ -196,7 +196,7 @@
                         <view>
                             <text>一等奖</text>
                             <image
-                                src="../../static/images/chunjie/chunjiehao-prize01.png"
+                                src="/history/static/images/chunjie/chunjiehao-prize01.png"
                             />
                             <text>空气炸锅*1</text>
                         </view>
@@ -210,14 +210,14 @@
                         <view>
                             <text>三等奖</text>
                             <image
-                                src="../../static/images/chunjie/chunjiehao-prize03.png"
+                                src="/history/static/images/chunjie/chunjiehao-prize03.png"
                             />
                             <text>欧普护眼台灯*3</text>
                         </view>
                         <view>
                             <text>四等奖</text>
                             <image
-                                src="../../static/images/chunjie/chunjiehao-prize04.png"
+                                src="/history/static/images/chunjie/chunjiehao-prize04.png"
                             />
                             <text>小熊加湿器*4</text>
                         </view>
@@ -245,7 +245,7 @@
                         >
                             <view class="swiper-item">
                                 <image
-                                    src="/static/images/chunjie/horn01.png"
+                                    src="/history/static/images/chunjie/horn01.png"
                                 />
                                 <view class="swiper-info">
                                     <text>
@@ -261,7 +261,7 @@
                 </view>
                 <image
                     class="cansai-text"
-                    src="../../static/images/chunjie/cansai_text.png"
+                    src="/history/static/images/chunjie/cansai_text.png"
                 />
 
                 <!-- work show -->
@@ -285,7 +285,7 @@
                         </button>
                         <view class="search">
                             <image
-                                src="../../static/images/chunjie/search-icon01.png"
+                                src="/history/static/images/chunjie/search-icon01.png"
                             />
                             <input
                                 v-model="changeValue"
@@ -397,8 +397,8 @@ export default {
             activeMenuIndex: 'new',
             loadMoreStatus: 'more',
             mediaIcon: {
-                1: '../../static/images/chunjie/video-icon.png',
-                2: '../../static/images/chunjie/img-icon.png',
+                1: '/history/static/images/chunjie/video-icon.png',
+                2: '/history/static/images/chunjie/img-icon.png',
             },
             prompt: false,
             isPlayed: false,
@@ -426,17 +426,17 @@ export default {
                 {
                     prize_score: '三等奖',
                     name: '无人机*6个',
-                    prize: '../../static/images/chunjie/prize03.png',
+                    prize: '/history/static/images/chunjie/prize03.png',
                 },
                 {
                     prize_score: '四等奖',
                     name: '护眼灯*8个',
-                    prize: '../../static/images/chunjie/prize04.png',
+                    prize: '/history/static/images/chunjie/prize04.png',
                 },
                 {
                     prize_score: '五等奖',
                     name: '液晶手写板*20个',
-                    prize: '../../static/images/chunjie/prize05.png',
+                    prize: '/history/static/images/chunjie/prize05.png',
                 },
             ],
             status: 2,
@@ -1071,8 +1071,7 @@ body.dialog-open {
         z-index: 222;
     }
     .close {
-        background: url("../../static/images/chunjie/prompt-close.png")
-            no-repeat;
+        background: url("../static/images/chunjie/prompt-close.png") no-repeat;
         background-size: 100% 100%;
         width: 62upx;
         height: 62upx;

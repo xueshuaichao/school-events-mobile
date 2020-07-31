@@ -478,12 +478,27 @@ export default {
 .activity-init-page {
     .fixed-mall {
         position: fixed;
-        right: -10upx;
+        right: 0;
         width: 150upx;
         height: 136upx;
         top: 50%;
         margin-top: -48upx;
         z-index: 100;
+        animation: mymove 0.8s linear infinite;
+    }
+    @keyframes mymove {
+        0% {
+            transform: rotate(0deg); /*开始为原始大小*/
+        }
+        25% {
+            transform: rotate(-20deg);
+        }
+        50% {
+            transform: rotate(0);
+        }
+        75% {
+            transform: rotate(20deg);
+        }
     }
     .rule {
         position: relative;

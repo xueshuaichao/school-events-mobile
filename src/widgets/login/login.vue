@@ -273,7 +273,7 @@ export default {
                         && res.user_info.shop_id === 1;
                     if (this.needBindMobile) {
                         uni.navigateTo({
-                            url: '/pages/yiqing/bind-mobile/index',
+                            url: '/history/yiqing/bind-mobile/index',
                         });
                     } else {
                         this.userInfo = res;

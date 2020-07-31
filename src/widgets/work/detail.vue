@@ -487,7 +487,7 @@ export default {
             this.showMore = !this.showMore;
         },
         watchIndex() {
-            let url = '/pages/read/index';
+            let url = '/history/read/index';
             if (this.activityId === 8) {
                 url = '/pages/activity-pages/labor/index';
             }
@@ -504,7 +504,7 @@ export default {
                 url = '/history/chunjiehao/index';
             }
             if (this.activityId === 5) {
-                url = '/pages/yiqing/index';
+                url = '/history/yiqing/index';
             }
             if (this.activityId === 10) {
                 url = '/activity/pages/index?activity_id=10';
