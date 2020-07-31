@@ -898,12 +898,12 @@ export default {
             } else {
                 api.get('/api/activity/curtheme', {
                     activity_id: 12,
-                }).then(({ type }) => {
+                }).then(({ type, status }) => {
                     let acType = 0;
                     let preStatus = 0;
                     if (type) {
                         acType = type;
-                        preStatus = 1;
+                        preStatus = status;
                     }
                     uni.navigateTo({
                         url: `/activity/pages/upload/modify?id=${id}&activity_id=${this.filter.activity_id}&status=${preStatus}&ac_type=${acType}&days=${this.signinfo.serial_day}`,
