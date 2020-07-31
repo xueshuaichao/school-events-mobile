@@ -172,9 +172,9 @@ export default {
             });
         },
         getPath(item) {
-            const path = `/activity/static/clocked/ka/ka-${item.status}-${
-                item.draw
-            }-${item.type - 1}.png`;
+            const path = `https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/clocked/ka-${
+                item.status
+            }-${item.draw}-${item.type - 1}.png`;
             return path;
         },
         isPassedDay(d) {

@@ -139,25 +139,25 @@ const routesConfig = {
             path: '/history/chunjiehao/index',
         },
         {
-            path: '/pages/yiqing/index',
+            path: '/history/yiqing/index',
         },
         {
-            path: '/pages/yiqing/myWork/myWork',
+            path: '/history/yiqing/myWork/myWork',
         },
         {
-            path: '/pages/yiqing/upload/upload',
+            path: '/history/yiqing/upload/upload',
         },
         {
-            path: '/pages/yiqing/upload/result',
+            path: '/history/yiqing/upload/result',
         },
         {
-            path: '/pages/yiqing/bind-mobile/index',
+            path: '/history/yiqing/bind-mobile/index',
         },
         {
-            path: '/pages/read/index',
+            path: '/history/read/index',
         },
         {
-            path: '/pages/read/myWork/myWork',
+            path: '/history/read/myWork/myWork',
         },
         {
             path: '/pages/activity-pages/labor/index',

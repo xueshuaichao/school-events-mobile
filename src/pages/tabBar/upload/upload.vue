@@ -108,13 +108,13 @@ export default {
                     id: 6,
                     img:
                         'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/h5/read-banner.png',
-                    url: '/pages/read/index',
+                    url: '/history/read/index',
                 },
                 {
                     id: 5,
                     img:
                         'http://aitiaozhan.oss-cn-beijing.aliyuncs.com/school-events-mobile/prize-banner.png',
-                    url: '/pages/yiqing/index',
+                    url: '/history/yiqing/index',
                 },
                 {
                     id: 4,

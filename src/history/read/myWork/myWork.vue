@@ -192,14 +192,14 @@
                 </view>
                 <navigator
                     v-if="allTotal === 0"
-                    url="/pages/read/upload/modify"
+                    url="/history/read/upload/modify"
                 >
                     <view class="goUpload">
                         去上传
                     </view>
                 </navigator>
             </view>
-            <goHome home-path="/pages/read/index" />
+            <goHome home-path="/history/read/index" />
         </view>
     </view>
 </template>
@@ -247,8 +247,8 @@ export default {
             changeValue: '',
             loadMoreStatus: 'none',
             mediaIcon: {
-                1: '../../../static/images/chunjie/video-icon.png',
-                2: '../../../static/images/chunjie/img-icon.png',
+                1: '/history/static/images/chunjie/video-icon.png',
+                2: '/history/static/images/chunjie/img-icon.png',
             },
             tabActiveIndex: 2,
             filter: {
@@ -430,7 +430,7 @@ export default {
                 });
             }
             return uni.navigateTo({
-                url: `/pages/read/upload/modify?id=${id}`,
+                url: `/pages/history/upload/modify?id=${id}`,
             });
         },
         onConfirmDelete(item) {
@@ -524,7 +524,7 @@ export default {
             title: this.shareDesc,
             imageUrl:
                 'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/read_share.png',
-            path: '/pages/read/index',
+            path: '/history/read/index',
         };
     },
 };

@@ -49,7 +49,7 @@
                     </button>
                     <view class="search">
                         <image
-                            src="../../../static/images/chunjie/search-icon.png"
+                            src="/history/static/images/chunjie/search-icon.png"
                         />
                         <form action="javascript:return true">
                             <input
@@ -207,8 +207,8 @@ export default {
             changeValue: '',
             loadMoreStatus: 'none',
             mediaIcon: {
-                1: '../../../static/images/chunjie/video-icon.png',
-                2: '../../../static/images/chunjie/img-icon.png',
+                1: '/history/static/images/chunjie/video-icon.png',
+                2: '/history/static/images/chunjie/img-icon.png',
             },
             tabActiveIndex: 2,
             filter: {

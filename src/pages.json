@@ -183,72 +183,6 @@
             }
         },
         // ============== 春节好 end =====================
-        // ============== 疫情 ========================
-        {
-            "path": "pages/yiqing/index",
-            "style": {
-                "navigationBarTitleText": "抗击疫情“艺”起来"
-            }
-        },
-        {
-            "path": "pages/yiqing/upload/upload",
-            "style": {
-                "navigationBarTitleText": "上传作品"
-            }
-        },
-        {
-            "path": "pages/yiqing/upload/result",
-            "style": {
-                "navigationBarTitleText": "上传结果"
-            }
-        },
-        {
-            "path": "pages/yiqing/myWork/myWork",
-            "style": {
-                "navigationBarTitleText": "我的作品"
-            }
-        },
-        {
-            "path": "pages/yiqing/bind-mobile/index",
-            "style": {
-                "navigationBarTitleText": "绑定手机号"
-            }
-        },
-        {
-            "path": "pages/yiqing/prize/index",
-            "style": {
-                "navigationBarTitleText": "领取证书",
-                "usingComponents": {
-                    "poster": "/wxcomponents/third-party/poster/poster/index"
-                }
-            }
-        },
-        // ============== 疫情end ========================
-
-        {
-            "path": "pages/read/index",
-            "style": {
-                "navigationBarTitleText": "世界读书日"
-            }
-        },
-        {
-            "path": "pages/read/upload/modify",
-            "style": {
-                "navigationBarTitleText": "上传作品"
-            }
-        },
-        {
-            "path": "pages/read/upload/result",
-            "style": {
-                "navigationBarTitleText": "上传结果"
-            }
-        },
-        {
-            "path": "pages/read/myWork/myWork",
-            "style": {
-                "navigationBarTitleText": "我的作品"
-            }
-        },
 
         {
             "path": "pages/activity-pages/labor/index",
@@ -445,7 +379,74 @@
                     "style": {
                         "navigationBarTitleText": "我的作品"
                     }
+                },
+                // ===========start===========世界读书日
+                {
+                    "path": "read/index",
+                    "style": {
+                        "navigationBarTitleText": "世界读书日"
+                    }
+                },
+                {
+                    "path": "read/upload/modify",
+                    "style": {
+                        "navigationBarTitleText": "上传作品"
+                    }
+                },
+                {
+                    "path": "read/upload/result",
+                    "style": {
+                        "navigationBarTitleText": "上传结果"
+                    }
+                },
+                {
+                    "path": "read/myWork/myWork",
+                    "style": {
+                        "navigationBarTitleText": "我的作品"
+                    }
+                },
+                // ================end 世界读书日
+                // ============== 疫情 ========================
+                {
+                    "path": "yiqing/index",
+                    "style": {
+                        "navigationBarTitleText": "抗击疫情“艺”起来"
+                    }
+                },
+                {
+                    "path": "yiqing/upload/upload",
+                    "style": {
+                        "navigationBarTitleText": "上传作品"
+                    }
+                },
+                {
+                    "path": "yiqing/upload/result",
+                    "style": {
+                        "navigationBarTitleText": "上传结果"
+                    }
+                },
+                {
+                    "path": "yiqing/myWork/myWork",
+                    "style": {
+                        "navigationBarTitleText": "我的作品"
+                    }
+                },
+                {
+                    "path": "yiqing/bind-mobile/index",
+                    "style": {
+                        "navigationBarTitleText": "绑定手机号"
+                    }
+                },
+                {
+                    "path": "yiqing/prize/index",
+                    "style": {
+                        "navigationBarTitleText": "领取证书",
+                        "usingComponents": {
+                            "poster": "/wxcomponents/third-party/poster/poster/index"
+                        }
+                    }
                 }
+                // ============== 疫情end ========================
             ]
         },
         {

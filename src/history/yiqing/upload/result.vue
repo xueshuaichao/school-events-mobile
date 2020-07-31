@@ -6,7 +6,7 @@
         />
         <view>上传成功，请等待审核</view>
         <navigator
-            url="/pages/yiqing/myWork/myWork?type=myWork"
+            url="/history/yiqing/myWork/myWork?type=myWork"
             class="btn"
         >
             我的作品
@@ -29,7 +29,7 @@ export default {
             title,
             imageUrl:
                 'http: //aitiaozhan.oss-cn-beijing.aliyuncs.com/chunjiehao/yiqing-poster01.png',
-            path: '/pages/yiqing/index',
+            path: '/history/yiqing/index',
         };
     },
 };

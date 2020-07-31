@@ -414,7 +414,7 @@ export default {
                     console.log(res);
                     uni.hideLoading();
                     uni.navigateTo({
-                        url: '/pages/yiqing/upload/result',
+                        url: '/history/yiqing/upload/result',
                     });
                     this.resetForm();
                 },
@@ -442,7 +442,7 @@ export default {
             title,
             imageUrl:
                 'http: //aitiaozhan.oss-cn-beijing.aliyuncs.com/chunjiehao/yiqing-poster01.png',
-            path: '/pages/yiqing/index',
+            path: '/history/yiqing/index',
         };
     },
 };

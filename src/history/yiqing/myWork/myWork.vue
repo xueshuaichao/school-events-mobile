@@ -48,7 +48,7 @@
                         成年组
                     </button>
                     <view class="search">
-                        <image src="../../../static/images/yiqing/search.png" />
+                        <image src="/static/images/yiqing/search.png" />
                         <form action="javascript:return true">
                             <input
                                 v-model="changeValue"
@@ -159,7 +159,7 @@
                 </view>
                 <navigator
                     v-if="allTotal === 0"
-                    url="/pages/yiqing/upload/upload"
+                    url="/history/yiqing/upload/upload"
                 >
                     <view class="goUpload">
                         去上传
@@ -213,8 +213,8 @@ export default {
             changeValue: '',
             loadMoreStatus: 'none',
             mediaIcon: {
-                1: '../../../static/images/chunjie/video-icon.png',
-                2: '../../../static/images/chunjie/img-icon.png',
+                1: '/history/static/images/chunjie/video-icon.png',
+                2: '/history/static/images/chunjie/img-icon.png',
             },
             tabActiveIndex: 2,
             filter: {
@@ -248,13 +248,13 @@ export default {
             // #endif
             // #ifndef H5
             uni.navigateTo({
-                url: `/pages/yiqing/prize/index?id=${item.id}&activity_cat=${item.activity_cat}`,
+                url: `/history/yiqing/prize/index?id=${item.id}&activity_cat=${item.activity_cat}`,
             });
             // #endif
         },
         goHome() {
             uni.reLaunch({
-                url: '/pages/yiqing/index',
+                url: '/history/yiqing/index',
             });
         },
         toggle(k) {
@@ -404,7 +404,7 @@ export default {
             title,
             imageUrl:
                 'http: //aitiaozhan.oss-cn-beijing.aliyuncs.com/chunjiehao/yiqing-poster01.png',
-            path: '/pages/yiqing/index',
+            path: '/history/yiqing/index',
         };
     },
 };

@@ -299,7 +299,7 @@ export default {
         reUpload() {
             let params = '';
             if (this.activityId === 12) {
-                params = `&pre_status=1&days=${this.days}&ac_type=${this.ac_type}`;
+                params = `&status=1&days=${this.days}&ac_type=${this.ac_type}`;
             }
             uni.reLaunch({
                 url: `/activity/pages/upload/modify?activity_id=${this.activityId}${params}`,

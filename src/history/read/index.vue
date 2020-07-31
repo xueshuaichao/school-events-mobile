@@ -501,7 +501,7 @@ export default {
                     fr: this.fr,
                 }).then(() => {
                     uni.navigateTo({
-                        url: '/pages/read/upload/modify',
+                        url: '/history/read/upload/modify',
                     });
                 });
             } else {
@@ -525,7 +525,7 @@ export default {
         },
         bindconfirm() {
             uni.navigateTo({
-                url: `/pages/read/myWork/myWork?type=search&name=${this.changeValue.trim()}`,
+                url: `/history/read/myWork/myWork?type=search&name=${this.changeValue.trim()}`,
             });
         },
         initShare() {
@@ -575,7 +575,7 @@ export default {
                 fr: this.fr,
             }).then(() => {
                 uni.navigateTo({
-                    url: '/pages/read/myWork/myWork?type=myWork',
+                    url: '/history/read/myWork/myWork?type=myWork',
                 });
             });
         },

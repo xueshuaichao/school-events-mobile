@@ -26,7 +26,7 @@
                 查看作品
             </text>
         </view>
-        <goHome home-path="/pages/read/index" />
+        <goHome home-path="/history/read/index" />
     </div>
 </template>
 
@@ -48,18 +48,18 @@ export default {
             title,
             imageUrl:
                 'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/read_share.png',
-            path: '/pages/read/index',
+            path: '/history/read/index',
         };
     },
     methods: {
         reUpload() {
             uni.reLaunch({
-                url: '/pages/read/upload/modify',
+                url: '/history/read/upload/modify',
             });
         },
         goToUc() {
             uni.reLaunch({
-                url: '/pages/read/myWork/myWork?status=1&type=myWork',
+                url: '/history/read/myWork/myWork?status=1&type=myWork',
             });
         },
     },

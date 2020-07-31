@@ -179,7 +179,7 @@
                             </view>
                         </view>
                         <image
-                            src="../../static/images/chunjie/mini-pro.png"
+                            src="/history/static/images/chunjie/mini-pro.png"
                             @click="openMiniProgram"
                         />
                     </view>
@@ -290,7 +290,9 @@
                             :key="item.id"
                         >
                             <view class="swiper-item">
-                                <image src="/static/images/chunjie/horn.png" />
+                                <image
+                                    src="/history/static/images/chunjie/horn.png"
+                                />
                                 <view class="swiper-info">
                                     <text>
                                         用户{{ item.user_name | plusXing }}
@@ -306,7 +308,7 @@
                 </view>
                 <image
                     class="cansai-text"
-                    src="../../static/images/chunjie/cansai_text.png"
+                    src="/history/static/images/chunjie/cansai_text.png"
                 />
                 <!-- work show -->
                 <view class="menu-list">
@@ -329,7 +331,7 @@
                         </button>
                         <view class="search">
                             <image
-                                src="../../static/images/chunjie/search-icon.png"
+                                src="/history/static/images/chunjie/search-icon.png"
                             />
                             <input
                                 v-model="changeValue"
@@ -1032,8 +1034,7 @@ body.dialog-open {
     .prize-more {
         width: 189upx;
         height: 224upx;
-        background: url("../../static/images/chunjie/more-prize-bg.png")
-            no-repeat;
+        background: url("../static/images/chunjie/more-prize-bg.png") no-repeat;
         background-size: 100% 100%;
         background-position: center 24upx;
         font-size: 34upx;
@@ -1089,7 +1090,7 @@ body.dialog-open {
             float: left;
         }
         .vote {
-            background: url("../../static/images/chunjie/vote_bg.png");
+            background: url("/history/static/images/chunjie/vote_bg.png");
             background-size: 100% 100%;
             height: 78upx;
             width: 171upx;
@@ -1132,7 +1133,7 @@ body.dialog-open {
         margin-bottom: 40upx;
     }
     .title-icon {
-        background: url("../../static/images/chunjie/title.png") no-repeat;
+        background: url("/history/static/images/chunjie/title.png") no-repeat;
         background-size: 100% 100%;
         font-size: 34upx;
         width: 387upx;
@@ -1144,7 +1145,7 @@ body.dialog-open {
         line-height: 69upx;
     }
     .close {
-        background: url("../../static/images/chunjie/close.png") no-repeat;
+        background: url("/history/static/images/chunjie/close.png") no-repeat;
         background-size: 100% 100%;
         width: 62upx;
         height: 62upx;
@@ -1217,7 +1218,7 @@ body.dialog-open {
                 font-weight: 700;
 
                 &.active {
-                    background: url("../../static/images/chunjie/neworhot.png")
+                    background: url("../static/images/chunjie/neworhot.png")
                         no-repeat;
                     background-size: 100% 100%;
                     color: #ff3849;
