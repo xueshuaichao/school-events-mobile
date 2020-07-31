@@ -312,7 +312,7 @@ page {
     }
     .score-list-cont {
         position: absolute;
-        top: 362upx;
+        top: 368upx;
         left: 40upx;
         right: 40upx;
         bottom: 44upx;
@@ -378,9 +378,8 @@ page {
                     background-size: 100% 100%;
                     background-repeat: no-repeat;
                     background-position: center center;
-                    background-image: url(https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/mall-icon-score3.png);
+                    background-image: url(https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/mall-icon-score1.png);
                 }
-
                 .icon-score-2 {
                     background-image: url(https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/mall-icon-score1.png);
                 }

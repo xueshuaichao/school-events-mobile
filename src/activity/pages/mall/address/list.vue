@@ -343,7 +343,8 @@ page {
             }
         }
         .address {
-            line-height: 36upx;
+            line-height: 38upx;
+            font-size: 26upx;
             color: #666;
             word-break: break-all;
         }

@@ -307,6 +307,9 @@ page {
                 line-height: 48upx;
                 box-sizing: border-box;
             }
+            .title {
+                line-height: 88upx;
+            }
         }
         .title {
             color: #333;
@@ -317,8 +320,7 @@ page {
             align-self: flex-start;
         }
         .uni-input {
-            border-bottom: 1px solid #ccc;
-            border-radius: 4upx;
+            border-bottom: 1px solid #d8d8d8;
             font-size: 28upx;
             height: 80upx;
             padding: 0 24upx;

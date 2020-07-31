@@ -671,7 +671,7 @@ export default {
         left: 0;
         right: 0;
         background-color: rgba(0, 0, 0, 0.8);
-        z-index: 1;
+        z-index: 100;
         .modal-content {
             position: absolute;
             top: 50%;
