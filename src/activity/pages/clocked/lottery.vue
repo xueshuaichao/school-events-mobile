@@ -107,7 +107,7 @@
                                     :src="canvasImage"
                                 />
                             </template>
-                            <template>
+                            <template v-else>
                                 <img
                                     v-if="isH5"
                                     class="image-bg"
@@ -167,7 +167,15 @@
                                 v-if="isWechat"
                                 class="brand-btn btn"
                             >
-                                长按图片保存到本地
+                                <view
+                                    v-if="!canvasImage"
+                                    @click="createPoster"
+                                >
+                                    生成海报
+                                </view>
+                                <view v-else>
+                                    长按图片保存到本地
+                                </view>
                             </view>
                             <view
                                 v-else
@@ -467,11 +475,6 @@ export default {
                 ...this.successConfig,
             };
             this.status = 1;
-            this.$nextTick(() => {
-                if (this.isWechat) {
-                    this.createPoster();
-                }
-            });
         },
         notWinning() {
             this.togglePoster(true);
@@ -480,15 +483,9 @@ export default {
                 ...this.failConfig,
             };
             this.status = 2;
-            this.$nextTick(() => {
-                if (this.isWechat) {
-                    this.createPoster();
-                }
-            });
         },
         onPosterSuccess(detail) {
             this.canvasImage = detail;
-            console.log(this.canvasImage);
             if (this.isWechat) return false;
             this.$nextTick(() => {
                 if (this.isH5) {
@@ -569,6 +566,7 @@ export default {
         onPosterFail() {
             uni.showToast({
                 title: '图片生成失败，请稍后再试',
+                icon: 'none',
             });
         },
         jumpLotteryList() {
@@ -631,6 +629,7 @@ export default {
             this.previewMask = status;
         },
         createPoster() {
+            console.log(this.posterCommonConfig);
             this.$refs.posterh5.createPoster(this.posterCommonConfig);
         },
         postCrouselList() {
