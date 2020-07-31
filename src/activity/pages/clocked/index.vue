@@ -243,7 +243,7 @@ export default {
                         'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/clocked-gift-1.png',
                 },
                 {
-                    txt: '小度智能音响',
+                    txt: '小度智能音箱',
                     url:
                         'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/clocked-gift-2.png',
                 },
