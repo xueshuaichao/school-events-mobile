@@ -611,7 +611,7 @@ export default {
                     height: 40upx;
                     background: #ffe967;
                     color: #ff685c;
-                    font-size: 18upx;
+                    font-size: 22upx;
                     text-align: center;
                     line-height: 40upx;
                     border-radius: 20upx;
