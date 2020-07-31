@@ -274,7 +274,7 @@ export default {
             loadMoreStatus: 'none',
             list: [],
             filter: {
-                page_size: 10,
+                page_size: 20,
                 page_num: 1,
             },
             integral: {},
@@ -394,12 +394,20 @@ export default {
         toggleExchangeMask(status) {
             this.exchangeMask = status;
         },
-        exchangeItem({
-            name, img, id, price, num, unit,
-        }) {
+        exchangeItem(item) {
+            const { num, price, id } = item;
             // 兑换
+            if (this.status === 2) {
+                return uni.showToast({
+                    title: '兑换时间已结束',
+                    icon: 'none',
+                });
+            }
             if (num <= 0) {
-                return false;
+                return uni.showToast({
+                    title: '该商品已兑完',
+                    icon: 'none',
+                });
             }
             if (price > this.integra) {
                 return uni.showToast({
@@ -407,21 +415,10 @@ export default {
                     icon: 'none',
                 });
             }
-            if (this.status === 2) {
-                return uni.showToast({
-                    title: '兑换时间已结束',
-                    icon: 'none',
-                });
-            }
             this.itemId = id;
             this.itemDetail = {
                 ...this.itemDetail,
-                id,
-                unit,
-                name,
-                img,
-                num,
-                price,
+                ...item,
             };
             return this.toggleExchangeMask(1);
         },
