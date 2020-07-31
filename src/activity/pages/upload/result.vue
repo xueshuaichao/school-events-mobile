@@ -1,5 +1,13 @@
 <template>
     <view :class="[`${publicConfig.activityName}-page`]">
+        <template v-if="isH5">
+            <img
+                class="preload-img"
+                crossorigin="anonymous"
+                src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/clocked/bayi_upload_success.png"
+                alt=""
+            >
+        </template>
         <div class="page-read-upload-result">
             <view class="icon-wrap">
                 <image
@@ -433,6 +441,10 @@ export default {
 };
 </script>
 <style lang="less">
+.preload-img {
+    width: 0;
+    height: 0;
+}
 .page-read-upload-result {
     min-height: 100vh;
     text-align: center;
