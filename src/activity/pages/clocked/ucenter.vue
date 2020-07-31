@@ -1,5 +1,31 @@
 <template>
     <view v-if="!isLoading">
+        <template v-if="isH5">
+            <img
+                class="pre-img"
+                crossorigin="anonymous"
+                src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/clocked/honor-l-1.png"
+                alt=""
+            >
+            <img
+                class="pre-img"
+                crossorigin="anonymous"
+                src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/clocked/honor-l-2.png"
+                alt=""
+            >
+            <img
+                class="pre-img"
+                crossorigin="anonymous"
+                src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/clocked/honor-l-3.png"
+                alt=""
+            >
+            <img
+                class="pre-img"
+                crossorigin="anonymous"
+                src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/clocked/honor-l-4.png"
+                alt=""
+            >
+        </template>
         <view
             class="page-read-work clocked-page"
             :class="{ login: userInfo === null }"
@@ -53,19 +79,7 @@
                                     >
                                         {{ item.num }}
                                     </view>
-                                    <img
-                                        v-if="isH5"
-                                        class="img"
-                                        crossorigin="anonymous"
-                                        :src="
-                                            `https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/clocked/honor-${
-                                                item.id
-                                            }-${item.num ? 1 : 0}.png`
-                                        "
-                                        alt=""
-                                    >
                                     <image
-                                        v-else
                                         class="img"
                                         :src="
                                             `https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/clocked/honor-${
@@ -1085,6 +1099,10 @@ export default {
 </script>
 
 <style lang="less">
+.pre-img {
+    width: 0;
+    height: 0;
+}
 .work-empty {
     text-align: center;
     background: #ffdada;
