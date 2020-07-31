@@ -4,6 +4,12 @@
             <img
                 class="pre-img"
                 crossorigin="anonymous"
+                src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/clocked/clocked_honor_poster.png"
+                alt=""
+            >
+            <img
+                class="pre-img"
+                crossorigin="anonymous"
                 src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/clocked/honor-l-1.png"
                 alt=""
             >
