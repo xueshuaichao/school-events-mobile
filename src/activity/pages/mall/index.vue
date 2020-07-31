@@ -409,7 +409,7 @@ export default {
                     icon: 'none',
                 });
             }
-            if (price > this.integra) {
+            if (price > this.integral.useful_score) {
                 return uni.showToast({
                     title: '可用积分不足',
                     icon: 'none',
