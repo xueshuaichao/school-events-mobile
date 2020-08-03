@@ -388,7 +388,7 @@ export default {
         getNewActivityStatus() {
             // 1未开始，2进行中，3已结束
             api.get('/api/activity/activitystatus', {
-                activity_id: 10,
+                activity_id: 12,
             }).then((data) => {
                 if (data.status) {
                     this.status = data.status;

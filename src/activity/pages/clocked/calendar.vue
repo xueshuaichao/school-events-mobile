@@ -63,6 +63,7 @@
                             class="item"
                             :data-name="name"
                             :data-key="item.type + item.status + index"
+                            :data-today="item.isToday"
                             :class="{
                                 grey: item.grey,
                                 passed: item.type && !item.isToday && ismyself
@@ -183,7 +184,8 @@ export default {
             const month = date.getMonth() + 1 > 10
                 ? date.getMonth() + 1
                 : `0${date.getMonth() + 1}`;
-            const time = `${date.getFullYear()}${month}${date.getDate()}`;
+            const day = date.getDate() > 10 ? date.getDate() : `0${date.getDate()}`;
+            const time = `${date.getFullYear()}${month}${day}`;
             let passed = 0;
             // 0 过去了 1，当天，2 未来。
             if (d < time) {
