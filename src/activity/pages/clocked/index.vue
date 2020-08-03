@@ -409,7 +409,7 @@ export default {
         toUpload() {
             // 先查询今天的主题。
             if (this.hasLogin) {
-                if (this.curThemeInfo.type || !this.curThemeInfo.status) {
+                if (this.curThemeInfo.type && this.curThemeInfo.status) {
                     uni.navigateTo({
                         url: `/activity/pages/upload/modify?activity_id=12&ac_type=${this.curThemeInfo.type}&status=${this.curThemeInfo.status}&days=${this.signinfo.serial_day}`,
                     });

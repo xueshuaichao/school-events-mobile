@@ -26,7 +26,7 @@
         </view>
         <view class="calendar-main">
             <view class="integral-txt">
-                <view>累计积分</view>
+                <view>可用积分</view>
                 <view class="all-integral">
                     {{ signinfo.points }}
                 </view>
