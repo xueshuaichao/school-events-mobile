@@ -70,8 +70,7 @@ export default {
     },
     methods: {
         jumpZhibo(item) {
-            // 已经开始,已经结束的直播，可以跳转。
-            if (item.status !== 1) {
+            if (item.status === 2) {
                 uni.navigateTo({
                     url: `/pages/openGame/zhibo?id=${item.id}`,
                 });
