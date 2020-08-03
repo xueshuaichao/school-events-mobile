@@ -293,6 +293,18 @@
     ],
     "subPackages": [
         {
+            "root": "activityA",
+            "pages": [
+                {
+                    "path": "pages/poetry/index",
+                    "style": {
+                        "navigationBarTitleText": "秀才艺，赢好礼",
+                        "softinputNavBar": "none"
+                    }
+                }
+            ]
+        },
+        {
             "root": "history",
             "pages": [
                 // ============== 春节 活动 =================
