@@ -328,3 +328,124 @@
         color: #583ed4;
     }
 }
+/deep/ .clocked-page {
+    &.activity-page-index {
+        background-color: #ff685c;
+        .page-index .main-swiper .banner {
+            .menu-title,
+            .active-rule {
+                height: 70upx;
+                line-height: 70upx;
+                width: 160upx;
+                font-size: 28upx;
+                box-sizing: border-box;
+                background: #ff78a5;
+                background: linear-gradient(
+                    180deg,
+                    rgba(255, 162, 132, 1) 0%,
+                    rgba(255, 104, 76, 1) 100%
+                );
+            }
+            .banner-image {
+                height: 612rpx;
+            }
+            .active-time {
+                width: 394upx;
+                height: 54upx;
+                text-align: center;
+                line-height: 54upx;
+                background: #42b6ff;
+                border-radius: 20upx;
+                top: auto;
+                bottom: 0;
+                left: 178upx;
+            }
+        }
+        .page-index .menu-list .search-box {
+            background: #ffdada;
+            border-radius: 0 20upx 0 0;
+            padding: 40upx 30upx 4upx;
+            margin-bottom: 0;
+            display: flex;
+            justify-content: space-between;
+            button {
+                width: 100upx;
+                border: 1px solid rgba(255, 104, 92, 1);
+                color: #ff685c;
+                height: 68upx;
+                line-height: 68upx;
+                margin: 0;
+                border-radius: 40upx;
+                &.active {
+                    color: #fff;
+                    background: #ff685c;
+                }
+            }
+            .search {
+                border: 1px solid rgba(255, 104, 92, 1);
+                height: 64upx;
+                input {
+                    color: #ff685c;
+                }
+                .search-button {
+                    color: rgba(255, 104, 92, 1);
+                    line-height: 1;
+                }
+            }
+        }
+        .menu-list {
+            padding-bottom: 40upx;
+            .media-fill {
+                color: rgb(255, 104, 92);
+            }
+            .cansai-text {
+                width: 220upx;
+                height: 72upx;
+                background: linear-gradient(
+                    180deg,
+                    rgba(255, 162, 132, 1) 0%,
+                    rgba(255, 104, 76, 1) 100%
+                );
+                box-shadow: 0 2upx 4upx 0p0x rgba(255, 255, 255, 0.5);
+                border-radius: 20upx 20upx 0 0;
+                line-height: 72upx;
+                color: #fff;
+                font-size: 32upx;
+                font-weight: 500;
+            }
+            .media-box {
+                background: #ffdada;
+                padding: 30upx;
+                border-radius: 0 0 20upx 20upx;
+                position: relative;
+                margin-top: -2upx;
+                box-shadow: 0upx 12upx 0upx #ffa19a;
+                .media-content {
+                    width: 306upx;
+                    .clocked-work {
+                        width: 100%;
+                        .video {
+                            width: 100%;
+                        }
+                    }
+                    .media-name {
+                        color: #666;
+                        font-size: 28upx;
+                    }
+                    .vote {
+                        background: #ff685c;
+                        font-size: 26upx;
+                    }
+                    .tag {
+                        background: #ffe967;
+                        color: #ff685c;
+                    }
+                    .vote-num {
+                        color: #ff685c;
+                        font-size: 26upx;
+                    }
+                }
+            }
+        }
+    }
+}

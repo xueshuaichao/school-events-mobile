@@ -13,7 +13,8 @@
                 { wuyi: activity_id === 8 },
                 { openGame: from === 'openGame' },
                 { liuyi: activity_id === 9 },
-                { qiyi: activity_id === 10 }
+                { qiyi: activity_id === 10 },
+                { bayi: activity_id === 12 }
             ]"
         >
             <view class="activerule">
@@ -491,7 +492,7 @@ export default {
                 this.activity_id = res.activity_id || 0;
             }
             this.id = res.id;
-            // activity_id,  没有7..
+            // activity_id,  没有7..没有11
             if (this.activity_id) {
                 // wyhd 五一活动
                 const arr = [
@@ -503,6 +504,8 @@ export default {
                     'wyhd',
                     'lyhd',
                     'qyhd',
+                    '',
+                    'byhd',
                 ];
                 const type = arr[this.activity_id - 3];
                 this.fr = logger.getFr(type, {});
@@ -529,10 +532,7 @@ export default {
                     ...detailConf[6].posterConfig,
                 };
             }
-            let bgColor = 'ffffff';
-            if (this.activity_id === 10) {
-                bgColor = '9882ff';
-            }
+            const bgColor = this.posterConfig.images[1].color || 'ffffff';
             this.posterConfig.images[1].url = `${res.video_img_url}?x-oss-process=image/format,jpg/interlace,1/quality,Q_80/resize,m_pad,w_460,h_300,color_${bgColor}`;
             this.canvasImgW = this.posterConfig.width * this.pix;
             this.canvasImgH = this.posterConfig.height * this.pix;
@@ -678,30 +678,22 @@ export default {
             }).then((res) => {
                 const { status } = res;
                 if (status === 2) {
-                    if (this.activity_id === 10) {
+                    if (this.activity_id >= 10) {
+                        // 代言人活动，打卡活动详情跳转 活动首页。
                         uni.navigateTo({
                             url: `/activity/pages/index?activity_id=${this.activity_id}`,
                         });
                     } else if (this.activity_id === 8) {
+                        // 活动的上传
                         uni.navigateTo({
                             url: `/pages/activity-pages/upload/modify?activity_id=${this.activity_id}`,
                         });
                     } else {
+                        // 才艺秀的上传页 网络大赛的上传入口不一样。
                         api.isLogin({ fr: this.fr }).then(() => {
-                            if (this.activity_id === 10) {
-                                if (this.userInfo) {
-                                    this.setEnroll();
-                                } else {
-                                    api.get('/api/user/info').then((data) => {
-                                        this.userInfo = data.user_info;
-                                        this.setEnroll();
-                                    });
-                                }
-                            } else {
-                                uni.navigateTo({
-                                    url: `/activity/pages/upload/modify?activity_id=${this.activity_id}`,
-                                });
-                            }
+                            uni.navigateTo({
+                                url: `/activity/pages/upload/modify?activity_id=${this.activity_id}`,
+                            });
                         });
                     }
                 } else if (status === 1) {
@@ -1215,6 +1207,24 @@ export default {
                     180deg,
                     rgba(255, 142, 133, 1),
                     rgba(255, 87, 74, 1)
+                );
+            }
+        }
+        &.bayi {
+            .saveBtn {
+                width: 570upx;
+                background: linear-gradient(
+                    180deg,
+                    rgba(255, 162, 132, 1),
+                    rgba(255, 104, 76, 1)
+                );
+                box-shadow: 0 4upx 6upx 0 rgba(0, 0, 0, 0.4);
+            }
+            .close {
+                background: linear-gradient(
+                    180deg,
+                    rgba(255, 162, 132, 1),
+                    rgba(255, 104, 76, 1)
                 );
             }
         }

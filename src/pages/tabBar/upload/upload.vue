@@ -75,6 +75,10 @@ export default {
             total: 0,
             confList: [
                 {
+                    id: 12,
+                    url: '/activity/pages/index?activity_id=12',
+                },
+                {
                     id: 11,
                     url: '/pages/openGame/school-zhibo',
                 },
@@ -104,25 +108,25 @@ export default {
                     id: 6,
                     img:
                         'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/h5/read-banner.png',
-                    url: '/pages/read/index',
+                    url: '/history/read/index',
                 },
                 {
                     id: 5,
                     img:
                         'http://aitiaozhan.oss-cn-beijing.aliyuncs.com/school-events-mobile/prize-banner.png',
-                    url: '/pages/yiqing/index',
+                    url: '/history/yiqing/index',
                 },
                 {
                     id: 4,
                     img:
                         'http://aitiaozhan.oss-cn-beijing.aliyuncs.com/chunjiehao.png',
-                    url: '/activity/chunjiehao/index',
+                    url: '/history/chunjiehao/index',
                 },
                 {
                     id: 3,
                     img:
                         'http://aitiaozhan.oss-cn-beijing.aliyuncs.com/banner4.png',
-                    url: '/activity/chunjie/index',
+                    url: '/history/chunjie/index',
                 },
             ],
         };

@@ -6,6 +6,11 @@
             :activity-id="activityId"
             :canvas-image="canvasImg"
         />
+        <clocked
+            v-if="activityId === 12"
+            ref="myChildren"
+            :activity-id="activityId"
+        />
         <poster
             v-if="!isH5 && showPoster"
             id="poster"
@@ -18,11 +23,13 @@
 </template>
 <script>
 import brand from './brand/index.vue';
+import clocked from './clocked/index.vue';
 import share from '../../common/share';
 
 export default {
     components: {
         brand,
+        clocked,
     },
     data() {
         return {
@@ -38,6 +45,10 @@ export default {
                 {
                     id: 10,
                     title: '青少年”爱挑战“寻找代言人',
+                },
+                {
+                    id: 12,
+                    title: '打卡一下，记录暑假',
                 },
             ],
             canvasImg: '',
@@ -74,12 +85,12 @@ export default {
         },
     },
     onUnload() {
-        if (this.$refs.myChildren) {
+        if (this.$refs.myChildren && this.$refs.myChildren.unload) {
             this.$refs.myChildren.unload();
         }
     },
     onShow() {
-        if (this.$refs.myChildren) {
+        if (this.$refs.myChildren && this.$refs.myChildren.onshow) {
             this.$refs.myChildren.onshow();
         }
     },

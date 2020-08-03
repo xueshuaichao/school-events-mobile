@@ -45,7 +45,7 @@ const common = {
         console.log('on<<<<<');
         logger.onPageView();
         // #ifdef H5
-        if (['/activity/chunjie/index'].indexOf(location.pathname) === -1) {
+        if (['/history/chunjie/index'].indexOf(location.pathname) === -1) {
             share();
         }
         // #endif

@@ -12,7 +12,7 @@ export default {
                     catMenu: [], // 分组
                     activityName: 'labor',
                     activityId: 8,
-                    catId: 20, // 所属分类
+                    catId: '', // 所属分类
                     showAllCat: false,
                     time: '活动时间：4月27日--5月31日',
                     primaryColor: '#DB4E0E', // 主色调
@@ -302,6 +302,57 @@ export default {
                 indexColorConfig: {
                     maskBgColor: '#fff',
                     placeholderColor: '#d1c7ff',
+                },
+                uploadColorConfig: {
+                    placeholderColor: '#999',
+                },
+            },
+            {
+                activityId: 12,
+                publicConfig: {
+                    title: '打卡一夏 记录暑假',
+                    log: 'byhd',
+                    sort: ['最新', '最热'],
+                    catMenu: [], // 分组
+                    activityName: 'clocked', // 空作品的图片拼接地址
+                    activityId: 12,
+                    isPNG: true,
+                    catId: 20, // 所属分类
+                    showAllCat: false,
+                    time: '活动日期：8月1日--8月31日',
+                    primaryColor: '#FF685C', // 主色调
+                    primaryBgColor: '#FFA69F', // 主要的背景颜色 （图片背景）
+                    placeholderColor: '#FFBBB5',
+                    homePath: '/activity/pages/index?activity_id=12', // 我的作品页面返回首页的路径
+                    shareConfig: {
+                        title: [
+                            '打卡一夏，记录暑假赢好礼！',
+                            '爱挑战素质教育养成计划，过充实又快乐的暑假！',
+                            '每日打卡一小步！成长提升一大步！',
+                        ],
+                        h5Title: [
+                            '打卡一夏，记录暑假赢好礼！',
+                            '爱挑战素质教育养成计划，过充实又快乐的暑假！',
+                            '每日打卡一小步！成长提升一大步！',
+                        ],
+                        desc: ['打卡一夏，记录暑假'],
+                        image:
+                            'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/clocked/clocked_share.png',
+                        path: '/activity/pages/index?activity_id=12',
+                    },
+                },
+                uploadConfig: {
+                    // 上传作品页
+                    activityCat: [], // 表现形式
+                    uploadMode: ['video', 'image'], // 上传类型 只传1个值时（['video']）不显示表现形式
+                    placeholderNameText: '*作品名称（不超过11字）',
+                    placeholderDescText: '作品介绍(不超过80个字符)',
+                    nameMaxLength: 11,
+                    descMaxLength: 80,
+                },
+                indexColorConfig: {
+                    maskBgColor: '#fff',
+                    placeholderColor: '#FFBBB5',
                 },
                 uploadColorConfig: {
                     placeholderColor: '#999',

@@ -149,6 +149,7 @@ function h5InitShare(customShareConfig) {
     }
     // console.log(params, 'before--share--');
     // if (!h5InitShare.config) {
+    console.log(params);
     api.get('/api/weixin/getshareconfig', {
         url: location.href,
     }).then((data) => {

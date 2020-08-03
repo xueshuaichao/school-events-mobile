@@ -552,11 +552,11 @@ export default {
                             this.posterCommonConfig.images[3].url = res;
                         });
                     } else {
-                        this.posterCommonConfig.images[3].url = 'http://aitiaozhan.oss-cn-beijing.aliyuncs.com/main-erweima.png';
+                        this.posterCommonConfig.images[3].url = 'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/main-erweima.png';
                     }
                 },
                 () => {
-                    this.posterCommonConfig.images[3].url = 'http://aitiaozhan.oss-cn-beijing.aliyuncs.com/main-erweima.png';
+                    this.posterCommonConfig.images[3].url = 'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/main-erweima.png';
                 },
             );
         },
@@ -600,6 +600,7 @@ export default {
             }
         },
         getMyPoster() {
+            console.log(this.isH5, this.detail);
             uni.showLoading();
             if (
                 (this.isH5 && !this.detail.poster_h5)

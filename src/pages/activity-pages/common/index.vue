@@ -502,7 +502,7 @@ export default {
         }
         return {
             title: this.shareDesc,
-            path: '/pages/read/index',
+            path: '/history/read/index',
         };
     },
 };
