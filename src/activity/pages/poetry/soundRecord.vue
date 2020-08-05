@@ -3,12 +3,11 @@
     <div>
         <view>
             <!-- <div style="background-image: url('https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/applet-code-10.png')"></div>-->
-            <div
-                style="margin-top: 20rpx;background: rgba(255,255,255,0.8);
-                position: absolute;width: 80%;text-align: center;left: 10%"
-            >
-                <h2>望岳</h2>
-                <span>唐</span>. <span>杜甫</span>
+            <div class="poetryStyle">
+                <div style="text-align: center">
+                    <h2>望岳</h2>
+                    <span>唐</span>. <span>杜甫</span>
+                </div>
                 <p style="text-align: center">
                     岱宗夫如何？齐鲁青未了。
                 </p>
@@ -26,13 +25,22 @@
                 </p>
                 <p style="text-align: center">
                     岱宗夫如何？齐鲁青未了。
+                </p>
+                <p style="text-indent:2em;">
+                    岱宗夫如何？齐鲁青未了.岱宗夫如何？
+                    齐鲁青未了。岱宗夫如何？齐鲁青未了。
+                    岱宗夫如何？齐鲁青未了.岱宗夫如何？
+                    齐鲁青未了。岱宗夫如何？齐鲁青未了。
+                    岱宗夫如何？齐鲁青未了.岱宗夫如何？
+                    齐鲁青未了。岱宗夫如何？齐鲁青未了。
                 </p>
             </div>
             <view>
                 <img
-                    src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/brand_poster.png"
+                    class="imgStyle"
                     alt=""
                     style="width: 100%"
+                    :src="imgUrl + cover"
                 >
             </view>
         </view>
@@ -112,29 +120,13 @@
     </div>
 </template>
 <script>
-// import indexPage from '../../../activity/pages/common/index.vue';
-// import logger from '../../../common/logger';
-// import model from './model.vue';
 import AudioPlayer from '../../../common/audio';
-import api from '../../../common/api';
-// import login from '../../../widgets/login/login.vue';
 
 const recorderManager = uni.getRecorderManager();
 const innerAudioContext = uni.createInnerAudioContext();
 
 innerAudioContext.autoplay = true;
 export default {
-    // components: {
-    //     indexPage,
-    //     model,
-    //     login,
-    // },
-    props: {
-        activityId: {
-            type: Number,
-            default: 12,
-        },
-    },
     data() {
         // const recorderManager = wx.getRecorderManager();
         // const innerAudioContext = wx.createInnerAudioContext();
@@ -164,6 +156,11 @@ export default {
             audioAction: {
                 method: 'pause',
             },
+            // imgUrl:'https://aitiaozhan.oss-cn-beijing.aliyuncs.com',
+            // cover:'/mp_wx/clocked_main.png',
+            // https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/brand_main.jpg
+            imgUrl: 'https://aitiaozhan.oss-cn-beijing.aliyuncs.com',
+            cover: '/mp_wx/brand_main.jpg',
         };
     },
     computed: {
@@ -174,10 +171,10 @@ export default {
         },
     },
     created() {
-        // this.bgAudio = new AudioPlayer({ src: this.bgSrc });
-        // // console.log(this.bgAudio,this.bgAudio.audioPlayer.duration);
-        // this.bgAudio.audioPlayer.buffered = this.bgAudio.audioPlayer.duration;
-        // this.audiotwo = new AudioPlayer({ src: this.src });
+        this.bgAudio = new AudioPlayer({ src: this.bgSrc });
+        // console.log(this.bgAudio,this.bgAudio.audioPlayer.duration);
+        this.bgAudio.audioPlayer.buffered = this.bgAudio.audioPlayer.duration;
+        this.audiotwo = new AudioPlayer({ src: this.src });
     },
     onLoad() {
         const self = this;
@@ -196,8 +193,6 @@ export default {
                 this.intervalTime += 0.5;
 
                 if (this.intervalTime >= 0.5 && !this.isRecord) {
-                    // 如果用户录制的时间太短,就不会去开启录音, 因为有个bug: recorderManager.stop()在短时间内开启在关闭的话,实际上他还在不停地录音,不知道你们有没有遇到过
-
                     console.log('开始录音');
                     this.isRecord = true;
                     this.intervalTime = 0;
@@ -278,69 +273,16 @@ export default {
             this.play([this.bgAudio, this.audio]);
             this.questry();
         },
-        getTaskStatus() {
-            api.get('/api/activity/taskstatus', {
-                activity_id: 12,
-            }).then((tasks) => {
-                this.taskStatus = tasks;
+        play(audio) {
+            audio.forEach((item) => {
+                item.play();
             });
         },
-        onLogin({ user_info: userInfo }) {
-            console.log('asasass', userInfo);
-            this.hasLogin = true;
-            this.userInfo = userInfo;
-            this.myWorkPath = `/activity/pages/clocked/ucenter?activity_id=12&user_id=${this.userInfo.user_id}`;
-            this.getsigninfo();
-            this.getClockin();
-            this.getTheme();
-            this.getTaskStatus();
-        },
-        toggleCalendar() {
-            if (this.btnStatus === 0) {
-                if (this.hasLogin) {
-                    this.themePrompt = true;
-                } else {
-                    this.toLogin = true;
-                }
-            } else if (this.btnStatus === 1) {
-                uni.navigateTo({
-                    url: `/activity/pages/upload/modify?activity_id=12&ac_type=${this.curThemeInfo.type}&status=${this.curThemeInfo.status}&days=${this.signinfo.serial_day}`,
-                });
-            } else {
-                uni.showToast({
-                    icon: 'none',
-                    title:
-                        '今日已完成打卡，可通过更多作品及作品获赞获取更多积分',
-                });
-            }
-        },
-        showMask({ title, type }) {
-            this.maskTitle = title;
-            this.maskType = type;
-            this.maskPrompt = true;
-        },
-        openModel() {
-            this.maskTitle = '积分攻略';
-            this.maskType = 1;
-            this.maskPrompt = true;
-        },
-        handleClose(id) {
-            // 关闭弹窗
-            this.maskPrompt = false;
-            this.themePrompt = false;
-            if (id) {
-                // 选择主题后进行打卡。
-                uni.navigateTo({
-                    url: `/activity/pages/upload/modify?activity_id=12&ac_type=${id}&status=0`,
-                });
-            }
-        },
-        isLogin() {
-            return api.get('/api/user/info');
+        onPlay(res) {
+            console.log('播放中', res);
         },
         questry() {
             this.audio = new AudioPlayer({ src: this.src });
-            // this.audio.src = 'https://img-cdn-qiniu.dcloud.net.cn/uniapp/audio/music.mp3';
             this.audio.play();
         },
     },
@@ -351,7 +293,7 @@ export default {
     width: 100%;
     height: 150rpx;
     position: absolute;
-    top: 30%;
+    top: 70%;
     text-align: center;
 }
 /* 按钮样式 */
@@ -365,5 +307,16 @@ export default {
     line-height: 80rpx;
     background-color: aquamarine;
     font-size: 30rpx;
+}
+.imgStyle {
+    height: 600upx;
+}
+.poetryStyle {
+    margin-top: 20rpx;
+    background: rgba(255, 255, 255, 0.8);
+    position: absolute;
+    width: 70%;
+    left: 14%;
+    padding: 2%;
 }
 </style>

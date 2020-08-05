@@ -559,6 +559,24 @@
                     "style": {
                         "navigationBarTitleText": "我的中奖"
                     }
+                },
+                {
+                    "path": "pages/poetry/bgmusic",
+                    "style": {
+                        "navigationBarTitleText": "选择背景音乐"
+                    }
+                },
+                {
+                    "path": "pages/poetry/clearance",
+                    "style": {
+                        "navigationBarTitleText": "趣味诗词大闯关"
+                    }
+                },
+                {
+                    "path": "pages/poetry/soundRecord",
+                    "style": {
+                        "navigationBarTitleText": "录音"
+                    }
                 }
             ]
         }

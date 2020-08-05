@@ -8,7 +8,11 @@
         />
         <clocked
             v-if="activityId === 12"
-            ref="myChildren"
+            ref="myClocked"
+            :activity-id="activityId"
+        />
+        <poetry
+            v-if="activityId === 13"
             :activity-id="activityId"
         />
         <poster
@@ -24,12 +28,14 @@
 <script>
 import brand from './brand/index.vue';
 import clocked from './clocked/index.vue';
+import poetry from './poetry/index.vue';
 import share from '../../common/share';
 
 export default {
     components: {
         brand,
         clocked,
+        poetry,
     },
     data() {
         return {
@@ -49,6 +55,10 @@ export default {
                 {
                     id: 12,
                     title: '打卡一下，记录暑假',
+                },
+                {
+                    id: 13,
+                    title: '趣味诗词大闯关',
                 },
             ],
             canvasImg: '',

@@ -211,7 +211,17 @@ const routesConfig = {
             path: '/activityA/pages/poetry/index',
         },
         {
+            path: '/activity/pages/poetry/bgmusic',
+        },
+        {
             path: '/activityA/pages/poetry/level',
+        },
+        {
+            path: '/activity/pages/poetry/clearance',
+        },
+        // 录音
+        {
+            path: '/activity/pages/poetry/soundRecord',
         },
         {
             path: '/pages/activity-pages/mywork/mywork',
