@@ -216,6 +216,10 @@ const routesConfig = {
         {
             path: '/activity/pages/poetry/clearance',
         },
+        // 录音
+        {
+            path: '/activity/pages/poetry/soundRecord',
+        },
         {
             path: '/pages/activity-pages/mywork/mywork',
         },

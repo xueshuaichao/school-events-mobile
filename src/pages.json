@@ -564,6 +564,12 @@
                     "style": {
                         "navigationBarTitleText": "趣味诗词大闯关"
                     }
+                },
+                {
+                    "path": "pages/poetry/soundRecord",
+                    "style": {
+                        "navigationBarTitleText": "录音"
+                    }
                 }
             ]
         }
