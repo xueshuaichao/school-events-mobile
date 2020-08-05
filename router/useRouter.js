@@ -211,6 +211,9 @@ const routesConfig = {
             path: '/activityA/pages/poetry/index',
         },
         {
+            path: '/activityA/pages/poetry/level',
+        },
+        {
             path: '/pages/activity-pages/mywork/mywork',
         },
 

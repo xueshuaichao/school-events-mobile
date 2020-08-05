@@ -301,6 +301,13 @@
                         "navigationBarTitleText": "秀才艺，赢好礼",
                         "softinputNavBar": "none"
                     }
+                },
+                {
+                    "path": "pages/poetry/level",
+                    "style": {
+                        "navigationBarTitleText": "秀才艺，赢好礼",
+                        "softinputNavBar": "none"
+                    }
                 }
             ]
         },
