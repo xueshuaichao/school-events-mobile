@@ -211,6 +211,12 @@ const routesConfig = {
             path: '/activityA/pages/poetry/index',
         },
         {
+            path: '/activity/pages/poetry/bgmusic',
+        },
+        {
+            path: '/activity/pages/poetry/clearance',
+        },
+        {
             path: '/pages/activity-pages/mywork/mywork',
         },
 

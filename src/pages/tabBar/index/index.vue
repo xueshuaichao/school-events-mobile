@@ -238,6 +238,10 @@ export default {
             bannerlist: [],
             confList: [
                 {
+                    id: 13,
+                    url: '/activity/pages/index?activity_id=13',
+                },
+                {
                     id: 12,
                     url: '/activity/pages/index?activity_id=12',
                 },
@@ -388,7 +392,7 @@ export default {
         getNewActivityStatus() {
             // 1未开始，2进行中，3已结束
             api.get('/api/activity/activitystatus', {
-                activity_id: 12,
+                activity_id: 13,
             }).then((data) => {
                 if (data.status) {
                     this.status = data.status;
@@ -417,7 +421,7 @@ export default {
             uni.setStorageSync(this.isFirstLogin, true);
             this.prompt = false;
             uni.navigateTo({
-                url: '/activity/pages/index?activity_id=12',
+                url: '/activity/pages/index?activity_id=13',
             });
         },
         handleClose() {

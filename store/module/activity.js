@@ -358,6 +358,46 @@ export default {
                     placeholderColor: '#999',
                 },
             },
+            {
+                activityId: 13,
+                publicConfig: {
+                    title: '打卡一夏 记录暑假',
+                    log: 'byhd',
+                    sort: ['最新', '最热'],
+                    catMenu: [], // 分组
+                    activityName: 'poetry', // 空作品的图片拼接地址
+                    activityId: 13,
+                    isPNG: true,
+                    catId: 20, // 所属分类
+                    showAllCat: false,
+                    time: '活动日期：8月1日--8月31日',
+                    primaryColor: '#FF685C', // 主色调
+                    primaryBgColor: '#FFA69F', // 主要的背景颜色 （图片背景）
+                    placeholderColor: '#FFBBB5',
+                    homePath: '/activity/pages/index?activity_id=13', // 我的作品页面返回首页的路径
+                    shareConfig: {
+                        title: [
+                            '趣味诗词大闯关，等你来战！',
+                            '诵读诗词，传承经典，快来跟我一起闯关！',
+                            '学习诗词知识，丰富诗词知识积累，帮你成为诗词达人！',
+                            '我是诗词小达人，跟我一起来闯关',
+                            '品味经典诗词之美，传承古典文化精华，快来挑战！',
+                        ],
+                        h5Title: ['青少年“爱挑战”趣味诗词大闯关'],
+                        desc: ['诵读诗词，传承经典'],
+                        image:
+                            'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/clocked/clocked_share.png',
+                        path: '/activity/pages/index?activity_id=13',
+                    },
+                },
+                indexColorConfig: {
+                    maskBgColor: '#fff',
+                    placeholderColor: '#FFBBB5',
+                },
+                uploadColorConfig: {
+                    placeholderColor: '#999',
+                },
+            },
         ],
     },
     getters: {
