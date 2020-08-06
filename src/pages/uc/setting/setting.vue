@@ -8,7 +8,7 @@
             @login="onLogin"
         />
         <template v-else>
-            <view class="p-title">
+            <view class="p-title infos">
                 个人信息
             </view>
             <view
@@ -120,12 +120,12 @@
                         <text>{{ userInfo.student_info.school_name }}</text>
                     </template>
                     <template v-else>
-                        <view>
+                        <navigator url="/pages/uc/setting/resetSchool">
                             <text class="none">
                                 暂无学校
                             </text>
                             <text class="arrow-r" />
-                        </view>
+                        </navigator>
                     </template>
                 </view>
                 <view class="item">
@@ -139,12 +139,12 @@
                         </text>
                     </template>
                     <template v-else>
-                        <view>
+                        <navigator url="/pages/uc/setting/resetSchool">
                             <text class="none">
                                 暂无班级
                             </text>
                             <text class="arrow-r" />
-                        </view>
+                        </navigator>
                     </template>
                 </view>
                 <view class="item">
@@ -410,9 +410,14 @@ export default {
     .p-title {
         font-size: 32upx;
         font-weight: 500;
-        margin: 24upx 0;
+        padding: 8upx 2upx;
         display: flex;
         justify-content: space-between;
+        box-sizing: content-box;
+        &.infos {
+            line-height: 60upx;
+            margin-top: 20upx;
+        }
         .blue {
             color: #1166ff;
             .br {

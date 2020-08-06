@@ -210,6 +210,12 @@
             }
         },
         {
+            "path": "pages/uc/setting/resetSchool",
+            "style": {
+                "navigationBarTitleText": "修改学校"
+            }
+        },
+        {
             "path": "pages/uc/record/record",
             "style": {
                 "navigationBarTitleText": "我的记录"
