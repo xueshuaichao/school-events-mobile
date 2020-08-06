@@ -112,13 +112,29 @@
     </div>
 </template>
 <script>
+// import indexPage from '../../../activity/pages/common/index.vue';
+// import logger from '../../../common/logger';
+// import model from './model.vue';
 import AudioPlayer from '../../../common/audio';
+import api from '../../../common/api';
+// import login from '../../../widgets/login/login.vue';
 
 const recorderManager = uni.getRecorderManager();
 const innerAudioContext = uni.createInnerAudioContext();
 
 innerAudioContext.autoplay = true;
 export default {
+    // components: {
+    //     indexPage,
+    //     model,
+    //     login,
+    // },
+    props: {
+        activityId: {
+            type: Number,
+            default: 12,
+        },
+    },
     data() {
         // const recorderManager = wx.getRecorderManager();
         // const innerAudioContext = wx.createInnerAudioContext();
@@ -158,10 +174,10 @@ export default {
         },
     },
     created() {
-        this.bgAudio = new AudioPlayer({ src: this.bgSrc });
-        // console.log(this.bgAudio,this.bgAudio.audioPlayer.duration);
-        this.bgAudio.audioPlayer.buffered = this.bgAudio.audioPlayer.duration;
-        this.audiotwo = new AudioPlayer({ src: this.src });
+        // this.bgAudio = new AudioPlayer({ src: this.bgSrc });
+        // // console.log(this.bgAudio,this.bgAudio.audioPlayer.duration);
+        // this.bgAudio.audioPlayer.buffered = this.bgAudio.audioPlayer.duration;
+        // this.audiotwo = new AudioPlayer({ src: this.src });
     },
     onLoad() {
         const self = this;
@@ -262,13 +278,65 @@ export default {
             this.play([this.bgAudio, this.audio]);
             this.questry();
         },
-        play(audio) {
-            audio.forEach((item) => {
-                item.play();
+        getTaskStatus() {
+            api.get('/api/activity/taskstatus', {
+                activity_id: 12,
+            }).then((tasks) => {
+                this.taskStatus = tasks;
             });
         },
-        onPlay(res) {
-            console.log('播放中', res);
+        onLogin({ user_info: userInfo }) {
+            console.log('asasass', userInfo);
+            this.hasLogin = true;
+            this.userInfo = userInfo;
+            this.myWorkPath = `/activity/pages/clocked/ucenter?activity_id=12&user_id=${this.userInfo.user_id}`;
+            this.getsigninfo();
+            this.getClockin();
+            this.getTheme();
+            this.getTaskStatus();
+        },
+        toggleCalendar() {
+            if (this.btnStatus === 0) {
+                if (this.hasLogin) {
+                    this.themePrompt = true;
+                } else {
+                    this.toLogin = true;
+                }
+            } else if (this.btnStatus === 1) {
+                uni.navigateTo({
+                    url: `/activity/pages/upload/modify?activity_id=12&ac_type=${this.curThemeInfo.type}&status=${this.curThemeInfo.status}&days=${this.signinfo.serial_day}`,
+                });
+            } else {
+                uni.showToast({
+                    icon: 'none',
+                    title:
+                        '今日已完成打卡，可通过更多作品及作品获赞获取更多积分',
+                });
+            }
+        },
+        showMask({ title, type }) {
+            this.maskTitle = title;
+            this.maskType = type;
+            this.maskPrompt = true;
+        },
+        openModel() {
+            this.maskTitle = '积分攻略';
+            this.maskType = 1;
+            this.maskPrompt = true;
+        },
+        handleClose(id) {
+            // 关闭弹窗
+            this.maskPrompt = false;
+            this.themePrompt = false;
+            if (id) {
+                // 选择主题后进行打卡。
+                uni.navigateTo({
+                    url: `/activity/pages/upload/modify?activity_id=12&ac_type=${id}&status=0`,
+                });
+            }
+        },
+        isLogin() {
+            return api.get('/api/user/info');
         },
         questry() {
             this.audio = new AudioPlayer({ src: this.src });

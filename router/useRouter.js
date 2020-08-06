@@ -214,6 +214,9 @@ const routesConfig = {
             path: '/activity/pages/poetry/bgmusic',
         },
         {
+            path: '/activityA/pages/poetry/level',
+        },
+        {
             path: '/activity/pages/poetry/clearance',
         },
         // 录音
