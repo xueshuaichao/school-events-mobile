@@ -33,7 +33,7 @@
                 <view class="arrow">
                     <!--游客可以修改姓名信息-->
                     <template
-                        v-if="userInfo.identity !== 1"
+                        v-if="userInfo.identity === 1"
                         @click="settingName"
                     >
                         <text v-if="userInfo.name">
