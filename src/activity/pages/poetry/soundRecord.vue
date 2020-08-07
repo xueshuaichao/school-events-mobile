@@ -177,7 +177,6 @@ export default {
         this.bgAudio = new AudioPlayer({ src: this.bgSrc });
         // console.log(this.bgAudio,this.bgAudio.audioPlayer.duration);
         this.bgAudio.audioPlayer.buffered = this.bgAudio.audioPlayer.duration;
-        this.audiotwo = new AudioPlayer({ src: this.src });
     },
     onLoad() {
         const self = this;
