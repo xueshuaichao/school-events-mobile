@@ -189,7 +189,6 @@ export default {
     },
     methods: {
         showMask({ title, type }) {
-            console.log(111);
             this.maskTitle = title;
             this.type = type;
             this.maskPrompt = true;

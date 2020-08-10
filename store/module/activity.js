@@ -12,7 +12,7 @@ export default {
                     catMenu: [], // 分组
                     activityName: 'labor',
                     activityId: 8,
-                    catId: '', // 所属分类
+                    catId: 20, // 所属分类
                     showAllCat: false,
                     time: '活动时间：4月27日--5月31日',
                     primaryColor: '#DB4E0E', // 主色调
@@ -367,7 +367,7 @@ export default {
                     catMenu: [], // 分组
                     activityName: 'labor',
                     activityId: 13,
-                    catId: '', // 所属分类
+                    catId: 20, // 所属分类
                     showAllCat: false,
                     time: '活动时间：8月31日--9月27日',
                     primaryColor: '#DB4E0E', // 主色调
