@@ -489,7 +489,7 @@ export default {
         watchIndex() {
             let url = '/history/read/index';
             if (this.activityId === 8) {
-                url = '/pages/activity-pages/labor/index';
+                url = '/activity/pages/index?activity_id=8';
             }
             if (this.activityId === 9) {
                 url = '/activity/pages/children/index';

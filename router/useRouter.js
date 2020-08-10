@@ -139,10 +139,6 @@ const routesConfig = {
             path: '/history/read/myWork/myWork',
         },
         {
-            path: '/pages/activity-pages/labor/index',
-        },
-
-        {
             path: '/activity/pages/children/index',
         },
         {
