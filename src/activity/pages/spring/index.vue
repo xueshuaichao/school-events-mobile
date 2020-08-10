@@ -16,7 +16,6 @@
             @close="handleClose"
         />
         <indexPage
-            v-if="loading"
             text-bg-color="#DB4E0E"
             btn-color="#04a875"
             search-color="#FF9F73"
@@ -134,7 +133,6 @@
 <script>
 import indexPage from '../common/index.vue';
 import maskBox from '../common/mask.vue';
-import share from '../../../common/share';
 import logger from '../../../common/logger';
 import api from '../../../common/api';
 
@@ -147,6 +145,12 @@ export default {
         changeNum(value) {
             const dayArr = ['一', '二', '三', '四', '五'];
             return dayArr[value];
+        },
+    },
+    props: {
+        activityId: {
+            type: Number,
+            default: 13,
         },
     },
     data() {
@@ -162,26 +166,24 @@ export default {
             historyRankList: [],
             showHistoryRankList: false,
             fr: '',
-            activityId: '',
             maskPrompt: false,
             maskTitle: '',
             type: 0,
         };
     },
-    onLoad(params) {
-        this.activityId = 8;
-        this.publicConfig = this.$store.getters.getPublicConfig(
-            this.activityId,
-        );
+    created() {
+        this.publicConfig = {
+            ...this.$store.getters.getPublicConfig(this.activityId),
+            ...this.$store.getters.getColorConfig({
+                activityId: this.activityId,
+                page: 'indexColorConfig',
+            }),
+        };
         this.indexConfig = this.$store.getters.getActivityConfig({
             activityId: this.activityId,
             page: 'indexConfig',
         });
-        this.fr = logger.getFr(this.publicConfig.log, params);
-        this.loading = true;
-    },
-    onShow() {},
-    created() {
+        this.fr = logger.getFr(this.publicConfig.log, {});
         this.getRank();
         this.historyRank();
     },
@@ -201,7 +203,6 @@ export default {
                     this.showRank = true;
                 }
                 this.rank = [data[1], data[0], data[2]];
-                this.initShare();
             });
         },
         historyRank() {
@@ -212,40 +213,11 @@ export default {
         toggleHistoryRank(status) {
             this.showHistoryRankList = status;
         },
-        initShare() {
-            const titleList = this.isH5
-                ? this.publicConfig.shareConfig.h5Title
-                : this.publicConfig.shareConfig.title;
-            const descList = this.publicConfig.shareConfig.desc;
-            const random = Math.floor(Math.random() * titleList.length);
-            this.title = titleList[random];
-            const desc = descList[random];
-            console.log(this.title);
-            share({
-                title: this.title,
-                desc,
-                thumbnail: `${this.publicConfig.shareConfig.image}?x-oss-process=image/format,png/interlace,1/quality,Q_80/resize,m_pad,h_100`,
-            });
-        },
         jumpSearch(item) {
             uni.navigateTo({
                 url: `/pages/activity-pages/mywork/mywork?type=search&activity_id=${this.activityId}&user_id=${item.user_id}`,
             });
         },
-        onReachBottom() {
-            uni.$emit('onReachBottom');
-        },
-    },
-    onShareAppMessage(res) {
-        if (res.from === 'button') {
-            // 来自页面内分享按钮
-            console.log(res.target);
-        }
-        return {
-            title: this.title,
-            imageUrl: this.publicConfig.shareConfig.image,
-            path: '/pages/activity-pages/labor/index',
-        };
     },
 };
 </script>
