@@ -263,7 +263,7 @@ export default {
         copyToast(status) {
             uni.showToast({
                 icon: 'none',
-                title: status ? '物流单号复制成功' : '复制失败，可长按复制',
+                title: status ? '复制成功' : '复制失败，可长按复制',
             });
         },
         getData() {
