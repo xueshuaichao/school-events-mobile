@@ -155,7 +155,10 @@
                         <text>
                             {{ userInfo.ID_number }}
                         </text>
-                        <text class="copy">
+                        <text
+                            class="copy"
+                            @click="copyDeliveryCode(userInfo.ID_number)"
+                        >
                             复制
                         </text>
                     </view>
@@ -215,6 +218,9 @@ export default {
     },
     data() {
         return {
+            // #ifdef H5
+            isH5: true,
+            // #endif
             isLoading: true,
             userInfo: {
                 avatar_url: '',
@@ -229,6 +235,37 @@ export default {
         };
     },
     methods: {
+        copyDeliveryCode(data) {
+            if (this.isH5) {
+                utils.handleClipboard(
+                    data,
+                    // eslint-disable-next-line no-restricted-globals
+                    event,
+                    () => {
+                        this.copyToast(true);
+                    },
+                    () => {
+                        this.copyToast(false);
+                    },
+                );
+            } else {
+                uni.setClipboardData({
+                    data,
+                    success: () => {
+                        this.copyToast(true);
+                    },
+                    fail: () => {
+                        this.copyToast(false);
+                    },
+                });
+            }
+        },
+        copyToast(status) {
+            uni.showToast({
+                icon: 'none',
+                title: status ? '物流单号复制成功' : '复制失败，可长按复制',
+            });
+        },
         getData() {
             api.get('/api/user/info').then(
                 (res) => {
@@ -406,6 +443,7 @@ export default {
     .copy {
         color: #1166ff;
         margin-left: 16upx;
+        font-size: 28upx;
     }
     .p-title {
         font-size: 32upx;

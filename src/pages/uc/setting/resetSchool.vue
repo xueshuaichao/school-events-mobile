@@ -96,7 +96,6 @@ export default {
             gradeList: [],
             classList: [],
             lock: false,
-            total: 0,
             formData: {
                 school_id: 0,
                 grade_id: 0,
@@ -113,29 +112,34 @@ export default {
                     page_size: 10,
                     keyword: e.target.value.trim(),
                 }).then(
-                    ({ list, total }) => {
+                    ({ list }) => {
                         this.lock = false;
-                        this.schoolList = list;
                         if (
                             list.length === 1
                             && e.target.value.trim() === list[0].name
                         ) {
+                            this.schoolList = [];
                             this.formData.school_id = list[0].id;
                         } else {
+                            this.schoolList = list;
                             this.formData.school_id = 0;
                         }
-                        this.total = total;
                     },
                     () => {
                         this.lock = false;
                         this.formData.school_id = 0;
                     },
                 );
+            } else if (!e.target.value.length) {
+                this.schoolList = [];
+                this.formData.school_id = 0;
+                this.lock = false;
             }
         },
         selSchool(item) {
             this.schoolVal = item.name;
             this.formData.school_id = item.id;
+            this.schoolList = [];
         },
         selGrade(item) {
             this.gradeVal = item.grade_name;
