@@ -238,6 +238,10 @@ export default {
             bannerlist: [],
             confList: [
                 {
+                    id: 14,
+                    url: '/activity/pages/index?activity_id=14',
+                },
+                {
                     id: 13,
                     url: '/activity/pages/index?activity_id=13',
                 },

@@ -75,6 +75,10 @@ export default {
             total: 0,
             confList: [
                 {
+                    id: 14,
+                    url: '/activity/pages/index?activity_id=13',
+                },
+                {
                     id: 13,
                     url: '/activity/pages/index?activity_id=13',
                 },
