@@ -209,6 +209,11 @@ export default {
                                     iocn: 'success',
                                     title: '修改成功',
                                 });
+                                setTimeout(() => {
+                                    uni.navigateTo({
+                                        url: '/pages/uc/setting/setting',
+                                    });
+                                }, 1600);
                             });
                         } else if (res.cancel) {
                             console.log('用户点击取消');
@@ -302,6 +307,7 @@ export default {
         border: 1upx solid #ccc;
         border-top: none;
         height: auto;
+        box-sizing: border-box;
         &.school {
             width: 690upx;
         }
