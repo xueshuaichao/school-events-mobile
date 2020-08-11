@@ -46,8 +46,15 @@
                 >
             </view>
             <view class="flex">
-                <view
+                <scroll-view
                     v-if="gradeList.length"
+                    scroll-y
+                    :style="{
+                        height:
+                            gradeList.length < 10
+                                ? 84 * gradeList.length + 'rpx'
+                                : '840rpx'
+                    }"
                     class="drop-wrap l"
                 >
                     <view
@@ -58,9 +65,16 @@
                     >
                         {{ item.grade_name }}
                     </view>
-                </view>
-                <view
+                </scroll-view>
+                <scroll-view
                     v-if="classList.length"
+                    scroll-y
+                    :style="{
+                        height:
+                            classList.length < 10
+                                ? 84 * classList.length + 'rpx'
+                                : '840rpx'
+                    }"
                     class="drop-wrap r"
                 >
                     <view
@@ -71,7 +85,7 @@
                     >
                         {{ item.class_name }}
                     </view>
-                </view>
+                </scroll-view>
             </view>
         </template>
         <view
