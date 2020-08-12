@@ -264,6 +264,9 @@ const routesConfig = {
             path: '/pages/uc/setting/resetSchool',
         },
         {
+            path: '/pages/uc/setting/resetClass',
+        },
+        {
             path: '/pages/uc/message/message',
         },
         {

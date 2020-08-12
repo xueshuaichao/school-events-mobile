@@ -216,6 +216,12 @@
             }
         },
         {
+            "path": "pages/uc/setting/resetClass",
+            "style": {
+                "navigationBarTitleText": "修改班级"
+            }
+        },
+        {
             "path": "pages/uc/record/record",
             "style": {
                 "navigationBarTitleText": "我的记录"
