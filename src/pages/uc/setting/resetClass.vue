@@ -9,14 +9,14 @@
                 type="text"
                 class="grade-input"
                 placeholder="请选择年级"
-                @focus="showGrade = true"
+                @focus="toggle(1)"
             >
             <input
                 v-model="classVal"
                 type="text"
                 class="class-input"
                 placeholder="请选择修改的班级"
-                @focus="showClass = true"
+                @focus="toggle(2)"
             >
         </view>
         <view class="flex">
@@ -93,6 +93,15 @@ export default {
         this.getGradeList();
     },
     methods: {
+        toggle(type) {
+            if (type === 1) {
+                this.showGrade = true;
+                this.showClass = false;
+            } else {
+                this.showGrade = false;
+                this.showClass = true;
+            }
+        },
         selGrade(item) {
             this.gradeVal = item.grade_name;
             this.formData.grade_id = item.grade_id;
@@ -184,7 +193,7 @@ export default {
             border-left: 12upx solid transparent;
             border-right: 10upx solid transparent;
         }
-        &.on::before {
+        &.on::after {
             transform: rotate(180deg);
         }
     }
