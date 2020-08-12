@@ -24,9 +24,9 @@
                 scroll-y
                 :style="{
                     height:
-                        gradeList.length < 10 && gradeList.length
+                        gradeList.length < 6 && gradeList.length
                             ? 82 * gradeList.length + 'rpx'
-                            : '820rpx'
+                            : '440rpx'
                 }"
                 class="drop-wrap l"
                 :class="{ hide: !showGrade, br: !gradeList.length }"
@@ -44,9 +44,9 @@
                 scroll-y
                 :style="{
                     height:
-                        classList.length < 10 && classList.length
+                        classList.length < 6 && classList.length
                             ? 82 * classList.length + 'rpx'
-                            : '820rpx'
+                            : '440rpx'
                 }"
                 class="drop-wrap r"
                 :class="{ hide: !showClass, br: !classList.length }"
