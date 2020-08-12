@@ -24,12 +24,12 @@
                 scroll-y
                 :style="{
                     height:
-                        gradeList.length < 10
-                            ? 84 * gradeList.length + 'rpx'
-                            : '840rpx'
+                        gradeList.length < 10 && gradeList.length
+                            ? 82 * gradeList.length + 'rpx'
+                            : '820rpx'
                 }"
                 class="drop-wrap l"
-                :class="{ hide: !showGrade || !gradeList.length }"
+                :class="{ hide: !showGrade, br: !gradeList.length }"
             >
                 <view
                     v-for="(item, index) in gradeList"
@@ -44,12 +44,12 @@
                 scroll-y
                 :style="{
                     height:
-                        classList.length < 10
-                            ? 84 * classList.length + 'rpx'
-                            : '840rpx'
+                        classList.length < 10 && classList.length
+                            ? 82 * classList.length + 'rpx'
+                            : '820rpx'
                 }"
                 class="drop-wrap r"
-                :class="{ hide: !showClass || !classList.length }"
+                :class="{ hide: !showClass, br: !classList.length }"
             >
                 <view
                     v-for="(item, index) in classList"
@@ -263,6 +263,9 @@ export default {
         box-sizing: border-box;
         &.hide {
             opacity: 0;
+        }
+        &.br {
+            border: none;
         }
         .api-item {
             line-height: 80upx;
