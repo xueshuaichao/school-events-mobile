@@ -103,19 +103,23 @@ export default {
             }
         },
         selGrade(item) {
-            this.gradeVal = item.grade_name;
-            this.formData.grade_id = item.grade_id;
-            this.classVal = '';
-            this.formData.class_id = 0;
-            this.classList = [];
-            this.showGrade = false;
-            this.getClassList();
+            if (this.showGrade) {
+                this.gradeVal = item.grade_name;
+                this.formData.grade_id = item.grade_id;
+                this.classVal = '';
+                this.formData.class_id = 0;
+                this.classList = [];
+                this.showGrade = false;
+                this.getClassList();
+            }
         },
         selClass(item) {
-            this.classVal = item.name;
-            this.showClass = false;
-            this.formData.class_id = item.id;
-            this.classVal = item.class_name;
+            if (this.showClass) {
+                this.classVal = item.name;
+                this.showClass = false;
+                this.formData.class_id = item.id;
+                this.classVal = item.class_name;
+            }
         },
         getClassList() {
             api.post('/api/school/class', {
