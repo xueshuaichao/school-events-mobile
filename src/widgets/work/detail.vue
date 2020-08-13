@@ -487,9 +487,9 @@ export default {
             this.showMore = !this.showMore;
         },
         watchIndex() {
-            let url = '/history/read/index';
-            if (this.activityId === 8) {
-                url = '/activity/pages/index?activity_id=8';
+            let url = `/activity/pages/index?activity_id=${this.activityId}`;
+            if (this.read === 6) {
+                url = '/history/read/index';
             }
             if (this.activityId === 9) {
                 url = '/activity/pages/children/index';
@@ -505,12 +505,6 @@ export default {
             }
             if (this.activityId === 5) {
                 url = '/history/yiqing/index';
-            }
-            if (this.activityId === 10) {
-                url = '/activity/pages/index?activity_id=10';
-            }
-            if (this.activityId === 12) {
-                url = '/activity/pages/index?activity_id=12';
             }
             uni.navigateTo({
                 url,
@@ -553,6 +547,10 @@ export default {
             } else if (activity && this.activityId === 12) {
                 uni.navigateTo({
                     url: `/activity/pages/clocked/ucenter?activity_id=12&user_id=${this.pageData.create_by}`,
+                });
+            } else if (activity && this.activityId === 13) {
+                uni.navigateTo({
+                    url: `/activity/pages/mywork/mywork?type=myWork&activity_id=13&user_id=${this.pageData.create_by}`,
                 });
             } else {
                 uni.navigateTo({

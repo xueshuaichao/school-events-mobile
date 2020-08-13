@@ -10,7 +10,7 @@
             :class="[
                 { read: activity_id === 6 },
                 { chunjie: activity_id === 3 || activity_id === 4 },
-                { wuyi: activity_id === 8 },
+                { wuyi: activity_id === 8 || activity_id === 13 },
                 { openGame: from === 'openGame' },
                 { liuyi: activity_id === 9 },
                 { qiyi: activity_id === 10 },
@@ -506,6 +506,7 @@ export default {
                     'qyhd',
                     '',
                     'byhd',
+                    'qyhd',
                 ];
                 const type = arr[this.activity_id - 3];
                 this.fr = logger.getFr(type, {});

@@ -15,6 +15,17 @@
             :rules="indexConfig.rules"
             @close="handleClose"
         />
+        <!-- 奖品说明 -->
+        <prize-desc
+            v-if="prizePrompt"
+            :prizes-detail="indexConfig.prizesDetail"
+            :theme="{
+                bgColor: publicConfig.primaryBgColor,
+                titleColor: publicConfig.titleColor
+            }"
+            :name="publicConfig.activityName"
+            @close="handleCloses"
+        />
         <indexPage
             text-bg-color="#DB4E0E"
             btn-color="#04a875"
@@ -22,11 +33,20 @@
             :index-config="indexConfig"
             :public-config="publicConfig"
             :is-stop-scroll="showHistoryRankList"
-            class-name="labor-page"
+            :class-name="`labor-page ${activityId === 13 ? 'spring' : ''}`"
             :fr="fr"
             @showMask="showMask"
         >
-            <template v-slot:rank>
+            <template v-slot:main-data>
+                <!-- 奖品 -->
+                <prize
+                    :name="publicConfig.activityName"
+                    :text-color="publicConfig.primaryColor"
+                    :border-color="publicConfig.primaryBgColor"
+                    :prize-list="indexConfig.prizes"
+                    @handleActiveprize="handleActiveprize"
+                />
+
                 <view class="week-rank">
                     <view class="title">
                         —— 本周劳动能手 ——
@@ -39,7 +59,18 @@
                         历史榜单
                     </view>
                     <view
-                        v-if="showRank"
+                        v-if="showRank && activityId === 13"
+                        class="week-rank-list-2"
+                    >
+                        <view
+                            v-for="(item, index) in rank"
+                            :key="index"
+                            class="rank-item-2"
+                            @click="jumpSearch(item)"
+                        />
+                    </view>
+                    <view
+                        v-if="showRank && activityId === 8"
                         class="week-rank-list"
                     >
                         <view
@@ -69,6 +100,11 @@
                         本周暂无榜单生成，可查看历史榜单纪录哦
                     </view>
                 </view>
+                <!-- 跑马灯 -->
+                <tipsList
+                    :text="'发布了'"
+                    :crousel-list="crouselList"
+                />
             </template>
         </indexPage>
         <view
@@ -125,6 +161,9 @@
                 <view class="tips">
                     立即参与活动吧！下一个劳动小能手就是你！
                 </view>
+                <view class="tips2">
+                    ~活动结束前被删除的、内容不符合要求的作品将不被计数哦~
+                </view>
             </view>
         </view>
     </div>
@@ -135,11 +174,17 @@ import indexPage from '../common/index.vue';
 import maskBox from '../common/mask.vue';
 import logger from '../../../common/logger';
 import api from '../../../common/api';
+import prizeDesc from '../common/prize-desc.vue';
+import tipsList from '../common/tips-list.vue';
+import prize from '../common/prize.vue';
 
 export default {
     components: {
         indexPage,
         maskBox,
+        prizeDesc,
+        tipsList,
+        prize,
     },
     filters: {
         changeNum(value) {
@@ -169,6 +214,9 @@ export default {
             maskPrompt: false,
             maskTitle: '',
             type: 0,
+            crouselList: [],
+            prizePrompt: false,
+            setId: null,
         };
     },
     created() {
@@ -183,11 +231,36 @@ export default {
             activityId: this.activityId,
             page: 'indexConfig',
         });
+        console.log(this.indexConfig);
         this.fr = logger.getFr(this.publicConfig.log, {});
         this.getRank();
         this.historyRank();
+        this.getCrouselList();
+    },
+    onUnload() {
+        clearInterval(this.setId);
+        this.setId = null;
     },
     methods: {
+        getCrouselList() {
+            this.postCrouselList();
+            this.setId = setInterval(() => {
+                this.postCrouselList();
+            }, 1000 * 60 * 5);
+        },
+        postCrouselList() {
+            api.post('/api/activity/resourcelist', {
+                activity_id: this.activityId,
+                page_num: 1,
+                page_size: 10,
+            }).then(({ list }) => {
+                this.crouselList = list;
+            });
+        },
+
+        handleActiveprize() {
+            this.prizePrompt = true;
+        },
         showMask({ title, type }) {
             this.maskTitle = title;
             this.type = type;
@@ -196,16 +269,28 @@ export default {
         handleClose() {
             this.maskPrompt = false;
         },
+        handleCloses() {
+            this.prizePrompt = false;
+        },
         getRank() {
-            api.get('/api/activity/laborrank').then((data) => {
-                if (data.length === 3) {
-                    this.showRank = true;
+            api.get('/api/activity/laborrank', {
+                activity_id: this.activityId,
+            }).then((data) => {
+                // if (data.length === 3) {
+                //     this.showRank = true;
+                // }
+                this.showRank = true;
+                if (this.activityId === 8) {
+                    this.rank = [data[1], data[0], data[2]];
+                } else {
+                    this.rank = data;
                 }
-                this.rank = [data[1], data[0], data[2]];
             });
         },
         historyRank() {
-            api.get('/api/activity/laborranklist').then((data) => {
+            api.get('/api/activity/laborranklist', {
+                activity_id: this.activityId,
+            }).then((data) => {
                 this.historyRankList = data;
             });
         },
@@ -214,7 +299,7 @@ export default {
         },
         jumpSearch(item) {
             uni.navigateTo({
-                url: `/pages/activity-pages/mywork/mywork?type=search&activity_id=${this.activityId}&user_id=${item.user_id}`,
+                url: `/activity/pages/mywork/mywork?type=search&activity_id=${this.activityId}&user_id=${item.user_id}`,
             });
         },
     },
@@ -336,6 +421,12 @@ export default {
         font-size: 26upx;
         text-align: center;
     }
+    .tips2 {
+        font-size: 20upx;
+        color: #db4e0e;
+        text-align: center;
+        line-height: 30upx;
+    }
     .history-content-box {
         overflow-y: auto;
         max-height: 616upx;
@@ -404,6 +495,7 @@ export default {
             color: #ab3500;
             width: 38%;
             text-align: right;
+            font-weight: 500;
         }
     }
 }
