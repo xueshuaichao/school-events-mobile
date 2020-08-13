@@ -366,6 +366,7 @@ export default {
                     sort: ['最新', '最热'],
                     catMenu: [], // 分组
                     activityName: 'labor',
+                    isPNG: true,
                     activityId: 13,
                     catId: 20, // 所属分类
                     showAllCat: false,

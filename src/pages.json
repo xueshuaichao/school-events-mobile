@@ -178,6 +178,18 @@
             }
         },
         {
+            "path": "pages/uc/setting/resetSchool",
+            "style": {
+                "navigationBarTitleText": "修改学校"
+            }
+        },
+        {
+            "path": "pages/uc/setting/resetClass",
+            "style": {
+                "navigationBarTitleText": "修改班级"
+            }
+        },
+        {
             "path": "pages/uc/record/record",
             "style": {
                 "navigationBarTitleText": "我的记录"
@@ -286,8 +298,8 @@
                 {
                     "path": "chunjie/index",
                     "style": {
-                        "navigationBarTitleText": "秀才艺，赢好礼",
-                        "softinputNavBar": "none"
+                        "navigationBarTitleText": "秀才艺，赢好礼"
+                        // "softinputNavBar": "none"
                     }
                 },
                 {
@@ -308,8 +320,8 @@
                 {
                     "path": "chunjiehao/index",
                     "style": {
-                        "navigationBarTitleText": "dou说新年好",
-                        "softinputNavBar": "none"
+                        "navigationBarTitleText": "dou说新年好"
+                        // "softinputNavBar": "none"
                     }
                 },
                 {
