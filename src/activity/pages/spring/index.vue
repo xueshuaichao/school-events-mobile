@@ -67,7 +67,45 @@
                             :key="index"
                             class="rank-item-2"
                             @click="jumpSearch(item)"
-                        />
+                        >
+                            <view class="item-left">
+                                <view class="crown">
+                                    <image
+                                        v-if="index < 3"
+                                        class="crown-icon"
+                                        :src="
+                                            `https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/labor-crown-${index +
+                                                1}.png`
+                                        "
+                                    />
+                                    <view
+                                        v-else
+                                        class="crown-num"
+                                    >
+                                        {{ index + 1 }}
+                                    </view>
+                                </view>
+                                <image
+                                    class="avatar"
+                                    :src="
+                                        item.avatar_url ||
+                                            '/static/images/uc/avatar.png'
+                                    "
+                                />
+                                <view class="rank-name text-one-line">
+                                    {{ item.user_name }}
+                                </view>
+                            </view>
+                            <view class="item-right">
+                                <image
+                                    class="fire"
+                                    src="/static/images/upload/fire.png"
+                                />
+                                <view class="work-num text-one-line">
+                                    作品{{ item.num }}个
+                                </view>
+                            </view>
+                        </view>
                     </view>
                     <view
                         v-if="showRank && activityId === 8"
@@ -141,11 +179,28 @@
                                 class="text-item"
                             >
                                 <image
+                                    v-if="activityId === 8"
                                     class="rank-img"
                                     :src="
                                         `https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/labor_mini_rank_${k}.png`
                                     "
                                 />
+                                <view v-else>
+                                    <image
+                                        v-if="k < 2"
+                                        class="rank-img-2"
+                                        :src="
+                                            `https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/labor-crown-${k +
+                                                1}.png`
+                                        "
+                                    />
+                                    <view
+                                        v-else
+                                        class="rank-num"
+                                    >
+                                        {{ k + 1 }}
+                                    </view>
+                                </view>
                                 <view class="text-content">
                                     <text class="user-name text-one-line">
                                         {{ list.user_name }}
@@ -276,10 +331,9 @@ export default {
             api.get('/api/activity/laborrank', {
                 activity_id: this.activityId,
             }).then((data) => {
-                // if (data.length === 3) {
-                //     this.showRank = true;
-                // }
-                this.showRank = true;
+                if (data.length === 3) {
+                    this.showRank = true;
+                }
                 if (this.activityId === 8) {
                     this.rank = [data[1], data[0], data[2]];
                 } else {
@@ -328,6 +382,66 @@ export default {
         border-radius: 28upx;
         margin-bottom: 20upx;
         font-size: 24upx;
+    }
+    .week-rank-list-2 {
+        width: 630upx;
+        margin: 8upx auto 40upx;
+        background: rgba(255, 251, 246, 1);
+        box-shadow: 0 0 8upx 0 #ffce99 inset;
+        border-radius: 10upx 10upx 0 0;
+        .rank-item-2 {
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 2upx solid #ffce99;
+            padding: 24upx;
+            .item-left,
+            .item-right {
+                display: flex;
+            }
+            .crown-num {
+                width: 24upx;
+                height: 24upx;
+                background: #f5c189;
+                border-radius: 4px;
+                font-size: 20upx;
+                color: #fff;
+                line-height: 24upx;
+                margin-top: 20upx;
+                font-weight: 500;
+            }
+            .crown-icon {
+                width: 34upx;
+                height: 24upx;
+                margin-top: 20upx;
+                font-weight: 500;
+                text-align: center;
+            }
+            .avatar {
+                width: 64upx;
+                height: 64upx;
+                border-radius: 50%;
+                margin: 0 16upx;
+            }
+            .fire {
+                width: 21upx;
+                height: 24upx;
+                margin-right: 12upx;
+                margin-top: 20upx;
+            }
+            .rank-name {
+                color: #db4e0e;
+                font-size: 24upx;
+                line-height: 64upx;
+                font-weight: 500;
+                width: 240upx;
+                text-align: left;
+            }
+            .work-num {
+                color: #ab3500;
+                font-size: 22upx;
+                line-height: 64upx;
+            }
+        }
     }
     .week-rank-list {
         margin: 0 85upx;
@@ -485,6 +599,24 @@ export default {
             height: 50upx;
             margin-right: 20upx;
             margin-top: 7upx;
+        }
+        .rank-img-2 {
+            width: 35upx;
+            height: 24upx;
+            margin-top: 20upx;
+            margin-right: 18upx;
+        }
+        .rank-num {
+            width: 24upx;
+            height: 24upx;
+            background: #ffce99;
+            text-align: center;
+            line-height: 24upx;
+            color: #fff;
+            font-weight: 500;
+            font-size: 20upx;
+            margin-top: 20upx;
+            margin-right: 18upx;
         }
         .user-name {
             color: #db4e0e;
