@@ -47,7 +47,15 @@
                                     <image
                                         class="prize-item-img"
                                         :src="
-                                            `https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/${name}_prize_${k}_${key}.png`
+                                            `https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/${
+                                                activityId === 13
+                                                    ? 'spring'
+                                                    : 'labor'
+                                            }_prize_${k}_${key}.${
+                                                activityId === 13
+                                                    ? 'jpg'
+                                                    : 'png'
+                                            }`
                                         "
                                         mode=""
                                     />
@@ -120,6 +128,10 @@ export default {
                 return {};
             },
         },
+        activityId: {
+            type: Number,
+            default: 8,
+        },
     },
     methods: {
         handleClose() {
@@ -165,7 +177,7 @@ export default {
         width: 292upx;
         margin: 0 6upx 29upx;
         position: relative;
-        padding-top: 33upx;
+        padding-top: 28upx;
         background-color: #fff;
         height: 222upx;
         box-sizing: border-box;

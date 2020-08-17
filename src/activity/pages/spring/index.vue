@@ -18,6 +18,7 @@
         <!-- 奖品说明 -->
         <prize-desc
             v-if="prizePrompt"
+            :activity-id="activityId"
             :prizes-detail="indexConfig.prizesDetail"
             :theme="{
                 bgColor: publicConfig.primaryBgColor,
@@ -40,6 +41,7 @@
             <template v-slot:main-data>
                 <!-- 奖品 -->
                 <prize
+                    :activity-id="activityId"
                     :name="publicConfig.activityName"
                     :text-color="publicConfig.primaryColor"
                     :border-color="publicConfig.primaryBgColor"

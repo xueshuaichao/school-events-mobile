@@ -396,16 +396,19 @@ export default {
                     rules: rulesData.rules.filter(v => v.id === 13)[0].text, // 规则文案
                     prizes: [
                         {
-                            text: ['一等奖', '佳能打印机'],
+                            text: ['一等奖', '空气炸锅'],
                         },
                         {
-                            text: ['二等奖', '骆驼帐篷'],
+                            text: ['二等奖', '九阳早餐机'],
                         },
                         {
-                            text: ['三等奖', '液晶手写板'],
+                            text: ['三等奖', '充电体重秤'],
                         },
                         {
-                            text: ['劳动能手奖', '榨汁机'],
+                            text: ['四等奖', '毛巾礼盒'],
+                        },
+                        {
+                            text: ['劳动能手奖', '富光保温壶'],
                         },
                     ], // 奖品文案
                     prizesDetail: {
@@ -429,15 +432,15 @@ export default {
                                 prizeList: [
                                     {
                                         name: '一等奖*2名',
-                                        text: '佳能打印机+证书',
+                                        text: '空气炸锅+证书',
                                     },
                                     {
                                         name: '二等奖*6名',
-                                        text: '骆驼帐篷+证书',
+                                        text: '九阳早餐机+证书',
                                     },
                                     {
                                         name: '三等奖*12名',
-                                        text: '液晶手写板+证书',
+                                        text: 'USB充电体重秤+证书',
                                     },
                                     {
                                         name: '21名-40名',
@@ -449,8 +452,8 @@ export default {
                                 title: '劳动能手',
                                 prizeList: [
                                     {
-                                        name: '每周3名(共5周)',
-                                        text: '榨汁机+证书',
+                                        name: '共20名(4周，每周5名)',
+                                        text: '富光保温壶+证书',
                                     },
                                 ],
                             },
