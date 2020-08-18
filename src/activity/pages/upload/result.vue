@@ -1,6 +1,6 @@
 <template>
     <view :class="[`${publicConfig.activityName}-page`]">
-        <template v-if="isH5">
+        <template v-if="isH5 && activityId === 12">
             <img
                 class="preload-img"
                 crossorigin="anonymous"

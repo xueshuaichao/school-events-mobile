@@ -12,7 +12,6 @@ const whitelist = {
     '/pages/work/detail/detail': 'work-detail',
     '/pages/news/list/list': 'news-list',
     '/pages/news/detail/detail': 'news-detail',
-    '/pages/mall/detail/detail': 'mall-detail',
     '/pages/doc/notice/notice': 'notice',
 };
 
@@ -57,12 +56,6 @@ const routesConfig = {
             name: 'tabbar-upload',
         },
         {
-            path: '/pages/mall/detail/detail',
-            component: () => import('@/pages/mall/detail/detail.vue'),
-            aliasPath: '/mall/detail',
-            name: 'mall-detail',
-        },
-        {
             path: '/pages/tabBar/uc/uc',
             component: () => import('@/pages/tabBar/uc/uc.vue'),
             aliasPath: '/uc',
@@ -79,11 +72,6 @@ const routesConfig = {
         },
         {
             path: '/pages/uc/uc/index',
-        },
-        {
-            path: '/pages/doc/detail/detail',
-            name: 'doc',
-            component: () => import('@/pages/doc/detail/detail.vue'),
         },
         {
             path: '/pages/doc/intro/intro',
@@ -138,10 +126,6 @@ const routesConfig = {
         {
             path: '/history/read/myWork/myWork',
         },
-        {
-            path: '/pages/activity-pages/labor/index',
-        },
-
         {
             path: '/activity/pages/children/index',
         },
@@ -275,6 +259,12 @@ const routesConfig = {
         },
         {
             path: '/pages/uc/setting/resetName',
+        },
+        {
+            path: '/pages/uc/setting/resetSchool',
+        },
+        {
+            path: '/pages/uc/setting/resetClass',
         },
         {
             path: '/pages/uc/message/message',

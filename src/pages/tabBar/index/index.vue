@@ -238,6 +238,10 @@ export default {
             bannerlist: [],
             confList: [
                 {
+                    id: 14,
+                    url: '/activity/pages/index?activity_id=14',
+                },
+                {
                     id: 13,
                     url: '/activity/pages/index?activity_id=13',
                 },
@@ -263,25 +267,13 @@ export default {
                     id: 8,
                     img:
                         'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/h5/wuyi-s-banner.png',
-                    url: '/pages/activity-pages/labor/index',
+                    url: '/activity/pages/index?activity_id=8',
                 },
                 {
                     id: 7,
                     img:
                         'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/h5/aitiaozhan-s-banner.png',
                     url: '/pages/openGame/index',
-                },
-                {
-                    id: 6,
-                    img:
-                        'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/h5/read-s-banner.png',
-                    url: '/history/read/index',
-                },
-                {
-                    id: 5,
-                    img:
-                        'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/h5/yiqing-s-banner.png',
-                    url: '/history/yiqing/index',
                 },
             ],
             isSearchWord: false, // 是否设置了关键词
