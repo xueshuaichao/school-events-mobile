@@ -579,18 +579,17 @@
                 "text": "首页"
             },
             {
-                "pagePath": "pages/tabBar/list/list",
-                "iconPath": "static/images/tab/work.png",
-                "selectedIconPath": "static/images/tab/work_ac.png",
-                "text": "作品"
-            },
-            {
                 "pagePath": "pages/tabBar/upload/upload",
                 "iconPath": "static/images/tab/upload.png",
                 "selectedIconPath": "static/images/tab/upload_ac.png",
                 "text": "活动"
             },
-
+            {
+                "pagePath": "pages/uc/message/message",
+                "iconPath": "static/images/tab/work.png",
+                "selectedIconPath": "static/images/tab/work_ac.png",
+                "text": "消息"
+            },
             {
                 "pagePath": "pages/tabBar/uc/uc",
                 "iconPath": "static/images/tab/uc.png",

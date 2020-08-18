@@ -44,6 +44,7 @@ export default {
     onLoad(params) {
         this.filter.keyword = params.keyword || '';
         this.filter.cat_id.one_level_id = params.cat_id;
+        // show_type 关键字统计
         this.filter.show_type = params.show_type;
         const title = '作品展示';
         uni.setNavigationBarTitle({

@@ -1,6 +1,7 @@
 <template>
     <div class="page-password">
         <form
+            v-if="loading"
             class="password-form"
             @submit="formSubmit"
         >
@@ -9,7 +10,14 @@
                     手机号
                 </view>
                 <view class="input-flex">
+                    <view
+                        v-if="userInfo && userInfo.mobile"
+                        class="uni-input"
+                    >
+                        {{ phone }}
+                    </view>
                     <input
+                        v-else
                         v-model="phone"
                         name="phone"
                         class="uni-input"
@@ -90,6 +98,7 @@ import api from '../../../common/api';
 export default {
     data() {
         return {
+            loading: false,
             captcha: '',
             isMobile: /^1[0-9]{10}$/,
             isPassword: /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{8,16}$/,
@@ -104,9 +113,25 @@ export default {
                 remain: '',
                 isSend: false,
             },
+            userInfo: null,
         };
     },
+    created() {
+        this.getUserInfo();
+    },
     methods: {
+        getUserInfo() {
+            api.get('/api/user/info').then(
+                ({ user_info: userInfo }) => {
+                    this.userInfo = userInfo;
+                    this.phone = userInfo.mobile;
+                    this.loading = true;
+                },
+                () => {
+                    this.loading = true;
+                },
+            );
+        },
         formSubmit(e) {
             if (this.lock) {
                 this.lock = false;
@@ -197,7 +222,7 @@ export default {
                         () => {
                             try {
                                 this.captchaAll.create_at = new Date() - 0;
-                                this.captchaAll.remain = 30;
+                                this.captchaAll.remain = 60;
                                 this.captchaAll.isSend = true;
                                 this.countDown();
                             } catch (e) {

@@ -95,7 +95,7 @@
                     />
                 </view>
                 <text class="name">
-                    大赛简介
+                    大赛指南
                 </text>
             </navigator>
             <!-- <navigator
@@ -115,7 +115,7 @@
 
             <navigator
                 class="item"
-                :url="`/pages/doc/list/list?type=challenge`"
+                url="/pages/work/list/list?cat_id=0"
             >
                 <view class="icon-wrap">
                     <image
@@ -130,7 +130,7 @@
 
             <navigator
                 class="item"
-                :url="`/pages/doc/list/list?type=talent`"
+                url="/pages/work/list/list?cat_id=3"
             >
                 <view class="icon-wrap">
                     <image
@@ -145,7 +145,7 @@
 
             <navigator
                 class="item"
-                :url="`/pages/doc/list/list?type=guinness`"
+                url="/pages/work/list/list?cat_id=6"
             >
                 <view class="icon-wrap">
                     <image
@@ -155,6 +155,20 @@
                 </view>
                 <text class="name">
                     吉尼斯
+                </text>
+            </navigator>
+            <navigator
+                class="item"
+                url="/pages/openGame/rank?type=1"
+            >
+                <view class="icon-wrap">
+                    <image
+                        class="icon"
+                        src="/static/images/index/0004.png"
+                    />
+                </view>
+                <text class="name">
+                    排行榜
                 </text>
             </navigator>
         </view>

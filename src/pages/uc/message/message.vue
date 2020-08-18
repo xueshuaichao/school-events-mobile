@@ -376,7 +376,7 @@ export default {
     .content {
         margin-top: 130rpx;
         margin-bottom: 110rpx;
-        max-height: calc(100vh - 242rpx);
+        min-height: calc(100vh - 242rpx);
     }
     .mess-item {
         position: relative;
@@ -461,7 +461,7 @@ export default {
     }
     .all-show-close {
         position: fixed;
-        bottom: 0;
+        bottom: 60px;
         height: 100rpx;
         text-align: center;
         line-height: 100rpx;
