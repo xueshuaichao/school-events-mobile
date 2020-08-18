@@ -77,8 +77,8 @@
                         </view>
                     </view>
                     <view
-                        v-for="(ruleItem, index) in prizesDetail.text"
-                        :key="index"
+                        v-for="(ruleItem, key) in prizesDetail.text"
+                        :key="key + 3"
                     >
                         <view
                             class="title"

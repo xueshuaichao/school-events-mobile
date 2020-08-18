@@ -729,6 +729,7 @@ export default {
         line-height: 35upx;
         position: relative;
         margin-top: 12upx;
+        word-break: break-all;
     }
     .cat-name {
         font-size: 24upx;
