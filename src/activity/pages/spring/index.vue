@@ -137,7 +137,7 @@
                         </view>
                     </view>
                     <view
-                        v-else
+                        v-if="!showRank"
                         class="no-data-text"
                     >
                         本周暂无榜单生成，可查看历史榜单纪录哦
