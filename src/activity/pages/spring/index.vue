@@ -49,7 +49,10 @@
                     @handleActiveprize="handleActiveprize"
                 />
 
-                <view class="week-rank">
+                <view
+                    v-if="historyRankList.length || showRank"
+                    class="week-rank"
+                >
                     <view class="title">
                         —— 本周劳动能手 ——
                     </view>
@@ -333,7 +336,7 @@ export default {
             api.get('/api/activity/laborrank', {
                 activity_id: this.activityId,
             }).then((data) => {
-                if (data.length === 3) {
+                if (data.length >= 3) {
                     this.showRank = true;
                 }
                 if (this.activityId === 8) {

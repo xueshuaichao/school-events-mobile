@@ -548,10 +548,6 @@ export default {
                 uni.navigateTo({
                     url: `/activity/pages/clocked/ucenter?activity_id=12&user_id=${this.pageData.create_by}`,
                 });
-            } else if (activity && this.activityId === 13) {
-                uni.navigateTo({
-                    url: `/activity/pages/mywork/mywork?type=myWork&activity_id=13&user_id=${this.pageData.create_by}`,
-                });
             } else {
                 uni.navigateTo({
                     url: `/pages/uc/uc/index?uid=${this.pageData.create_by}`,
