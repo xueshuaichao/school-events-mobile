@@ -291,7 +291,6 @@ export default {
             activityId: this.activityId,
             page: 'indexConfig',
         });
-        console.log(this.indexConfig);
         this.fr = logger.getFr(this.publicConfig.log, {});
         this.getRank();
         this.historyRank();
