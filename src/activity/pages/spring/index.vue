@@ -192,7 +192,7 @@
                                 />
                                 <view v-else>
                                     <image
-                                        v-if="k < 2"
+                                        v-if="k < 3"
                                         class="rank-img-2"
                                         :src="
                                             `https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/labor-crown-${k +
