@@ -86,7 +86,7 @@
         <view class="menu-list">
             <navigator
                 class="item"
-                :url="`/pages/doc/intro/intro?id=rule`"
+                :url="`/pages/doc/guide/guide`"
             >
                 <view class="icon-wrap">
                     <image

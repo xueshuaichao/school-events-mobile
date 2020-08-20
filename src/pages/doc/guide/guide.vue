@@ -45,18 +45,17 @@
         </view>
         <view class="content">
             <!-- 非项目 -->
-            <template v-if="activeMenuItem.code !== 'iterms'">
+            <template v-if="activeMenuItem.code !== 'items'">
                 <view class="page-rich-text rich-content">
                     <rich-text :nodes="contentNodes[activeMenuItem.code]" />
                 </view>
                 <view
-                    v-if="!isH5"
+                    v-if="!isH5 && contentNodes[activeMenuItem.code].length > 0"
                     class="share-wrap"
                 >
                     <button
                         class="share-btn"
                         open-type="share"
-                        @click="shareToFriend"
                     >
                         <text class="text">
                             分享好友
@@ -70,7 +69,7 @@
             </template>
             <template v-else>
                 <view
-                    v-for="(item, index) in itermData[activeMenuSubCode]"
+                    v-for="(item, index) in itemData[activeMenuSubCode]"
                     :key="index"
                     class="item-box"
                 >
@@ -131,7 +130,7 @@ export default {
                 },
                 {
                     name: '大赛项目',
-                    code: 'iterms',
+                    code: 'items',
                     fold: false, // 展开收起
                     children: [
                         {
@@ -158,7 +157,7 @@ export default {
                 notice: [],
                 process: [],
             },
-            itermData: {
+            itemData: {
                 challenge: [],
                 guinness: [],
                 talent: [],
@@ -201,11 +200,11 @@ export default {
     },
     methods: {
         handleItemData(key) {
-            this.itermData[key] = conf[key].content.map((item) => {
+            this.itemData[key] = conf[key].content.map((item) => {
                 const content = item.content || item.describe.join('');
                 return {
                     ...item,
-                    shortDesc: `${content.slice(0, 29)}...`,
+                    shortDesc: `${content.slice(0, 27)}...`,
                 };
             });
         },
@@ -340,7 +339,7 @@ export default {
         }
     }
     .rich-content {
-        padding: 40upx;
+        padding: 40upx 30upx;
     }
     .content {
         flex: 1;
@@ -376,6 +375,7 @@ export default {
     }
 
     .share-wrap {
+        padding-bottom: 20px;
         display: flex;
 
         .share-btn {
