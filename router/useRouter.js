@@ -91,6 +91,11 @@ const routesConfig = {
             component: () => import('@/pages/doc/intro/intro.vue'),
         },
         {
+            path: '/pages/doc/guide/guide',
+            // name: 'doc',
+            // component: () => import('@/pages/doc/intro/intro.vue'),
+        },
+        {
             path: '/history/chunjie/upload/upload',
         },
         {

@@ -55,6 +55,12 @@
             }
         },
         {
+            "path": "pages/doc/guide/guide",
+            "style": {
+                "navigationBarTitleText": "参赛指南"
+            }
+        },
+        {
             "path": "pages/doc/detail/detail",
             "style": {
                 "navigationBarTitleText": "参赛指南"
