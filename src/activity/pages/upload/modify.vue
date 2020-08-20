@@ -640,7 +640,7 @@ export default {
                         this.disabled = false;
                         uni.hideLoading();
                         let url = '';
-                        if (this.activity_id === 12) {
+                        if (this.formData.activity_id === 12) {
                             url = `&pre_status=${this.preStatus}&days=${this.days}&ac_type=${this.ac_type}`;
                         }
                         uni.navigateTo({
