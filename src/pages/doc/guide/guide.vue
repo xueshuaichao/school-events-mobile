@@ -69,7 +69,7 @@
             </template>
             <template v-else>
                 <view
-                    v-for="(item, index) in itermData[activeMenuSubCode]"
+                    v-for="(item, index) in itemData[activeMenuSubCode]"
                     :key="index"
                     class="item-box"
                 >
@@ -157,7 +157,7 @@ export default {
                 notice: [],
                 process: [],
             },
-            itermData: {
+            itemData: {
                 challenge: [],
                 guinness: [],
                 talent: [],
@@ -200,7 +200,7 @@ export default {
     },
     methods: {
         handleItemData(key) {
-            this.itermData[key] = conf[key].content.map((item) => {
+            this.itemData[key] = conf[key].content.map((item) => {
                 const content = item.content || item.describe.join('');
                 return {
                     ...item,
