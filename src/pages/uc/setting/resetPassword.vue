@@ -101,7 +101,8 @@ export default {
             loading: false,
             captcha: '',
             isMobile: /^1[0-9]{10}$/,
-            isPassword: /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{8,16}$/,
+            // eslint-disable-next-line no-useless-escape
+            isPassword: /(?!^(\d+|[a-zA-Z]+|[~!@#$%^&*()_+`\-={}:";'<>?,.\/]+)$)^[\w~!@#$%^&*()_+`\-={}:";'<>?,.\/]{6,32}$/,
             phone: '',
             first_pwd: '',
             second_pwd: '',

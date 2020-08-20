@@ -164,7 +164,7 @@
                 <view class="icon-wrap">
                     <image
                         class="icon"
-                        src="/static/images/index/0004.png"
+                        src="/static/images/index/0005.png"
                     />
                 </view>
                 <text class="name">
