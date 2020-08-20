@@ -461,7 +461,10 @@ export default {
     }
     .all-show-close {
         position: fixed;
+        bottom: 0;
+        // #ifdef H5
         bottom: 60px;
+        // #endif
         height: 100rpx;
         text-align: center;
         line-height: 100rpx;
