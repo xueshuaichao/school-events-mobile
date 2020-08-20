@@ -106,9 +106,21 @@ function isLogin(params = {}) {
                     isLogin.userInfo = data.user_info;
                     resolve(data.user_info);
                 } else if (status === 602) {
-                    uni.navigateTo({
-                        url: `/pages/login/login${query}`,
-                    });
+                    // eslint-disable-next-line no-undef
+                    const pages = getCurrentPages();
+                    const url = pages[pages.length - 1].route;
+                    if (
+                        url.indexOf('tabBar') > -1
+                        || url.indexOf('pages/uc/message/message') > -1
+                    ) {
+                        uni.redirectTo({
+                            url: `/pages/login/login${query}`,
+                        });
+                    } else {
+                        uni.navigateTo({
+                            url: `/pages/login/login${query}`,
+                        });
+                    }
                     reject();
                 } else {
                     uni.showToast({

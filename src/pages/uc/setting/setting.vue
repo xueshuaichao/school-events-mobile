@@ -275,10 +275,6 @@ export default {
                 () => {
                     this.isLoading = false;
                     this.userInfo = null;
-                    // uni.showToast({
-                    //     title: err.message,
-                    //     icon: 'none',
-                    // });
                 },
             );
         },
@@ -380,7 +376,9 @@ export default {
                 // error
             }
             api.logout().then(() => {
-                this.getData();
+                uni.reLaunch({
+                    url: '/pages/login/login',
+                });
             });
         },
         // fetch user info

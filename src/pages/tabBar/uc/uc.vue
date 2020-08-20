@@ -1,5 +1,8 @@
 <template>
-    <view class="page-uc-index">
+    <view
+        v-show="loading"
+        class="page-uc-index"
+    >
         <uc
             :refresh="refreshPage"
             :reach-bottom="reachBottom"
@@ -10,6 +13,7 @@
 
 <script>
 import uc from '../../../widgets/uc/uc.vue';
+import api from '../../../common/api';
 
 export default {
     components: {
@@ -20,6 +24,7 @@ export default {
             refreshPage: false,
             reachBottom: false,
             pageShow: false,
+            loading: false,
         };
     },
     created() {},
@@ -29,6 +34,14 @@ export default {
         },
     },
     onShow() {
+        uni.showLoading({
+            title: '加载中',
+            icon: 'none',
+        });
+        api.isLogin().then(() => {
+            this.loading = true;
+            uni.hideLoading();
+        });
         this.pageShow = !this.pageShow;
     },
     onPullDownRefresh() {

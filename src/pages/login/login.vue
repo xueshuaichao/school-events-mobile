@@ -28,10 +28,18 @@ export default {
     },
     methods: {
         onLogin() {
-            if (this.isH5) {
-                window.history.back();
+            // eslint-disable-next-line no-undef
+            const pages = getCurrentPages();
+            if (pages.length > 1) {
+                if (this.isH5) {
+                    window.history.back();
+                } else {
+                    uni.navigateBack();
+                }
             } else {
-                uni.navigateBack();
+                uni.switchTab({
+                    url: '/pages/tabBar/index/index',
+                });
             }
         },
     },

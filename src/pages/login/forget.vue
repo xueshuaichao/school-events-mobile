@@ -95,7 +95,7 @@
             <view class="forget-text">
                 <navigator
                     url="/pages/login/login"
-                    open-type="redirect"
+                    open-type="navigateBack"
                 >
                     返回登录
                 </navigator>
@@ -162,14 +162,7 @@ export default {
             // #ifdef H5
             isH5: true,
             // #endif
-            userkey: '',
-            jscode: '',
         };
-    },
-    created() {
-        if (!this.isH5) {
-            this.getCode();
-        }
     },
     methods: {
         validate() {
@@ -225,10 +218,10 @@ export default {
                         icon: 'none',
                     });
                     setTimeout(() => {
-                        uni.redirectTo({
+                        uni.reLaunch({
                             url: '/pages/login/login',
                         });
-                    }, 3000);
+                    }, 2000);
                 },
                 (err) => {
                     uni.hideLoading();

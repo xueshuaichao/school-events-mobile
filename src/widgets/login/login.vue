@@ -113,11 +113,11 @@
                             {{ captcha.remain }}s 后重新发
                         </view>
                     </view>
-                    <view class="login-mode">
-                        <view
-                            v-if="loginMode === 'sms'"
-                            class="desc"
-                        >
+                    <view
+                        v-if="loginMode === 'sms'"
+                        class="login-mode"
+                    >
+                        <view class="desc">
                             未注册手机号验证后即完成注册
                         </view>
                     </view>
@@ -645,12 +645,11 @@ export default {
 
     .login-mode {
         color: #1166ff;
-        font-size: 30rpx;
-        margin: 10upx 0;
+        font-size: 28rpx;
         min-height: 40upx;
         text-align: center;
         .desc {
-            padding: 20upx 0 40upx;
+            padding: 24upx 0 56upx;
         }
     }
 
@@ -739,6 +738,7 @@ export default {
             height: 96upx;
             line-height: 96upx;
             text-align: center;
+            box-sizing: border-box;
             &.is-send {
                 color: #999;
             }
@@ -746,7 +746,7 @@ export default {
     }
     .forget-text {
         color: #5f98ff;
-        padding: 24upx 40upx;
+        padding: 24upx 40upx 56upx;
         font-size: 28upx;
     }
     .user-argement {
@@ -784,7 +784,7 @@ export default {
 
     .desc {
         color: #aaa;
-        font-size: 32rpx;
+        font-size: 28rpx;
     }
     .wx-login-text {
         color: #666;
