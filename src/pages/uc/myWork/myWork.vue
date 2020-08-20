@@ -192,9 +192,7 @@ export default {
             let urlPath = `/pages/upload/modify/modify?id=${id}`;
             if (activityId === 6) {
                 urlPath = `/history/read/upload/modify?id=${id}`;
-            } else if (activityId === 8) {
-                urlPath = `/pages/activity-pages/upload/modify?id=${id}&activity_id=${activityId}`;
-            } else if (activityId > 8) {
+            } else if (activityId >= 8) {
                 urlPath = `/activity/pages/upload/modify?id=${id}&activity_id=${activityId}&from=mywork`;
             }
             return uni.navigateTo({

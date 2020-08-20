@@ -151,32 +151,6 @@
                 "navigationBarTitleText": "下载"
             }
         },
-        // ============== 春节好 end =====================
-
-        {
-            "path": "pages/activity-pages/labor/index",
-            "style": {
-                "navigationBarTitleText": "青少年动起来"
-            }
-        },
-        {
-            "path": "pages/activity-pages/upload/modify",
-            "style": {
-                "navigationBarTitleText": "上传作品"
-            }
-        },
-        {
-            "path": "pages/activity-pages/upload/result",
-            "style": {
-                "navigationBarTitleText": "上传成功"
-            }
-        },
-        {
-            "path": "pages/activity-pages/mywork/mywork",
-            "style": {
-                "navigationBarTitleText": "我的作品"
-            }
-        },
         {
             "path": "pages/login/login",
             "style": {
@@ -309,6 +283,25 @@
     ],
     "subPackages": [
         {
+            "root": "activityA",
+            "pages": [
+                {
+                    "path": "pages/poetry/index",
+                    "style": {
+                        "navigationBarTitleText": "秀才艺，赢好礼",
+                        "softinputNavBar": "none"
+                    }
+                },
+                {
+                    "path": "pages/poetry/level",
+                    "style": {
+                        "navigationBarTitleText": "秀才艺，赢好礼",
+                        "softinputNavBar": "none"
+                    }
+                }
+            ]
+        },
+        {
             "root": "history",
             "pages": [
                 // ============== 春节 活动 =================
@@ -331,9 +324,6 @@
                         "navigationBarTitleText": "我的作品"
                     }
                 },
-                // ============== 春节 end ======================
-
-                // ============== 春节好 ========================
                 {
                     "path": "chunjiehao/index",
                     "style": {
@@ -555,6 +545,24 @@
                     "path": "pages/lottery/detail",
                     "style": {
                         "navigationBarTitleText": "我的中奖"
+                    }
+                },
+                {
+                    "path": "pages/poetry/bgmusic",
+                    "style": {
+                        "navigationBarTitleText": "选择背景音乐"
+                    }
+                },
+                {
+                    "path": "pages/poetry/clearance",
+                    "style": {
+                        "navigationBarTitleText": "趣味诗词大闯关"
+                    }
+                },
+                {
+                    "path": "pages/poetry/soundRecord",
+                    "style": {
+                        "navigationBarTitleText": "录音"
                     }
                 }
             ]

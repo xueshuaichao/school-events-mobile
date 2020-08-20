@@ -144,10 +144,6 @@ const routesConfig = {
             path: '/history/read/myWork/myWork',
         },
         {
-            path: '/pages/activity-pages/labor/index',
-        },
-
-        {
             path: '/activity/pages/children/index',
         },
         {
@@ -211,6 +207,22 @@ const routesConfig = {
         },
         {
             path: '/activity/pages/lottery/detail',
+        },
+        {
+            path: '/activityA/pages/poetry/index',
+        },
+        {
+            path: '/activity/pages/poetry/bgmusic',
+        },
+        {
+            path: '/activityA/pages/poetry/level',
+        },
+        {
+            path: '/activity/pages/poetry/clearance',
+        },
+        // 录音
+        {
+            path: '/activity/pages/poetry/soundRecord',
         },
         {
             path: '/pages/activity-pages/mywork/mywork',

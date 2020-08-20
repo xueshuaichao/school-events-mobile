@@ -5,7 +5,7 @@
             class="cover"
         >
             <image
-                src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/h5/suspension-bayi.png"
+                src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/h5/suspension-jiuyi.png"
             />
             <view
                 class="join-btn"
@@ -252,6 +252,10 @@ export default {
             bannerlist: [],
             confList: [
                 {
+                    id: 13,
+                    url: '/activity/pages/index?activity_id=13',
+                },
+                {
                     id: 12,
                     url: '/activity/pages/index?activity_id=12',
                 },
@@ -273,25 +277,13 @@ export default {
                     id: 8,
                     img:
                         'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/h5/wuyi-s-banner.png',
-                    url: '/pages/activity-pages/labor/index',
+                    url: '/activity/pages/index?activity_id=8',
                 },
                 {
                     id: 7,
                     img:
                         'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/h5/aitiaozhan-s-banner.png',
                     url: '/pages/openGame/index',
-                },
-                {
-                    id: 6,
-                    img:
-                        'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/h5/read-s-banner.png',
-                    url: '/history/read/index',
-                },
-                {
-                    id: 5,
-                    img:
-                        'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/h5/yiqing-s-banner.png',
-                    url: '/history/yiqing/index',
                 },
             ],
             isSearchWord: false, // 是否设置了关键词
@@ -402,7 +394,7 @@ export default {
         getNewActivityStatus() {
             // 1未开始，2进行中，3已结束
             api.get('/api/activity/activitystatus', {
-                activity_id: 12,
+                activity_id: 13,
             }).then((data) => {
                 if (data.status) {
                     this.status = data.status;
@@ -411,17 +403,8 @@ export default {
         },
         thirdEntryPrompt() {
             const isFirstLogin = uni.getStorageSync(this.isFirstLogin);
-            if (uni.getStorageSync('hasReadPromt')) {
-                uni.removeStorageSync('hasReadPromt');
-            }
-            if (uni.getStorageSync('hasLaborPromt')) {
-                uni.removeStorageSync('hasLaborPromt');
-            }
-            if (uni.getStorageSync('hasLiuyiPromt')) {
-                uni.removeStorageSync('hasLiuyiPromt');
-            }
-            if (uni.getStorageSync('hasQiyiPromt')) {
-                uni.removeStorageSync('hasQiyiPromt');
+            if (uni.getStorageSync('hasBayiPromt')) {
+                uni.removeStorageSync('hasBayiPromt');
             }
             if (!isFirstLogin) {
                 this.prompt = true;
@@ -431,7 +414,7 @@ export default {
             uni.setStorageSync(this.isFirstLogin, true);
             this.prompt = false;
             uni.navigateTo({
-                url: '/activity/pages/index?activity_id=12',
+                url: '/activity/pages/index?activity_id=13',
             });
         },
         handleClose() {
@@ -537,25 +520,27 @@ export default {
     text-align: center;
     font-size: 0;
     image:first-child {
-        width: 638rpx;
+        width: 558rpx;
         height: 700rpx;
         display: block;
         margin: 160upx auto 0;
     }
     .join-btn {
-        width: 570upx;
+        width: 420upx;
         height: 110upx;
-        margin: 50upx auto 30upx;
+        margin: -50upx auto 30upx;
         border-radius: 60upx;
         color: #fff;
         font-size: 40upx;
         line-height: 110upx;
         text-align: center;
         background: linear-gradient(
-            180deg,
-            rgba(255, 162, 132, 1) 0%,
-            rgba(255, 104, 76, 1) 100%
+            0deg,
+            rgba(219, 78, 14, 1),
+            rgba(255, 159, 115, 1)
         );
+        position: relative;
+        z-index: 1;
     }
     .close {
         width: 52upx;
@@ -564,9 +549,9 @@ export default {
         margin: 0 auto;
         position: relative;
         background: linear-gradient(
-            180deg,
-            rgba(255, 162, 132, 1) 0%,
-            rgba(255, 104, 76, 1) 100%
+            0deg,
+            rgba(219, 78, 14, 1),
+            rgba(255, 159, 115, 1)
         );
         &::before,
         &::after {

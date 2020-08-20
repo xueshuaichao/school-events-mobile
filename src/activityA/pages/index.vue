@@ -1,48 +1,18 @@
 <template>
     <view>
-        <brand
-            v-if="activityId === 10"
+        <poetry
+            v-if="activityId === 13"
             ref="myChildren"
             :activity-id="activityId"
-            :canvas-image="canvasImg"
-        />
-        <clocked
-            v-if="activityId === 12"
-            ref="myClocked"
-            :activity-id="activityId"
-        />
-        <poetry
-            v-if="activityId === 14"
-            ref="myPoetry"
-            :activity-id="activityId"
-        />
-        <spring
-            v-if="activityId === 13 || activityId === 8"
-            ref="mySpring"
-            :activity-id="activityId"
-        />
-        <poster
-            v-if="!isH5 && showPoster"
-            id="poster"
-            :config="posterCommonConfig"
-            :hide-loading="true"
-            @success="onPosterSuccess"
-            @fail="onPosterFail"
         />
     </view>
 </template>
 <script>
-import brand from './brand/index.vue';
-import clocked from './clocked/index.vue';
-import spring from './spring/index.vue';
 import poetry from './poetry/index.vue';
 import share from '../../common/share';
 
 export default {
     components: {
-        brand,
-        clocked,
-        spring,
         poetry,
     },
     data() {
@@ -53,40 +23,10 @@ export default {
             activityId: '',
             activityName: [
                 {
-                    id: 8,
-                    title: '青少年动起来',
-                },
-                {
-                    id: 9,
+                    id: 13,
                     title: '七彩童年，快乐成长秀风采',
                 },
-                {
-                    id: 10,
-                    title: '青少年”爱挑战“寻找代言人',
-                },
-                {
-                    id: 12,
-                    title: '打卡一下，记录暑假',
-                },
-                {
-                    id: 13,
-                    title: '青少年动起来 第二季',
-                },
-                {
-                    id: 14,
-                    title: '趣味诗词大闯关',
-                },
             ],
-            canvasImg: '',
-            showPoster: false,
-            posterCommonConfig: {
-                pixelRatio: 2,
-                width: 538,
-                height: 760,
-                debug: false,
-                images: [],
-            },
-            posterWin: true,
         };
     },
     methods: {

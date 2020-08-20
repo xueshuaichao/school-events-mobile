@@ -11,11 +11,12 @@
                 v-if="type === 'myWork' && userInfo === null"
                 @login="onLogin"
             />
-            <!-- my works -->
+            <!-- main -context-- -->
             <view
                 v-else
                 class="panel"
             >
+                <!--pannel-->
                 <view
                     v-if="type === 'myWork'"
                     class="panel-hd"
@@ -42,6 +43,7 @@
                         未通过({{ allNum.no_pass || 0 }})
                     </text>
                 </view>
+                <!--search-box-->
                 <view
                     v-else
                     class="search-box"
@@ -95,6 +97,7 @@
                         </text>
                     </view>
                 </view>
+                <!--列表-->
                 <view
                     v-if="total > 0"
                     class="media-list"
@@ -567,6 +570,9 @@ export default {
             },
         );
         if (type === 'myWork') {
+            if (userId) {
+                this.filter.user_id = String(userId);
+            }
             this.getWorkData();
         } else if (type === 'search') {
             uni.setNavigationBarTitle({ title: this.publicConfig.title });
