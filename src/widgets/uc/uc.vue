@@ -712,7 +712,7 @@ export default {
     .reported-btn {
         position: fixed;
         // bottom: var(--window-bottom);
-        bottom: 60px;
+        bottom: 0;
         width: 100%;
         background: #1166ff;
         color: #fff;
