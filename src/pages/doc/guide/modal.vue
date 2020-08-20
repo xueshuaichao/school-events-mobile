@@ -2,6 +2,7 @@
     <view
         v-if="show"
         class="guide-modal"
+        @touchmove.stop.prevent="moveHandle"
     >
         <view class="modal-content">
             <view class="modal-title">
@@ -60,8 +61,8 @@
                 </template>
                 <template v-if="modalType === 'talent'">
                     <view class="inner-item">
-                        <view>1、视频要求3-10分钟；</view>
-                        <view>2、要求视频画质清晰可见（不低于720P)。</view>
+                        <view>1、视频要求3-10分钟</view>
+                        <view>2、要求视频画质清晰可见（不低于720P)</view>
                     </view>
                 </template>
                 <template
@@ -162,6 +163,9 @@ export default {
         closeModal() {
             this.$emit('closeModal');
         },
+        moveHandle() {
+            return false;
+        },
     },
 };
 </script>
@@ -179,9 +183,9 @@ export default {
         top: 198upx;
         left: 50upx;
         right: 50upx;
-        min-height: 870upx;
         background: #fff;
-        border-radius: 24rpx;
+        border-radius: 24upx;
+        padding-bottom: 32upx;
     }
     .modal-title {
         text-align: center;
@@ -220,7 +224,7 @@ export default {
     }
     .join-btn {
         display: block;
-        margin: 32upx auto;
+        margin: 32upx auto 0upx;
         border-radius: 47upx;
         width: 400upx;
         height: 94upx;

@@ -205,7 +205,7 @@ export default {
                 const content = item.content || item.describe.join('');
                 return {
                     ...item,
-                    shortDesc: `${content.slice(0, 29)}...`,
+                    shortDesc: `${content.slice(0, 27)}...`,
                 };
             });
         },
