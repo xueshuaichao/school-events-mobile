@@ -215,6 +215,9 @@ const routesConfig = {
             path: '/pages/login/login',
         },
         {
+            path: '/pages/login/forget',
+        },
+        {
             path: '/pages/doc/notice/notice',
             name: 'notice',
             aliasPath: '/notice',

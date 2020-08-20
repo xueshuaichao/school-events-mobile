@@ -13,7 +13,7 @@
                 :class="{ active: selTab === 1 }"
                 @click="clickTab(1)"
             >
-                喜欢
+                获赞
             </view>
             <view
                 class="mes-panel-title"

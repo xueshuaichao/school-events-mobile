@@ -171,18 +171,16 @@
                 "navigationBarTitleText": "我的作品"
             }
         },
-        // #ifdef H5
         {
             "path": "pages/login/login",
             "style": {
                 "navigationBarTitleText": "登录"
             }
         },
-        // #endif
         {
-            "path": "pages/login/login",
+            "path": "pages/login/forget",
             "style": {
-                "navigationBarTitleText": "登录"
+                "navigationBarTitleText": "忘记密码"
             }
         },
         {
