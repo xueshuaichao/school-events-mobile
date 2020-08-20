@@ -365,8 +365,8 @@ export default {
                 grade_id: 1,
                 grade_name: '',
                 create_info: '',
-                city: '',
-                county: '',
+                city: 0,
+                county: 0,
             },
             gradeData: [
                 '一年级',
