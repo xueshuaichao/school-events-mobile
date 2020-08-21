@@ -2,6 +2,7 @@
     <view :class="['page-upload', { 'stop-scroll': prompt }]">
         <view
             class="content-box"
+            :class="{ join: identity !== 4 }"
             style="padding-top:114upx"
         >
             <view class="title">
@@ -851,6 +852,9 @@ export default {
         position: relative;
         padding: 30upx 30upx 128upx;
         background: #fff;
+        &.join {
+            padding-bottom: 30upx;
+        }
         .show-type-hd {
             // display: flex;
             // align-items: center;

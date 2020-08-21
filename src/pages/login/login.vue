@@ -37,11 +37,29 @@ export default {
                     uni.navigateBack();
                 }
             } else {
-                uni.switchTab({
-                    url: '/pages/tabBar/index/index',
+                uni.getStorage({
+                    key: 'tabBarPath',
+                    success: ({ data }) => {
+                        if (data) {
+                            uni.switchTab({
+                                url: `/${data}`,
+                            });
+                        }
+                        uni.removeStorage({ key: 'tabBarPath' });
+                    },
+                    fail: () => {
+                        uni.switchTab({
+                            url: '/pages/tabBar/index/index',
+                        });
+                    },
                 });
             }
         },
     },
 };
 </script>
+<style lang="less" scoped>
+.custom-header-title {
+    text-align: center;
+}
+</style>

@@ -8,6 +8,7 @@ const whitelist = {
     '/pages/tabBar/index/index': 'tabbar-index',
     '/pages/tabBar/list/list': 'tabbar-list',
     '/pages/tabBar/upload/upload': 'tabbar-upload',
+    '/pages/tabBar/message/message': 'tabbar-message',
     '/pages/tabBar/uc/uc': 'tabbar-uc',
     '/pages/work/detail/detail': 'work-detail',
     '/pages/news/list/list': 'news-list',
@@ -55,6 +56,12 @@ const routesConfig = {
             component: () => import('@/pages/tabBar/upload/upload.vue'),
             aliasPath: '/upload',
             name: 'tabbar-upload',
+        },
+        {
+            path: '/pages/tabBar/message/message',
+            component: () => import('@/pages/tabBar/message/message.vue'),
+            aliasPath: '/message',
+            name: 'tabbar-message',
         },
         {
             path: '/pages/mall/detail/detail',
@@ -286,9 +293,7 @@ const routesConfig = {
         {
             path: '/pages/uc/setting/resetClass',
         },
-        {
-            path: '/pages/uc/message/message',
-        },
+
         {
             path: '/pages/uc/reported/reported',
         },

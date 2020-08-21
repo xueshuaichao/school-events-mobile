@@ -109,16 +109,17 @@ function isLogin(params = {}) {
                     // eslint-disable-next-line no-undef
                     const pages = getCurrentPages();
                     const url = pages[pages.length - 1].route;
-                    if (
-                        url.indexOf('tabBar') > -1
-                        || url.indexOf('pages/uc/message/message') > -1
-                    ) {
-                        uni.redirectTo({
-                            url: `/pages/login/login${query}`,
+                    const isTabBar = url.indexOf('tabBar') > -1;
+                    const path = `/pages/login/login${query}`;
+                    if (isTabBar) {
+                        // 如果是tabBar跳转到登录 需要跳回需要登录的页面，禁止显示返回按钮，不然会重复跳转
+                        uni.setStorage({ key: 'tabBarPath', data: url });
+                        uni.reLaunch({
+                            url: path,
                         });
                     } else {
                         uni.navigateTo({
-                            url: `/pages/login/login${query}`,
+                            url: path,
                         });
                     }
                     reject();

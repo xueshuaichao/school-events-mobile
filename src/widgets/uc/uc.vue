@@ -17,13 +17,6 @@
                         >
                             <image src="/static/images/uc/settings.png" />
                         </navigator>
-                        <!-- <navigator
-                            open-type="switchTab"
-                            class="icons mess"
-                            url="/pages/uc/message/message"
-                        >
-                            <image src="/static/images/uc/messages.png" />
-                        </navigator> -->
                         <view
                             v-if="userInfo.msg_count"
                             class="mess-pop"
