@@ -190,19 +190,19 @@
         <!-- menu -->
         <work
             :title="'爱挑战竞技优秀作品'"
-            :more-url="'/pages/work/list/list?cat_id=0'"
+            :more-url="'/pages/tabBar/list/list?cat_id=0'"
             :info="workData.individual.list"
             :cat-id="0"
         />
         <work
             :title="'爱挑战吉尼斯优秀作品'"
-            :more-url="'/pages/work/list/list?cat_id=6'"
+            :more-url="'/pages/tabBar/list/list?cat_id=6'"
             :info="workData.team.list"
             :cat-id="6"
         />
         <work
             :title="'才艺秀优秀作品'"
-            :more-url="'/pages/work/list/list?cat_id=3'"
+            :more-url="'/pages/tabBar/list/list?cat_id=3'"
             :info="workData.talent.list"
             :cat-id="3"
         />
