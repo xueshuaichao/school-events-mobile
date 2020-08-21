@@ -126,7 +126,6 @@ export default {
                 ({ user_info: userInfo }) => {
                     this.userInfo = userInfo;
                     this.phone = userInfo.mobile || '';
-                    this.formdata.phone = userInfo.mobile || '';
                     this.loading = true;
                 },
                 () => {
@@ -143,7 +142,8 @@ export default {
                     captcha: '验证码码',
                     first_pwd: '密码',
                 };
-                if (formdata.phone && !this.isMobile.test(this.phone)) {
+                formdata.phone = this.phone;
+                if (formdata.phone && !this.isMobile.test(formdata.phone)) {
                     this.lock = true;
                     return uni.showToast({
                         title: '请输入正确的手机号',
