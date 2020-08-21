@@ -82,7 +82,7 @@
                 >
             </view>
             <text class="psw-tips">
-                密码必须是8-16位的数字、字母组合（不能是纯数字）
+                密码为6到32位的字母、数字、特殊字符的任意两种组合
             </text>
             <view class="uni-btn-v">
                 <button form-type="submit">
@@ -183,9 +183,15 @@ export default {
                 api.post('/api/account/resetpassword', formdata).then(
                     () => {
                         this.lock = true;
-                        uni.navigateTo({
-                            url: '/pages/uc/setting/resetPasswordResult',
+                        uni.showToast({
+                            title: '密码重置成功!',
+                            icon: 'none',
                         });
+                        setTimeout(() => {
+                            uni.reLaunch({
+                                url: '/pages/login/login',
+                            });
+                        }, 2000);
                     },
                     (err) => {
                         this.lock = true;
@@ -244,7 +250,7 @@ export default {
             return true;
         },
         countDown() {
-            const sep = 30 * 1000;
+            const sep = 60 * 1000;
             const now = new Date() - 0;
             const duration = this.captchaAll.create_at + sep - now;
 
