@@ -125,7 +125,8 @@ export default {
             api.get('/api/user/info').then(
                 ({ user_info: userInfo }) => {
                     this.userInfo = userInfo;
-                    this.phone = userInfo.mobile;
+                    this.phone = userInfo.mobile || '';
+                    this.formdata.phone = userInfo.mobile || '';
                     this.loading = true;
                 },
                 () => {
