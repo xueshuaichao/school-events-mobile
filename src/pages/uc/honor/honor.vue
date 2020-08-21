@@ -7,6 +7,7 @@
                 :info="item"
             />
             <uni-load-more
+                v-if="total >= 20"
                 class="loadMore"
                 :status="loadMoreStatus"
                 :content-text="{
@@ -34,6 +35,7 @@ export default {
             loading: false,
             loadMoreStatus: 'none',
             dataList: [],
+            total: 0,
             filter: {
                 page_num: 1,
                 page_size: 20,

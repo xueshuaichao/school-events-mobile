@@ -394,7 +394,7 @@ export default {
     .content {
         margin-top: 130rpx;
         margin-bottom: 110rpx;
-        min-height: calc(100vh - 242rpx);
+        max-height: calc(100vh - 242rpx);
     }
     .mess-item {
         position: relative;
@@ -490,6 +490,9 @@ export default {
         color: #666;
         width: 100%;
         background: #fff;
+    }
+    .loadMore {
+        padding-bottom: 242rpx;
     }
 }
 </style>
