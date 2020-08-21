@@ -244,6 +244,12 @@ export default {
                 }
                 return;
             }
+            if (item.code === 'items' && item.fold) {
+                // 再次选中 打开子类
+                // eslint-disable-next-line no-param-reassign
+                item.fold = false;
+            }
+
             this.activeMenuItem = item;
             if (item.id && this.contentNodes[item.code].length === 0) {
                 // 非项目

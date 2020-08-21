@@ -109,7 +109,13 @@ function isLogin(params = {}) {
                     // eslint-disable-next-line no-undef
                     const pages = getCurrentPages();
                     const url = pages[pages.length - 1].route;
-                    const isTabBar = url.indexOf('tabBar') > -1;
+                    const tabBarArray = [
+                        'pages/tabBar/message/message',
+                        'pages/tabBar/upload/upload',
+                        'pages/tabBar/index/index',
+                        'pages/tabBar/uc/uc',
+                    ];
+                    const isTabBar = tabBarArray.indexOf(url) > -1;
                     const path = `/pages/login/login${query}`;
                     if (isTabBar) {
                         // 如果是tabBar跳转到登录 需要跳回需要登录的页面，禁止显示返回按钮，不然会重复跳转

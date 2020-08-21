@@ -115,7 +115,7 @@
 
             <navigator
                 class="item"
-                url="/pages/work/list/list?cat_id=0"
+                url="/pages/tabBar/list/list?cat_id=0"
             >
                 <view class="icon-wrap">
                     <image
@@ -130,7 +130,7 @@
 
             <navigator
                 class="item"
-                url="/pages/work/list/list?cat_id=3"
+                url="/pages/tabBar/list/list?cat_id=3"
             >
                 <view class="icon-wrap">
                     <image
@@ -145,7 +145,7 @@
 
             <navigator
                 class="item"
-                url="/pages/work/list/list?cat_id=6"
+                url="/pages/tabBar/list/list?cat_id=6"
             >
                 <view class="icon-wrap">
                     <image

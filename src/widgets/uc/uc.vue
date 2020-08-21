@@ -17,16 +17,6 @@
                         >
                             <image src="/static/images/uc/settings.png" />
                         </navigator>
-                        <view
-                            v-if="userInfo.msg_count"
-                            class="mess-pop"
-                        >
-                            {{
-                                userInfo.msg_count > 99
-                                    ? "..."
-                                    : userInfo.msg_count
-                            }}
-                        </view>
                     </view>
                 </template>
                 <view class="user-info">
