@@ -95,6 +95,7 @@
             <view class="forget-text">
                 <navigator
                     url="/pages/login/login"
+                    class="text"
                     open-type="navigateBack"
                 >
                     返回登录
@@ -419,6 +420,9 @@ export default {
         color: #5f98ff;
         padding: 24upx 40upx;
         font-size: 28upx;
+        .text {
+            display: inline-block;
+        }
     }
 }
 </style>

@@ -79,6 +79,7 @@
                     >
                         <navigator
                             url="/pages/login/forget"
+                            class="text"
                             hover-class="className"
                         >
                             忘记密码
@@ -748,6 +749,9 @@ export default {
         color: #5f98ff;
         padding: 24upx 40upx 56upx;
         font-size: 28upx;
+        .text {
+            display: inline-block;
+        }
     }
     .user-argement {
         display: flex;
