@@ -1,42 +1,58 @@
 <template>
-    <view
-        class="prize"
-        :style="{
-            'background-image': `url(https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/${name}_prize.png)`
-        }"
-    >
+    <view>
         <view
-            v-for="(item, index) in prizeList"
-            :key="index"
-            class="prize-item"
+            class="prize"
+            :style="{
+                'background-image': `url(https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/${name}_prize.png)`
+            }"
         >
-            <text class="prize-text-1">
-                {{ item.text[0] }}
-            </text>
-            <image
-                class="prize-img"
-                :style="{ border: `1px solid ${borderColor}` }"
-                :src="
-                    `https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/${name}_prize${index +
-                        1}.png`
-                "
-            />
-            <text
-                class="prize-text-2"
-                :style="{ color: textColor }"
+            <view
+                v-for="(item, index) in prizeList"
+                :key="index"
+                class="prize-item"
             >
-                {{ item.text[1] }}
-            </text>
+                <text class="prize-text-1">
+                    {{ item.text[0] }}
+                </text>
+                <image
+                    class="prize-img"
+                    :style="{ border: `1px solid ${borderColor}` }"
+                    :src="
+                        `https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/${
+                            activityId === 13 ? 'spring' : 'labor'
+                        }_prize${index + 1}.${
+                            activityId === 13 ? 'jpg' : 'png'
+                        }`
+                    "
+                />
+                <text
+                    class="prize-text-2"
+                    :style="{ color: textColor }"
+                >
+                    {{ item.text[1] }}
+                </text>
+            </view>
+            <template v-if="activityId === 8">
+                <view class="prize-item last-item">
+                    <image
+                        class="prize-img-text"
+                        :src="
+                            `https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/labor_prize5.png`
+                        "
+                        @click="handleActiverule"
+                    />
+                </view>
+            </template>
         </view>
-        <view class="prize-item">
+        <template v-if="activityId === 13">
             <image
-                class="prize-img-text"
+                class="prize-img-rule"
                 :src="
-                    `https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/${name}_prize5.png`
+                    `https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/spring_prize6.jpg`
                 "
                 @click="handleActiverule"
             />
-        </view>
+        </template>
     </view>
 </template>
 
@@ -60,6 +76,10 @@ export default {
             default() {
                 return [];
             },
+        },
+        activityId: {
+            type: Number,
+            default: 8,
         },
     },
     methods: {
@@ -89,7 +109,7 @@ export default {
         text-align: center;
         width: 141upx;
         height: 176upx;
-        &:last-of-type {
+        &.last-item {
             height: 238upx;
             width: 169upx;
         }
@@ -97,6 +117,7 @@ export default {
             color: #ff3442;
             width: 100%;
             font-size: 24upx;
+            font-weight: 600;
         }
         .prize-text-2 {
             color: #08986d;
@@ -114,5 +135,10 @@ export default {
             display: block;
         }
     }
+}
+.prize-img-rule {
+    width: 238upx;
+    height: 60upx;
+    margin: 20upx 0 0 256upx;
 }
 </style>

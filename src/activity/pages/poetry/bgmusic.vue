@@ -36,6 +36,8 @@ export default {
             total: 0,
             bgSrc:
                 'https://bj.bcebos.com//vod-bj/convert/200664/audio/202005181456325ec231a07ea2c.mp3',
+            bgSrc2:
+                'https://img-cdn-qiniu.dcloud.net.cn/uniapp/audio/music.mp3',
             src: 'https://img-cdn-qiniu.dcloud.net.cn/uniapp/audio/music.mp3',
         };
     },

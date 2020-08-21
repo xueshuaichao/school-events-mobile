@@ -426,11 +426,13 @@ export default {
         luckyList: {
             handler(val) {
                 const list = [];
-                for (let i = 1; i < val.list.length + 1; i += 1) {
-                    list.push(i);
+                if (val.list) {
+                    for (let i = 1; i < val.list.length + 1; i += 1) {
+                        list.push(i);
+                    }
+                    this.luckyListArr = val.list;
+                    this.luckyAllTotal = val.total;
                 }
-                this.luckyListArr = val.list;
-                this.luckyAllTotal = val.total;
             },
             deep: true,
             immediate: true,
