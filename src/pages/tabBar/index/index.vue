@@ -86,7 +86,7 @@
         <view class="menu-list">
             <navigator
                 class="item"
-                :url="`/pages/doc/intro/intro?id=rule`"
+                :url="`/pages/doc/guide/guide`"
             >
                 <view class="icon-wrap">
                     <image
@@ -95,7 +95,7 @@
                     />
                 </view>
                 <text class="name">
-                    大赛简介
+                    大赛指南
                 </text>
             </navigator>
             <!-- <navigator
@@ -115,7 +115,7 @@
 
             <navigator
                 class="item"
-                :url="`/pages/doc/list/list?type=challenge`"
+                url="/pages/tabBar/list/list?cat_id=0"
             >
                 <view class="icon-wrap">
                     <image
@@ -130,7 +130,7 @@
 
             <navigator
                 class="item"
-                :url="`/pages/doc/list/list?type=talent`"
+                url="/pages/tabBar/list/list?cat_id=3"
             >
                 <view class="icon-wrap">
                     <image
@@ -145,7 +145,7 @@
 
             <navigator
                 class="item"
-                :url="`/pages/doc/list/list?type=guinness`"
+                url="/pages/tabBar/list/list?cat_id=6"
             >
                 <view class="icon-wrap">
                     <image
@@ -155,6 +155,20 @@
                 </view>
                 <text class="name">
                     吉尼斯
+                </text>
+            </navigator>
+            <navigator
+                class="item"
+                url="/pages/openGame/rank?type=1"
+            >
+                <view class="icon-wrap">
+                    <image
+                        class="icon"
+                        src="/static/images/index/0005.png"
+                    />
+                </view>
+                <text class="name">
+                    排行榜
                 </text>
             </navigator>
         </view>
@@ -176,19 +190,19 @@
         <!-- menu -->
         <work
             :title="'爱挑战竞技优秀作品'"
-            :more-url="'/pages/work/list/list?cat_id=0'"
+            :more-url="'/pages/tabBar/list/list?cat_id=0'"
             :info="workData.individual.list"
             :cat-id="0"
         />
         <work
             :title="'爱挑战吉尼斯优秀作品'"
-            :more-url="'/pages/work/list/list?cat_id=6'"
+            :more-url="'/pages/tabBar/list/list?cat_id=6'"
             :info="workData.team.list"
             :cat-id="6"
         />
         <work
             :title="'才艺秀优秀作品'"
-            :more-url="'/pages/work/list/list?cat_id=3'"
+            :more-url="'/pages/tabBar/list/list?cat_id=3'"
             :info="workData.talent.list"
             :cat-id="3"
         />

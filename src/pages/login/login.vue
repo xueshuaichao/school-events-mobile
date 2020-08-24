@@ -28,12 +28,38 @@ export default {
     },
     methods: {
         onLogin() {
-            if (this.isH5) {
-                window.history.back();
+            // eslint-disable-next-line no-undef
+            const pages = getCurrentPages();
+            if (pages.length > 1) {
+                if (this.isH5) {
+                    window.history.back();
+                } else {
+                    uni.navigateBack();
+                }
             } else {
-                uni.navigateBack();
+                uni.getStorage({
+                    key: 'tabBarPath',
+                    success: ({ data }) => {
+                        if (data) {
+                            uni.switchTab({
+                                url: `/${data}`,
+                            });
+                        }
+                        uni.removeStorage({ key: 'tabBarPath' });
+                    },
+                    fail: () => {
+                        uni.switchTab({
+                            url: '/pages/tabBar/index/index',
+                        });
+                    },
+                });
             }
         },
     },
 };
 </script>
+<style lang="less" scoped>
+.custom-header-title {
+    text-align: center;
+}
+</style>

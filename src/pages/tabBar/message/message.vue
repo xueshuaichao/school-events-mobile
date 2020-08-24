@@ -1,5 +1,8 @@
 <template>
-    <view class="page-message">
+    <view
+        v-show="initLoading"
+        class="page-message"
+    >
         <view class="mes-panel-hd">
             <view
                 class="mes-panel-title"
@@ -13,7 +16,7 @@
                 :class="{ active: selTab === 1 }"
                 @click="clickTab(1)"
             >
-                喜欢
+                获赞
             </view>
             <view
                 class="mes-panel-title"
@@ -114,6 +117,7 @@ export default {
     },
     data() {
         return {
+            userInfo: {},
             dataList: [],
             loadMoreStatus: 'none',
             filter: {
@@ -122,22 +126,39 @@ export default {
                 category: 1,
             },
             selTab: 0,
+            initLoading: false,
             loading: false,
             startX: 0,
             delBtnWidth: 80,
             checkedArr: [],
         };
     },
-    created() {
-        const that = this;
-        uni.getSystemInfo({
-            success(res) {
-                const pix = res.screenWidth / 750;
-                that.delBtnWidth = 136 * pix;
-            },
+    onShow() {
+        console.log(1);
+        uni.showLoading({
+            title: '加载中',
+            icon: 'none',
+        });
+        api.isLogin().then(() => {
+            this.initLoading = true;
+            uni.hideLoading();
         });
     },
+    created() {
+        console.log(2);
+        this.getDataList();
+        this.getSystemInfo();
+    },
     methods: {
+        getSystemInfo() {
+            const that = this;
+            uni.getSystemInfo({
+                success(res) {
+                    const pix = res.screenWidth / 750;
+                    that.delBtnWidth = 136 * pix;
+                },
+            });
+        },
         toDetail(item) {
             if (!this.selTab) {
                 if (!item.is_read) {
@@ -341,9 +362,6 @@ export default {
         },
         stopOutMove() {},
     },
-    onLoad() {
-        this.getDataList();
-    },
 };
 </script>
 
@@ -462,6 +480,9 @@ export default {
     .all-show-close {
         position: fixed;
         bottom: 0;
+        // #ifdef H5
+        bottom: 60px;
+        // #endif
         height: 100rpx;
         text-align: center;
         line-height: 100rpx;
@@ -469,6 +490,9 @@ export default {
         color: #666;
         width: 100%;
         background: #fff;
+    }
+    .loadMore {
+        padding-bottom: 242rpx;
     }
 }
 </style>
