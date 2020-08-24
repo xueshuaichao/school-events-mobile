@@ -271,6 +271,11 @@ export default {
     display: flex;
     height: 100vh;
     overflow-y: hidden;
+    .rich-text-image {
+        width: 100% !important;
+        margin: 20upx 0;
+        height: auto !important;
+    }
     .menu-list {
         width: 212rpx;
         background: rgba(245, 245, 245, 1);
