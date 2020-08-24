@@ -116,7 +116,7 @@ export default {
                 {
                     name: '大赛简介',
                     code: 'intro',
-                    id: 191,
+                    id: 190,
                 },
                 {
                     name: '大赛须知',
