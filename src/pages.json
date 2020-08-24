@@ -42,6 +42,12 @@
             }
         },
         {
+            "path": "pages/tabBar/message/message",
+            "style": {
+                "navigationBarTitleText": "消息"
+            }
+        },
+        {
             "path": "pages/uc/uc/index",
             "style": {
                 "navigationBarTitleText": "个人空间",
@@ -50,6 +56,18 @@
         },
         {
             "path": "pages/doc/intro/intro",
+            "style": {
+                "navigationBarTitleText": "参赛指南"
+            }
+        },
+        {
+            "path": "pages/doc/guide/guide",
+            "style": {
+                "navigationBarTitleText": "参赛指南"
+            }
+        },
+        {
+            "path": "pages/doc/detail/detail",
             "style": {
                 "navigationBarTitleText": "参赛指南"
             }
@@ -139,18 +157,16 @@
                 "navigationBarTitleText": "下载"
             }
         },
-        // #ifdef H5
         {
             "path": "pages/login/login",
             "style": {
                 "navigationBarTitleText": "登录"
             }
         },
-        // #endif
         {
-            "path": "pages/login/login",
+            "path": "pages/login/forget",
             "style": {
-                "navigationBarTitleText": "登录"
+                "navigationBarTitleText": "忘记密码"
             }
         },
         {
@@ -204,12 +220,7 @@
                 }
             }
         },
-        {
-            "path": "pages/uc/message/message",
-            "style": {
-                "navigationBarTitleText": "消息"
-            }
-        },
+
         {
             "path": "pages/uc/argement/index",
             "style": {
@@ -314,9 +325,6 @@
                         "navigationBarTitleText": "我的作品"
                     }
                 },
-                // ============== 春节 end ======================
-
-                // ============== 春节好 ========================
                 {
                     "path": "chunjiehao/index",
                     "style": {
@@ -584,18 +592,17 @@
                 "text": "首页"
             },
             {
-                "pagePath": "pages/tabBar/list/list",
-                "iconPath": "static/images/tab/work.png",
-                "selectedIconPath": "static/images/tab/work_ac.png",
-                "text": "作品"
-            },
-            {
                 "pagePath": "pages/tabBar/upload/upload",
                 "iconPath": "static/images/tab/upload.png",
                 "selectedIconPath": "static/images/tab/upload_ac.png",
                 "text": "活动"
             },
-
+            {
+                "pagePath": "pages/tabBar/message/message",
+                "iconPath": "static/images/tab/work.png",
+                "selectedIconPath": "static/images/tab/work_ac.png",
+                "text": "消息"
+            },
             {
                 "pagePath": "pages/tabBar/uc/uc",
                 "iconPath": "static/images/tab/uc.png",

@@ -158,6 +158,9 @@
                 >
                     上传
                 </view>
+                <view class="warn-tip">
+                    *请勿重复上传同一作品
+                </view>
             </view>
             <view
                 v-if="needBindMobile"
@@ -771,6 +774,11 @@ export default {
     }
     .uni-input {
         border-radius: 40upx;
+    }
+    .warn-tip {
+        text-align: center;
+        color: #ff685c;
+        margin-top: 20upx;
     }
 
     /deep/ .comp-upload {

@@ -8,6 +8,7 @@ const whitelist = {
     '/pages/tabBar/index/index': 'tabbar-index',
     '/pages/tabBar/list/list': 'tabbar-list',
     '/pages/tabBar/upload/upload': 'tabbar-upload',
+    '/pages/tabBar/message/message': 'tabbar-message',
     '/pages/tabBar/uc/uc': 'tabbar-uc',
     '/pages/work/detail/detail': 'work-detail',
     '/pages/news/list/list': 'news-list',
@@ -56,6 +57,12 @@ const routesConfig = {
             name: 'tabbar-upload',
         },
         {
+            path: '/pages/tabBar/message/message',
+            component: () => import('@/pages/tabBar/message/message.vue'),
+            aliasPath: '/message',
+            name: 'tabbar-message',
+        },
+        {
             path: '/pages/tabBar/uc/uc',
             component: () => import('@/pages/tabBar/uc/uc.vue'),
             aliasPath: '/uc',
@@ -77,6 +84,11 @@ const routesConfig = {
             path: '/pages/doc/intro/intro',
             name: 'doc',
             component: () => import('@/pages/doc/intro/intro.vue'),
+        },
+        {
+            path: '/pages/doc/guide/guide',
+            // name: 'doc',
+            // component: () => import('@/pages/doc/intro/intro.vue'),
         },
         {
             path: '/history/chunjie/upload/upload',
@@ -215,6 +227,9 @@ const routesConfig = {
             path: '/pages/login/login',
         },
         {
+            path: '/pages/login/forget',
+        },
+        {
             path: '/pages/doc/notice/notice',
             name: 'notice',
             aliasPath: '/notice',
@@ -266,9 +281,7 @@ const routesConfig = {
         {
             path: '/pages/uc/setting/resetClass',
         },
-        {
-            path: '/pages/uc/message/message',
-        },
+
         {
             path: '/pages/uc/reported/reported',
         },

@@ -17,22 +17,6 @@
                         >
                             <image src="/static/images/uc/settings.png" />
                         </navigator>
-                        <navigator
-                            class="icons mess"
-                            url="/pages/uc/message/message"
-                        >
-                            <image src="/static/images/uc/messages.png" />
-                        </navigator>
-                        <view
-                            v-if="userInfo.msg_count"
-                            class="mess-pop"
-                        >
-                            {{
-                                userInfo.msg_count > 99
-                                    ? "..."
-                                    : userInfo.msg_count
-                            }}
-                        </view>
                     </view>
                 </template>
                 <view class="user-info">
@@ -710,7 +694,8 @@ export default {
     }
     .reported-btn {
         position: fixed;
-        bottom: var(--window-bottom);
+        // bottom: var(--window-bottom);
+        bottom: 0;
         width: 100%;
         background: #1166ff;
         color: #fff;
@@ -721,7 +706,7 @@ export default {
         font-weight: 500;
         line-height: 98rpx;
         // #ifdef H5
-        bottom: 120rpx;
+        bottom: 60px;
         // #endif
         &.from-detail {
             // #ifdef H5

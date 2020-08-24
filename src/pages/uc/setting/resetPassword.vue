@@ -1,6 +1,7 @@
 <template>
     <div class="page-password">
         <form
+            v-if="loading"
             class="password-form"
             @submit="formSubmit"
         >
@@ -9,7 +10,14 @@
                     手机号
                 </view>
                 <view class="input-flex">
+                    <view
+                        v-if="userInfo && userInfo.mobile"
+                        class="uni-input"
+                    >
+                        {{ phone }}
+                    </view>
                     <input
+                        v-else
                         v-model="phone"
                         name="phone"
                         class="uni-input"
@@ -74,7 +82,7 @@
                 >
             </view>
             <text class="psw-tips">
-                密码必须是8-16位的数字、字母组合（不能是纯数字）
+                密码为6到32位的字母、数字、特殊字符的任意两种组合
             </text>
             <view class="uni-btn-v">
                 <button form-type="submit">
@@ -90,9 +98,11 @@ import api from '../../../common/api';
 export default {
     data() {
         return {
+            loading: false,
             captcha: '',
             isMobile: /^1[0-9]{10}$/,
-            isPassword: /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{8,16}$/,
+            // eslint-disable-next-line no-useless-escape
+            isPassword: /(?!^(\d+|[a-zA-Z]+|[~!@#$%^&*()_+`\-={}:";'<>?,.\/]+)$)^[\w~!@#$%^&*()_+`\-={}:";'<>?,.\/]{6,32}$/,
             phone: '',
             first_pwd: '',
             second_pwd: '',
@@ -104,9 +114,25 @@ export default {
                 remain: '',
                 isSend: false,
             },
+            userInfo: null,
         };
     },
+    created() {
+        this.getUserInfo();
+    },
     methods: {
+        getUserInfo() {
+            api.get('/api/user/info').then(
+                ({ user_info: userInfo }) => {
+                    this.userInfo = userInfo;
+                    this.phone = userInfo.mobile || '';
+                    this.loading = true;
+                },
+                () => {
+                    this.loading = true;
+                },
+            );
+        },
         formSubmit(e) {
             if (this.lock) {
                 this.lock = false;
@@ -116,7 +142,8 @@ export default {
                     captcha: '验证码码',
                     first_pwd: '密码',
                 };
-                if (formdata.phone && !this.isMobile.test(this.phone)) {
+                formdata.phone = this.phone;
+                if (formdata.phone && !this.isMobile.test(formdata.phone)) {
                     this.lock = true;
                     return uni.showToast({
                         title: '请输入正确的手机号',
@@ -156,9 +183,15 @@ export default {
                 api.post('/api/account/resetpassword', formdata).then(
                     () => {
                         this.lock = true;
-                        uni.navigateTo({
-                            url: '/pages/uc/setting/resetPasswordResult',
+                        uni.showToast({
+                            title: '密码重置成功!',
+                            icon: 'none',
                         });
+                        setTimeout(() => {
+                            uni.reLaunch({
+                                url: '/pages/login/login',
+                            });
+                        }, 2000);
                     },
                     (err) => {
                         this.lock = true;
@@ -197,7 +230,7 @@ export default {
                         () => {
                             try {
                                 this.captchaAll.create_at = new Date() - 0;
-                                this.captchaAll.remain = 30;
+                                this.captchaAll.remain = 60;
                                 this.captchaAll.isSend = true;
                                 this.countDown();
                             } catch (e) {
@@ -217,7 +250,7 @@ export default {
             return true;
         },
         countDown() {
-            const sep = 30 * 1000;
+            const sep = 60 * 1000;
             const now = new Date() - 0;
             const duration = this.captchaAll.create_at + sep - now;
 

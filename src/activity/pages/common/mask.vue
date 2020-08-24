@@ -516,6 +516,7 @@ export default {
         font-weight: 300;
         font-size: 28upx;
         color: #fff;
+        word-break: break-all;
     }
     .title-icon {
         background-repeat: no-repeat;

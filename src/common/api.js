@@ -106,9 +106,28 @@ function isLogin(params = {}) {
                     isLogin.userInfo = data.user_info;
                     resolve(data.user_info);
                 } else if (status === 602) {
-                    uni.navigateTo({
-                        url: `/pages/login/login${query}`,
-                    });
+                    // eslint-disable-next-line no-undef
+                    const pages = getCurrentPages();
+                    const url = pages[pages.length - 1].route;
+                    const tabBarArray = [
+                        'pages/tabBar/message/message',
+                        'pages/tabBar/upload/upload',
+                        'pages/tabBar/index/index',
+                        'pages/tabBar/uc/uc',
+                    ];
+                    const isTabBar = tabBarArray.indexOf(url) > -1;
+                    const path = `/pages/login/login${query}`;
+                    if (isTabBar) {
+                        // 如果是tabBar跳转到登录 需要跳回需要登录的页面，禁止显示返回按钮，不然会重复跳转
+                        uni.setStorage({ key: 'tabBarPath', data: url });
+                        uni.reLaunch({
+                            url: path,
+                        });
+                    } else {
+                        uni.navigateTo({
+                            url: path,
+                        });
+                    }
                     reject();
                 } else {
                     uni.showToast({
