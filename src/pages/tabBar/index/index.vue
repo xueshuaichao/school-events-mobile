@@ -57,28 +57,6 @@
                             :src="item.banner_image"
                         />
                     </swiper-item>
-                    <!-- <swiper-item>
-                        <navigator
-                            url="/pages/activity-pages/labor/index"
-                            class="swiper-item"
-                        >
-                            <image
-                                class="banner-image"
-                                src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/h5/wuyi-banner.png"
-                            />
-                        </navigator>
-                    </swiper-item> -->
-                    <!-- <swiper-item v-if="!isH5">
-                        <navigator
-                            url="/pages/openGame/index"
-                            class="swiper-item"
-                        >
-                            <image
-                                class="banner-image"
-                                src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/h5/opengame-banner.png"
-                            />
-                        </navigator>
-                    </swiper-item> -->
                 </swiper>
             </view>
         </view>
@@ -98,21 +76,6 @@
                     大赛指南
                 </text>
             </navigator>
-            <!-- <navigator
-                class="item"
-                :url="`/pages/doc/detail/detail?id=rule`"
-            >
-                <view class="icon-wrap red">
-                    <image
-                        class="icon"
-                        src="/static/images/index/0001.png"
-                    />
-                </view>
-                <text class="name">
-                    参赛指南
-                </text>
-            </navigator> -->
-
             <navigator
                 class="item"
                 url="/pages/tabBar/list/list?cat_id=0"

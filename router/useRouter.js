@@ -81,11 +81,6 @@ const routesConfig = {
             path: '/pages/uc/uc/index',
         },
         {
-            path: '/pages/doc/intro/intro',
-            name: 'doc',
-            component: () => import('@/pages/doc/intro/intro.vue'),
-        },
-        {
             path: '/pages/doc/guide/guide',
             // name: 'doc',
             // component: () => import('@/pages/doc/intro/intro.vue'),
@@ -220,7 +215,7 @@ const routesConfig = {
             path: '/activity/pages/poetry/soundRecord',
         },
         {
-            path: '/pages/activity-pages/mywork/mywork',
+            path: '/activity/pages/poetry/record',
         },
 
         {
@@ -234,9 +229,6 @@ const routesConfig = {
             name: 'notice',
             aliasPath: '/notice',
             component: () => import('@/pages/doc/notice/notice.vue'),
-        },
-        {
-            path: '/pages/doc/list/list',
         },
         {
             path: '/pages/qa/detail/detail',

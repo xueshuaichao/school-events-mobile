@@ -19,7 +19,7 @@ export default {
     methods: {
         start() {
             uni.navigateTo({
-                url: '/activity/pages/poetry/soundRecord',
+                url: '/activity/pages/poetry/record',
             });
         },
     },
