@@ -48,11 +48,18 @@ export default {
     onLoad() {
         this.innerAudioContext = uni.createInnerAudioContext();
     },
+    onUnload() {
+        this.innerAudioContext.destroy();
+    },
     methods: {
         selBg(item, index) {
             if (!item.sel) {
                 if (this.selItem) {
                     this.$set(this.list[this.selItem.index], 'sel', 0);
+                }
+                if (!item.play) {
+                    //  正在播放的其他音乐要暂停。
+                    this.innerAudioContext.pause();
                 }
                 this.$set(this.list[index], 'sel', 1);
                 this.selItem = { index, ...item };

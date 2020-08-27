@@ -205,6 +205,9 @@ const routesConfig = {
             path: '/activity/pages/poetry/bgmusic',
         },
         {
+            path: '/activity/pages/poetry/ucenter',
+        },
+        {
             path: '/activityA/pages/poetry/level',
         },
         {

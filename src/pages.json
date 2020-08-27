@@ -553,6 +553,24 @@
                     "style": {
                         "navigationBarTitleText": "录音"
                     }
+                },
+                {
+                    "path": "pages/poetry/vip",
+                    "style": {
+                        "navigationBarTitleText": "我的中奖"
+                    }
+                },
+                {
+                    "path": "pages/poetry/test",
+                    "style": {
+                        "navigationBarTitleText": "趣味背古诗"
+                    }
+                },
+                {
+                    "path": "pages/poetry/ucenter",
+                    "style": {
+                        "navigationBarTitleText": "趣味诗词大闯关"
+                    }
                 }
             ]
         }

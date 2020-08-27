@@ -1,8 +1,6 @@
-<!--suppress ALL -->
 <template>
     <div>
         <view>
-            <!-- <div style="background-image: url('https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/applet-code-10.png')"></div>-->
             <div class="poetryStyle">
                 <div style="text-align: center">
                     <h2>望岳</h2>
@@ -48,7 +46,7 @@
             <view>
                 <button
                     class="cont_btn"
-                    @click="startRecords"
+                    @click="startRecord"
                 >
                     开始录音
                 </button>
@@ -66,7 +64,7 @@
                 </button>
                 <button
                     class="cont_btn"
-                    @click="endRecords"
+                    @click="endRecord"
                 >
                     停止录音
                 </button>
@@ -78,39 +76,27 @@
                 </button>
                 <button
                     class="cont_btn"
+                    @click="onConfirmDelete"
+                >
+                    重新录音
+                </button>
+                <button
+                    class="cont_btn"
                     @click="setBgAudioVol(0.5)"
                 >
                     0.5bg
                 </button>
                 <button
                     class="cont_btn"
-                    @click="setBgAudioVol(0.2)"
+                    @click="setMainAudio(0.8)"
                 >
-                    0.2bg
+                    0.8录音
                 </button>
                 <button
                     class="cont_btn"
-                    @click="setBgAudioVol(0.8)"
+                    @click="seek(20)"
                 >
-                    0.8bg
-                </button>
-                <button
-                    class="cont_btn"
-                    @click="setMainAudio(0.5)"
-                >
-                    0.5录音
-                </button>
-                <button
-                    class="cont_btn"
-                    @click="setMainAudio(0.2)"
-                >
-                    0.2录音
-                </button>
-                <button
-                    class="cont_btn"
-                    @click="setMainAudio(0.7)"
-                >
-                    0.7录音
+                    跳转
                 </button>
                 <button
                     class="cont_btn"
@@ -124,12 +110,6 @@
                 >
                     pauseAll
                 </button>
-                <view
-                    class="clicking"
-                    @click="clicking"
-                >
-                    点我呀
-                </view>
             </view>
         </view>
     </div>
@@ -148,7 +128,9 @@ export default {
         // const recorderManager = wx.getRecorderManager();
         // const innerAudioContext = wx.createInnerAudioContext();
         return {
-            text: 'uni-app',
+            // #ifdef H5
+            isH5: true,
+            // #endif
             voicePath: '',
             intervalTime: 0,
             timer: null,
@@ -160,14 +142,14 @@ export default {
             volBg: 0.5,
             volManage: 0.8,
             options: null,
+            imgAuthBtn: false,
         };
     },
     computed: {
-        // intIntervalTime() {
-        //     // 用于显示整数的秒数
-        //     console.log(Math.round(this.intervalTime));
-        //     return Math.round(this.intervalTime);
-        // },
+        intIntervalTime() {
+            // 用于显示整数的秒数
+            return Math.round(this.intervalTime);
+        },
     },
     created() {},
     onLoad() {
@@ -178,24 +160,97 @@ export default {
             console.log(`recorder stop${JSON.stringify(res)}`);
             self.voicePath = res.tempFilePath;
         });
+        innerAudioContext.onEnded(() => {
+            innerAudioContextBg.pause();
+        });
+        innerAudioContextBg.onEnded(() => {
+            // 背景音乐重复播放；
+            if (!innerAudioContext.paused) {
+                innerAudioContextBg.play();
+            }
+        });
+        innerAudioContextBg.onWaiting(() => {
+            uni.showLoading();
+            // 一直加载不出来
+            setTimeout(() => {
+                uni.hideLoading();
+                uni.showToast({
+                    icon: 'none',
+                    title: '网络不流畅',
+                });
+            }, 30000);
+        });
+        innerAudioContextBg.onError((res) => {
+            uni.showToast({
+                icon: 'none',
+                title: res.errMsg + res.errCode,
+            });
+        });
+        innerAudioContextBg.onCanplay(() => {
+            uni.hideLoading();
+        });
+        if (!this.isH5) {
+            this.getSetting();
+        }
     },
     onUnload() {
-        console.log(this.options);
+        innerAudioContext.destroy();
+        innerAudioContextBg.destroy();
         uni.navigateBack();
     },
     onBackPress(options) {
-        console.log(options);
         this.options = options;
     },
     methods: {
-        clicking() {
-            alert(12);
+        onConfirmDelete() {
+            uni.showModal({
+                title: '提示',
+                content: '确定要放弃已经录制的作品重新录制吗',
+                confirmText: '确定',
+                cancelText: '取消',
+                cancelColor: '#999999',
+                confirmColor: '#1166FF',
+                success: (res) => {
+                    if (res.confirm) {
+                        this.reStartRecord();
+                    } else if (res.cancel) {
+                        console.log('用户点击取消');
+                    }
+                },
+            });
+        },
+        reStartRecord() {
+            this.voicePath = '';
+            this.startRecord();
+        },
+        getSetting() {
+            const that = this;
+            uni.getSetting({
+                success(res) {
+                    if (res.authSetting['scope.record']) {
+                        that.imgAuthBtn = true;
+                    }
+                    console.log(res.authSetting);
+                },
+            });
+        },
+        setAuthStatus() {
+            const that = this;
+            uni.authorize({
+                scope: 'scope.record',
+                success() {
+                    that.imgAuthBtn = true;
+                },
+            });
         },
         setBgAudioVol(val) {
             innerAudioContextBg.volume = val;
         },
         setMainAudio(val) {
             innerAudioContext.volume = val;
+        },
+        seek(val) {
+            innerAudioContextBg.seek(val);
         },
         palyAll() {
             console.log(
@@ -204,6 +259,7 @@ export default {
                 innerAudioContext.volume,
                 '2',
             );
+
             innerAudioContext.play();
             innerAudioContextBg.play();
         },
@@ -211,19 +267,22 @@ export default {
             innerAudioContext.pause();
             innerAudioContextBg.pause();
         },
-        startRecords() {
-            this.timer = setInterval(() => {
-                this.intervalTime += 0.5;
-
-                if (this.intervalTime >= 0.5 && !this.isRecord) {
-                    console.log('开始录音');
-                    this.isRecord = true;
-                    this.intervalTime = 0;
-                    recorderManager.start({
-                        format: 'mp3',
-                    });
-                }
-            }, 500);
+        startRecord() {
+            if (!this.imgAuthBtn) {
+                this.setAuthStatus();
+            } else {
+                this.timer = setInterval(() => {
+                    this.intervalTime += 0.5;
+                    if (this.intervalTime >= 0.5 && !this.isRecord) {
+                        console.log('开始录音');
+                        this.isRecord = true;
+                        this.intervalTime = 0;
+                        recorderManager.start({
+                            format: 'mp3',
+                        });
+                    }
+                }, 500);
+            }
         },
         stopRecord() {
             console.log('停止');
@@ -241,7 +300,7 @@ export default {
             }
             console.log(this.voicePath, 111111111);
         },
-        endRecords() {
+        endRecord() {
             if (this.intervalTime <= 0.5) {
                 console.log('录音太短了!!!');
             }
