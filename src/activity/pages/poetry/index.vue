@@ -268,7 +268,7 @@ export default {
                 activity_id: 14,
             }).then((res) => {
                 this.activityStatus = res.status;
-                if (this.activityStatus === 1) {
+                if (this.activityStatus > 1) {
                     this.userHasJoin();
                 }
             });

@@ -1,118 +1,98 @@
 <template>
-    <div>
-        <view>
-            <div class="poetryStyle">
-                <div style="text-align: center">
-                    <h2>望岳</h2>
-                    <span>唐</span>. <span>杜甫</span>
-                </div>
-                <p style="text-align: center">
-                    岱宗夫如何？齐鲁青未了。
-                </p>
-                <p style="text-align: center">
-                    岱宗夫如何？齐鲁青未了。
-                </p>
-                <p style="text-align: center">
-                    岱宗夫如何？齐鲁青未了。
-                </p>
-                <p style="text-align: center">
-                    岱宗夫如何？齐鲁青未了。
-                </p>
-                <p style="text-align: center">
-                    岱宗夫如何？齐鲁青未了。
-                </p>
-                <p style="text-align: center">
-                    岱宗夫如何？齐鲁青未了。
-                </p>
-                <p style="text-indent:2em;">
-                    岱宗夫如何？齐鲁青未了.岱宗夫如何？
-                    齐鲁青未了。岱宗夫如何？齐鲁青未了。
-                    岱宗夫如何？齐鲁青未了.岱宗夫如何？
-                    齐鲁青未了。岱宗夫如何？齐鲁青未了。
-                    岱宗夫如何？齐鲁青未了.岱宗夫如何？
-                    齐鲁青未了。岱宗夫如何？齐鲁青未了。
-                </p>
-            </div>
-            <view>
-                <img
-                    class="imgStyle"
-                    alt=""
-                    style="width: 100%"
-                    :src="imgUrl + cover"
-                >
-            </view>
-        </view>
+    <view>
         <view class="cont">
-            <view>
-                <button
-                    class="cont_btn"
-                    @click="startRecord"
-                >
-                    开始录音
-                </button>
-                <button
-                    class="cont_btn"
-                    @click="stopRecord"
-                >
-                    暂停录音
-                </button>
-                <button
-                    class="cont_btn"
-                    @click="resumeRecord"
-                >
-                    继续录音
-                </button>
-                <button
-                    class="cont_btn"
-                    @click="endRecord"
-                >
-                    停止录音
-                </button>
-                <button
-                    class="cont_btn"
-                    @click="playVoice"
-                >
-                    播放录音
-                </button>
-                <button
-                    class="cont_btn"
-                    @click="onConfirmDelete"
-                >
-                    重新录音
-                </button>
-                <button
-                    class="cont_btn"
-                    @click="setBgAudioVol(0.5)"
-                >
-                    0.5bg
-                </button>
-                <button
-                    class="cont_btn"
-                    @click="setMainAudio(0.8)"
-                >
-                    0.8录音
-                </button>
-                <button
-                    class="cont_btn"
-                    @click="seek(20)"
-                >
-                    跳转
-                </button>
-                <button
-                    class="cont_btn"
-                    @click="palyAll"
-                >
-                    palyAll
-                </button>
-                <button
-                    class="cont_btn"
-                    @click="pauseAll"
-                >
-                    pauseAll
-                </button>
-            </view>
+            <button
+                class="cont_btn"
+                @click="startRecord"
+            >
+                开始录音
+            </button>
+            <button
+                class="cont_btn"
+                @click="stopRecord"
+            >
+                暂停录音
+            </button>
+            <button
+                class="cont_btn"
+                @click="resumeRecord"
+            >
+                继续录音
+            </button>
+            <button
+                class="cont_btn"
+                @click="endRecord"
+            >
+                停止录音
+            </button>
+            <button
+                class="cont_btn"
+                @click="playVoice"
+            >
+                播放录音
+            </button>
+            <button
+                class="cont_btn"
+                @click="onConfirmDelete"
+            >
+                重新录音
+            </button>
+            <button
+                class="cont_btn"
+                @click="setBgAudioVol(0.5)"
+            >
+                0.5bg
+            </button>
+            <button
+                class="cont_btn"
+                @click="setMainAudio(0.8)"
+            >
+                0.8录音
+            </button>
+
+            <button
+                class="cont_btn"
+                @click="palyAll"
+            >
+                palyAll
+            </button>
+            <button
+                class="cont_btn"
+                @click="pauseAll"
+            >
+                pauseAll
+            </button>
+            <button
+                class="cont_btn"
+                @click="palyBg"
+            >
+                palyBG
+            </button>
+            <button
+                class="cont_btn"
+                @click="pauseBg"
+            >
+                pauseBG
+            </button>
+            <button
+                class="cont_btn"
+                @click="seekbg(20)"
+            >
+                跳转
+            </button>
         </view>
-    </div>
+        <view class="slide-wrap">
+            <slider
+                value="60"
+                block-size="20"
+                block-color="#ff0"
+                active-color="#00ff00"
+                background-color="#999999"
+                step="5"
+                @change="sliderChange"
+            />
+        </view>
+    </view>
 </template>
 <script>
 const recorderManager = uni.getRecorderManager();
@@ -134,11 +114,10 @@ export default {
             voicePath: '',
             intervalTime: 0,
             timer: null,
+            timer2: null,
             bgSrc:
                 'https://bj.bcebos.com//vod-bj/convert/200664/audio/202005181456325ec231a07ea2c.mp3',
             audio: null,
-            imgUrl: 'https://aitiaozhan.oss-cn-beijing.aliyuncs.com',
-            cover: '/mp_wx/brand_main.jpg',
             volBg: 0.5,
             volManage: 0.8,
             options: null,
@@ -172,12 +151,15 @@ export default {
         innerAudioContextBg.onWaiting(() => {
             uni.showLoading();
             // 一直加载不出来
-            setTimeout(() => {
+
+            this.timer2 = setTimeout(() => {
                 uni.hideLoading();
-                uni.showToast({
-                    icon: 'none',
-                    title: '网络不流畅',
-                });
+                if (innerAudioContextBg.paused) {
+                    uni.showToast({
+                        icon: 'none',
+                        title: '网络不流畅',
+                    });
+                }
             }, 30000);
         });
         innerAudioContextBg.onError((res) => {
@@ -187,6 +169,7 @@ export default {
             });
         });
         innerAudioContextBg.onCanplay(() => {
+            console.log(innerAudioContextBg.duration, 'duration, onCanplay');
             uni.hideLoading();
         });
         if (!this.isH5) {
@@ -196,12 +179,17 @@ export default {
     onUnload() {
         innerAudioContext.destroy();
         innerAudioContextBg.destroy();
+        clearTimeout(this.timer2);
+        clearInterval(this.timer);
         uni.navigateBack();
     },
     onBackPress(options) {
         this.options = options;
     },
     methods: {
+        sliderChange(e) {
+            console.log(e.detail.value, 'detail----val----');
+        },
         onConfirmDelete() {
             uni.showModal({
                 title: '提示',
@@ -249,8 +237,15 @@ export default {
         setMainAudio(val) {
             innerAudioContext.volume = val;
         },
-        seek(val) {
+        seekbg(val) {
             innerAudioContextBg.seek(val);
+        },
+        palyBg() {
+            innerAudioContextBg.play();
+            console.log(innerAudioContextBg.duration, 'duration, palyBg');
+        },
+        pauseBg() {
+            innerAudioContextBg.pause();
         },
         palyAll() {
             console.log(
@@ -321,34 +316,19 @@ export default {
 };
 </script>
 <style lang="less" scoped>
-.cont {
-    width: 100%;
-    height: 150rpx;
-    position: absolute;
-    top: 70%;
-    text-align: center;
-}
 /* 按钮样式 */
+.cont {
+    display: flex;
+    flex-wrap: wrap;
+}
 .cont_btn {
     position: relative;
-    float: left;
-    width: 25%;
+    width: 200upx;
     height: 80rpx;
-    margin: 10rpx 30rpx;
     border-radius: 10rpx;
     line-height: 80rpx;
     background-color: aquamarine;
     font-size: 30rpx;
-}
-.imgStyle {
-    height: 600upx;
-}
-.poetryStyle {
-    margin-top: 20rpx;
-    background: rgba(255, 255, 255, 0.8);
-    position: absolute;
-    width: 70%;
-    left: 14%;
-    padding: 2%;
+    margin: 20upx 0;
 }
 </style>
