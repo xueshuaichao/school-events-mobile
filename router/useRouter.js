@@ -220,7 +220,12 @@ const routesConfig = {
         {
             path: '/activity/pages/poetry/record',
         },
-
+        {
+            path: '/activity/pages/poetry/vip',
+        },
+        {
+            path: '/activity/pages/poetry/test',
+        },
         {
             path: '/pages/login/login',
         },

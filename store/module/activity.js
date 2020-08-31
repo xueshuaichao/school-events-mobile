@@ -501,49 +501,35 @@ export default {
                     log: '',
                     sort: ['最新', '最热'],
                     catMenu: [], // 分组
-                    activityName: 'clocked', // 空作品的图片拼接地址
+                    activityName: '',
                     activityId: 14,
-                    isPNG: true,
                     catId: 20, // 所属分类
                     showAllCat: false,
-                    time: '活动日期：8月1日--8月31日',
+                    time: '',
                     primaryColor: '#FF685C', // 主色调
                     primaryBgColor: '#FFA69F', // 主要的背景颜色 （图片背景）
                     placeholderColor: '#FFBBB5',
                     homePath: '/activity/pages/index?activity_id=14', // 我的作品页面返回首页的路径
                     shareConfig: {
                         title: [
-                            '打卡一夏，记录暑假赢好礼！',
-                            '爱挑战素质教育养成计划，过充实又快乐的暑假！',
-                            '每日打卡一小步！成长提升一大步！',
+                            '趣味诗词大闯关，等你来战！',
+                            '诵读诗词，传承经典，快来跟我一起闯关！',
+                            '学习诗词知识，丰富诗词知识积累，帮你成为诗词达人！',
+                            '我是诗词小达人，跟我一起来闯关！',
+                            '品味经典诗词之美，传承古典文化精华，快来挑战！',
                         ],
                         h5Title: [
-                            '打卡一夏，记录暑假赢好礼！',
-                            '爱挑战素质教育养成计划，过充实又快乐的暑假！',
-                            '每日打卡一小步！成长提升一大步！',
+                            '品味经典诗词之美，传承古典文化精华，快来挑战！',
                         ],
                         desc: ['打卡一夏，记录暑假'],
                         image:
-                            'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/clocked/clocked_share.png',
+                            'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/share.png',
                         path: '/activity/pages/index?activity_id=14',
                     },
                 },
-                uploadConfig: {
-                    // 上传作品页
-                    activityCat: [], // 表现形式
-                    uploadMode: ['video', 'image'], // 上传类型 只传1个值时（['video']）不显示表现形式
-                    placeholderNameText: '*作品名称（不超过11字）',
-                    placeholderDescText: '作品介绍(不超过80个字符)',
-                    nameMaxLength: 11,
-                    descMaxLength: 80,
-                },
-                indexColorConfig: {
-                    maskBgColor: '#fff',
-                    placeholderColor: '#FFBBB5',
-                },
-                uploadColorConfig: {
-                    placeholderColor: '#999',
-                },
+                uploadConfig: {},
+                indexColorConfig: {},
+                uploadColorConfig: {},
             },
         ],
     },

@@ -5,26 +5,6 @@
             @login="onLogin"
         />
         <template v-else>
-            <!-- <view  class="btn-wrap">
-                <button
-                    class="btn"
-                    @click="jumpRecord"
-                >
-                    录制页面
-                </button>
-                <button
-                    class="btn"
-                    @click="jumpVip"
-                >
-                    vip
-                </button>
-                <button
-                    class="btn"
-                    @click="jumpBgList"
-                >
-                    音乐列表
-                </button>
-            </view> -->
             <view class="page-top">
                 <view class="user-info">
                     <view class="avator">
@@ -40,10 +20,31 @@
                 >
                     我的作品
                 </view>
+                <view class="btn-wrap">
+                    <view
+                        class="btn"
+                        @click="jumpRecord"
+                    >
+                        录制页面
+                    </view>
+                    <view
+                        class="btn"
+                        @click="jumpVip"
+                    >
+                        vip
+                    </view>
+                    <view
+                        class="btn"
+                        @click="jumpBgList"
+                    >
+                        音乐列表
+                    </view>
+                </view>
             </view>
             <view class="main-data">
                 <view
                     v-for="(item, index) in level"
+                    :id="`row-${index}`"
                     :key="index"
                     class="level-row"
                     :class="{
@@ -57,17 +58,21 @@
                         v-for="key in item"
                         :key="key.k"
                         class="level-item"
-                        @click="jumpAnster(key.k + 1)"
+                        @click="jumpRecord(key.k + 1)"
                     >
                         <image
                             :src="
                                 `https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/level-${
                                     key.canPrize ? 1 : 2
-                                }-${key.k + 1 < successLevel ? 0 : 1}.png`
+                                }-${key.k + 1 > successLevel ? 0 : 1}.png`
                             "
                             class="card"
                         />
-                        <view class="num">
+                        <view
+                            v-if="key.canPrize"
+                            class="num"
+                            :class="{ unlocked: key.k < successLevel }"
+                        >
                             {{ key.k + 1 }}
                         </view>
                     </view>
@@ -79,6 +84,9 @@
                 </view>
                 <view class="ucenter">
                     我的奖品
+                </view>
+                <view @click="pageScroll">
+                    滑动
                 </view>
             </view>
         </template>
@@ -105,7 +113,7 @@ export default {
             },
             loadMoreStatus: 'none',
             init: true,
-            successLevel: 100,
+            successLevel: 10,
         };
     },
     onShow() {
@@ -120,7 +128,31 @@ export default {
             this.getlevel('reachBottom');
         }
     },
+    mounted() {
+        // this.getNodes();
+    },
     methods: {
+        getNodes() {
+            // 当前页面使用一次。
+            // const that = this;
+            const nodesRef = uni
+                .createSelectorQuery()
+                .in(this)
+                .select(`#row-${this.level.length - 1}`);
+            // console.log(nodesRef);
+            nodesRef
+                .boundingClientRect((rek) => {
+                    console.log(rek);
+                    uni.pageScrollTo({
+                        scrollTop: rek.top,
+                        duration: 300,
+                    });
+                })
+                .exec();
+        },
+        pageScroll() {
+            this.getNodes();
+        },
         getlevel(type) {
             const newResult = this.sliceData(
                 this.filter.page_size,
@@ -151,16 +183,15 @@ export default {
             let list = [];
             list = Array.from({ length: size }, (v, k) => {
                 const K = k + pageSize * pageNum;
-                let canPrize = k === 0 || k === 2 || k === 5;
-                if (K > 5) {
-                    canPrize = K % 5;
+                let canPrize = 1;
+                if (k) {
+                    canPrize = (K + 1) % 5;
                 }
                 return {
                     canPrize,
                     k: K,
                 };
             });
-            console.log(list, 'list----');
             // 将数据拆成num个一组
             const result = [];
             for (let i = 0; i < list.length; i += rowNum) {
@@ -183,10 +214,18 @@ export default {
             this.toLogin = false;
             this.userInfo = userInfo;
         },
-        jumpRecord() {
-            uni.navigateTo({
-                url: '/activity/pages/poetry/record',
-            });
+        jumpRecord(id) {
+            if (id < this.successLevel + 2) {
+                uni.navigateTo({
+                    url: `/activity/pages/poetry/record?id=${id}`,
+                });
+            } else {
+                uni.showToast({
+                    icon: 'none',
+                    title: '请先解锁上一关卡',
+                    duration: 2000,
+                });
+            }
         },
         jumpVip() {
             uni.navigateTo({
@@ -217,8 +256,13 @@ export default {
 .btn-wrap {
     display: flex;
     flex-wrap: wrap;
+    position: absolute;
+    right: 0;
+    top: 80upx;
+    color: yellow;
+    text-align: center;
     .btn {
-        width: 200upx;
+        width: 100upx;
         margin: 20upx 0;
     }
 }
@@ -270,48 +314,7 @@ export default {
         justify-content: space-between;
         padding: 0 80upx;
         height: 136upx;
-        &.one {
-            margin-bottom: 112upx;
-            transform: rotate(10deg);
-            .card {
-                transform: rotate(-10deg);
-            }
-            .level-item {
-                margin-top: -100upx;
-            }
-
-            // :nth-child(2) {
-            //     margin-top: -50upx;
-            // }
-            // :nth-child(3) {
-            //     margin-top: -30upx;
-            // }
-            // :nth-child(4) {
-            //     margin-top: -10upx;
-            // }
-        }
-        &.two {
-            transform: rotate(-10deg);
-            margin-bottom: 160upx;
-            .card {
-                transform: rotate(10deg);
-            }
-        }
-        &.three {
-            margin-bottom: 200upx;
-            transform: rotate(10deg);
-            .card {
-                transform: rotate(-10deg);
-            }
-        }
-        &.four {
-            margin-bottom: 290upx;
-            transform: rotate(-10deg);
-            .card {
-                transform: rotate(10deg);
-            }
-        }
-
+        margin-bottom: 140upx;
         .level-item {
             width: 88upx;
             height: 136upx;
@@ -320,9 +323,94 @@ export default {
             text-align: center;
             font-size: 28upx;
             color: #ffef98;
+            position: relative;
             .card {
                 width: 88upx;
                 height: 136upx;
+            }
+            .num {
+                position: absolute;
+                font-size: 40upx;
+                color: #ffef98;
+                top: 0;
+                text-align: center;
+                width: 88upx;
+                &.unlocked {
+                    color: #8b572a;
+                }
+            }
+        }
+        &.one {
+            .level-item {
+                &:nth-child(1) {
+                    transform: translate(20upx, -176upx);
+                }
+                &:nth-child(2) {
+                    transform: translate(84upx, -124upx);
+                }
+                &:nth-child(3) {
+                    transform: translate(124upx, -88upx);
+                }
+                &:nth-child(4) {
+                    transform: translate(38upx, 20upx);
+                }
+            }
+        }
+        &:nth-child(1) {
+            .level-item {
+                &:nth-child(1) {
+                    transform: translate(52upx, -168upx);
+                }
+            }
+        }
+        &.two {
+            .level-item {
+                &:nth-child(1) {
+                    transform: translate(-16upx, 40upx);
+                }
+                &:nth-child(2) {
+                    transform: translate(-16upx, -36upx);
+                }
+                &:nth-child(3) {
+                    transform: translate(28upx, -76upx);
+                }
+                &:nth-child(4) {
+                    transform: translate(28upx, -132upx);
+                }
+            }
+        }
+        &.three {
+            margin-bottom: 200upx;
+            .level-item {
+                &:nth-child(1) {
+                    transform: translate(20upx, -72upx);
+                }
+                &:nth-child(2) {
+                    transform: translate(80upx, -20upx);
+                }
+                &:nth-child(3) {
+                    transform: translate(122upx, 10upx);
+                }
+                &:nth-child(4) {
+                    transform: translate(40upx, 116upx);
+                }
+            }
+        }
+        &.four {
+            margin-bottom: 282upx;
+            .level-item {
+                &:nth-child(1) {
+                    transform: translate(-20upx, 76upx);
+                }
+                &:nth-child(2) {
+                    transform: translate(-20upx, 8upx);
+                }
+                &:nth-child(3) {
+                    transform: translate(28upx, -32upx);
+                }
+                &:nth-child(4) {
+                    transform: translate(32upx, -100upx);
+                }
             }
         }
     }
