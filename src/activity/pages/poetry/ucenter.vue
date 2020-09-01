@@ -1,15 +1,15 @@
 <template>
     <view v-if="!isLoading">
         <template v-if="isH5">
-            <img
+            <!-- <img
                 class="pre-img"
                 crossorigin="anonymous"
-                src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/clocked/clocked_honor_poster.png"
+                src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/my-title-0.png"
                 alt=""
-            >
+            > -->
         </template>
         <view
-            class="page-read-work poetry-page"
+            class="page-my-work poetry-page"
             :class="{ login: userInfo === null }"
         >
             <login
@@ -18,13 +18,19 @@
             />
             <!-- my works -->
             <template v-else>
-                <view
-                    class="to-open-honor"
-                    @click="getMyPoster"
-                >
-                    炫耀下吧～
+                <view class="page-top">
+                    <image
+                        class="my-title"
+                        src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/my-title-1.png"
+                    />
+                    <view
+                        class="showing"
+                        @click="getMyPoster"
+                    >
+                        来炫耀下吧～
+                    </view>
                 </view>
-                <view :class="['panel', isSelf ? 'is-self' : '']">
+                <view :class="['panels', isSelf ? 'is-self' : '']">
                     <!-- 生成海报 -->
                     <posterh5
                         ref="posterh5"
@@ -43,8 +49,11 @@
                         class="clocked"
                         @togglePoster="togglePoster"
                     />
-                    <view class="top-bar">
-                        {{ isSelf ? "我" : "TA" }}的作品
+                    <view
+                        v-if="!isSelf"
+                        class="top-bar"
+                    >
+                        TA的作品
                     </view>
                     <view
                         v-if="isSelf"
@@ -73,22 +82,19 @@
                         </text>
                     </view>
                     <view
-                        v-if="total > 0"
-                        :class="['media-list', isSelf ? '' : 'media-box']"
+                        v-if="dataList.length > 0"
+                        :class="['media-list', isSelf ? 'media-box' : '']"
                     >
                         <template v-for="(item, index) in dataList">
                             <view
-                                :key="item.id"
+                                :key="item.id + index"
                                 :class="['media-content', isSelf ? 'self' : '']"
                             >
-                                <event-craft-cover
-                                    :info="item"
-                                    :media-icon="!isSelf"
-                                    :like-icon="isSelf"
-                                    :best-icon="false"
-                                    :bg-color="publicConfig.primaryBgColor"
-                                    @click.native="viewDetail(item, index)"
-                                />
+                                <view class="work-main">
+                                    <view class="tag">
+                                        排名：1
+                                    </view>
+                                </view>
                                 <view
                                     v-if="isSelf === true"
                                     class="work-info"
@@ -100,13 +106,6 @@
                                         {{ item.created_at }}
                                     </view>
                                     <view class="btn">
-                                        <text
-                                            v-if="Number(tabActiveIndex) === 2"
-                                            class="btn-item"
-                                            @click="viewDetail(item, index)"
-                                        >
-                                            查看
-                                        </text>
                                         <text
                                             v-if="Number(tabActiveIndex) === 3"
                                             class="btn-item big"
@@ -136,15 +135,7 @@
                                     <view
                                         class="vote"
                                         @click="handleVote(item)"
-                                    >
-                                        <image
-                                            class="like-icon"
-                                            :src="
-                                                `https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/${publicConfig.activityName}_like_icon.png`
-                                            "
-                                        />
-                                        点赞
-                                    </view>
+                                    />
                                 </view>
                             </view>
                         </template>
@@ -163,16 +154,21 @@
                         v-show="myWorkEmpty"
                         class="work-empty"
                     >
-                        <image
-                            :src="
-                                `https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/${publicConfig.activityName}_empty_work.png`
-                            "
-                        />
                         <view v-if="isSelf">
                             <view v-if="allTotal === 0">
-                                <view>
-                                    暂无作品，快去参与活动吧~
-                                </view>
+                                <template v-if="status === 2">
+                                    <view>
+                                        暂无作品，快去参与活动吧~
+                                    </view>
+                                    <view class="upload-btn">
+                                        开始闯关
+                                    </view>
+                                </template>
+                                <template v-else>
+                                    <view>
+                                        ~暂无作品，快去看看精彩活动吧~
+                                    </view>
+                                </template>
                             </view>
                             <view v-else>
                                 暂无作品
@@ -201,7 +197,7 @@ import api from '../../../common/api';
 import share from '../../../common/share';
 import login from '../../../widgets/login/login.vue';
 import uniLoadMore from '../../../components/uni-load-more/uni-load-more.vue';
-import EventCraftCover from '../../../components/event-craft-cover/index.vue';
+// import EventCraftCover from '../../../components/event-craft-cover/index.vue';
 import utils from '../../../common/utils';
 import posterh5 from '../brand/posterh5.vue';
 import savePoster from '../brand/savePoster.vue';
@@ -209,28 +205,10 @@ import savePoster from '../brand/savePoster.vue';
 export default {
     components: {
         uniLoadMore,
-        EventCraftCover,
+        // EventCraftCover,
         login,
         posterh5,
         savePoster,
-    },
-    filters: {
-        optimizeImage: (val) => {
-            if (!val) {
-                return '';
-            }
-            let newUrl = '';
-            const width = 335;
-            const height = 225;
-            if (val.indexOf('?') !== -1) {
-                newUrl = `${val}&x-oss-process=image/format,jpg/interlace,1/quality,Q_80/resize,m_pad,h_${height
-                    * 2},w_${width * 2}`;
-            } else {
-                newUrl = `${val}?x-oss-process=image/format,jpg/interlace,1/quality,Q_80/resize,m_pad,h_${height
-                    * 2},w_${width * 2}`;
-            }
-            return newUrl;
-        },
     },
     data() {
         return {
@@ -241,7 +219,13 @@ export default {
             isLoading: true,
             userInfo: null,
             publicConfig: {},
-            dataList: [],
+            dataList: [
+                {
+                    resource_name: '222',
+                    ticket: 1,
+                    created_at: '121',
+                },
+            ],
             changeValue: '',
             loadMoreStatus: 'none',
             tabActiveIndex: 2,
@@ -346,7 +330,7 @@ export default {
             }
         },
         getH5QrCode() {
-            const uCenterUrl = `${window.location.origin}/activity/pages/clocked/ucenter?activity_id=12&user_id=${this.userInfo.user_id}&w=244`;
+            const uCenterUrl = `${window.location.origin}/activity/pages/poetry/ucenter?activity_id=14&user_id=${this.userInfo.user_id}&w=244`;
             this.posterCommonConfig.images[1].url = `${
                 window.location.origin
             }/api/common/qrcode?url=${encodeURIComponent(uCenterUrl)}`;
@@ -650,21 +634,19 @@ export default {
         return {
             title: this.title,
             imageUrl: this.publicConfig.shareConfig.image,
-            path: `/activity/pages/clocked/ucenter?user_id=${this.filter.user_id}&activity_id=12`,
+            path: `/activity/pages/poetry/ucenter?user_id=${this.filter.user_id}&activity_id=14`,
         };
     },
 };
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 .pre-img {
     width: 0;
     height: 0;
 }
 .work-empty {
     text-align: center;
-    background: #ffdada;
-    border-radius: 0 0 20upx 20upx;
     position: relative;
     padding-bottom: 80upx;
     image {
@@ -674,34 +656,28 @@ export default {
     }
 
     view {
-        color: #ff685c;
-        font-size: 28upx;
+        color: #004137;
+        font-size: 36upx;
         margin-top: 30upx;
     }
 }
 .goIndex {
     position: fixed;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    height: 116upx;
+    left: 100upx;
+    bottom: 6upx;
+    height: 90upx;
+    width: 552upx;
     background: #ffe464;
-    font-size: 36upx;
+    font-size: 30upx;
     font-weight: 600;
-    color: #ff5547;
-    line-height: 116upx;
+    color: #fff;
+    line-height: 90upx;
     text-align: center;
-    display: inline-block;
-}
-.ucenter-calendar {
-    margin-bottom: 40upx;
+    background: url(https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/upload-btn.png);
+    background-size: 100% 100%;
 }
 .media-list {
-    // overflow-y: auto;
-    background: #ffdada;
-    padding: 30upx;
-    border-radius: 0 0 20upx 20upx;
-    position: relative;
+    margin-top: 106upx;
 }
 .media-box {
     display: flex;
@@ -710,23 +686,48 @@ export default {
     overflow: hidden;
 }
 .media-content {
-    width: 306upx;
-    padding: 0;
+    width: 342upx;
+    height: 370upx;
     justify-items: space-betwen;
     position: relative;
-    margin-bottom: 50upx;
+    margin-bottom: 30upx;
+    background: url(https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/work-card.png);
+    background-size: 100% 100%;
+    padding: 24upx 16upx;
+    box-sizing: border-box;
+    .work-main {
+        width: 310upx;
+        height: 210upx;
+        position: relative;
+        background: #fff;
+        .tag {
+            position: absolute;
+            left: 0;
+            top: 20upx;
+            background: #5f8b83;
+            color: #fff;
+            height: 38upx;
+            padding: 0 18upx 0 6upx;
+            box-sizing: border-box;
+            font-size: 22upx;
+            border-radius: 0 20upx 20upx 0;
+        }
+    }
     &.self {
-        width: 630upx;
-        padding: 21upx;
+        width: 692upx;
+        height: 272upx;
+        background: url(https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/mywork-card.png);
+        background-size: 100% 100%;
         box-sizing: border-box;
         display: flex;
         justify-content: space-between;
         position: relative;
         color: #fff;
         margin-bottom: 20upx;
-        border-radius: 20upx;
-        background-color: #fff;
-        box-shadow: inset 0px 0px 24upx 0px #ffdada;
+        .work-main {
+            width: 330upx;
+            height: 224upx;
+        }
         .work-info {
             color: #333;
             width: 300upx;
@@ -734,57 +735,11 @@ export default {
                 color: #666;
             }
         }
-        /deep/ .event-craft-cover,
-        .event-craft-cover {
-            .tag {
-                max-width: 130upx;
-                background: #ffe967;
-                color: #ff685c;
-            }
-            .video {
-                width: 280upx;
-                height: 210upx;
-            }
-            .like-icon {
-                top: 164upx;
-            }
-        }
     }
     .work {
         width: 335upx;
         height: 225upx;
         border-radius: 20upx;
-    }
-
-    /deep/ .event-craft-cover,
-    .event-craft-cover {
-        .tag {
-            max-width: 130upx;
-            background: #ffe967;
-            color: #ff685c;
-        }
-        .video {
-            width: 306upx;
-            height: 205upx;
-        }
-        .media-icon {
-            width: 40upx;
-            height: 40upx;
-            background: rgba(0, 0, 0, 0.6);
-            border-radius: 20upx;
-            text-align: center;
-            line-height: 39upx;
-            // #ifdef H5
-            line-height: 42upx;
-            // #endif
-            position: absolute;
-            top: 150upx;
-            left: 250upx;
-            image {
-                width: 22upx;
-                height: 22upx;
-            }
-        }
     }
 
     .work-info {
@@ -795,7 +750,7 @@ export default {
             font-size: 28upx;
             line-height: 32upx;
             margin-bottom: 15upx;
-            color: #666;
+            color: #004137;
             &.text-two-line {
                 height: 63upx;
                 word-break: break-all;
@@ -805,35 +760,23 @@ export default {
         }
 
         .media-time {
-            color: #fff;
+            color: #3a9184;
             font-size: 24upx;
-            opacity: 0.7;
-            margin-bottom: 40upx;
-            // top: 156upx;
-        }
-        .like-icon {
-            width: 27upx;
-            height: 27upx;
-            margin-right: 5upx;
+            margin-bottom: 16upx;
         }
         .vote {
             float: right;
-            background-color: #ff685c;
-            color: #fff;
-            width: 130upx;
-            height: 50upx;
-            border-radius: 30upx;
-            font-size: 26upx;
-            line-height: 50upx;
-            position: relative;
-            box-sizing: border-box;
+            width: 171upx;
+            height: 56upx;
+            background: url(https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/vote.png);
+            background-size: 100%;
             display: flex;
             justify-content: center;
             align-items: center;
         }
         .vote-num {
             font-size: 30upx;
-            color: #ff685c;
+            color: #004137;
         }
         .btn {
             display: flex;
@@ -841,91 +784,91 @@ export default {
         }
         .btn-item {
             flex: 1;
-            margin: 0 5upx;
-            height: 60upx;
-            background-color: #ff685c;
-            border-radius: 30upx;
             font-size: 24upx;
             color: rgba(255, 255, 255, 1);
-            line-height: 60upx;
+            line-height: 120upx;
             text-align: center;
             display: inline-block;
-            min-width: 80upx;
+            width: 116upx;
+            background: url(https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/mywork-btn-s.png);
+            background-size: 100% 100%;
             &.big {
                 flex: none;
-                width: 127upx;
+                width: 182upx;
+                background: url(https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/mywork-btn-l.png);
+                background-size: 100% 100%;
             }
         }
     }
 }
 
-.page-read-work {
-    padding: 30upx 0 116upx;
-    box-sizing: border-box;
+.page-my-work {
     width: 100%;
     min-height: 100vh;
-    background-color: #ff685c;
+    background: url(https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/mywork-bg.png);
+    background-size: 750upx 1446upx;
+    background-color: #93d7cd;
+    background-repeat: no-repeat;
+    padding-top: 20upx;
     &.login {
-        background-color: #fff !important;
+        background: #fff !important;
     }
-    .panel {
-        padding: 0upx 30upx 0;
+    .page-top {
+        height: 383upx;
         position: relative;
         margin-bottom: 20upx;
-        &.no-padding {
-            padding-top: 10upx;
+        .my-title {
+            width: 536upx;
+            height: 450upx;
+            margin-left: 108upx;
         }
-        &::before {
+        .showing {
             position: absolute;
-            content: "";
-            height: 24upx;
-            width: 690upx;
-            left: 30upx;
-            bottom: -10upx;
-            background: #ffa19a;
-            border-radius: 0 0 20upx 20upx;
+            right: 16upx;
+            top: 0;
+            width: 228upx;
+            height: 84upx;
+            line-height: 84upx;
+            text-align: center;
+            color: #fff4f4;
+            font-weight: 500;
+            background: url(https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/show-bg.png);
+            background-size: 100% 100%;
         }
+    }
+    .panels {
+        padding: 0 30upx 0;
+        position: relative;
+        margin-bottom: 20upx;
         .top-bar {
-            height: 72upx;
-            background: linear-gradient(
-                180deg,
-                rgba(255, 162, 132, 1) 0%,
-                rgba(255, 104, 76, 1) 100%
-            );
-            box-shadow: 0 20upx 40upx 0 rgba(255, 255, 255, 0.5);
-            border-radius: 20upx 20upx 0 0;
             font-size: 32upx;
             font-weight: 500;
             color: #fff;
             text-align: center;
             line-height: 72upx;
         }
-    }
-    .panel .panel-hd {
-        margin: 0;
-        border-bottom: none;
-        display: flex;
-        justify-content: space-around;
-        align-items: center;
-        height: 68upx;
-        padding: 30upx 30upx 0 30upx;
-        background: #ffdada;
-    }
-
-    .panel .panel-hd .panel-title {
-        display: inline-block;
-        padding: 0 25upx;
-        height: 68upx;
-        line-height: 68upx;
-        font-size: 30upx;
-        color: #ff685c;
-        &.active {
-            background-color: #ff685c;
-            color: #fff;
-            border-radius: 34px;
-        }
-        &.active::after {
-            display: none;
+        .panel-hd {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            text-align: center;
+            .panel-title {
+                display: inline-block;
+                height: 92upx;
+                line-height: 92upx;
+                font-size: 34upx;
+                color: #004137;
+                font-weight: 600;
+                &.active {
+                    background: url(https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/mywork-active.png);
+                    background-size: 100% 100%;
+                    color: #f7fffe;
+                    width: 236upx;
+                }
+                &.active::after {
+                    display: none;
+                }
+            }
         }
     }
 }

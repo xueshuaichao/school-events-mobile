@@ -60,20 +60,22 @@
                         class="level-item"
                         @click="jumpRecord(key.k + 1)"
                     >
-                        <image
-                            :src="
-                                `https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/level-${
-                                    key.canPrize ? 1 : 2
-                                }-${key.k + 1 > successLevel ? 0 : 1}.png`
-                            "
-                            class="card"
-                        />
-                        <view
-                            v-if="key.canPrize"
-                            class="num"
-                            :class="{ unlocked: key.k < successLevel }"
-                        >
-                            {{ key.k + 1 }}
+                        <view :class="{ cur: key.k === successLevel }">
+                            <image
+                                :src="
+                                    `https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/level-${
+                                        key.canPrize ? 1 : 2
+                                    }-${key.k > successLevel ? 0 : 1}.png`
+                                "
+                                class="card"
+                            />
+                            <view
+                                v-if="key.canPrize"
+                                class="num"
+                                :class="{ unlocked: key.k < successLevel }"
+                            >
+                                {{ key.k + 1 }}
+                            </view>
                         </view>
                     </view>
                 </view>
@@ -85,9 +87,9 @@
                 <view class="ucenter">
                     我的奖品
                 </view>
-                <view @click="pageScroll">
+                <!-- <view @click="pageScroll">
                     滑动
-                </view>
+                </view> -->
             </view>
         </template>
     </view>
@@ -113,7 +115,8 @@ export default {
             },
             loadMoreStatus: 'none',
             init: true,
-            successLevel: 10,
+            successLevel: 2,
+            activityStatus: 2,
         };
     },
     onShow() {
@@ -130,8 +133,17 @@ export default {
     },
     mounted() {
         // this.getNodes();
+        this.getActivityStatus();
     },
     methods: {
+        getActivityStatus() {
+            // 1未开始，2进行中，3已结束
+            api.get('/api/activity/activitystatus', {
+                activity_id: 14,
+            }).then((res) => {
+                this.activityStatus = res.status;
+            });
+        },
         getNodes() {
             // 当前页面使用一次。
             // const that = this;
@@ -215,16 +227,31 @@ export default {
             this.userInfo = userInfo;
         },
         jumpRecord(id) {
-            if (id < this.successLevel + 2) {
-                uni.navigateTo({
-                    url: `/activity/pages/poetry/record?id=${id}`,
-                });
-            } else {
-                uni.showToast({
-                    icon: 'none',
-                    title: '请先解锁上一关卡',
-                    duration: 2000,
-                });
+            if (this.activityStatus === 3) {
+                if (id < this.successLevel + 1) {
+                    // 活动已结束，继续录制，不答题
+                    uni.navigateTo({
+                        url: `/activity/pages/poetry/record?id=${id}&status=${this.activityStatus}`,
+                    });
+                } else {
+                    uni.showToast({
+                        icon: 'none',
+                        title: '活动已结束，不可继续闯关',
+                        duration: 2000,
+                    });
+                }
+            } else if (this.activityStatus === 2) {
+                if (id < this.successLevel + 2) {
+                    uni.navigateTo({
+                        url: `/activity/pages/poetry/record?id=${id}&status=${this.activityStatus}`,
+                    });
+                } else {
+                    uni.showToast({
+                        icon: 'none',
+                        title: '请先解锁上一关卡',
+                        duration: 2000,
+                    });
+                }
             }
         },
         jumpVip() {
@@ -337,6 +364,23 @@ export default {
                 width: 88upx;
                 &.unlocked {
                     color: #8b572a;
+                }
+            }
+            .cur {
+                animation: mymove 2s infinite;
+            }
+            @keyframes mymove {
+                0% {
+                    transform: scale(1);
+                }
+                25% {
+                    transform: scale(1.04);
+                }
+                50% {
+                    transform: scale(1);
+                }
+                75% {
+                    transform: scale(1.04);
                 }
             }
         }
