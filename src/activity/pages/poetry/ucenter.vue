@@ -64,26 +64,26 @@
                             :class="{ active: tabActiveIndex === 2 }"
                             @click="setTabActive(2)"
                         >
-                            已通过({{ allNum.pass || 0 }})
+                            已通过{{ allNum.pass || 0 }}
                         </text>
                         <text
                             class="panel-title"
                             :class="{ active: tabActiveIndex === 1 }"
                             @click="setTabActive(1)"
                         >
-                            待审核({{ allNum.wait || 0 }})
+                            待审核{{ allNum.wait || 0 }}
                         </text>
                         <text
                             class="panel-title"
                             :class="{ active: tabActiveIndex === 3 }"
                             @click="setTabActive(3)"
                         >
-                            未通过({{ allNum.no_pass || 0 }})
+                            未通过{{ allNum.no_pass || 0 }}
                         </text>
                     </view>
                     <view
                         v-if="dataList.length > 0"
-                        :class="['media-list', isSelf ? 'media-box' : '']"
+                        :class="['media-list', isSelf ? '' : 'media-box']"
                     >
                         <template v-for="(item, index) in dataList">
                             <view
@@ -99,10 +99,10 @@
                                     v-if="isSelf === true"
                                     class="work-info"
                                 >
-                                    <view class="media-name text-two-line">
+                                    <view class="media-names text-two-line">
                                         {{ item.resource_name }}
                                     </view>
-                                    <view class="media-time">
+                                    <view class="media-times">
                                         {{ item.created_at }}
                                     </view>
                                     <view class="btn">
@@ -126,7 +126,7 @@
                                     v-else
                                     class="work-info"
                                 >
-                                    <view class="media-name text-one-line">
+                                    <view class="media-names text-one-line">
                                         {{ `${item.resource_name}` }}
                                     </view>
                                     <text class="vote-num">
@@ -135,7 +135,15 @@
                                     <view
                                         class="vote"
                                         @click="handleVote(item)"
-                                    />
+                                    >
+                                        <image
+                                            class="like-icon"
+                                            :src="
+                                                `https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/labor_like_icon.png`
+                                            "
+                                        />
+                                        赞
+                                    </view>
                                 </view>
                             </view>
                         </template>
@@ -158,10 +166,7 @@
                             <view v-if="allTotal === 0">
                                 <template v-if="status === 2">
                                     <view>
-                                        暂无作品，快去参与活动吧~
-                                    </view>
-                                    <view class="upload-btn">
-                                        开始闯关
+                                        还没有作品哦~快来闯关吧~
                                     </view>
                                 </template>
                                 <template v-else>
@@ -181,9 +186,15 @@
 
                     <view
                         class="goIndex"
-                        @click="handleIndex"
+                        @click="handleUpload"
                     >
-                        我要参与
+                        {{
+                            isSelf
+                                ? status === 2
+                                    ? "继续闯关"
+                                    : "查看活动"
+                                : "查看活动"
+                        }}
                     </view>
                 </view>
             </template>
@@ -224,6 +235,19 @@ export default {
                     resource_name: '222',
                     ticket: 1,
                     created_at: '121',
+                    id: 1,
+                },
+                {
+                    resource_name: '222',
+                    ticket: 1,
+                    created_at: '121',
+                    id: 2,
+                },
+                {
+                    resource_name: '222',
+                    ticket: 1,
+                    created_at: '121',
+                    id: 3,
                 },
             ],
             changeValue: '',
@@ -296,7 +320,6 @@ export default {
                         zIndex: 100,
                     },
                 ],
-                radiusRects: [],
             },
         };
     },
@@ -395,9 +418,6 @@ export default {
             // 中间的内容区域是多种排版显示，有多种图片。
             console.log(this.posterCommonConfig.images[1], 'sasasa');
             this.posterCommonConfig.images[0].url = 'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/clocked/clocked_honor_poster.png';
-            // this.posterCommonConfig.images[1].url = this.posterCommonConfig.images[1].url
-            //     || 'http://aitiaozhan.oss-cn-beijing.aliyuncs.com/main-erweima.png';
-            // this.posterCommonConfig.images[1].url = 'http://aitiaozhan.oss-cn-beijing.aliyuncs.com/main-erweima.png';
             this.$refs.posterh5.createPoster(this.posterCommonConfig);
         },
         togglePoster(status) {
@@ -440,7 +460,7 @@ export default {
                         if (title === 'reachBottom') {
                             this.dataList = this.dataList.concat(list);
                         } else {
-                            this.dataList = list;
+                            // this.dataList = list;
                         }
                         this.total = total;
                         this.allNum = allNum;
@@ -602,10 +622,16 @@ export default {
                 });
             }
         },
-        handleIndex() {
-            uni.navigateTo({
-                url: `/activity/pages/index?activity_id=${this.filter.activity_id}`,
-            });
+        handleUpload() {
+            if (this.status !== 2 || !this.isSelf) {
+                uni.navigateTo({
+                    url: `/activity/pages/index?activity_id=${this.filter.activity_id}`,
+                });
+            } else {
+                uni.navigateTo({
+                    url: '/activity/pages/clearance',
+                });
+            }
         },
     },
     onLoad(query) {
@@ -677,7 +703,7 @@ export default {
     background-size: 100% 100%;
 }
 .media-list {
-    margin-top: 106upx;
+    margin-top: 110upx;
 }
 .media-box {
     display: flex;
@@ -731,7 +757,7 @@ export default {
         .work-info {
             color: #333;
             width: 300upx;
-            .media-time {
+            .media-times {
                 color: #666;
             }
         }
@@ -745,7 +771,7 @@ export default {
     .work-info {
         position: relative;
         color: #fff;
-        .media-name {
+        .media-names {
             width: 100%;
             font-size: 28upx;
             line-height: 32upx;
@@ -759,7 +785,7 @@ export default {
             }
         }
 
-        .media-time {
+        .media-times {
             color: #3a9184;
             font-size: 24upx;
             margin-bottom: 16upx;
@@ -767,12 +793,20 @@ export default {
         .vote {
             float: right;
             width: 171upx;
-            height: 56upx;
-            background: url(https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/vote.png);
-            background-size: 100%;
+            height: 66upx;
+            background: url(https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/mywork-btn-l.png);
+            background-size: 100% 100%;
             display: flex;
             justify-content: center;
             align-items: center;
+            line-height: 66upx;
+            color: #fff;
+            font-size: 26upx;
+            .like-icon {
+                width: 38upx;
+                height: 40upx;
+                margin-right: 20upx;
+            }
         }
         .vote-num {
             font-size: 30upx;
@@ -814,9 +848,7 @@ export default {
         background: #fff !important;
     }
     .page-top {
-        height: 383upx;
         position: relative;
-        margin-bottom: 20upx;
         .my-title {
             width: 536upx;
             height: 450upx;
@@ -839,24 +871,30 @@ export default {
     .panels {
         padding: 0 30upx 0;
         position: relative;
-        margin-bottom: 20upx;
         .top-bar {
-            font-size: 32upx;
+            width: 640upx;
+            height: 86upx;
+            font-size: 38upx;
             font-weight: 500;
             color: #fff;
             text-align: center;
-            line-height: 72upx;
+            line-height: 86upx;
+            background: url(https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/ta-bg.png);
+            background-size: 100% 100%;
+            margin-top: 28upx;
+            margin-top: -48upx;
         }
         .panel-hd {
             display: flex;
             justify-content: space-around;
             align-items: center;
             text-align: center;
+            margin-top: -60upx;
             .panel-title {
                 display: inline-block;
                 height: 92upx;
                 line-height: 92upx;
-                font-size: 34upx;
+                font-size: 32upx;
                 color: #004137;
                 font-weight: 600;
                 &.active {
