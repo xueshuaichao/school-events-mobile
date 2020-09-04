@@ -598,6 +598,60 @@ const detailConf = [
             ['我又发布新作品啦，快来看！'],
         ],
     },
+    {
+        posterConfig: {
+            width: 570,
+            height: 820,
+            debug: false,
+            texts: [
+                {
+                    x: 60,
+                    y: 583,
+                    text: '',
+                    fontSize: 28,
+                    color: '#DB4E0E',
+                    opacity: 1,
+                    marginRight: 10,
+                    lineHeight: 40,
+                    lineNum: 1,
+                    width: 1210,
+                    textOverflow: 'ellipsis',
+                    baseLine: 'middle',
+                },
+            ],
+            images: [
+                {
+                    url:
+                        'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/h5/wuyi-poster.png',
+                    width: 570,
+                    height: 820,
+                    y: 0,
+                    x: 0,
+                },
+                {
+                    url: '',
+                    width: 469,
+                    height: 315,
+                    y: 233,
+                    x: 50,
+                },
+                {
+                    url: '',
+                    width: 142,
+                    height: 142,
+                    y: 645,
+                    x: 400,
+                    borderRadius: 140,
+                },
+            ],
+        },
+        titleList: [
+            ['体验劳动乐趣，感受父母辛劳！来看看我的劳动成果'],
+            ['我是劳动小能手，传承勤劳好家风，一起动起来！'],
+            ['争当劳动之星，就差你的赞了，快来支持我！'],
+            ['幸福的生活哪里来，要靠劳动来创造~来为我点赞吧'],
+        ],
+    },
 ];
 
 export default detailConf;

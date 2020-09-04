@@ -10,7 +10,7 @@
             :class="[
                 { read: activity_id === 6 },
                 { chunjie: activity_id === 3 || activity_id === 4 },
-                { wuyi: activity_id === 8 },
+                { wuyi: activity_id === 8 || activity_id === 13 },
                 { openGame: from === 'openGame' },
                 { liuyi: activity_id === 9 },
                 { qiyi: activity_id === 10 },
@@ -506,6 +506,7 @@ export default {
                     'qyhd',
                     '',
                     'byhd',
+                    'qyhd',
                 ];
                 const type = arr[this.activity_id - 3];
                 this.fr = logger.getFr(type, {});
@@ -678,15 +679,10 @@ export default {
             }).then((res) => {
                 const { status } = res;
                 if (status === 2) {
-                    if (this.activity_id >= 10) {
+                    if (this.activity_id >= 10 || this.activity_id === 8) {
                         // 代言人活动，打卡活动详情跳转 活动首页。
                         uni.navigateTo({
                             url: `/activity/pages/index?activity_id=${this.activity_id}`,
-                        });
-                    } else if (this.activity_id === 8) {
-                        // 活动的上传
-                        uni.navigateTo({
-                            url: `/pages/activity-pages/upload/modify?activity_id=${this.activity_id}`,
                         });
                     } else {
                         // 才艺秀的上传页 网络大赛的上传入口不一样。

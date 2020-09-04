@@ -73,18 +73,29 @@
                             password
                         >
                     </view>
-
+                    <view
+                        v-if="loginMode === 'password'"
+                        class="forget-text"
+                    >
+                        <navigator
+                            url="/pages/login/forget"
+                            class="text"
+                            hover-class="className"
+                        >
+                            忘记密码
+                        </navigator>
+                    </view>
                     <view
                         v-if="loginMode === 'sms'"
                         class="form-item-wrap"
                     >
                         <image
                             class="icon"
-                            src="/static/images/widgets/login/lock.png"
+                            src="/static/images/widgets/login/captcha.png"
                         />
                         <input
                             v-model="formData.password"
-                            class="form-input"
+                            class="form-input captcha"
                             placeholder-class="placeholder"
                             maxlength="6"
                             placeholder="请输入验证码"
@@ -103,11 +114,11 @@
                             {{ captcha.remain }}s 后重新发
                         </view>
                     </view>
-                    <view class="login-mode">
-                        <view
-                            v-if="loginMode === 'sms'"
-                            class="desc"
-                        >
+                    <view
+                        v-if="loginMode === 'sms'"
+                        class="login-mode"
+                    >
+                        <view class="desc">
                             未注册手机号验证后即完成注册
                         </view>
                     </view>
@@ -597,7 +608,7 @@ export default {
     }
 }
 .page-bind-mobile {
-    padding: 0 65upx 0;
+    padding: 0 50upx 0;
     .weixin-login {
         padding-top: 168upx;
         font-size: 36upx;
@@ -635,36 +646,29 @@ export default {
 
     .login-mode {
         color: #1166ff;
-        font-size: 30rpx;
-        margin: 10upx 0;
+        font-size: 28rpx;
         min-height: 40upx;
         text-align: center;
         .desc {
-            padding: 20upx 0 40upx;
+            padding: 24upx 0 56upx;
         }
     }
 
     .tabs {
-        margin: 0 auto 14upx;
-        justify-content: space-between;
-        width: 467upx;
-
+        margin: 0 auto 80upx;
+        justify-content: flex-start;
         .tab {
-            color: #999;
-            font-size: 36upx;
-            padding-bottom: 8upx;
-
-            &.active {
-                color: #1166ff;
-                border-bottom: 4upx solid #1166ff;
+            color: #666;
+            font-size: 28upx;
+            line-height: 50upx;
+            &:first-of-type {
+                margin-right: 40upx;
             }
-        }
-
-        .tab-login {
-            text-align: center;
-        }
-        .tab-register {
-            text-align: center;
+            &.active {
+                color: #333;
+                font-size: 50upx;
+                font-weight: 600;
+            }
         }
     }
 
@@ -682,19 +686,24 @@ export default {
         .form-input {
             color: #333;
             font-size: 36upx;
-            border-bottom: 1rpx solid #d8d8d8;
-            height: 130upx;
-            // margin-top: 20rpx;
+            border-radius: 55px;
+            height: 96upx;
+            background-color: #f5f5f5;
+            margin-top: 30rpx;
             padding-left: 70rpx;
+            &.captcha {
+                width: 400upx;
+                box-sizing: border-box;
+            }
         }
 
         .icon {
             position: absolute;
-            width: 34rpx;
-            height: 32rpx;
+            width: 44rpx;
+            height: 44rpx;
             left: 18rpx;
             top: 50%;
-            margin-top: -16upx;
+            margin-top: -22upx;
         }
 
         &.inValid {
@@ -718,20 +727,30 @@ export default {
         .send-captcha {
             position: absolute;
             right: 0rpx;
-            color: #1166ff;
-            font-size: 36rpx;
+            color: #5e6166;
+            font-size: 28rpx;
             top: 50%;
-            margin-top: -22upx;
+            margin-top: -48upx;
             z-index: 100;
-
+            border: 2upx solid #e8e8eb;
+            border-radius: 55upx;
+            display: block;
+            width: 220upx;
+            height: 96upx;
+            line-height: 96upx;
+            text-align: center;
+            box-sizing: border-box;
             &.is-send {
                 color: #999;
-                height: 50rpx;
-                background: #eeeeee;
-                padding: 0 10rpx;
-                font-size: 28rpx;
-                line-height: 50rpx;
             }
+        }
+    }
+    .forget-text {
+        color: #5f98ff;
+        padding: 24upx 40upx 56upx;
+        font-size: 28upx;
+        .text {
+            display: inline-block;
         }
     }
     .user-argement {
@@ -741,7 +760,7 @@ export default {
         color: #999;
         navigator,
         uni-navigator {
-            color: #2b66ff;
+            color: #0086ff;
         }
     }
 
@@ -749,12 +768,12 @@ export default {
         width: 100%;
         background: #1166ff;
         color: #fff;
-        height: 98rpx;
-        line-height: 98rpx;
+        height: 100rpx;
+        line-height: 100rpx;
         text-align: center;
         margin-bottom: 60upx;
         font-size: 36rpx;
-        border-radius: 4upx;
+        border-radius: 55upx;
         &.h5-btn {
             margin-top: 100rpx;
         }
@@ -764,12 +783,12 @@ export default {
         width: 316upx;
         height: 194upx;
         display: block;
-        margin: 40upx auto 60upx;
+        margin: 40upx auto 48upx;
     }
 
     .desc {
         color: #aaa;
-        font-size: 32rpx;
+        font-size: 28rpx;
     }
     .wx-login-text {
         color: #666;

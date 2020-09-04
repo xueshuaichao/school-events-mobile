@@ -5,7 +5,7 @@
             class="cover"
         >
             <image
-                src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/h5/suspension-bayi.png"
+                src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/h5/suspension-jiuyi.png"
             />
             <view
                 class="join-btn"
@@ -57,28 +57,6 @@
                             :src="item.banner_image"
                         />
                     </swiper-item>
-                    <!-- <swiper-item>
-                        <navigator
-                            url="/pages/activity-pages/labor/index"
-                            class="swiper-item"
-                        >
-                            <image
-                                class="banner-image"
-                                src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/h5/wuyi-banner.png"
-                            />
-                        </navigator>
-                    </swiper-item> -->
-                    <!-- <swiper-item v-if="!isH5">
-                        <navigator
-                            url="/pages/openGame/index"
-                            class="swiper-item"
-                        >
-                            <image
-                                class="banner-image"
-                                src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/h5/opengame-banner.png"
-                            />
-                        </navigator>
-                    </swiper-item> -->
                 </swiper>
             </view>
         </view>
@@ -86,7 +64,7 @@
         <view class="menu-list">
             <navigator
                 class="item"
-                :url="`/pages/doc/intro/intro?id=rule`"
+                :url="`/pages/doc/guide/guide`"
             >
                 <view class="icon-wrap">
                     <image
@@ -95,27 +73,12 @@
                     />
                 </view>
                 <text class="name">
-                    大赛简介
+                    大赛指南
                 </text>
             </navigator>
-            <!-- <navigator
-                class="item"
-                :url="`/pages/doc/detail/detail?id=rule`"
-            >
-                <view class="icon-wrap red">
-                    <image
-                        class="icon"
-                        src="/static/images/index/0001.png"
-                    />
-                </view>
-                <text class="name">
-                    参赛指南
-                </text>
-            </navigator> -->
-
             <navigator
                 class="item"
-                :url="`/pages/doc/list/list?type=challenge`"
+                url="/pages/tabBar/list/list?cat_id=0"
             >
                 <view class="icon-wrap">
                     <image
@@ -130,7 +93,7 @@
 
             <navigator
                 class="item"
-                :url="`/pages/doc/list/list?type=talent`"
+                url="/pages/tabBar/list/list?cat_id=3"
             >
                 <view class="icon-wrap">
                     <image
@@ -145,7 +108,7 @@
 
             <navigator
                 class="item"
-                :url="`/pages/doc/list/list?type=guinness`"
+                url="/pages/tabBar/list/list?cat_id=6"
             >
                 <view class="icon-wrap">
                     <image
@@ -155,6 +118,20 @@
                 </view>
                 <text class="name">
                     吉尼斯
+                </text>
+            </navigator>
+            <navigator
+                class="item"
+                url="/pages/openGame/rank?type=1"
+            >
+                <view class="icon-wrap">
+                    <image
+                        class="icon"
+                        src="/static/images/index/0005.png"
+                    />
+                </view>
+                <text class="name">
+                    排行榜
                 </text>
             </navigator>
         </view>
@@ -176,19 +153,19 @@
         <!-- menu -->
         <work
             :title="'爱挑战竞技优秀作品'"
-            :more-url="'/pages/work/list/list?cat_id=0'"
+            :more-url="'/pages/tabBar/list/list?cat_id=0'"
             :info="workData.individual.list"
             :cat-id="0"
         />
         <work
             :title="'爱挑战吉尼斯优秀作品'"
-            :more-url="'/pages/work/list/list?cat_id=6'"
+            :more-url="'/pages/tabBar/list/list?cat_id=6'"
             :info="workData.team.list"
             :cat-id="6"
         />
         <work
             :title="'才艺秀优秀作品'"
-            :more-url="'/pages/work/list/list?cat_id=3'"
+            :more-url="'/pages/tabBar/list/list?cat_id=3'"
             :info="workData.talent.list"
             :cat-id="3"
         />
@@ -393,17 +370,8 @@ export default {
         },
         thirdEntryPrompt() {
             const isFirstLogin = uni.getStorageSync(this.isFirstLogin);
-            if (uni.getStorageSync('hasReadPromt')) {
-                uni.removeStorageSync('hasReadPromt');
-            }
-            if (uni.getStorageSync('hasLaborPromt')) {
-                uni.removeStorageSync('hasLaborPromt');
-            }
-            if (uni.getStorageSync('hasLiuyiPromt')) {
-                uni.removeStorageSync('hasLiuyiPromt');
-            }
-            if (uni.getStorageSync('hasQiyiPromt')) {
-                uni.removeStorageSync('hasQiyiPromt');
+            if (uni.getStorageSync('hasBayiPromt')) {
+                uni.removeStorageSync('hasBayiPromt');
             }
             if (!isFirstLogin) {
                 this.prompt = true;
@@ -519,25 +487,27 @@ export default {
     text-align: center;
     font-size: 0;
     image:first-child {
-        width: 638rpx;
+        width: 558rpx;
         height: 700rpx;
         display: block;
         margin: 160upx auto 0;
     }
     .join-btn {
-        width: 570upx;
+        width: 420upx;
         height: 110upx;
-        margin: 50upx auto 30upx;
+        margin: -50upx auto 30upx;
         border-radius: 60upx;
         color: #fff;
         font-size: 40upx;
         line-height: 110upx;
         text-align: center;
         background: linear-gradient(
-            180deg,
-            rgba(255, 162, 132, 1) 0%,
-            rgba(255, 104, 76, 1) 100%
+            0deg,
+            rgba(219, 78, 14, 1),
+            rgba(255, 159, 115, 1)
         );
+        position: relative;
+        z-index: 1;
     }
     .close {
         width: 52upx;
@@ -546,9 +516,9 @@ export default {
         margin: 0 auto;
         position: relative;
         background: linear-gradient(
-            180deg,
-            rgba(255, 162, 132, 1) 0%,
-            rgba(255, 104, 76, 1) 100%
+            0deg,
+            rgba(219, 78, 14, 1),
+            rgba(255, 159, 115, 1)
         );
         &::before,
         &::after {

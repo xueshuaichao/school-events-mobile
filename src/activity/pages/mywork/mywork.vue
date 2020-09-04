@@ -570,6 +570,9 @@ export default {
             },
         );
         if (type === 'myWork') {
+            if (userId) {
+                this.filter.user_id = String(userId);
+            }
             this.getWorkData();
         } else if (type === 'search') {
             uni.setNavigationBarTitle({ title: this.publicConfig.title });
