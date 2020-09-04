@@ -26,6 +26,8 @@
     </view>
 </template>
 <script>
+import api from '../../../common/api';
+
 export default {
     data() {
         return {
@@ -47,11 +49,15 @@ export default {
     },
     onLoad() {
         this.innerAudioContext = uni.createInnerAudioContext();
+        this.getList();
     },
     onUnload() {
         this.innerAudioContext.destroy();
     },
     methods: {
+        getList() {
+            api.get('/api/poem/bglist').then(() => {});
+        },
         selBg(item, index) {
             if (!item.sel) {
                 if (this.selItem) {

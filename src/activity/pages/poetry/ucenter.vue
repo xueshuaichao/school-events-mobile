@@ -163,6 +163,14 @@
                         class="work-empty"
                     >
                         <view v-if="isSelf">
+                            <view class="my-empty">
+                                <view class="txt">
+                                    空
+                                </view>
+                                <image
+                                    src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/my-title-0.png"
+                                />
+                            </view>
                             <view v-if="allTotal === 0">
                                 <template v-if="status === 2">
                                     <view>
@@ -250,6 +258,7 @@ export default {
                     id: 3,
                 },
             ],
+            // dataList: [],
             changeValue: '',
             loadMoreStatus: 'none',
             tabActiveIndex: 2,
@@ -674,17 +683,32 @@ export default {
 .work-empty {
     text-align: center;
     position: relative;
-    padding-bottom: 80upx;
     image {
-        width: 300upx;
-        height: 236upx;
-        margin-top: 60upx;
+        width: 456upx;
+        height: 366upx;
+        position: absolute;
+        left: 0;
+        top: 0;
+    }
+    .my-empty {
+        width: 456upx;
+        height: 366upx;
+        position: relative;
+        margin-left: 100upx;
+        line-height: 366upx;
+        text-align: center;
+        margin-top: 120upx;
+    }
+    .txt {
+        color: #fff;
+        font-size: 72upx;
+        z-index: 1;
+        position: relative;
     }
 
     view {
         color: #004137;
         font-size: 36upx;
-        margin-top: 30upx;
     }
 }
 .goIndex {
@@ -755,11 +779,8 @@ export default {
             height: 224upx;
         }
         .work-info {
-            color: #333;
-            width: 300upx;
-            .media-times {
-                color: #666;
-            }
+            width: 312upx;
+            margin-top: 0;
         }
     }
     .work {
@@ -771,16 +792,16 @@ export default {
     .work-info {
         position: relative;
         color: #fff;
+        margin-top: 10upx;
         .media-names {
             width: 100%;
             font-size: 28upx;
             line-height: 32upx;
-            margin-bottom: 15upx;
+            margin-bottom: 10upx;
             color: #004137;
             &.text-two-line {
                 height: 63upx;
                 word-break: break-all;
-                color: #333;
                 font-weight: 500;
             }
         }
@@ -788,29 +809,32 @@ export default {
         .media-times {
             color: #3a9184;
             font-size: 24upx;
-            margin-bottom: 16upx;
+            margin-bottom: 46upx;
         }
         .vote {
             float: right;
             width: 171upx;
             height: 66upx;
-            background: url(https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/mywork-btn-l.png);
+            background: url(https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/mywork-btn-s.png);
             background-size: 100% 100%;
             display: flex;
             justify-content: center;
             align-items: center;
-            line-height: 66upx;
+            line-height: 68upx;
             color: #fff;
-            font-size: 26upx;
+            font-size: 28upx;
             .like-icon {
                 width: 38upx;
                 height: 40upx;
                 margin-right: 20upx;
+                position: relative;
+                bottom: 2upx;
             }
         }
         .vote-num {
-            font-size: 30upx;
+            font-size: 36upx;
             color: #004137;
+            line-height: 64upx;
         }
         .btn {
             display: flex;
@@ -820,15 +844,16 @@ export default {
             flex: 1;
             font-size: 24upx;
             color: rgba(255, 255, 255, 1);
-            line-height: 120upx;
+            line-height: 76upx;
             text-align: center;
             display: inline-block;
-            width: 116upx;
+            width: 124upx;
+            height: 68upx;
             background: url(https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/mywork-btn-s.png);
             background-size: 100% 100%;
             &.big {
                 flex: none;
-                width: 182upx;
+                width: 190upx;
                 background: url(https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/mywork-btn-l.png);
                 background-size: 100% 100%;
             }
@@ -897,11 +922,11 @@ export default {
                 font-size: 32upx;
                 color: #004137;
                 font-weight: 600;
+                width: 236upx;
                 &.active {
                     background: url(https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/mywork-active.png);
                     background-size: 100% 100%;
                     color: #f7fffe;
-                    width: 236upx;
                 }
                 &.active::after {
                     display: none;

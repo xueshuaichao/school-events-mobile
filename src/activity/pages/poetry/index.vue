@@ -94,10 +94,18 @@
             />
             <view class="menu-list">
                 <view class="search-box">
-                    <view class="btn">
+                    <view
+                        class="btn"
+                        :class="{ active: curBtn === 1 }"
+                        @click="selBtn(1)"
+                    >
                         人气榜
                     </view>
-                    <view class="btn active">
+                    <view
+                        class="btn"
+                        :class="{ active: curBtn === 2 }"
+                        @click="selBtn(2)"
+                    >
                         闯关榜
                     </view>
                     <view class="search">
@@ -116,11 +124,93 @@
                         >
                     </view>
                 </view>
-                <template>
-                    <view class="media-box" />
+                <template v-if="curBtn === 1">
+                    <view class="media-box">
+                        <view
+                            v-for="(item, index) in dataList2"
+                            :key="index"
+                            class="poetry-work-card"
+                        >
+                            <view class="top">
+                                <view class="tag">
+                                    排名1
+                                </view>
+                            </view>
+                            <view class="name text-one-line">
+                                asajdalsda
+                            </view>
+                            <view class="vote-box">
+                                <view class="vote-num">
+                                    9赞
+                                </view>
+                                <view class="vote">
+                                    <image
+                                        class="like-icon"
+                                        :src="
+                                            `https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/labor_like_icon.png`
+                                        "
+                                    />
+                                    赞
+                                </view>
+                            </view>
+                        </view>
+                        <view
+                            v-if="!dataList.length"
+                            class="data-none"
+                        >
+                            暂无数据
+                        </view>
+                    </view>
                 </template>
-                <template>
-                    <view class="ranks-box" />
+                <template v-else>
+                    <view class="ranks-box">
+                        <view class="rank-tip">
+                            排行榜仅展示闯关关卡前100名用户，关卡相同取最先闯关成功的用户展示
+                        </view>
+                        <view class="rank-row th">
+                            <view class="user">
+                                头像
+                            </view>
+                            <view class="name">
+                                用户名
+                            </view>
+                            <view class="level-title">
+                                等级
+                            </view>
+                            <view class="barrier">
+                                闯关关卡
+                            </view>
+                        </view>
+                        <view
+                            v-for="(item, index) in rankList"
+                            :key="index"
+                            class="rank-row infos"
+                            @click="jumpUcenter(item)"
+                        >
+                            <view class="user">
+                                <image
+                                    class="avator"
+                                    :src="
+                                        item.avatar ||
+                                            '/static/images/uc/avatar.png'
+                                    "
+                                />
+                            </view>
+
+                            <view class="name">
+                                {{ item.name }}
+                            </view>
+                            <view class="level-title">
+                                {{ item.level_title }}
+                            </view>
+                            <view class="barrier">
+                                {{ item.barrier }}关
+                            </view>
+                        </view>
+                        <view class="data-none">
+                            正在统计最新排名，敬请期待
+                        </view>
+                    </view>
                 </template>
                 <uni-load-more
                     class="loadMore"
@@ -218,6 +308,16 @@ export default {
                     prize_name: '78',
                 },
             ],
+            curBtn: 1,
+            dataList2: [
+                {
+                    id: '1',
+                },
+                {
+                    id: '2',
+                },
+            ],
+            rankList: [],
         };
     },
     created() {
@@ -228,11 +328,49 @@ export default {
             if (this.loadMoreStatus === 'more') {
                 this.filter.page_num = this.filter.page_num + 1;
                 this.loadMoreStatus = 'loading';
-                this.getData('reachBottom');
+                if (this.curBtn === 1) {
+                    this.getData('reachBottom');
+                } else {
+                    this.getRankList();
+                }
             }
         });
     },
     methods: {
+        jumpUcenter(item) {
+            uni.navigateTo({
+                url: `/activity/pages/poetry/ucenter?activity_id=14&user_id=${item.user_id}`,
+            });
+        },
+        getRankList(title) {
+            api.post('/api/poem/barrierlist', {
+                page_num: this.filter.page_num,
+                page_size: this.filter.page_size,
+            }).then(({ data, total }) => {
+                if (!this.rankList.length) {
+                    this.rankList = data;
+                } else {
+                    this.rankList = this.rankList.concat(data);
+                }
+                this.total = total;
+                this.setUnimore(title);
+            });
+        },
+        selBtn(num) {
+            if (num !== this.curBtn) {
+                this.curBtn = num;
+                this.filter.page_num = 1;
+                this.loadMoreStatus = 'more';
+                this.total = 0;
+                this.dataList = [];
+                this.rankList = [];
+                if (num === 2) {
+                    this.getRankList();
+                } else {
+                    this.getData();
+                }
+            }
+        },
         getData(title) {
             api.post('/api/activity/resourcelist', this.filter).then(
                 ({ list, total }) => {
@@ -243,17 +381,20 @@ export default {
                     }
 
                     this.total = total;
-                    if (
-                        this.total
-                        <= this.filter.page_num * this.filter.page_size
-                    ) {
-                        this.loadMoreStatus = title === 'reachBottom' ? 'noMore' : 'none';
-                    } else {
-                        this.loadMoreStatus = 'more';
-                    }
+                    this.setUnimore(title);
                     uni.hideLoading();
                 },
             );
+        },
+        setUnimore(title) {
+            const total = this.selBtn === 1 || (this.selBtn === 2 && this.total <= 100)
+                ? this.total
+                : 100;
+            if (total <= this.filter.page_num * this.filter.page_size) {
+                this.loadMoreStatus = title === 'reachBottom' ? 'noMore' : 'none';
+            } else {
+                this.loadMoreStatus = 'more';
+            }
         },
         toggelModel() {
             this.rulePrompt = false;
@@ -321,6 +462,12 @@ export default {
     width: 100%;
     height: 100%;
     overflow: hidden;
+}
+.data-none {
+    color: #254834;
+    width: 690upx;
+    text-align: center;
+    line-height: 100upx;
 }
 .activity-init-page {
     background: #93d7cd;
@@ -485,6 +632,107 @@ export default {
                     left: 50upx;
                     font-size: 22upx;
                     color: #fff;
+                }
+            }
+        }
+        .ranks-box {
+            .rank-tip {
+                color: #fff;
+                font-size: 20upx;
+                line-height: 28upx;
+                text-align: center;
+            }
+            .rank-row {
+                display: flex;
+                justify-content: space-around;
+                font-size: 32upx;
+                text-align: center;
+                .user {
+                    width: 15%;
+                }
+                .name {
+                    width: 35%;
+                }
+                .level-title,
+                .barrier {
+                    width: 25%;
+                }
+
+                &.th {
+                    color: #004137;
+                    line-height: 44upx;
+                    font-weight: 500;
+                    margin-top: 20upx;
+                    margin-bottom: 20upx;
+                }
+                &.infos {
+                    color: #238375;
+                    margin-bottom: 20upx;
+                    text-align: center;
+                    .avator {
+                        width: 60upx;
+                        height: 60upx;
+                        border-radius: 50%;
+                    }
+                }
+            }
+        }
+        .media-box {
+            display: flex;
+            justify-content: space-between;
+            flex-flow: row wrap;
+            padding: 0 30upx;
+            .poetry-work-card {
+                width: 335upx;
+                height: 344upx;
+                background: url(https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/index-work-card.png);
+                background-size: 100% 100%;
+                padding: 16upx 12upx;
+                box-sizing: border-box;
+                .top {
+                    width: 310upx;
+                    height: 204upx;
+                    background: #fff;
+                    position: relative;
+                    .tag {
+                        background: #254834;
+                        padding: 0 18upx 0 4upx;
+                        line-height: 28upx;
+                        color: #fff;
+                        font-size: 18upx;
+                        position: absolute;
+                        left: 0;
+                        top: 16upx;
+                    }
+                }
+                .name {
+                    font-size: 24upx;
+                    line-height: 50upx;
+                }
+                .vote-box {
+                    display: flex;
+                    justify-content: space-between;
+                    line-height: 58upx;
+                    .vote-num {
+                        color: #254834;
+                        font-size: 30upx;
+                    }
+                    .vote {
+                        width: 116upx;
+                        height: 58upx;
+                        background: url(https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/index-vote-card.png);
+                        background-size: 100% 100%;
+                        color: #fff;
+                        font-size: 24upx;
+                        .like-icon {
+                            width: 27upx;
+                            height: 27upx;
+                            margin-right: 36upx;
+                            position: relative;
+                            bottom: -2upx;
+                            left: 20upx;
+                        }
+                    }
                 }
             }
         }

@@ -1,45 +1,102 @@
 <template>
-    <view class="record-page">
-        <view class="record-page-init">
-            <view class="other-users">
-                <view class="item">
-                    1
-                </view>
-                <view class="item">
-                    2
-                </view>
-                <view class="item">
-                    ...
-                </view>
-            </view>
-            <view class="more">
-                本诗更多作品
-            </view>
-            <view class="title">
-                {{ detail.title || "title" }}
-            </view>
-            <view class="dynasty">
-                {{ detail.dynasty }}/{{ detail.author || "author" }}
-            </view>
-            <view
-                class="content"
-                :class="{ left: detail.display_type === 2 }"
+    <view>
+        <view class="cont">
+            <button
+                class="cont_btn"
+                @click="startRecord"
             >
-                <view
-                    v-for="(txt, index) in detail.content"
-                    :key="index"
-                >
-                    {{ txt }}
-                </view>
-            </view>
-            <view class="zhusi" />
-            <view class="page-btm" />
+                开始录音
+            </button>
+            <button
+                class="cont_btn"
+                @click="stopRecord"
+            >
+                暂停录音
+            </button>
+            <button
+                class="cont_btn"
+                @click="resumeRecord"
+            >
+                继续录音
+            </button>
+            <button
+                class="cont_btn"
+                @click="endRecord"
+            >
+                停止录音
+            </button>
+            <button
+                class="cont_btn"
+                @click="playVoice"
+            >
+                播放录音
+            </button>
+            <button
+                class="cont_btn"
+                @click="onConfirmDelete"
+            >
+                重新录音
+            </button>
+            <button
+                class="cont_btn"
+                @click="setBgAudioVol(0.5)"
+            >
+                0.5bg
+            </button>
+            <button
+                class="cont_btn"
+                @click="setMainAudio(0.8)"
+            >
+                0.8录音
+            </button>
+
+            <button
+                class="cont_btn"
+                @click="palyAll"
+            >
+                palyAll
+            </button>
+            <button
+                class="cont_btn"
+                @click="pauseAll"
+            >
+                pauseAll
+            </button>
+            <button
+                class="cont_btn"
+                @click="palyBg"
+            >
+                palyBG
+            </button>
+            <button
+                class="cont_btn"
+                @click="pauseBg"
+            >
+                pauseBG
+            </button>
+            <button
+                class="cont_btn"
+                @click="seekbg(20)"
+            >
+                跳转
+            </button>
+        </view>
+        <view class="slide-wrap">
+            <slider
+                value="60"
+                block-size="20"
+                block-color="#ff0"
+                active-color="#00ff00"
+                background-color="#999999"
+                step="5"
+                @change="sliderChange"
+            />
         </view>
     </view>
 </template>
 <script>
 import api from '../../../common/api';
-// import { content } from 'html2canvas/dist/types/css/property-descriptors/content';
+
 const recorderManager = uni.getRecorderManager();
 const innerAudioContext = uni.createInnerAudioContext();
 const innerAudioContextBg = uni.createInnerAudioContext();
@@ -68,20 +125,6 @@ export default {
             options: null,
             imgAuthBtn: false,
             activityStatus: 2,
-            btmH: 0,
-            pix: 0.5,
-            screenHeight: 667,
-            detail: {
-                annotate: '',
-                author: '',
-                content: '',
-                cover_img: '',
-                display_type: 1,
-                dynasty: '',
-                poem_id: 0,
-                question: {},
-                title: '',
-            },
         };
     },
     computed: {
@@ -90,17 +133,7 @@ export default {
             return Math.round(this.intervalTime);
         },
     },
-    created() {
-        const that = this;
-        uni.getSystemInfo({
-            success(res) {
-                that.pix = res.screenWidth / 750;
-                that.screenHeight = res.windowHeight;
-                that.btmH = 182 * that.pix;
-            },
-            fail() {},
-        });
-    },
+    created() {},
     onLoad({
         id, status, test, barrier,
     }) {
@@ -171,8 +204,7 @@ export default {
             api.post('/api/poem/barrierpoem', {
                 barrier: id,
             }).then((res) => {
-                const content = res.content.split(/[\r\n]/);
-                this.detail = { ...res, content };
+                console.log(res);
             });
         },
         sliderChange(e) {
@@ -304,65 +336,19 @@ export default {
 };
 </script>
 <style lang="less" scoped>
-.record-page {
-    background: linear-gradient(#fefdf9, #c3efe4);
-
-    .record-page-init {
-        background-image: url(https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/poetry-cover-1.png);
-        height: 100vh;
-        background-repeat: no-repeat;
-        background-size: contain;
-    }
-    .other-users {
-        width: 160upx;
-        display: flex;
-        text-align: right;
-        margin-left: 568upx;
-        .item {
-            width: 60upx;
-            height: 60upx;
-            border-radius: 50%;
-            border: 1px solid #eee;
-            line-height: 60upx;
-            text-align: center;
-            margin-top: 10upx;
-        }
-    }
-    .more {
-        color: #43a294;
-        line-height: 28upx;
-        text-align: right;
-        margin-right: 12upx;
-    }
-    .title {
-        font-size: 40upx;
-        line-height: 56upx;
-        color: #222;
-        text-align: center;
-    }
-    .dynasty {
-        font-size: 32upx;
-        line-height: 56upx;
-        color: #888;
-        text-align: center;
-    }
-    .content {
-        word-break: break-all;
-        font-size: 32upx;
-        line-height: 44upx;
-        text-align: center;
-        &.left {
-            text-align: left;
-        }
-    }
-    .page-btm {
-        width: 100%;
-        height: 364upx;
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        background: url(https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/recored-btm.png);
-        background-size: cover;
-    }
+/* 按钮样式 */
+.cont {
+    display: flex;
+    flex-wrap: wrap;
+}
+.cont_btn {
+    position: relative;
+    width: 200upx;
+    height: 80rpx;
+    border-radius: 10rpx;
+    line-height: 80rpx;
+    background-color: aquamarine;
+    font-size: 30rpx;
+    margin: 20upx 0;
 }
 </style>
