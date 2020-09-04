@@ -170,7 +170,7 @@ export default {
     data() {
         return {
             rulePrompt: false,
-            prizePromt: false,
+            prizePromt: true,
             changeValue: '',
             activityStatus: 1,
             hasJoin: false,
