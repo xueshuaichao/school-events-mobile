@@ -33,6 +33,11 @@
                 </view>
             </view>
             <view class="zhusi" />
+            <view class="cover">
+                <image
+                    src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/poetry-cover-1.png"
+                />
+            </view>
             <view class="page-btm" />
         </view>
     </view>
@@ -306,13 +311,15 @@ export default {
 <style lang="less" scoped>
 .record-page {
     background: linear-gradient(#fefdf9, #c3efe4);
+    height: 100vh;
 
-    .record-page-init {
-        background-image: url(https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/poetry-cover-1.png);
-        height: 100vh;
-        background-repeat: no-repeat;
-        background-size: contain;
-    }
+    // .record-page-init {
+    //     background-image: url(https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/poetry-cover-1.png);
+    //     height: 100vh;
+    //     background-repeat: no-repeat;
+    //     background-size: contain;
+    //     background-position-y: 40%;
+    // }
     .other-users {
         width: 160upx;
         display: flex;
@@ -353,6 +360,16 @@ export default {
         text-align: center;
         &.left {
             text-align: left;
+        }
+    }
+    .cover {
+        position: fixed;
+        bottom: 360upx;
+        left: 0;
+        width: 100%;
+        image {
+            width: 100%;
+            height: auto;
         }
     }
     .page-btm {

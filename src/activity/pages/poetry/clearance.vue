@@ -27,12 +27,6 @@
                 <view class="btn-wrap">
                     <view
                         class="btn"
-                        @click="jumpRecord"
-                    >
-                        录制页面
-                    </view>
-                    <view
-                        class="btn"
                         @click="jumpVip"
                     >
                         vip
@@ -89,7 +83,10 @@
                 </view>
             </view>
             <view class="fixed">
-                <view class="prize">
+                <view
+                    class="prize"
+                    @click="jumpPrize"
+                >
                     抽奖啦
                 </view>
                 <view class="ucenter">
@@ -150,6 +147,11 @@ export default {
         this.getBarrierInfo();
     },
     methods: {
+        jumpPrize() {
+            uni.navigateTo({
+                url: '/activity/pages/poetry/lottery?activity_id=12',
+            });
+        },
         getBarrierInfo() {
             api.get('/api/poem/userinfo').then((res) => {
                 this.barrierInfo = { ...this.barrierInfo, res };
@@ -495,7 +497,7 @@ export default {
     width: 460upx;
     justify-content: space-between;
     .prize {
-        width: 196upx;
+        width: 278upx;
         height: 74upx;
         background: url(https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/level-prize.png);
         background-size: 100% 100%;

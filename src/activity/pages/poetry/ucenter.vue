@@ -29,6 +29,14 @@
                     >
                         来炫耀下吧～
                     </view>
+                    <view class="barrier">
+                        <view>
+                            当前
+                        </view>
+                        <view class="num">
+                            101
+                        </view>
+                    </view>
                 </view>
                 <view :class="['panels', isSelf ? 'is-self' : '']">
                     <!-- 生成海报 -->
@@ -891,6 +899,26 @@ export default {
             font-weight: 500;
             background: url(https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/show-bg.png);
             background-size: 100% 100%;
+        }
+        .barrier {
+            background: url(https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/level-1-0.png);
+            width: 90upx;
+            height: 135upx;
+            background-size: 100%;
+            font-size: 16upx;
+            color: #5d2708;
+            text-align: center;
+            position: absolute;
+            left: 60upx;
+            top: -20upx;
+            padding-top: 26upx;
+            box-sizing: border-box;
+            line-height: 24upx;
+            .num {
+                color: #ffef98;
+                font-size: 40upx;
+                line-height: 30upx;
+            }
         }
     }
     .panels {

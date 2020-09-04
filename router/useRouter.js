@@ -227,6 +227,9 @@ const routesConfig = {
             path: '/activity/pages/poetry/test',
         },
         {
+            path: '/activity/pages/poetry/lottery',
+        },
+        {
             path: '/pages/login/login',
         },
         {

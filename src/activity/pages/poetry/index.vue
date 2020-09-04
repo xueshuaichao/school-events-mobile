@@ -31,7 +31,7 @@
                     class="prize-rule"
                     @click="handleActiverule"
                 >
-                    活动规则
+                    奖项说明
                 </view>
                 <template>
                     <i class="active-time">
