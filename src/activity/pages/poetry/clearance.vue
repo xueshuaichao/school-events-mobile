@@ -8,10 +8,14 @@
             <view class="page-top">
                 <view class="user-info">
                     <view class="avator">
-                        h
+                        <image
+                            :src="
+                                `https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/my-title-${barrierInfo.level}.png`
+                            "
+                        />
                     </view>
                     <view class="info">
-                        我的等级： 小诗仙
+                        我的等级： {{ barrierInfo.level_title }}
                     </view>
                 </view>
                 <view
@@ -21,12 +25,6 @@
                     我的作品
                 </view>
                 <view class="btn-wrap">
-                    <view
-                        class="btn"
-                        @click="jumpRecord"
-                    >
-                        录制页面
-                    </view>
                     <view
                         class="btn"
                         @click="jumpVip"
@@ -60,19 +58,23 @@
                         class="level-item"
                         @click="jumpRecord(key.k + 1)"
                     >
-                        <view :class="{ cur: key.k === successLevel }">
+                        <view :class="{ cur: key.k === barrierInfo.barrier }">
                             <image
                                 :src="
                                     `https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/level-${
                                         key.canPrize ? 1 : 2
-                                    }-${key.k > successLevel ? 0 : 1}.png`
+                                    }-${
+                                        key.k >= barrierInfo.barrier ? 0 : 1
+                                    }.png`
                                 "
                                 class="card"
                             />
                             <view
                                 v-if="key.canPrize"
                                 class="num"
-                                :class="{ unlocked: key.k < successLevel }"
+                                :class="{
+                                    unlocked: key.k < barrierInfo.barrier
+                                }"
                             >
                                 {{ key.k + 1 }}
                             </view>
@@ -81,7 +83,10 @@
                 </view>
             </view>
             <view class="fixed">
-                <view class="prize">
+                <view
+                    class="prize"
+                    @click="jumpPrize"
+                >
                     抽奖啦
                 </view>
                 <view class="ucenter">
@@ -115,8 +120,13 @@ export default {
             },
             loadMoreStatus: 'none',
             init: true,
-            successLevel: 2,
             activityStatus: 2,
+            barrierInfo: {
+                level_title: '小诗童',
+                level: 1,
+                draw_num: null,
+                barrier: 0,
+            },
         };
     },
     onShow() {
@@ -134,8 +144,19 @@ export default {
     mounted() {
         // this.getNodes();
         this.getActivityStatus();
+        this.getBarrierInfo();
     },
     methods: {
+        jumpPrize() {
+            uni.navigateTo({
+                url: '/activity/pages/poetry/lottery?activity_id=12',
+            });
+        },
+        getBarrierInfo() {
+            api.get('/api/poem/userinfo').then((res) => {
+                this.barrierInfo = { ...this.barrierInfo, res };
+            });
+        },
         getActivityStatus() {
             // 1未开始，2进行中，3已结束
             api.get('/api/activity/activitystatus', {
@@ -228,10 +249,10 @@ export default {
         },
         jumpRecord(id) {
             if (this.activityStatus === 3) {
-                if (id < this.successLevel + 1) {
+                if (id < this.barrierInfo.barrier + 1) {
                     // 活动已结束，继续录制，不答题
                     uni.navigateTo({
-                        url: `/activity/pages/poetry/record?id=${id}&status=${this.activityStatus}`,
+                        url: `/activity/pages/poetry/record?id=${id}&status=${this.activityStatus}&barrier=${this.barrierInfo.barrier}`,
                     });
                 } else {
                     uni.showToast({
@@ -241,9 +262,9 @@ export default {
                     });
                 }
             } else if (this.activityStatus === 2) {
-                if (id < this.successLevel + 2) {
+                if (id < this.barrierInfo.barrier + 2) {
                     uni.navigateTo({
-                        url: `/activity/pages/poetry/record?id=${id}&status=${this.activityStatus}`,
+                        url: `/activity/pages/poetry/record?id=${id}&status=${this.activityStatus}&barrier=${this.barrierInfo.barrier}`,
                     });
                 } else {
                     uni.showToast({
@@ -308,6 +329,10 @@ export default {
         background-size: 100% 100%;
         .avator {
             width: 206upx;
+            image {
+                width: 100%;
+                height: 206upx;
+            }
         }
         .info {
             color: #ffdf8a;
@@ -374,13 +399,13 @@ export default {
                     transform: scale(1);
                 }
                 25% {
-                    transform: scale(1.04);
+                    transform: scale(1.05);
                 }
                 50% {
                     transform: scale(1);
                 }
                 75% {
-                    transform: scale(1.04);
+                    transform: scale(1.05);
                 }
             }
         }
@@ -472,7 +497,7 @@ export default {
     width: 460upx;
     justify-content: space-between;
     .prize {
-        width: 196upx;
+        width: 278upx;
         height: 74upx;
         background: url(https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/level-prize.png);
         background-size: 100% 100%;
