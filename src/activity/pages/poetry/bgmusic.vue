@@ -5,35 +5,35 @@
                 v-for="(item, index) in list"
                 :key="index"
                 class="item"
+                @click.prevent="clickItem(item, index)"
             >
                 <view class="title">
                     {{ item.title }}
                 </view>
                 <view class="action">
                     <image
-                        v-if="!item.play"
                         class="icon"
-                        src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/btn-play.png"
-                        @click="play(item, index)"
+                        :src="
+                            `https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/btn-${
+                                item.play ? 'pause' : 'play'
+                            }.png`
+                        "
+                        @click.stop="clickItem(item, index)"
                     />
-                    <image
-                        v-else
-                        class="icon"
-                        src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/btn-pause.png"
-                        @click="pause(index)"
-                    />
-                    <view
-                        class="btns"
-                        :class="{ sel: item.sel }"
-                        @click.self="selBg(item, index)"
-                    >
-                        {{ item.sel ? "已选" : "选择" }}
+                    <view class="btns-box">
+                        <view
+                            class="btns"
+                            :class="{ sel: item.sel }"
+                            @click.stop="selBg(item, index)"
+                        >
+                            {{ item.sel ? "已选" : "选择" }}
+                        </view>
                     </view>
                 </view>
             </view>
         </view>
-
         <uni-load-more
+            v-if="list.length"
             class="loadMore"
             :status="loadMoreStatus"
             :content-text="{
@@ -62,7 +62,7 @@ export default {
                 'https://img-cdn-qiniu.dcloud.net.cn/uniapp/audio/music.mp3',
             innerAudioContext: null,
             playItem: null,
-            selItem: null,
+            selItemIndex: -1,
             filter: {
                 page_size: 20,
                 page_num: 1,
@@ -113,32 +113,40 @@ export default {
             );
         },
         selBg(item, index) {
+            console.log(this.playItem, 'llll');
             if (!item.sel) {
-                if (this.selItem) {
-                    this.$set(this.list[this.selItem.index], 'sel', 0);
+                if (this.selItemIndex > -1) {
+                    this.$set(this.list[this.selItemIndex], 'sel', 0);
                 }
-                if (!item.play) {
-                    //  正在播放的其他音乐要暂停。
-                    this.innerAudioContext.pause();
-                }
+                this.selItemIndex = index;
                 this.$set(this.list[index], 'sel', 1);
-                this.selItem = { index, ...item };
+                this.play(item, index);
             }
         },
         pause(index) {
+            console.log('pause');
             this.$set(this.list[index], 'play', 0);
             this.innerAudioContext.pause();
         },
-        play(item, index) {
+        clickItem(item, index) {
+            console.log(index, 'index');
             if (!item.play) {
-                console.log(item, this.playItem, this.list);
+                this.play(item, index);
+            } else {
+                this.pause(index);
+            }
+        },
+        play(item, index) {
+            console.log('play');
+            if (!item.play) {
+                console.log(this.playItem);
                 if (this.playItem) {
                     this.$set(this.list[this.playItem.index], 'play', 0);
                 }
                 this.$set(this.list[index], 'play', 1);
 
                 this.playItem = { index, ...item };
-                this.innerAudioContext.src = index % 2 ? this.bgSrc : this.bgSrc2;
+                this.innerAudioContext.src = item.play_url;
                 this.innerAudioContext.play();
             }
         },
@@ -147,14 +155,14 @@ export default {
 </script>
 <style scoped lang="less">
 .music-bg-page {
-    padding: 0 21upx;
-    height: 100vh;
+    padding: 20upx 21upx 0;
+    min-height: 100vh;
     background: #e9f8f2;
     .main {
         min-height: 99%;
     }
     .item {
-        margin-top: 20upx;
+        margin-bottom: 20upx;
         display: flex;
         justify-content: space-between;
         width: 718upx;
@@ -172,8 +180,12 @@ export default {
             display: flex;
         }
         .icon {
-            width: 120upx;
-            height: 120upx;
+            width: 100upx;
+            height: 100upx;
+            margin-top: 14upx;
+        }
+        .btns-box {
+            width: 172upx;
         }
         .btns {
             width: 172upx;
@@ -183,12 +195,16 @@ export default {
             text-align: center;
             line-height: 114upx;
             color: #128070;
-            margin-top: 4upx;
+            margin-top: 6upx;
 
             &.sel {
                 color: #fff;
                 background-image: url(https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/btn-select-1.png);
                 background-size: 100%;
+                width: 124upx;
+                height: 64upx;
+                margin-top: 30upx;
+                line-height: 72upx;
             }
         }
     }

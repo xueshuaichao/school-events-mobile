@@ -496,6 +496,7 @@ export default {
     display: flex;
     width: 460upx;
     justify-content: space-between;
+
     .prize {
         width: 278upx;
         height: 74upx;
@@ -503,6 +504,8 @@ export default {
         background-size: 100% 100%;
         padding-right: 16upx;
         box-sizing: border-box;
+        text-align: left;
+        padding-left: 68upx;
     }
     .ucenter {
         width: 236upx;
