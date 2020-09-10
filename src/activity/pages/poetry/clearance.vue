@@ -131,8 +131,7 @@ export default {
     },
     onShow() {
         this.getUserinfo();
-        this.getlevel();
-        this.getlevel();
+        this.getBarrierInfo();
     },
     onReachBottom() {
         if (this.loadMoreStatus === 'more') {
@@ -143,8 +142,9 @@ export default {
     },
     mounted() {
         // this.getNodes();
+        this.getlevel();
+        this.getlevel();
         this.getActivityStatus();
-        this.getBarrierInfo();
     },
     methods: {
         jumpPrize() {
@@ -154,7 +154,8 @@ export default {
         },
         getBarrierInfo() {
             api.get('/api/poem/userinfo').then((res) => {
-                this.barrierInfo = { ...this.barrierInfo, res };
+                this.barrierInfo = { ...this.barrierInfo, ...res };
+                console.log(this.barrierInfo, 'barrierInfo');
             });
         },
         getActivityStatus() {
