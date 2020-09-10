@@ -102,6 +102,12 @@
                                     <view class="tag">
                                         排名：1
                                     </view>
+                                    <image
+                                        class="cover"
+                                        :src="
+                                            item.video_img_url | optimizeImage
+                                        "
+                                    />
                                 </view>
                                 <view
                                     v-if="isSelf"
@@ -237,6 +243,24 @@ export default {
         posterh5,
         savePoster,
     },
+    filters: {
+        optimizeImage: (val) => {
+            if (!val) {
+                return '';
+            }
+            let newUrl = '';
+            const width = 320;
+            const height = 210;
+            if (val.indexOf('?') !== -1) {
+                newUrl = `${val}&x-oss-process=image/format,jpg/interlace,1/quality,Q_80/resize,m_pad,h_${height
+                    * 2},w_${width * 2}`;
+            } else {
+                newUrl = `${val}?x-oss-process=image/format,jpg/interlace,1/quality,Q_80/resize,m_pad,h_${height
+                    * 2},w_${width * 2}`;
+            }
+            return newUrl;
+        },
+    },
     data() {
         return {
             // #ifdef H5
@@ -246,27 +270,7 @@ export default {
             isLoading: true,
             userInfo: null,
             publicConfig: {},
-            dataList: [
-                {
-                    resource_name: '222',
-                    ticket: 1,
-                    created_at: '121',
-                    id: 1,
-                },
-                {
-                    resource_name: '222',
-                    ticket: 1,
-                    created_at: '121',
-                    id: 2,
-                },
-                {
-                    resource_name: '222',
-                    ticket: 1,
-                    created_at: '121',
-                    id: 3,
-                },
-            ],
-            // dataList: [],
+            dataList: [],
             changeValue: '',
             loadMoreStatus: 'none',
             tabActiveIndex: 2,
@@ -477,7 +481,7 @@ export default {
                         if (title === 'reachBottom') {
                             this.dataList = this.dataList.concat(list);
                         } else {
-                            // this.dataList = list;
+                            this.dataList = list;
                         }
                         this.total = total;
                         this.allNum = allNum;
@@ -769,6 +773,10 @@ export default {
             box-sizing: border-box;
             font-size: 22upx;
             border-radius: 0 20upx 20upx 0;
+        }
+        .cover {
+            width: 100%;
+            height: 100%;
         }
     }
     &.self {
