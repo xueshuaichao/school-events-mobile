@@ -203,7 +203,7 @@ export default {
                 talent: { list: [], total: 0 },
             },
             prompt: false,
-            isFirstLogin: 'hasBayiPromt',
+            isFirstLogin: 'hasshiyiPromt',
             status: 1,
             // show: 1,
             // #ifdef H5
@@ -381,7 +381,7 @@ export default {
             uni.setStorageSync(this.isFirstLogin, true);
             this.prompt = false;
             uni.navigateTo({
-                url: '/activity/pages/index?activity_id=13',
+                url: '/activity/pages/index?activity_id=14',
             });
         },
         handleClose() {

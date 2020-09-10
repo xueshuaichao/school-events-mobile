@@ -113,7 +113,6 @@ export default {
             );
         },
         selBg(item, index) {
-            console.log(this.playItem, 'llll');
             if (!item.sel) {
                 if (this.selItemIndex > -1) {
                     this.$set(this.list[this.selItemIndex], 'sel', 0);
@@ -124,12 +123,10 @@ export default {
             }
         },
         pause(index) {
-            console.log('pause');
             this.$set(this.list[index], 'play', 0);
             this.innerAudioContext.pause();
         },
         clickItem(item, index) {
-            console.log(index, 'index');
             if (!item.play) {
                 this.play(item, index);
             } else {

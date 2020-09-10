@@ -104,7 +104,7 @@
                                     </view>
                                 </view>
                                 <view
-                                    v-if="isSelf === true"
+                                    v-if="isSelf"
                                     class="work-info"
                                 >
                                     <view class="media-names text-two-line">

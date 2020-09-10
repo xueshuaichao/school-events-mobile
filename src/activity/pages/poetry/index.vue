@@ -29,7 +29,7 @@
                 </view>
                 <view
                     class="prize-rule"
-                    @click="handleActiverule"
+                    @click="handlePrizerule"
                 >
                     奖项说明
                 </view>
@@ -260,7 +260,7 @@ export default {
     data() {
         return {
             rulePrompt: false,
-            prizePromt: true,
+            prizePromt: false,
             changeValue: '',
             activityStatus: 1,
             hasJoin: false,
@@ -402,6 +402,9 @@ export default {
         },
         handleActiverule() {
             this.rulePrompt = true;
+        },
+        handlePrizerule() {
+            this.prizePromt = true;
         },
         getActivityStatus() {
             // 1未开始，2进行中，3已结束

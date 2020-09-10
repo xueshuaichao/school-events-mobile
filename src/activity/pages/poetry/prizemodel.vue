@@ -25,7 +25,7 @@
                                 <text v-if="item.title">
                                     {{ item.title }}
                                 </text>
-                                <template v-if="typeof item.desc === 'string'">
+                                <template v-if="!Array.isArray(item.desc)">
                                     <view class="desc">
                                         {{ item.desc }}
                                     </view>
