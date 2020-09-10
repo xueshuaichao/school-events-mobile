@@ -50,18 +50,47 @@ export default {
             this.posterCommonConfig = config;
             this.h5DrawImage(config);
         },
+        setBase64(imgUrl) {
+            return new Promise((resolve, reject) => {
+                window.URL = window.URL || window.webkitURL;
+                const xhr = new XMLHttpRequest();
+                xhr.open('get', imgUrl, true);
+                // 至关重要
+                xhr.responseType = 'blob';
+                // eslint-disable-next-line func-names
+                xhr.onload = function () {
+                    if (this.status === 200) {
+                        const blob = this.response;
+                        const oFileReader = new FileReader();
+                        // eslint-disable-next-line func-names
+                        oFileReader.onloadend = function (e) {
+                            // 此处拿到的已经是 base64的图片了
+                            const base64 = e.target.result;
+                            return resolve(base64);
+                        };
+                        oFileReader.readAsDataURL(blob);
+                    } else {
+                        reject();
+                    }
+                };
+                xhr.send();
+            });
+        },
         h5DrawImage(config) {
             // h5 我的海报
             const wxGetImageInfo = this.promisify(uni.getImageInfo);
-            const imageInfoArr = [];
-            config.images.forEach((item) => {
-                imageInfoArr.push(
-                    wxGetImageInfo({
-                        src: item.url, // 背景图片
-                    }),
-                );
-            });
-            Promise.all(imageInfoArr).then((res) => {
+            Promise.all(
+                config.images.map((item) => {
+                    if (this.isH5) {
+                        return this.setBase64(item.url).then(res => wxGetImageInfo({
+                            src: res, // 图片
+                        }));
+                    }
+                    return wxGetImageInfo({
+                        src: item.url, // 图片
+                    });
+                }),
+            ).then((res) => {
                 // console.log(res);
                 res.forEach((item, index) => {
                     this.ctx.save();
