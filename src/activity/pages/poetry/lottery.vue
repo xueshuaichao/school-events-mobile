@@ -27,9 +27,9 @@
                             <view class="icon icon-gift" />
                             我的中奖
                         </view>
-                        <!-- <view @click="serPrize">
+                        <view @click="serPrize">
                             抽奖了
-                        </view> -->
+                        </view>
                     </view>
                 </view>
                 <!-- 跑马灯 -->
@@ -92,6 +92,32 @@
                                     src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/lottery-poster-bg.png"
                                 />
                                 <view class="image-detail">
+                                    <template v-if="status === 1">
+                                        <img
+                                            v-if="isH5"
+                                            class="lucky-img"
+                                            crossorigin="anonymous"
+                                            src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/lottery-1-lucky.png"
+                                            alt=""
+                                        >
+                                        <image
+                                            v-else
+                                            class="lucky-img"
+                                            src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/lottery-1-lucky.png"
+                                        />
+                                        <img
+                                            v-if="isH5"
+                                            class="word-img"
+                                            crossorigin="anonymous"
+                                            :src="successConfig.images[4].url"
+                                            alt=""
+                                        >
+                                        <image
+                                            v-else
+                                            class="word-img"
+                                            :src="successConfig.images[4].url"
+                                        />
+                                    </template>
                                     <template v-if="status === 2">
                                         <img
                                             v-if="isH5"
@@ -114,7 +140,6 @@
                                         class="image"
                                         :src="prizeDetail.image"
                                     />
-
                                     <view
                                         v-if="status === 1"
                                         class="name"
@@ -250,8 +275,8 @@ export default {
                         text: '“爱挑战”趣味诗词大闯关',
                         height: 50,
                         textAlign: 'center',
-                        y: 178,
-                        x: 114,
+                        y: 108,
+                        x: 400,
                         fontSize: '36',
                         color: '#254834',
                         lineNum: 1,
@@ -265,7 +290,7 @@ export default {
                         url:
                             'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/lottery-poster-bg.png',
                         width: 630,
-                        height: 900,
+                        height: 800,
                         y: 0,
                         x: 0,
                     },
@@ -281,7 +306,7 @@ export default {
                         url: '',
                         width: 420,
                         height: 252,
-                        y: 400,
+                        y: 300,
                         x: 106,
                     },
                 ],
@@ -292,10 +317,36 @@ export default {
                         text: '“爱挑战”趣味诗词大闯关',
                         height: 50,
                         textAlign: 'center',
-                        y: 178,
-                        x: 114,
+                        y: 38,
+                        x: 300,
                         fontSize: '36',
                         color: '#254834',
+                        lineNum: 1,
+                        textOverflow: 'ellipsis',
+                        fontWeight: 'bold',
+                        zIndex: 10,
+                    },
+                    {
+                        text: '我抽到了',
+                        height: 50,
+                        textAlign: 'center',
+                        y: 358,
+                        x: 300,
+                        fontSize: '30',
+                        color: '#666666',
+                        lineNum: 1,
+                        textOverflow: 'ellipsis',
+                        fontWeight: 'bold',
+                        zIndex: 10,
+                    },
+                    {
+                        text: 'hahhah',
+                        height: 50,
+                        textAlign: '#FF685C',
+                        y: 586,
+                        x: 300,
+                        fontSize: '34',
+                        color: '#666666',
                         lineNum: 1,
                         textOverflow: 'ellipsis',
                         fontWeight: 'bold',
@@ -307,14 +358,14 @@ export default {
                         url:
                             'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/lottery-poster-bg.png',
                         width: 630,
-                        height: 900,
+                        height: 800,
                         y: 0,
                         x: 0,
                     },
                     {
                         url: '',
                         width: 192,
-                        height: 144,
+                        height: 104,
                         y: 400,
                         x: 219,
                     },
@@ -326,12 +377,29 @@ export default {
                         x: 464,
                         borderRadius: 126,
                     },
+                    // 运气爆棚
+                    {
+                        url:
+                            'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/lottery-1-lucky.png',
+                        width: 396,
+                        height: 96,
+                        x: 120,
+                        y: 234,
+                    },
+                    // 诗句
+                    {
+                        url: '',
+                        width: 592,
+                        height: 42,
+                        x: 18,
+                        y: 106,
+                    },
                 ],
             },
             posterCommonConfig: {
                 pixelRatio: 1,
                 width: 630,
-                height: 900,
+                height: 800,
                 debug: false,
                 texts: [],
                 images: [],
@@ -355,7 +423,7 @@ export default {
     },
     methods: {
         serPrize() {
-            this.notWinning();
+            this.winning();
         },
         onLogin({ user_info: userInfo }) {
             this.userInfo = userInfo;
@@ -434,8 +502,10 @@ export default {
             this.successConfig.images[1].url = this.isH5
                 ? this.prizeDetail.image
                 : utils.mapHttpToHttps(this.prizeDetail.image);
-
-            this.successConfig.texts[0].text = this.prizeDetail.name;
+            this.successConfig.images[4].url = `https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/lottery-1-${Math.floor(
+                Math.random() * 5 + 1,
+            )}.png`;
+            // this.successConfig.texts[2].text = this.prizeDetail.name;
             this.togglePoster(true);
             this.posterCommonConfig = {
                 ...this.posterCommonConfig,
@@ -633,13 +703,18 @@ export default {
 };
 </script>
 <style lang="less" scoped>
+.lottery-page {
+    background: linear-gradient(
+        180deg,
+        #efebbb 0,
+        #fff 750upx,
+        #e5f8ee 800upx; #a4e6dc 1800upx,
+        #a4e6dc 2000upx
+    );
+}
 .lottery-content {
-    // background-color: #ff685c;
     padding-bottom: 40upx;
     min-height: 100vh;
-    background: url(https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/lottery-bg.png);
-    background-size: contain;
-    // box-sizing: border-box;
     .poster-previwe {
         position: fixed;
         top: 0;
@@ -672,7 +747,7 @@ export default {
         }
         .poster-main {
             width: 630upx;
-            height: 900upx;
+            height: 800upx;
             margin: -100upx auto 0;
             overflow: hidden;
             position: relative;
@@ -693,12 +768,26 @@ export default {
                     height: 252upx;
                     position: absolute;
                     left: 106upx;
-                    top: 400upx;
+                    top: 300upx;
+                }
+                .lucky-img {
+                    width: 396upx;
+                    height: 96upx;
+                    left: 120upx;
+                    top: 224upx;
+                    position: absolute;
+                }
+                .word-img {
+                    position: absolute;
+                    left: 18upx;
+                    top: 106upx;
+                    width: 592upx;
+                    height: 42upx;
                 }
                 .poster-title {
                     position: absolute;
                     left: 114upx;
-                    top: 178upx;
+                    top: 108upx;
                     color: #254834;
                     font-size: 36upx;
                     font-weight: 500;
