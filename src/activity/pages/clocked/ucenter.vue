@@ -161,7 +161,11 @@
                         v-if="total > 0"
                         :class="['media-list', isSelf ? '' : 'media-box']"
                     >
-                        <template v-for="(item, index) in dataList">
+                        <view
+                            v-for="(item, index) in dataList"
+                            :key="index"
+                            @click="viewDetail(item, index)"
+                        >
                             <view
                                 v-if="item.dateCount === 1"
                                 :key="index"
@@ -186,7 +190,6 @@
                                     :like-icon="isSelf"
                                     :best-icon="false"
                                     :bg-color="publicConfig.primaryBgColor"
-                                    @click.native="viewDetail(item, index)"
                                 />
                                 <view
                                     v-if="isSelf === true"
@@ -199,29 +202,29 @@
                                         {{ item.created_at }}
                                     </view>
                                     <view class="btn">
-                                        <text
+                                        <!-- <text
                                             v-if="Number(tabActiveIndex) === 2"
                                             class="btn-item"
                                             @click="viewDetail(item, index)"
                                         >
                                             查看
-                                        </text>
+                                        </text> -->
                                         <text
                                             v-if="Number(tabActiveIndex) === 3"
                                             class="btn-item big"
-                                            @click="reason(item)"
+                                            @click.stop="reason(item)"
                                         >
                                             驳回原因
                                         </text>
-                                        <text
+                                        <!-- <text
                                             v-if="Number(tabActiveIndex) === 3"
                                             class="btn-item"
                                             @click="modifyItem(item)"
                                         >
                                             编辑
-                                        </text>
+                                        </text> -->
                                         <text
-                                            v-if="Number(tabActiveIndex) > 1"
+                                            v-if="Number(tabActiveIndex) === 3"
                                             class="btn-item"
                                             @click="onConfirmDelete(item)"
                                         >
@@ -258,7 +261,7 @@
                                     </view>
                                 </view>
                             </view>
-                        </template>
+                        </view>
                         <uni-load-more
                             class="loadMore"
                             :status="loadMoreStatus"
@@ -1315,11 +1318,9 @@ export default {
         }
         .btn {
             display: flex;
-            justify-content: space-between;
+            justify-content: flex-end;
         }
         .btn-item {
-            flex: 1;
-            margin: 0 5upx;
             height: 60upx;
             background-color: #ff685c;
             border-radius: 30upx;
@@ -1328,10 +1329,10 @@ export default {
             line-height: 60upx;
             text-align: center;
             display: inline-block;
-            min-width: 80upx;
+            padding: 0 31upx;
             &.big {
-                flex: none;
-                width: 127upx;
+                padding: 0 16upx;
+                margin-right: 32upx;
             }
         }
     }
