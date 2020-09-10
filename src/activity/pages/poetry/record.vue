@@ -9,7 +9,7 @@
                         class="item"
                         :class="{ one: !index }"
                     >
-                        <image :src="item" />
+                        <image :src="item || '/static/images/uc/avatar.png'" />
                     </view>
                     <view
                         v-if="detail.avatars.length"

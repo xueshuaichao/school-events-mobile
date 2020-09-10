@@ -99,8 +99,11 @@
                                 :class="['media-content', isSelf ? 'self' : '']"
                             >
                                 <view class="work-main">
-                                    <view class="tag">
-                                        排名：1
+                                    <view
+                                        v-if="item.rank"
+                                        class="tag"
+                                    >
+                                        排名：{{ item.rank }}
                                     </view>
                                     <image
                                         class="cover"
@@ -182,7 +185,7 @@
                                     空
                                 </view>
                                 <image
-                                    src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/my-title-0.png"
+                                    src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/mywork-kong.png"
                                 />
                             </view>
                             <view v-if="allTotal === 0">
@@ -709,7 +712,7 @@ export default {
         margin-left: 100upx;
         line-height: 366upx;
         text-align: center;
-        margin-top: 120upx;
+        margin-top: 150upx;
     }
     .txt {
         color: #fff;
@@ -892,8 +895,9 @@ export default {
         position: relative;
         .my-title {
             width: 536upx;
-            height: 450upx;
+            height: 384upx;
             margin-left: 108upx;
+            margin-bottom: 60upx;
         }
         .showing {
             position: absolute;
@@ -958,7 +962,7 @@ export default {
                 font-size: 32upx;
                 color: #004137;
                 font-weight: 600;
-                width: 236upx;
+                width: 224upx;
                 &.active {
                     background: url(https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/mywork-active.png);
                     background-size: 100% 100%;

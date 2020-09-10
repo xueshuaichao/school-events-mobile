@@ -85,7 +85,11 @@
                     class="prize"
                     @click="jumpPrize"
                 >
-                    抽奖啦
+                    {{
+                        barrierInfo.draw_num
+                            ? `抽奖*${barrierInfo.draw_num}`
+                            : "抽奖啦"
+                    }}
                 </view>
                 <view class="ucenter">
                     我的奖品
@@ -232,9 +236,6 @@ export default {
             // 将偶数行数据颠倒
             return result.map((item, index) => (index % 2 !== 0 ? item.reverse() : item));
         },
-        jumpAnster(index) {
-            console.log(index);
-        },
         getUserinfo() {
             api.get('/api/user/info').then((res) => {
                 this.hasLogin = true;
@@ -321,7 +322,7 @@ export default {
         margin-left: 22upx;
         .avator {
             width: 206upx;
-            margin-right: 40upx;
+            margin-right: 20upx;
             image {
                 width: 100%;
                 height: 206upx;
@@ -332,6 +333,7 @@ export default {
             margin-top: 100upx;
             line-height: 100upx;
             font-size: 28upx;
+            text-shadow: 0 2upx 4upx rgba(0, 0, 0, 0.5);
             .title {
                 font-size: 36upx;
             }
@@ -492,18 +494,19 @@ export default {
     color: #fff;
     line-height: 76upx;
     display: flex;
-    width: 460upx;
+    width: 520upx;
     justify-content: space-between;
+    text-shadow: 0 4upx 4upx rgba(0, 0, 0, 0.5);
 
     .prize {
-        width: 278upx;
+        width: 268upx;
         height: 74upx;
         background: url(https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/level-prize.png);
         background-size: 100% 100%;
         padding-right: 16upx;
         box-sizing: border-box;
         text-align: left;
-        padding-left: 68upx;
+        padding-left: 74upx;
     }
     .ucenter {
         width: 236upx;
