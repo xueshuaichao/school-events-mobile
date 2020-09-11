@@ -646,7 +646,6 @@ export default {
     .block-title-act {
         width: 750upx;
         height: 63upx;
-        margin-top: -40upx;
     }
     .menu-list {
         padding-bottom: 106upx;

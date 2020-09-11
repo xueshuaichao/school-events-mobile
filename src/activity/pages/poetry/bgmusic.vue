@@ -69,10 +69,12 @@ export default {
             },
             loadMoreStatus: 'more',
             total: 0,
+            urlId: -1,
         };
     },
     onLoad() {
         this.innerAudioContext = uni.createInnerAudioContext();
+        this.urlId = this.$store.getters.getBgMusic || -1;
         this.getList();
     },
     onUnload() {
@@ -89,10 +91,14 @@ export default {
         getList(title) {
             api.post('/api/poem/bglist', this.filter).then(
                 ({ total, list }) => {
-                    const list2 = list.map((D) => {
+                    const list2 = list.map((D, index) => {
                         const d = D;
                         d.sel = 0;
                         d.play = 0;
+                        if (!title && d.id === this.urlId) {
+                            d.sel = 1;
+                            this.selItemIndex = index;
+                        }
                         return d;
                     });
                     this.total = total;
@@ -119,6 +125,7 @@ export default {
                 }
                 this.selItemIndex = index;
                 this.$set(this.list[index], 'sel', 1);
+                this.$store.commit('setBgmusic', item.id);
                 this.play(item, index);
             }
         },
@@ -202,6 +209,7 @@ export default {
                 height: 64upx;
                 margin-top: 30upx;
                 line-height: 72upx;
+                margin-left: 20upx;
             }
         }
     }

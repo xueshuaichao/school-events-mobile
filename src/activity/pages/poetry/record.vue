@@ -90,7 +90,23 @@
             <view class="time">
                 {{ intIntervalTime }}/10:00
             </view>
-            <view class="music" />
+            <view class="music">
+                <view class="m-title">
+                    {{ selBgTitle }}
+                </view>
+                <view
+                    class="m-more"
+                    @click="moreMusic"
+                >
+                    <view>
+                        切换背景音乐
+                    </view>
+                    <image
+                        class="to-more"
+                        src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/record-more.png"
+                    />
+                </view>
+            </view>
             <view class="btns-wrap">
                 <view
                     class="item"
@@ -166,7 +182,7 @@ const recorderManager = uni.getRecorderManager();
 const innerAudioContext = uni.createInnerAudioContext();
 const innerAudioContextBg = uni.createInnerAudioContext();
 
-innerAudioContext.autoplay = true;
+// innerAudioContext.autoplay = true;
 innerAudioContext.volume = 0.8;
 innerAudioContextBg.volume = 0.3;
 
@@ -216,7 +232,8 @@ export default {
             id: 0,
             barrier: 0,
             bgId: 0,
-            bgIndex: Math.floor(Math.random() * 5)
+            bgIndex: Math.floor(Math.random() * 5),
+            selBgTitle: ""
         };
     },
     computed: {
@@ -298,8 +315,7 @@ export default {
             this.getSetting();
         }
         this.getInfos(id);
-
-        this.getbgList();
+        console.log("loading----");
     },
     onUnload() {
         innerAudioContext.destroy();
@@ -307,6 +323,10 @@ export default {
         clearTimeout(this.timer2);
         clearInterval(this.timer);
         clearTimeout(this.timer3);
+    },
+    onShow() {
+        this.bgId = this.$store.getters.getBgMusic || -1;
+        this.getbgList();
     },
     onBackPress(options) {
         this.options = options;
@@ -621,9 +641,27 @@ export default {
                 page_num: 1
             }).then(({ list }) => {
                 if (list.length) {
-                    const index = Math.floor(Math.random() * (list.length - 1));
-                    this.bgId = list[index].id;
+                    console.log(this.bgId, "hhhh");
+                    if (this.bgId === -1) {
+                        const index = Math.floor(
+                            Math.random() * (list.length - 1)
+                        );
+                        this.bgId = list[index].id;
+                        this.selBgTitle = list[index].title;
+                    } else {
+                        list.forEach((d, index) => {
+                            if (d.id === this.bgId) {
+                                this.selBgTitle = d.title;
+                            }
+                        });
+                    }
                 }
+            });
+        },
+        moreMusic() {
+            this.$store.commit("setBgmusic", this.bgId);
+            uni.navigateTo({
+                url: `/activity/pages/poetry/bgmusic`
             });
         }
     }
@@ -688,7 +726,7 @@ export default {
             font-size: 32upx;
             line-height: 44upx;
             text-align: center;
-            padding: 0 88upx;
+            padding: 0 118upx;
             .left {
                 text-align: left;
                 text-indent: 20upx;
@@ -762,11 +800,11 @@ export default {
             }
         }
         .time {
-            color: #004137;
+            color: #2e796e;
             font-size: 24upx;
             text-align: right;
             line-height: 30upx;
-            padding-right: 50upx;
+            padding-right: 100upx;
         }
         .btns-wrap,
         .music {
@@ -774,8 +812,25 @@ export default {
             justify-content: space-between;
         }
         .music {
-            margin-bottom: 26upx;
+            margin-bottom: 22upx;
             height: 40upx;
+            font-size: 24upx;
+            line-height: 40upx;
+            padding: 0 50upx;
+            margin-top: 8upx;
+            .m-title {
+                color: #004137;
+            }
+            .m-more {
+                color: #47958a;
+                display: flex;
+                .to-more {
+                    width: 80upx;
+                    height: 80upx;
+                    margin-top: -24upx;
+                    margin-left: -10upx;
+                }
+            }
         }
         .btns-wrap {
             padding: 0 154upx;
