@@ -110,11 +110,27 @@
                         :key="item.id"
                         class="media-content"
                     >
+                        <event-craft-cover
+                            :info="item"
+                            :media-icon="type !== 'myWork'"
+                            :like-icon="type === 'myWork'"
+                            :best-icon="false"
+                            :bg-color="publicConfig.primaryBgColor"
+                        />
                         <view
                             class="work-main"
                             @click="viewDetail(item, index)"
                         >
-                            <image :src="item.video_img_url" />
+                            <view
+                                v-if="item.rank"
+                                class="tag"
+                            >
+                                排名：{{ item.rank }}
+                            </view>
+                            <image
+                                class="cover"
+                                :src="item.video_img_url | optimizeImage"
+                            />
                         </view>
                         <view
                             v-if="type === 'myWork'"
@@ -727,16 +743,33 @@ export default {
     position: relative;
     color: #fff;
     margin-bottom: 20upx;
+    padding: 24upx 16upx;
     .work-main {
         width: 310upx;
         height: 210upx;
         position: relative;
-        image {
+        /*image {*/
+        /*position: absolute;*/
+        /*top: 28upx;*/
+        /*width: 320upx;*/
+        /*height: 214upx;*/
+        /*}*/
+        .tag {
             position: absolute;
-            left: 20upx;
-            top: 28upx;
-            width: 320upx;
-            height: 214upx;
+            left: 0;
+            top: 20upx;
+            background: #5f8b83;
+            color: #fff;
+            height: 38upx;
+            padding: 0 18upx 0 6upx;
+            box-sizing: border-box;
+            font-size: 22upx;
+            border-radius: 0 20upx 20upx 0;
+            z-index: 999;
+        }
+        .cover {
+            width: 100%;
+            height: 100%;
         }
     }
     .work-info {
@@ -746,7 +779,7 @@ export default {
     .work-info {
         position: relative;
         color: #fff;
-        margin-top: 36upx;
+        margin-top: 8upx;
         margin-left: 10upx;
         .media-names {
             width: 100%;
@@ -770,7 +803,7 @@ export default {
             font-size: 30upx;
             left: 0;
             position: absolute;
-            bottom: 14upx;
+            bottom: 16upx;
         }
         .btn {
             display: flex;
