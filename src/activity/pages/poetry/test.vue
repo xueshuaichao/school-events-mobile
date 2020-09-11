@@ -169,7 +169,7 @@ export default {
                     width: 32upx;
                     height: 32upx;
                     left: 0;
-                    top: 0;
+                    top: 6upx;
                     background: #fff;
                     border: 4upx solid #43a294;
                     border-radius: 50%;
@@ -180,7 +180,7 @@ export default {
                     background: #43a294;
                     border-radius: 50%;
                     left: 6upx;
-                    top: 6upx;
+                    top: 12upx;
                     display: none;
                 }
                 &.sel::before {

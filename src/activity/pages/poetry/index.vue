@@ -72,14 +72,20 @@
                                         "
                                     />
                                     <view class="txt">
-                                        {{ subItem }}
+                                        {{ subItem.a }}
+                                    </view>
+                                    <view class="sub-txt">
+                                        {{ subItem.b }}
                                     </view>
                                 </view>
                             </view>
                         </view>
                     </view>
                 </view>
-                <view class="prize-more">
+                <view
+                    class="prize-more"
+                    @click="handlePrizerule"
+                >
                     更多奖品
                 </view>
                 <!-- 跑马灯 -->
@@ -286,17 +292,53 @@ export default {
                 {
                     title: '闯关达人奖',
                     text: '参与诗词闯关关卡数量排名前20可获得如下奖品',
-                    prizes: ['小爱触屏音箱', '九阳养生壶', '便携式榨汁机'],
+                    prizes: [
+                        {
+                            a: '小爱触屏音箱',
+                            b: '一等奖*2名',
+                        },
+                        {
+                            a: '九阳养生壶',
+                            b: '二等奖*6名',
+                        },
+                        {
+                            a: '便携式榨汁机',
+                            b: '二等奖*12名',
+                        },
+                    ],
                 },
                 {
                     title: '闯关人气奖',
                     text: '参与诗词作品点赞量排名前45的作品可获得如下奖品',
-                    prizes: ['苏泊尔豆浆机', '小米电水壶', '古风手账本套装'],
+                    prizes: [
+                        {
+                            a: '苏泊尔豆浆机',
+                            b: '一等奖*2名',
+                        },
+                        {
+                            a: '小米电水壶',
+                            b: '二等奖*15名',
+                        },
+                        {
+                            a: '古风手账本套装',
+                            b: '三等奖*28名',
+                        },
+                    ],
                 },
                 {
                     title: '闯关幸运奖',
                     text: '参与诗词闯关抽奖活动，即有机会获得如下奖品',
-                    prizes: ['小度音箱', '旅行箱', '无人机'],
+                    prizes: [
+                        {
+                            a: '小度音箱',
+                        },
+                        {
+                            a: '旅行箱',
+                        },
+                        {
+                            a: '无人机',
+                        },
+                    ],
                 },
             ],
             crouselList: [
@@ -559,10 +601,10 @@ export default {
         .block-prizes {
             border: 2upx solid #c2deb4;
             padding: 8upx;
-            margin-bottom: 24upx;
+            margin-bottom: 10upx;
             .block-prizes-ctx {
                 background: #c2deb4;
-                padding: 10upx 0;
+                padding: 0 0 10upx;
             }
             .rule {
                 color: #83ab7e;
@@ -584,11 +626,21 @@ export default {
                     font-size: 24upx;
                     line-height: 40upx;
                 }
+                .sub-txt {
+                    color: #83aa7e;
+                    font-size: 20upx;
+                }
             }
         }
         .prize-more {
             text-align: center;
             color: #64937c;
+            width: 167upx;
+            height: 54upx;
+            background: url(https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/index-more-prize.png);
+            background-size: 100%;
+            line-height: 54upx;
+            margin-left: 246upx;
         }
     }
     .block-title-act {
@@ -706,13 +758,15 @@ export default {
                     position: relative;
                     .tag {
                         background: #254834;
-                        padding: 0 18upx 0 4upx;
+                        padding: 0 12upx 0 4upx;
                         line-height: 28upx;
                         color: #fff;
                         font-size: 18upx;
                         position: absolute;
                         left: 0;
                         top: 16upx;
+                        z-index: 1;
+                        border-radius: 0 20upx 20upx 0;
                     }
                     .img {
                         width: 100%;

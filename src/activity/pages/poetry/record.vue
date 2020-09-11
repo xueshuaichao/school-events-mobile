@@ -72,7 +72,9 @@
         </view>
         <view class="cover">
             <image
-                src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/poetry-cover-1.png"
+                :src="
+                    `https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/poetry-cover-${bgIndex}.png`
+                "
             />
         </view>
         <view class="page-btm">
@@ -109,6 +111,7 @@
                     @click="clickCenter"
                 >
                     <image
+                        v-if="isRecordPage"
                         class="center-icon"
                         :src="
                             `https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/btn-record-${
@@ -117,11 +120,23 @@
                         "
                     />
                     <image
-                        v-if="!recordStatus"
+                        v-else
+                        class="center-icon plays"
+                        :src="
+                            `https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/btn-${
+                                playStatus ? 'pause' : 'play'
+                            }.png`
+                        "
+                    />
+                    <image
+                        v-if="!recordStatus && isRecordPage"
                         class="voice"
                         src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/btn-voice.png"
                     />
-                    <view class="center">
+                    <view
+                        class="center"
+                        :class="{ plays: !isRecordPage }"
+                    >
                         {{ centerTxt }}
                     </view>
                 </view>
@@ -153,7 +168,7 @@ const innerAudioContextBg = uni.createInnerAudioContext();
 
 innerAudioContext.autoplay = true;
 innerAudioContext.volume = 0.8;
-innerAudioContextBg.volume = 0.5;
+innerAudioContextBg.volume = 0.3;
 
 export default {
     data() {
@@ -200,7 +215,8 @@ export default {
             fileSize: 0,
             id: 0,
             barrier: 0,
-            bgId: 0
+            bgId: 0,
+            bgIndex: Math.floor(Math.random() * 5)
         };
     },
     computed: {
@@ -242,6 +258,7 @@ export default {
             console.log(`recorder stop${JSON.stringify(res)}`);
             self.voicePath = res.tempFilePath;
             self.fileSize = res.fileSize;
+            innerAudioContext.src = this.voicePath;
         });
         innerAudioContext.onEnded(() => {
             self.unPlayStatus = -1;
@@ -316,7 +333,8 @@ export default {
                 }
             } else {
                 // 没有播放的状态。使用同一个图标，显示不同的文本。
-                // unPlayStatus ：-2 从未播放 -1已经结束播放  0 暂停播放
+
+                // unPlayStatus ：-2 从未播放 -1 已经结束播放  0 暂停播放
                 if (this.playStatus) {
                     // 正在播放着，则暂停播放，根据状态显示重听
                     this.playStatus = 0;
@@ -327,13 +345,13 @@ export default {
                     } else {
                         this.centerTxt = "继续";
                     }
-                    this.palyAll();
+                    this.pauseAll();
                 } else {
                     // 已经暂停，则继续播放。
                     this.centerTxt = "暂停";
                     this.playStatus = 1;
                     this.unPlayStatus = 0; // 不在是-2；
-                    this.pauseAll();
+                    this.palyAll();
                 }
             }
         },
@@ -343,6 +361,9 @@ export default {
                 this.isRecordPage = 0;
                 this.endRecord();
             } else {
+                if (this.playStatus) {
+                    this.stopAll();
+                }
                 // 进行测试题的条件
                 if (this.id === this.barrier + 1 && this.activityStatus === 2) {
                     this.$store.commit("setTestData", {
@@ -425,8 +446,15 @@ export default {
                     if (res.confirm) {
                         this.isRecordPage = 1;
                         this.unPlayStatus = -2;
+                        if (this.playStatus) {
+                            this.stopAll();
+                        }
+                        if (this.isRecord) {
+                            this.endRecord();
+                        }
                         this.playStatus = 0;
-                        (this.voicePath = ""), (this.centerTxt = "录音");
+                        this.voicePath = "";
+                        this.centerTxt = "录音";
                         this.recordStatus = 0;
                         this.isStartRecord = 0;
                         this.reStartRecord();
@@ -469,27 +497,19 @@ export default {
         seekbg(val) {
             innerAudioContextBg.seek(val);
         },
-        palyBg() {
-            innerAudioContextBg.play();
-            console.log(innerAudioContextBg.duration, "duration, palyBg");
-        },
-        pauseBg() {
-            innerAudioContextBg.pause();
-        },
         palyAll() {
-            console.log(
-                innerAudioContextBg.volume,
-                "1",
-                innerAudioContext.volume,
-                "2"
-            );
-
+            console.log("1", innerAudioContext.src, "2");
             innerAudioContext.play();
             innerAudioContextBg.play();
         },
         pauseAll() {
+            console.log("pauseing");
             innerAudioContext.pause();
             innerAudioContextBg.pause();
+        },
+        stopAll() {
+            innerAudioContext.stop();
+            innerAudioContextBg.stop();
         },
         startRecord() {
             if (!this.imgAuthBtn) {
@@ -690,7 +710,7 @@ export default {
     }
     .cover {
         position: fixed;
-        bottom: 360upx;
+        bottom: 130upx;
         left: 0;
         width: 750upx;
         height: 598upx;
@@ -773,6 +793,11 @@ export default {
                 width: 180upx;
                 height: 180upx;
                 margin-top: -20upx;
+                &.plays {
+                    width: 140upx;
+                    height: 140upx;
+                    margin-top: -4upx;
+                }
             }
             .voice {
                 position: absolute;
@@ -786,6 +811,9 @@ export default {
             }
             .center {
                 margin-top: -40upx;
+                &.plays {
+                    margin-top: -16upx;
+                }
             }
         }
     }

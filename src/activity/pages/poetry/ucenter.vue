@@ -21,7 +21,10 @@
                 <view class="page-top">
                     <image
                         class="my-title"
-                        src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/my-title-1.png"
+                        :src="
+                            `https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/my-title-${barrierInfo.level -
+                                1}.png`
+                        "
                     />
                     <view
                         class="showing"
@@ -103,7 +106,7 @@
                                         v-if="item.rank"
                                         class="tag"
                                     >
-                                        排名：{{ item.rank }}
+                                        排名{{ item.rank }}
                                     </view>
                                     <image
                                         class="cover"
@@ -293,6 +296,9 @@ export default {
             userId: '',
             isSelf: true,
             detail: {},
+            barrierInfo: {
+                level: 1,
+            },
             showPosterMask: false,
             myPoster: '',
             posterCommonConfig: {
@@ -353,6 +359,11 @@ export default {
         },
     },
     methods: {
+        getBarrierInfo() {
+            api.get(`/api/poem/userinfo?user_id=${this.userId}`).then((res) => {
+                this.barrierInfo = { ...this.barrierInfo, ...res };
+            });
+        },
         onLogin() {
             this.getData();
         },
@@ -456,6 +467,7 @@ export default {
             });
         },
         getData() {
+            // 自己账户登陆，还是要用url头部的user_id去判断是不是自己的账户登陆
             api.get(`/api/user/showinfo?uid=${this.userId}`).then(
                 (data) => {
                     this.isLoading = false;
@@ -464,6 +476,7 @@ export default {
                     this.getWorkData();
                     this.getQrCode();
                     this.initShare();
+                    this.getBarrierInfo();
                 },
                 () => {
                     this.isLoading = false;
@@ -771,11 +784,12 @@ export default {
             top: 20upx;
             background: #5f8b83;
             color: #fff;
-            height: 38upx;
+            line-height: 38upx;
             padding: 0 18upx 0 6upx;
             box-sizing: border-box;
             font-size: 22upx;
             border-radius: 0 20upx 20upx 0;
+            z-index: 1;
         }
         .cover {
             width: 100%;
