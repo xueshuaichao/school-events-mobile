@@ -1,5 +1,17 @@
 import rulesData from '../../src/data/rules/list';
 
+const getConfig = (state, activityId, name) => {
+    const arr = state.activities.filter(
+        v => v.activityId === Number(activityId),
+    );
+
+    if (arr.length) {
+        return arr[0][name];
+    }
+    return uni.switchTab({
+        url: '/pages/tabBar/index/index',
+    });
+};
 export default {
     state: {
         activities: [
@@ -537,17 +549,12 @@ export default {
     getters: {
         // 获取活动公共配置 如：背景颜色 分类 名称 统计参数
         // eslint-disable-next-line max-len
-        getPublicConfig: state => activityId => state.activities.filter(v => v.activityId === Number(activityId))[0]
-            .publicConfig,
+        getPublicConfig: state => activityId => getConfig(state, activityId, 'publicConfig'),
         // eslint-disable-next-line max-len
-        getColorConfig: state => ({ activityId, page }) => state.activities.filter(
-            v => v.activityId === Number(activityId),
-        )[0][page],
+        getColorConfig: state => ({ activityId, page }) => getConfig(state, activityId, page),
         // 获取各个页面配置 包括：活动页、我的作品、上传页、上传结果页
         // eslint-disable-next-line max-len
-        getActivityConfig: state => ({ activityId, page }) => state.activities.filter(
-            v => v.activityId === Number(activityId),
-        )[0][page],
+        getActivityConfig: state => ({ activityId, page }) => getConfig(state, activityId, page),
     },
     actions: {},
     mutations: {},

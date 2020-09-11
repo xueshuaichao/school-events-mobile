@@ -90,6 +90,7 @@
                     v-for="(item, index) in dataList"
                     :key="item.id"
                     class="media-content"
+                    @click="viewDetail(item, index)"
                 >
                     <event-craft-cover
                         :info="item"
@@ -97,7 +98,6 @@
                         :like-icon="type === 'myWork'"
                         :best-icon="false"
                         :bg-color="'19B583'"
-                        @click.native="viewDetail(item, index)"
                     />
 
                     <view
@@ -112,30 +112,31 @@
                             {{ item.created_at }}
                         </view>
                         <view class="btn">
-                            <text
+                            <!-- <text
                                 v-if="Number(tabActiveIndex) === 2"
                                 class="btn-item"
                                 @click="viewDetail(item, index)"
                             >
                                 查看
-                            </text>
+                            </text> -->
                             <text
                                 v-if="Number(tabActiveIndex) === 3"
                                 class="btn-item big"
-                                @click="reason(item)"
+                                @click.stop="reason(item)"
                             >
                                 驳回原因
                             </text>
-                            <text
+                            <!-- <text
                                 v-if="Number(tabActiveIndex) !== 2"
                                 class="btn-item"
                                 @click="modifyItem(item)"
                             >
                                 编辑
-                            </text>
+                            </text> -->
                             <text
+                                v-if="Number(tabActiveIndex) === 2"
                                 class="btn-item"
-                                @click="onConfirmDelete(item)"
+                                @click.stop="onConfirmDelete(item)"
                             >
                                 删除
                             </text>
@@ -633,11 +634,9 @@ export default {
         }
         .btn {
             display: flex;
-            justify-content: space-between;
+            justify-content: flex-end;
         }
         .btn-item {
-            flex: 1;
-            margin: 0 5upx;
             height: 50upx;
             background: rgba(25, 181, 131, 1);
             border-radius: 25upx;
@@ -646,10 +645,10 @@ export default {
             line-height: 50upx;
             text-align: center;
             display: inline-block;
-            min-width: 80upx;
+            padding: 0 31upx;
             &.big {
-                flex: none;
-                width: 127upx;
+                padding: 0 16upx;
+                margin-right: 32upx;
             }
         }
     }

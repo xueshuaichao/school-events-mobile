@@ -127,21 +127,28 @@
                 <template v-if="curBtn === 1">
                     <view class="media-box">
                         <view
-                            v-for="(item, index) in dataList2"
+                            v-for="(item, index) in dataList"
                             :key="index"
                             class="poetry-work-card"
                         >
                             <view class="top">
-                                <view class="tag">
-                                    排名1
+                                <view
+                                    v-if="item.rank"
+                                    class="tag"
+                                >
+                                    排名{{ item.rank }}
                                 </view>
+                                <image
+                                    class="img"
+                                    :src="item.video_img_url"
+                                />
                             </view>
                             <view class="name text-one-line">
-                                asajdalsda
+                                {{ item.resource_name }}
                             </view>
                             <view class="vote-box">
                                 <view class="vote-num">
-                                    9赞
+                                    {{ item.ticket }}赞
                                 </view>
                                 <view class="vote">
                                     <image
@@ -706,6 +713,10 @@ export default {
                         position: absolute;
                         left: 0;
                         top: 16upx;
+                    }
+                    .img {
+                        width: 100%;
+                        height: 100%;
                     }
                 }
                 .name {

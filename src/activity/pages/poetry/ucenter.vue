@@ -99,9 +99,18 @@
                                 :class="['media-content', isSelf ? 'self' : '']"
                             >
                                 <view class="work-main">
-                                    <view class="tag">
-                                        排名：1
+                                    <view
+                                        v-if="item.rank"
+                                        class="tag"
+                                    >
+                                        排名：{{ item.rank }}
                                     </view>
+                                    <image
+                                        class="cover"
+                                        :src="
+                                            item.video_img_url | optimizeImage
+                                        "
+                                    />
                                 </view>
                                 <view
                                     v-if="isSelf"
@@ -176,7 +185,7 @@
                                     空
                                 </view>
                                 <image
-                                    src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/my-title-0.png"
+                                    src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/mywork-kong.png"
                                 />
                             </view>
                             <view v-if="allTotal === 0">
@@ -237,6 +246,24 @@ export default {
         posterh5,
         savePoster,
     },
+    filters: {
+        optimizeImage: (val) => {
+            if (!val) {
+                return '';
+            }
+            let newUrl = '';
+            const width = 320;
+            const height = 210;
+            if (val.indexOf('?') !== -1) {
+                newUrl = `${val}&x-oss-process=image/format,jpg/interlace,1/quality,Q_80/resize,m_pad,h_${height
+                    * 2},w_${width * 2}`;
+            } else {
+                newUrl = `${val}?x-oss-process=image/format,jpg/interlace,1/quality,Q_80/resize,m_pad,h_${height
+                    * 2},w_${width * 2}`;
+            }
+            return newUrl;
+        },
+    },
     data() {
         return {
             // #ifdef H5
@@ -246,27 +273,7 @@ export default {
             isLoading: true,
             userInfo: null,
             publicConfig: {},
-            dataList: [
-                {
-                    resource_name: '222',
-                    ticket: 1,
-                    created_at: '121',
-                    id: 1,
-                },
-                {
-                    resource_name: '222',
-                    ticket: 1,
-                    created_at: '121',
-                    id: 2,
-                },
-                {
-                    resource_name: '222',
-                    ticket: 1,
-                    created_at: '121',
-                    id: 3,
-                },
-            ],
-            // dataList: [],
+            dataList: [],
             changeValue: '',
             loadMoreStatus: 'none',
             tabActiveIndex: 2,
@@ -477,7 +484,7 @@ export default {
                         if (title === 'reachBottom') {
                             this.dataList = this.dataList.concat(list);
                         } else {
-                            // this.dataList = list;
+                            this.dataList = list;
                         }
                         this.total = total;
                         this.allNum = allNum;
@@ -705,7 +712,7 @@ export default {
         margin-left: 100upx;
         line-height: 366upx;
         text-align: center;
-        margin-top: 120upx;
+        margin-top: 150upx;
     }
     .txt {
         color: #fff;
@@ -769,6 +776,10 @@ export default {
             box-sizing: border-box;
             font-size: 22upx;
             border-radius: 0 20upx 20upx 0;
+        }
+        .cover {
+            width: 100%;
+            height: 100%;
         }
     }
     &.self {
@@ -884,8 +895,9 @@ export default {
         position: relative;
         .my-title {
             width: 536upx;
-            height: 450upx;
+            height: 384upx;
             margin-left: 108upx;
+            margin-bottom: 60upx;
         }
         .showing {
             position: absolute;
@@ -950,7 +962,7 @@ export default {
                 font-size: 32upx;
                 color: #004137;
                 font-weight: 600;
-                width: 236upx;
+                width: 224upx;
                 &.active {
                     background: url(https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/mywork-active.png);
                     background-size: 100% 100%;

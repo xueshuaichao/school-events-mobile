@@ -10,12 +10,16 @@
                     <view class="avator">
                         <image
                             :src="
-                                `https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/my-title-${barrierInfo.level}.png`
+                                `https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/clearance-title-${barrierInfo.level -
+                                    1}.png`
                             "
                         />
                     </view>
                     <view class="info">
-                        我的等级： {{ barrierInfo.level_title }}
+                        我的等级：
+                        <text class="title">
+                            {{ barrierInfo.level_title }}
+                        </text>
                     </view>
                 </view>
                 <view
@@ -29,13 +33,7 @@
                         class="btn"
                         @click="jumpVip"
                     >
-                        vip
-                    </view>
-                    <view
-                        class="btn"
-                        @click="jumpBgList"
-                    >
-                        音乐列表
+                        有书vip
                     </view>
                 </view>
             </view>
@@ -87,7 +85,11 @@
                     class="prize"
                     @click="jumpPrize"
                 >
-                    抽奖啦
+                    {{
+                        barrierInfo.draw_num
+                            ? `抽奖*${barrierInfo.draw_num}`
+                            : "抽奖啦"
+                    }}
                 </view>
                 <view class="ucenter">
                     我的奖品
@@ -234,9 +236,6 @@ export default {
             // 将偶数行数据颠倒
             return result.map((item, index) => (index % 2 !== 0 ? item.reverse() : item));
         },
-        jumpAnster(index) {
-            console.log(index);
-        },
         getUserinfo() {
             api.get('/api/user/info').then((res) => {
                 this.hasLogin = true;
@@ -281,11 +280,6 @@ export default {
                 url: '/activity/pages/poetry/vip',
             });
         },
-        jumpBgList() {
-            uni.navigateTo({
-                url: '/activity/pages/poetry/bgmusic',
-            });
-        },
         confirmUcenter() {
             if (!this.hasLogin) {
                 this.toLogin = true;
@@ -303,8 +297,6 @@ export default {
 </script>
 <style scoped lang="less">
 .btn-wrap {
-    display: flex;
-    flex-wrap: wrap;
     position: absolute;
     right: 0;
     top: 80upx;
@@ -312,7 +304,6 @@ export default {
     text-align: center;
     .btn {
         width: 100upx;
-        margin: 20upx 0;
     }
 }
 .page-top {
@@ -320,7 +311,7 @@ export default {
     background: url(https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/level-top.png);
     background-size: 100% 472upx;
     position: relative;
-    padding-top: 30upx;
+    padding-top: 26upx;
     box-sizing: border-box;
     .user-info {
         width: 506upx;
@@ -328,8 +319,10 @@ export default {
         background: url(https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/level-user.png);
         display: flex;
         background-size: 100% 100%;
+        margin-left: 22upx;
         .avator {
             width: 206upx;
+            margin-right: 20upx;
             image {
                 width: 100%;
                 height: 206upx;
@@ -339,6 +332,11 @@ export default {
             color: #ffdf8a;
             margin-top: 100upx;
             line-height: 100upx;
+            font-size: 28upx;
+            text-shadow: 0 2upx 4upx rgba(0, 0, 0, 0.5);
+            .title {
+                font-size: 36upx;
+            }
         }
     }
     .ucenter {
@@ -362,6 +360,7 @@ export default {
     background: url(https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/level-bg.png);
     background-repeat: repeat-y;
     min-height: 1306upx;
+    background-size: 100% auto;
     .level-row {
         display: flex;
         justify-content: space-between;
@@ -495,18 +494,19 @@ export default {
     color: #fff;
     line-height: 76upx;
     display: flex;
-    width: 460upx;
+    width: 520upx;
     justify-content: space-between;
+    text-shadow: 0 4upx 4upx rgba(0, 0, 0, 0.5);
 
     .prize {
-        width: 278upx;
+        width: 268upx;
         height: 74upx;
         background: url(https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/level-prize.png);
         background-size: 100% 100%;
         padding-right: 16upx;
         box-sizing: border-box;
         text-align: left;
-        padding-left: 68upx;
+        padding-left: 74upx;
     }
     .ucenter {
         width: 236upx;
