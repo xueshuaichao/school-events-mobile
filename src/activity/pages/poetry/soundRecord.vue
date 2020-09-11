@@ -8,7 +8,10 @@
                     <h2>望岳</h2>
                     <span>唐</span>. <span>杜甫</span>
                 </div>
-                <p style="text-align: center">
+                <p
+                    class="p_style"
+                    style="text-align: center"
+                >
                     岱宗夫如何？齐鲁青未了。
                 </p>
                 <p style="text-align: center">
@@ -174,7 +177,6 @@ export default {
         this.bgAudio = new AudioPlayer({ src: this.bgSrc });
         // console.log(this.bgAudio,this.bgAudio.audioPlayer.duration);
         this.bgAudio.audioPlayer.buffered = this.bgAudio.audioPlayer.duration;
-        this.audiotwo = new AudioPlayer({ src: this.src });
     },
     onLoad() {
         const self = this;
@@ -258,7 +260,6 @@ export default {
                 }, 500); // 延迟小段时间停止录音, 更好的体验
             }
         },
-
         playVoices() {
             console.log('播放录音');
             if (this.voicePath) {
@@ -315,8 +316,14 @@ export default {
     margin-top: 20rpx;
     background: rgba(255, 255, 255, 0.8);
     position: absolute;
-    width: 70%;
-    left: 14%;
+    width: 50%;
+    left: 23%;
     padding: 2%;
+}
+.p_style {
+    font-size: 28upx;
+    color: #535353;
+    font-weight: 600;
+    padding-top: 8upx;
 }
 </style>

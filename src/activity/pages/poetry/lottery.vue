@@ -3,6 +3,17 @@
         v-if="loading"
         class="lottery-page"
     >
+        <view
+            v-for="(item, index) in listLuck"
+            :key="index"
+            class="luck"
+        />
+        <!--<view class="luck" />
+        <view class="luck" />
+        <view class="luck" />
+        <view class="luck" />
+        <view class="luck" />
+        <view class="luck" />-->
         <login
             v-if="userInfo === null"
             @login="onLogin"
@@ -57,12 +68,12 @@
                     class="poster-previwe"
                 >
                     <view class="poster-previwe-content">
+                        <view class="sun" />
                         <view class="title">
                             <template v-if="status === 1">
                                 恭喜您！抽中
-                                <text>{{ prizeDetail.name }}</text> 1{{
-                                    prizeDetail.unit
-                                }}
+                                <text>{{ prizeDetail.name }}</text>
+                                {{ prizeDetail.unit }}
                             </template>
                             <template v-else-if="status === 2">
                                 未中奖，别气馁，还有机会！
@@ -72,6 +83,9 @@
                             class="poster-main"
                             :class="{ no: status === 2 }"
                         >
+                            <view class="poster-title">
+                                “爱挑战”趣味诗词大闯关
+                            </view>
                             <template v-if="isH5 && isWechat && canvasImage">
                                 <image
                                     class="image-bg"
@@ -269,6 +283,7 @@ export default {
             crouselList: [],
             lotteryData: [],
             num: 0,
+            listLuck: [1, 2, 3, 4, 5, 6, 7],
             failConfig: {
                 texts: [
                     {
@@ -407,7 +422,7 @@ export default {
             canvasImage: '',
             showError: false,
             prizeDetail: {
-                name: 'asakjdljalsd',
+                name: '百度音响一台',
                 image:
                     'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/prize-1-1.png',
             },
@@ -711,6 +726,75 @@ export default {
         #e5f8ee 800upx; #a4e6dc 1800upx,
         #a4e6dc 2000upx
     );
+    .luck {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        &:nth-child(1) {
+            position: absolute;
+            background: url(https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/fish1.png);
+            background-size: 100% 100%;
+            width: 61upx;
+            height: 87upx;
+            bottom: 24%;
+            z-index: 1;
+        }
+        &:nth-child(2) {
+            position: absolute;
+            background: url(https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/fish2.png);
+            background-size: 100% 100%;
+            width: 61upx;
+            height: 127upx;
+            bottom: 8%;
+            right: 0;
+            z-index: 1;
+        }
+        &:nth-child(3) {
+            position: absolute;
+            background: url(https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/flower1.png);
+            background-size: 100% 100%;
+            width: 640upx;
+            height: 328upx;
+            bottom: 33%;
+            right: 0;
+        }
+        &:nth-child(4) {
+            position: absolute;
+            background: url(https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/river1.png);
+            background-size: 100% 100%;
+            width: 206upx;
+            height: 103upx;
+            bottom: 35%;
+            left: 0;
+        }
+        &:nth-child(5) {
+            position: absolute;
+            background: url(https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/river2.png);
+            background-size: 100% 100%;
+            width: 324upx;
+            height: 286upx;
+            bottom: 8%;
+            left: 0;
+        }
+        &:nth-child(6) {
+            position: absolute;
+            background: url(https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/river3.png);
+            background-size: 100% 100%;
+            width: 461upx;
+            height: 298upx;
+            bottom: 3%;
+            right: 0;
+        }
+        &:nth-child(7) {
+            position: absolute;
+            background: url(https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/flower.png);
+            background-size: 100% 100%;
+            width: 100upx;
+            height: 100upx;
+            bottom: 44%;
+            right: 0;
+        }
+    }
 }
 .lottery-content {
     padding-bottom: 40upx;
@@ -727,13 +811,23 @@ export default {
         .poster-previwe-content {
             position: absolute;
             width: 100%;
-            top: 50%;
+            top: 46%;
             transform: translateY(-50%);
+        }
+        .sun {
+            position: absolute;
+            width: 100%;
+            top: 2%;
+            left: 26%;
+            height: 80%;
+            background: url(https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/sun.png)
+                no-repeat;
+            background-size: 50% 50%;
         }
         .title {
             text-align: center;
             font-size: 30upx;
-            height: 99upx;
+            height: 300upx;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -753,6 +847,15 @@ export default {
             position: relative;
             background-size: 100% 100%;
             background-position: center center;
+            .poster-title {
+                position: absolute;
+                left: 114upx;
+                top: 36upx;
+                color: #254834;
+                font-size: 36upx;
+                font-weight: 600;
+                z-index: 1;
+            }
             .image-bg,
             .image-detail {
                 width: 100%;
