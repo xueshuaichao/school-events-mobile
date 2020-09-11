@@ -3,17 +3,6 @@
         v-if="loading"
         class="lottery-page"
     >
-        <view
-            v-for="(item, index) in listLuck"
-            :key="index"
-            class="luck"
-        />
-        <!--<view class="luck" />
-        <view class="luck" />
-        <view class="luck" />
-        <view class="luck" />
-        <view class="luck" />
-        <view class="luck" />-->
         <login
             v-if="userInfo === null"
             @login="onLogin"
@@ -52,6 +41,11 @@
                     />
                 </view>
                 <view class="lottery-main">
+                    <view
+                        v-for="(item, index) in listLuck"
+                        :key="index"
+                        class="luck"
+                    />
                     <lotteryDraw
                         v-if="lotteryData.length === 8"
                         ref="lottery"
@@ -332,7 +326,7 @@ export default {
                         text: '“爱挑战”趣味诗词大闯关',
                         height: 50,
                         textAlign: 'center',
-                        y: 38,
+                        y: 70,
                         x: 300,
                         fontSize: '36',
                         color: '#254834',
@@ -357,11 +351,11 @@ export default {
                     {
                         text: 'hahhah',
                         height: 50,
-                        textAlign: '#FF685C',
+                        textAlign: 'center',
                         y: 586,
                         x: 300,
                         fontSize: '34',
-                        color: '#666666',
+                        color: '#FF685C',
                         lineNum: 1,
                         textOverflow: 'ellipsis',
                         fontWeight: 'bold',
@@ -382,7 +376,7 @@ export default {
                         width: 192,
                         height: 104,
                         y: 400,
-                        x: 219,
+                        x: 210,
                     },
                     {
                         url: '',
@@ -745,7 +739,7 @@ export default {
             background-size: 100% 100%;
             width: 61upx;
             height: 127upx;
-            bottom: 8%;
+            bottom: 0;
             right: 0;
             z-index: 1;
         }
@@ -764,7 +758,7 @@ export default {
             background-size: 100% 100%;
             width: 206upx;
             height: 103upx;
-            bottom: 35%;
+            bottom: 44%;
             left: 0;
         }
         &:nth-child(5) {
@@ -773,7 +767,7 @@ export default {
             background-size: 100% 100%;
             width: 324upx;
             height: 286upx;
-            bottom: 8%;
+            bottom: -6%;
             left: 0;
         }
         &:nth-child(6) {
@@ -782,7 +776,7 @@ export default {
             background-size: 100% 100%;
             width: 461upx;
             height: 298upx;
-            bottom: 3%;
+            bottom: -6%;
             right: 0;
         }
         &:nth-child(7) {
@@ -791,7 +785,7 @@ export default {
             background-size: 100% 100%;
             width: 100upx;
             height: 100upx;
-            bottom: 44%;
+            bottom: 62%;
             right: 0;
         }
     }
@@ -1037,6 +1031,7 @@ export default {
         }
     }
     .lottery-main {
+        position: relative;
         margin-top: -48upx;
         /deep/.container {
             background-color: #adcca8;
