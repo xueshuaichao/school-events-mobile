@@ -419,7 +419,7 @@ export default {
         },
         bindconfirm() {
             uni.navigateTo({
-                url: `/activity/pages/mywork/mywork?type=search&name=${this.changeValue.trim()}&activity_id=14`,
+                url: `/activity/pages/mywork/myWorkList?type=search&name=${this.changeValue.trim()}&activity_id=14`,
             });
         },
         start() {

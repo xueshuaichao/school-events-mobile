@@ -506,6 +506,7 @@ export default {
                     catId: 20, // 所属分类
                     showAllCat: false,
                     time: '',
+                    poentyColor: 'rgba(rgba(164, 230, 220, 1)',
                     primaryColor: '#FF685C', // 主色调
                     primaryBgColor: '#FFA69F', // 主要的背景颜色 （图片背景）
                     placeholderColor: '#FFBBB5',

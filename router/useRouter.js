@@ -140,6 +140,9 @@ const routesConfig = {
             path: '/activity/pages/mywork/mywork',
         },
         {
+            path: '/activity/pages/mywork/myWorkList',
+        },
+        {
             path: '/activity/pages/upload/modify',
         },
         {

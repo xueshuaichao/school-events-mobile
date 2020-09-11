@@ -438,6 +438,12 @@
                     }
                 },
                 {
+                    "path": "pages/mywork/myWorkList",
+                    "style": {
+                        "navigationBarTitleText": "我的作品"
+                    }
+                },
+                {
                     "path": "pages/brand/ucenter",
                     "style": {
                         "navigationBarTitleText": "青少年”爱挑战“寻找代言人"
