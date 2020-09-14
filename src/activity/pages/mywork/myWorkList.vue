@@ -765,7 +765,7 @@ export default {
             box-sizing: border-box;
             font-size: 22upx;
             border-radius: 0 20upx 20upx 0;
-            z-index: 999;
+            z-index: 1;
         }
         .cover {
             width: 100%;
