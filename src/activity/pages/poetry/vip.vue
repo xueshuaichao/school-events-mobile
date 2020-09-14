@@ -1,6 +1,10 @@
 <template>
     <view>
-        读书vip
+        兑换码：11123546566767
+        <image
+            class="qr-code"
+            src="../../static/icon_copy.png"
+        />
         <text
             class="copy"
             @click="copyCode('hhhhhhhh')"
@@ -55,4 +59,17 @@ export default {
     },
 };
 </script>
-<style scoped></style>
+<style scoped lang="less">
+.qr-code {
+    width: 60upx;
+    height: 60upx;
+    display: inline-block;
+    vertical-align: middle;
+}
+.copy {
+    font-weight: 600;
+    &:hover {
+        color: #007aff;
+    }
+}
+</style>
