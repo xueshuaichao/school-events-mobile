@@ -136,6 +136,7 @@
                             v-for="(item, index) in dataList"
                             :key="index"
                             class="poetry-work-card"
+                            @click.native="viewDetail(item, index)"
                         >
                             <view class="top">
                                 <view
@@ -156,7 +157,10 @@
                                 <view class="vote-num">
                                     {{ item.ticket }}赞
                                 </view>
-                                <view class="vote">
+                                <view
+                                    class="vote"
+                                    @click="handleVote(item)"
+                                >
                                     <image
                                         class="like-icon"
                                         :src="
@@ -250,7 +254,7 @@
                     继续闯关
                 </template>
                 <template v-if="activityStatus == 3">
-                    查看活动
+                    查看关卡
                 </template>
             </view>
         </view>
@@ -367,6 +371,7 @@ export default {
                 },
             ],
             rankList: [],
+            fr: 'syhd',
         };
     },
     created() {
@@ -386,6 +391,20 @@ export default {
         });
     },
     methods: {
+        viewDetail({ id }, index) {
+            console.log(id, 'viewDetail');
+            this.$store.commit('setFilterData', {
+                position: {
+                    total: this.total,
+                    curposition: index,
+                    from: '/api/activity/resourcelist',
+                },
+                filter: this.filter,
+            });
+            uni.navigateTo({
+                url: `/pages/work/detail/detail?id=${id}&activity_id=${this.filter.activity_id}`,
+            });
+        },
         jumpUcenter(item) {
             uni.navigateTo({
                 url: `/activity/pages/poetry/ucenter?activity_id=14&user_id=${item.user_id}`,
@@ -488,6 +507,43 @@ export default {
                     // todo
                 }
             });
+        },
+        handleVote(item) {
+            if (this.activityStatus === 2) {
+                api.isLogin({
+                    fr: this.fr,
+                }).then(() => {
+                    api.post('/api/activity/vote', {
+                        id: item.id,
+                        activity_id: this.filter.activity_id,
+                    }).then(
+                        () => {
+                            // eslint-disable-next-line no-param-reassign
+                            item.ticket += 1;
+                            // eslint-disable-next-line no-param-reassign
+                            item.vote_status = 1;
+                            uni.showToast({
+                                title: '已点赞',
+                                icon: 'none',
+                            });
+                        },
+                        (res) => {
+                            uni.showToast({
+                                title: res.message,
+                                icon: 'none',
+                            });
+                        },
+                    );
+                });
+            } else {
+                uni.showToast({
+                    title:
+                        this.status === 1
+                            ? '活动未开始，敬请期待'
+                            : '活动已结束',
+                    icon: 'none',
+                });
+            }
         },
     },
 };

@@ -5,16 +5,22 @@
             class="cover"
         >
             <image
-                src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/h5/suspension-jiuyi.png"
+                src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/h5/suspension-shiyi.png"
+                @click="handlePromt"
             />
-            <view
+            <!-- <view
                 class="join-btn"
                 @click="handlePromt"
             >
                 立即参与
-            </view>
-            <view
+            </view> -->
+            <!-- <view
                 class="close"
+                @click="handleClose"
+            /> -->
+            <image
+                class="close-img"
+                src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/index-close.png"
                 @click="handleClose"
             />
         </view>
@@ -361,7 +367,7 @@ export default {
         getNewActivityStatus() {
             // 1未开始，2进行中，3已结束
             api.get('/api/activity/activitystatus', {
-                activity_id: 13,
+                activity_id: 14,
             }).then((data) => {
                 if (data.status) {
                     this.status = data.status;
@@ -487,10 +493,10 @@ export default {
     text-align: center;
     font-size: 0;
     image:first-child {
-        width: 558rpx;
-        height: 700rpx;
+        width: 700rpx;
+        height: 1020rpx;
         display: block;
-        margin: 160upx auto 0;
+        margin: 20rpx auto 0;
     }
     .join-btn {
         width: 420upx;
@@ -535,6 +541,10 @@ export default {
         &::after {
             transform: rotate(-45deg);
         }
+    }
+    .close-img {
+        width: 72upx;
+        height: 72upx;
     }
 }
 uni-swiper {

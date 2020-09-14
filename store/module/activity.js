@@ -510,7 +510,7 @@ export default {
                 activityId: 14,
                 publicConfig: {
                     title: '趣味诗词大闯关',
-                    log: '',
+                    log: 'syhd',
                     sort: ['最新', '最热'],
                     catMenu: [], // 分组
                     activityName: '',

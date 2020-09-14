@@ -132,11 +132,6 @@ export default {
                     title: '正在为您准备精彩活动',
                     icon: 'none',
                 });
-            } else if (item.status === 1) {
-                uni.showToast({
-                    title: '活动尚未开始，敬请启期待',
-                    icon: 'none',
-                });
             } else {
                 uni.navigateTo({
                     url: item.url,

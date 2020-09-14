@@ -1,12 +1,21 @@
 <template>
     <view v-if="!isLoading">
         <template v-if="isH5">
-            <!-- <img
+            <img
                 class="pre-img"
                 crossorigin="anonymous"
-                src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/my-title-0.png"
+                src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/mywork-poster.png"
                 alt=""
-            > -->
+            >
+            <img
+                class="pre-img"
+                crossorigin="anonymous"
+                :src="
+                    `https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/poster-title-${barrierInfo.level -
+                        1}.png`
+                "
+                alt=""
+            >
         </template>
         <view
             class="page-my-work poetry-page"
@@ -37,7 +46,7 @@
                             当前
                         </view>
                         <view class="num">
-                            101
+                            {{ barrierInfo.barrier }}
                         </view>
                     </view>
                 </view>
@@ -47,8 +56,8 @@
                         ref="posterh5"
                         :config="posterCommonConfig"
                         :hide-loading="true"
-                        :width="630"
-                        :height="886"
+                        :width="750"
+                        :height="1020"
                         @success="onPosterSuccess"
                         @fail="onPosterFail"
                     />
@@ -57,7 +66,8 @@
                         v-if="showPosterMask"
                         ref="savePoster"
                         :image="myPoster"
-                        class="clocked"
+                        upper-class-name="poetry"
+                        class="poetry-my"
                         @togglePoster="togglePoster"
                     />
                     <view
@@ -298,58 +308,79 @@ export default {
             detail: {},
             barrierInfo: {
                 level: 1,
+                barrier: 0,
             },
             showPosterMask: false,
             myPoster: '',
             posterCommonConfig: {
                 pixelRatio: 2,
-                width: 630,
-                height: 866,
+                width: 750,
+                height: 1020,
                 debug: false,
                 texts: [
                     {
                         text: '',
-                        textAlign: 'left',
-                        y: 270,
-                        x: 90,
-                        fontSize: '40',
-                        color: '#FF8B82',
+                        textAlign: 'center',
+                        y: 656,
+                        x: 375,
+                        fontSize: '32',
+                        color: '#004137',
                         lineNum: 1,
                         textOverflow: 'ellipsis',
-                        fontWeight: 'bold',
+                        fontWeight: 'normal',
                         zIndex: 10,
                     },
                     {
-                        text: '',
-                        textAlign: 'center',
-                        y: 670,
-                        x: 320,
-                        fontSize: '32',
-                        color: '#FF8300',
+                        text: '我在参加趣味诗词大闯关',
+                        textAlign: 'left',
+                        y: 730,
+                        x: 148,
+                        fontSize: '28',
+                        color: '#004137',
                         lineNum: 1,
-                        fontWeight: 'bold',
-                        textOverflow: 'ellipsis',
+                        fontWeight: 'normal',
+                        zIndex: 100,
+                    },
+                    {
+                        text: '你也快来参加吧！',
+                        textAlign: 'left',
+                        y: 772,
+                        x: 148,
+                        fontSize: '28',
+                        color: '#004137',
+                        lineNum: 1,
+                        fontWeight: 'normal',
                         zIndex: 100,
                     },
                 ],
                 images: [
                     {
-                        url: '',
-                        width: 630,
-                        height: 866,
+                        url:
+                            'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/mywork-poster.png',
+                        width: 750,
+                        height: 1020,
                         y: 0,
                         x: 0,
                     },
                     {
                         url: '',
-                        width: 120,
-                        height: 120,
-                        y: 730,
-                        x: 480,
-                        borderRadius: this.isH5 ? 0 : 120,
+                        width: 160,
+                        height: 160,
+                        y: 682,
+                        x: 484,
+                        borderRadius: this.isH5 ? 0 : 170,
+                        zIndex: 100,
+                    },
+                    {
+                        url: '',
+                        width: 300,
+                        height: 400,
+                        y: 198,
+                        x: 224,
                         zIndex: 100,
                     },
                 ],
+                radiusRects: [],
             },
         };
     },
@@ -388,7 +419,7 @@ export default {
             }
         },
         getH5QrCode() {
-            const uCenterUrl = `${window.location.origin}/activity/pages/poetry/ucenter?activity_id=14&user_id=${this.userInfo.user_id}&w=244`;
+            const uCenterUrl = `${window.location.origin}/activity/pages/poetry/ucenter?activity_id=14&user_id=${this.userInfo.user_id}&w=204`;
             this.posterCommonConfig.images[1].url = `${
                 window.location.origin
             }/api/common/qrcode?url=${encodeURIComponent(uCenterUrl)}`;
@@ -452,7 +483,9 @@ export default {
             // 图片的处理。。。。。。。
             // 中间的内容区域是多种排版显示，有多种图片。
             console.log(this.posterCommonConfig.images[1], 'sasasa');
-            this.posterCommonConfig.images[0].url = 'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/clocked/clocked_honor_poster.png';
+            this.posterCommonConfig.texts[0].text = `我是‘${this.barrierInfo.level_title}’已经成功闯关${this.barrierInfo.barrier}关了`;
+            this.posterCommonConfig.images[2].url = `https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/poster-title-${this
+                .barrierInfo.level - 1}.png`;
             this.$refs.posterh5.createPoster(this.posterCommonConfig);
         },
         togglePoster(status) {
@@ -925,6 +958,7 @@ export default {
             font-weight: 500;
             background: url(https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/show-bg.png);
             background-size: 100% 100%;
+            font-size: 28upx;
         }
         .barrier {
             background: url(https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/level-1-0.png);
