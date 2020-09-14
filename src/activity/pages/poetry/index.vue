@@ -562,6 +562,7 @@ export default {
     font-weight: 600;
     background-image: url(https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/upload-btn.png);
     background-size: 100% 100%;
+    z-index: 2;
 }
 .stop-scroll {
     position: fixed !important;
