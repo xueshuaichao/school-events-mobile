@@ -67,10 +67,10 @@
                             <template v-if="status === 1">
                                 恭喜您！抽中
                                 <text>{{ prizeDetail.name }}</text>
-                                {{ prizeDetail.unit }}
+                                <text>{{ prizeDetail.unit }}</text>
                             </template>
                             <template v-else-if="status === 2">
-                                未中奖，别气馁，还有机会！
+                                <text>未中奖!</text> 别气馁，还有机会！
                             </template>
                         </view>
                         <view
@@ -416,7 +416,8 @@ export default {
             canvasImage: '',
             showError: false,
             prizeDetail: {
-                name: '百度音响一台',
+                name: '百度音响',
+                unit: '一台',
                 image:
                     'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/prize-1-1.png',
             },
