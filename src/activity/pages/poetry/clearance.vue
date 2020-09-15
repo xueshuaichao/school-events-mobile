@@ -254,6 +254,12 @@ export default {
                     uni.navigateTo({
                         url: `/activity/pages/poetry/record?id=${id}&status=${this.activityStatus}&barrier=${this.barrierInfo.barrier}`,
                     });
+                    // id, status, barrier
+                    this.$store.commit('setRecordParam', {
+                        status: this.activityStatus,
+                        id,
+                        barrier: this.barrierInfo.barrier,
+                    });
                 } else {
                     uni.showToast({
                         icon: 'none',
@@ -265,6 +271,11 @@ export default {
                 if (id < this.barrierInfo.barrier + 2) {
                     uni.navigateTo({
                         url: `/activity/pages/poetry/record?id=${id}&status=${this.activityStatus}&barrier=${this.barrierInfo.barrier}`,
+                    });
+                    this.$store.commit('setRecordParam', {
+                        status: this.activityStatus,
+                        id,
+                        barrier: this.barrierInfo.barrier,
                     });
                 } else {
                     uni.showToast({

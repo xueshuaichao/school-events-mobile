@@ -241,7 +241,7 @@ export default {
             fileSize: 0,
             id: 0,
             barrier: 0,
-            bgId: 0,
+            bgId: 1,
             bgIndex: Math.floor(Math.random() * 5),
             selBgTitle: "",
             isTouchStart: false
@@ -268,18 +268,8 @@ export default {
             fail() {}
         });
     },
-    onLoad({ id, status, test, barrier }) {
-        // test做了几次测试题，默认为0；
-        // barrier 已经闯关的关数；
-        // status活动的状态
-        // id 录制的关卡。
-        console.log(id, status, test, barrier);
-        this.barrier = Number(barrier) || 0;
-        this.id = Number(id) || 1;
-        this.activityStatus = Number(status);
-
+    onLoad() {
         const self = this;
-
         innerAudioContextBg.src = this.bgSrc;
 
         recorderManager.onStop(res => {
@@ -301,7 +291,6 @@ export default {
         innerAudioContextBg.onWaiting(() => {
             uni.showLoading();
             // 一直加载不出来
-
             this.timer2 = setTimeout(() => {
                 uni.hideLoading();
                 if (innerAudioContextBg.paused) {
@@ -325,12 +314,11 @@ export default {
         if (!this.isH5) {
             this.getSetting();
         }
-        this.getInfos(id);
-        console.log("loading----");
     },
     onUnload() {
-        innerAudioContext.destroy();
-        innerAudioContextBg.destroy();
+        // innerAudioContext.destroy();
+        // innerAudioContextBg.destroy();
+        this.stopAll();
         clearTimeout(this.timer2);
         clearInterval(this.timer);
         clearTimeout(this.timer3);
@@ -338,11 +326,24 @@ export default {
     onShow() {
         this.bgId = this.$store.getters.getBgMusic || -1;
         this.getbgList();
+        this.getRecordParams();
     },
     onBackPress(options) {
         this.options = options;
     },
     methods: {
+        getRecordParams() {
+            let params = this.$store.getters.getRecordParam;
+            if (params) {
+                this.barrier = params.barrier || 0;
+
+                this.activityStatus = params.status;
+                if (params.id !== this.id) {
+                    this.id = params.id || 1;
+                    this.getInfos(params.id);
+                }
+            }
+        },
         touchstart(e) {
             console.log(e);
             this.isTouchStart = true;
@@ -716,6 +717,7 @@ export default {
             image {
                 width: 60upx;
                 height: 60upx;
+                border-radius: 50%;
             }
             &.one {
                 margin-right: -10upx;
