@@ -81,6 +81,19 @@
                 />
             </template>
         </view>
+        <view
+            v-if="pageData.resource_type === 3"
+            class="audio-detail"
+        >
+            <view class="cover">
+                <image
+                    :src="
+                        `https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/poetry-cover-${bgIndex}.png`
+                    "
+                />
+            </view>
+            <view class="page-btm" />
+        </view>
         <view class="content">
             <view
                 class="author-name text-one-line"
@@ -344,6 +357,7 @@ export default {
             praise_count: this.pageData.praise_count || 0,
             toggleLikeObj: {},
             togglePlatCounts: {},
+            bgIndex: 0,
         };
     },
     watch: {
@@ -821,6 +835,30 @@ export default {
 /deep/ .uni-video-container {
     .uni-video-cover-duration {
         display: none;
+    }
+}
+.audio-detail {
+    background: linear-gradient(#fefdf9, #c3efe4);
+    height: 100%;
+    .cover {
+        position: fixed;
+        bottom: 130upx;
+        left: 0;
+        width: 750upx;
+        height: 598upx;
+        image {
+            width: 100%;
+            height: 100%;
+        }
+    }
+    .page-btm {
+        width: 100%;
+        height: 248upx;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        background: url(../../static/images/work/audio-detail-btm2.png);
+        background-size: cover;
     }
 }
 </style>

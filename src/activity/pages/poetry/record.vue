@@ -36,7 +36,7 @@
             <scroll-view
                 :scroll-top="scrollTop"
                 :scroll-y="scrollY"
-                style="height: 400px"
+                style="height: 300px"
                 :style="mystyle"
                 class="scroll-Y"
                 @scrolltoupper="upper"
@@ -85,6 +85,16 @@
                 <image
                     class="btn"
                     src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/btn-dot.png"
+                />
+                <slider
+                    value="50"
+                    active-color="#FFCC33"
+                    background-color="#000000"
+                    block-color="#8A6DE9"
+                    block-size="20"
+                    class="unseable-slider"
+                    @change="sliderChange"
+                    @changing="sliderChangeing"
                 />
             </view>
             <view class="time">
@@ -233,7 +243,8 @@ export default {
             barrier: 0,
             bgId: 0,
             bgIndex: Math.floor(Math.random() * 5),
-            selBgTitle: ""
+            selBgTitle: "",
+            isTouchStart: false
         };
     },
     computed: {
@@ -332,6 +343,12 @@ export default {
         this.options = options;
     },
     methods: {
+        touchstart(e) {
+            console.log(e);
+            this.isTouchStart = true;
+        },
+        touchmove() {},
+        touchend() {},
         clickCenter() {
             if (this.isRecordPage) {
                 if (this.recordStatus) {
@@ -663,6 +680,12 @@ export default {
             uni.navigateTo({
                 url: `/activity/pages/poetry/bgmusic`
             });
+        },
+        sliderChange(e) {
+            console.log(e.detail, "stoped");
+        },
+        sliderChangeing(e) {
+            console.log(e.detail, "moving");
         }
     }
 };

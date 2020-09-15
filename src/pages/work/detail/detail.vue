@@ -14,7 +14,8 @@
                 { openGame: from === 'openGame' },
                 { liuyi: activity_id === 9 },
                 { qiyi: activity_id === 10 },
-                { bayi: activity_id === 12 }
+                { bayi: activity_id === 12 },
+                { shiyi: activity_id === 14 }
             ]"
         >
             <view class="activerule">
@@ -1222,6 +1223,35 @@ export default {
                     rgba(255, 162, 132, 1),
                     rgba(255, 104, 76, 1)
                 );
+            }
+        }
+        &.shiyi {
+            .saveBtn {
+                width: 216upx;
+                height: 72upx;
+                line-height: 72upx;
+                background: url(https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/show-bg.png);
+                font-size: 28upx;
+                background-size: 100%;
+                margin-top: 0;
+            }
+            .close {
+                position: absolute;
+                background: url(https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/index-close.png);
+                background-size: 100%;
+                top: 0;
+                right: 40upx;
+                width: 52upx;
+                height: 52upx;
+                left: auto;
+                &::before,
+                &::after {
+                    display: none;
+                }
+            }
+            .activerule {
+                padding-top: 20upx;
+                position: relative;
             }
         }
     }

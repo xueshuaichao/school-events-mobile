@@ -86,12 +86,13 @@ export default {
                             src: res, // 图片
                         }));
                     }
+                    console.log(item.url, wxGetImageInfo({ src: item.url }));
                     return wxGetImageInfo({
                         src: item.url, // 图片
                     });
                 }),
             ).then((res) => {
-                // console.log(res);
+                console.log(res);
                 res.forEach((item, index) => {
                     this.ctx.save();
                     if (config.images[index].borderRadius) {
