@@ -77,7 +77,10 @@
                             class="poster-main"
                             :class="{ no: status === 2 }"
                         >
-                            <view class="poster-title">
+                            <view
+                                v-if="status === 1"
+                                class="poster-title"
+                            >
                                 “爱挑战”趣味诗词大闯关
                             </view>
                             <template v-if="isH5 && isWechat && canvasImage">
@@ -880,7 +883,7 @@ export default {
                     left: 18upx;
                     top: 106upx;
                     width: 592upx;
-                    height: 42upx;
+                    height: 56upx;
                 }
                 .poster-title {
                     position: absolute;
@@ -888,7 +891,7 @@ export default {
                     top: 108upx;
                     color: #254834;
                     font-size: 36upx;
-                    font-weight: 500;
+                    font-weight: 600;
                 }
             }
             .image {
