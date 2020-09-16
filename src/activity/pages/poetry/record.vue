@@ -36,8 +36,7 @@
             <scroll-view
                 :scroll-top="scrollTop"
                 :scroll-y="scrollY"
-                style="height: 300px"
-                :style="mystyle"
+                :style="{ height: scrollH + 'px' }"
                 class="scroll-Y"
                 @scrolltoupper="upper"
                 @scrolltolower="lower"
@@ -82,20 +81,22 @@
                 <view class="walk-way">
                     <view
                         class="wark-bar"
-                        :style="barStyle"
+                        :style="{ width: slideValue + 'px' }"
                     />
                 </view>
                 <image
                     class="btn"
                     src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/btn-dot.png"
-                    :style="dotStyle"
+                    :style="{ left: slideValue + 'px' }"
                 />
                 <slider
-                    value="50"
+                    :value="slideValue"
+                    min="0"
+                    :max="maxVal"
                     active-color="#FFCC33"
                     background-color="#000000"
                     block-color="#8A6DE9"
-                    block-size="20"
+                    block-size="30"
                     class="unseable-slider"
                     @change="sliderChange"
                     @changing="sliderChangeing"
@@ -280,7 +281,9 @@ export default {
                 level: 1,
                 draw_num: null,
                 barrier: 0
-            }
+            },
+            slideValue: 0,
+            maxVal: 100
         };
     },
     computed: {
@@ -290,21 +293,6 @@ export default {
                 this.endRecord("max");
             }
             return Math.round(this.intervalTime);
-        },
-        mystyle() {
-            return {
-                height: this.scrollH + "px"
-            };
-        },
-        dotStyle() {
-            return {
-                left: 100 + "px"
-            };
-        },
-        barStyle() {
-            return {
-                width: 100 + "px"
-            };
         }
     },
     created() {
@@ -788,10 +776,11 @@ export default {
             });
         },
         sliderChange(e) {
-            console.log(e.detail, "stoped");
+            console.log(e.detail, this.slideValue, "stoped");
+            this.slideValue = e.detail.value;
         },
         sliderChangeing(e) {
-            console.log(e.detail, "moving");
+            this.slideValue = e.detail.value;
         }
     }
 };
@@ -1019,6 +1008,10 @@ export default {
                 }
             }
         }
+    }
+    .unseable-slider {
+        opacity: 0.5;
+        margin-top: 10upx;
     }
 }
 </style>
