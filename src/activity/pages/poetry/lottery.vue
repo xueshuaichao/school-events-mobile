@@ -67,7 +67,7 @@
                             <template v-if="status === 1">
                                 恭喜您！抽中
                                 <text>{{ prizeDetail.name }}</text>
-                                <text>{{ prizeDetail.unit }}</text>
+                                {{ prizeDetail.unit }}
                             </template>
                             <template v-else-if="status === 2">
                                 <text>未中奖!</text> 别气馁，还有机会！
@@ -267,7 +267,7 @@ export default {
             codeUrl:
                 'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/applet-code-12.png',
             userInfo: '',
-            status: 1,
+            status: 0,
             lotteryStatus: 1,
             previewMask: false,
             // #ifdef H5
@@ -701,8 +701,8 @@ export default {
     onLoad(parms) {
         this.activityId = parms.activity_id;
         this.codeUrl = this.isH5
-            ? `https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/applet-code-h5-${this.activityId}.png`
-            : `https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/applet-code-${this.activityId}.png`;
+            ? 'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/applet-code-h5-12.png'
+            : 'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/applet-code-12.png';
         this.successConfig.images[2].url = this.codeUrl;
         this.successConfig.images[2].borderRadius = this.isH5 ? 0 : 126;
         this.failConfig.images[1].url = this.codeUrl;

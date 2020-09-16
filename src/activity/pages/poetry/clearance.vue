@@ -151,7 +151,7 @@ export default {
     methods: {
         jumpPrize() {
             uni.navigateTo({
-                url: '/activity/pages/poetry/lottery?activity_id=12',
+                url: '/activity/pages/poetry/lottery?activity_id=14',
             });
         },
         getBarrierInfo() {
