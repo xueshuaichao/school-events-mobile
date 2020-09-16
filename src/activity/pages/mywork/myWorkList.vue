@@ -125,7 +125,7 @@
                                 v-if="item.rank"
                                 class="tag"
                             >
-                                排名：{{ item.rank }}
+                                排名{{ item.rank }}
                             </view>
                             <image
                                 class="cover"
@@ -760,7 +760,7 @@ export default {
             top: 20upx;
             background: #5f8b83;
             color: #fff;
-            height: 38upx;
+            line-height: 38upx;
             padding: 0 18upx 0 6upx;
             box-sizing: border-box;
             font-size: 22upx;

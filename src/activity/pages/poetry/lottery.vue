@@ -67,7 +67,7 @@
                             <template v-if="status === 1">
                                 恭喜您！抽中
                                 <text>{{ prizeDetail.name }}</text>
-                                <text>{{ prizeDetail.unit }}</text>
+                                {{ prizeDetail.unit }}
                             </template>
                             <template v-else-if="status === 2">
                                 <text>未中奖!</text> 别气馁，还有机会！
@@ -77,7 +77,10 @@
                             class="poster-main"
                             :class="{ no: status === 2 }"
                         >
-                            <view class="poster-title">
+                            <view
+                                v-if="status === 1"
+                                class="poster-title"
+                            >
                                 “爱挑战”趣味诗词大闯关
                             </view>
                             <template v-if="isH5 && isWechat && canvasImage">
@@ -267,7 +270,7 @@ export default {
             codeUrl:
                 'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/applet-code-12.png',
             userInfo: '',
-            status: 1,
+            status: 0,
             lotteryStatus: 1,
             previewMask: false,
             // #ifdef H5
@@ -701,8 +704,8 @@ export default {
     onLoad(parms) {
         this.activityId = parms.activity_id;
         this.codeUrl = this.isH5
-            ? `https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/applet-code-h5-${this.activityId}.png`
-            : `https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/applet-code-${this.activityId}.png`;
+            ? 'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/applet-code-h5-12.png'
+            : 'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/applet-code-12.png';
         this.successConfig.images[2].url = this.codeUrl;
         this.successConfig.images[2].borderRadius = this.isH5 ? 0 : 126;
         this.failConfig.images[1].url = this.codeUrl;
@@ -880,7 +883,7 @@ export default {
                     left: 18upx;
                     top: 106upx;
                     width: 592upx;
-                    height: 42upx;
+                    height: 56upx;
                 }
                 .poster-title {
                     position: absolute;
@@ -888,7 +891,7 @@ export default {
                     top: 108upx;
                     color: #254834;
                     font-size: 36upx;
-                    font-weight: 500;
+                    font-weight: 600;
                 }
             }
             .image {
