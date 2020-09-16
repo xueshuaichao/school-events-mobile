@@ -33,95 +33,45 @@
             src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/poetry-cover-1.png"
         />
         <!--弹窗-->
-        <view
-            v-if="show"
-            class="test-modal"
-        >
-            <view
-                class="center"
-                :class="{ fail: !isSuccess }"
-            >
-                <view
-                    v-if="!isSuccess"
-                    class="fail-txt"
-                    :class="{ lesspadding: testStatus === 0 }"
-                >
-                    {{ modelTxt1 }}
-                </view>
-                <template v-else>
-                    <view class="bandge">
-                        {{ modelTxt1 }}
-                    </view>
-                    <image
-                        v-if="testStatus === 2"
-                        :src="
-                            `https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/poster-title-${detail.level -
-                                1}.png`
-                        "
-                        class="img img-level"
-                    />
-                    <image
-                        v-else
-                        :src="
-                            `https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/test-draw-${
-                                testStatus === 3 ? 0 : 1
-                            }.png`
-                        "
-                        class="img"
-                    />
-                    <view
-                        v-if="testStatus === 1"
-                        class="txt2"
-                    >
-                        {{ modelTxt2 }}
-                    </view>
-                    <view
-                        v-if="testStatus > 2"
-                        class="txt2 next-num"
-                    >
-                        {{ curNum }} 下一关
-                    </view>
-                </template>
-            </view>
-            <view
-                v-if="testStatus < 3"
-                class="btn-wraps"
-            >
-                <view
-                    class="btn"
-                    @click="jumpOne"
-                >
-                    {{ btn1 }}
-                </view>
-                <view
-                    class="btn"
-                    @click="jumpTwo"
-                >
-                    {{ btn2 }}
-                </view>
-            </view>
-        </view>
+        <model
+            :show="show"
+            :test-status="testStatus"
+            :is-success="isSuccess"
+            :model-txt1="modelTxt1"
+            :model-txt2="modelTxt2"
+            :btn2="btn2"
+            :btn1="btn1"
+            :cur-num="curNum"
+            :level="level"
+            @jumpTwo="jumpTwo"
+            @jumpOne="jumpOne"
+        />
     </view>
 </template>
 <script>
 import api from '../../../common/api';
+import model from './testmodel.vue';
 
 export default {
+    components: {
+        model,
+    },
     data() {
         return {
             detail: null,
             options: [],
             selItem: null,
             answer: 0,
-            show: true,
+            show: false,
             isSuccess: true,
-            modelTxt1: '恭喜你晋升“',
+            modelTxt1: '请继续加油喔',
             modelTxt2: '并获得一次抽奖机会哦',
             testStatus: 0, // -1 0 1 2 3 4
             btn1: '下一关',
             btn2: '去抽奖',
             curNum: 3,
             timer: null,
+            level: 1,
         };
     },
     created() {
@@ -151,16 +101,16 @@ export default {
     },
     methods: {
         jumpOne() {
-            if (this.testStatus === 0) {
+            if (this.testStatus === -1) {
                 // 重新答题
                 this.answer = 0;
                 this.selItem = null;
-            } else if (this.testStatus === -1) {
+            } else if (this.testStatus === 0) {
                 // 换诗
-                this.toNext();
+                this.toRecordPage();
             } else {
                 // 下一关
-                this.toNext('add');
+                this.toRecordPage('add');
             }
             this.show = false;
         },
@@ -178,7 +128,7 @@ export default {
             }
             this.show = false;
         },
-        toNext(add) {
+        toRecordPage(add) {
             this.$store.commit('setRecordParam', {
                 status: 2,
                 id: this.detail.barrier + (add ? 1 : 0),
@@ -188,6 +138,7 @@ export default {
                 clearInterval(this.timer);
                 this.timer = null;
             }
+            this.show = false;
             uni.navigateTo({
                 url: '/activity/pages/poetry/record',
             });
@@ -227,6 +178,7 @@ export default {
                     console.log(res);
                     // 返回操作都是跳转关卡页面
                     if (res.success) {
+                        this.isSuccess = true;
                         if (res.has_draw && res.level_title) {
                             this.modelTxt1 = `恭喜你晋升“${res.level_title}”`;
                             this.modelTxt2 = '并获得一次抽奖机会哦';
@@ -243,9 +195,10 @@ export default {
                             this.testStatus = 3;
                         } else {
                             this.modelTxt1 = `还有${5
-                                - this.detail.barrier / 5}关即可抽奖`;
+                                - (this.detail.barrier % 5)}关即可抽奖`;
                             this.testStatus = 4;
                         }
+                        this.level = res.level;
                         this.btn1 = '下一关';
                         this.btn2 = '去抽奖';
                         this.setTimer();
@@ -253,13 +206,15 @@ export default {
                         // 换诗跳转闯关页面
                         this.modelTxt1 = '这首诗太难了，换首诗来学习吧';
                         this.testStatus = 0;
-                        this.btn1 = '重新答题';
-                        this.btn2 = '返回';
-                    } else {
-                        this.modelTxt1 = '很遗憾，通关失败，答对后方 可通关成功';
-                        this.testStatus = -1;
                         this.btn1 = '换诗';
                         this.btn2 = '返回';
+                        this.isSuccess = false;
+                    } else {
+                        this.modelTxt1 = '很遗憾，通关失败，答对后方可通关成功';
+                        this.testStatus = -1;
+                        this.btn1 = '重新答题';
+                        this.btn2 = '返回';
+                        this.isSuccess = false;
                     }
                     this.show = true;
                 });
@@ -273,7 +228,7 @@ export default {
                     if (that.curNum === 0) {
                         clearInterval(that.timer);
                         that.timer = null;
-                        that.toNext('add');
+                        that.toRecordPage('add');
                     }
                 }, 1000);
             }
@@ -367,89 +322,6 @@ export default {
             background-size: 100%;
             margin-left: 280upx;
             margin-top: 78upx;
-        }
-    }
-    .test-modal {
-        position: fixed;
-        width: 100%;
-        height: 100%;
-        left: 0;
-        top: 0;
-        background: rgba(0, 0, 0, 0.7);
-        z-index: 10;
-        .center {
-            width: 624upx;
-            height: 760upx;
-            background: url(https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/test-success.png);
-            background-size: 100%;
-            margin: 40upx auto 32upx;
-            &.fail {
-                width: 624upx;
-                height: 686upx;
-                background: url(https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/test-fail.png);
-                margin-top: 140upx;
-            }
-            .fail-txt {
-                padding: 264upx 100upx 0;
-                text-align: center;
-                font-size: 32upx;
-                line-height: 44upx;
-                color: #fff;
-                font-weight: 500;
-                &.lesspadding {
-                    padding: 264upx 80upx 0;
-                }
-            }
-            .bandge {
-                box-sizing: content-box;
-                padding-top: 288upx;
-                width: 398upx;
-                height: 96upx;
-                background: url(https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/test-bar.png);
-                background-size: 100% 96upx;
-                margin: 0 auto;
-                color: #834a21;
-                font-size: 32upx;
-                text-align: center;
-                background-position-y: bottom;
-                background-repeat: no-repeat;
-                line-height: 96upx;
-            }
-            .img {
-                width: 176upx;
-                height: 272upx;
-                margin: -60upx auto 28upx;
-                display: block;
-            }
-            .img-level {
-                width: 160upx;
-                height: 214upx;
-                margin-top: 0;
-            }
-            .txt2 {
-                color: #834a21;
-                font-weight: 500;
-                font-size: 32upx;
-                text-align: center;
-                line-height: 32upx;
-            }
-        }
-        .btn-wraps {
-            display: flex;
-            width: 414upx;
-            margin: 0 auto;
-            justify-content: space-around;
-            .btn {
-                width: 190upx;
-                height: 68upx;
-                text-align: center;
-                color: #fff;
-                font-size: 28upx;
-                line-height: 68upx;
-                background: url(https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/mywork-btn-l.png);
-                background-size: 100%;
-                background-position-x: -4upx;
-            }
         }
     }
 }

@@ -73,18 +73,22 @@
         <view class="cover">
             <image
                 :src="
-                    `https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/poetry-cover-${bgIndex}.png`
+                    `https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/poetry-cover-${bgImgIndex}.png`
                 "
             />
         </view>
         <view class="page-btm">
             <view class="control">
                 <view class="walk-way">
-                    <view class="wark-bar" />
+                    <view
+                        class="wark-bar"
+                        :style="barStyle"
+                    />
                 </view>
                 <image
                     class="btn"
                     src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/btn-dot.png"
+                    :style="dotStyle"
                 />
                 <slider
                     value="50"
@@ -101,27 +105,31 @@
                 {{ intIntervalTime }}/10:00
             </view>
             <view class="music">
-                <view class="m-title">
-                    {{ selBgTitle }}
-                </view>
-                <view
-                    class="m-more"
-                    @click="moreMusic"
-                >
-                    <view>
-                        切换背景音乐
+                <template v-if="!isRecordPage">
+                    <view class="m-title">
+                        {{ selBg.title }}
                     </view>
-                    <image
-                        class="to-more"
-                        src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/record-more.png"
-                    />
-                </view>
+                    <view
+                        class="m-more"
+                        @click="moreMusic"
+                    >
+                        <view>
+                            切换背景音乐
+                        </view>
+                        <image
+                            class="to-more"
+                            src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/record-more.png"
+                        />
+                    </view>
+                </template>
             </view>
             <view class="btns-wrap">
                 <view
                     class="item"
+                    :class="{ hide: !recordInit }"
                     @click="onConfirmDelete"
                 >
+                    <template />
                     <image
                         class="icon"
                         :src="
@@ -168,6 +176,7 @@
                 </view>
                 <view
                     class="item"
+                    :class="{ hide: !recordInit }"
                     @click="next"
                 >
                     <image
@@ -180,6 +189,14 @@
                 </view>
             </view>
         </view>
+        <model
+            :show="show"
+            :test-status="testStatus"
+            :model-txt3="modelTxt3"
+            :model-txt1="modelTxt1"
+            :level="barrierInfo.level"
+            :cur-num="curNum"
+        />
     </view>
 </template>
 <script>
@@ -187,16 +204,20 @@
 import config from "../../../common/config";
 import utils from "../../../common/utils";
 import api from "../../../common/api";
+import model from "./testmodel.vue";
 
 const recorderManager = uni.getRecorderManager();
 const innerAudioContext = uni.createInnerAudioContext();
 const innerAudioContextBg = uni.createInnerAudioContext();
 
 // innerAudioContext.autoplay = true;
-innerAudioContext.volume = 0.8;
-innerAudioContextBg.volume = 0.3;
+innerAudioContext.volume = 1;
+innerAudioContextBg.volume = 0.6;
 
 export default {
+    components: {
+        model
+    },
     data() {
         // const recorderManager = wx.getRecorderManager();
         // const innerAudioContext = wx.createInnerAudioContext();
@@ -209,13 +230,14 @@ export default {
             timer: null,
             timer2: null,
             timer3: null,
+            numTimer: null,
             bgSrc:
                 "https://bj.bcebos.com//vod-bj/convert/200664/audio/202005181456325ec231a07ea2c.mp3",
             audio: null,
             volBg: 0.5,
             volManage: 0.8,
             options: null,
-            imgAuthBtn: false,
+            authStatus: false,
             activityStatus: 2,
             scrollH: 0,
             scrollY: true,
@@ -242,19 +264,46 @@ export default {
             id: 0,
             barrier: 0,
             bgId: 1,
-            bgIndex: Math.floor(Math.random() * 5),
-            selBgTitle: "",
-            isTouchStart: false
+            bgImgIndex: Math.floor(Math.random() * 5),
+            selBg: {
+                title: ""
+            },
+            isTouchStart: false,
+            recordInit: false,
+            show: false,
+            testStatus: 3,
+            curNum: 3,
+            modelTxt3: "下一关",
+            modelTxt1: "继续加油喔",
+            barrierInfo: {
+                level_title: "小诗童",
+                level: 1,
+                draw_num: null,
+                barrier: 0
+            }
         };
     },
     computed: {
         intIntervalTime() {
             // 用于显示整数的秒数
+            if (this.endRecord >= 600000) {
+                this.endRecord("max");
+            }
             return Math.round(this.intervalTime);
         },
         mystyle() {
             return {
                 height: this.scrollH + "px"
+            };
+        },
+        dotStyle() {
+            return {
+                left: 100 + "px"
+            };
+        },
+        barStyle() {
+            return {
+                width: 100 + "px"
             };
         }
     },
@@ -319,27 +368,40 @@ export default {
         // innerAudioContext.destroy();
         // innerAudioContextBg.destroy();
         this.stopAll();
+        clearInterval(this.numTimer);
         clearTimeout(this.timer2);
         clearInterval(this.timer);
         clearTimeout(this.timer3);
+        this.numTimer = null;
+        this.timer2 = null;
+        this.timer = null;
+        this.timer3 = null;
     },
     onShow() {
+        // 选择背景音乐，返回录制页面。
         this.bgId = this.$store.getters.getBgMusic || -1;
+        this.recordInit = false;
         this.getbgList();
         this.getRecordParams();
-    },
-    onBackPress(options) {
-        this.options = options;
+        this.getBarrierInfo();
     },
     methods: {
+        getBarrierInfo() {
+            // 闯关列表或者是测试题返回到录制页面
+            api.get("/api/poem/userinfo").then(res => {
+                this.barrierInfo = { ...this.barrierInfo, ...res };
+            });
+        },
         getRecordParams() {
             let params = this.$store.getters.getRecordParam;
+            console.log(params, "record params----");
             if (params) {
+                this.resetPageData();
                 this.barrier = params.barrier || 0;
-
                 this.activityStatus = params.status;
                 if (params.id !== this.id) {
                     this.id = params.id || 1;
+                    // 获取诗词内容
                     this.getInfos(params.id);
                 }
             }
@@ -351,107 +413,157 @@ export default {
         touchmove() {},
         touchend() {},
         clickCenter() {
-            if (this.isRecordPage) {
-                if (this.recordStatus) {
-                    // 录音中，则暂停
-                    this.centerTxt = "继续";
-                    this.recordStatus = 0;
-                    this.stopRecord();
-                } else {
-                    // 未开始录音，进行录音
-                    // 继续录音的状态 ，进行录音
-                    this.recordStatus = 1;
-                    this.centerTxt = "录音";
-                    if (!this.isStartRecord) {
-                        this.startRecord();
+            if (!this.isH5) {
+                if (this.isRecordPage) {
+                    if (this.recordStatus) {
+                        // 录音中，则暂停
+                        this.centerTxt = "继续";
+                        this.recordStatus = 0;
+                        this.pauseRecord();
                     } else {
-                        this.resumeRecord();
+                        // 未开始录音，进行录音
+                        // 无录音的状态 ，进行录音
+                        if (!this.authStatus) {
+                            this.setAuthStatus();
+                        } else {
+                            this.recordInit = true;
+                            this.recordStatus = 1;
+                            this.centerTxt = "录音";
+                            if (!this.isStartRecord) {
+                                this.startRecord();
+                            } else {
+                                this.resumeRecord();
+                            }
+                            this.isStartRecord = 1;
+                        }
                     }
-                    this.isStartRecord = 1;
+                } else {
+                    // 没有播放的状态。使用同一个图标，显示不同的文本。
+
+                    // unPlayStatus ：-2 从未播放 -1 已经结束播放  0 暂停播放
+                    if (this.playStatus) {
+                        // 正在播放着，则暂停播放，根据状态显示重听
+                        this.playStatus = 0;
+                        if (this.unPlayStatus === -2) {
+                            this.centerTxt = "试听";
+                        } else if (this.unPlayStatus === -1) {
+                            this.centerTxt = "重听";
+                        } else {
+                            this.centerTxt = "继续";
+                        }
+                        this.pauseAll();
+                    } else {
+                        // 已经暂停，则继续播放。
+                        this.centerTxt = "暂停";
+                        this.playStatus = 1;
+                        this.unPlayStatus = 0; // 手动暂停的是0
+                        this.palyAll();
+                    }
                 }
             } else {
-                // 没有播放的状态。使用同一个图标，显示不同的文本。
-
-                // unPlayStatus ：-2 从未播放 -1 已经结束播放  0 暂停播放
-                if (this.playStatus) {
-                    // 正在播放着，则暂停播放，根据状态显示重听
-                    this.playStatus = 0;
-                    if (this.unPlayStatus === -2) {
-                        this.centerTxt = "试听";
-                    } else if (this.unPlayStatus === -1) {
-                        this.centerTxt = "重听";
-                    } else {
-                        this.centerTxt = "继续";
-                    }
-                    this.pauseAll();
-                } else {
-                    // 已经暂停，则继续播放。
-                    this.centerTxt = "暂停";
-                    this.playStatus = 1;
-                    this.unPlayStatus = 0; // 不在是-2；
-                    this.palyAll();
-                }
+                uni.showToast({
+                    icon: "none",
+                    title: "请在微信小程序UP青少年爱挑战参与活动。",
+                    duration: 5000
+                });
             }
         },
         next() {
             console.log(this.isRecordPage, "next--");
-            if (this.isRecordPage) {
-                this.isRecordPage = 0;
-                this.endRecord();
-            } else {
-                if (this.playStatus) {
-                    this.stopAll();
-                }
-                // 进行测试题的条件
-                if (this.id === this.barrier + 1 && this.activityStatus === 2) {
-                    this.$store.commit("setTestData", {
-                        barrier: this.id,
-                        ...this.detail
-                    });
-
-                    this.uploadFile(this.voicePath, this.fileSize).then(
-                        resp => {
-                            api.post("/api/activity/add", {
-                                cat_id: 18,
-                                poem_id: this.detail.poem_id,
-                                resource_type: 3,
-                                play_url: resp.path,
-                                file_size: this.fileSize,
-                                activity_id: 14,
-                                resource_name: this.detail.title,
-                                introduce: "",
-                                type: 2,
-                                activity_cat: 1,
-                                bg_id: this.bgId
-                            }).then(() => {
-                                uni.navigateTo({
-                                    url: "/activity/pages/poetry/test"
-                                });
-                            });
-                        }
-                    );
+            if (this.recordInit) {
+                if (this.isRecordPage) {
+                    this.isRecordPage = 0;
+                    this.endRecord();
                 } else {
-                    // 出现海报的情况
-                    // 1.已经结束了
-                    uni.showToast({
-                        icon: "none",
-                        title: "已经做过测试题了",
-                        duration: 3000
-                    });
-                    this.timer3 = setTimeout(() => {
+                    if (this.playStatus) {
+                        this.stopAll();
+                    }
+                    // 进行测试题的条件
+                    if (
+                        this.id === this.barrier + 1 &&
+                        this.activityStatus === 2
+                    ) {
+                        this.$store.commit("setTestData", {
+                            barrier: this.id,
+                            ...this.detail
+                        });
+
+                        this.uploadFile(this.voicePath, this.fileSize).then(
+                            resp => {
+                                api.post("/api/activity/add", {
+                                    cat_id: 18,
+                                    poem_id: this.detail.poem_id,
+                                    resource_type: 3,
+                                    play_url: resp.path,
+                                    file_size: this.fileSize,
+                                    activity_id: 14,
+                                    resource_name: this.detail.title,
+                                    introduce: "",
+                                    type: 2,
+                                    activity_cat: 1,
+                                    bg_id: this.bgId
+                                }).then(() => {
+                                    uni.navigateTo({
+                                        url: "/activity/pages/poetry/test"
+                                    });
+                                });
+                            }
+                        );
+                    } else if (
+                        this.id === this.barrier &&
+                        this.activityStatus === 3
+                    ) {
+                        // 出现海报的情况
+                        // 1.已经结束了, 还未结束
+                        // uni.showToast({
+                        //     icon: "none",
+                        //     title: "已经做过测试题了",
+                        //     duration: 3000
+                        // });
+                        this.show = true;
+                        this.modelTxt1 = "活动已结束，不可继续闯关";
+                        this.modelTxt3 = "返回关卡列表";
+                        this.setNumberTimer();
+                    } else {
+                        this.show = true;
+                        this.modelTxt1 = `${this.level_title}，请继续加油哦！`;
+                        this.modelTxt3 = "下一关";
+                        this.setNumberTimer("next");
+                    }
+                    // this.$store.commit('setTestData', {
+                    //     barrier: this.id,
+                    //     ...this.detail,
+                    // });
+                    // uni.navigateTo({
+                    //     url: '/activity/pages/poetry/test',
+                    // })
+                }
+            }
+        },
+        setNumberTimer(next) {
+            const that = this;
+            this.numTimer = setInterval(() => {
+                that.curNum -= 1;
+                if (that.curNum === 0) {
+                    clearInterval(that.numTimer);
+                    that.numTimer = null;
+
+                    if (next) {
+                        // 下一关
+                        this.$store.commit("setRecordParam", {
+                            status: this.activityStatus,
+                            id: this.id + 1,
+                            barrier: this.barrierInfo.barrier
+                        });
+                        this.getRecordParams();
+                    } else {
+                        // 闯关列表
                         uni.navigateTo({
                             url: `/activity/pages/poetry/clearance?id=${this.id}`
                         });
-                    }, 3000);
+                    }
                 }
-                // this.$store.commit('setTestData', {
-                //     barrier: this.id,
-                //     ...this.detail,
-                // });
-                // uni.navigateTo({
-                //     url: '/activity/pages/poetry/test',
-                // })
-            }
+            }, 1000);
         },
         checkMore() {
             console.log("checkMore----");
@@ -472,46 +584,50 @@ export default {
                 uni.hideLoading();
             });
         },
-        onConfirmDelete() {
-            uni.showModal({
-                title: "提示",
-                content: "确定要放弃已经录制的作品重新录制吗",
-                confirmText: "确定",
-                cancelText: "取消",
-                cancelColor: "#999999",
-                confirmColor: "#1166FF",
-                success: res => {
-                    if (res.confirm) {
-                        this.isRecordPage = 1;
-                        this.unPlayStatus = -2;
-                        if (this.playStatus) {
-                            this.stopAll();
-                        }
-                        if (this.isRecord) {
-                            this.endRecord();
-                        }
-                        this.playStatus = 0;
-                        this.voicePath = "";
-                        this.centerTxt = "录音";
-                        this.recordStatus = 0;
-                        this.isStartRecord = 0;
-                        this.reStartRecord();
-                    } else if (res.cancel) {
-                        console.log("用户点击取消");
-                    }
-                }
-            });
-        },
-        reStartRecord() {
+        resetPageData() {
+            this.isRecordPage = 1;
+            this.unPlayStatus = -2;
+            if (this.playStatus) {
+                // 正在播放的时候进行停止播放
+                this.stopAll();
+            }
+            if (this.isRecord) {
+                this.endRecord();
+            }
+            this.playStatus = 0;
             this.voicePath = "";
-            this.startRecord();
+            this.centerTxt = "录音";
+            this.recordStatus = 0;
+            this.isStartRecord = 0;
+            this.recordInit = false;
+            this.intervalTime = 0;
+        },
+        onConfirmDelete() {
+            if (this.recordInit) {
+                uni.showModal({
+                    title: "提示",
+                    content: "确定要放弃已经录制的作品重新录制吗",
+                    confirmText: "确定",
+                    cancelText: "取消",
+                    cancelColor: "#999999",
+                    confirmColor: "#1166FF",
+                    success: res => {
+                        if (res.confirm) {
+                            this.resetPageData();
+                            this.startRecord();
+                        } else if (res.cancel) {
+                            console.log("用户点击取消");
+                        }
+                    }
+                });
+            }
         },
         getSetting() {
             const that = this;
             uni.getSetting({
                 success(res) {
                     if (res.authSetting["scope.record"]) {
-                        that.imgAuthBtn = true;
+                        that.authStatus = true;
                     }
                     console.log(res.authSetting);
                 }
@@ -522,7 +638,7 @@ export default {
             uni.authorize({
                 scope: "scope.record",
                 success() {
-                    that.imgAuthBtn = true;
+                    that.authStatus = true;
                 }
             });
         },
@@ -550,23 +666,20 @@ export default {
             innerAudioContextBg.stop();
         },
         startRecord() {
-            if (!this.imgAuthBtn) {
-                this.setAuthStatus();
-            } else {
-                this.timer = setInterval(() => {
-                    this.intervalTime += 0.5;
-                    if (this.intervalTime >= 0.5 && !this.isRecord) {
-                        console.log("开始录音");
-                        this.isRecord = true;
-                        this.intervalTime = 0;
-                        recorderManager.start({
-                            format: "mp3"
-                        });
-                    }
-                }, 500);
-            }
+            this.timer = setInterval(() => {
+                this.intervalTime += 0.5;
+                if (this.intervalTime >= 0.5 && !this.isRecord) {
+                    console.log("开始录音");
+                    this.isRecord = true;
+                    this.intervalTime = 0;
+                    recorderManager.start({
+                        format: "mp3",
+                        duration: 600000
+                    });
+                }
+            }, 500);
         },
-        stopRecord() {
+        pauseRecord() {
             console.log("停止");
             recorderManager.pause();
         },
@@ -574,15 +687,7 @@ export default {
             console.log("继续");
             recorderManager.resume();
         },
-        playVoice() {
-            console.log("播放录音");
-            if (this.voicePath) {
-                innerAudioContext.src = this.voicePath;
-                innerAudioContext.play();
-            }
-            console.log(this.voicePath, 111111111);
-        },
-        endRecord() {
+        endRecord(maxDuration) {
             if (this.intervalTime <= 0.5) {
                 console.log("录音太短了!!!");
             }
@@ -591,10 +696,10 @@ export default {
 
             if (this.isRecord) {
                 setTimeout(() => {
-                    recorderManager.stop();
-
+                    if (!maxDuration) {
+                        recorderManager.stop();
+                    }
                     this.isRecord = false;
-
                     console.log(this.isRecord);
                 }, 500); // 延迟小段时间停止录音, 更好的体验
             }
@@ -659,20 +764,20 @@ export default {
                 page_num: 1
             }).then(({ list }) => {
                 if (list.length) {
-                    console.log(this.bgId, "hhhh");
                     if (this.bgId === -1) {
                         const index = Math.floor(
                             Math.random() * (list.length - 1)
                         );
                         this.bgId = list[index].id;
-                        this.selBgTitle = list[index].title;
+                        this.selBg = list[index];
                     } else {
                         list.forEach((d, index) => {
                             if (d.id === this.bgId) {
-                                this.selBgTitle = d.title;
+                                this.selBg = d;
                             }
                         });
                     }
+                    innerAudioContextBg.src = this.selBg.play_url;
                 }
             });
         },
@@ -801,7 +906,7 @@ export default {
                 height: 68upx;
                 position: absolute;
                 top: 0;
-                left: 170upx;
+                left: 0;
             }
             .walk-way {
                 width: 624upx;
@@ -815,7 +920,7 @@ export default {
                 .wark-bar {
                     position: absolute;
                     left: 0;
-                    width: 200upx;
+                    width: 0;
                     height: 100%;
                     top: 0;
                     background: #b5fff5;
@@ -864,6 +969,9 @@ export default {
             .item {
                 position: relative;
                 text-align: center;
+                &.hide {
+                    opacity: 0;
+                }
             }
             .icon {
                 width: 140upx;
@@ -885,6 +993,21 @@ export default {
                 height: 100upx;
                 left: 40upx;
                 top: 20upx;
+                animation: mymove 2s infinite;
+            }
+            @keyframes mymove {
+                0% {
+                    transform: scale(1);
+                }
+                25% {
+                    transform: scale(1.05);
+                }
+                50% {
+                    transform: scale(1);
+                }
+                75% {
+                    transform: scale(1.05);
+                }
             }
             .txt {
                 margin-top: -20upx;

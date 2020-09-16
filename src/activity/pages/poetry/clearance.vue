@@ -28,14 +28,6 @@
                 >
                     我的作品
                 </view>
-                <view class="btn-wrap">
-                    <view
-                        class="btn"
-                        @click="jumpVip"
-                    >
-                        有书vip
-                    </view>
-                </view>
             </view>
             <view class="main-data">
                 <view
@@ -86,7 +78,7 @@
                     @click="jumpPrize"
                 >
                     {{
-                        barrierInfo.draw_num
+                        barrierInfo.draw_num > 0
                             ? `抽奖*${barrierInfo.draw_num}`
                             : "抽奖啦"
                     }}
@@ -251,14 +243,14 @@ export default {
             if (this.activityStatus === 3) {
                 if (id < this.barrierInfo.barrier + 1) {
                     // 活动已结束，继续录制，不答题
-                    uni.navigateTo({
-                        url: `/activity/pages/poetry/record?id=${id}&status=${this.activityStatus}&barrier=${this.barrierInfo.barrier}`,
-                    });
                     // id, status, barrier
                     this.$store.commit('setRecordParam', {
                         status: this.activityStatus,
                         id,
                         barrier: this.barrierInfo.barrier,
+                    });
+                    uni.navigateTo({
+                        url: '/activity/pages/poetry/record',
                     });
                 } else {
                     uni.showToast({
@@ -269,13 +261,13 @@ export default {
                 }
             } else if (this.activityStatus === 2) {
                 if (id < this.barrierInfo.barrier + 2) {
-                    uni.navigateTo({
-                        url: `/activity/pages/poetry/record?id=${id}&status=${this.activityStatus}&barrier=${this.barrierInfo.barrier}`,
-                    });
                     this.$store.commit('setRecordParam', {
                         status: this.activityStatus,
                         id,
                         barrier: this.barrierInfo.barrier,
+                    });
+                    uni.navigateTo({
+                        url: '/activity/pages/poetry/record',
                     });
                 } else {
                     uni.showToast({
@@ -285,11 +277,6 @@ export default {
                     });
                 }
             }
-        },
-        jumpVip() {
-            uni.navigateTo({
-                url: '/activity/pages/poetry/vip',
-            });
         },
         confirmUcenter() {
             if (!this.hasLogin) {
@@ -307,16 +294,6 @@ export default {
 };
 </script>
 <style scoped lang="less">
-.btn-wrap {
-    position: absolute;
-    right: 0;
-    top: 80upx;
-    color: yellow;
-    text-align: center;
-    .btn {
-        width: 100upx;
-    }
-}
 .page-top {
     height: 468upx;
     background: url(https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/level-top.png);
@@ -371,13 +348,14 @@ export default {
     background: url(https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/level-bg.png);
     background-repeat: repeat-y;
     min-height: 1306upx;
-    background-size: 100% auto;
+    background-size: 750upx 1306upx;
     .level-row {
         display: flex;
         justify-content: space-between;
         padding: 0 80upx;
         height: 136upx;
         margin-bottom: 140upx;
+        box-sizing: border-box;
         .level-item {
             width: 88upx;
             height: 136upx;
