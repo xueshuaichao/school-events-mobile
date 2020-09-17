@@ -502,7 +502,7 @@ export default {
         },
         watchIndex() {
             let url = `/activity/pages/index?activity_id=${this.activityId}`;
-            if (this.read === 6) {
+            if (this.activityId === 6) {
                 url = '/history/read/index';
             }
             if (this.activityId === 9) {

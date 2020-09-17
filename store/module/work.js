@@ -10,12 +10,14 @@ export default {
         },
         recordDetail: null,
         bgMusic: -1,
+        recordParam: null,
     },
     getters: {
         // eslint-disable-next-line max-len
         getWorkParams: state => state.workParams,
         getRecordDetail: state => state.recordDetail,
         getBgMusic: state => state.bgMusic,
+        getRecordParam: state => state.recordParam,
     },
     actions: {},
     mutations: {
@@ -26,8 +28,10 @@ export default {
             state.recordDetail = data;
         },
         setBgmusic(state, data) {
-            console.log(data, 'change----bg---music');
             state.bgMusic = data;
+        },
+        setRecordParam(state, data) {
+            state.recordParam = data;
         },
     },
 };

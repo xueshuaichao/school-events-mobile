@@ -9,7 +9,7 @@
     >
         <view class="thumbnail-wrap">
             <image
-                v-if="info.resource_type === 1"
+                v-if="info.resource_type === 1 || info.resource_type === 3"
                 class="thumbnail"
                 :src="
                     info.video_img_url ||

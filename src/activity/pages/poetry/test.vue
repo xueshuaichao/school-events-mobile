@@ -32,29 +32,117 @@
             class="cover"
             src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/poetry-cover-1.png"
         />
+        <!--弹窗-->
+        <model
+            :show="show"
+            :test-status="testStatus"
+            :is-success="isSuccess"
+            :model-txt1="modelTxt1"
+            :model-txt2="modelTxt2"
+            :btn2="btn2"
+            :btn1="btn1"
+            :cur-num="curNum"
+            :level="level"
+            @jumpTwo="jumpTwo"
+            @jumpOne="jumpOne"
+        />
     </view>
 </template>
 <script>
 import api from '../../../common/api';
+import model from './testmodel.vue';
 
 export default {
+    components: {
+        model,
+    },
     data() {
         return {
             detail: null,
             options: [],
             selItem: null,
             answer: 0,
+            show: false,
+            isSuccess: true,
+            modelTxt1: '请继续加油喔',
+            modelTxt2: '并获得一次抽奖机会哦',
+            testStatus: 0, // -1 0 1 2 3 4
+            btn1: '下一关',
+            btn2: '去抽奖',
+            curNum: 3,
+            timer: null,
+            level: 1,
         };
     },
     created() {
         this.detail = this.$store.getters.getRecordDetail;
+        console.log(this.detail);
+        if (!this.detail) {
+            this.detail = {
+                barrier: 1,
+                level: 1,
+                level_title: '小诗人',
+                question: {
+                    title: 'ahskahdkahsk',
+                    extra: ['1212'],
+                },
+            };
+        }
         this.options = this.detail.question.extra;
         console.log(this.detail);
+        // this.setTimer();
     },
     onUnload() {
+        if (this.timer) {
+            clearInterval(this.timer);
+            this.timer = null;
+        }
         uni.navigateBack();
     },
     methods: {
+        jumpOne() {
+            if (this.testStatus === -1) {
+                // 重新答题
+                this.answer = 0;
+                this.selItem = null;
+            } else if (this.testStatus === 0) {
+                // 换诗
+                this.toRecordPage();
+            } else {
+                // 下一关
+                this.toRecordPage('add');
+            }
+            this.show = false;
+        },
+        jumpTwo() {
+            if (this.testStatus < 1) {
+                // 清空state
+                this.$store.commit('setRecordParam', null);
+                uni.navigateTo({
+                    url: `/activity/pages/poetry/clearance?id=${this.detail.barrier}`,
+                });
+            } else {
+                uni.navigateTo({
+                    url: '/activity/pages/poetry/lottery?activity_id=14',
+                });
+            }
+            this.show = false;
+        },
+        toRecordPage(add) {
+            this.$store.commit('setRecordParam', {
+                status: 2,
+                id: this.detail.barrier + (add ? 1 : 0),
+                barrier: this.detail.barrier + (add ? 1 : 0),
+            });
+            if (this.timer) {
+                clearInterval(this.timer);
+                this.timer = null;
+            }
+            this.show = false;
+            uni.navigateTo({
+                url: '/activity/pages/poetry/record',
+            });
+        },
         clickItem(item, index) {
             this.selItem = item;
             switch (index) {
@@ -90,26 +178,59 @@ export default {
                     console.log(res);
                     // 返回操作都是跳转关卡页面
                     if (res.success) {
+                        this.isSuccess = true;
                         if (res.has_draw && res.level_title) {
+                            this.modelTxt1 = `恭喜你晋升“${res.level_title}”`;
+                            this.modelTxt2 = '并获得一次抽奖机会哦';
+                            this.testStatus = 1;
                             // 去抽奖
-                        } else if (res.level_title) {
-                            // 进入下一关
                         } else if (res.has_draw) {
                             // 去抽奖
+                            this.modelTxt1 = '恭喜你获得一次抽奖机会';
+                            this.testStatus = 2;
+                        } else if (res.level_title) {
+                            // 进入下一关
+                            this.modelTxt1 = `恭喜你晋升“${res.level_title}”`;
+                            this.modelTxt2 = '';
+                            this.testStatus = 3;
+                        } else {
+                            this.modelTxt1 = `还有${5
+                                - (this.detail.barrier % 5)}关即可抽奖`;
+                            this.testStatus = 4;
                         }
+                        this.level = res.level;
+                        this.btn1 = '下一关';
+                        this.btn2 = '去抽奖';
+                        this.setTimer();
                     } else if (!res.retry) {
-                        uni.showToast({
-                            icon: 'none',
-                            title: '这首诗太难了，换首诗来学习吧！',
-                        });
                         // 换诗跳转闯关页面
+                        this.modelTxt1 = '这首诗太难了，换首诗来学习吧';
+                        this.testStatus = 0;
+                        this.btn1 = '换诗';
+                        this.btn2 = '返回';
+                        this.isSuccess = false;
                     } else {
-                        uni.showToast({
-                            icon: 'none',
-                            title: '试试继续答题',
-                        });
+                        this.modelTxt1 = '很遗憾，通关失败，答对后方可通关成功';
+                        this.testStatus = -1;
+                        this.btn1 = '重新答题';
+                        this.btn2 = '返回';
+                        this.isSuccess = false;
                     }
+                    this.show = true;
                 });
+            }
+        },
+        setTimer() {
+            if (this.testStatus > 2) {
+                const that = this;
+                this.timer = setInterval(() => {
+                    that.curNum -= 1;
+                    if (that.curNum === 0) {
+                        clearInterval(that.timer);
+                        that.timer = null;
+                        that.toRecordPage('add');
+                    }
+                }, 1000);
             }
         },
     },
