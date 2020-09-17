@@ -112,7 +112,7 @@ export default {
             hasLogin: false,
             level: [],
             filter: {
-                page_size: 32,
+                page_size: 16,
                 page_num: 0,
             },
             loadMoreStatus: 'none',

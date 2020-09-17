@@ -110,13 +110,13 @@
                         :key="item.id"
                         class="media-content"
                     >
-                        <event-craft-cover
+                        <!--<event-craft-cover
                             :info="item"
                             :media-icon="type !== 'myWork'"
                             :like-icon="type === 'myWork'"
                             :best-icon="false"
                             :bg-color="publicConfig.primaryBgColor"
-                        />
+                        />-->
                         <view
                             class="work-main"
                             @click="viewDetail(item, index)"
