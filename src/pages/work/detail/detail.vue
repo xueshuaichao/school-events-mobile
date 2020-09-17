@@ -490,15 +490,37 @@ export default {
             if (item.resource_type === 3) {
                 api.get(`/api/poem/info?ac_resource_id=${item.id}`).then(
                     (res) => {
-                        console.log(res, 'res----');
+                        let content = [];
+                        let annotate = [];
+                        if (res.poem.content) {
+                            content = res.poem.content.split(/[\r\n]/);
+                        }
+                        if (res.poem.annotate) {
+                            annotate = res.poem.annotate.split(/[\r\n]/);
+                        }
                         if (num === 1) {
-                            this.pageDataOne = { ...this.pageDataOne, ...res };
+                            this.pageDataOne = {
+                                ...this.pageDataOne,
+                                ...res.poem,
+                                annotate,
+                                content,
+                                bg_url: res.bg_url,
+                            };
                         } else if (num === 2) {
-                            this.pageDataTwo = { ...this.pageDataTwo, ...res };
+                            this.pageDataTwo = {
+                                ...this.pageDataTwo,
+                                ...res.poem,
+                                annotate,
+                                content,
+                                bg_url: res.bg_url,
+                            };
                         } else {
                             this.pageDataThree = {
                                 ...this.pageDataThree,
-                                ...res,
+                                ...res.poem,
+                                annotate,
+                                content,
+                                bg_url: res.bg_url,
                             };
                         }
                     },
@@ -832,12 +854,15 @@ export default {
                         switch (this.currentSwiper) {
                             case 0:
                                 this.pageDataThree = res;
+                                this.getPoem(res, 3);
                                 break;
                             case 1:
                                 this.pageDataOne = res;
+                                this.getPoem(res, 1);
                                 break;
                             case 2:
                                 this.pageDataTwo = res;
+                                this.getPoem(res, 2);
                                 break;
                             default:
                                 console.log('1');
@@ -846,12 +871,15 @@ export default {
                         switch (this.currentSwiper) {
                             case 2:
                                 this.pageDataOne = res;
+                                this.getPoem(res, 1);
                                 break;
                             case 1:
                                 this.pageDataThree = res;
+                                this.getPoem(res, 3);
                                 break;
                             case 0:
                                 this.pageDataTwo = res;
+                                this.getPoem(res, 2);
                                 break;
                             default:
                                 console.log('-');

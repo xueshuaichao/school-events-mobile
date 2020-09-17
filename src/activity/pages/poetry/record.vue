@@ -889,7 +889,8 @@ export default {
             font-size: 32upx;
             line-height: 44upx;
             text-align: center;
-            padding: 0 118upx;
+            padding: 16upx 116upx 0;
+            color: #444;
             .left {
                 text-align: left;
                 text-indent: 20upx;
