@@ -110,6 +110,7 @@
                             <view
                                 :key="item.id + index"
                                 :class="['media-content', isSelf ? 'self' : '']"
+                                @click.native="viewDetail(item, index)"
                             >
                                 <view class="work-main">
                                     <view
@@ -786,6 +787,7 @@ export default {
     text-align: center;
     background: url(https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/upload-btn.png);
     background-size: 100% 100%;
+    z-index: 1;
 }
 .media-list {
     margin-top: 110upx;

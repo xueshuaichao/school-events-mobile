@@ -58,12 +58,12 @@
                     </view>
                 </view>
             </scroll-view>
-            <!-- <view
+            <view
                 class="more-content"
                 @click="checkMore"
             >
                 上滑查看更多
-            </view> -->
+            </view>
             <view class="zhusi">
                 <view
                     v-for="(txt, index) in detail.annotate"
@@ -94,21 +94,21 @@
                 <view class="walk-way">
                     <view
                         class="wark-bar"
-                        :style="{ width: slideValue + 'px' }"
+                        :style="{ width: (slideValue / maxVal) * 100 + '%' }"
                     />
                 </view>
                 <image
                     class="btn"
                     src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/btn-dot.png"
-                    :style="{ left: slideValue + 'px' }"
+                    :style="{ left: (slideValue / maxVal) * 100 + '%' }"
                 />
                 <slider
                     :value="slideValue"
                     min="0"
                     :max="maxVal"
-                    active-color="#FFCC33"
-                    background-color="#000000"
-                    block-color="#8A6DE9"
+                    active-color="#ffffff"
+                    background-color="#ffffff"
+                    block-color="#ffffff"
                     block-size="30"
                     class="unseable-slider"
                     @change="sliderChange"
@@ -295,7 +295,7 @@ export default {
                 draw_num: null,
                 barrier: 0
             },
-            slideValue: 0,
+            slideValue: 50,
             maxVal: 100,
             isPreview: false
         };
@@ -314,7 +314,7 @@ export default {
         uni.getSystemInfo({
             success(res) {
                 const pix = res.screenWidth / 750;
-                that.scrollH = res.windowHeight - 680 * pix;
+                that.scrollH = res.windowHeight - 760 * pix;
             },
             fail() {}
         });
@@ -596,7 +596,7 @@ export default {
         },
         checkMore() {
             console.log("checkMore----");
-            this.scrollY = true;
+            // this.scrollY = true;
         },
         upper() {
             // this.scrollY = false;
@@ -670,12 +670,6 @@ export default {
                     that.authStatus = true;
                 }
             });
-        },
-        setBgAudioVol(val) {
-            innerAudioContextBg.volume = val;
-        },
-        setMainAudio(val) {
-            innerAudioContext.volume = val;
         },
         seekbg(val) {
             innerAudioContextBg.seek(val);
@@ -843,7 +837,7 @@ export default {
         text-align: right;
         margin-left: 568upx;
         &.short {
-            margin-left: 686upx;
+            margin-left: 624upx;
         }
         .item {
             width: 60upx;
@@ -869,6 +863,7 @@ export default {
         color: #43a294;
         line-height: 28upx;
         text-align: right;
+        margin-top: 10upx;
         margin-right: 24upx;
     }
     .title {
@@ -894,15 +889,37 @@ export default {
             .left {
                 text-align: left;
                 text-indent: 20upx;
+                margin-bottom: 40upx;
             }
         }
     }
 
     .more-content {
         text-align: center;
-        padding: 20upx;
         color: #cda972;
         font-size: 20upx;
+        height: 60upx;
+        line-height: 80upx;
+        padding-bottom: 20upx;
+        position: relative;
+        width: 120upx;
+        box-sizing: content-box;
+        margin: 0 auto;
+        &::before,
+        &::after {
+            position: absolute;
+            content: "";
+            left: 48upx;
+            width: 12upx;
+            height: 12upx;
+            border-top: 4upx solid #cda972;
+            border-left: 4upx solid #cda972;
+            transform: rotate(45deg);
+            top: 4upx;
+        }
+        &::after {
+            top: 14upx;
+        }
     }
     .zhusi {
         color: #43a294;
@@ -1062,7 +1079,8 @@ export default {
     }
     .unseable-slider {
         opacity: 0.5;
-        margin-top: 10upx;
+        margin: 10upx 30upx 0;
+        width: 624upx;
     }
 }
 </style>

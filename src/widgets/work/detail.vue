@@ -887,7 +887,7 @@ export default {
         color: #fff;
 
         .item {
-            margin-bottom: 52rpx;
+            margin-bottom: 32rpx;
             margin-left: 50rpx;
             // min-width: 120rpx;
             letter-spacing: 2upx;
