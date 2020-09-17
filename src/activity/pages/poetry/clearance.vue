@@ -83,7 +83,10 @@
                             : "抽奖啦"
                     }}
                 </view>
-                <view class="ucenter">
+                <view
+                    class="ucenter"
+                    @click="jumpLotteryList"
+                >
                     我的奖品
                 </view>
                 <!-- <view @click="pageScroll">
@@ -109,7 +112,7 @@ export default {
             hasLogin: false,
             level: [],
             filter: {
-                page_size: 32,
+                page_size: 16,
                 page_num: 0,
             },
             loadMoreStatus: 'none',
@@ -144,6 +147,11 @@ export default {
         jumpPrize() {
             uni.navigateTo({
                 url: '/activity/pages/poetry/lottery?activity_id=14',
+            });
+        },
+        jumpLotteryList() {
+            uni.navigateTo({
+                url: '/activity/pages/lottery/list?activity_id=14',
             });
         },
         getBarrierInfo() {

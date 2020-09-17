@@ -5,24 +5,24 @@
                 src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/vip-1.jpg"
             />
         </view>
-        <template>
+        <!--<template>
             <view class="card">
                 有书VIP 会员卡
             </view>
             <view class="hare">
-                兑换码：11123546566767
+                兑换码：{{cardCode}}
                 <image
                     class="qr-code"
                     src="../../static/icon_copy.png"
                 />
                 <text
                     class="copy"
-                    @click="copyCode('hhhhhhhh')"
+                    @click="copyCode(cardCode)"
                 >
                     复制
                 </text>
             </view>
-        </template>
+        </template>-->
         <view class="bass2">
             <image
                 src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/vip-2.png"
@@ -69,6 +69,7 @@ export default {
             // #ifdef H5
             isH5: true,
             // #endif
+            cardCode: '',
         };
     },
     methods: {
@@ -104,6 +105,9 @@ export default {
             });
         },
     },
+    // onLoad(parms) {
+    //     this.cardCode = parms.cardCode;
+    // },
 };
 </script>
 <style scoped lang="less">
@@ -115,6 +119,7 @@ export default {
         }
     }
     .bass2 {
+        margin-top: -10upx;
         image {
             width: 100%;
             height: 360upx;
