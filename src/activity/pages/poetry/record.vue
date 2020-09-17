@@ -2,7 +2,10 @@
     <view class="record-page">
         <view class="record-page-init">
             <view class="page-top-wrap">
-                <view class="other-users">
+                <view
+                    class="other-users"
+                    :class="{ short: detail.avatars.length === 1 }"
+                >
                     <view
                         v-for="(item, index) in detail.avatars"
                         :key="index"
@@ -283,7 +286,8 @@ export default {
                 barrier: 0
             },
             slideValue: 0,
-            maxVal: 100
+            maxVal: 100,
+            isPreview: false
         };
     },
     computed: {
@@ -305,9 +309,26 @@ export default {
             fail() {}
         });
     },
-    onLoad() {
+    onLoad({ title, annotate, content, display_type, dynasty, author }) {
         const self = this;
         innerAudioContextBg.src = this.bgSrc;
+        if (title) {
+            // 这里用作预览。
+            console.log(this.detail, title, content, "before--preview.detail");
+            this.isPreview = true;
+            content = content.split(/[\r\n]/);
+            annotate = annotate.split(/[\r\n]/);
+            this.detail = {
+                ...this.detail,
+                title,
+                display_type,
+                dynasty,
+                author,
+                content,
+                annotate
+            };
+            console.log(this.detail, title, content, "preview.detail");
+        }
 
         recorderManager.onStop(res => {
             console.log(`recorder stop${JSON.stringify(res)}`);
@@ -369,11 +390,17 @@ export default {
         // 选择背景音乐，返回录制页面。
         this.bgId = this.$store.getters.getBgMusic || -1;
         this.recordInit = false;
-        this.getbgList();
-        this.getRecordParams();
-        this.getBarrierInfo();
+        console.log(this.isPreview, "isPreview");
+        if (!this.isPreview) {
+            this.getbgList();
+            this.getRecordParams();
+            this.getBarrierInfo();
+        } else {
+            this.setPriviewData();
+        }
     },
     methods: {
+        setPriviewData() {},
         getBarrierInfo() {
             // 闯关列表或者是测试题返回到录制页面
             api.get("/api/poem/userinfo").then(res => {
@@ -801,6 +828,9 @@ export default {
         display: flex;
         text-align: right;
         margin-left: 568upx;
+        &.short {
+            margin-left: 686upx;
+        }
         .item {
             width: 60upx;
             height: 60upx;
