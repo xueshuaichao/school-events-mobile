@@ -34,7 +34,11 @@
                 {{ detail.title }}
             </view>
             <view class="dynasty">
-                {{ detail.dynasty }}/{{ detail.author }}
+                {{ detail.dynasty }}
+                <template v-if="detail.author">
+                    /
+                </template>
+                {{ detail.author }}
             </view>
             <scroll-view
                 :scroll-top="scrollTop"
@@ -72,14 +76,20 @@
                 </view>
             </view>
         </view>
-        <view class="cover">
+        <view
+            class="cover"
+            :class="{ btm: isPreview }"
+        >
             <image
                 :src="
                     `https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/poetry-cover-${bgImgIndex}.png`
                 "
             />
         </view>
-        <view class="page-btm">
+        <view
+            class="page-btm"
+            :class="{ hide: isPreview }"
+        >
             <view class="control">
                 <view class="walk-way">
                     <view
@@ -316,8 +326,12 @@ export default {
             // 这里用作预览。
             console.log(this.detail, title, content, "before--preview.detail");
             this.isPreview = true;
-            content = content.split(/[\r\n]/);
-            annotate = annotate.split(/[\r\n]/);
+            if (content) {
+                content = content.split(/[\r\n]/);
+            }
+            if (annotate) {
+                annotate = annotate.split(/[\r\n]/);
+            }
             this.detail = {
                 ...this.detail,
                 title,
@@ -901,6 +915,9 @@ export default {
         left: 0;
         width: 750upx;
         height: 598upx;
+        &.btm {
+            bottom: 0;
+        }
         image {
             width: 100%;
             height: 100%;
@@ -914,6 +931,9 @@ export default {
         left: 0;
         background: url(https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/recored-btm.png);
         background-size: cover;
+        &.hide {
+            display: none;
+        }
         .control {
             margin: 30upx 0 0 30upx;
             width: 688upx;
@@ -1012,20 +1032,20 @@ export default {
                 height: 100upx;
                 left: 40upx;
                 top: 20upx;
-                animation: mymove 2s infinite;
+                animation: mymove 3s infinite;
             }
             @keyframes mymove {
                 0% {
                     transform: scale(1);
                 }
                 25% {
-                    transform: scale(1.05);
+                    transform: scale(1.1);
                 }
                 50% {
                     transform: scale(1);
                 }
                 75% {
-                    transform: scale(1.05);
+                    transform: scale(1.1);
                 }
             }
             .txt {

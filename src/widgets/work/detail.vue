@@ -413,9 +413,6 @@ export default {
                 this.praise_count = this.pageData.praise_count || 0;
                 this.introduce = this.pageData.introduce || '';
                 this.catName = this.pageData.cat_name || '';
-                if (val.resource_type === 3) {
-                    this.getPoem(val);
-                }
             }
         },
     },
@@ -451,11 +448,6 @@ export default {
         // #endif
     },
     methods: {
-        getPoem(item) {
-            api.get(`/api/poem/info?ac_resource_id=${item.id}`).then((res) => {
-                console.log(res, 'res----');
-            });
-        },
         html5VideoAutoAdjust() {
             document.querySelector('.uni-video-type-fullscreen').style = '';
         },
@@ -510,7 +502,7 @@ export default {
         },
         watchIndex() {
             let url = `/activity/pages/index?activity_id=${this.activityId}`;
-            if (this.read === 6) {
+            if (this.activityId === 6) {
                 url = '/history/read/index';
             }
             if (this.activityId === 9) {

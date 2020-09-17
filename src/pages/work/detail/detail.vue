@@ -197,7 +197,7 @@ import detailConf from './detail.config';
 import drawer from '../../../widgets/work/drawer.vue';
 // 上下滑动的功能的拆解
 // 使用Swiper组件，把页面的主要内容，当作独立的部分，迁移到../../../widgets/work/detail.vue。
-// 页面滑动的时候，确定下当前显示的数据，用来做转发，二维码的数据
+// 页面滑动的时候，确定下当前显示的数据，用来做页面分享，作品海报的数据
 
 // 页面进入时候，分别获取前一页面，后一页面的数据，显示在swiper-item里面。
 // 根据页面翻动的方向, 获取相对的第二页面的数据，并修改视图。
@@ -469,6 +469,7 @@ export default {
                     if (!reget) {
                         this.pageDataTwo = res;
                         this.setGetDetail(res);
+                        this.getPoem(res, 2);
                     }
                 },
                 (err) => {
@@ -484,6 +485,25 @@ export default {
                 },
             );
             this.getLikeStatus();
+        },
+        getPoem(item, num) {
+            if (item.resource_type === 3) {
+                api.get(`/api/poem/info?ac_resource_id=${item.id}`).then(
+                    (res) => {
+                        console.log(res, 'res----');
+                        if (num === 1) {
+                            this.pageDataOne = { ...this.pageDataOne, ...res };
+                        } else if (num === 2) {
+                            this.pageDataTwo = { ...this.pageDataTwo, ...res };
+                        } else {
+                            this.pageDataThree = {
+                                ...this.pageDataThree,
+                                ...res,
+                            };
+                        }
+                    },
+                );
+            }
         },
         setGetDetail(res) {
             if (
@@ -943,6 +963,7 @@ export default {
                     this.apiFrom,
                 ).then((res) => {
                     this.pageDataOne = res;
+                    this.getPoem(res, 1);
                 });
                 this.getPageMoreDate(
                     paramNext,
@@ -950,6 +971,7 @@ export default {
                     this.apiFrom,
                 ).then((res) => {
                     this.pageDataThree = res;
+                    this.getPoem(res, 3);
                 });
                 try {
                     const value = uni.getStorageSync('hasPromtSlide');
