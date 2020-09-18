@@ -555,7 +555,7 @@ export default {
                         this.setNumberTimer();
                     } else {
                         this.show = true;
-                        this.modelTxt1 = `${this.level_title}，请继续加油哦！`;
+                        this.modelTxt1 = `${this.barrierInfo.level_title}，请继续加油哦！`;
                         this.modelTxt3 = "下一关";
                         this.setNumberTimer("next");
                     }

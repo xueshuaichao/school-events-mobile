@@ -27,9 +27,9 @@
                             <view class="icon icon-gift" />
                             我的中奖
                         </view>
-                        <view @click="serPrize">
+                        <!--<view @click="serPrize">
                             抽奖了
-                        </view>
+                        </view>-->
                     </view>
                 </view>
                 <!-- 跑马灯 -->

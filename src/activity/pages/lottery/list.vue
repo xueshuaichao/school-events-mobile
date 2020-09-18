@@ -251,7 +251,7 @@ page {
         .item {
             border-radius: 16upx;
             background-color: #fff;
-            padding: 20upx 0 0;
+            padding: 20upx 0 10upx;
             margin-bottom: 32upx;
         }
         .item-detail,
