@@ -82,9 +82,53 @@
             </template>
         </view>
         <view
-            v-if="pageData.resource_type === 3"
+            v-if="pageData.resource_type === 3 && pageData.title"
             class="audio-detail"
         >
+            <view class="record-page-init">
+                <view class="title">
+                    {{ pageData.title }}
+                </view>
+                <view class="dynasty">
+                    {{ pageData.dynasty }}
+                    <template v-if="pageData.author">
+                        /
+                    </template>
+                    {{ pageData.author }}
+                </view>
+                <scroll-view
+                    :scroll-y="scrollY"
+                    :style="{ height: scrollH + 'px' }"
+                    class="scroll-Y"
+                >
+                    <view class="content-poetry">
+                        <view
+                            v-for="(txt, index) in pageData.content"
+                            :key="index"
+                            :class="{ left: pageData.display_type === 1 }"
+                        >
+                            {{ txt }}
+                        </view>
+                    </view>
+                </scroll-view>
+                <!-- <view
+                    class="more-content"
+                    @click="checkMore"
+                >
+                    上滑查看更多
+                </view> -->
+                <view class="zhusi">
+                    <view
+                        v-for="(txt, index) in pageData.annotate"
+                        :key="index"
+                    >
+                        <template v-if="!index">
+                            注释：
+                        </template>
+                        {{ txt }}
+                    </view>
+                </view>
+            </view>
             <view class="cover">
                 <image
                     :src="
@@ -94,7 +138,48 @@
             </view>
             <view class="page-btm" />
         </view>
-        <view class="content">
+        <view
+            v-if="pageData.resource_type === 3"
+            class="content2"
+        >
+            <view class="poetry-info">
+                <view
+                    class="poetry-create text-one-line"
+                    @click="jumpUc"
+                >
+                    @{{ pageData.create_name }}
+                </view>
+                <view class="poetry-name text-two-line">
+                    {{ pageData.resource_name }}
+                </view>
+                <view
+                    class="cat-name"
+                    :class="{ cur: pageData.cat_name }"
+                    @click="jumpLabelList"
+                >
+                    {{ pageData.cat_name ? `#${pageData.cat_name}#` : "" }}
+                </view>
+            </view>
+            <view class="controller">
+                <image
+                    class="play-btn"
+                    src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/btn-play.png"
+                />
+                <view class="play-time">
+                    00:00
+                </view>
+                <view class="bar-wrap">
+                    <view class="bar-way" />
+                </view>
+                <view class="play-time">
+                    00:00
+                </view>
+            </view>
+        </view>
+        <view
+            v-if="pageData.resource_type < 3"
+            class="content"
+        >
             <view
                 class="author-name text-one-line"
                 @click="jumpUc"
@@ -102,7 +187,7 @@
                 @{{ pageData.create_name }}
             </view>
             <view
-                v-if="pageData.school_name"
+                v-if="pageData.school_name && pageData.resource_type < 3"
                 class="school-and-record"
             >
                 <text>{{ pageData.school_name }}</text>
@@ -358,6 +443,8 @@ export default {
             toggleLikeObj: {},
             togglePlatCounts: {},
             bgIndex: 0,
+            scrollH: 300,
+            scrollY: true,
         };
     },
     watch: {
@@ -413,6 +500,7 @@ export default {
                 this.praise_count = this.pageData.praise_count || 0;
                 this.introduce = this.pageData.introduce || '';
                 this.catName = this.pageData.cat_name || '';
+                console.log(val, val.poem, 'change');
             }
         },
     },
@@ -543,7 +631,7 @@ export default {
                         activity_id: this.activityId,
                     }).then((data) => {
                         if (data.status === 2) {
-                            this.jumpUcUrl('activity');
+                            this.jumpUcUrl('going');
                         } else {
                             this.jumpUcUrl();
                         }
@@ -553,14 +641,18 @@ export default {
                 }
             });
         },
-        jumpUcUrl(activity) {
-            if (activity && this.activityId === 10) {
+        jumpUcUrl(going) {
+            if (going && this.activityId === 10) {
                 uni.navigateTo({
                     url: `/activity/pages/brand/ucenter?activity_id=10&user_id=${this.pageData.create_by}`,
                 });
-            } else if (activity && this.activityId === 12) {
+            } else if (going && this.activityId === 12) {
                 uni.navigateTo({
                     url: `/activity/pages/clocked/ucenter?activity_id=12&user_id=${this.pageData.create_by}`,
+                });
+            } else if (going && this.activityId === 14) {
+                uni.navigateTo({
+                    url: `/activity/pages/poetry/ucenter?activity_id=14&user_id=${this.pageData.create_by}`,
                 });
             } else {
                 uni.navigateTo({
@@ -795,9 +887,9 @@ export default {
         color: #fff;
 
         .item {
-            margin-bottom: 52rpx;
+            margin-bottom: 32rpx;
             margin-left: 50rpx;
-            min-width: 120rpx;
+            // min-width: 120rpx;
             letter-spacing: 2upx;
         }
     }
@@ -806,26 +898,26 @@ export default {
         width: 80rpx;
         height: 80rpx;
         &.join {
-            width: 136rpx;
-            height: 130rpx;
+            width: 112rpx;
+            height: 108rpx;
         }
         &.avator {
-            width: 90rpx;
-            height: 90rpx;
+            width: 86rpx;
+            height: 86rpx;
             border-radius: 66rpx;
             box-shadow: 0 4upx 4upx 0 rgba(0, 0, 0, 0.28);
         }
     }
     .primary {
         color: #fff;
-        font-size: 28rpx;
+        font-size: 26rpx;
         text-align: center;
         line-height: 36rpx;
         background: #1166ff;
-        width: 102rpx;
-        height: 118rpx;
+        width: 104rpx;
+        height: 104rpx;
         border-radius: 56rpx;
-        padding: 24rpx 24rpx 0;
+        padding: 16rpx 16rpx 0;
         box-sizing: border-box;
     }
 }
@@ -859,6 +951,105 @@ export default {
         left: 0;
         background: url(../../static/images/work/audio-detail-btm2.png);
         background-size: cover;
+    }
+    .record-page-init {
+        position: relative;
+        z-index: 1;
+        padding-top: 110upx;
+        .title {
+            font-size: 40upx;
+            line-height: 56upx;
+            color: #222;
+            text-align: center;
+        }
+        .dynasty {
+            font-size: 32upx;
+            line-height: 56upx;
+            color: #888;
+            text-align: center;
+        }
+        .scroll-Y {
+            .content-poetry {
+                word-break: break-all;
+                font-size: 32upx;
+                line-height: 44upx;
+                text-align: center;
+                padding: 16upx 116upx 0;
+                color: #444;
+                .left {
+                    text-align: left;
+                    text-indent: 20upx;
+                }
+            }
+        }
+
+        .more-content {
+            text-align: center;
+            padding: 20upx;
+            color: #cda972;
+            font-size: 20upx;
+        }
+        .zhusi {
+            color: #43a294;
+            font-size: 24upx;
+            line-height: 34upx;
+            padding: 0 144upx 0 54upx;
+        }
+    }
+}
+.content2 {
+    position: fixed;
+    left: 0;
+    width: 100%;
+    bottom: 20upx;
+    .poetry-info {
+        margin-left: 68upx;
+        width: 300upx;
+        color: #fff;
+        font-size: 24upx;
+        line-height: 34upx;
+        .poetry-create {
+            font-size: 24upx;
+            line-height: 34upx;
+            font-weight: 500;
+        }
+        .poetry-name {
+            height: 68upx;
+        }
+        .cat-name {
+            padding: 0 26upx;
+            border-radius: 34upx;
+            background: rgba(0, 65, 55, 0.3);
+            display: inline-block;
+        }
+    }
+    .controller {
+        height: 30upx;
+        display: flex;
+        padding: 0 26upx 0 16upx;
+        margin-top: 38upx;
+        font-size: 20upx;
+        color: #266158;
+        justify-content: space-between;
+        .play-btn {
+            width: 44upx;
+            height: 44upx;
+            position: relative;
+            bottom: 6upx;
+        }
+        .bar-wrap {
+            padding-top: 6upx;
+            .bar-way {
+                width: 540upx;
+                height: 20upx;
+                background: linear-gradient(
+                    180deg,
+                    rgba(0, 65, 55, 0.3) 0%,
+                    rgba(0, 65, 55, 0.08) 100%
+                );
+                border-radius: 10px;
+            }
+        }
     }
 }
 </style>

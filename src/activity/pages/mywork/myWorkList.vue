@@ -109,6 +109,7 @@
                         v-for="(item, index) in dataList"
                         :key="item.id"
                         class="media-content"
+                        @click="viewDetail(item, index)"
                     >
                         <!--<event-craft-cover
                             :info="item"
@@ -117,10 +118,7 @@
                             :best-icon="false"
                             :bg-color="publicConfig.primaryBgColor"
                         />-->
-                        <view
-                            class="work-main"
-                            @click="viewDetail(item, index)"
-                        >
+                        <view class="work-main">
                             <view
                                 v-if="item.rank"
                                 class="tag"
