@@ -106,7 +106,7 @@ export default {
                 this.answer = 0;
                 this.selItem = null;
             } else if (this.testStatus === 0) {
-                // 换诗
+                // 换诗 关卡不变。
                 this.toRecordPage();
             } else {
                 // 下一关
@@ -129,16 +129,18 @@ export default {
             this.show = false;
         },
         toRecordPage(add) {
+            // 待闯关的关卡 +2， 已经闯关的关卡 +1；
             this.$store.commit('setRecordParam', {
                 status: 2,
                 id: this.detail.barrier + (add ? 1 : 0),
-                barrier: this.detail.barrier + (add ? 1 : 0),
+                barrier: this.detail.barrier + (add ? 0 : -1),
             });
             if (this.timer) {
                 clearInterval(this.timer);
                 this.timer = null;
             }
             this.show = false;
+            console.log('testStatus', this.testStatus, this.curNum);
             uni.navigateTo({
                 url: '/activity/pages/poetry/record',
             });

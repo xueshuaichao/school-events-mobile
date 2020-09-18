@@ -233,8 +233,6 @@ export default {
         model
     },
     data() {
-        // const recorderManager = wx.getRecorderManager();
-        // const innerAudioContext = wx.createInnerAudioContext();
         return {
             // #ifdef H5
             isH5: true,
@@ -245,12 +243,6 @@ export default {
             timer2: null,
             timer3: null,
             numTimer: null,
-            bgSrc:
-                "https://bj.bcebos.com//vod-bj/convert/200664/audio/202005181456325ec231a07ea2c.mp3",
-            audio: null,
-            volBg: 0.5,
-            volManage: 0.8,
-            options: null,
             authStatus: false,
             activityStatus: 2,
             scrollH: 0,
@@ -297,7 +289,8 @@ export default {
             },
             slideValue: 50,
             maxVal: 100,
-            isPreview: false
+            isPreview: false,
+            pageWidth: 375
         };
     },
     computed: {
@@ -315,13 +308,14 @@ export default {
             success(res) {
                 const pix = res.screenWidth / 750;
                 that.scrollH = res.windowHeight - 760 * pix;
+                that.controllBarWidth = 624 * pix;
             },
             fail() {}
         });
     },
     onLoad({ title, annotate, content, display_type, dynasty, author }) {
         const self = this;
-        innerAudioContextBg.src = this.bgSrc;
+        // innerAudioContextBg.src = this.bgSrc;
         if (title) {
             // 这里用作预览。
             console.log(this.detail, title, content, "before--preview.detail");
@@ -416,7 +410,8 @@ export default {
     methods: {
         setPriviewData() {},
         getBarrierInfo() {
-            // 闯关列表或者是测试题返回到录制页面
+            // 闯关列表或者是测试题返回到录制页面需要重新获取
+            // 录制页面到下一关的录制仅仅是重复关卡录制
             api.get("/api/poem/userinfo").then(res => {
                 this.barrierInfo = { ...this.barrierInfo, ...res };
             });
@@ -542,13 +537,6 @@ export default {
                         this.id === this.barrier &&
                         this.activityStatus === 3
                     ) {
-                        // 出现海报的情况
-                        // 1.已经结束了, 还未结束
-                        // uni.showToast({
-                        //     icon: "none",
-                        //     title: "已经做过测试题了",
-                        //     duration: 3000
-                        // });
                         this.show = true;
                         this.modelTxt1 = "活动已结束，不可继续闯关";
                         this.modelTxt3 = "返回关卡列表";
@@ -761,6 +749,7 @@ export default {
                                 title: "服务器开小差了~",
                                 icon: "none"
                             });
+                            uni.hideToast();
                             return reject(e);
                         }
                         if (resp.status === 200) {
@@ -774,6 +763,7 @@ export default {
                                 title: resp.msg,
                                 icon: "none"
                             });
+                            uni.hideToast();
                             return reject(resp.msg);
                         }
                         return false;
@@ -968,9 +958,10 @@ export default {
             .walk-way {
                 width: 624upx;
                 height: 8upx;
-                position: relative;
+                position: absolute;
                 top: 30upx;
                 left: 30upx;
+                right: 30upx;
                 background: #43a294;
                 box-shadow: 0 2upx 6upx 0 rgba(0, 0, 0, 0.4) inset;
                 border-radius: 8upx;
@@ -1077,10 +1068,17 @@ export default {
             }
         }
     }
-    .unseable-slider {
+    /deep/.unseable-slider {
         opacity: 0.5;
         margin: 10upx 30upx 0;
         width: 624upx;
+        position: absolute;
+        top: 18upx;
+        left: 0;
+        .uni-slider-handle {
+            background: url(https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/btn-dot.png);
+            background-size: 100%;
+        }
     }
 }
 </style>
