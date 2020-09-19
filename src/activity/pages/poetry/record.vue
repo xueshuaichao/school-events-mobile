@@ -94,18 +94,20 @@
                 <view class="walk-way">
                     <view
                         class="wark-bar"
-                        :style="{ width: (slideValue / maxVal) * 100 + '%' }"
+                        :style="{ width: barWidth + 'px' }"
                     />
                 </view>
+                <!--鉴于slider的style在小程序模拟器难以改变，使用slider覆盖的方式做控制条-->
                 <image
                     class="btn"
                     src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/btn-dot.png"
-                    :style="{ left: (slideValue / maxVal) * 100 + '%' }"
+                    :style="{ left: btnLeft + 'px' }"
                 />
                 <slider
                     :value="slideValue"
                     min="0"
                     :max="maxVal"
+                    :disabled="!isRecordPage"
                     active-color="#ffffff"
                     background-color="#ffffff"
                     block-color="#ffffff"
@@ -116,7 +118,7 @@
                 />
             </view>
             <view class="time">
-                {{ intIntervalTime }}/10:00
+                {{ curTime }}/{{ recordDuration }}
             </view>
             <view class="music">
                 <template v-if="!isRecordPage">
@@ -287,18 +289,27 @@ export default {
                 draw_num: null,
                 barrier: 0
             },
-            slideValue: 50,
-            maxVal: 100,
             isPreview: false,
-            pageWidth: 375
+            pageWidth: 375,
+            barWidth: 0,
+            btnLeft: 0,
+            controllWidth: 0,
+            btnWidth: 0,
+            recordDuration: 600,
+            slideValue: 0,
+            maxVal: 600000,
+            maxTime: "10:00",
+            curTime: "00:00"
         };
     },
     computed: {
         intIntervalTime() {
             // 用于显示整数的秒数
             if (this.endRecord >= 600000) {
+                // 超过10分钟就停止记时；
                 this.endRecord("max");
             }
+            // this.curTime =
             return Math.round(this.intervalTime);
         }
     },
@@ -308,7 +319,8 @@ export default {
             success(res) {
                 const pix = res.screenWidth / 750;
                 that.scrollH = res.windowHeight - 760 * pix;
-                that.controllBarWidth = 624 * pix;
+                that.controllWidth = 624 * pix;
+                that.btnWidth = 68 * pix;
             },
             fail() {}
         });
@@ -342,6 +354,13 @@ export default {
             console.log(`recorder stop${JSON.stringify(res)}`);
             self.voicePath = res.tempFilePath;
             self.fileSize = res.fileSize;
+            self.maxVal = self.intervalTime;
+            self.recordDuration =
+                self.intervalTime > 60
+                    ? Math.floor(self.intervalTime / 60) +
+                      ":" +
+                      (self.intervalTime % 60)
+                    : "00:" + self.intervalTime;
             innerAudioContext.src = this.voicePath;
         });
         innerAudioContext.onEnded(() => {
@@ -803,9 +822,15 @@ export default {
         sliderChange(e) {
             console.log(e.detail, this.slideValue, "stoped");
             this.slideValue = e.detail.value;
+            let w = (this.slideValue * this.controllWidth) / 100;
+            this.barWidth = w;
+            this.btnLeft = w;
         },
         sliderChangeing(e) {
             this.slideValue = e.detail.value;
+            let w = (this.slideValue * this.controllWidth) / 100;
+            this.barWidth = w;
+            this.btnLeft = w;
         }
     }
 };
@@ -814,6 +839,9 @@ export default {
 .record-page {
     background: linear-gradient(#fefdf9, #c3efe4);
     height: 100vh;
+    .unseable-slider {
+        opacity: 0;
+    }
     .record-page-init {
         position: relative;
         z-index: 10;
@@ -1066,18 +1094,6 @@ export default {
                     margin-top: -16upx;
                 }
             }
-        }
-    }
-    /deep/.unseable-slider {
-        opacity: 0.5;
-        margin: 10upx 30upx 0;
-        width: 624upx;
-        position: absolute;
-        top: 18upx;
-        left: 0;
-        .uni-slider-handle {
-            background: url(https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/btn-dot.png);
-            background-size: 100%;
         }
     }
 }
