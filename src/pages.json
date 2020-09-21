@@ -549,12 +549,6 @@
                     }
                 },
                 {
-                    "path": "pages/poetry/soundRecord",
-                    "style": {
-                        "navigationBarTitleText": "录音"
-                    }
-                },
-                {
                     "path": "pages/poetry/record",
                     "style": {
                         "navigationBarTitleText": "录音"

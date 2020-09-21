@@ -534,7 +534,7 @@ export default {
                         h5Title: [
                             '品味经典诗词之美，传承古典文化精华，快来挑战！',
                         ],
-                        desc: ['打卡一夏，记录暑假'],
+                        desc: ['挑战诗词闯关，赢好礼！'],
                         image:
                             'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/share.png',
                         path: '/activity/pages/index?activity_id=14',

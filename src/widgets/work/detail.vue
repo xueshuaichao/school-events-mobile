@@ -161,9 +161,17 @@
                 </view>
             </view>
             <view class="controller">
+                <!--<image
+                    class=""
+                    src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/btn-play.png"
+                />-->
                 <image
                     class="play-btn"
-                    src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/btn-play.png"
+                    :src="
+                        `https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/btn-${
+                            playStatus ? 'pause' : 'play'
+                        }.png`
+                    "
                 />
                 <view class="play-time">
                     00:00
@@ -445,6 +453,7 @@ export default {
             bgIndex: 0,
             scrollH: 300,
             scrollY: true,
+            playStatus: 0,
         };
     },
     watch: {

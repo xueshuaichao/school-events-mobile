@@ -90,14 +90,16 @@
             class="page-btm"
             :class="{ hide: isPreview }"
         >
+            <!--鉴于slider的style在小程序模拟器难以改变，使用slider覆盖的方式做控制条-->
             <view class="control">
                 <view class="walk-way">
+                    <!--:style="{ width: (slideValue / maxVal) * 100 + '%' }"-->
                     <view
                         class="wark-bar"
                         :style="{ width: barWidth + 'px' }"
                     />
                 </view>
-                <!--鉴于slider的style在小程序模拟器难以改变，使用slider覆盖的方式做控制条-->
+                <!--:style="{ left: (slideValue / maxVal) * 100 + '%' }"-->
                 <image
                     class="btn"
                     src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/btn-dot.png"
@@ -298,9 +300,9 @@ export default {
             btnLeft: 0,
             controllWidth: 0,
             btnWidth: 0,
-            recordDuration: 600,
+            recordDuration: "10:00",
             slideValue: 0,
-            maxVal: 600000,
+            maxVal: 600,
             maxTime: "10:00",
             curTime: "00:00"
         };
@@ -485,7 +487,6 @@ export default {
                     }
                 } else {
                     // 没有播放的状态。使用同一个图标，显示不同的文本。
-
                     // unPlayStatus ：-2 从未播放 -1 已经结束播放  0 暂停播放
                     if (this.playStatus) {
                         // 正在播放着，则暂停播放，根据状态显示重听
