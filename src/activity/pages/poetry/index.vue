@@ -816,14 +816,14 @@ export default {
                     background: #fff;
                     position: relative;
                     .tag {
-                        background: #254834;
-                        padding: 0 12upx 0 4upx;
-                        line-height: 28upx;
+                        background: #5f8b83;
+                        padding: 0 18upx 0 6upx;
+                        line-height: 38upx;
                         color: #fff;
                         font-size: 18upx;
                         position: absolute;
                         left: 0;
-                        top: 16upx;
+                        top: 20upx;
                         z-index: 1;
                         border-radius: 0 20upx 20upx 0;
                     }
