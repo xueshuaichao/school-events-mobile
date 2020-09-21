@@ -48,13 +48,16 @@
 <script>
 import api from '../../../common/api';
 import uniLoadMore from '../../../components/uni-load-more/uni-load-more.vue';
+import share from '../common/shareMinxin';
 
 export default {
     components: {
         uniLoadMore,
     },
+    mixins: [share.initShare],
     data() {
         return {
+            activityId: 14,
             list: [],
             bgSrc:
                 'https://bj.bcebos.com//vod-bj/convert/200664/audio/202005181456325ec231a07ea2c.mp3',

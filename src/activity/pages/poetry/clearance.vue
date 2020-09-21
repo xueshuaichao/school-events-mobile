@@ -99,11 +99,13 @@
 <script>
 import api from '../../../common/api';
 import login from '../../../widgets/login/login.vue';
+import share from '../common/shareMinxin';
 
 export default {
     components: {
         login,
     },
+    mixins: [share.initShare],
     data() {
         return {
             maskPrompt: false,
@@ -124,6 +126,7 @@ export default {
                 draw_num: null,
                 barrier: 0,
             },
+            activityId: 14,
         };
     },
     onShow() {

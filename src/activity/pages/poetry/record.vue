@@ -94,18 +94,20 @@
                 <view class="walk-way">
                     <view
                         class="wark-bar"
-                        :style="{ width: (slideValue / maxVal) * 100 + '%' }"
+                        :style="{ width: barWidth + 'px' }"
                     />
                 </view>
+                <!--鉴于slider的style在小程序模拟器难以改变，使用slider覆盖的方式做控制条-->
                 <image
                     class="btn"
                     src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/btn-dot.png"
-                    :style="{ left: (slideValue / maxVal) * 100 + '%' }"
+                    :style="{ left: btnLeft + 'px' }"
                 />
                 <slider
                     :value="slideValue"
                     min="0"
                     :max="maxVal"
+                    :disabled="!isRecordPage"
                     active-color="#ffffff"
                     background-color="#ffffff"
                     block-color="#ffffff"
@@ -116,7 +118,7 @@
                 />
             </view>
             <view class="time">
-                {{ intIntervalTime }}/10:00
+                {{ curTime }}/{{ recordDuration }}
             </view>
             <view class="music">
                 <template v-if="!isRecordPage">
@@ -219,6 +221,7 @@ import config from "../../../common/config";
 import utils from "../../../common/utils";
 import api from "../../../common/api";
 import model from "./testmodel.vue";
+import share from "../common/shareMinxin";
 
 const recorderManager = uni.getRecorderManager();
 const innerAudioContext = uni.createInnerAudioContext();
@@ -232,10 +235,10 @@ export default {
     components: {
         model
     },
+    mixins: [share.initShare],
     data() {
-        // const recorderManager = wx.getRecorderManager();
-        // const innerAudioContext = wx.createInnerAudioContext();
         return {
+            activityId: 14,
             // #ifdef H5
             isH5: true,
             // #endif
@@ -245,12 +248,6 @@ export default {
             timer2: null,
             timer3: null,
             numTimer: null,
-            bgSrc:
-                "https://bj.bcebos.com//vod-bj/convert/200664/audio/202005181456325ec231a07ea2c.mp3",
-            audio: null,
-            volBg: 0.5,
-            volManage: 0.8,
-            options: null,
             authStatus: false,
             activityStatus: 2,
             scrollH: 0,
@@ -295,17 +292,27 @@ export default {
                 draw_num: null,
                 barrier: 0
             },
-            slideValue: 50,
-            maxVal: 100,
-            isPreview: false
+            isPreview: false,
+            pageWidth: 375,
+            barWidth: 0,
+            btnLeft: 0,
+            controllWidth: 0,
+            btnWidth: 0,
+            recordDuration: 600,
+            slideValue: 0,
+            maxVal: 600000,
+            maxTime: "10:00",
+            curTime: "00:00"
         };
     },
     computed: {
         intIntervalTime() {
             // 用于显示整数的秒数
             if (this.endRecord >= 600000) {
+                // 超过10分钟就停止记时；
                 this.endRecord("max");
             }
+            // this.curTime =
             return Math.round(this.intervalTime);
         }
     },
@@ -315,13 +322,15 @@ export default {
             success(res) {
                 const pix = res.screenWidth / 750;
                 that.scrollH = res.windowHeight - 760 * pix;
+                that.controllWidth = 624 * pix;
+                that.btnWidth = 68 * pix;
             },
             fail() {}
         });
     },
     onLoad({ title, annotate, content, display_type, dynasty, author }) {
         const self = this;
-        innerAudioContextBg.src = this.bgSrc;
+        // innerAudioContextBg.src = this.bgSrc;
         if (title) {
             // 这里用作预览。
             console.log(this.detail, title, content, "before--preview.detail");
@@ -348,6 +357,13 @@ export default {
             console.log(`recorder stop${JSON.stringify(res)}`);
             self.voicePath = res.tempFilePath;
             self.fileSize = res.fileSize;
+            self.maxVal = self.intervalTime;
+            self.recordDuration =
+                self.intervalTime > 60
+                    ? Math.floor(self.intervalTime / 60) +
+                      ":" +
+                      (self.intervalTime % 60)
+                    : "00:" + self.intervalTime;
             innerAudioContext.src = this.voicePath;
         });
         innerAudioContext.onEnded(() => {
@@ -416,7 +432,8 @@ export default {
     methods: {
         setPriviewData() {},
         getBarrierInfo() {
-            // 闯关列表或者是测试题返回到录制页面
+            // 闯关列表或者是测试题返回到录制页面需要重新获取
+            // 录制页面到下一关的录制仅仅是重复关卡录制
             api.get("/api/poem/userinfo").then(res => {
                 this.barrierInfo = { ...this.barrierInfo, ...res };
             });
@@ -542,13 +559,6 @@ export default {
                         this.id === this.barrier &&
                         this.activityStatus === 3
                     ) {
-                        // 出现海报的情况
-                        // 1.已经结束了, 还未结束
-                        // uni.showToast({
-                        //     icon: "none",
-                        //     title: "已经做过测试题了",
-                        //     duration: 3000
-                        // });
                         this.show = true;
                         this.modelTxt1 = "活动已结束，不可继续闯关";
                         this.modelTxt3 = "返回关卡列表";
@@ -761,6 +771,7 @@ export default {
                                 title: "服务器开小差了~",
                                 icon: "none"
                             });
+                            uni.hideToast();
                             return reject(e);
                         }
                         if (resp.status === 200) {
@@ -774,6 +785,7 @@ export default {
                                 title: resp.msg,
                                 icon: "none"
                             });
+                            uni.hideToast();
                             return reject(resp.msg);
                         }
                         return false;
@@ -813,9 +825,15 @@ export default {
         sliderChange(e) {
             console.log(e.detail, this.slideValue, "stoped");
             this.slideValue = e.detail.value;
+            let w = (this.slideValue * this.controllWidth) / 100;
+            this.barWidth = w;
+            this.btnLeft = w;
         },
         sliderChangeing(e) {
             this.slideValue = e.detail.value;
+            let w = (this.slideValue * this.controllWidth) / 100;
+            this.barWidth = w;
+            this.btnLeft = w;
         }
     }
 };
@@ -824,6 +842,9 @@ export default {
 .record-page {
     background: linear-gradient(#fefdf9, #c3efe4);
     height: 100vh;
+    .unseable-slider {
+        opacity: 0;
+    }
     .record-page-init {
         position: relative;
         z-index: 10;
@@ -968,9 +989,10 @@ export default {
             .walk-way {
                 width: 624upx;
                 height: 8upx;
-                position: relative;
+                position: absolute;
                 top: 30upx;
                 left: 30upx;
+                right: 30upx;
                 background: #43a294;
                 box-shadow: 0 2upx 6upx 0 rgba(0, 0, 0, 0.4) inset;
                 border-radius: 8upx;
@@ -1076,11 +1098,6 @@ export default {
                 }
             }
         }
-    }
-    .unseable-slider {
-        opacity: 0.5;
-        margin: 10upx 30upx 0;
-        width: 624upx;
     }
 }
 </style>
