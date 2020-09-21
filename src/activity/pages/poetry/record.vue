@@ -221,6 +221,7 @@ import config from "../../../common/config";
 import utils from "../../../common/utils";
 import api from "../../../common/api";
 import model from "./testmodel.vue";
+import share from "../common/shareMinxin";
 
 const recorderManager = uni.getRecorderManager();
 const innerAudioContext = uni.createInnerAudioContext();
@@ -234,8 +235,10 @@ export default {
     components: {
         model
     },
+    mixins: [share.initShare],
     data() {
         return {
+            activityId: 14,
             // #ifdef H5
             isH5: true,
             // #endif

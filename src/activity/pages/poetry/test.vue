@@ -51,13 +51,16 @@
 <script>
 import api from '../../../common/api';
 import model from './testmodel.vue';
+import share from '../common/shareMinxin';
 
 export default {
     components: {
         model,
     },
+    mixins: [share.initShare],
     data() {
         return {
+            activityId: 14,
             detail: null,
             options: [],
             selItem: null,
