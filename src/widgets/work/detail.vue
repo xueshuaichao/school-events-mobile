@@ -555,8 +555,8 @@ export default {
                 this.praise_count = this.pageData.praise_count || 0;
                 this.introduce = this.pageData.introduce || '';
                 this.catName = this.pageData.cat_name || '';
-                innerAudioContext.src = this.pageData.audio_url;
-                innerAudioContextBg.src = val.bg_url;
+                innerAudioContext.src = this.pageData.audio_url; // 录音音频
+                innerAudioContextBg.src = val.bg_url; // 背景音乐
                 console.log(val, val.poem, 'change');
             }
         },
@@ -752,11 +752,13 @@ export default {
             // this.barWidth = w;
             // this.btnLeft = w;
         },
+        // 音频播放
         palyAll() {
             console.log('1', innerAudioContext.src, '2');
             innerAudioContext.play();
             innerAudioContextBg.play();
         },
+        // 音频暂停
         pauseAll() {
             console.log('pauseing');
             innerAudioContext.pause();
