@@ -210,7 +210,9 @@
                     />
                 </view>
                 <view class="time">
-                    {{ curTime }}/{{ recordDuration }}
+                    {{ currentSecond | secondsToText }}/{{
+                        recordDuration | secondsToText
+                    }}
                 </view>
             </view>
         </view>
@@ -426,6 +428,29 @@ export default {
             }
             return newUrl;
         },
+        secondsToText(secs) {
+            if (typeof secs === 'string') {
+                return secs;
+            }
+            // secs = Number(secs);
+            const minutesDiv = (secs % 3600) / 60;
+            let minutes = Math.floor(minutesDiv);
+            let seconds = Math.ceil((secs % 3600) % 60);
+            if (seconds > 59) {
+                seconds = 0;
+                minutes = Math.ceil(minutesDiv);
+            }
+            if (minutes > 59) {
+                minutes = 0;
+            }
+            const toDouble = function (val) {
+                if (val >= 0 && val.toString().length < 2) {
+                    return `0${val}`;
+                }
+                return `${val}`;
+            };
+            return `${toDouble(minutes)}:${toDouble(seconds)}`;
+        },
     },
     props: {
         pageData: {
@@ -496,11 +521,14 @@ export default {
             scrollH: 300,
             scrollY: true,
             playStatus: 0,
-            recordDuration: '10:00',
+            recordDuration: 600,
+            allowSetCurrentTime: true,
+            setTimeoutId3: 0,
             slideValue: 0,
             maxVal: 600,
             maxTime: 10 * 60,
-            curTime: '00:00',
+            curTime: 200,
+            currentSecond: 0,
         };
     },
     watch: {
@@ -558,6 +586,12 @@ export default {
                 this.catName = this.pageData.cat_name || '';
                 innerAudioContext.src = this.pageData.audio_url; // 录音音频
                 innerAudioContextBg.src = val.bg_url; // 背景音乐
+
+                this.recordDuration = innerAudioContext.duration;
+                // innerAudioContext.onCanplay(()=>{
+
+                // })
+                // console.log(111112323232, innerAudioContext.duration)
                 console.log(val, val.poem, 'change');
             }
         },
@@ -735,13 +769,16 @@ export default {
         },
         percentToTime(p) {
             const seconds = this.maxTime * p;
-            const minutes = padTime(Math.floor(seconds / 60));
-            const second = padTime(Math.round(seconds % 60));
-            this.curTime = `${minutes}:${second}`;
+            const minutes = seconds ? padTime(Math.floor(seconds / 60)) : '00';
+            const second = seconds ? padTime(Math.round(seconds % 60)) : '00';
+            this.currentSecond = `${minutes}:${second}`;
         },
         sliderChange(e) {
+            // e.detail.value-秒数
             console.log(e.detail, this.slideValue, 'stoped');
-            this.percentToTime(this.slideValue / this.maxVal);
+            this.percentToTime(
+                this.slideValue ? this.slideValue / this.maxVal : 0,
+            );
             this.slideValue = e.detail.value;
             // let w = (this.slideValue * this.controllWidth) / 100;
             // this.barWidth = w;
@@ -757,6 +794,15 @@ export default {
         palyAll() {
             innerAudioContext.play();
             innerAudioContextBg.play();
+            // if (this.allowSetCurrentTime) {
+            //     // 1秒只能重置一次currentTime（兼容iOS：iOS设置了currentTime之后可能会回溯前一段时间开始播放）
+            //     innerAudioContextBg.currentTime = this.currentSecond;
+            //     this.allowSetCurrentTime = false;
+            //     setTimeout(() => {
+            //         this.allowSetCurrentTime = true;
+            //     }, 1000);
+            //     console.log(innerAudioContextBg.currentTime);
+            // }
         },
         // 音频暂停
         pauseAll() {
@@ -787,6 +833,16 @@ export default {
                 this.playStatus = 1;
                 this.unPlayStatus = 0; // 手动暂停的是0
                 this.palyAll();
+                setTimeout(() => {
+                    innerAudioContext.onTimeUpdate(() => {
+                        this.currentSecond = innerAudioContext.currentTime;
+                        this.recordDuration = innerAudioContext.duration;
+                        this.maxVal = innerAudioContext.duration;
+                        // console.log(111,innerAudioContext.duration); // 总时长
+                        // console.log(111,innerAudioContext.currentTime); // 当前播放进度
+                        innerAudioContextBg.currentTime = this.currentSecond;
+                    });
+                }, 500);
             }
         },
     },
