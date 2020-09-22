@@ -311,17 +311,6 @@ export default {
             curTime: "00:00"
         };
     },
-    computed: {
-        intIntervalTime() {
-            // 用于显示整数的秒数
-            if (this.endRecord >= 600000) {
-                // 超过10分钟就停止记时；
-                this.endRecord("max");
-            }
-            // this.curTime =
-            return Math.round(this.intervalTime);
-        }
-    },
     created() {
         const that = this;
         uni.getSystemInfo({
@@ -363,20 +352,15 @@ export default {
             console.log(`recorder stop${JSON.stringify(res)}`);
             self.voicePath = res.tempFilePath;
             self.fileSize = res.fileSize;
-            this.pauseUpdateTime();
+            self.pauseUpdateTime();
             self.updateTotalTime();
-            // self.maxVal = self.intervalTime;
-            // self.recordDuration =
-            // self.intervalTime > 60
-            // ? Math.floor(self.intervalTime / 60) +
-            //   ":" +
-            //   (self.intervalTime % 60)
-            // : "00:" + self.intervalTime;
+
             innerAudioContext.src = this.voicePath;
         });
         innerAudioContext.onEnded(() => {
             self.unPlayStatus = -1;
             innerAudioContextBg.pause();
+            self.onPausePlay();
         });
         innerAudioContextBg.onEnded(() => {
             // 背景音乐重复播放；
@@ -483,6 +467,27 @@ export default {
             this.recordStatus = 0;
             this.pauseRecord();
         },
+        onPlay() {
+            // 已经暂停，则继续播放。
+            this.centerTxt = "暂停";
+            this.playStatus = 1;
+            this.unPlayStatus = 0; // 手动暂停的是0
+            this.palyAll();
+            this.updatePlayTime();
+        },
+        onPausePlay() {
+            // 正在播放着，则暂停播放，根据状态显示重听
+            this.playStatus = 0;
+            if (this.unPlayStatus === -2) {
+                this.centerTxt = "试听";
+            } else if (this.unPlayStatus === -1) {
+                this.centerTxt = "重听";
+            } else {
+                this.centerTxt = "继续";
+            }
+            this.pauseAll();
+            this.pauseUpdateTime();
+        },
         clickCenter() {
             if (!this.isH5) {
                 if (this.isRecordPage) {
@@ -502,22 +507,9 @@ export default {
                     // 没有播放的状态。使用同一个图标，显示不同的文本。
                     // unPlayStatus ：-2 从未播放 -1 已经结束播放  0 暂停播放
                     if (this.playStatus) {
-                        // 正在播放着，则暂停播放，根据状态显示重听
-                        this.playStatus = 0;
-                        if (this.unPlayStatus === -2) {
-                            this.centerTxt = "试听";
-                        } else if (this.unPlayStatus === -1) {
-                            this.centerTxt = "重听";
-                        } else {
-                            this.centerTxt = "继续";
-                        }
-                        this.pauseAll();
+                        this.onPausePlay();
                     } else {
-                        // 已经暂停，则继续播放。
-                        this.centerTxt = "暂停";
-                        this.playStatus = 1;
-                        this.unPlayStatus = 0; // 手动暂停的是0
-                        this.palyAll();
+                        this.onPlay();
                     }
                 }
             } else {
@@ -647,6 +639,8 @@ export default {
             if (this.isRecord) {
                 this.endRecord();
             }
+            this.pauseUpdateTime();
+
             this.playStatus = 0;
             this.voicePath = "";
             this.centerTxt = "录音";
@@ -654,6 +648,11 @@ export default {
             this.isStartRecord = 0;
             this.recordInit = false;
             this.intervalTime = 0;
+            this.maxVal = 600;
+            this.maxTime = 600;
+            this.recordDuration = "10:00";
+            this.slideValue = 0;
+            this.curTime = "00:00";
         },
         onConfirmDelete() {
             if (this.recordInit) {
@@ -722,21 +721,21 @@ export default {
                 duration: 600000
             });
             this.updateTime();
-
-            // this.timer = setInterval(() => {
-            //     this.intervalTime += 0.5;
-            //     if (this.intervalTime >= 0.5 && !this.isRecord) {
-            //         console.log("开始录音");
-            //         this.isRecord = true;
-            //         this.intervalTime = 0;
-            //         recorderManager.start({
-            //             format: "mp3",
-            //             duration: 600000
-            //         });
-            //     }
-            // }, 500);
         },
+        updatePlayTime() {
+            // currentTime
+            const seconds = innerAudioContext.currentTime;
+            const minutes = padTime(Math.floor(seconds / 60));
+            const second = padTime(Math.round(seconds % 60));
+            console.log(innerAudioContext.duration);
 
+            this.slideValue = 600 * (seconds / (10 * 60));
+            this.curTime = `${minutes}:${second}`;
+
+            this.tid = setTimeout(() => {
+                this.updatePlayTime();
+            }, 200);
+        },
         updateTime() {
             const now = new Date() - 0;
             const duration = now - this.recordStartAt;
@@ -777,6 +776,7 @@ export default {
 
             this.recordDuration = `${minutes}:${second}`;
             this.maxTime = seconds;
+            this.maxVal = seconds;
         },
         pauseRecord() {
             this.pauseUpdateTime();
@@ -791,20 +791,12 @@ export default {
             recorderManager.resume();
         },
         endRecord(maxDuration) {
-            if (this.intervalTime <= 0.5) {
-                console.log("录音太短了!!!");
-            }
-
-            clearInterval(this.timer);
-
             if (this.isRecord) {
-                setTimeout(() => {
-                    if (!maxDuration) {
-                        recorderManager.stop();
-                    }
-                    this.isRecord = false;
-                    console.log(this.isRecord);
-                }, 500); // 延迟小段时间停止录音, 更好的体验
+                console.log("stop recordddddd....");
+                this.pauseUpdateTime();
+                recorderManager.stop();
+                this.isRecord = false;
+                this.centerTxt = "试听";
             }
         },
         uploadFile(tempFilePath, fileSize) {
@@ -896,6 +888,12 @@ export default {
             console.log(e.detail, this.slideValue, "stoped");
             this.percentToTime(this.slideValue / this.maxVal);
             this.slideValue = e.detail.value;
+            // if is playing mode, seed play position
+            const seconds = this.maxTime * (this.slideValue / this.maxVal);
+            if (!this.isH5 && !this.isRecordPage) {
+                innerAudioContext.seek(seconds);
+                innerAudioContextBg.seek(seconds);
+            }
             // let w = (this.slideValue * this.controllWidth) / 100;
             // this.barWidth = w;
             // this.btnLeft = w;
