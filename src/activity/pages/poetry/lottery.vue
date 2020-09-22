@@ -702,6 +702,7 @@ export default {
         },
     },
     onLoad(parms) {
+        /* `https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/applet-code-h5-${this.activityId}.png` */
         this.activityId = parms.activity_id;
         this.codeUrl = this.isH5
             ? 'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/applet-code-h5-12.png'
