@@ -210,7 +210,9 @@
                     />
                 </view>
                 <view class="time">
-                    {{ curTime }}/{{ recordDuration }}
+                    {{ currentSecond | secondsToText }}/{{
+                        recordDuration | secondsToText
+                    }}
                 </view>
             </view>
         </view>
@@ -426,6 +428,26 @@ export default {
             }
             return newUrl;
         },
+        secondsToText(secs) {
+            if (secs === Infinity) return '';
+            const minutesDiv = (secs % 3600) / 60;
+            let minutes = Math.floor(minutesDiv);
+            let seconds = Math.ceil((secs % 3600) % 60);
+            if (seconds > 59) {
+                seconds = 0;
+                minutes = Math.ceil(minutesDiv);
+            }
+            if (minutes > 59) {
+                minutes = 0;
+            }
+            const toDouble = function (val) {
+                if (val >= 0 && val.toString().length < 2) {
+                    return `0${val}`;
+                }
+                return `${val}`;
+            };
+            return `${toDouble(minutes)}:${toDouble(seconds)}`;
+        },
     },
     props: {
         pageData: {
@@ -496,11 +518,14 @@ export default {
             scrollH: 300,
             scrollY: true,
             playStatus: 0,
-            recordDuration: '10:00',
+            recordDuration: 600,
+            allowSetCurrentTime: true,
+            setTimeoutId3: 0,
             slideValue: 0,
             maxVal: 600,
             maxTime: 10 * 60,
-            curTime: '00:00',
+            curTime: 200,
+            currentSecond: 0,
         };
     },
     watch: {
@@ -737,7 +762,7 @@ export default {
             const seconds = this.maxTime * p;
             const minutes = padTime(Math.floor(seconds / 60));
             const second = padTime(Math.round(seconds % 60));
-            this.curTime = `${minutes}:${second}`;
+            this.currentSecond = `${minutes}:${second}`;
         },
         sliderChange(e) {
             console.log(e.detail, this.slideValue, 'stoped');
@@ -757,6 +782,15 @@ export default {
         palyAll() {
             innerAudioContext.play();
             innerAudioContextBg.play();
+            // if (this.allowSetCurrentTime) {
+            //     // 1秒只能重置一次currentTime（兼容iOS：iOS设置了currentTime之后可能会回溯前一段时间开始播放）
+            //     innerAudioContextBg.currentTime = this.currentSecond;
+            //     this.allowSetCurrentTime = false;
+            //     setTimeout(() => {
+            //         this.allowSetCurrentTime = true;
+            //     }, 1000);
+            //     console.log(innerAudioContextBg.currentTime);
+            // }
         },
         // 音频暂停
         pauseAll() {
@@ -782,6 +816,13 @@ export default {
                     this.centerTxt = '继续';
                 }
                 this.pauseAll();
+                setTimeout(() => {
+                    innerAudioContext.onTimeUpdate(() => {
+                        console.log(innerAudioContext.duration); // 总时长
+                        console.log(innerAudioContext.currentTime); // 当前播放进度
+                        innerAudioContextBg.currentTime = this.currentSecond;
+                    });
+                }, 500);
             } else {
                 // 已经暂停，则继续播放。
                 this.playStatus = 1;
