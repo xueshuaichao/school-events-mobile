@@ -172,8 +172,9 @@
                             playStatus ? 'pause' : 'play'
                         }.png`
                     "
+                    @click="clickCenter"
                 />
-                <view class="play-time">
+                <!--<view class="play-time">
                     00:00
                 </view>
                 <view class="bar-wrap">
@@ -181,6 +182,35 @@
                 </view>
                 <view class="play-time">
                     00:00
+                </view>-->
+                <view class="control">
+                    <!-- <view class="walk-way">
+                        <view
+                            class="wark-bar"
+                            :style="{ width: barWidth + 'px' }"
+                        />
+                    </view> -->
+                    <!--:style="{ left: (slideValue / maxVal) * 100 + '%' }"-->
+                    <!-- <image
+                        class="btn"
+                        src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/btn-dot.png"
+                        :style="{ left: btnLeft + 'px' }"
+                    /> -->
+                    <slider
+                        :value="slideValue"
+                        min="0"
+                        :max="maxVal"
+                        active-color="#B5FFF5"
+                        background-color="#277d73"
+                        block-color="#54afa9"
+                        block-size="20"
+                        class="unseable-slider"
+                        @change="sliderChange"
+                        @changing="sliderChangeing"
+                    />
+                </view>
+                <view class="time">
+                    {{ curTime }}/{{ recordDuration }}
                 </view>
             </view>
         </view>
@@ -361,6 +391,18 @@
 <script>
 import api from '../../common/api';
 
+const innerAudioContext = uni.createInnerAudioContext();
+const innerAudioContextBg = uni.createInnerAudioContext();
+
+// innerAudioContext.autoplay = true;
+innerAudioContext.volume = 1;
+innerAudioContextBg.volume = 0.6;
+
+const padTime = function (val) {
+    const str = `${val}`;
+    return str.length === 1 ? `0${str}` : str;
+};
+
 export default {
     filters: {
         optimizeImage: (val) => {
@@ -454,6 +496,10 @@ export default {
             scrollH: 300,
             scrollY: true,
             playStatus: 0,
+            slideValue: 0,
+            maxVal: 600,
+            curTime: '00:00',
+            recordDuration: '10:00',
         };
     },
     watch: {
@@ -509,6 +555,8 @@ export default {
                 this.praise_count = this.pageData.praise_count || 0;
                 this.introduce = this.pageData.introduce || '';
                 this.catName = this.pageData.cat_name || '';
+                innerAudioContext.src = this.pageData.audio_url;
+                innerAudioContextBg.src = val.bg_url;
                 console.log(val, val.poem, 'change');
             }
         },
@@ -683,6 +731,61 @@ export default {
                 str = `${minutes}分${times[0] - minutes * 60}秒${millseconds}`;
             }
             return str;
+        },
+        percentToTime(p) {
+            const seconds = this.maxTime * p;
+            const minutes = padTime(Math.floor(seconds / 60));
+            const second = padTime(Math.round(seconds % 60));
+            this.curTime = `${minutes}:${second}`;
+        },
+        sliderChange(e) {
+            console.log(e.detail, this.slideValue, 'stoped');
+            this.percentToTime(this.slideValue / this.maxVal);
+            this.slideValue = e.detail.value;
+            // let w = (this.slideValue * this.controllWidth) / 100;
+            // this.barWidth = w;
+            // this.btnLeft = w;
+        },
+        sliderChangeing(e) {
+            this.slideValue = e.detail.value;
+            // let w = (this.slideValue * this.controllWidth) / 100;
+            // this.barWidth = w;
+            // this.btnLeft = w;
+        },
+        palyAll() {
+            console.log('1', innerAudioContext.src, '2');
+            innerAudioContext.play();
+            innerAudioContextBg.play();
+        },
+        pauseAll() {
+            console.log('pauseing');
+            innerAudioContext.pause();
+            innerAudioContextBg.pause();
+        },
+        stopAll() {
+            innerAudioContext.stop();
+            innerAudioContextBg.stop();
+        },
+        clickCenter() {
+            // 没有播放的状态。使用同一个图标，显示不同的文本。
+            // unPlayStatus ：-2 从未播放 -1 已经结束播放  0 暂停播放
+            if (this.playStatus) {
+                // 正在播放着，则暂停播放，根据状态显示重听
+                this.playStatus = 0;
+                if (this.unPlayStatus === -2) {
+                    this.centerTxt = '试听';
+                } else if (this.unPlayStatus === -1) {
+                    this.centerTxt = '重听';
+                } else {
+                    this.centerTxt = '继续';
+                }
+                this.pauseAll();
+            } else {
+                // 已经暂停，则继续播放。
+                this.playStatus = 1;
+                this.unPlayStatus = 0; // 手动暂停的是0
+                this.palyAll();
+            }
         },
     },
 };
@@ -1041,10 +1144,10 @@ export default {
         color: #266158;
         justify-content: space-between;
         .play-btn {
-            width: 44upx;
-            height: 44upx;
+            width: 60upx;
+            height: 60upx;
             position: relative;
-            bottom: 6upx;
+            bottom: 15upx;
         }
         .bar-wrap {
             padding-top: 6upx;
@@ -1057,6 +1160,45 @@ export default {
                     rgba(0, 65, 55, 0.08) 100%
                 );
                 border-radius: 10px;
+            }
+        }
+        .control {
+            margin: 0 0 0 10upx;
+            width: 688upx;
+            height: 68upx;
+            border-radius: 48upx;
+            position: relative;
+            top: -20upx;
+            .uni-slider {
+                margin: 0 10upx;
+            }
+            .btn {
+                width: 68upx;
+                height: 68upx;
+                position: absolute;
+                top: 0;
+                left: 0;
+            }
+            .walk-way {
+                width: 624upx;
+                height: 8upx;
+                position: absolute;
+                top: 30upx;
+                left: 30upx;
+                right: 30upx;
+                background: #43a294;
+                box-shadow: 0 2upx 6upx 0 rgba(0, 0, 0, 0.4) inset;
+                border-radius: 8upx;
+                .wark-bar {
+                    position: absolute;
+                    left: 0;
+                    width: 0;
+                    height: 100%;
+                    top: 0;
+                    background: #b5fff5;
+                    box-shadow: 0 2upx 6upx 0 rgba(0, 0, 0, 0.5) inset;
+                    border-radius: 8upx;
+                }
             }
         }
     }
