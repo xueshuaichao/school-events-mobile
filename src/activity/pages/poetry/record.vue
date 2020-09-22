@@ -335,6 +335,7 @@ export default {
         });
     },
     onLoad({ title, annotate, content, display_type, dynasty, author }) {
+        this.getRecordParams();
         const self = this;
         // innerAudioContextBg.src = this.bgSrc;
         if (title) {
@@ -427,18 +428,23 @@ export default {
     onShow() {
         // 选择背景音乐，返回录制页面。
         this.bgId = this.$store.getters.getBgMusic || -1;
-        this.recordInit = false;
+        console.log();
+        // this.recordInit = false;
         console.log(this.isPreview, "isPreview");
-        if (!this.isPreview) {
-            this.getbgList();
-            this.getRecordParams();
-            this.getBarrierInfo();
-        } else {
-            this.setPriviewData();
-        }
+        // if (!this.isPreview) {
+        //     this.getbgList();
+        //     this.getRecordParams();
+        this.getbgList();
+        this.getBarrierInfo();
+        // }
+        // // else {
+        // //     this.setPriviewData();
+        // // }
     },
     methods: {
-        setPriviewData() {},
+        setPriviewData() {
+            api.get().then(res => {});
+        },
         getBarrierInfo() {
             // 闯关列表或者是测试题返回到录制页面需要重新获取
             // 录制页面到下一关的录制仅仅是重复关卡录制

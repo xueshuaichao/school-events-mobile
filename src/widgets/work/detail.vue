@@ -205,7 +205,7 @@
                         block-color="#54afa9"
                         block-size="20"
                         class="unseable-slider"
-                        @change="sliderChange"
+                        :disabled="sliderDisabled"
                         @changing="sliderChangeing"
                     />
                 </view>
@@ -432,6 +432,9 @@ export default {
             if (typeof secs === 'string') {
                 return secs;
             }
+            if (!secs || secs === 'Infinity') {
+                return '00:00';
+            }
             // secs = Number(secs);
             const minutesDiv = (secs % 3600) / 60;
             let minutes = Math.floor(minutesDiv);
@@ -521,9 +524,10 @@ export default {
             scrollH: 300,
             scrollY: true,
             playStatus: 0,
-            recordDuration: 600,
+            recordDuration: 0,
             allowSetCurrentTime: true,
             setTimeoutId3: 0,
+            sliderDisabled: true,
             slideValue: 0,
             maxVal: 600,
             maxTime: 10 * 60,
@@ -562,6 +566,7 @@ export default {
                 } else {
                     this.videoContext.seek(0);
                     this.videoContext.play();
+                    this.sliderDisabled = false;
                     this.setPlayCount();
                 }
             }
@@ -586,17 +591,17 @@ export default {
                 this.catName = this.pageData.cat_name || '';
                 innerAudioContext.src = this.pageData.audio_url; // 录音音频
                 innerAudioContextBg.src = val.bg_url; // 背景音乐
-
-                this.recordDuration = innerAudioContext.duration;
-                // innerAudioContext.onCanplay(()=>{
-
-                // })
-                // console.log(111112323232, innerAudioContext.duration)
                 console.log(val, val.poem, 'change');
             }
         },
     },
-    created() {},
+    created() {
+        innerAudioContext.onEnded(() => {
+            this.slideValue = 0;
+            this.playStatus = 0;
+            innerAudioContextBg.stop();
+        });
+    },
     mounted() {
         this.videoContext = uni.createVideoContext(
             `detail${this.swiperPage}`,
@@ -773,22 +778,17 @@ export default {
             const second = seconds ? padTime(Math.round(seconds % 60)) : '00';
             this.currentSecond = `${minutes}:${second}`;
         },
-        sliderChange(e) {
-            // e.detail.value-秒数
-            console.log(e.detail, this.slideValue, 'stoped');
-            this.percentToTime(
-                this.slideValue ? this.slideValue / this.maxVal : 0,
-            );
-            this.slideValue = e.detail.value;
-            // let w = (this.slideValue * this.controllWidth) / 100;
-            // this.barWidth = w;
-            // this.btnLeft = w;
-        },
+
         sliderChangeing(e) {
-            this.slideValue = e.detail.value;
-            // let w = (this.slideValue * this.controllWidth) / 100;
-            // this.barWidth = w;
-            // this.btnLeft = w;
+            if (this.playStatus === 0) {
+                this.sliderDisabled = true;
+            } else {
+                this.percentToTime(
+                    this.slideValue ? this.slideValue / this.maxVal : 0,
+                );
+                this.slideValue = e.detail.value;
+            }
+            return true;
         },
         // 音频播放
         palyAll() {
@@ -833,16 +833,14 @@ export default {
                 this.playStatus = 1;
                 this.unPlayStatus = 0; // 手动暂停的是0
                 this.palyAll();
-                setTimeout(() => {
-                    innerAudioContext.onTimeUpdate(() => {
+                innerAudioContext.onTimeUpdate(() => {
+                    if (innerAudioContext.duration !== Infinity) {
                         this.currentSecond = innerAudioContext.currentTime;
                         this.recordDuration = innerAudioContext.duration;
                         this.maxVal = innerAudioContext.duration;
-                        // console.log(111,innerAudioContext.duration); // 总时长
-                        // console.log(111,innerAudioContext.currentTime); // 当前播放进度
-                        innerAudioContextBg.currentTime = this.currentSecond;
-                    });
-                }, 500);
+                        this.slideValue = innerAudioContext.currentTime;
+                    }
+                });
             }
         },
     },
