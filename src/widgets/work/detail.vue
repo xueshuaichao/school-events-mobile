@@ -496,10 +496,11 @@ export default {
             scrollH: 300,
             scrollY: true,
             playStatus: 0,
+            recordDuration: '10:00',
             slideValue: 0,
             maxVal: 600,
+            maxTime: 10 * 60,
             curTime: '00:00',
-            recordDuration: '10:00',
         };
     },
     watch: {
@@ -754,7 +755,6 @@ export default {
         },
         // 音频播放
         palyAll() {
-            console.log('1', innerAudioContext.src, '2');
             innerAudioContext.play();
             innerAudioContextBg.play();
         },
