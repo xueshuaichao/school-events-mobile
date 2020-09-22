@@ -92,27 +92,25 @@
         >
             <!--鉴于slider的style在小程序模拟器难以改变，使用slider覆盖的方式做控制条-->
             <view class="control">
-                <view class="walk-way">
-                    <!--:style="{ width: (slideValue / maxVal) * 100 + '%' }"-->
+                <!-- <view class="walk-way">
                     <view
                         class="wark-bar"
                         :style="{ width: barWidth + 'px' }"
                     />
-                </view>
+                </view> -->
                 <!--:style="{ left: (slideValue / maxVal) * 100 + '%' }"-->
-                <image
+                <!-- <image
                     class="btn"
                     src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/btn-dot.png"
                     :style="{ left: btnLeft + 'px' }"
-                />
+                /> -->
                 <slider
                     :value="slideValue"
                     min="0"
                     :max="maxVal"
-                    :disabled="!isRecordPage"
-                    active-color="#ffffff"
-                    background-color="#ffffff"
-                    block-color="#ffffff"
+                    active-color="#B5FFF5"
+                    background-color="#277d73"
+                    block-color="#54afa9"
                     block-size="30"
                     class="unseable-slider"
                     @change="sliderChange"
@@ -233,6 +231,11 @@ const innerAudioContextBg = uni.createInnerAudioContext();
 innerAudioContext.volume = 1;
 innerAudioContextBg.volume = 0.6;
 
+const padTime = function(val) {
+    const str = "" + val;
+    return str.length === 1 ? "0" + str : str;
+};
+
 export default {
     components: {
         model
@@ -268,6 +271,7 @@ export default {
                 avatars: []
             },
             isRecordPage: 1,
+            // 0 暂停 1 正在录音
             recordStatus: 0,
             playStatus: 0,
             centerTxt: "录音",
@@ -303,7 +307,7 @@ export default {
             recordDuration: "10:00",
             slideValue: 0,
             maxVal: 600,
-            maxTime: "10:00",
+            maxTime: 10 * 60,
             curTime: "00:00"
         };
     },
@@ -359,13 +363,15 @@ export default {
             console.log(`recorder stop${JSON.stringify(res)}`);
             self.voicePath = res.tempFilePath;
             self.fileSize = res.fileSize;
-            self.maxVal = self.intervalTime;
-            self.recordDuration =
-                self.intervalTime > 60
-                    ? Math.floor(self.intervalTime / 60) +
-                      ":" +
-                      (self.intervalTime % 60)
-                    : "00:" + self.intervalTime;
+            this.pauseUpdateTime();
+            self.updateTotalTime();
+            // self.maxVal = self.intervalTime;
+            // self.recordDuration =
+            // self.intervalTime > 60
+            // ? Math.floor(self.intervalTime / 60) +
+            //   ":" +
+            //   (self.intervalTime % 60)
+            // : "00:" + self.intervalTime;
             innerAudioContext.src = this.voicePath;
         });
         innerAudioContext.onEnded(() => {
@@ -460,29 +466,36 @@ export default {
         },
         touchmove() {},
         touchend() {},
+        onStartRecord() {
+            this.recordInit = true;
+            this.recordStatus = 1;
+            this.centerTxt = "录音";
+            if (!this.isStartRecord) {
+                this.startRecord();
+            } else {
+                this.resumeRecord();
+            }
+            this.isStartRecord = 1;
+        },
+        onPauseRecord() {
+            // 录音中，则暂停
+            this.centerTxt = "继续";
+            this.recordStatus = 0;
+            this.pauseRecord();
+        },
         clickCenter() {
             if (!this.isH5) {
                 if (this.isRecordPage) {
-                    if (this.recordStatus) {
-                        // 录音中，则暂停
-                        this.centerTxt = "继续";
-                        this.recordStatus = 0;
-                        this.pauseRecord();
+                    if (this.recordStatus === 1) {
+                        this.onPauseRecord();
                     } else {
                         // 未开始录音，进行录音
                         // 无录音的状态 ，进行录音
                         if (!this.authStatus) {
                             this.setAuthStatus();
                         } else {
-                            this.recordInit = true;
-                            this.recordStatus = 1;
-                            this.centerTxt = "录音";
-                            if (!this.isStartRecord) {
-                                this.startRecord();
-                            } else {
-                                this.resumeRecord();
-                            }
-                            this.isStartRecord = 1;
+                            // 开始录音
+                            this.onStartRecord();
                         }
                     }
                 } else {
@@ -654,7 +667,7 @@ export default {
                     success: res => {
                         if (res.confirm) {
                             this.resetPageData();
-                            this.startRecord();
+                            this.onStartRecord();
                         } else if (res.cancel) {
                             console.log("用户点击取消");
                         }
@@ -700,24 +713,80 @@ export default {
             innerAudioContextBg.stop();
         },
         startRecord() {
-            this.timer = setInterval(() => {
-                this.intervalTime += 0.5;
-                if (this.intervalTime >= 0.5 && !this.isRecord) {
-                    console.log("开始录音");
-                    this.isRecord = true;
-                    this.intervalTime = 0;
-                    recorderManager.start({
-                        format: "mp3",
-                        duration: 600000
-                    });
-                }
-            }, 500);
+            this.recordStatus = 1;
+            console.log("开始录音");
+            this.isRecord = true;
+            this.recordStartAt = new Date() - 0;
+            recorderManager.start({
+                format: "mp3",
+                duration: 600000
+            });
+            this.updateTime();
+
+            // this.timer = setInterval(() => {
+            //     this.intervalTime += 0.5;
+            //     if (this.intervalTime >= 0.5 && !this.isRecord) {
+            //         console.log("开始录音");
+            //         this.isRecord = true;
+            //         this.intervalTime = 0;
+            //         recorderManager.start({
+            //             format: "mp3",
+            //             duration: 600000
+            //         });
+            //     }
+            // }, 500);
+        },
+
+        updateTime() {
+            const now = new Date() - 0;
+            const duration = now - this.recordStartAt;
+            const seconds = duration / 1000;
+            const minutes = padTime(Math.floor(seconds / 60));
+            const second = padTime(Math.round(seconds % 60));
+
+            this.slideValue = 600 * (seconds / (10 * 60));
+            this.curTime = `${minutes}:${second}`;
+
+            this.tid = setTimeout(() => {
+                this.updateTime();
+            }, 200);
+        },
+        pauseUpdateTime() {
+            clearTimeout(this.tid);
+        },
+        percentToTime(p) {
+            const seconds = this.maxTime * p;
+            const minutes = padTime(Math.floor(seconds / 60));
+            const second = padTime(Math.round(seconds % 60));
+            this.curTime = `${minutes}:${second}`;
+        },
+        updateTotalTime() {
+            let duration;
+            if (this.recordStatus === 1) {
+                // 正在录音
+                const now = new Date() - 0;
+                duration = now - this.recordStartAt;
+            } else {
+                duration = this.lastDuration;
+            }
+            console.log(this.recordStatus);
+
+            const seconds = duration / 1000;
+            const minutes = padTime(Math.floor(seconds / 60));
+            const second = padTime(Math.round(seconds % 60));
+
+            this.recordDuration = `${minutes}:${second}`;
+            this.maxTime = seconds;
         },
         pauseRecord() {
+            this.pauseUpdateTime();
+            this.lastDuration = new Date() - this.recordStartAt;
             console.log("停止");
             recorderManager.pause();
         },
         resumeRecord() {
+            this.recordStartAt = new Date() - this.lastDuration;
+            this.updateTime();
             console.log("继续");
             recorderManager.resume();
         },
@@ -825,16 +894,17 @@ export default {
         },
         sliderChange(e) {
             console.log(e.detail, this.slideValue, "stoped");
+            this.percentToTime(this.slideValue / this.maxVal);
             this.slideValue = e.detail.value;
-            let w = (this.slideValue * this.controllWidth) / 100;
-            this.barWidth = w;
-            this.btnLeft = w;
+            // let w = (this.slideValue * this.controllWidth) / 100;
+            // this.barWidth = w;
+            // this.btnLeft = w;
         },
         sliderChangeing(e) {
             this.slideValue = e.detail.value;
-            let w = (this.slideValue * this.controllWidth) / 100;
-            this.barWidth = w;
-            this.btnLeft = w;
+            // let w = (this.slideValue * this.controllWidth) / 100;
+            // this.barWidth = w;
+            // this.btnLeft = w;
         }
     }
 };
@@ -844,7 +914,8 @@ export default {
     background: linear-gradient(#fefdf9, #c3efe4);
     height: 100vh;
     .unseable-slider {
-        opacity: 0;
+        // opacity: 0;
+        margin-top: 45upx;
     }
     .record-page-init {
         position: relative;
