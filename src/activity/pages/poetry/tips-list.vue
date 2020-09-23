@@ -82,7 +82,8 @@ export default {
         .swiper-item {
             position: relative;
             height: 100%;
-            padding-left: 82upx;
+            padding-left: 2upx;
+            text-align: center;
             .swiper-info {
                 white-space: nowrap;
                 text-overflow: ellipsis;

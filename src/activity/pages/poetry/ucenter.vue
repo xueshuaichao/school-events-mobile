@@ -108,7 +108,7 @@
                     >
                         <template v-for="(item, index) in dataList">
                             <view
-                                :key="item.id + index"
+                                :key="item.id"
                                 :class="['media-content', isSelf ? 'self' : '']"
                                 @click.native="viewDetail(item, index)"
                             >
@@ -700,7 +700,7 @@ export default {
                 });
             } else {
                 uni.navigateTo({
-                    url: '/activity/pages/clearance',
+                    url: '/activity/pages/poetry/clearance',
                 });
             }
         },

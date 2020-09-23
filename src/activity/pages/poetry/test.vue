@@ -132,6 +132,7 @@ export default {
             this.show = false;
         },
         toRecordPage(add) {
+            this.show = false;
             // 待闯关的关卡 +2， 已经闯关的关卡 +1；
             this.$store.commit('setRecordParam', {
                 status: 2,

@@ -348,22 +348,7 @@ export default {
                     ],
                 },
             ],
-            crouselList: [
-                {
-                    user_name: '111',
-                    cat_name: '222',
-                    resource_name: '333',
-                    draw: '44',
-                    prize_name: '44',
-                },
-                {
-                    user_name: '5511',
-                    cat_name: '522',
-                    resource_name: '333',
-                    draw: '56',
-                    prize_name: '78',
-                },
-            ],
+            crouselList: [],
             curBtn: 1,
             dataList2: [
                 {
@@ -394,6 +379,25 @@ export default {
         });
     },
     methods: {
+        onLogin({ user_info: userInfo }) {
+            this.userInfo = userInfo;
+            this.getCrouselList();
+        },
+        getCrouselList() {
+            this.postCrouselList();
+            this.setId = setInterval(() => {
+                this.postCrouselList();
+            }, 1000 * 60 * 5);
+        },
+        postCrouselList() {
+            api.post('/api/draw/getuser', {
+                page_num: 1,
+                page_size: 10,
+                activity_id: 14,
+            }).then((res) => {
+                this.crouselList = res;
+            });
+        },
         viewDetail({ id }, index) {
             console.log(id, 'viewDetail');
             this.$store.commit('setFilterData', {
@@ -505,6 +509,7 @@ export default {
         userHasJoin() {
             api.get('/api/user/info').then((res) => {
                 this.userInfo = res.user_info;
+                this.getCrouselList();
                 if (this.userInfo) {
                     this.hasJoin = true;
                     // todo

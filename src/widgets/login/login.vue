@@ -177,10 +177,13 @@ export default {
     },
     data() {
         return {
+            // formData: {
+            //     username:
+            //         process.env.NODE_ENV === 'development' ? '13370123965' : '',
+            //     password: process.env.NODE_ENV === 'development' ? '123456' : '',
+            // },
             formData: {
-                username:
-                    process.env.NODE_ENV === 'development' ? '13370123965' : '',
-                password: process.env.NODE_ENV === 'development' ? '123456' : '',
+                username: '',
             },
             newUser: {
                 phone: '',

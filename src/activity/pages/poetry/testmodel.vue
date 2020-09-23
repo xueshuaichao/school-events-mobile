@@ -134,13 +134,15 @@ export default {
     .center {
         width: 624upx;
         height: 760upx;
-        background: url(https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/test-success.png);
+        background: url(https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/test-success.png)
+            no-repeat;
         background-size: 100%;
         margin: 40upx auto 32upx;
         &.fail {
             width: 624upx;
             height: 686upx;
-            background: url(https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/test-fail.png);
+            background: url(https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/test-fail.png)
+                no-repeat;
             margin-top: 140upx;
         }
         .fail-txt {

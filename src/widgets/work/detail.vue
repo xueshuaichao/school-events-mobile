@@ -602,6 +602,14 @@ export default {
             innerAudioContextBg.stop();
         });
     },
+    onLoad() {
+        innerAudioContext.stop();
+        innerAudioContextBg.stop();
+    },
+    onHide() {
+        innerAudioContext.stop();
+        innerAudioContextBg.stop();
+    },
     mounted() {
         this.videoContext = uni.createVideoContext(
             `detail${this.swiperPage}`,
@@ -708,6 +716,9 @@ export default {
             uni.navigateTo({
                 url,
             });
+
+            innerAudioContext.stop();
+            innerAudioContextBg.stop();
         },
         jumpLabelList() {
             // 标签列表

@@ -26,6 +26,7 @@
                 <view
                     v-if="detail.avatars.length"
                     class="more-work"
+                    @click="bindconfirm"
                 >
                     本诗更多作品
                 </view>
@@ -92,22 +93,11 @@
         >
             <!--鉴于slider的style在小程序模拟器难以改变，使用slider覆盖的方式做控制条-->
             <view class="control">
-                <!-- <view class="walk-way">
-                    <view
-                        class="wark-bar"
-                        :style="{ width: barWidth + 'px' }"
-                    />
-                </view> -->
-                <!--:style="{ left: (slideValue / maxVal) * 100 + '%' }"-->
-                <!-- <image
-                    class="btn"
-                    src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/btn-dot.png"
-                    :style="{ left: btnLeft + 'px' }"
-                /> -->
                 <slider
                     :value="slideValue"
                     min="0"
                     :max="maxVal"
+                    :disabled="sliderDisabled"
                     active-color="#B5FFF5"
                     background-color="#277d73"
                     block-color="#54afa9"
@@ -308,7 +298,8 @@ export default {
             slideValue: 0,
             maxVal: 600,
             maxTime: 10 * 60,
-            curTime: "00:00"
+            curTime: "00:00",
+            sliderDisabled: true
         };
     },
     created() {
@@ -357,6 +348,9 @@ export default {
             self.updateTotalTime();
 
             innerAudioContext.src = this.voicePath;
+            if (!this.isRecord) {
+                this.onStartRecord();
+            }
         });
         innerAudioContext.onEnded(() => {
             self.unPlayStatus = -1;
@@ -486,10 +480,13 @@ export default {
             this.playStatus = 0;
             if (this.unPlayStatus === -2) {
                 this.centerTxt = "试听";
+                this.sliderDisabled = false;
             } else if (this.unPlayStatus === -1) {
                 this.centerTxt = "重听";
+                this.sliderDisabled = false;
             } else {
                 this.centerTxt = "继续";
+                this.sliderDisabled = false;
             }
             this.pauseAll();
             this.pauseUpdateTime();
@@ -527,8 +524,8 @@ export default {
             }
         },
         next() {
-            console.log(this.isRecordPage, "next--");
-            if (this.recordInit) {
+            // console.log(this.isRecordPage, "next--");
+            if (this.recordInit && this.curTime > `00:10`) {
                 if (this.isRecordPage) {
                     this.isRecordPage = 0;
                     this.endRecord();
@@ -589,6 +586,12 @@ export default {
                     //     url: '/activity/pages/poetry/test',
                     // })
                 }
+            } else {
+                uni.showToast({
+                    icon: "none",
+                    title: "录音时长未满10秒",
+                    duration: 5000
+                });
             }
         },
         setNumberTimer(next) {
@@ -623,9 +626,15 @@ export default {
         upper() {
             // this.scrollY = false;
         },
+        bindconfirm() {
+            uni.navigateTo({
+                url: `/activity/pages/mywork/myWorkList?type=search&name=${this.detail.title}&activity_id=14`
+            });
+        },
         lower() {},
         getInfos(id) {
             uni.showLoading();
+            uni.setNavigationBarTitle({ title: `第${id}关` });
             api.post("/api/poem/barrierpoem", {
                 barrier: id
             }).then(res => {
@@ -774,7 +783,7 @@ export default {
             } else {
                 duration = this.lastDuration;
             }
-            console.log(this.recordStatus);
+            // console.log(this.recordStatus);
 
             const seconds = duration / 1000;
             const minutes = padTime(Math.floor(seconds / 60));
@@ -787,18 +796,18 @@ export default {
         pauseRecord() {
             this.pauseUpdateTime();
             this.lastDuration = new Date() - this.recordStartAt;
-            console.log("停止");
+            // console.log("停止");
             recorderManager.pause();
         },
         resumeRecord() {
             this.recordStartAt = new Date() - this.lastDuration;
             this.updateTime();
-            console.log("继续");
+            // console.log("继续");
             recorderManager.resume();
         },
         endRecord(maxDuration) {
             if (this.isRecord) {
-                console.log("stop recordddddd....");
+                // console.log("stop recordddddd....");
                 this.pauseUpdateTime();
                 recorderManager.stop();
                 this.isRecord = false;
@@ -812,7 +821,7 @@ export default {
                 suffix = tempFilePath.split(".").pop();
                 // eslint-disable-next-line no-empty
             } catch {}
-            console.log(1111, tempFilePath);
+            // console.log(1111, tempFilePath);
 
             uni.showToast({
                 icon: "loading",
