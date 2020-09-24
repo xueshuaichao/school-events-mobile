@@ -301,7 +301,8 @@ export default {
             maxTime: 10 * 60,
             curTime: "00:00",
             sliderDisabled: true,
-            addRecord: true
+            addRecord: true,
+            finish: false
         };
     },
     created() {
@@ -343,18 +344,20 @@ export default {
         }
 
         recorderManager.onStop(res => {
-            console.log(`recorder stop${JSON.stringify(res)}`);
             self.voicePath = res.tempFilePath;
             self.fileSize = res.fileSize;
-            self.pauseUpdateTime();
-            self.updateTotalTime();
-
             innerAudioContext.src = this.voicePath;
-            if (!this.isRecord) {
-                console.log(123, this.isRecord);
-                this.onStartRecord();
+            if (!self.finish) {
+                console.log(`recorder stop${JSON.stringify(res)}`);
+                self.pauseUpdateTime();
+                self.updateTotalTime();
+
+                if (!this.isRecord) {
+                    this.onStartRecord();
+                }
             }
         });
+
         innerAudioContext.onEnded(() => {
             self.unPlayStatus = -1;
             innerAudioContextBg.pause();
@@ -529,19 +532,24 @@ export default {
         next() {
             this.addRecord = true;
             // console.log(this.isRecordPage, "next--");
-            if (this.recordInit && this.curTime > `00:10`) {
+            if (this.recordInit && this.curTime > `00:05`) {
                 if (this.isRecordPage) {
                     this.isRecordPage = 0;
                     this.endRecord();
+                    this.finish = true;
                 } else {
                     if (this.playStatus) {
+                        console.log(2);
                         this.stopAll();
+
+                        // console.log(this.curTime)
                     }
-                    // 进行测试题的条件
+                    // 进行测试题的条件 提交
                     if (
                         this.id === this.barrier + 1 &&
                         this.activityStatus === 2
                     ) {
+                        console.log(3);
                         this.$store.commit("setTestData", {
                             barrier: this.id,
                             ...this.detail
@@ -697,8 +705,10 @@ export default {
                     success: res => {
                         if (res.confirm) {
                             this.resetPageData();
-                            this.onStartRecord();
-                            console.log(111111111, 55);
+                            if (this.finish) {
+                                this.onStartRecord();
+                                this.finish = false;
+                            }
                         } else if (res.cancel) {
                             console.log("用户点击取消");
                         }
@@ -722,7 +732,17 @@ export default {
             uni.authorize({
                 scope: "scope.record",
                 success() {
+                    console.log(1111111);
                     that.authStatus = true;
+                },
+                fail() {
+                    console.log(134232323);
+                    uni.openSetting({
+                        success(res) {
+                            console.log(res.authSetting);
+                        }
+                    });
+                    that.authStatus = false;
                 }
             });
         },
