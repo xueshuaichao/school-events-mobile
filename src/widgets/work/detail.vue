@@ -399,16 +399,16 @@ const innerAudioContextBg = uni.createInnerAudioContext();
 // innerAudioContext.autoplay = true;
 innerAudioContext.volume = 1;
 innerAudioContextBg.volume = 0.6;
-
-const padTime = function (val) {
+/* eslint-disable */
+const padTime = function(val) {
     const str = `${val}`;
     return str.length === 1 ? `0${str}` : str;
 };
 
 export default {
     filters: {
-        optimizeImage: (val) => {
-            let newUrl = '';
+        optimizeImage: val => {
+            let newUrl = "";
             let width = 330;
             let height = 667;
             try {
@@ -419,21 +419,21 @@ export default {
                 // error
             }
 
-            if (val.indexOf('?') !== -1) {
-                newUrl = `${val}&x-oss-process=image/format,png/interlace,1/quality,Q_80/resize,m_pad,h_${height
-                    * 2},w_${width * 2},color_000000`;
+            if (val.indexOf("?") !== -1) {
+                newUrl = `${val}&x-oss-process=image/format,png/interlace,1/quality,Q_80/resize,m_pad,h_${height *
+                    2},w_${width * 2},color_000000`;
             } else {
-                newUrl = `${val}?x-oss-process=image/format,png/interlace,1/quality,Q_80/resize,m_pad,h_${height
-                    * 2},w_${width * 2},color_000000`;
+                newUrl = `${val}?x-oss-process=image/format,png/interlace,1/quality,Q_80/resize,m_pad,h_${height *
+                    2},w_${width * 2},color_000000`;
             }
             return newUrl;
         },
         secondsToText(secs) {
-            if (typeof secs === 'string') {
+            if (typeof secs === "string") {
                 return secs;
             }
-            if (!secs || secs === 'Infinity') {
-                return '00:00';
+            if (!secs || secs === "Infinity") {
+                return "00:00";
             }
             // secs = Number(secs);
             const minutesDiv = (secs % 3600) / 60;
@@ -446,64 +446,64 @@ export default {
             if (minutes > 59) {
                 minutes = 0;
             }
-            const toDouble = function (val) {
+            const toDouble = function(val) {
                 if (val >= 0 && val.toString().length < 2) {
                     return `0${val}`;
                 }
                 return `${val}`;
             };
             return `${toDouble(minutes)}:${toDouble(seconds)}`;
-        },
+        }
     },
     props: {
         pageData: {
             type: Object,
             default: () => ({
-                show: false,
-            }),
+                show: false
+            })
         },
         likeStatus: {
             type: Number,
-            default: 0,
+            default: 0
         },
         activityId: {
             type: Number,
-            default: 0,
+            default: 0
         },
         isFromShare: {
             type: String,
-            default: '1',
+            default: "1"
         },
         from: {
             type: String,
-            default: '',
+            default: ""
         },
         showDrawer: {
             type: Boolean,
-            default: false,
+            default: false
         },
         isChangeSlide: {
             type: Number,
-            default: 1,
+            default: 1
         },
         swiperPage: {
             type: Number,
-            default: 1,
+            default: 1
         },
         commentTotal: {
             type: Number,
-            default: 0,
+            default: 0
         },
         isChangeStatusLike: {
             type: Boolean,
-            default: false,
-        },
+            default: false
+        }
     },
     data() {
         return {
             isFullScreen: false,
-            recordTxts: ['校级记录', '市级记录', '省级记录'],
-            groupTxts: ['1-3年级', '4-6年级', '7-9年级', '高一-高三'],
+            recordTxts: ["校级记录", "市级记录", "省级记录"],
+            groupTxts: ["1-3年级", "4-6年级", "7-9年级", "高一-高三"],
             // #ifdef H5
             isH5: true,
             isWechat: false,
@@ -514,7 +514,7 @@ export default {
             isVideoWaiting: false,
             // play_count: 1,
             showMore: false,
-            introduce: this.pageData.introduce || '',
+            introduce: this.pageData.introduce || "",
             total: 10,
             catName: this.pageData.cat_name,
             praise_count: this.pageData.praise_count || 0,
@@ -532,7 +532,7 @@ export default {
             maxVal: 600,
             maxTime: 10 * 60,
             curTime: 200,
-            currentSecond: 0,
+            currentSecond: 0
         };
     },
     watch: {
@@ -541,7 +541,7 @@ export default {
                 if (this.isH5) {
                     // h5的暂停方式需要专门处理。
                     const b = document.querySelector(
-                        `#detail${this.swiperPage} video`,
+                        `#detail${this.swiperPage} video`
                     );
                     if (b) {
                         b.pause();
@@ -557,7 +557,7 @@ export default {
 
                 if (this.isH5) {
                     const b = document.querySelector(
-                        `#detail${this.swiperPage} video`,
+                        `#detail${this.swiperPage} video`
                     );
                     if (b) {
                         b.pause();
@@ -576,9 +576,9 @@ export default {
         },
         isChangeStatusLike() {
             if (
-                this.swiperPage === this.isChangeSlide
-                && !this.toggleLikeObj[this.pageData.id]
-                && this.likeStatus
+                this.swiperPage === this.isChangeSlide &&
+                !this.toggleLikeObj[this.pageData.id] &&
+                this.likeStatus
             ) {
                 this.toggleLikeObj[this.pageData.id] = true;
                 this.praise_count += 1;
@@ -587,42 +587,57 @@ export default {
         pageData(val) {
             if (val) {
                 this.praise_count = this.pageData.praise_count || 0;
-                this.introduce = this.pageData.introduce || '';
-                this.catName = this.pageData.cat_name || '';
+                this.introduce = this.pageData.introduce || "";
+                this.catName = this.pageData.cat_name || "";
                 innerAudioContext.src = this.pageData.audio_url; // 录音音频
                 innerAudioContextBg.src = val.bg_url; // 背景音乐
-                console.log(val, val.poem, 'change');
+                console.log(val, val.poem, "change");
             }
-        },
+        }
     },
     created() {
         innerAudioContext.onEnded(() => {
             this.slideValue = 0;
             this.playStatus = 0;
+            this.currentSecond = 0;
             innerAudioContextBg.stop();
         });
     },
     onLoad() {
         innerAudioContext.stop();
         innerAudioContextBg.stop();
+        this.getShareConfig();
+    },
+    /**
+     * 生命周期函数--监听页面卸载
+     */
+    onUnload() {
+        console.log(111111111);
+        this.$refs.innerAudioContext.stop();
+        this.$refs.innerAudioContextBg.stop();
+        this.$refs.innerAudioContext.destroy();
+        this.$refs.innerAudioContextBg.destroy();
     },
     onHide() {
-        innerAudioContext.stop();
-        innerAudioContextBg.stop();
+        console.log(111111111);
+        this.$refs.innerAudioContext.stop();
+        this.$refs.innerAudioContextBg.stop();
+        this.$refs.innerAudioContext.destroy();
+        this.$refs.innerAudioContextBg.destroy();
     },
     mounted() {
         this.videoContext = uni.createVideoContext(
             `detail${this.swiperPage}`,
-            this,
+            this
         );
         if (
-            !this.isH5
-            && this.swiperPage === 1
-            && this.pageData.resource_type === 1
+            !this.isH5 &&
+            this.swiperPage === 1 &&
+            this.pageData.resource_type === 1
         ) {
             this.videoContext.play();
             this.setPlayCount();
-            console.log('mounted--play-----');
+            console.log("mounted--play-----");
         }
         if (this.swiperPage === 1 && this.pageData.resource_type === 2) {
             this.setPlayCount();
@@ -630,36 +645,37 @@ export default {
         // hack for html5 video size notwoking
         // #ifdef H5
         window.removeEventListener(
-            'orientationchange',
-            this.html5VideoAutoAdjust,
+            "orientationchange",
+            this.html5VideoAutoAdjust
         );
-        window.addEventListener('orientationchange', this.html5VideoAutoAdjust);
+        window.addEventListener("orientationchange", this.html5VideoAutoAdjust);
         const ua = window.navigator.userAgent.toLowerCase();
-        this.isWechat = ua.indexOf('micromessenger') !== -1;
-        this.isApp = ua.toLowerCase().indexOf('wd-atz-ios') !== -1
-            || ua.toLowerCase().indexOf('wd-atz-android') !== -1;
+        this.isWechat = ua.indexOf("micromessenger") !== -1;
+        this.isApp =
+            ua.toLowerCase().indexOf("wd-atz-ios") !== -1 ||
+            ua.toLowerCase().indexOf("wd-atz-android") !== -1;
         // #endif
     },
     methods: {
         html5VideoAutoAdjust() {
-            document.querySelector('.uni-video-type-fullscreen').style = '';
+            document.querySelector(".uni-video-type-fullscreen").style = "";
         },
         setPlayCount() {
-            api.post('/api/works/playcount', {
-                id: this.pageData.id,
+            api.post("/api/works/playcount", {
+                id: this.pageData.id
             });
         },
         handleCanvass() {
-            this.$emit('doAction', 'handleCanvass');
+            this.$emit("doAction", "handleCanvass");
         },
         toggleLike() {
-            this.$emit('doAction', 'toggleLike');
+            this.$emit("doAction", "toggleLike");
         },
         joinGame() {
-            this.$emit('doAction', 'joinGame');
+            this.$emit("doAction", "joinGame");
         },
         showMessage() {
-            this.$emit('doAction', 'showMessage');
+            this.$emit("doAction", "showMessage");
         },
         onPause() {
             this.isPaused = true;
@@ -696,25 +712,25 @@ export default {
         watchIndex() {
             let url = `/activity/pages/index?activity_id=${this.activityId}`;
             if (this.activityId === 6) {
-                url = '/history/read/index';
+                url = "/history/read/index";
             }
             if (this.activityId === 9) {
-                url = '/activity/pages/children/index';
+                url = "/activity/pages/children/index";
             }
-            if (this.from === 'openGame') {
-                url = '/pages/openGame/index';
+            if (this.from === "openGame") {
+                url = "/pages/openGame/index";
             }
             if (this.activityId === 3) {
-                url = '/history/chunjie/index';
+                url = "/history/chunjie/index";
             }
             if (this.activityId === 4) {
-                url = '/history/chunjiehao/index';
+                url = "/history/chunjiehao/index";
             }
             if (this.activityId === 5) {
-                url = '/history/yiqing/index';
+                url = "/history/yiqing/index";
             }
             uni.navigateTo({
-                url,
+                url
             });
 
             innerAudioContext.stop();
@@ -725,21 +741,21 @@ export default {
             const {
                 resource_scope: resourceScope,
                 cat_id: catId,
-                cat_name: catName,
+                cat_name: catName
             } = this.pageData;
             const url = `/pages/work/label/list?cat_id=${resourceScope},${catId}&cat_name=${catName}`;
             uni.navigateTo({
-                url,
+                url
             });
         },
         jumpUc() {
             api.isLogin().then(() => {
                 if (this.activityId && this.activityId > 9) {
-                    api.get('/api/activity/activitystatus', {
-                        activity_id: this.activityId,
-                    }).then((data) => {
+                    api.get("/api/activity/activitystatus", {
+                        activity_id: this.activityId
+                    }).then(data => {
                         if (data.status === 2) {
-                            this.jumpUcUrl('going');
+                            this.jumpUcUrl("going");
                         } else {
                             this.jumpUcUrl();
                         }
@@ -752,26 +768,26 @@ export default {
         jumpUcUrl(going) {
             if (going && this.activityId === 10) {
                 uni.navigateTo({
-                    url: `/activity/pages/brand/ucenter?activity_id=10&user_id=${this.pageData.create_by}`,
+                    url: `/activity/pages/brand/ucenter?activity_id=10&user_id=${this.pageData.create_by}`
                 });
             } else if (going && this.activityId === 12) {
                 uni.navigateTo({
-                    url: `/activity/pages/clocked/ucenter?activity_id=12&user_id=${this.pageData.create_by}`,
+                    url: `/activity/pages/clocked/ucenter?activity_id=12&user_id=${this.pageData.create_by}`
                 });
             } else if (going && this.activityId === 14) {
                 uni.navigateTo({
-                    url: `/activity/pages/poetry/ucenter?activity_id=14&user_id=${this.pageData.create_by}`,
+                    url: `/activity/pages/poetry/ucenter?activity_id=14&user_id=${this.pageData.create_by}`
                 });
             } else {
                 uni.navigateTo({
-                    url: `/pages/uc/uc/index?uid=${this.pageData.create_by}`,
+                    url: `/pages/uc/uc/index?uid=${this.pageData.create_by}`
                 });
             }
         },
         setInfoTime(time) {
-            let str = '';
-            let millseconds = '';
-            const times = String(time).split('.');
+            let str = "";
+            let millseconds = "";
+            const times = String(time).split(".");
             if (times.length === 2) {
                 [, millseconds] = times;
             }
@@ -785,8 +801,8 @@ export default {
         },
         percentToTime(p) {
             const seconds = this.maxTime * p;
-            const minutes = seconds ? padTime(Math.floor(seconds / 60)) : '00';
-            const second = seconds ? padTime(Math.round(seconds % 60)) : '00';
+            const minutes = seconds ? padTime(Math.floor(seconds / 60)) : "00";
+            const second = seconds ? padTime(Math.round(seconds % 60)) : "00";
             this.currentSecond = `${minutes}:${second}`;
         },
 
@@ -795,7 +811,7 @@ export default {
                 this.sliderDisabled = true;
             } else {
                 this.percentToTime(
-                    this.slideValue ? this.slideValue / this.maxVal : 0,
+                    this.slideValue ? this.slideValue / this.maxVal : 0
                 );
                 this.slideValue = e.detail.value;
             }
@@ -805,6 +821,7 @@ export default {
         palyAll() {
             innerAudioContext.play();
             innerAudioContextBg.play();
+            this.sliderDisabled = false;
             // if (this.allowSetCurrentTime) {
             //     // 1秒只能重置一次currentTime（兼容iOS：iOS设置了currentTime之后可能会回溯前一段时间开始播放）
             //     innerAudioContextBg.currentTime = this.currentSecond;
@@ -817,7 +834,7 @@ export default {
         },
         // 音频暂停
         pauseAll() {
-            console.log('pauseing');
+            console.log("pauseing");
             innerAudioContext.pause();
             innerAudioContextBg.pause();
         },
@@ -832,13 +849,14 @@ export default {
                 // 正在播放着，则暂停播放，根据状态显示重听
                 this.playStatus = 0;
                 if (this.unPlayStatus === -2) {
-                    this.centerTxt = '试听';
+                    this.centerTxt = "试听";
                 } else if (this.unPlayStatus === -1) {
-                    this.centerTxt = '重听';
+                    this.centerTxt = "重听";
                 } else {
-                    this.centerTxt = '继续';
+                    this.centerTxt = "继续";
                 }
                 this.pauseAll();
+                console.log(11111111111111, this.recordDuration);
             } else {
                 // 已经暂停，则继续播放。
                 this.playStatus = 1;
@@ -852,9 +870,10 @@ export default {
                         this.slideValue = innerAudioContext.currentTime;
                     }
                 });
+                console.log(222222222222, this.recordDuration);
             }
-        },
-    },
+        }
+    }
 };
 </script>
 

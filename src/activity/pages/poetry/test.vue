@@ -240,6 +240,9 @@ export default {
             }
         },
     },
+    onLoad() {
+        this.getShareConfig();
+    },
 };
 </script>
 <style scoped lang="less">

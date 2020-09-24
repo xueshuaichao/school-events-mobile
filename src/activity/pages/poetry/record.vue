@@ -59,12 +59,12 @@
                     </view>
                 </view>
             </scroll-view>
-            <view
+            <!--<view
                 class="more-content"
                 @click="checkMore"
             >
                 上滑查看更多
-            </view>
+            </view>-->
             <view class="zhusi">
                 <view
                     v-for="(txt, index) in detail.annotate"
@@ -181,6 +181,7 @@
                     </view>
                 </view>
                 <view
+                    v-show="addRecord"
                     class="item"
                     :class="{ hide: !recordInit }"
                     @click="next"
@@ -299,7 +300,8 @@ export default {
             maxVal: 600,
             maxTime: 10 * 60,
             curTime: "00:00",
-            sliderDisabled: true
+            sliderDisabled: true,
+            addRecord: true
         };
     },
     created() {
@@ -349,6 +351,7 @@ export default {
 
             innerAudioContext.src = this.voicePath;
             if (!this.isRecord) {
+                console.log(123, this.isRecord);
                 this.onStartRecord();
             }
         });
@@ -524,6 +527,7 @@ export default {
             }
         },
         next() {
+            this.addRecord = true;
             // console.log(this.isRecordPage, "next--");
             if (this.recordInit && this.curTime > `00:10`) {
                 if (this.isRecordPage) {
@@ -557,10 +561,19 @@ export default {
                                     type: 2,
                                     activity_cat: 1,
                                     bg_id: this.bgId
-                                }).then(() => {
-                                    uni.navigateTo({
-                                        url: "/activity/pages/poetry/test"
-                                    });
+                                }).then(res => {
+                                    this.addRecord = false;
+                                    if (res.status !== 910) {
+                                        uni.navigateTo({
+                                            url: "/activity/pages/poetry/test"
+                                        });
+                                    } else {
+                                        uni.showToast({
+                                            icon: "none",
+                                            title: res.msg,
+                                            duration: 5000
+                                        });
+                                    }
                                 });
                             }
                         );
@@ -577,6 +590,9 @@ export default {
                         this.modelTxt1 = `${this.barrierInfo.level_title}，请继续加油哦！`;
                         this.modelTxt3 = "下一关";
                         this.setNumberTimer("next");
+                        setTimeout(() => {
+                            this.show = false;
+                        }, 3000);
                     }
                     // this.$store.commit('setTestData', {
                     //     barrier: this.id,
@@ -682,6 +698,7 @@ export default {
                         if (res.confirm) {
                             this.resetPageData();
                             this.onStartRecord();
+                            console.log(111111111, 55);
                         } else if (res.cancel) {
                             console.log("用户点击取消");
                         }

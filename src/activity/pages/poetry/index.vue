@@ -136,9 +136,11 @@
                             v-for="(item, index) in dataList"
                             :key="index"
                             class="poetry-work-card"
-                            @click.native="viewDetail(item, index)"
                         >
-                            <view class="top">
+                            <view
+                                class="top"
+                                @click.native="viewDetail(item, index)"
+                            >
                                 <view
                                     v-if="item.rank"
                                     class="tag"
@@ -224,7 +226,10 @@
                                 {{ item.barrier }}关
                             </view>
                         </view>
-                        <view class="data-none">
+                        <view
+                            v-if="rankList.length < 1"
+                            class="data-none"
+                        >
                             正在统计最新排名，敬请期待
                         </view>
                     </view>
@@ -373,10 +378,18 @@ export default {
                 if (this.curBtn === 1) {
                     this.getData('reachBottom');
                 } else {
-                    this.getRankList();
+                    this.getRankList('reachBottom');
                 }
             }
         });
+    },
+    onLoad() {
+        this.$refs.innerAudioContext.stop();
+        this.$refs.innerAudioContextBg.stop();
+    },
+    onHide() {
+        this.$refs.innerAudioContext.stop();
+        this.$refs.innerAudioContextBg.stop();
     },
     methods: {
         onLogin({ user_info: userInfo }) {
