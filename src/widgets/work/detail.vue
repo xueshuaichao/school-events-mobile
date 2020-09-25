@@ -604,8 +604,6 @@ export default {
         });
     },
     onLoad() {
-        innerAudioContext.stop();
-        innerAudioContextBg.stop();
         this.getShareConfig();
     },
     /**
@@ -619,13 +617,23 @@ export default {
         this.$refs.innerAudioContextBg.destroy();
     },
     onHide() {
-        console.log(111111111);
+        console.log(22222222);
         this.$refs.innerAudioContext.stop();
         this.$refs.innerAudioContextBg.stop();
         this.$refs.innerAudioContext.destroy();
         this.$refs.innerAudioContextBg.destroy();
     },
     mounted() {
+        this.playStatus = 1; // 手动暂停的是0
+        this.palyAll();
+        innerAudioContext.onTimeUpdate(() => {
+            if (innerAudioContext.duration !== Infinity) {
+                this.currentSecond = innerAudioContext.currentTime;
+                this.recordDuration = innerAudioContext.duration;
+                this.maxVal = innerAudioContext.duration;
+                this.slideValue = innerAudioContext.currentTime;
+            }
+        });
         this.videoContext = uni.createVideoContext(
             `detail${this.swiperPage}`,
             this
@@ -1222,15 +1230,15 @@ export default {
         }
     }
     .controller {
-        height: 30upx;
+        height: 48upx;
         display: flex;
         padding: 0 26upx 0 16upx;
-        margin-top: 38upx;
+        margin-top: 12upx;
         font-size: 20upx;
         color: #266158;
         justify-content: space-between;
         .play-btn {
-            width: 60upx;
+            width: 80upx;
             height: 60upx;
             position: relative;
             bottom: 15upx;

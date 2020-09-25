@@ -238,7 +238,7 @@
                     class="loadMore"
                     :status="loadMoreStatus"
                     :content-text="{
-                        contentdown: '上拉显示更多',
+                        contentdown: '',
                         contentrefresh: '正在加载...',
                         contentnomore: '———— 已经到底了~ ————'
                     }"
@@ -392,10 +392,6 @@ export default {
         this.$refs.innerAudioContextBg.stop();
     },
     methods: {
-        onLogin({ user_info: userInfo }) {
-            this.userInfo = userInfo;
-            this.getCrouselList();
-        },
         getCrouselList() {
             this.postCrouselList();
             this.setId = setInterval(() => {

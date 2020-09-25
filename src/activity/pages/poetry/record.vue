@@ -347,6 +347,7 @@ export default {
             self.voicePath = res.tempFilePath;
             self.fileSize = res.fileSize;
             innerAudioContext.src = this.voicePath;
+            self.updateTotalTime();
             if (!self.finish) {
                 console.log(`recorder stop${JSON.stringify(res)}`);
                 self.pauseUpdateTime();
@@ -532,7 +533,7 @@ export default {
         next() {
             this.addRecord = true;
             // console.log(this.isRecordPage, "next--");
-            if (this.recordInit && this.curTime > `00:05`) {
+            if (this.recordInit && this.curTime > `00:10`) {
                 if (this.isRecordPage) {
                     this.isRecordPage = 0;
                     this.endRecord();
@@ -569,20 +570,22 @@ export default {
                                     type: 2,
                                     activity_cat: 1,
                                     bg_id: this.bgId
-                                }).then(res => {
-                                    this.addRecord = false;
-                                    if (res.status !== 910) {
+                                }).then(
+                                    () => {
+                                        this.addRecord = false;
+                                        console.log(111, 22, this.addRecord);
                                         uni.navigateTo({
                                             url: "/activity/pages/poetry/test"
                                         });
-                                    } else {
+                                    },
+                                    err => {
                                         uni.showToast({
                                             icon: "none",
-                                            title: res.msg,
+                                            title: err,
                                             duration: 5000
                                         });
                                     }
-                                });
+                                );
                             }
                         );
                     } else if (
@@ -765,13 +768,14 @@ export default {
         },
         startRecord() {
             this.recordStatus = 1;
-            console.log("开始录音");
+            console.log("开始录音1");
             this.isRecord = true;
             this.recordStartAt = new Date() - 0;
             recorderManager.start({
                 format: "mp3",
                 duration: 600000
             });
+
             this.updateTime();
         },
         updatePlayTime() {
@@ -797,10 +801,14 @@ export default {
 
             this.slideValue = 600 * (seconds / (10 * 60));
             this.curTime = `${minutes}:${second}`;
-
-            this.tid = setTimeout(() => {
-                this.updateTime();
-            }, 200);
+            if (this.curTime > `00:19`) {
+                this.pauseRecord();
+            } else {
+                console.log(this.curTime, "123yy");
+                this.tid = setTimeout(() => {
+                    this.updateTime();
+                }, 200);
+            }
         },
         pauseUpdateTime() {
             clearTimeout(this.tid);
@@ -833,13 +841,13 @@ export default {
         pauseRecord() {
             this.pauseUpdateTime();
             this.lastDuration = new Date() - this.recordStartAt;
-            // console.log("停止");
+            console.log("停止");
             recorderManager.pause();
         },
         resumeRecord() {
             this.recordStartAt = new Date() - this.lastDuration;
             this.updateTime();
-            // console.log("继续");
+            console.log("继续");
             recorderManager.resume();
         },
         endRecord(maxDuration) {

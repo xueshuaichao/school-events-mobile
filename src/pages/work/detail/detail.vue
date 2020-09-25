@@ -1066,9 +1066,25 @@ export default {
         // window.addEventListener('orientationchange', this.html5VideoAutoAdjust);
         // #endif
     },
+    onUnload() {
+        this.$refs.innerAudioContext.stop();
+        this.$refs.innerAudioContextBg.stop();
+        this.$refs.innerAudioContext.destroy();
+        this.$refs.innerAudioContextBg.destroy();
+    },
     onHide() {
         // this.isPaused = true;
         console.log('hidiiing--------');
+        this.$refs.innerAudioContext.stop();
+        this.$refs.innerAudioContextBg.stop();
+        this.$refs.innerAudioContext.destroy();
+        this.$refs.innerAudioContextBg.destroy();
+    },
+    onBackPress() {
+        this.$refs.innerAudioContext.stop();
+        this.$refs.innerAudioContextBg.stop();
+        this.$refs.innerAudioContext.destroy();
+        this.$refs.innerAudioContextBg.destroy();
     },
     onShow() {
         // 返回列表，刷新作品页，首页的点赞
