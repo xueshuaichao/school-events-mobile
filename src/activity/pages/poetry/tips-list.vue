@@ -20,7 +20,9 @@
             >
                 <view class="swiper-item">
                     <view class="swiper-info">
-                        <text> 用户{{ item.user_name | plusXing }} </text>
+                        <text class="usStyle">
+                            用户{{ item.user_name | plusXing }}
+                        </text>
                         <text> {{ text }} </text>
                         <text v-if="item.cat_name">
                             #{{ item.cat_name }}#

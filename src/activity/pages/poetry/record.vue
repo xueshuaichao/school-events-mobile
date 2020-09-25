@@ -555,7 +555,7 @@ export default {
                             barrier: this.id,
                             ...this.detail
                         });
-
+                        console.log(8888, this.curTime);
                         this.uploadFile(this.voicePath, this.fileSize).then(
                             resp => {
                                 api.post("/api/activity/add", {
@@ -568,6 +568,7 @@ export default {
                                     resource_name: this.detail.title,
                                     introduce: "",
                                     type: 2,
+                                    duration: this.curTime,
                                     activity_cat: 1,
                                     bg_id: this.bgId
                                 }).then(
@@ -597,13 +598,43 @@ export default {
                         this.modelTxt3 = "返回关卡列表";
                         this.setNumberTimer();
                     } else {
-                        this.show = true;
-                        this.modelTxt1 = `${this.barrierInfo.level_title}，请继续加油哦！`;
-                        this.modelTxt3 = "下一关";
-                        this.setNumberTimer("next");
-                        setTimeout(() => {
-                            this.show = false;
-                        }, 3000);
+                        this.uploadFile(this.voicePath, this.fileSize).then(
+                            resp => {
+                                api.post("/api/activity/add", {
+                                    cat_id: 18,
+                                    poem_id: this.detail.poem_id,
+                                    resource_type: 3,
+                                    play_url: resp.path,
+                                    file_size: this.fileSize,
+                                    activity_id: 14,
+                                    resource_name: this.detail.title,
+                                    introduce: "",
+                                    type: 2,
+                                    duration: this.curTime,
+                                    activity_cat: 1,
+                                    bg_id: this.bgId
+                                }).then(
+                                    () => {
+                                        this.addRecord = false;
+                                        console.log(111, 22, this.addRecord);
+                                        this.show = true;
+                                        this.modelTxt1 = `${this.barrierInfo.level_title}，请继续加油哦！`;
+                                        this.modelTxt3 = "下一关";
+                                        this.setNumberTimer("next");
+                                        setTimeout(() => {
+                                            this.show = false;
+                                        }, 3000);
+                                    },
+                                    err => {
+                                        uni.showToast({
+                                            icon: "none",
+                                            title: err,
+                                            duration: 5000
+                                        });
+                                    }
+                                );
+                            }
+                        );
                     }
                     // this.$store.commit('setTestData', {
                     //     barrier: this.id,
@@ -1189,7 +1220,7 @@ export default {
             .center-icon {
                 width: 180upx;
                 height: 180upx;
-                margin-top: -20upx;
+                margin-top: -70upx;
                 &.plays {
                     width: 140upx;
                     height: 140upx;
@@ -1201,7 +1232,7 @@ export default {
                 width: 100upx;
                 height: 100upx;
                 left: 40upx;
-                top: 20upx;
+                top: -28upx;
                 animation: mymove 3s infinite;
             }
             @keyframes mymove {

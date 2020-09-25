@@ -592,6 +592,7 @@ export default {
                 innerAudioContext.src = this.pageData.audio_url; // 录音音频
                 innerAudioContextBg.src = val.bg_url; // 背景音乐
                 console.log(val, val.poem, "change");
+                console.log("ooooooo");
             }
         }
     },
@@ -603,26 +604,12 @@ export default {
             innerAudioContextBg.stop();
         });
     },
-    onLoad() {
-        this.getShareConfig();
-    },
+    onLoad() {},
     /**
      * 生命周期函数--监听页面卸载
      */
-    onUnload() {
-        console.log(111111111);
-        this.$refs.innerAudioContext.stop();
-        this.$refs.innerAudioContextBg.stop();
-        this.$refs.innerAudioContext.destroy();
-        this.$refs.innerAudioContextBg.destroy();
-    },
-    onHide() {
-        console.log(111111111);
-        this.$refs.innerAudioContext.stop();
-        this.$refs.innerAudioContextBg.stop();
-        this.$refs.innerAudioContext.destroy();
-        this.$refs.innerAudioContextBg.destroy();
-    },
+    onUnload() {},
+    onHide() {},
     mounted() {
         this.videoContext = uni.createVideoContext(
             `detail${this.swiperPage}`,
