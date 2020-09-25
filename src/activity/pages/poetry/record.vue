@@ -1173,7 +1173,7 @@ export default {
             color: #2e796e;
             font-size: 24upx;
             text-align: right;
-            line-height: 30upx;
+            line-height: 6upx;
             padding-right: 100upx;
         }
         .btns-wrap,
@@ -1220,7 +1220,7 @@ export default {
             .center-icon {
                 width: 180upx;
                 height: 180upx;
-                margin-top: -70upx;
+                margin-top: -20upx;
                 &.plays {
                     width: 140upx;
                     height: 140upx;
@@ -1232,7 +1232,7 @@ export default {
                 width: 100upx;
                 height: 100upx;
                 left: 40upx;
-                top: -28upx;
+                top: 20upx;
                 animation: mymove 3s infinite;
             }
             @keyframes mymove {
