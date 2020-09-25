@@ -617,23 +617,13 @@ export default {
         this.$refs.innerAudioContextBg.destroy();
     },
     onHide() {
-        console.log(22222222);
+        console.log(111111111);
         this.$refs.innerAudioContext.stop();
         this.$refs.innerAudioContextBg.stop();
         this.$refs.innerAudioContext.destroy();
         this.$refs.innerAudioContextBg.destroy();
     },
     mounted() {
-        this.playStatus = 1; // 手动暂停的是0
-        this.palyAll();
-        innerAudioContext.onTimeUpdate(() => {
-            if (innerAudioContext.duration !== Infinity) {
-                this.currentSecond = innerAudioContext.currentTime;
-                this.recordDuration = innerAudioContext.duration;
-                this.maxVal = innerAudioContext.duration;
-                this.slideValue = innerAudioContext.currentTime;
-            }
-        });
         this.videoContext = uni.createVideoContext(
             `detail${this.swiperPage}`,
             this

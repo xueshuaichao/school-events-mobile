@@ -108,6 +108,7 @@
                 class="pre-swiper"
             >
                 <detail
+                    ref="mychild"
                     :page-data="pageDataOne"
                     :like-status="likeStatus"
                     :is-change-slide="currentSwiper"
@@ -128,6 +129,7 @@
                     @touchmove.stop="stopTouchMove"
                 >
                     <detail
+                        ref="mychild"
                         :page-data="pageDataTwo"
                         :like-status="likeStatus"
                         :is-change-slide="currentSwiper"
@@ -146,6 +148,7 @@
                     class="cur-swiper"
                 >
                     <detail
+                        ref="mychild"
                         :page-data="pageDataTwo"
                         :like-status="likeStatus"
                         :is-change-slide="currentSwiper"
@@ -163,6 +166,7 @@
 
             <swiper-item class="next-swiper">
                 <detail
+                    ref="mychild"
                     :page-data="pageDataThree"
                     :like-status="likeStatus"
                     :is-change-slide="currentSwiper"
@@ -1067,25 +1071,13 @@ export default {
         // #endif
     },
     onUnload() {
-        this.$refs.innerAudioContext.stop();
-        this.$refs.innerAudioContextBg.stop();
-        this.$refs.innerAudioContext.destroy();
-        this.$refs.innerAudioContextBg.destroy();
+        this.$refs.mychild.pauseAll();
     },
     onHide() {
         // this.isPaused = true;
         console.log('hidiiing--------');
-        this.$refs.innerAudioContext.stop();
-        this.$refs.innerAudioContextBg.stop();
-        this.$refs.innerAudioContext.destroy();
-        this.$refs.innerAudioContextBg.destroy();
     },
-    onBackPress() {
-        this.$refs.innerAudioContext.stop();
-        this.$refs.innerAudioContextBg.stop();
-        this.$refs.innerAudioContext.destroy();
-        this.$refs.innerAudioContextBg.destroy();
-    },
+    onBackPress() {},
     onShow() {
         // 返回列表，刷新作品页，首页的点赞
         uni.setStorageSync('onShowFrom', 'detail');
