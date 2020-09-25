@@ -596,32 +596,13 @@ export default {
         }
     },
     created() {
+        console.log(innerAudioContext);
         innerAudioContext.onEnded(() => {
             this.slideValue = 0;
             this.playStatus = 0;
             this.currentSecond = 0;
             innerAudioContextBg.stop();
         });
-    },
-    onLoad() {
-        this.getShareConfig();
-    },
-    /**
-     * 生命周期函数--监听页面卸载
-     */
-    onUnload() {
-        console.log(111111111);
-        this.$refs.innerAudioContext.stop();
-        this.$refs.innerAudioContextBg.stop();
-        this.$refs.innerAudioContext.destroy();
-        this.$refs.innerAudioContextBg.destroy();
-    },
-    onHide() {
-        console.log(22222222);
-        this.$refs.innerAudioContext.stop();
-        this.$refs.innerAudioContextBg.stop();
-        this.$refs.innerAudioContext.destroy();
-        this.$refs.innerAudioContextBg.destroy();
     },
     mounted() {
         this.playStatus = 1; // 手动暂停的是0

@@ -108,6 +108,7 @@
                 class="pre-swiper"
             >
                 <detail
+                    ref="detail"
                     :page-data="pageDataOne"
                     :like-status="likeStatus"
                     :is-change-slide="currentSwiper"
@@ -1067,24 +1068,13 @@ export default {
         // #endif
     },
     onUnload() {
-        this.$refs.innerAudioContext.stop();
-        this.$refs.innerAudioContextBg.stop();
-        this.$refs.innerAudioContext.destroy();
-        this.$refs.innerAudioContextBg.destroy();
+        this.$refs.detail.stopAll();
     },
     onHide() {
-        // this.isPaused = true;
-        console.log('hidiiing--------');
-        this.$refs.innerAudioContext.stop();
-        this.$refs.innerAudioContextBg.stop();
-        this.$refs.innerAudioContext.destroy();
-        this.$refs.innerAudioContextBg.destroy();
+        this.$refs.detail.stopAll();
     },
     onBackPress() {
-        this.$refs.innerAudioContext.stop();
-        this.$refs.innerAudioContextBg.stop();
-        this.$refs.innerAudioContext.destroy();
-        this.$refs.innerAudioContextBg.destroy();
+        this.$refs.detail.stopAll();
     },
     onShow() {
         // 返回列表，刷新作品页，首页的点赞
