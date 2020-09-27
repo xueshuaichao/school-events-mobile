@@ -591,6 +591,7 @@ export default {
                 this.catName = this.pageData.cat_name || "";
                 innerAudioContext.src = this.pageData.audio_url; // 录音音频
                 innerAudioContextBg.src = val.bg_url; // 背景音乐
+                this.recordDuration = val.duration;
                 console.log(val, val.poem, "change");
                 console.log("ooooooo");
             }
@@ -850,12 +851,12 @@ export default {
                 innerAudioContext.onTimeUpdate(() => {
                     if (innerAudioContext.duration !== Infinity) {
                         this.currentSecond = innerAudioContext.currentTime;
-                        this.recordDuration = innerAudioContext.duration;
+                        // this.recordDuration = innerAudioContext.duration;
                         this.maxVal = innerAudioContext.duration;
                         this.slideValue = innerAudioContext.currentTime;
                     }
                 });
-                console.log(222222222222, this.recordDuration);
+                console.log(222222222222, this.recordDuration, this.slideValue);
             }
         }
     }

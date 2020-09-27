@@ -1071,7 +1071,7 @@ export default {
         // #endif
     },
     onUnload() {
-        this.$refs.mychild.pauseAll();
+        this.$refs.mychild.stopAll();
     },
     onHide() {
         // this.isPaused = true;

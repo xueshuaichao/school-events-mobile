@@ -532,6 +532,7 @@ export default {
         },
         next() {
             this.addRecord = true;
+            console.log(this.slideValue, 1111111111111111111);
             // console.log(this.isRecordPage, "next--");
             if (this.recordInit && this.curTime > `00:10`) {
                 if (this.isRecordPage) {
@@ -556,6 +557,8 @@ export default {
                             ...this.detail
                         });
                         console.log(8888, this.curTime);
+                        this.addRecord = false;
+                        console.log(filename, 7890);
                         this.uploadFile(this.voicePath, this.fileSize).then(
                             resp => {
                                 api.post("/api/activity/add", {
@@ -568,21 +571,21 @@ export default {
                                     resource_name: this.detail.title,
                                     introduce: "",
                                     type: 2,
-                                    duration: this.curTime,
+                                    duration: this.slideValue,
                                     activity_cat: 1,
                                     bg_id: this.bgId
                                 }).then(
                                     () => {
-                                        this.addRecord = false;
                                         console.log(111, 22, this.addRecord);
                                         uni.navigateTo({
                                             url: "/activity/pages/poetry/test"
                                         });
+                                        this.addRecord = true;
                                     },
                                     err => {
                                         uni.showToast({
                                             icon: "none",
-                                            title: err,
+                                            title: err.msg,
                                             duration: 5000
                                         });
                                     }
@@ -598,6 +601,7 @@ export default {
                         this.modelTxt3 = "返回关卡列表";
                         this.setNumberTimer();
                     } else {
+                        this.addRecord = false;
                         this.uploadFile(this.voicePath, this.fileSize).then(
                             resp => {
                                 api.post("/api/activity/add", {
@@ -610,17 +614,17 @@ export default {
                                     resource_name: this.detail.title,
                                     introduce: "",
                                     type: 2,
-                                    duration: this.curTime,
+                                    duration: this.slideValue,
                                     activity_cat: 1,
                                     bg_id: this.bgId
                                 }).then(
                                     () => {
-                                        this.addRecord = false;
                                         console.log(111, 22, this.addRecord);
                                         this.show = true;
                                         this.modelTxt1 = `${this.barrierInfo.level_title}，请继续加油哦！`;
                                         this.modelTxt3 = "下一关";
                                         this.setNumberTimer("next");
+                                        this.addRecord = true;
                                         setTimeout(() => {
                                             this.show = false;
                                         }, 3000);
@@ -628,7 +632,7 @@ export default {
                                     err => {
                                         uni.showToast({
                                             icon: "none",
-                                            title: err,
+                                            title: err.msg,
                                             duration: 5000
                                         });
                                     }
@@ -659,6 +663,7 @@ export default {
                 if (that.curNum === 0) {
                     clearInterval(that.numTimer);
                     that.numTimer = null;
+                    that.numTimer = 3;
 
                     if (next) {
                         // 下一关
@@ -761,24 +766,52 @@ export default {
                 }
             });
         },
+        /*录音授权*/
         setAuthStatus() {
             const that = this;
             uni.authorize({
                 scope: "scope.record",
-                success() {
-                    console.log(1111111);
+                success: res => {
                     that.authStatus = true;
+                    console.log("11111");
                 },
-                fail() {
-                    console.log(134232323);
-                    uni.openSetting({
-                        success(res) {
-                            console.log(res.authSetting);
+                fail: res => {
+                    uni.showModal({
+                        content:
+                            "检测到您没打开获取信息功能权限，是否去设置打开？",
+                        confirmText: "确认",
+                        cancelText: "取消",
+                        success: res => {
+                            if (res.confirm) {
+                                uni.openSetting({
+                                    success: res => {
+                                        console.log(res);
+                                    }
+                                });
+                            } else {
+                                console.log("取消");
+                            }
                         }
                     });
                     that.authStatus = false;
                 }
             });
+            // uni.authorize({
+            //     scope: "scope.record",
+            //     success() {
+            //         console.log(1111111);
+            //         that.authStatus = true;
+            //     },
+            //     fail() {
+            //         console.log(134232323);
+            //         uni.openSetting({
+            //             success(res) {
+            //                 console.log(res.authSetting);
+            //             }
+            //         });
+            //         that.authStatus = false;
+            //     }
+            // });
         },
         seekbg(val) {
             innerAudioContextBg.seek(val);
@@ -814,7 +847,7 @@ export default {
             const seconds = innerAudioContext.currentTime;
             const minutes = padTime(Math.floor(seconds / 60));
             const second = padTime(Math.round(seconds % 60));
-            console.log(innerAudioContext.duration);
+            console.log(innerAudioContext.duration, 111111111111111111111111);
 
             this.slideValue = 600 * (seconds / (10 * 60));
             this.curTime = `${minutes}:${second}`;
@@ -835,7 +868,7 @@ export default {
             if (this.curTime > `00:19`) {
                 this.pauseRecord();
             } else {
-                console.log(this.curTime, "123yy");
+                console.log(this.curTime, this.slideValue, "123yy");
                 this.tid = setTimeout(() => {
                     this.updateTime();
                 }, 200);
@@ -854,7 +887,7 @@ export default {
             let duration;
             if (this.recordStatus === 1) {
                 // 正在录音
-                const now = new Date() - 0;
+                const now = new Date() + 1;
                 duration = now - this.recordStartAt;
             } else {
                 duration = this.lastDuration;
