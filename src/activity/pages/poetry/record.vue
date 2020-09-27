@@ -925,6 +925,7 @@ export default {
             const second = padTime(Math.round(seconds % 60));
 
             this.recordDuration = `${minutes}:${second}`;
+            this.curTime = this.recordDuration;
             this.maxTime = seconds;
             this.maxVal = seconds;
         },
