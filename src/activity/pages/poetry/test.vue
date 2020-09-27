@@ -106,6 +106,7 @@ export default {
         jumpOne() {
             if (this.testStatus === -1) {
                 // 重新答题
+                console.log(777777777777, this.testStatus === -1);
                 this.answer = 0;
                 this.selItem = null;
             } else if (this.testStatus === 0) {

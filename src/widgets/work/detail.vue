@@ -592,6 +592,7 @@ export default {
                 innerAudioContext.src = this.pageData.audio_url; // 录音音频
                 innerAudioContextBg.src = val.bg_url; // 背景音乐
                 console.log(val, val.poem, "change");
+                console.log("ooooooo");
             }
         }
     },
