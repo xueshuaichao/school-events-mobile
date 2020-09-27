@@ -45,7 +45,7 @@
 export default {
     filters: {
         plusXing: (val) => {
-            if (val.length === 11) {
+            if (val.length === 7) {
                 return `${val.substr(0, 3)}****${val.substr(7)}`;
             }
             return val;
