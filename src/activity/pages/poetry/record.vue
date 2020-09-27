@@ -674,7 +674,7 @@ export default {
                 if (that.curNum === 0) {
                     clearInterval(that.numTimer);
                     that.numTimer = null;
-                    that.numTimer = 3;
+                    that.curNum = 3;
 
                     if (next) {
                         // 下一关
