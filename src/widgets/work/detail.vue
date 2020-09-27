@@ -605,16 +605,6 @@ export default {
         });
     },
     mounted() {
-        this.playStatus = 1; // 手动暂停的是0
-        this.palyAll();
-        innerAudioContext.onTimeUpdate(() => {
-            if (innerAudioContext.duration !== Infinity) {
-                this.currentSecond = innerAudioContext.currentTime;
-                this.recordDuration = innerAudioContext.duration;
-                this.maxVal = innerAudioContext.duration;
-                this.slideValue = innerAudioContext.currentTime;
-            }
-        });
         this.videoContext = uni.createVideoContext(
             `detail${this.swiperPage}`,
             this

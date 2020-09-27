@@ -108,7 +108,7 @@
                 class="pre-swiper"
             >
                 <detail
-                    ref="detail"
+                    ref="mychild"
                     :page-data="pageDataOne"
                     :like-status="likeStatus"
                     :is-change-slide="currentSwiper"
@@ -129,6 +129,7 @@
                     @touchmove.stop="stopTouchMove"
                 >
                     <detail
+                        ref="mychild"
                         :page-data="pageDataTwo"
                         :like-status="likeStatus"
                         :is-change-slide="currentSwiper"
@@ -147,6 +148,7 @@
                     class="cur-swiper"
                 >
                     <detail
+                        ref="mychild"
                         :page-data="pageDataTwo"
                         :like-status="likeStatus"
                         :is-change-slide="currentSwiper"
@@ -164,6 +166,7 @@
 
             <swiper-item class="next-swiper">
                 <detail
+                    ref="mychild"
                     :page-data="pageDataThree"
                     :like-status="likeStatus"
                     :is-change-slide="currentSwiper"
@@ -1068,14 +1071,14 @@ export default {
         // #endif
     },
     onUnload() {
-        this.$refs.detail.stopAll();
+        this.$refs.mychild.stopAll();
     },
     onHide() {
-        this.$refs.detail.stopAll();
+        this.$refs.mychild.pauseAll();
+        // this.isPaused = true;
+        console.log('hidiiing--------');
     },
-    onBackPress() {
-        this.$refs.detail.stopAll();
-    },
+    onBackPress() {},
     onShow() {
         // 返回列表，刷新作品页，首页的点赞
         uni.setStorageSync('onShowFrom', 'detail');
