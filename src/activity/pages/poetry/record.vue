@@ -343,6 +343,16 @@ export default {
             console.log(this.detail, title, content, "preview.detail");
         }
 
+        recorderManager.onStart(res => {
+            console.log(42343243242343434234);
+            if (this.isStartRecord) {
+                this.recordStartAt = new Date() - 0;
+                this.updateTime();
+            } else {
+                this.recordStartAt = new Date() - this.lastDuration;
+                this.updateTime();
+            }
+        });
         recorderManager.onStop(res => {
             self.voicePath = res.tempFilePath;
             self.fileSize = res.fileSize;
@@ -536,6 +546,7 @@ export default {
             // console.log(this.isRecordPage, "next--");
             if (this.recordInit && this.curTime > `00:10`) {
                 if (this.isRecordPage) {
+                    // 完成
                     this.isRecordPage = 0;
                     this.endRecord();
                     this.finish = true;
@@ -834,13 +845,11 @@ export default {
             this.recordStatus = 1;
             console.log("开始录音1");
             this.isRecord = true;
-            this.recordStartAt = new Date() - 0;
+
             recorderManager.start({
                 format: "mp3",
                 duration: 600000
             });
-
-            this.updateTime();
         },
         updatePlayTime() {
             // currentTime
@@ -909,8 +918,6 @@ export default {
             recorderManager.pause();
         },
         resumeRecord() {
-            this.recordStartAt = new Date() - this.lastDuration;
-            this.updateTime();
             console.log("继续");
             recorderManager.resume();
         },
@@ -918,6 +925,7 @@ export default {
             if (this.isRecord) {
                 // console.log("stop recordddddd....");
                 this.pauseUpdateTime();
+                // this.lastDuration = new Date() - this.recordStartAt;
                 recorderManager.stop();
                 this.isRecord = false;
                 this.centerTxt = "试听";

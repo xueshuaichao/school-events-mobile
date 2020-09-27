@@ -598,6 +598,7 @@ export default {
         }
     },
     created() {
+        console.log(innerAudioContext);
         innerAudioContext.onEnded(() => {
             this.slideValue = 0;
             this.playStatus = 0;
@@ -605,12 +606,6 @@ export default {
             innerAudioContextBg.stop();
         });
     },
-    onLoad() {},
-    /**
-     * 生命周期函数--监听页面卸载
-     */
-    onUnload() {},
-    onHide() {},
     mounted() {
         this.videoContext = uni.createVideoContext(
             `detail${this.swiperPage}`,

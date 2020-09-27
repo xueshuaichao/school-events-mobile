@@ -1074,6 +1074,7 @@ export default {
         this.$refs.mychild.stopAll();
     },
     onHide() {
+        this.$refs.mychild.pauseAll();
         // this.isPaused = true;
         console.log('hidiiing--------');
     },
