@@ -593,7 +593,6 @@ export default {
                         });
                         console.log(8888, this.curTime);
                         this.addRecord = false;
-                        console.log(filename, 7890);
                         this.uploadFile(this.voicePath, this.fileSize).then(
                             resp => {
                                 api.post("/api/activity/add", {
@@ -899,7 +898,8 @@ export default {
             let duration;
             if (this.recordStatus === 1) {
                 // 正在录音
-                const now = new Date() + 1;
+                const now = new Date() - 0;
+                console.log(111, duration);
                 duration = now - this.recordStartAt;
             } else {
                 duration = this.lastDuration;
