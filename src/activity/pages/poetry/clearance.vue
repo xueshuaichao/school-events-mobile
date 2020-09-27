@@ -127,6 +127,7 @@ export default {
                 barrier: 0,
             },
             activityId: 14,
+            max: 500,
         };
     },
     onShow() {
@@ -197,7 +198,7 @@ export default {
                 this.filter.page_size,
                 this.filter.page_num,
                 4,
-                500,
+                this.max,
             );
             if (type === 'reachBottom') {
                 this.level = this.level.concat(newResult);

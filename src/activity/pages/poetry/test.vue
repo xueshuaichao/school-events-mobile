@@ -200,6 +200,9 @@ export default {
                             this.modelTxt1 = `恭喜你晋升“${res.level_title}”`;
                             this.modelTxt2 = '';
                             this.testStatus = 3;
+                        } else if (this.detail.barrier === 500) {
+                            // 提示
+                            // todo
                         } else {
                             this.modelTxt1 = `还有${5
                                 - (this.detail.barrier % 5)}关即可抽奖`;
