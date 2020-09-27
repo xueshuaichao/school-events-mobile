@@ -353,14 +353,12 @@ export default {
             };
             console.log(this.detail, title, content, "preview.detail");
         }
-        console.log(111111, recorderManager);
         recorderManager.onStart(res => {
             console.log("onStart");
             this.recordStartAt = new Date() - 0;
             this.updateTime();
         });
         recorderManager.onStop(res => {
-            console.log(1111111111);
             if (!self.finish) {
                 // 重录
                 if (!this.isRecord) {
@@ -563,6 +561,7 @@ export default {
         },
         next() {
             this.addRecord = true;
+            console.log(this.slideValue, 1111111111111111111);
             // console.log(this.isRecordPage, "next--");
             if (this.recordInit) {
                 if (this.isRecordPage) {
@@ -593,6 +592,8 @@ export default {
                             ...this.detail
                         });
                         console.log(8888, this.curTime);
+                        this.addRecord = false;
+                        console.log(filename, 7890);
                         this.uploadFile(this.voicePath, this.fileSize).then(
                             resp => {
                                 api.post("/api/activity/add", {
@@ -601,19 +602,20 @@ export default {
                                     play_url: resp.path,
                                     file_size: this.fileSize,
                                     resource_name: this.detail.title,
-                                    duration: this.recordDuration,
+                                    duration: this.slideValue,
                                     bg_id: this.bgId
                                 }).then(
                                     () => {
-                                        this.addRecord = true;
+                                        console.log(111, 22, this.addRecord);
                                         uni.navigateTo({
                                             url: "/activity/pages/poetry/test"
                                         });
+                                        this.addRecord = true;
                                     },
                                     err => {
                                         uni.showToast({
                                             icon: "none",
-                                            title: err,
+                                            title: err.msg,
                                             duration: 5000
                                         });
                                     }
@@ -629,6 +631,7 @@ export default {
                         this.modelTxt3 = "返回关卡列表";
                         this.setNumberTimer();
                     } else {
+                        this.addRecord = false;
                         this.uploadFile(this.voicePath, this.fileSize).then(
                             resp => {
                                 api.post("/api/activity/add", {
@@ -638,16 +641,16 @@ export default {
                                     play_url: resp.path,
                                     file_size: this.fileSize,
                                     resource_name: this.detail.title,
-                                    duration: this.recordDuration,
+                                    duration: this.slideValue,
                                     bg_id: this.bgId
                                 }).then(
                                     () => {
-                                        this.addRecord = true;
                                         console.log(111, 22, this.addRecord);
                                         this.show = true;
                                         this.modelTxt1 = `${this.barrierInfo.level_title}，请继续加油哦！`;
                                         this.modelTxt3 = "下一关";
                                         this.setNumberTimer("next");
+                                        this.addRecord = true;
                                         setTimeout(() => {
                                             this.show = false;
                                         }, 3000);
@@ -655,7 +658,7 @@ export default {
                                     err => {
                                         uni.showToast({
                                             icon: "none",
-                                            title: err,
+                                            title: err.msg,
                                             duration: 5000
                                         });
                                     }
@@ -784,24 +787,52 @@ export default {
                 }
             });
         },
+        /*录音授权*/
         setAuthStatus() {
             const that = this;
             uni.authorize({
                 scope: "scope.record",
-                success() {
-                    console.log(1111111);
+                success: res => {
                     that.authStatus = true;
+                    console.log("11111");
                 },
-                fail() {
-                    console.log(134232323);
-                    uni.openSetting({
-                        success(res) {
-                            console.log(res.authSetting);
+                fail: res => {
+                    uni.showModal({
+                        content:
+                            "检测到您没打开获取信息功能权限，是否去设置打开？",
+                        confirmText: "确认",
+                        cancelText: "取消",
+                        success: res => {
+                            if (res.confirm) {
+                                uni.openSetting({
+                                    success: res => {
+                                        console.log(res);
+                                    }
+                                });
+                            } else {
+                                console.log("取消");
+                            }
                         }
                     });
                     that.authStatus = false;
                 }
             });
+            // uni.authorize({
+            //     scope: "scope.record",
+            //     success() {
+            //         console.log(1111111);
+            //         that.authStatus = true;
+            //     },
+            //     fail() {
+            //         console.log(134232323);
+            //         uni.openSetting({
+            //             success(res) {
+            //                 console.log(res.authSetting);
+            //             }
+            //         });
+            //         that.authStatus = false;
+            //     }
+            // });
         },
         seekbg(val) {
             innerAudioContextBg.seek(val);
@@ -827,10 +858,9 @@ export default {
         updatePlayTime() {
             // currentTime
             const seconds = innerAudioContext.currentTime;
-            const m = padTime(Math.floor(seconds / 60));
-            const s = padTime(Math.round(seconds % 60));
-
-            this.curTime = `${m}:${s}`;
+            const minutes = padTime(Math.floor(seconds / 60));
+            const second = padTime(Math.round(seconds % 60));
+            this.curTime = `${minutes}:${second}`;
             this.slideValue = 600 * (seconds / (10 * 60));
 
             this.tid = setTimeout(() => {
@@ -869,7 +899,7 @@ export default {
             let duration;
             if (this.recordStatus === 1) {
                 // 正在录音
-                const now = new Date() - 0;
+                const now = new Date() + 1;
                 duration = now - this.recordStartAt;
             } else {
                 duration = this.lastDuration;
