@@ -306,7 +306,9 @@ export default {
                 introduce: "",
                 type: 2,
                 activity_cat: 1
-            }
+            },
+            isFirst: true,
+            nowTime: new Date() - 0
         };
     },
     created() {
@@ -354,16 +356,7 @@ export default {
             };
             console.log(this.detail, title, content, "preview.detail");
         }
-        recorderManager.onStart(res => {
-            console.log("onStart");
-            // 模拟器上继续录音执行 需要真机调试
-            if (this.recordType === 1) {
-                this.recordStartAt = new Date() - 0;
-            } else {
-                this.recordStartAt = new Date() - this.lastDuration;
-            }
-            this.updateTime();
-        });
+        recorderManager.onStart(res => {});
         recorderManager.onStop(res => {
             if (!self.finish) {
                 // 重录
@@ -375,16 +368,11 @@ export default {
                 self.voicePath = res.tempFilePath;
                 self.fileSize = res.fileSize;
                 innerAudioContext.src = this.voicePath;
-                console.log(4343434343);
                 self.updateTotalTime();
             }
             self.pauseUpdateTime();
         });
-        recorderManager.onPause(res => {
-            console.log("暂停回调");
-            this.lastDuration = new Date() - this.recordStartAt;
-            self.pauseUpdateTime();
-        });
+        recorderManager.onPause(res => {});
 
         innerAudioContext.onEnded(() => {
             self.unPlayStatus = -1;
@@ -421,7 +409,6 @@ export default {
             uni.hideLoading();
         });
         innerAudioContext.onPlay(() => {
-            console.log("23232323");
             self.updatePlayTime();
         });
         if (!this.isH5) {
@@ -429,6 +416,7 @@ export default {
         }
     },
     onUnload() {
+        recorderManager.stop();
         innerAudioContext.destroy();
         innerAudioContextBg.destroy();
         // this.stopAll();
@@ -441,6 +429,7 @@ export default {
         this.timer2 = null;
         this.timer = null;
         this.timer3 = null;
+        this.resetPageData();
     },
     onHide() {
         if (this.isRecordPage) {
@@ -557,6 +546,7 @@ export default {
                             this.setAuthStatus();
                         } else {
                             // 开始录音
+                            console.log("xxxxxxxxx");
                             this.onStartRecord();
                         }
                     }
@@ -877,6 +867,8 @@ export default {
                 duration: 600000,
                 format: "mp3"
             });
+            this.recordStartAt = new Date() - 0;
+            this.updateTime();
         },
         updatePlayTime() {
             // currentTime
@@ -940,11 +932,15 @@ export default {
             // 暂停录音
             console.log("暂停录音");
             recorderManager.pause();
+            this.lastDuration = new Date() - this.recordStartAt;
+            this.pauseUpdateTime();
         },
         resumeRecord() {
             // 继续录音
             console.log("继续录音");
             recorderManager.resume();
+            this.recordStartAt = new Date() - this.lastDuration;
+            this.updateTime();
         },
         endRecord(maxDuration) {
             if (this.isRecord) {
