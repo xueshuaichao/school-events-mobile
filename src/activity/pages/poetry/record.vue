@@ -369,6 +369,7 @@ export default {
                 self.voicePath = res.tempFilePath;
                 self.fileSize = res.fileSize;
                 innerAudioContext.src = this.voicePath;
+                console.log(4343434343);
                 self.updateTotalTime();
             }
             self.pauseUpdateTime();
@@ -853,7 +854,10 @@ export default {
             this.recordStatus = 1;
             console.log("开始录音1");
             this.isRecord = true;
-            recorderManager.start();
+            recorderManager.start({
+                duration: 600000,
+                format: "mp3"
+            });
         },
         updatePlayTime() {
             // currentTime
@@ -876,7 +880,7 @@ export default {
 
             this.slideValue = 600 * (seconds / (10 * 60));
             this.curTime = `${minutes}:${second}`;
-            if (this.curTime > `00:19`) {
+            if (this.curTime === `10:00`) {
                 this.isRecordPage = 0;
                 this.endRecord();
                 this.finish = true;
@@ -899,12 +903,11 @@ export default {
             let duration;
             if (this.recordStatus === 1) {
                 // 正在录音
-                const now = new Date() + 1;
+                const now = new Date() - 0;
                 duration = now - this.recordStartAt;
             } else {
                 duration = this.lastDuration;
             }
-            // console.log(this.recordStatus);
 
             const seconds = duration / 1000;
             const minutes = padTime(Math.floor(seconds / 60));
@@ -1180,7 +1183,7 @@ export default {
         .control {
             margin: 30upx 0 0 30upx;
             width: 688upx;
-            height: 68upx;
+            height: 60upx;
             border-radius: 48upx;
             position: relative;
             .btn {
@@ -1216,7 +1219,7 @@ export default {
             color: #2e796e;
             font-size: 24upx;
             text-align: right;
-            line-height: 6upx;
+            line-height: 30upx;
             padding-right: 100upx;
         }
         .btns-wrap,
