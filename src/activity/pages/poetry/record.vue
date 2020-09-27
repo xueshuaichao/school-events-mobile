@@ -298,6 +298,7 @@ export default {
             sliderDisabled: true,
             addRecord: true,
             finish: false,
+            namess: "",
             formData: {
                 cat_id: 18,
                 resource_type: 3,
@@ -370,6 +371,17 @@ export default {
                 self.voicePath = res.tempFilePath;
                 self.fileSize = res.fileSize;
                 innerAudioContext.src = this.voicePath;
+                console.log(self.voicePath, 222);
+                // if(this.voicePath) {
+                //     const path = this.voicePath;
+                //     const reg = /(?<=durationTime=).*?(?=.mp3)/;
+                //     // this.namess = path.match(reg)[0];
+                //     console.log(path.match(reg)[0],987906587986578);
+                // }
+                const path = self.voicePath;
+                const reg = /(?<=durationTime=).+(?=.mp3)/;
+                self.durationTime = path.match(reg);
+                console.log(self.durationTime, 11111111);
                 self.updateTotalTime();
             }
             self.pauseUpdateTime();
@@ -562,8 +574,8 @@ export default {
         },
         next() {
             this.addRecord = true;
-            console.log(this.slideValue, 1111111111111111111);
-            // console.log(this.isRecordPage, "next--");
+            console.log(this.slideValue, this.voicePath, 1111111111111111111);
+            console.log(this.isRecordPage, "next--");
             if (this.recordInit) {
                 if (this.isRecordPage) {
                     // 完成
