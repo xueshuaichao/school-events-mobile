@@ -561,7 +561,6 @@ export default {
                         this.id === this.barrier + 1 &&
                         this.activityStatus === 2
                     ) {
-                        console.log(3);
                         this.$store.commit("setTestData", {
                             barrier: this.id,
                             ...this.detail
@@ -584,7 +583,7 @@ export default {
                                     bg_id: this.bgId
                                 }).then(
                                     () => {
-                                        this.addRecord = false;
+                                        this.addRecord = true;
                                         console.log(111, 22, this.addRecord);
                                         uni.navigateTo({
                                             url: "/activity/pages/poetry/test"
@@ -626,7 +625,7 @@ export default {
                                     bg_id: this.bgId
                                 }).then(
                                     () => {
-                                        this.addRecord = false;
+                                        this.addRecord = true;
                                         console.log(111, 22, this.addRecord);
                                         this.show = true;
                                         this.modelTxt1 = `${this.barrierInfo.level_title}，请继续加油哦！`;
@@ -670,6 +669,7 @@ export default {
                 if (that.curNum === 0) {
                     clearInterval(that.numTimer);
                     that.numTimer = null;
+                    that.curNum = 3;
 
                     if (next) {
                         // 下一关
@@ -679,6 +679,7 @@ export default {
                             barrier: this.barrierInfo.barrier
                         });
                         this.getRecordParams();
+                        //
                     } else {
                         // 闯关列表
                         uni.navigateTo({

@@ -79,6 +79,7 @@ export default {
         this.innerAudioContext = uni.createInnerAudioContext();
         this.urlId = this.$store.getters.getBgMusic || -1;
         this.getList();
+        this.getShareConfig();
     },
     onUnload() {
         this.innerAudioContext.destroy();

@@ -391,7 +391,11 @@ export default {
         this.$refs.innerAudioContext.stop();
         this.$refs.innerAudioContextBg.stop();
     },
+
     methods: {
+        onshow() {
+            this.getActivityStatus();
+        },
         getCrouselList() {
             this.postCrouselList();
             this.setId = setInterval(() => {
