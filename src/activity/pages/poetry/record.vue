@@ -594,7 +594,6 @@ export default {
                         });
                         console.log(8888, this.curTime);
                         this.addRecord = false;
-                        console.log(filename, 7890);
                         this.uploadFile(this.voicePath, this.fileSize).then(
                             resp => {
                                 api.post("/api/activity/add", {
