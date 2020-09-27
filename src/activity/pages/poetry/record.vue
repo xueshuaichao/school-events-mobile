@@ -306,7 +306,9 @@ export default {
                 introduce: "",
                 type: 2,
                 activity_cat: 1
-            }
+            },
+            isFirst: true,
+            nowTime: new Date() - 0
         };
     },
     created() {
@@ -355,11 +357,7 @@ export default {
             };
             console.log(this.detail, title, content, "preview.detail");
         }
-        recorderManager.onStart(res => {
-            console.log("onStart");
-            this.recordStartAt = new Date() - 0;
-            this.updateTime();
-        });
+        recorderManager.onStart(res => {});
         recorderManager.onStop(res => {
             if (!self.finish) {
                 // 重录
@@ -380,9 +378,11 @@ export default {
                 // }
                 const path = self.voicePath;
                 const reg = /(?<=durationTime=).+(?=.mp3)/;
-                self.durationTime = path.match(reg);
+                self.durationTime = path.match(reg) ? path.match(reg)[0] : "";
+                this.recordDuration = self.durationTime;
+                // const timestamp1 =Date.parse(this.recordDuration);
                 console.log(self.durationTime, 11111111);
-                self.updateTotalTime();
+                self.updateTotalTime(this.recordDuration);
             }
             self.pauseUpdateTime();
         });
@@ -429,6 +429,7 @@ export default {
         }
     },
     onUnload() {
+        recorderManager.stop();
         innerAudioContext.destroy();
         innerAudioContextBg.destroy();
         // this.stopAll();
@@ -441,6 +442,7 @@ export default {
         this.timer2 = null;
         this.timer = null;
         this.timer3 = null;
+        this.resetPageData();
     },
     onHide() {
         if (this.isRecordPage) {
@@ -552,6 +554,7 @@ export default {
                             this.setAuthStatus();
                         } else {
                             // 开始录音
+                            console.log("xxxxxxxxx");
                             this.onStartRecord();
                         }
                     }
@@ -873,7 +876,12 @@ export default {
             this.recordStatus = 1;
             console.log("开始录音1");
             this.isRecord = true;
-            recorderManager.start();
+            recorderManager.start({
+                duration: 600000,
+                format: "mp3"
+            });
+            this.recordStartAt = new Date() - 0;
+            this.updateTime();
         },
         updatePlayTime() {
             // currentTime
@@ -915,15 +923,17 @@ export default {
             const second = padTime(Math.round(seconds % 60));
             this.curTime = `${minutes}:${second}`;
         },
-        updateTotalTime() {
+        updateTotalTime(ww) {
+            console.log(ww, 111);
             let duration;
             if (this.recordStatus === 1) {
                 // 正在录音
                 const now = new Date() - 0;
                 console.log(111, duration);
-                duration = now - this.recordStartAt;
+                duration = ww || now - this.recordStartAt;
             } else {
                 duration = this.lastDuration;
+                console.log(this.lastDuration, 22222222);
             }
             // console.log(this.recordStatus);
 
@@ -932,6 +942,7 @@ export default {
             const second = padTime(Math.round(seconds % 60));
 
             this.recordDuration = `${minutes}:${second}`;
+            // this.curTime = this.recordDuration;
             this.maxTime = seconds;
             this.maxVal = seconds;
         },
@@ -940,6 +951,8 @@ export default {
             console.log("暂停录音");
             this.lastDuration = new Date() - this.recordStartAt;
             recorderManager.pause();
+            this.lastDuration = new Date() - this.recordStartAt;
+            this.pauseUpdateTime();
         },
         resumeRecord() {
             // 继续录音
