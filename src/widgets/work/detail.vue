@@ -783,7 +783,7 @@ export default {
         percentToTime(p) {
             const seconds = this.maxTime * p;
             const minutes = seconds ? padTime(Math.floor(seconds / 60)) : "00";
-            const second = seconds ? padTime(Math.round(seconds % 60)) : "00";
+            const second = seconds ? padTime(Math.ceil(seconds % 60)) : "00";
             this.currentSecond = `${minutes}:${second}`;
         },
 

@@ -342,6 +342,7 @@ export default {
             if (content) {
                 content = content.split(/[\r\n]/);
             }
+            console.log(annotate);
             if (annotate) {
                 annotate = annotate.split(/[\r\n]/);
             }
@@ -602,7 +603,6 @@ export default {
                             barrier: this.id,
                             ...this.detail
                         });
-                        console.log(8888, this.curTime);
                         this.addRecord = false;
                         this.uploadFile(this.voicePath, this.fileSize).then(
                             resp => {
@@ -616,16 +616,16 @@ export default {
                                     bg_id: this.bgId
                                 }).then(
                                     () => {
-                                        console.log(111, 22, this.addRecord);
                                         uni.navigateTo({
                                             url: "/activity/pages/poetry/test"
                                         });
                                         this.addRecord = true;
                                     },
                                     err => {
+                                        this.addRecord = true;
                                         uni.showToast({
                                             icon: "none",
-                                            title: err.msg,
+                                            title: err.message,
                                             duration: 5000
                                         });
                                     }
@@ -666,9 +666,10 @@ export default {
                                         }, 3000);
                                     },
                                     err => {
+                                        this.addRecord = true;
                                         uni.showToast({
                                             icon: "none",
-                                            title: err.msg,
+                                            title: err.message,
                                             duration: 5000
                                         });
                                     }
@@ -732,9 +733,16 @@ export default {
             api.post("/api/poem/barrierpoem", {
                 barrier: id
             }).then(res => {
-                const content = res.content.split(/[\r\n]/);
-                const annotate = res.annotate.split(/[\r\n]/);
-                this.detail = { ...res, content, annotate };
+                if (res.annotate !== null) {
+                    const content = res.content.split(/[\r\n]/);
+                    const annotate = res.annotate.split(/[\r\n]/);
+                    this.detail = { ...res, content, annotate };
+                } else {
+                    const content = res.content.split(/[\r\n]/);
+                    const annotate = "";
+                    this.detail = { ...res, content, annotate };
+                }
+
                 uni.hideLoading();
             });
         },
@@ -874,7 +882,7 @@ export default {
             // currentTime
             const seconds = innerAudioContext.currentTime;
             const minutes = padTime(Math.floor(seconds / 60));
-            const second = padTime(Math.round(seconds % 60));
+            const second = padTime(Math.ceil(seconds % 60));
             this.curTime = `${minutes}:${second}`;
             this.slideValue = 600 * (seconds / (10 * 60));
 
@@ -887,7 +895,7 @@ export default {
             const duration = now - this.recordStartAt;
             const seconds = duration / 1000;
             const minutes = padTime(Math.floor(seconds / 60));
-            const second = padTime(Math.round(seconds % 60));
+            const second = padTime(Math.ceil(seconds % 60));
 
             this.slideValue = 600 * (seconds / (10 * 60));
             this.curTime = `${minutes}:${second}`;
