@@ -36,6 +36,7 @@
                         "
                     />
                     <view
+                        v-if="isSelf"
                         class="showing"
                         @click="getMyPoster"
                     >

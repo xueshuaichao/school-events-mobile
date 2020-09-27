@@ -13,7 +13,7 @@
         />
         <poetry
             v-if="activityId === 14"
-            ref="myPoetry"
+            ref="myChildren"
             :activity-id="activityId"
         />
         <spring

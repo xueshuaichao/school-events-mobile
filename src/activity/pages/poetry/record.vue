@@ -213,14 +213,9 @@ import utils from "../../../common/utils";
 import api from "../../../common/api";
 import model from "./testmodel.vue";
 import share from "../common/shareMinxin";
-
-const recorderManager = uni.getRecorderManager();
-const innerAudioContext = uni.createInnerAudioContext();
-const innerAudioContextBg = uni.createInnerAudioContext();
-
-// innerAudioContext.autoplay = true;
-innerAudioContext.volume = 1;
-innerAudioContextBg.volume = 0.6;
+let recorderManager;
+let innerAudioContext;
+let innerAudioContextBg;
 
 const padTime = function(val) {
     const str = "" + val;
@@ -302,7 +297,15 @@ export default {
             curTime: "00:00",
             sliderDisabled: true,
             addRecord: true,
-            finish: false
+            finish: false,
+            formData: {
+                cat_id: 18,
+                resource_type: 3,
+                activity_id: 14,
+                introduce: "",
+                type: 2,
+                activity_cat: 1
+            }
         };
     },
     created() {
@@ -318,6 +321,14 @@ export default {
         });
     },
     onLoad({ title, annotate, content, display_type, dynasty, author }) {
+        recorderManager = uni.getRecorderManager();
+        innerAudioContext = uni.createInnerAudioContext();
+        innerAudioContextBg = uni.createInnerAudioContext();
+
+        // innerAudioContext.autoplay = true;
+        innerAudioContext.volume = 1;
+        innerAudioContextBg.volume = 0.6;
+
         this.getRecordParams();
         const self = this;
         // innerAudioContextBg.src = this.bgSrc;
@@ -342,31 +353,25 @@ export default {
             };
             console.log(this.detail, title, content, "preview.detail");
         }
-
         recorderManager.onStart(res => {
-            console.log(42343243242343434234);
-            if (this.isStartRecord) {
-                this.recordStartAt = new Date() - 0;
-                this.updateTime();
-            } else {
-                this.recordStartAt = new Date() - this.lastDuration;
-                this.updateTime();
-            }
+            console.log("onStart");
+            this.recordStartAt = new Date() - 0;
+            this.updateTime();
         });
         recorderManager.onStop(res => {
-            self.voicePath = res.tempFilePath;
-            self.fileSize = res.fileSize;
-            innerAudioContext.src = this.voicePath;
-            self.updateTotalTime();
             if (!self.finish) {
-                console.log(`recorder stop${JSON.stringify(res)}`);
-                self.pauseUpdateTime();
-                self.updateTotalTime();
-
+                // 重录
                 if (!this.isRecord) {
                     this.onStartRecord();
                 }
+            } else {
+                // 正常录制完成
+                self.voicePath = res.tempFilePath;
+                self.fileSize = res.fileSize;
+                innerAudioContext.src = this.voicePath;
+                self.updateTotalTime();
             }
+            self.pauseUpdateTime();
         });
 
         innerAudioContext.onEnded(() => {
@@ -403,22 +408,37 @@ export default {
             console.log(innerAudioContextBg.duration, "duration, onCanplay");
             uni.hideLoading();
         });
+        innerAudioContext.onPlay(() => {
+            self.updatePlayTime();
+        });
         if (!this.isH5) {
             this.getSetting();
         }
     },
     onUnload() {
-        // innerAudioContext.destroy();
-        // innerAudioContextBg.destroy();
-        this.stopAll();
+        innerAudioContext.destroy();
+        innerAudioContextBg.destroy();
+        // this.stopAll();
         clearInterval(this.numTimer);
         clearTimeout(this.timer2);
         clearInterval(this.timer);
         clearTimeout(this.timer3);
+        clearTimeout(this.tid);
         this.numTimer = null;
         this.timer2 = null;
         this.timer = null;
         this.timer3 = null;
+    },
+    onHide() {
+        if (this.isRecordPage) {
+            if (this.recordStatus === 1) {
+                this.onPauseRecord();
+            }
+        } else {
+            if (this.playStatus) {
+                this.onPausePlay();
+            }
+        }
     },
     onShow() {
         // 选择背景音乐，返回录制页面。
@@ -490,7 +510,6 @@ export default {
             this.playStatus = 1;
             this.unPlayStatus = 0; // 手动暂停的是0
             this.palyAll();
-            this.updatePlayTime();
         },
         onPausePlay() {
             // 正在播放着，则暂停播放，根据状态显示重听
@@ -544,25 +563,30 @@ export default {
             this.addRecord = true;
             console.log(this.slideValue, 1111111111111111111);
             // console.log(this.isRecordPage, "next--");
-            if (this.recordInit && this.curTime > `00:10`) {
+            if (this.recordInit) {
                 if (this.isRecordPage) {
                     // 完成
-                    this.isRecordPage = 0;
-                    this.endRecord();
-                    this.finish = true;
+                    if (this.curTime > `00:10`) {
+                        this.isRecordPage = 0;
+                        this.endRecord();
+                        this.finish = true;
+                    } else {
+                        uni.showToast({
+                            icon: "none",
+                            title: "录音时长未满10秒",
+                            duration: 5000
+                        });
+                    }
                 } else {
+                    // 提交
                     if (this.playStatus) {
-                        console.log(2);
                         this.stopAll();
-
-                        // console.log(this.curTime)
                     }
                     // 进行测试题的条件 提交
                     if (
                         this.id === this.barrier + 1 &&
                         this.activityStatus === 2
                     ) {
-                        console.log(3);
                         this.$store.commit("setTestData", {
                             barrier: this.id,
                             ...this.detail
@@ -573,17 +597,12 @@ export default {
                         this.uploadFile(this.voicePath, this.fileSize).then(
                             resp => {
                                 api.post("/api/activity/add", {
-                                    cat_id: 18,
+                                    ...this.formData,
                                     poem_id: this.detail.poem_id,
-                                    resource_type: 3,
                                     play_url: resp.path,
                                     file_size: this.fileSize,
-                                    activity_id: 14,
                                     resource_name: this.detail.title,
-                                    introduce: "",
-                                    type: 2,
                                     duration: this.slideValue,
-                                    activity_cat: 1,
                                     bg_id: this.bgId
                                 }).then(
                                     () => {
@@ -616,17 +635,13 @@ export default {
                         this.uploadFile(this.voicePath, this.fileSize).then(
                             resp => {
                                 api.post("/api/activity/add", {
+                                    ...this.formData,
                                     cat_id: 18,
                                     poem_id: this.detail.poem_id,
-                                    resource_type: 3,
                                     play_url: resp.path,
                                     file_size: this.fileSize,
-                                    activity_id: 14,
                                     resource_name: this.detail.title,
-                                    introduce: "",
-                                    type: 2,
                                     duration: this.slideValue,
-                                    activity_cat: 1,
                                     bg_id: this.bgId
                                 }).then(
                                     () => {
@@ -659,12 +674,6 @@ export default {
                     //     url: '/activity/pages/poetry/test',
                     // })
                 }
-            } else {
-                uni.showToast({
-                    icon: "none",
-                    title: "录音时长未满10秒",
-                    duration: 5000
-                });
             }
         },
         setNumberTimer(next) {
@@ -684,6 +693,7 @@ export default {
                             barrier: this.barrierInfo.barrier
                         });
                         this.getRecordParams();
+                        //
                     } else {
                         // 闯关列表
                         uni.navigateTo({
@@ -828,12 +838,10 @@ export default {
             innerAudioContextBg.seek(val);
         },
         palyAll() {
-            console.log("1", innerAudioContext.src, "2");
             innerAudioContext.play();
             innerAudioContextBg.play();
         },
         pauseAll() {
-            console.log("pauseing");
             innerAudioContext.pause();
             innerAudioContextBg.pause();
         },
@@ -845,21 +853,15 @@ export default {
             this.recordStatus = 1;
             console.log("开始录音1");
             this.isRecord = true;
-
-            recorderManager.start({
-                format: "mp3",
-                duration: 600000
-            });
+            recorderManager.start();
         },
         updatePlayTime() {
             // currentTime
             const seconds = innerAudioContext.currentTime;
             const minutes = padTime(Math.floor(seconds / 60));
             const second = padTime(Math.round(seconds % 60));
-            console.log(innerAudioContext.duration, 111111111111111111111111);
-
-            this.slideValue = 600 * (seconds / (10 * 60));
             this.curTime = `${minutes}:${second}`;
+            this.slideValue = 600 * (seconds / (10 * 60));
 
             this.tid = setTimeout(() => {
                 this.updatePlayTime();
@@ -875,9 +877,10 @@ export default {
             this.slideValue = 600 * (seconds / (10 * 60));
             this.curTime = `${minutes}:${second}`;
             if (this.curTime > `00:19`) {
-                this.pauseRecord();
+                this.isRecordPage = 0;
+                this.endRecord();
+                this.finish = true;
             } else {
-                console.log(this.curTime, this.slideValue, "123yy");
                 this.tid = setTimeout(() => {
                     this.updateTime();
                 }, 200);
@@ -912,20 +915,19 @@ export default {
             this.maxVal = seconds;
         },
         pauseRecord() {
-            this.pauseUpdateTime();
+            // 暂停录音
+            console.log("暂停录音");
             this.lastDuration = new Date() - this.recordStartAt;
-            console.log("停止");
             recorderManager.pause();
         },
         resumeRecord() {
-            console.log("继续");
+            // 继续录音
             recorderManager.resume();
+            this.recordStartAt = new Date() - this.lastDuration;
+            this.updateTime();
         },
         endRecord(maxDuration) {
             if (this.isRecord) {
-                // console.log("stop recordddddd....");
-                this.pauseUpdateTime();
-                // this.lastDuration = new Date() - this.recordStartAt;
                 recorderManager.stop();
                 this.isRecord = false;
                 this.centerTxt = "试听";
