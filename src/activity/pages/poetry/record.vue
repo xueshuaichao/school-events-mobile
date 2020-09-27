@@ -593,6 +593,7 @@ export default {
                             ...this.detail
                         });
                         this.addRecord = false;
+                        console.log(44444444444, this.voicePath);
                         this.uploadFile(this.voicePath, this.fileSize).then(
                             resp => {
                                 api.post("/api/activity/add", {
@@ -866,7 +867,7 @@ export default {
             // currentTime
             const seconds = innerAudioContext.currentTime;
             const minutes = padTime(Math.floor(seconds / 60));
-            const second = padTime(Math.ceil(seconds % 60));
+            const second = padTime(Math.round(seconds % 60));
             this.curTime = `${minutes}:${second}`;
             this.slideValue = 600 * (seconds / (10 * 60));
 
@@ -879,7 +880,7 @@ export default {
             const duration = now - this.recordStartAt;
             const seconds = duration / 1000;
             const minutes = padTime(Math.floor(seconds / 60));
-            const second = padTime(Math.ceil(seconds % 60));
+            const second = padTime(Math.round(seconds % 60));
 
             this.slideValue = 600 * (seconds / (10 * 60));
             this.curTime = `${minutes}:${second}`;
@@ -1224,7 +1225,7 @@ export default {
             color: #2e796e;
             font-size: 24upx;
             text-align: right;
-            line-height: 6upx;
+            line-height: 30upx;
             padding-right: 100upx;
         }
         .btns-wrap,
