@@ -298,7 +298,6 @@ export default {
             sliderDisabled: true,
             addRecord: true,
             finish: false,
-            recordType: 1, // 录音类型 1-开始录音 2-继续录音
             formData: {
                 cat_id: 18,
                 resource_type: 3,
@@ -357,12 +356,7 @@ export default {
         }
         recorderManager.onStart(res => {
             console.log("onStart");
-            // 模拟器上继续录音执行 需要真机调试
-            if (this.recordType === 1) {
-                this.recordStartAt = new Date() - 0;
-            } else {
-                this.recordStartAt = new Date() - this.lastDuration;
-            }
+            this.recordStartAt = new Date() - 0;
             this.updateTime();
         });
         recorderManager.onStop(res => {
@@ -376,14 +370,8 @@ export default {
                 self.voicePath = res.tempFilePath;
                 self.fileSize = res.fileSize;
                 innerAudioContext.src = this.voicePath;
-                console.log(4343434343);
                 self.updateTotalTime();
             }
-            self.pauseUpdateTime();
-        });
-        recorderManager.onPause(res => {
-            console.log("暂停回调");
-            this.lastDuration = new Date() - this.recordStartAt;
             self.pauseUpdateTime();
         });
 
@@ -422,7 +410,6 @@ export default {
             uni.hideLoading();
         });
         innerAudioContext.onPlay(() => {
-            console.log("23232323");
             self.updatePlayTime();
         });
         if (!this.isH5) {
@@ -507,12 +494,8 @@ export default {
             this.centerTxt = "录音";
             if (!this.isStartRecord) {
                 this.startRecord();
-                this.recordType = 1;
-                console.log("开始");
             } else {
-                console.log("继续继续");
                 this.resumeRecord();
-                this.recordType = 2;
             }
             this.isStartRecord = 1;
         },
@@ -549,7 +532,6 @@ export default {
             if (!this.isH5) {
                 if (this.isRecordPage) {
                     if (this.recordStatus === 1) {
-                        console.log(12323232);
                         this.onPauseRecord();
                     } else {
                         // 未开始录音，进行录音
@@ -562,15 +544,12 @@ export default {
                         }
                     }
                 } else {
-                    console.log(22323232);
                     // 没有播放的状态。使用同一个图标，显示不同的文本。
                     // unPlayStatus ：-2 从未播放 -1 已经结束播放  0 暂停播放
                     if (this.playStatus) {
-                        console.log(32323232, this.playStatus);
                         this.onPausePlay();
                     } else {
                         this.onPlay();
-                        console.log(42323232);
                     }
                 }
             } else {
@@ -881,10 +860,7 @@ export default {
             this.recordStatus = 1;
             console.log("开始录音1");
             this.isRecord = true;
-            recorderManager.start({
-                duration: 600000,
-                format: "mp3"
-            });
+            recorderManager.start();
         },
         updatePlayTime() {
             // currentTime
@@ -907,7 +883,7 @@ export default {
 
             this.slideValue = 600 * (seconds / (10 * 60));
             this.curTime = `${minutes}:${second}`;
-            if (this.curTime === `10:00`) {
+            if (this.curTime > `10:00`) {
                 this.isRecordPage = 0;
                 this.endRecord();
                 this.finish = true;
@@ -931,10 +907,12 @@ export default {
             if (this.recordStatus === 1) {
                 // 正在录音
                 const now = new Date() - 0;
+                console.log(111, duration);
                 duration = now - this.recordStartAt;
             } else {
                 duration = this.lastDuration;
             }
+            // console.log(this.recordStatus);
 
             const seconds = duration / 1000;
             const minutes = padTime(Math.floor(seconds / 60));
@@ -947,12 +925,14 @@ export default {
         pauseRecord() {
             // 暂停录音
             console.log("暂停录音");
+            this.lastDuration = new Date() - this.recordStartAt;
             recorderManager.pause();
         },
         resumeRecord() {
             // 继续录音
-            console.log("继续录音");
             recorderManager.resume();
+            this.recordStartAt = new Date() - this.lastDuration;
+            this.updateTime();
         },
         endRecord(maxDuration) {
             if (this.isRecord) {
@@ -1208,7 +1188,7 @@ export default {
         .control {
             margin: 30upx 0 0 30upx;
             width: 688upx;
-            height: 60upx;
+            height: 68upx;
             border-radius: 48upx;
             position: relative;
             .btn {
@@ -1244,7 +1224,7 @@ export default {
             color: #2e796e;
             font-size: 24upx;
             text-align: right;
-            line-height: 30upx;
+            line-height: 6upx;
             padding-right: 100upx;
         }
         .btns-wrap,
