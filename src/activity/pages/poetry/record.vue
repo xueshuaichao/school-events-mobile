@@ -222,6 +222,13 @@ const padTime = function(val) {
     return str.length === 1 ? "0" + str : str;
 };
 
+const formatDuration = function(duration) {
+    duration = Math.round(duration);
+    const minutes = padTime(Math.floor(duration / 60));
+    const second = padTime(duration % 60);
+    return `${minutes}:${second}`;
+};
+
 export default {
     components: {
         model
@@ -369,20 +376,24 @@ export default {
                 }
             } else {
                 // 正常录制完成
+                console.log(res.duration, "duration");
                 self.voicePath = res.tempFilePath;
                 self.fileSize = res.fileSize;
                 innerAudioContext.src = this.voicePath;
                 self.durationTime = res.duration || 0;
                 // this.recordDuration = self.durationTime;
-                self.updateTotalTime(self.durationTime);
+                self.updateTotalTime(self.slideValue, true);
                 self.pauseUpdateTime();
             }
         });
+        recorderManager.onPause(this.onRecordPause);
+        recorderManager.onResume(this.onRecordResume);
 
         innerAudioContext.onEnded(() => {
             self.unPlayStatus = -1;
             innerAudioContextBg.pause();
             self.onPausePlay();
+            this.slideValue = this.maxValue;
         });
         innerAudioContextBg.onEnded(() => {
             // 背景音乐重复播放；
@@ -413,9 +424,11 @@ export default {
             console.log(innerAudioContextBg.duration, "duration, onCanplay");
             uni.hideLoading();
         });
-        innerAudioContext.onPlay(() => {
-            self.updatePlayTime();
-        });
+        // innerAudioContext.onPlay(() => {
+        //     console.log(innerAudioContext.duration, 'ddddd');
+        //     self.updateTotalTime(innerAudioContext.duration);
+        // });
+        innerAudioContext.onTimeUpdate(() => self.updatePlayTime());
         if (!this.isH5) {
             this.getSetting();
         }
@@ -466,6 +479,14 @@ export default {
     methods: {
         setPriviewData() {
             api.get().then(res => {});
+        },
+        onRecordPause() {
+            this.lastDuration = new Date() - this.recordStartAt;
+            this.pauseUpdateTime();
+        },
+        onRecordResume() {
+            this.recordStartAt = new Date() - this.lastDuration;
+            this.updateTime();
         },
         getBarrierInfo() {
             // 闯关列表或者是测试题返回到录制页面需要重新获取
@@ -860,7 +881,6 @@ export default {
             innerAudioContextBg.pause();
         },
         stopAll() {
-            console.log(1111111);
             innerAudioContext.stop();
             innerAudioContextBg.stop();
         },
@@ -878,24 +898,17 @@ export default {
         updatePlayTime() {
             // currentTime
             const seconds = innerAudioContext.currentTime;
-            const minutes = padTime(Math.floor(seconds / 60));
-            const second = padTime(Math.round(seconds % 60));
-            this.curTime = `${minutes}:${second}`;
-            this.slideValue = 600 * (seconds / (10 * 60));
-
-            this.tid = setTimeout(() => {
-                this.updatePlayTime();
-            }, 1000);
+            this.curTime = formatDuration(seconds);
+            this.slideValue = seconds;
+            //this.updateTotalTime(innerAudioContext.duration);
+            console.log(seconds, innerAudioContext.duration);
         },
         updateTime() {
             const now = new Date() - 0;
             const duration = now - this.recordStartAt;
             const seconds = duration / 1000;
-            const minutes = padTime(Math.floor(seconds / 60));
-            const second = padTime(Math.round(seconds % 60));
-
-            this.slideValue = 600 * (seconds / (10 * 60));
-            this.curTime = `${minutes}:${second}`;
+            this.slideValue = Math.round(seconds);
+            this.curTime = formatDuration(seconds);
             if (this.curTime > `10:00`) {
                 this.isRecordPage = 0;
                 this.endRecord();
@@ -912,39 +925,31 @@ export default {
         },
         percentToTime(p) {
             const seconds = this.maxTime * p;
-            const minutes = padTime(Math.floor(seconds / 60));
-            const second = padTime(Math.round(seconds % 60));
-            this.curTime = `${minutes}:${second}`;
+            this.curTime = formatDuration(seconds);
         },
-        updateTotalTime(duration) {
-            const seconds = duration / 1000;
-            const minutes = padTime(Math.floor(seconds / 60));
-            const second = padTime(Math.round(seconds % 60));
-            this.recordDuration = `${minutes}:${second}`;
-            this.curTime = this.recordDuration;
+        updateTotalTime(seconds, isEnded) {
+            seconds = Math.round(seconds);
+            this.recordDuration = formatDuration(seconds);
+            isEnded && (this.curTime = this.recordDuration);
             this.maxTime = seconds;
             this.maxVal = seconds;
         },
-
         pauseRecord() {
             // 暂停录音
             console.log("暂停录音");
-            this.lastDuration = new Date() - this.recordStartAt;
+            //this.lastDuration = new Date() - this.recordStartAt;
             recorderManager.pause();
-            this.lastDuration = new Date() - this.recordStartAt;
-            this.pauseUpdateTime();
         },
         resumeRecord() {
             // 继续录音
             recorderManager.resume();
-            this.recordStartAt = new Date() - this.lastDuration;
-            this.updateTime();
         },
         endRecord(maxDuration) {
             if (this.isRecord) {
                 recorderManager.stop();
                 this.isRecord = false;
                 this.centerTxt = "试听";
+                clearTimeout(this.tid);
             }
         },
         uploadFile(tempFilePath, fileSize) {
@@ -1035,7 +1040,7 @@ export default {
         sliderChange(e) {
             console.log(e.detail, this.slideValue, "stoped");
             this.percentToTime(this.slideValue / this.maxVal);
-            this.slideValue = e.detail.value;
+            this.slideValue = Math.round(e.detail.value);
             // if is playing mode, seed play position
             const seconds = this.maxTime * (this.slideValue / this.maxVal);
             if (!this.isH5 && !this.isRecordPage) {
@@ -1047,7 +1052,7 @@ export default {
             // this.btnLeft = w;
         },
         sliderChangeing(e) {
-            this.slideValue = e.detail.value;
+            this.slideValue = Math.round(e.detail.value);
             // let w = (this.slideValue * this.controllWidth) / 100;
             // this.barWidth = w;
             // this.btnLeft = w;
