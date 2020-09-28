@@ -531,9 +531,7 @@ export default {
                             '我是诗词小达人，跟我一起来闯关！',
                             '品味经典诗词之美，传承古典文化精华，快来挑战！',
                         ],
-                        h5Title: [
-                            '品味经典诗词之美，传承古典文化精华，快来挑战！',
-                        ],
+                        h5Title: ['青少年“爱挑战”趣味诗词大闯关！'],
                         desc: ['挑战诗词闯关，赢好礼！'],
                         image:
                             'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/share.png',
