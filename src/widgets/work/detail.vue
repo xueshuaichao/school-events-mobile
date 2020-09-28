@@ -591,20 +591,24 @@ export default {
                 this.catName = this.pageData.cat_name || "";
                 innerAudioContext.src = this.pageData.audio_url; // 录音音频
                 innerAudioContextBg.src = val.bg_url; // 背景音乐
-                // this.recordDuration = val.duration;
+                this.recordDuration = val.duration;
+                this.maxVal = val.duration;
                 console.log(val, val.poem, "change");
-                console.log("ooooooo");
             }
         }
     },
     created() {
         console.log(innerAudioContext);
         innerAudioContext.onEnded(() => {
+            console.log(11111);
             this.slideValue = 0;
-            this.playStatus = 0;
+            this.playStatus = 1;
             this.currentSecond = 0;
             innerAudioContextBg.stop();
         });
+    },
+    onLoad() {
+        this.clickCenter();
     },
     mounted() {
         this.videoContext = uni.createVideoContext(
@@ -849,6 +853,9 @@ export default {
                         this.recordDuration = innerAudioContext.duration;
                         this.maxVal = innerAudioContext.duration;
                         this.slideValue = innerAudioContext.currentTime;
+                        this.slideValue = Math.round(
+                            innerAudioContext.currentTime
+                        );
                     }
                 });
                 console.log(222222222222, this.recordDuration, this.slideValue);

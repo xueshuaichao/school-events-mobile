@@ -13,7 +13,7 @@ export default {
             {
                 activityId: 14,
                 h5Title: ['挑战诗词闯关，赢好礼！'],
-                title: ['诵读诗词，品味经典！'],
+                title: ['诵读诗词，传承经典！'],
                 desc: ['铭记诗词，传承文化！'],
                 image:
                     'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/banner.png',

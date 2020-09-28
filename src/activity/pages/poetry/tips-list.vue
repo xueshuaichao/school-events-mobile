@@ -92,6 +92,7 @@ export default {
                 overflow: hidden;
                 display: inline-block;
                 color: #254834;
+                width: 100%;
             }
         }
     }

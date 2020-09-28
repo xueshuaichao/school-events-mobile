@@ -324,7 +324,7 @@ export default {
         });
     },
     onLoad({ title, annotate, content, display_type, dynasty, author }) {
-        recorderManager = uni.getRecorderManager();
+        recorderManager = wx.getRecorderManager();
         innerAudioContext = uni.createInnerAudioContext();
         innerAudioContextBg = uni.createInnerAudioContext();
 
@@ -357,10 +357,13 @@ export default {
             };
             console.log(this.detail, title, content, "preview.detail");
         }
-        recorderManager.onStart(res => {});
+        recorderManager.onStart(res => {
+            console.log("onstart");
+        });
         recorderManager.onStop(res => {
             if (!self.finish) {
-                // 重录
+                self.pauseUpdateTime();
+                // 未完成时 重录
                 if (!this.isRecord) {
                     this.onStartRecord();
                 }
@@ -369,17 +372,11 @@ export default {
                 self.voicePath = res.tempFilePath;
                 self.fileSize = res.fileSize;
                 innerAudioContext.src = this.voicePath;
-                console.log(self.voicePath, 222);
-                console.log(innerAudioContext.duration, 123456789);
-                // const path = self.voicePath;
-                // const reg = /(?<=durationTime=).+(?=.mp3)/;
-                // self.durationTime = path.match(reg) ? path.match(reg)[0] : "";
+                self.durationTime = res.duration || 0;
                 // this.recordDuration = self.durationTime;
-                // // const timestamp1 =Date.parse(this.recordDuration);
-                // console.log(self.durationTime, 11111111);
-                self.updateTotalTime();
+                self.updateTotalTime(self.durationTime);
+                self.pauseUpdateTime();
             }
-            self.pauseUpdateTime();
         });
 
         innerAudioContext.onEnded(() => {
@@ -603,7 +600,6 @@ export default {
                             ...this.detail
                         });
                         this.addRecord = false;
-                        console.log(44444444444, this.voicePath);
                         this.uploadFile(this.voicePath, this.fileSize).then(
                             resp => {
                                 api.post("/api/activity/add", {
@@ -612,7 +608,7 @@ export default {
                                     play_url: resp.path,
                                     file_size: this.fileSize,
                                     resource_name: this.detail.title,
-                                    duration: this.slideValue,
+                                    duration: this.durationTime / 1000,
                                     bg_id: this.bgId
                                 }).then(
                                     () => {
@@ -651,7 +647,7 @@ export default {
                                     play_url: resp.path,
                                     file_size: this.fileSize,
                                     resource_name: this.detail.title,
-                                    duration: this.slideValue,
+                                    duration: this.durationTime / 1000,
                                     bg_id: this.bgId
                                 }).then(
                                     () => {
@@ -889,7 +885,7 @@ export default {
 
             this.tid = setTimeout(() => {
                 this.updatePlayTime();
-            }, 200);
+            }, 1000);
         },
         updateTime() {
             const now = new Date() - 0;
@@ -905,9 +901,10 @@ export default {
                 this.endRecord();
                 this.finish = true;
             } else {
+                console.log(222);
                 this.tid = setTimeout(() => {
                     this.updateTime();
-                }, 200);
+                }, 1000);
             }
         },
         pauseUpdateTime() {
@@ -919,30 +916,16 @@ export default {
             const second = padTime(Math.round(seconds % 60));
             this.curTime = `${minutes}:${second}`;
         },
-        updateTotalTime() {
-            // console.log(ww, 111);
-            let duration;
-            if (this.recordStatus === 1) {
-                // 正在录音
-                const now = new Date() - 0;
-                console.log(111, duration);
-                duration = now - this.recordStartAt;
-                // duration = ww || now - this.recordStartAt;
-            } else {
-                duration = this.lastDuration;
-                console.log(this.lastDuration, 22222222);
-            }
-            // console.log(this.recordStatus);
-
+        updateTotalTime(duration) {
             const seconds = duration / 1000;
             const minutes = padTime(Math.floor(seconds / 60));
             const second = padTime(Math.round(seconds % 60));
-
             this.recordDuration = `${minutes}:${second}`;
-            // this.curTime = this.recordDuration;
+            this.curTime = this.recordDuration;
             this.maxTime = seconds;
             this.maxVal = seconds;
         },
+
         pauseRecord() {
             // 暂停录音
             console.log("暂停录音");

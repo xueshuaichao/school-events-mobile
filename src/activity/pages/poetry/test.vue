@@ -41,6 +41,7 @@
             :model-txt2="modelTxt2"
             :btn2="btn2"
             :btn1="btn1"
+            :is-last="detail.barrier === 500"
             :cur-num="curNum"
             :level="level"
             @jumpTwo="jumpTwo"
@@ -195,11 +196,21 @@ export default {
                             // 去抽奖
                             this.modelTxt1 = '恭喜你获得一次抽奖机会';
                             this.testStatus = 2;
+                            if (this.detail.barrier === 500) {
+                                // 500
+                                // 提示
+                                this.modelTxt2 = '敬请期待更多关卡！';
+                                // todo
+                            }
                         } else if (res.level_title) {
                             // 进入下一关
                             this.modelTxt1 = `恭喜你晋升“${res.level_title}”`;
                             this.modelTxt2 = '';
                             this.testStatus = 3;
+                        } else if (this.detail.barrier === 500) {
+                            // 提示
+                            this.modelTxt1 = '敬请期待更多关卡';
+                            // todo
                         } else {
                             this.modelTxt1 = `还有${5
                                 - (this.detail.barrier % 5)}关即可抽奖`;
