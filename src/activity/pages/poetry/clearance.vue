@@ -147,6 +147,9 @@ export default {
         this.getlevel();
         this.getActivityStatus();
     },
+    onLoad() {
+        this.getShareConfig();
+    },
     methods: {
         jumpPrize() {
             uni.navigateTo({

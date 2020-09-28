@@ -592,6 +592,7 @@ export default {
                 innerAudioContext.src = this.pageData.audio_url; // 录音音频
                 innerAudioContextBg.src = val.bg_url; // 背景音乐
                 this.recordDuration = val.duration;
+                this.maxVal = val.duration;
                 console.log(val, val.poem, "change");
                 console.log("ooooooo");
             }
@@ -600,8 +601,9 @@ export default {
     created() {
         console.log(innerAudioContext);
         innerAudioContext.onEnded(() => {
+            console.log(11111);
             this.slideValue = 0;
-            this.playStatus = 0;
+            this.playStatus = 1;
             this.currentSecond = 0;
             innerAudioContextBg.stop();
         });
@@ -847,8 +849,11 @@ export default {
                     if (innerAudioContext.duration !== Infinity) {
                         this.currentSecond = innerAudioContext.currentTime;
                         // this.recordDuration = innerAudioContext.duration;
-                        this.maxVal = innerAudioContext.duration;
-                        this.slideValue = innerAudioContext.currentTime;
+                        // this.maxVal = innerAudioContext.duration;
+                        // console.log(111111,innerAudioContext.duration)
+                        this.slideValue = Math.round(
+                            innerAudioContext.currentTime
+                        );
                     }
                 });
                 console.log(222222222222, this.recordDuration, this.slideValue);

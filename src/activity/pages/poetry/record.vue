@@ -298,7 +298,7 @@ export default {
             sliderDisabled: true,
             addRecord: true,
             finish: false,
-            recordType: 1, // 录音类型 1-开始录音 2-继续录音
+            namess: "",
             formData: {
                 cat_id: 18,
                 resource_type: 3,
@@ -324,7 +324,7 @@ export default {
         });
     },
     onLoad({ title, annotate, content, display_type, dynasty, author }) {
-        recorderManager = uni.getRecorderManager();
+        recorderManager = wx.getRecorderManager();
         innerAudioContext = uni.createInnerAudioContext();
         innerAudioContextBg = uni.createInnerAudioContext();
 
@@ -357,10 +357,13 @@ export default {
             };
             console.log(this.detail, title, content, "preview.detail");
         }
-        recorderManager.onStart(res => {});
+        recorderManager.onStart(res => {
+            console.log("onstart");
+        });
         recorderManager.onStop(res => {
             if (!self.finish) {
-                // 重录
+                self.pauseUpdateTime();
+                // 未完成时 重录
                 if (!this.isRecord) {
                     this.onStartRecord();
                 }
@@ -369,11 +372,12 @@ export default {
                 self.voicePath = res.tempFilePath;
                 self.fileSize = res.fileSize;
                 innerAudioContext.src = this.voicePath;
-                self.updateTotalTime();
+                self.durationTime = res.duration || 0;
+                // this.recordDuration = self.durationTime;
+                self.updateTotalTime(self.durationTime);
+                self.pauseUpdateTime();
             }
-            self.pauseUpdateTime();
         });
-        recorderManager.onPause(res => {});
 
         innerAudioContext.onEnded(() => {
             self.unPlayStatus = -1;
@@ -496,12 +500,8 @@ export default {
             this.centerTxt = "录音";
             if (!this.isStartRecord) {
                 this.startRecord();
-                this.recordType = 1;
-                console.log("开始");
             } else {
-                console.log("继续继续");
                 this.resumeRecord();
-                this.recordType = 2;
             }
             this.isStartRecord = 1;
         },
@@ -538,7 +538,6 @@ export default {
             if (!this.isH5) {
                 if (this.isRecordPage) {
                     if (this.recordStatus === 1) {
-                        console.log(12323232);
                         this.onPauseRecord();
                     } else {
                         // 未开始录音，进行录音
@@ -552,15 +551,12 @@ export default {
                         }
                     }
                 } else {
-                    console.log(22323232);
                     // 没有播放的状态。使用同一个图标，显示不同的文本。
                     // unPlayStatus ：-2 从未播放 -1 已经结束播放  0 暂停播放
                     if (this.playStatus) {
-                        console.log(32323232, this.playStatus);
                         this.onPausePlay();
                     } else {
                         this.onPlay();
-                        console.log(42323232);
                     }
                 }
             } else {
@@ -573,8 +569,8 @@ export default {
         },
         next() {
             this.addRecord = true;
-            console.log(this.slideValue, 1111111111111111111);
-            // console.log(this.isRecordPage, "next--");
+            console.log(this.slideValue, this.voicePath, 1111111111111111111);
+            console.log(this.isRecordPage, "next--");
             if (this.recordInit) {
                 if (this.isRecordPage) {
                     // 完成
@@ -612,7 +608,7 @@ export default {
                                     play_url: resp.path,
                                     file_size: this.fileSize,
                                     resource_name: this.detail.title,
-                                    duration: this.slideValue,
+                                    duration: this.durationTime / 1000,
                                     bg_id: this.bgId
                                 }).then(
                                     () => {
@@ -651,7 +647,7 @@ export default {
                                     play_url: resp.path,
                                     file_size: this.fileSize,
                                     resource_name: this.detail.title,
-                                    duration: this.slideValue,
+                                    duration: this.durationTime / 1000,
                                     bg_id: this.bgId
                                 }).then(
                                     () => {
@@ -882,31 +878,32 @@ export default {
             // currentTime
             const seconds = innerAudioContext.currentTime;
             const minutes = padTime(Math.floor(seconds / 60));
-            const second = padTime(Math.ceil(seconds % 60));
+            const second = padTime(Math.round(seconds % 60));
             this.curTime = `${minutes}:${second}`;
             this.slideValue = 600 * (seconds / (10 * 60));
 
             this.tid = setTimeout(() => {
                 this.updatePlayTime();
-            }, 200);
+            }, 1000);
         },
         updateTime() {
             const now = new Date() - 0;
             const duration = now - this.recordStartAt;
             const seconds = duration / 1000;
             const minutes = padTime(Math.floor(seconds / 60));
-            const second = padTime(Math.ceil(seconds % 60));
+            const second = padTime(Math.round(seconds % 60));
 
             this.slideValue = 600 * (seconds / (10 * 60));
             this.curTime = `${minutes}:${second}`;
-            if (this.curTime === `10:00`) {
+            if (this.curTime > `10:00`) {
                 this.isRecordPage = 0;
                 this.endRecord();
                 this.finish = true;
             } else {
+                console.log(222);
                 this.tid = setTimeout(() => {
                     this.updateTime();
-                }, 200);
+                }, 1000);
             }
         },
         pauseUpdateTime() {
@@ -918,20 +915,10 @@ export default {
             const second = padTime(Math.round(seconds % 60));
             this.curTime = `${minutes}:${second}`;
         },
-        updateTotalTime() {
-            let duration;
-            if (this.recordStatus === 1) {
-                // 正在录音
-                const now = new Date() - 0;
-                duration = now - this.recordStartAt;
-            } else {
-                duration = this.lastDuration;
-            }
-
+        updateTotalTime(duration) {
             const seconds = duration / 1000;
             const minutes = padTime(Math.floor(seconds / 60));
             const second = padTime(Math.round(seconds % 60));
-
             this.recordDuration = `${minutes}:${second}`;
             this.curTime = this.recordDuration;
             this.maxTime = seconds;
@@ -940,13 +927,13 @@ export default {
         pauseRecord() {
             // 暂停录音
             console.log("暂停录音");
+            this.lastDuration = new Date() - this.recordStartAt;
             recorderManager.pause();
             this.lastDuration = new Date() - this.recordStartAt;
             this.pauseUpdateTime();
         },
         resumeRecord() {
             // 继续录音
-            console.log("继续录音");
             recorderManager.resume();
             this.recordStartAt = new Date() - this.lastDuration;
             this.updateTime();
@@ -1205,7 +1192,7 @@ export default {
         .control {
             margin: 30upx 0 0 30upx;
             width: 688upx;
-            height: 60upx;
+            height: 68upx;
             border-radius: 48upx;
             position: relative;
             .btn {
