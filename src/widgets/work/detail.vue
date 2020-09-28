@@ -846,7 +846,7 @@ export default {
                 innerAudioContext.onTimeUpdate(() => {
                     if (innerAudioContext.duration !== Infinity) {
                         this.currentSecond = innerAudioContext.currentTime;
-                        // this.recordDuration = innerAudioContext.duration;
+                        this.recordDuration = innerAudioContext.duration;
                         this.maxVal = innerAudioContext.duration;
                         this.slideValue = innerAudioContext.currentTime;
                     }

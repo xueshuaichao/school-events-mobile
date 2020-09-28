@@ -712,7 +712,7 @@ export default {
                         //
                     } else {
                         // 闯关列表
-                        uni.navigateTo({
+                        uni.redirectTo({
                             url: `/activity/pages/poetry/clearance?id=${this.id}`
                         });
                     }
