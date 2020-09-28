@@ -62,6 +62,7 @@
                         />
                     </cover-view>
                 </cover-view>
+
                 <video
                     :id="`detail${swiperPage}`"
                     ref="video"
@@ -161,10 +162,6 @@
                 </view>
             </view>
             <view class="controller">
-                <!--<image
-                    class=""
-                    src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/btn-play.png"
-                />-->
                 <image
                     class="play-btn"
                     :src="
@@ -174,28 +171,7 @@
                     "
                     @click="clickCenter"
                 />
-                <!--<view class="play-time">
-                    00:00
-                </view>
-                <view class="bar-wrap">
-                    <view class="bar-way" />
-                </view>
-                <view class="play-time">
-                    00:00
-                </view>-->
                 <view class="control">
-                    <!-- <view class="walk-way">
-                        <view
-                            class="wark-bar"
-                            :style="{ width: barWidth + 'px' }"
-                        />
-                    </view> -->
-                    <!--:style="{ left: (slideValue / maxVal) * 100 + '%' }"-->
-                    <!-- <image
-                        class="btn"
-                        src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/btn-dot.png"
-                        :style="{ left: btnLeft + 'px' }"
-                    /> -->
                     <slider
                         :value="slideValue"
                         min="0"
@@ -393,12 +369,16 @@
 <script>
 import api from '../../common/api';
 
-const innerAudioContext = uni.createInnerAudioContext();
-const innerAudioContextBg = uni.createInnerAudioContext();
-
-// innerAudioContext.autoplay = true;
-innerAudioContext.volume = 1;
-innerAudioContextBg.volume = 0.6;
+const innerAudioContext = [
+    'innerAudioContext_0',
+    'innerAudioContext_1',
+    'innerAudioContext_2',
+];
+const innerAudioContextBg = [
+    'innerAudioContextBg_0',
+    'innerAudioContextBg_1',
+    'innerAudioContextBg_2',
+];
 /* eslint-disable */
 const padTime = function(val) {
     const str = `${val}`;
@@ -589,26 +569,49 @@ export default {
                 this.praise_count = this.pageData.praise_count || 0;
                 this.introduce = this.pageData.introduce || "";
                 this.catName = this.pageData.cat_name || "";
-                innerAudioContext.src = this.pageData.audio_url; // 录音音频
-                innerAudioContextBg.src = val.bg_url; // 背景音乐
-                this.recordDuration = val.duration;
-                this.maxVal = val.duration;
-                console.log(val, val.poem, "change");
-                console.log("ooooooo");
+                if (this.pageData.resource_type === 3) {
+                    this.slideValue = 0;
+                    this.recordDuration = this.pageData.duration;
+                    this.maxVal = this.pageData.duration;
+                    innerAudioContext[
+                        this.swiperPage
+                    ] = uni.createInnerAudioContext();
+                    innerAudioContextBg[
+                        this.swiperPage
+                    ] = uni.createInnerAudioContext();
+
+                    innerAudioContext[
+                        this.swiperPage
+                    ].src = this.pageData.audio_url; // 录音音频
+                    innerAudioContextBg[
+                        this.swiperPage
+                    ].src = this.pageData.bg_url; // 背景音乐
+                    innerAudioContext[this.swiperPage].volume = 1;
+                    innerAudioContextBg[this.swiperPage].volume = 0.6;
+                    innerAudioContextBg[this.swiperPage].loop = true;
+
+                    // innerAudioContext[this.swiperPage].autoplay = true;
+                    // innerAudioContextBg[this.swiperPage].autoplay = true;
+                    this.audioInit();
+                    // console.log(this.swiperPage)
+                    // this.playAll();
+                    if (
+                        !this.isH5 &&
+                        this.swiperPage === 1 &&
+                        this.pageData.resource_type === 3 &&
+                        this.isFirst
+                    ) {
+                        this.playCurrent(1);
+                        this.isFirst = false;
+                    }
+                    console.log("maxVal", this.maxVal);
+                }
             }
         }
     },
-    created() {
-        console.log(innerAudioContext);
-        innerAudioContext.onEnded(() => {
-            console.log(11111);
-            this.slideValue = 0;
-            this.playStatus = 1;
-            this.currentSecond = 0;
-            innerAudioContextBg.stop();
-        });
-    },
+    created() {},
     mounted() {
+        this.isFirst = true;
         this.videoContext = uni.createVideoContext(
             `detail${this.swiperPage}`,
             this
@@ -716,8 +719,8 @@ export default {
                 url
             });
 
-            innerAudioContext.stop();
-            innerAudioContextBg.stop();
+            innerAudioContext[this.swiperPage].stop();
+            innerAudioContextBg[this.swiperPage].stop();
         },
         jumpLabelList() {
             // 标签列表
@@ -782,6 +785,53 @@ export default {
             }
             return str;
         },
+        // 音频播放 开始
+        audioInit() {
+            this.waitFlag = false;
+            innerAudioContext[this.swiperPage].onEnded(() => {
+                if (!this.waitFlag) {
+                    this.slideValue = 0;
+                    this.playStatus = 1;
+                    this.currentSecond = 0;
+                    this.sliderDisabled = false;
+                    innerAudioContextBg[this.swiperPage].stop();
+                }
+            });
+            innerAudioContext[this.swiperPage].onStop(() => {
+                this.slideValue = 0;
+                this.playStatus = 1;
+                this.currentSecond = 0;
+                this.sliderDisabled = false;
+                innerAudioContextBg[this.swiperPage].stop();
+            });
+            innerAudioContextBg[this.swiperPage].onPause(() => {
+                this.playStatus = 0;
+            });
+            innerAudioContext[this.swiperPage].onWaiting(() => {
+                this.waitFlag = true;
+                uni.showLoading({
+                    title: "加载中"
+                });
+            });
+            innerAudioContext[this.swiperPage].onPlay(() => {
+                this.waitFlag = false;
+                this.playStatus = 1;
+            });
+            innerAudioContext[this.swiperPage].onCanplay(() => {
+                this.waitFlag = false;
+                uni.hideLoading();
+            });
+            innerAudioContext[this.swiperPage].onTimeUpdate(() => {
+                if (innerAudioContext[this.swiperPage].duration !== Infinity) {
+                    this.sliderDisabled = false;
+                    this.currentSecond =
+                        innerAudioContext[this.swiperPage].currentTime;
+                    this.slideValue = Math.round(
+                        innerAudioContext[this.swiperPage].currentTime
+                    );
+                }
+            });
+        },
         percentToTime(p) {
             const seconds = this.maxTime * p;
             const minutes = seconds ? padTime(Math.floor(seconds / 60)) : "00";
@@ -798,65 +848,47 @@ export default {
                 );
                 this.slideValue = e.detail.value;
             }
-            return true;
         },
-        // 音频播放
-        palyAll() {
-            innerAudioContext.play();
-            innerAudioContextBg.play();
+        // 播放当前
+        playCurrent(current) {
+            // const currentAudio = `innerAudioContext_${current}`;
+            this.current = current;
+            console.log(innerAudioContext[this.current]);
+            innerAudioContext[this.current].play();
+            innerAudioContextBg[this.current].play();
+        },
+        playAll() {
+            console.log("playAll");
+            innerAudioContext[this.swiperPage].play();
+            innerAudioContextBg[this.swiperPage].play();
             this.sliderDisabled = false;
-            // if (this.allowSetCurrentTime) {
-            //     // 1秒只能重置一次currentTime（兼容iOS：iOS设置了currentTime之后可能会回溯前一段时间开始播放）
-            //     innerAudioContextBg.currentTime = this.currentSecond;
-            //     this.allowSetCurrentTime = false;
-            //     setTimeout(() => {
-            //         this.allowSetCurrentTime = true;
-            //     }, 1000);
-            //     console.log(innerAudioContextBg.currentTime);
-            // }
         },
         // 音频暂停
-        pauseAll() {
+        pauseAll(page = null) {
             console.log("pauseing");
-            innerAudioContext.pause();
-            innerAudioContextBg.pause();
+            const swiperPage = page === null ? this.swiperPage : page;
+            innerAudioContext[swiperPage].pause();
+            innerAudioContextBg[swiperPage].pause();
         },
-        stopAll() {
-            innerAudioContext.stop();
-            innerAudioContextBg.stop();
+        destroyAll(page = null) {
+            const swiperPage = page === null ? this.swiperPage : page;
+            innerAudioContext[swiperPage].destroy();
+            innerAudioContextBg[swiperPage].destroy();
+        },
+        stopAll(page = null) {
+            const swiperPage = page === null ? this.swiperPage : page;
+            innerAudioContext[swiperPage].stop();
+            innerAudioContextBg[swiperPage].stop();
         },
         clickCenter() {
-            // 没有播放的状态。使用同一个图标，显示不同的文本。
-            // unPlayStatus ：-2 从未播放 -1 已经结束播放  0 暂停播放
+            // playStatus 1 播放中 0 暂停
             if (this.playStatus) {
                 // 正在播放着，则暂停播放，根据状态显示重听
                 this.playStatus = 0;
-                if (this.unPlayStatus === -2) {
-                    this.centerTxt = "试听";
-                } else if (this.unPlayStatus === -1) {
-                    this.centerTxt = "重听";
-                } else {
-                    this.centerTxt = "继续";
-                }
                 this.pauseAll();
-                console.log(11111111111111, this.recordDuration);
             } else {
                 // 已经暂停，则继续播放。
-                this.playStatus = 1;
-                this.unPlayStatus = 0; // 手动暂停的是0
-                this.palyAll();
-                innerAudioContext.onTimeUpdate(() => {
-                    if (innerAudioContext.duration !== Infinity) {
-                        this.currentSecond = innerAudioContext.currentTime;
-                        // this.recordDuration = innerAudioContext.duration;
-                        // this.maxVal = innerAudioContext.duration;
-                        // console.log(111111,innerAudioContext.duration)
-                        this.slideValue = Math.round(
-                            innerAudioContext.currentTime
-                        );
-                    }
-                });
-                console.log(222222222222, this.recordDuration, this.slideValue);
+                this.playAll();
             }
         }
     }

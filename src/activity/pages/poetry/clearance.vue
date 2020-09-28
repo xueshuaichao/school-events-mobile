@@ -101,6 +101,8 @@ import api from '../../../common/api';
 import login from '../../../widgets/login/login.vue';
 import share from '../common/shareMinxin';
 
+let query;
+
 export default {
     components: {
         login,
@@ -142,10 +144,11 @@ export default {
         }
     },
     mounted() {
-        // this.getNodes();
         this.getlevel();
         this.getlevel();
         this.getActivityStatus();
+        query = uni.createSelectorQuery().in(this);
+        this.getNodes();
     },
     onLoad() {
         this.getShareConfig();
@@ -175,23 +178,26 @@ export default {
                 this.activityStatus = res.status;
             });
         },
-        getNodes() {
-            // 当前页面使用一次。
-            // const that = this;
-            const nodesRef = uni
-                .createSelectorQuery()
-                .in(this)
-                .select(`#row-${this.level.length - 1}`);
-            // console.log(nodesRef);
+        onFindNode() {
+            const nodesRef = query.select('.level-item .cur');
             nodesRef
                 .boundingClientRect((rek) => {
-                    console.log(rek);
-                    uni.pageScrollTo({
-                        scrollTop: rek.top,
-                        duration: 300,
-                    });
+                    if (rek) {
+                        uni.pageScrollTo({
+                            scrollTop: rek.top,
+                            duration: 300,
+                        });
+                    } else if (this.loadMoreStatus === 'more') {
+                        this.filter.page_num = this.filter.page_num + 1;
+                        this.loadMoreStatus = 'loading';
+                        this.getlevel('reachBottom');
+                        this.onFindNode();
+                    }
                 })
                 .exec();
+        },
+        getNodes() {
+            this.onFindNode();
         },
         pageScroll() {
             this.getNodes();

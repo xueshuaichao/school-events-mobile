@@ -108,7 +108,7 @@
                 class="pre-swiper"
             >
                 <detail
-                    ref="mychild"
+                    ref="detail"
                     :page-data="pageDataOne"
                     :like-status="likeStatus"
                     :is-change-slide="currentSwiper"
@@ -129,7 +129,7 @@
                     @touchmove.stop="stopTouchMove"
                 >
                     <detail
-                        ref="mychild"
+                        ref="detail"
                         :page-data="pageDataTwo"
                         :like-status="likeStatus"
                         :is-change-slide="currentSwiper"
@@ -148,7 +148,7 @@
                     class="cur-swiper"
                 >
                     <detail
-                        ref="mychild"
+                        ref="detail"
                         :page-data="pageDataTwo"
                         :like-status="likeStatus"
                         :is-change-slide="currentSwiper"
@@ -166,7 +166,7 @@
 
             <swiper-item class="next-swiper">
                 <detail
-                    ref="mychild"
+                    ref="detail"
                     :page-data="pageDataThree"
                     :like-status="likeStatus"
                     :is-change-slide="currentSwiper"
@@ -472,9 +472,12 @@ export default {
                     this.pageData = res;
                     if (!reget) {
                         this.pageDataTwo = res;
+                        console.log(23232, res);
                         this.setGetDetail(res);
                         this.getPoem(res, 2);
                     }
+                    this.resourceType = res.resource_type;
+                    console.log(this.resourceType);
                 },
                 (err) => {
                     uni.showToast({
@@ -492,6 +495,7 @@ export default {
         },
         getPoem(item, num) {
             if (item.resource_type === 3) {
+                this.newId = item.id;
                 api.get(`/api/poem/info?ac_resource_id=${item.id}`).then(
                     (res) => {
                         let content = [];
@@ -538,6 +542,7 @@ export default {
             ) {
                 this.activity_id = res.activity_id || 0;
             }
+            console.log(res);
             this.id = res.id;
             // activity_id,  没有7..没有11
             if (this.activity_id) {
@@ -656,7 +661,7 @@ export default {
             if (this.activity_id) {
                 url = '/api/activity/getuserthumb';
                 param = {
-                    id: this.id,
+                    id: Number(this.activity_id) === 14 ? this.newId : this.id,
                 };
             }
 
@@ -787,6 +792,10 @@ export default {
             //  禁止滑动。
         },
         changeOutSwiper(event) {
+            if (this.resourceType === 3) {
+                this.$refs.detail.stopAll(this.currentSwiper);
+            }
+            // this.$refs.detail.playCurrent(event.detail.current);
             // 判断滑动的方向
             if (this.currentSwiper > event.detail.current) {
                 this.outSwiperIncrease = false;
@@ -911,6 +920,7 @@ export default {
                     console.log('-');
             }
             this.pageData = curPageData;
+            console.log(4343434, curPageData);
             this.setGetDetail(curPageData);
             this.getLikeStatus();
         },
@@ -1034,6 +1044,7 @@ export default {
         },
     },
     onLoad(query) {
+        console.log(query);
         this.id = utils.getParam(query, 'id');
         this.fr = utils.getParam(query, 'fr') || '';
         this.isFromShare = utils.getParam(query, 'isFromShare')
@@ -1060,21 +1071,16 @@ export default {
         this.poster = this.selectComponent('#poster');
         this.getAuthStatus();
         // #endif
-
-        // hack for html5 video size notwoking
-        // #ifdef H5
-        // window.removeEventListener(
-        //     'orientationchange',
-        //     this.html5VideoAutoAdjust,
-        // );
-        // window.addEventListener('orientationchange', this.html5VideoAutoAdjust);
-        // #endif
     },
     onUnload() {
-        this.$refs.mychild.stopAll();
+        if (this.resourceType === 3) {
+            this.$refs.detail.stopAll(this.currentSwiper);
+        }
     },
     onHide() {
-        this.$refs.mychild.pauseAll();
+        if (this.resourceType === 3) {
+            this.$refs.detail.stopAll(this.currentSwiper);
+        }
         // this.isPaused = true;
         console.log('hidiiing--------');
     },
