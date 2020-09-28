@@ -370,19 +370,14 @@ export default {
                 self.fileSize = res.fileSize;
                 innerAudioContext.src = this.voicePath;
                 console.log(self.voicePath, 222);
-                // if(this.voicePath) {
-                //     const path = this.voicePath;
-                //     const reg = /(?<=durationTime=).*?(?=.mp3)/;
-                //     // this.namess = path.match(reg)[0];
-                //     console.log(path.match(reg)[0],987906587986578);
-                // }
-                const path = self.voicePath;
-                const reg = /(?<=durationTime=).+(?=.mp3)/;
-                self.durationTime = path.match(reg) ? path.match(reg)[0] : "";
-                this.recordDuration = self.durationTime;
-                // const timestamp1 =Date.parse(this.recordDuration);
-                console.log(self.durationTime, 11111111);
-                self.updateTotalTime(this.recordDuration);
+                console.log(innerAudioContext.duration, 123456789);
+                // const path = self.voicePath;
+                // const reg = /(?<=durationTime=).+(?=.mp3)/;
+                // self.durationTime = path.match(reg) ? path.match(reg)[0] : "";
+                // this.recordDuration = self.durationTime;
+                // // const timestamp1 =Date.parse(this.recordDuration);
+                // console.log(self.durationTime, 11111111);
+                self.updateTotalTime();
             }
             self.pauseUpdateTime();
         });
@@ -869,6 +864,7 @@ export default {
             innerAudioContextBg.pause();
         },
         stopAll() {
+            console.log(1111111);
             innerAudioContext.stop();
             innerAudioContextBg.stop();
         },
@@ -923,14 +919,15 @@ export default {
             const second = padTime(Math.round(seconds % 60));
             this.curTime = `${minutes}:${second}`;
         },
-        updateTotalTime(ww) {
-            console.log(ww, 111);
+        updateTotalTime() {
+            // console.log(ww, 111);
             let duration;
             if (this.recordStatus === 1) {
                 // 正在录音
                 const now = new Date() - 0;
                 console.log(111, duration);
-                duration = ww || now - this.recordStartAt;
+                duration = now - this.recordStartAt;
+                // duration = ww || now - this.recordStartAt;
             } else {
                 duration = this.lastDuration;
                 console.log(this.lastDuration, 22222222);

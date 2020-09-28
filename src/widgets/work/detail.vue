@@ -591,7 +591,7 @@ export default {
                 this.catName = this.pageData.cat_name || "";
                 innerAudioContext.src = this.pageData.audio_url; // 录音音频
                 innerAudioContextBg.src = val.bg_url; // 背景音乐
-                this.recordDuration = val.duration;
+                // this.recordDuration = val.duration;
                 console.log(val, val.poem, "change");
                 console.log("ooooooo");
             }
