@@ -153,7 +153,7 @@
                                 />
                             </view>
                             <view class="name text-one-line">
-                                {{ item.resource_name }}
+                                {{ item.user_name }}
                             </view>
                             <view class="vote-box">
                                 <view class="vote-num">

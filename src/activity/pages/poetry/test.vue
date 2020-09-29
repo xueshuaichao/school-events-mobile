@@ -181,7 +181,8 @@ export default {
                     poem_id: this.detail.poem_id,
                     question_id: this.detail.question.id,
                     barrier: this.detail.barrier,
-                    answer: this.answer, // 1,2,4,8
+                    answer: this.answer,
+                    activity_id: 14, // 1,2,4,8
                 }).then((res) => {
                     console.log(res);
                     // 返回操作都是跳转关卡页面
