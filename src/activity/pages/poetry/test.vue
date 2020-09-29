@@ -101,7 +101,6 @@ export default {
             clearInterval(this.timer);
             this.timer = null;
         }
-        uni.navigateBack();
     },
     methods: {
         jumpOne() {
