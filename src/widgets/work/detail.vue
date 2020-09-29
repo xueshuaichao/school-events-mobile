@@ -181,7 +181,7 @@
                         block-color="#54afa9"
                         block-size="20"
                         class="unseable-slider"
-                        :disabled="sliderDisabled"
+                        :disabled="true"
                         @changing="sliderChangeing"
                     />
                 </view>
@@ -787,19 +787,16 @@ export default {
         },
         // 音频播放 开始
         audioInit() {
-            this.waitFlag = false;
             innerAudioContext[this.swiperPage].onEnded(() => {
-                if (!this.waitFlag) {
-                    this.slideValue = 0;
-                    this.playStatus = 1;
-                    this.currentSecond = 0;
-                    this.sliderDisabled = false;
-                    innerAudioContextBg[this.swiperPage].stop();
-                }
+                this.slideValue = 0;
+                this.playStatus = 0;
+                this.currentSecond = 0;
+                this.sliderDisabled = false;
+                innerAudioContextBg[this.swiperPage].stop();
             });
             innerAudioContext[this.swiperPage].onStop(() => {
                 this.slideValue = 0;
-                this.playStatus = 1;
+                this.playStatus = 0;
                 this.currentSecond = 0;
                 this.sliderDisabled = false;
                 innerAudioContextBg[this.swiperPage].stop();
@@ -807,20 +804,16 @@ export default {
             innerAudioContextBg[this.swiperPage].onPause(() => {
                 this.playStatus = 0;
             });
-            innerAudioContext[this.swiperPage].onWaiting(() => {
-                this.waitFlag = true;
-                uni.showLoading({
-                    title: "加载中"
-                });
-            });
             innerAudioContext[this.swiperPage].onPlay(() => {
-                this.waitFlag = false;
                 this.playStatus = 1;
             });
-            innerAudioContext[this.swiperPage].onCanplay(() => {
-                this.waitFlag = false;
-                uni.hideLoading();
-            });
+            // innerAudioContext[this.swiperPage].onSeeking(()=>{
+            //     innerAudioContext[this.swiperPage].pause()
+            // })
+            // innerAudioContext[this.swiperPage].onSeeked(()=>{
+            //     innerAudioContext[this.swiperPage].play()
+            // })
+
             innerAudioContext[this.swiperPage].onTimeUpdate(() => {
                 if (innerAudioContext[this.swiperPage].duration !== Infinity) {
                     this.sliderDisabled = false;
@@ -829,11 +822,12 @@ export default {
                     this.slideValue = Math.round(
                         innerAudioContext[this.swiperPage].currentTime
                     );
+                    // console.log(this.slideValue)
                 }
             });
         },
         percentToTime(p) {
-            const seconds = this.maxTime * p;
+            const seconds = p;
             const minutes = seconds ? padTime(Math.floor(seconds / 60)) : "00";
             const second = seconds ? padTime(Math.ceil(seconds % 60)) : "00";
             this.currentSecond = `${minutes}:${second}`;
@@ -843,17 +837,18 @@ export default {
             if (this.playStatus === 0) {
                 this.sliderDisabled = true;
             } else {
-                this.percentToTime(
-                    this.slideValue ? this.slideValue / this.maxVal : 0
-                );
+                console.log(11111);
+                innerAudioContext[this.swiperPage].seek(e.detail.value);
                 this.slideValue = e.detail.value;
+                this.percentToTime(this.slideValue);
+                // console.log(this.slideValue)
             }
         },
         // 播放当前
         playCurrent(current) {
             // const currentAudio = `innerAudioContext_${current}`;
             this.current = current;
-            console.log(innerAudioContext[this.current]);
+            // console.log(innerAudioContext[this.current]);
             innerAudioContext[this.current].play();
             innerAudioContextBg[this.current].play();
         },
@@ -876,6 +871,7 @@ export default {
             innerAudioContextBg[swiperPage].destroy();
         },
         stopAll(page = null) {
+            console.log("stop", page);
             const swiperPage = page === null ? this.swiperPage : page;
             innerAudioContext[swiperPage].stop();
             innerAudioContextBg[swiperPage].stop();

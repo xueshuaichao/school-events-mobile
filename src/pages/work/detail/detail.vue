@@ -792,6 +792,7 @@ export default {
             //  禁止滑动。
         },
         changeOutSwiper(event) {
+            console.log(this.resourceType);
             if (this.resourceType === 3) {
                 this.$refs.detail.stopAll(this.currentSwiper);
                 this.$refs.detail.playCurrent(event.detail.current);
