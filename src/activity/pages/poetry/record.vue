@@ -639,10 +639,10 @@ export default {
                                         this.addRecord = true;
                                     },
                                     err => {
-                                        this.addRecord = true;
+                                        this.addRecord = false;
                                         uni.showToast({
                                             icon: "none",
-                                            title: err.message,
+                                            title: err.message || "网络错误",
                                             duration: 5000
                                         });
                                     }
@@ -686,7 +686,7 @@ export default {
                                         this.addRecord = true;
                                         uni.showToast({
                                             icon: "none",
-                                            title: err.message,
+                                            title: err.message || "网络错误",
                                             duration: 5000
                                         });
                                     }
@@ -1004,6 +1004,9 @@ export default {
                             return reject(resp.msg);
                         }
                         return false;
+                    },
+                    fail() {
+                        return reject();
                     }
                 });
             });
