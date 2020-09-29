@@ -228,14 +228,10 @@ export default {
                 // 判断为最后一页并确定最后一页生成的数量
                 size = max - pageSize * pageNum;
             }
-
             let list = [];
             list = Array.from({ length: size }, (v, k) => {
                 const K = k + pageSize * pageNum;
-                let canPrize = 1;
-                if (k) {
-                    canPrize = (K + 1) % 5;
-                }
+                const canPrize = (K + 1) % 5;
                 return {
                     canPrize,
                     k: K,

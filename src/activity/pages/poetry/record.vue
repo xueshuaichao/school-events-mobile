@@ -266,6 +266,7 @@ export default {
             isRecordPage: 1,
             // 0 暂停 1 正在录音
             recordStatus: 0,
+            reRecord: false,
             playStatus: 0,
             centerTxt: "录音",
             unPlayStatus: -2,
@@ -371,7 +372,7 @@ export default {
             if (!self.finish) {
                 self.pauseUpdateTime();
                 // 未完成时 重录
-                if (!this.isRecord) {
+                if (!this.isRecord && this.reRecord) {
                     this.onStartRecord();
                 }
             } else {
@@ -392,7 +393,7 @@ export default {
         innerAudioContext.onEnded(() => {
             self.unPlayStatus = -1;
             innerAudioContextBg.pause();
-            self.onPausePlay();
+            self.pauseStatus();
             this.slideValue = this.maxValue;
         });
         innerAudioContextBg.onEnded(() => {
@@ -518,6 +519,7 @@ export default {
         onStartRecord() {
             this.recordInit = true;
             this.recordStatus = 1;
+            this.reRecord = false;
             this.centerTxt = "录音";
             if (!this.isStartRecord) {
                 this.startRecord();
@@ -539,7 +541,7 @@ export default {
             this.unPlayStatus = 0; // 手动暂停的是0
             this.palyAll();
         },
-        onPausePlay() {
+        pauseStatus() {
             // 正在播放着，则暂停播放，根据状态显示重听
             this.playStatus = 0;
             if (this.unPlayStatus === -2) {
@@ -552,6 +554,9 @@ export default {
                 this.centerTxt = "继续";
                 this.sliderDisabled = false;
             }
+        },
+        onPausePlay() {
+            this.pauseStatus();
             this.pauseAll();
             this.pauseUpdateTime();
         },
@@ -799,6 +804,7 @@ export default {
                     confirmColor: "#1166FF",
                     success: res => {
                         if (res.confirm) {
+                            this.reRecord = true;
                             this.resetPageData();
                             if (this.finish) {
                                 this.onStartRecord();
@@ -873,6 +879,7 @@ export default {
             innerAudioContextBg.seek(val);
         },
         palyAll() {
+            innerAudioContext.src = this.voicePath + "?=" + Math.random();
             innerAudioContext.play();
             innerAudioContextBg.play();
         },
@@ -901,7 +908,7 @@ export default {
             this.curTime = formatDuration(seconds);
             this.slideValue = seconds;
             //this.updateTotalTime(innerAudioContext.duration);
-            console.log(seconds, innerAudioContext.duration);
+            console.log("klklkl", seconds, innerAudioContext.duration);
         },
         updateTime() {
             const now = new Date() - 0;
@@ -939,6 +946,7 @@ export default {
             console.log("暂停录音");
             //this.lastDuration = new Date() - this.recordStartAt;
             recorderManager.pause();
+            //clearTimeout(this.tid);
         },
         resumeRecord() {
             // 继续录音
@@ -949,7 +957,6 @@ export default {
                 recorderManager.stop();
                 this.isRecord = false;
                 this.centerTxt = "试听";
-                clearTimeout(this.tid);
             }
         },
         uploadFile(tempFilePath, fileSize) {
