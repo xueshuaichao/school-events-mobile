@@ -371,8 +371,8 @@ export default {
         display: flex;
         justify-content: space-between;
         padding: 0 80upx;
-        height: 136upx;
-        margin-bottom: 140upx;
+        height: 137upx;
+        margin-bottom: 141upx;
         box-sizing: border-box;
         .level-item {
             width: 88upx;
@@ -399,20 +399,20 @@ export default {
                 }
             }
             .cur {
-                animation: mymove 2s infinite;
+                animation: mymove 1s infinite;
             }
             @keyframes mymove {
                 0% {
                     transform: scale(1);
                 }
                 25% {
-                    transform: scale(1.05);
+                    transform: scale(1.08);
                 }
                 50% {
-                    transform: scale(1);
+                    transform: scale(1.15);
                 }
                 75% {
-                    transform: scale(1.05);
+                    transform: scale(1.2);
                 }
             }
         }
