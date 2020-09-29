@@ -439,104 +439,6 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.read-page-index {
-    background-color: #a1debe;
-}
-
-.getStyle {
-    margin-top: 45upx;
-    display: flex;
-    justify-content: space-between;
-    view {
-        text:first-child {
-            color: #fff0a8;
-            font-size: 28upx;
-        }
-        text:nth-child(2) {
-            color: #fff;
-            font-size: 24upx;
-        }
-    }
-    image {
-        width: 128upx;
-        height: 128upx;
-    }
-}
-.jinguizi {
-    display: flex;
-    justify-content: space-between;
-    & > view {
-        width: 305upx;
-        padding: 20upx;
-        height: 330upx;
-        box-sizing: border-box;
-        background: #ffeac9;
-        border-radius: 12upx;
-        image {
-            width: 100%;
-            height: 150upx;
-        }
-        & view:nth-child(2) {
-            font-size: 28upx;
-            color: #ff5630;
-        }
-        & view:last-child {
-            font-size: 22upx;
-            color: #c9ac67;
-        }
-    }
-}
-.register02 {
-    width: 598upx;
-    height: 68upx;
-}
-
-.renqi-prize {
-    text-align: center;
-    margin-bottom: 30upx;
-    image {
-        width: 248upx;
-        height: 68upx;
-    }
-    view {
-        font-size: 22upx;
-        color: #fff;
-    }
-}
-.register {
-    padding: 0 30upx;
-    image {
-        width: 100%;
-        height: 102upx;
-    }
-}
-body.dialog-open {
-    position: fixed;
-    width: 100%;
-}
-.abc {
-    position: fixed;
-    z-index: 999;
-    right: 0;
-    top: 100upx;
-}
-._ul {
-    ._li {
-        position: relative;
-        padding-left: 23upx;
-        &::before {
-            position: absolute;
-            width: 10upx;
-            height: 10upx;
-            background: #fff;
-            border-radius: 50%;
-            content: "";
-            top: 13upx;
-            left: 1upx;
-        }
-    }
-}
-
 .loadMore {
     width: 100%;
 }
@@ -577,22 +479,6 @@ body.dialog-open {
     margin-top: 35upx;
     color: #138256;
     text-align: center;
-}
-.active-schedule {
-    display: flex;
-    justify-content: space-between;
-    padding: 0 30upx;
-    margin-bottom: 15upx;
-
-    & text {
-        // border: 1px solid #ffcea2;
-        // border-radius: 20upx;
-        color: #ffcea2;
-        height: 42upx;
-        line-height: 42upx;
-        font-size: 12px;
-        padding: 0 20upx;
-    }
 }
 
 .media-box {
@@ -772,21 +658,6 @@ body.dialog-open {
                     right: 22upx;
                 }
             }
-        }
-    }
-
-    .qr-wrap {
-        .qr-code {
-            width: 190rpx;
-            height: 190rpx;
-            display: block;
-            margin: 35rpx auto 15rpx;
-            border-radius: 15rpx;
-        }
-
-        .text {
-            font-size: 24rpx;
-            text-align: center;
         }
     }
 }

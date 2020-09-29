@@ -42,6 +42,12 @@
             }
         },
         {
+            "path": "pages/tabBar/message/message",
+            "style": {
+                "navigationBarTitleText": "消息"
+            }
+        },
+        {
             "path": "pages/uc/uc/index",
             "style": {
                 "navigationBarTitleText": "个人空间",
@@ -50,6 +56,12 @@
         },
         {
             "path": "pages/doc/intro/intro",
+            "style": {
+                "navigationBarTitleText": "参赛指南"
+            }
+        },
+        {
+            "path": "pages/doc/guide/guide",
             "style": {
                 "navigationBarTitleText": "参赛指南"
             }
@@ -145,44 +157,16 @@
                 "navigationBarTitleText": "下载"
             }
         },
-        // ============== 春节好 end =====================
-
-        {
-            "path": "pages/activity-pages/labor/index",
-            "style": {
-                "navigationBarTitleText": "青少年动起来"
-            }
-        },
-        {
-            "path": "pages/activity-pages/upload/modify",
-            "style": {
-                "navigationBarTitleText": "上传作品"
-            }
-        },
-        {
-            "path": "pages/activity-pages/upload/result",
-            "style": {
-                "navigationBarTitleText": "上传成功"
-            }
-        },
-        {
-            "path": "pages/activity-pages/mywork/mywork",
-            "style": {
-                "navigationBarTitleText": "我的作品"
-            }
-        },
-        // #ifdef H5
         {
             "path": "pages/login/login",
             "style": {
                 "navigationBarTitleText": "登录"
             }
         },
-        // #endif
         {
-            "path": "pages/login/login",
+            "path": "pages/login/forget",
             "style": {
-                "navigationBarTitleText": "登录"
+                "navigationBarTitleText": "忘记密码"
             }
         },
         {
@@ -210,6 +194,18 @@
             }
         },
         {
+            "path": "pages/uc/setting/resetSchool",
+            "style": {
+                "navigationBarTitleText": "修改学校"
+            }
+        },
+        {
+            "path": "pages/uc/setting/resetClass",
+            "style": {
+                "navigationBarTitleText": "修改班级"
+            }
+        },
+        {
             "path": "pages/uc/record/record",
             "style": {
                 "navigationBarTitleText": "我的记录"
@@ -224,12 +220,7 @@
                 }
             }
         },
-        {
-            "path": "pages/uc/message/message",
-            "style": {
-                "navigationBarTitleText": "消息"
-            }
-        },
+
         {
             "path": "pages/uc/argement/index",
             "style": {
@@ -293,14 +284,33 @@
     ],
     "subPackages": [
         {
+            "root": "activityA",
+            "pages": [
+                {
+                    "path": "pages/poetry/index",
+                    "style": {
+                        "navigationBarTitleText": "秀才艺，赢好礼",
+                        "softinputNavBar": "none"
+                    }
+                },
+                {
+                    "path": "pages/poetry/level",
+                    "style": {
+                        "navigationBarTitleText": "秀才艺，赢好礼",
+                        "softinputNavBar": "none"
+                    }
+                }
+            ]
+        },
+        {
             "root": "history",
             "pages": [
                 // ============== 春节 活动 =================
                 {
                     "path": "chunjie/index",
                     "style": {
-                        "navigationBarTitleText": "秀才艺，赢好礼",
-                        "softinputNavBar": "none"
+                        "navigationBarTitleText": "秀才艺，赢好礼"
+                        // "softinputNavBar": "none"
                     }
                 },
                 {
@@ -315,14 +325,11 @@
                         "navigationBarTitleText": "我的作品"
                     }
                 },
-                // ============== 春节 end ======================
-
-                // ============== 春节好 ========================
                 {
                     "path": "chunjiehao/index",
                     "style": {
-                        "navigationBarTitleText": "dou说新年好",
-                        "softinputNavBar": "none"
+                        "navigationBarTitleText": "dou说新年好"
+                        // "softinputNavBar": "none"
                     }
                 },
                 {
@@ -540,6 +547,24 @@
                     "style": {
                         "navigationBarTitleText": "我的中奖"
                     }
+                },
+                {
+                    "path": "pages/poetry/bgmusic",
+                    "style": {
+                        "navigationBarTitleText": "选择背景音乐"
+                    }
+                },
+                {
+                    "path": "pages/poetry/clearance",
+                    "style": {
+                        "navigationBarTitleText": "趣味诗词大闯关"
+                    }
+                },
+                {
+                    "path": "pages/poetry/soundRecord",
+                    "style": {
+                        "navigationBarTitleText": "录音"
+                    }
                 }
             ]
         }
@@ -567,18 +592,17 @@
                 "text": "首页"
             },
             {
-                "pagePath": "pages/tabBar/list/list",
-                "iconPath": "static/images/tab/work.png",
-                "selectedIconPath": "static/images/tab/work_ac.png",
-                "text": "作品"
-            },
-            {
                 "pagePath": "pages/tabBar/upload/upload",
                 "iconPath": "static/images/tab/upload.png",
                 "selectedIconPath": "static/images/tab/upload_ac.png",
                 "text": "活动"
             },
-
+            {
+                "pagePath": "pages/tabBar/message/message",
+                "iconPath": "static/images/tab/work.png",
+                "selectedIconPath": "static/images/tab/work_ac.png",
+                "text": "消息"
+            },
             {
                 "pagePath": "pages/tabBar/uc/uc",
                 "iconPath": "static/images/tab/uc.png",

@@ -158,6 +158,9 @@
                 >
                     上传
                 </view>
+                <view class="warn-tip">
+                    *请勿重复上传同一作品
+                </view>
             </view>
             <view
                 v-if="needBindMobile"
@@ -289,6 +292,7 @@ export default {
     onLoad(params) {
         this.id = params.id;
         this.formData.activity_id = Number(params.activity_id);
+        // ac_type，preStatus，days 打卡活动的配置
         this.ac_type = Number(params.ac_type) || 0;
         this.preStatus = Number(params.status) || 0;
         this.days = Number(params.days) || 0;
@@ -638,8 +642,12 @@ export default {
                     () => {
                         this.disabled = false;
                         uni.hideLoading();
+                        let url = '';
+                        if (this.formData.activity_id === 12) {
+                            url = `&pre_status=${this.preStatus}&days=${this.days}&ac_type=${this.ac_type}`;
+                        }
                         uni.navigateTo({
-                            url: `/activity/pages/upload/result?activity_id=${this.formData.activity_id}&pre_status=${this.preStatus}&days=${this.days}&ac_type=${this.ac_type}`,
+                            url: `/activity/pages/upload/result?activity_id=${this.formData.activity_id}${url}`,
                         });
                         this.resetData();
                         this.lock = true;
@@ -766,6 +774,11 @@ export default {
     }
     .uni-input {
         border-radius: 40upx;
+    }
+    .warn-tip {
+        text-align: center;
+        color: #ff685c;
+        margin-top: 20upx;
     }
 
     /deep/ .comp-upload {

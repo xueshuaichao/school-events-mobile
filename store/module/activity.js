@@ -12,13 +12,13 @@ export default {
                     catMenu: [], // 分组
                     activityName: 'labor',
                     activityId: 8,
-                    catId: '', // 所属分类
+                    catId: 20, // 所属分类
                     showAllCat: false,
                     time: '活动时间：4月27日--5月31日',
                     primaryColor: '#DB4E0E', // 主色调
                     primaryBgColor: '#FF9F73', // 主要的背景颜色
                     placeholderColor: 'rgba(255,255,255,.6)',
-                    homePath: '/pages/activity-pages/labor/index',
+                    homePath: '/activity/pages/index?activity_id=8',
                     shareConfig: {
                         title: [
                             '争做“劳动小能手”，参加活动赢好礼',
@@ -36,7 +36,7 @@ export default {
                         ],
                         image:
                             'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/labor_share.jpg',
-                        path: '/pages/activity-pages/labor/index',
+                        path: '/activity/pages/index?activity_id=8',
                     },
                 },
                 indexConfig: {
@@ -339,6 +339,193 @@ export default {
                         image:
                             'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/clocked/clocked_share.png',
                         path: '/activity/pages/index?activity_id=12',
+                    },
+                },
+                uploadConfig: {
+                    // 上传作品页
+                    activityCat: [], // 表现形式
+                    uploadMode: ['video', 'image'], // 上传类型 只传1个值时（['video']）不显示表现形式
+                    placeholderNameText: '*作品名称（不超过11字）',
+                    placeholderDescText: '作品介绍(不超过80个字符)',
+                    nameMaxLength: 11,
+                    descMaxLength: 80,
+                },
+                indexColorConfig: {
+                    maskBgColor: '#fff',
+                    placeholderColor: '#FFBBB5',
+                },
+                uploadColorConfig: {
+                    placeholderColor: '#999',
+                },
+            },
+            {
+                activityId: 13,
+                publicConfig: {
+                    title: '青少年动起来 第二季',
+                    log: 'qyhd',
+                    sort: ['最新', '最热'],
+                    catMenu: [], // 分组
+                    activityName: 'labor',
+                    isPNG: true,
+                    activityId: 13,
+                    catId: 20, // 所属分类
+                    showAllCat: false,
+                    time: '活动时间：8月31日--9月27日',
+                    primaryColor: '#DB4E0E', // 主色调
+                    primaryBgColor: '#FF9F73', // 主要的背景颜色
+                    placeholderColor: 'rgba(255,255,255,.6)',
+                    homePath: '/activity/pages/index?activity_id=13',
+                    shareConfig: {
+                        title: [
+                            '争做“劳动小能手”，参加活动赢好礼',
+                            '悦劳动越光荣，大家一起动起来！',
+                            '金秋收获季！青少年动起来，参与活动赢好礼！',
+                            '劳动最光荣，勤劳享好礼！你也来参加吧~',
+                        ],
+                        h5Title: [
+                            '争做“劳动小能手”，参加活动赢好礼',
+                            '悦劳动越光荣，大家一起动起来！',
+                            '金秋收获季！青少年动起来，参与活动赢好礼！',
+                            '劳动最光荣，勤劳享好礼！你也来参加吧~',
+                        ],
+                        desc: ['悦劳动越光荣，大家一起动起来！'],
+                        image:
+                            'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/labor2_share.png',
+                        path: '/activity/pages/index?activity_id=13',
+                    },
+                },
+                indexConfig: {
+                    // 活动页
+                    rules: rulesData.rules.filter(v => v.id === 13)[0].text, // 规则文案
+                    prizes: [
+                        {
+                            text: ['一等奖', '空气炸锅'],
+                        },
+                        {
+                            text: ['二等奖', '九阳早餐机'],
+                        },
+                        {
+                            text: ['三等奖', '充电体重秤'],
+                        },
+                        {
+                            text: ['四等奖', '毛巾礼盒'],
+                        },
+                        {
+                            text: ['劳动能手奖', '富光保温壶'],
+                        },
+                    ], // 奖品文案
+                    prizesDetail: {
+                        text: [
+                            {
+                                title: '奖品领奖说明',
+                                texts: [
+                                    '1、每名参赛选手只有一次领奖机会，如已获得过一次“劳动能手”奖，则余下活动期间，不能再参与后续“劳动能手”及“劳动之星”奖项评选；',
+                                    '2、每个账号视为一个参赛选手，请勿多人使用同一个账号上传，若同一账号下，多个作品获奖，只颁发排名最高的一个作品；',
+                                    '3、工作人员将于9月28-9月30日期间电话联系获奖账号所绑定的手机号，若电话无法联系且在10月9日前未能主动通过公众号添加客服联系组委会认领的，将视为自动放弃领奖资格；',
+                                    '4、奖品及证书将于10月16日之前通过普通快递寄出；',
+                                    '5、活动奖品不提供发票、收据；',
+                                    '6、奖品不支持退换和售后，请当面核实无质量问题再签收；',
+                                    '7、因用户提供的收货地址等信息有误而导致的奖品未收到，不予补发；',
+                                    '8、奖品图片仅供参考，奖品以实物为准。',
+                                ],
+                            },
+                        ],
+                        list: [
+                            {
+                                title: '劳动之星',
+                                prizeList: [
+                                    {
+                                        name: '一等奖*2名',
+                                        text: '空气炸锅+证书',
+                                    },
+                                    {
+                                        name: '二等奖*6名',
+                                        text: '九阳早餐机+证书',
+                                    },
+                                    {
+                                        name: '三等奖*12名',
+                                        text: 'USB充电体重秤+证书',
+                                    },
+                                    {
+                                        name: '四等奖*30名',
+                                        text: '小黄人毛巾礼盒+证书',
+                                    },
+                                ],
+                            },
+                            {
+                                title: '劳动能手',
+                                prizeList: [
+                                    {
+                                        name: '共20名(4周，每周5名)',
+                                        text: '富光保温壶+证书',
+                                    },
+                                ],
+                            },
+                            {
+                                title: '优秀组织单位',
+                                prizeList: [
+                                    {
+                                        name: '共5名',
+                                        text: '奖杯',
+                                    },
+                                ],
+                            },
+                            {
+                                title: '优秀管理员',
+                                prizeList: [
+                                    {
+                                        name: '优秀组织单位的管理员',
+                                        text: '奖杯+礼品',
+                                    },
+                                ],
+                            },
+                        ],
+                    },
+                },
+                uploadConfig: {
+                    // 上传作品页
+                    activityCat: [], // 表现形式
+                    uploadMode: ['video', 'image'], // 上传类型 只传1个值时（['video']）不显示表现形式
+                    placeholderNameText: '*作品名称（不超过11字）',
+                    placeholderDescText: '劳动心得（不超过150字）',
+                    nameMaxLength: 11,
+                    descMaxLength: 150,
+                },
+                indexColorConfig: {},
+                uploadColorConfig: {},
+            },
+            {
+                activityId: 14,
+                publicConfig: {
+                    title: '趣味诗词大闯关',
+                    log: '',
+                    sort: ['最新', '最热'],
+                    catMenu: [], // 分组
+                    activityName: 'clocked', // 空作品的图片拼接地址
+                    activityId: 14,
+                    isPNG: true,
+                    catId: 20, // 所属分类
+                    showAllCat: false,
+                    time: '活动日期：8月1日--8月31日',
+                    primaryColor: '#FF685C', // 主色调
+                    primaryBgColor: '#FFA69F', // 主要的背景颜色 （图片背景）
+                    placeholderColor: '#FFBBB5',
+                    homePath: '/activity/pages/index?activity_id=14', // 我的作品页面返回首页的路径
+                    shareConfig: {
+                        title: [
+                            '打卡一夏，记录暑假赢好礼！',
+                            '爱挑战素质教育养成计划，过充实又快乐的暑假！',
+                            '每日打卡一小步！成长提升一大步！',
+                        ],
+                        h5Title: [
+                            '打卡一夏，记录暑假赢好礼！',
+                            '爱挑战素质教育养成计划，过充实又快乐的暑假！',
+                            '每日打卡一小步！成长提升一大步！',
+                        ],
+                        desc: ['打卡一夏，记录暑假'],
+                        image:
+                            'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/clocked/clocked_share.png',
+                        path: '/activity/pages/index?activity_id=14',
                     },
                 },
                 uploadConfig: {

@@ -93,7 +93,7 @@ export default {
                 height: 26upx;
                 top: 50%;
                 transform: translateY(-50%);
-                background-image: url("/static/images/yiqing/horn.png");
+                background-image: url("../../../static/images/yiqing/horn.png");
                 background-size: 100% 100%;
             }
             .swiper-info {

@@ -75,6 +75,10 @@ export default {
             total: 0,
             confList: [
                 {
+                    id: 13,
+                    url: '/activity/pages/index?activity_id=13',
+                },
+                {
                     id: 12,
                     url: '/activity/pages/index?activity_id=12',
                 },
@@ -88,44 +92,30 @@ export default {
                 },
                 {
                     id: 9,
-                    img:
-                        'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/h5/liuyi-banner.png',
                     url: '/activity/pages/children/index',
                 },
                 {
                     id: 8,
-                    img:
-                        'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/h5/wuyi-banner.png',
-                    url: '/pages/activity-pages/labor/index',
+                    url: '/activity/pages/index?activity_id=8',
                 },
                 {
                     id: 7,
-                    img:
-                        'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/h5/opengame-banner.png',
                     url: '/pages/openGame/index',
                 },
                 {
                     id: 6,
-                    img:
-                        'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/h5/read-banner.png',
                     url: '/history/read/index',
                 },
                 {
                     id: 5,
-                    img:
-                        'http://aitiaozhan.oss-cn-beijing.aliyuncs.com/school-events-mobile/prize-banner.png',
                     url: '/history/yiqing/index',
                 },
                 {
                     id: 4,
-                    img:
-                        'http://aitiaozhan.oss-cn-beijing.aliyuncs.com/chunjiehao.png',
                     url: '/history/chunjiehao/index',
                 },
                 {
                     id: 3,
-                    img:
-                        'http://aitiaozhan.oss-cn-beijing.aliyuncs.com/banner4.png',
                     url: '/history/chunjie/index',
                 },
             ],

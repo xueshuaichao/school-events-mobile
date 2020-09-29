@@ -7,6 +7,7 @@
                 :info="item"
             />
             <uni-load-more
+                v-if="total >= 20"
                 class="loadMore"
                 :status="loadMoreStatus"
                 :content-text="{
@@ -34,6 +35,7 @@ export default {
             loading: false,
             loadMoreStatus: 'none',
             dataList: [],
+            total: 0,
             filter: {
                 page_num: 1,
                 page_size: 20,
@@ -75,18 +77,20 @@ export default {
         },
     },
     onLoad({ uid }) {
-        console.log('uid----', uid);
         this.filter.uid = uid;
         this.loading = true;
         this.getData();
     },
 };
 </script>
-<style scoped>
+<style scoped lang="less">
 .honor-page {
     padding: 30rpx;
     display: flex;
     justify-content: space-between;
     flex-wrap: wrap;
+    .loadMore {
+        width: 100%;
+    }
 }
 </style>
