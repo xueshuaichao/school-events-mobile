@@ -652,6 +652,57 @@ const detailConf = [
             ['幸福的生活哪里来，要靠劳动来创造~来为我点赞吧'],
         ],
     },
+    {
+        posterConfig: {
+            width: 750,
+            height: 1050,
+            debug: false,
+            texts: [
+                {
+                    x: 375,
+                    y: 656,
+                    text: '',
+                    fontSize: 32,
+                    color: '#004137',
+                    opacity: 1,
+                    lineHeight: 40,
+                    lineNum: 1,
+                    width: 1210,
+                    textOverflow: 'ellipsis',
+                    textAlign: 'center',
+                },
+            ],
+            images: [
+                {
+                    url:
+                        'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/h5/shiyi-poster.png',
+                    width: 750,
+                    height: 1050,
+                    y: 0,
+                    x: 0,
+                },
+                {
+                    url: '',
+                    width: 532,
+                    height: 364,
+                    y: 236,
+                    x: 108,
+                },
+                {
+                    url: '',
+                    width: 160,
+                    height: 160,
+                    y: 672,
+                    x: 484,
+                    borderRadius: 160,
+                },
+            ],
+        },
+        titleList: [
+            ['我正在参加趣味诗词大闯关，跟我一起来！'],
+            ['诵读诗词，传承经典'],
+        ],
+    },
 ];
 
 export default detailConf;

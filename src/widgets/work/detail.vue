@@ -62,6 +62,7 @@
                         />
                     </cover-view>
                 </cover-view>
+
                 <video
                     :id="`detail${swiperPage}`"
                     ref="video"
@@ -81,7 +82,90 @@
                 />
             </template>
         </view>
-        <view class="content">
+        <view
+            v-if="pageData.resource_type === 3 && pageData.title"
+            class="audio-detail"
+        >
+            <view class="record-page-init">
+                <view class="title">
+                    {{ pageData.title }}
+                </view>
+                <view class="dynasty">
+                    {{ pageData.dynasty }}
+                    <template v-if="pageData.author">
+                        /
+                    </template>
+                    {{ pageData.author }}
+                </view>
+                <scroll-view
+                    :scroll-y="scrollY"
+                    :style="{ height: scrollH + 'px' }"
+                    class="scroll-Y"
+                >
+                    <view class="content-poetry">
+                        <view
+                            v-for="(txt, index) in pageData.content"
+                            :key="index"
+                            :class="{ left: pageData.display_type === 1 }"
+                        >
+                            {{ txt }}
+                        </view>
+                    </view>
+                </scroll-view>
+                <!-- <view
+                    class="more-content"
+                    @click="checkMore"
+                >
+                    上滑查看更多
+                </view> -->
+                <view class="zhusi">
+                    <view
+                        v-for="(txt, index) in pageData.annotate"
+                        :key="index"
+                    >
+                        <template v-if="!index">
+                            注释：
+                        </template>
+                        {{ txt }}
+                    </view>
+                </view>
+            </view>
+            <view class="cover">
+                <image
+                    :src="
+                        `https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/poetry-cover-${bgIndex}.png`
+                    "
+                />
+            </view>
+            <view class="page-btm" />
+        </view>
+        <view
+            v-if="pageData.resource_type === 3"
+            class="content2"
+        >
+            <view class="poetry-info">
+                <view
+                    class="poetry-create text-one-line"
+                    @click="jumpUc"
+                >
+                    @{{ pageData.create_name }}
+                </view>
+                <view class="poetry-name text-two-line">
+                    {{ pageData.resource_name }}
+                </view>
+                <view
+                    class="cat-name"
+                    :class="{ cur: pageData.cat_name }"
+                    @click="jumpLabelList"
+                >
+                    {{ pageData.cat_name ? `#${pageData.cat_name}#` : "" }}
+                </view>
+            </view>
+        </view>
+        <view
+            v-if="pageData.resource_type < 3"
+            class="content"
+        >
             <view
                 class="author-name text-one-line"
                 @click="jumpUc"
@@ -89,7 +173,7 @@
                 @{{ pageData.create_name }}
             </view>
             <view
-                v-if="pageData.school_name"
+                v-if="pageData.school_name && pageData.resource_type < 3"
                 class="school-and-record"
             >
                 <text>{{ pageData.school_name }}</text>
@@ -255,10 +339,18 @@
 <script>
 import api from '../../common/api';
 
+const innerAudioContext = '';
+const innerAudioContextBg = '';
+/* eslint-disable */
+const padTime = function(val) {
+    const str = `${val}`;
+    return str.length === 1 ? `0${str}` : str;
+};
+
 export default {
     filters: {
-        optimizeImage: (val) => {
-            let newUrl = '';
+        optimizeImage: val => {
+            let newUrl = "";
             let width = 330;
             let height = 667;
             try {
@@ -269,65 +361,91 @@ export default {
                 // error
             }
 
-            if (val.indexOf('?') !== -1) {
-                newUrl = `${val}&x-oss-process=image/format,png/interlace,1/quality,Q_80/resize,m_pad,h_${height
-                    * 2},w_${width * 2},color_000000`;
+            if (val.indexOf("?") !== -1) {
+                newUrl = `${val}&x-oss-process=image/format,png/interlace,1/quality,Q_80/resize,m_pad,h_${height *
+                    2},w_${width * 2},color_000000`;
             } else {
-                newUrl = `${val}?x-oss-process=image/format,png/interlace,1/quality,Q_80/resize,m_pad,h_${height
-                    * 2},w_${width * 2},color_000000`;
+                newUrl = `${val}?x-oss-process=image/format,png/interlace,1/quality,Q_80/resize,m_pad,h_${height *
+                    2},w_${width * 2},color_000000`;
             }
             return newUrl;
         },
+        secondsToText(secs) {
+            if (typeof secs === "string") {
+                return secs;
+            }
+            if (!secs || secs === "Infinity") {
+                return "00:00";
+            }
+            // secs = Number(secs);
+            const minutesDiv = (secs % 3600) / 60;
+            let minutes = Math.floor(minutesDiv);
+            let seconds = Math.ceil((secs % 3600) % 60);
+            if (seconds > 59) {
+                seconds = 0;
+                minutes = Math.ceil(minutesDiv);
+            }
+            if (minutes > 59) {
+                minutes = 0;
+            }
+            const toDouble = function(val) {
+                if (val >= 0 && val.toString().length < 2) {
+                    return `0${val}`;
+                }
+                return `${val}`;
+            };
+            return `${toDouble(minutes)}:${toDouble(seconds)}`;
+        }
     },
     props: {
         pageData: {
             type: Object,
             default: () => ({
-                show: false,
-            }),
+                show: false
+            })
         },
         likeStatus: {
             type: Number,
-            default: 0,
+            default: 0
         },
         activityId: {
             type: Number,
-            default: 0,
+            default: 0
         },
         isFromShare: {
             type: String,
-            default: '1',
+            default: "1"
         },
         from: {
             type: String,
-            default: '',
+            default: ""
         },
         showDrawer: {
             type: Boolean,
-            default: false,
+            default: false
         },
         isChangeSlide: {
             type: Number,
-            default: 1,
+            default: 1
         },
         swiperPage: {
             type: Number,
-            default: 1,
+            default: 1
         },
         commentTotal: {
             type: Number,
-            default: 0,
+            default: 0
         },
         isChangeStatusLike: {
             type: Boolean,
-            default: false,
-        },
+            default: false
+        }
     },
     data() {
         return {
             isFullScreen: false,
-            recordTxts: ['校级记录', '市级记录', '省级记录'],
-            groupTxts: ['1-3年级', '4-6年级', '7-9年级', '高一-高三'],
+            recordTxts: ["校级记录", "市级记录", "省级记录"],
+            groupTxts: ["1-3年级", "4-6年级", "7-9年级", "高一-高三"],
             // #ifdef H5
             isH5: true,
             isWechat: false,
@@ -338,12 +456,26 @@ export default {
             isVideoWaiting: false,
             // play_count: 1,
             showMore: false,
-            introduce: this.pageData.introduce || '',
+            introduce: this.pageData.introduce || "",
             total: 10,
             catName: this.pageData.cat_name,
             praise_count: this.pageData.praise_count || 0,
             toggleLikeObj: {},
             togglePlatCounts: {},
+            bgIndex: 0,
+            scrollH: 300,
+            scrollY: true,
+            playStatus: 0,
+            recordDuration: 0,
+            allowSetCurrentTime: true,
+            setTimeoutId3: 0,
+            sliderDisabled: true,
+            slideValue: [0, 0, 0],
+            maxVal: 600,
+            maxTime: 10 * 60,
+            curTime: 200,
+            currentSecond: 0,
+            current: 1
         };
     },
     watch: {
@@ -352,7 +484,7 @@ export default {
                 if (this.isH5) {
                     // h5的暂停方式需要专门处理。
                     const b = document.querySelector(
-                        `#detail${this.swiperPage} video`,
+                        `#detail${this.swiperPage} video`
                     );
                     if (b) {
                         b.pause();
@@ -368,7 +500,7 @@ export default {
 
                 if (this.isH5) {
                     const b = document.querySelector(
-                        `#detail${this.swiperPage} video`,
+                        `#detail${this.swiperPage} video`
                     );
                     if (b) {
                         b.pause();
@@ -377,6 +509,7 @@ export default {
                 } else {
                     this.videoContext.seek(0);
                     this.videoContext.play();
+                    this.sliderDisabled = false;
                     this.setPlayCount();
                 }
             }
@@ -386,9 +519,9 @@ export default {
         },
         isChangeStatusLike() {
             if (
-                this.swiperPage === this.isChangeSlide
-                && !this.toggleLikeObj[this.pageData.id]
-                && this.likeStatus
+                this.swiperPage === this.isChangeSlide &&
+                !this.toggleLikeObj[this.pageData.id] &&
+                this.likeStatus
             ) {
                 this.toggleLikeObj[this.pageData.id] = true;
                 this.praise_count += 1;
@@ -397,25 +530,26 @@ export default {
         pageData(val) {
             if (val) {
                 this.praise_count = this.pageData.praise_count || 0;
-                this.introduce = this.pageData.introduce || '';
-                this.catName = this.pageData.cat_name || '';
+                this.introduce = this.pageData.introduce || "";
+                this.catName = this.pageData.cat_name || "";
             }
-        },
+        }
     },
     created() {},
     mounted() {
+        this.isFirst = true;
         this.videoContext = uni.createVideoContext(
             `detail${this.swiperPage}`,
-            this,
+            this
         );
         if (
-            !this.isH5
-            && this.swiperPage === 1
-            && this.pageData.resource_type === 1
+            !this.isH5 &&
+            this.swiperPage === 1 &&
+            this.pageData.resource_type === 1
         ) {
             this.videoContext.play();
             this.setPlayCount();
-            console.log('mounted--play-----');
+            console.log("mounted--play-----");
         }
         if (this.swiperPage === 1 && this.pageData.resource_type === 2) {
             this.setPlayCount();
@@ -423,36 +557,37 @@ export default {
         // hack for html5 video size notwoking
         // #ifdef H5
         window.removeEventListener(
-            'orientationchange',
-            this.html5VideoAutoAdjust,
+            "orientationchange",
+            this.html5VideoAutoAdjust
         );
-        window.addEventListener('orientationchange', this.html5VideoAutoAdjust);
+        window.addEventListener("orientationchange", this.html5VideoAutoAdjust);
         const ua = window.navigator.userAgent.toLowerCase();
-        this.isWechat = ua.indexOf('micromessenger') !== -1;
-        this.isApp = ua.toLowerCase().indexOf('wd-atz-ios') !== -1
-            || ua.toLowerCase().indexOf('wd-atz-android') !== -1;
+        this.isWechat = ua.indexOf("micromessenger") !== -1;
+        this.isApp =
+            ua.toLowerCase().indexOf("wd-atz-ios") !== -1 ||
+            ua.toLowerCase().indexOf("wd-atz-android") !== -1;
         // #endif
     },
     methods: {
         html5VideoAutoAdjust() {
-            document.querySelector('.uni-video-type-fullscreen').style = '';
+            document.querySelector(".uni-video-type-fullscreen").style = "";
         },
         setPlayCount() {
-            api.post('/api/works/playcount', {
-                id: this.pageData.id,
+            api.post("/api/works/playcount", {
+                id: this.pageData.id
             });
         },
         handleCanvass() {
-            this.$emit('doAction', 'handleCanvass');
+            this.$emit("doAction", "handleCanvass");
         },
         toggleLike() {
-            this.$emit('doAction', 'toggleLike');
+            this.$emit("doAction", "toggleLike");
         },
         joinGame() {
-            this.$emit('doAction', 'joinGame');
+            this.$emit("doAction", "joinGame");
         },
         showMessage() {
-            this.$emit('doAction', 'showMessage');
+            this.$emit("doAction", "showMessage");
         },
         onPause() {
             this.isPaused = true;
@@ -488,48 +623,51 @@ export default {
         },
         watchIndex() {
             let url = `/activity/pages/index?activity_id=${this.activityId}`;
-            if (this.read === 6) {
-                url = '/history/read/index';
+            if (this.activityId === 6) {
+                url = "/history/read/index";
             }
             if (this.activityId === 9) {
-                url = '/activity/pages/children/index';
+                url = "/activity/pages/children/index";
             }
-            if (this.from === 'openGame') {
-                url = '/pages/openGame/index';
+            if (this.from === "openGame") {
+                url = "/pages/openGame/index";
             }
             if (this.activityId === 3) {
-                url = '/history/chunjie/index';
+                url = "/history/chunjie/index";
             }
             if (this.activityId === 4) {
-                url = '/history/chunjiehao/index';
+                url = "/history/chunjiehao/index";
             }
             if (this.activityId === 5) {
-                url = '/history/yiqing/index';
+                url = "/history/yiqing/index";
             }
             uni.navigateTo({
-                url,
+                url
             });
+
+            innerAudioContext.stop();
+            innerAudioContextBg.stop();
         },
         jumpLabelList() {
             // 标签列表
             const {
                 resource_scope: resourceScope,
                 cat_id: catId,
-                cat_name: catName,
+                cat_name: catName
             } = this.pageData;
             const url = `/pages/work/label/list?cat_id=${resourceScope},${catId}&cat_name=${catName}`;
             uni.navigateTo({
-                url,
+                url
             });
         },
         jumpUc() {
             api.isLogin().then(() => {
                 if (this.activityId && this.activityId > 9) {
-                    api.get('/api/activity/activitystatus', {
-                        activity_id: this.activityId,
-                    }).then((data) => {
+                    api.get("/api/activity/activitystatus", {
+                        activity_id: this.activityId
+                    }).then(data => {
                         if (data.status === 2) {
-                            this.jumpUcUrl('activity');
+                            this.jumpUcUrl("going");
                         } else {
                             this.jumpUcUrl();
                         }
@@ -539,25 +677,29 @@ export default {
                 }
             });
         },
-        jumpUcUrl(activity) {
-            if (activity && this.activityId === 10) {
+        jumpUcUrl(going) {
+            if (going && this.activityId === 10) {
                 uni.navigateTo({
-                    url: `/activity/pages/brand/ucenter?activity_id=10&user_id=${this.pageData.create_by}`,
+                    url: `/activity/pages/brand/ucenter?activity_id=10&user_id=${this.pageData.create_by}`
                 });
-            } else if (activity && this.activityId === 12) {
+            } else if (going && this.activityId === 12) {
                 uni.navigateTo({
-                    url: `/activity/pages/clocked/ucenter?activity_id=12&user_id=${this.pageData.create_by}`,
+                    url: `/activity/pages/clocked/ucenter?activity_id=12&user_id=${this.pageData.create_by}`
+                });
+            } else if (going && this.activityId === 14) {
+                uni.navigateTo({
+                    url: `/activity/pages/poetry/ucenter?activity_id=14&user_id=${this.pageData.create_by}`
                 });
             } else {
                 uni.navigateTo({
-                    url: `/pages/uc/uc/index?uid=${this.pageData.create_by}`,
+                    url: `/pages/uc/uc/index?uid=${this.pageData.create_by}`
                 });
             }
         },
         setInfoTime(time) {
-            let str = '';
-            let millseconds = '';
-            const times = String(time).split('.');
+            let str = "";
+            let millseconds = "";
+            const times = String(time).split(".");
             if (times.length === 2) {
                 [, millseconds] = times;
             }
@@ -568,8 +710,8 @@ export default {
                 str = `${minutes}分${times[0] - minutes * 60}秒${millseconds}`;
             }
             return str;
-        },
-    },
+        }
+    }
 };
 </script>
 
@@ -781,9 +923,9 @@ export default {
         color: #fff;
 
         .item {
-            margin-bottom: 52rpx;
+            margin-bottom: 32rpx;
             margin-left: 50rpx;
-            min-width: 120rpx;
+            // min-width: 120rpx;
             letter-spacing: 2upx;
         }
     }
@@ -792,26 +934,26 @@ export default {
         width: 80rpx;
         height: 80rpx;
         &.join {
-            width: 136rpx;
-            height: 130rpx;
+            width: 112rpx;
+            height: 108rpx;
         }
         &.avator {
-            width: 90rpx;
-            height: 90rpx;
+            width: 86rpx;
+            height: 86rpx;
             border-radius: 66rpx;
             box-shadow: 0 4upx 4upx 0 rgba(0, 0, 0, 0.28);
         }
     }
     .primary {
         color: #fff;
-        font-size: 28rpx;
+        font-size: 26rpx;
         text-align: center;
         line-height: 36rpx;
         background: #1166ff;
-        width: 102rpx;
-        height: 118rpx;
+        width: 104rpx;
+        height: 104rpx;
         border-radius: 56rpx;
-        padding: 24rpx 24rpx 0;
+        padding: 16rpx 16rpx 0;
         box-sizing: border-box;
     }
 }
@@ -821,6 +963,168 @@ export default {
 /deep/ .uni-video-container {
     .uni-video-cover-duration {
         display: none;
+    }
+}
+.audio-detail {
+    background: linear-gradient(#fefdf9, #c3efe4);
+    height: 100%;
+    .cover {
+        position: fixed;
+        bottom: 130upx;
+        left: 0;
+        width: 750upx;
+        height: 598upx;
+        image {
+            width: 100%;
+            height: 100%;
+        }
+    }
+    .page-btm {
+        width: 100%;
+        height: 248upx;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        background: url(../../static/images/work/audio-detail-btm2.png);
+        background-size: cover;
+    }
+    .record-page-init {
+        position: relative;
+        z-index: 1;
+        padding-top: 110upx;
+        .title {
+            font-size: 40upx;
+            line-height: 56upx;
+            color: #222;
+            text-align: center;
+        }
+        .dynasty {
+            font-size: 32upx;
+            line-height: 56upx;
+            color: #888;
+            text-align: center;
+        }
+        .scroll-Y {
+            .content-poetry {
+                word-break: break-all;
+                font-size: 32upx;
+                line-height: 44upx;
+                text-align: center;
+                padding: 16upx 116upx 0;
+                color: #444;
+                .left {
+                    text-align: left;
+                    text-indent: 20upx;
+                }
+            }
+        }
+
+        .more-content {
+            text-align: center;
+            padding: 20upx;
+            color: #cda972;
+            font-size: 20upx;
+        }
+        .zhusi {
+            color: #43a294;
+            font-size: 24upx;
+            line-height: 34upx;
+            padding: 0 144upx 0 54upx;
+        }
+    }
+}
+.content2 {
+    position: fixed;
+    left: 0;
+    width: 100%;
+    bottom: 90upx;
+    .poetry-info {
+        margin-left: 68upx;
+        width: 300upx;
+        color: #fff;
+        font-size: 24upx;
+        line-height: 34upx;
+        .poetry-create {
+            font-size: 24upx;
+            line-height: 34upx;
+            font-weight: 500;
+        }
+        .poetry-name {
+            height: 68upx;
+        }
+        .cat-name {
+            padding: 0 26upx;
+            border-radius: 34upx;
+            background: rgba(0, 65, 55, 0.3);
+            display: inline-block;
+        }
+    }
+    .controller {
+        height: 48upx;
+        display: flex;
+        padding: 0 26upx 0 16upx;
+        margin-top: 12upx;
+        font-size: 20upx;
+        color: #266158;
+        justify-content: space-between;
+        .play-btn {
+            width: 80upx;
+            height: 60upx;
+            position: relative;
+            bottom: 15upx;
+        }
+        .bar-wrap {
+            padding-top: 6upx;
+            .bar-way {
+                width: 540upx;
+                height: 20upx;
+                background: linear-gradient(
+                    180deg,
+                    rgba(0, 65, 55, 0.3) 0%,
+                    rgba(0, 65, 55, 0.08) 100%
+                );
+                border-radius: 10px;
+            }
+        }
+        .control {
+            margin: 0 0 0 10upx;
+            width: 688upx;
+            height: 68upx;
+            border-radius: 48upx;
+            position: relative;
+            top: -20upx;
+            .uni-slider {
+                margin: 0 10upx;
+            }
+            .btn {
+                width: 68upx;
+                height: 68upx;
+                position: absolute;
+                top: 0;
+                left: 0;
+            }
+            .walk-way {
+                width: 624upx;
+                height: 8upx;
+                position: absolute;
+                top: 30upx;
+                left: 30upx;
+                right: 30upx;
+                background: #43a294;
+                box-shadow: 0 2upx 6upx 0 rgba(0, 0, 0, 0.4) inset;
+                border-radius: 8upx;
+                .wark-bar {
+                    position: absolute;
+                    left: 0;
+                    width: 0;
+                    height: 100%;
+                    top: 0;
+                    background: #b5fff5;
+                    box-shadow: 0 2upx 6upx 0 rgba(0, 0, 0, 0.5) inset;
+                    border-radius: 8upx;
+                }
+            }
+        }
     }
 }
 </style>

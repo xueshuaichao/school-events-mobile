@@ -1,6 +1,6 @@
 /* eslint-disable no-undef */
 <template>
-    <view>
+    <view :class="upperClassName">
         <view class="poster-img-mask">
             <view class="poster-img-mask-box">
                 <view
@@ -47,9 +47,8 @@
                         </button>
                     </template>
                 </template>
-                <image
+                <view
                     class="close"
-                    src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/brand_close.png"
                     @click="togglePoster(false)"
                 />
             </view>
@@ -63,6 +62,10 @@ import utils from '../../../common/utils';
 export default {
     props: {
         image: {
+            type: String,
+            default: '',
+        },
+        upperClassName: {
             type: String,
             default: '',
         },
@@ -278,6 +281,8 @@ export default {
         margin: 37upx auto 0;
         width: 52upx;
         height: 52upx;
+        background: url(https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/brand_close.png);
+        background-size: 100%;
     }
 }
 .clocked-page {
@@ -298,5 +303,29 @@ export default {
     //     background: linear-gradient(180deg,rgba(255,162,132,1) 0%,rgba(255,104,76,1) 100%);
     //     box-shadow:0 4upx 6upx 0 rgba(0,0,0,0.4);
     // }
+}
+.poetry {
+    .poster-img-mask {
+        .canvas-img {
+            width: 750upx;
+            height: 1020upx;
+        }
+    }
+    .btn {
+        background: url(https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/show-bg.png);
+        width: 216upx;
+        height: 84upx;
+        background-size: 100%;
+        line-height: 84upx;
+        font-size: 28upx;
+    }
+    .close {
+        position: absolute;
+        top: 0;
+        right: 40upx;
+        background: url(https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/index-close.png);
+        background-size: 100%;
+        margin-top: 0;
+    }
 }
 </style>

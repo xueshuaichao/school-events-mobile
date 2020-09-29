@@ -54,25 +54,25 @@
                     v-for="(item, index) in tableData"
                     :key="item.id"
                     class="work-item"
+                    @click="toDetail(item, index)"
                 >
                     <work
                         :info="item"
                         :mode="'single'"
                         :show-class="false"
                         :from="'/api/user/worklist'"
-                        @click.prevent="toDetail(item, index)"
                     />
                     <view
                         class="btns"
                         :class="{ pass: item.status === 1 || isH5 }"
                     >
-                        <button
+                        <!-- <button
                             v-if="item.status === 1"
                             class="btn active"
                             @click.stop="toDetail(item, index)"
                         >
                             查看
-                        </button>
+                        </button> -->
                         <button
                             v-if="item.status === 2"
                             class="btn active"
@@ -80,15 +80,15 @@
                         >
                             驳回原因
                         </button>
-                        <button
+                        <!-- <button
                             v-if="!isH5 && item.status === 2"
                             class="btn active"
                             @click="editWork(item)"
                         >
                             编辑
-                        </button>
+                        </button> -->
                         <button
-                            v-if="item.status"
+                            v-if="item.status === 2"
                             class="btn"
                             @click="onConfirmDelete(item)"
                         >
@@ -156,18 +156,24 @@ export default {
             );
         },
         toDetail(item, index) {
-            if (this.filter.status === 1) {
-                this.$store.commit('setFilterData', {
-                    position: {
-                        total: this.total,
-                        curposition: index,
-                        from: '/api/user/worklist',
-                    },
-                    filter: this.filter,
-                });
-                uni.navigateTo({
-                    url: `/pages/work/detail/detail?id=${item.id}&activity_id=${item.activity_id}`,
-                });
+            if (!this.lock) {
+                this.lock = true;
+                if (this.filter.status === 1) {
+                    this.$store.commit('setFilterData', {
+                        position: {
+                            total: this.total,
+                            curposition: index,
+                            from: '/api/user/worklist',
+                        },
+                        filter: this.filter,
+                    });
+                    uni.navigateTo({
+                        url: `/pages/work/detail/detail?id=${item.id}&activity_id=${item.activity_id}`,
+                        complete: () => {
+                            this.lock = false;
+                        },
+                    });
+                }
             }
         },
         showCause({ memo }) {
@@ -177,55 +183,28 @@ export default {
                 showCancel: false,
             });
         },
-        editWork({
-            id,
-            activity_id: activityId,
-            activity_status: activityStatus,
-        }) {
-            // activityStatus 1未开始 2进行中  3已过期
-            if (activityStatus === 3) {
-                return uni.showToast({
-                    title: '活动已结束！',
-                    icon: 'none',
-                });
-            }
-            let urlPath = `/pages/upload/modify/modify?id=${id}`;
-            if (activityId === 6) {
-                urlPath = `/history/read/upload/modify?id=${id}`;
-            } else if (activityId >= 8) {
-                urlPath = `/activity/pages/upload/modify?id=${id}&activity_id=${activityId}&from=mywork`;
-            }
-            return uni.navigateTo({
-                url: urlPath,
-            });
-        },
-        deleteWork(item) {
-            let url = '/api/user/delwork';
-            if (item.activity_id) {
-                // 活动
-                url = '/api/activity/del';
-            }
-            const index = this.tableData.indexOf(item);
-            api.post(url, {
-                id: item.id,
-            }).then(() => {
-                if (index !== -1) {
-                    this.tableData.splice(index, 1);
-                    this.total -= 1;
-                    if (
-                        this.tableData.length <= this.filter.page_size
-                        && this.total >= this.filter.page_size
-                    ) {
-                        this.filter.page_num = 1;
-                        this.getWorkData();
-                    }
-                }
-                uni.showToast({
-                    title: '删除成功',
-                });
-                this.getWorkStatic();
-            });
-        },
+        // editWork({
+        //     id,
+        //     activity_id: activityId,
+        //     activity_status: activityStatus,
+        // }) {
+        //     // activityStatus 1未开始 2进行中  3已过期
+        //     if (activityStatus === 3) {
+        //         return uni.showToast({
+        //             title: '活动已结束！',
+        //             icon: 'none',
+        //         });
+        //     }
+        //     let urlPath = `/pages/upload/modify/modify?id=${id}`;
+        //     if (activityId === 6) {
+        //         urlPath = `/history/read/upload/modify?id=${id}`;
+        //     } else if (activityId >= 8) {
+        //         urlPath = `/activity/pages/upload/modify?id=${id}&activity_id=${activityId}&from=mywork`;
+        //     }
+        //     return uni.navigateTo({
+        //         url: urlPath,
+        //     });
+        // },
         onReachBottom() {
             if (this.loadMoreStatus === 'more') {
                 this.filter.page_num = this.filter.page_num + 1;
@@ -286,6 +265,33 @@ export default {
                         console.log('用户点击取消');
                     }
                 },
+            });
+        },
+        deleteWork(item) {
+            let url = '/api/user/delwork';
+            if (item.activity_id) {
+                // 活动
+                url = '/api/activity/del';
+            }
+            const index = this.tableData.indexOf(item);
+            api.post(url, {
+                id: item.id,
+            }).then(() => {
+                if (index !== -1) {
+                    this.tableData.splice(index, 1);
+                    this.total -= 1;
+                    if (
+                        this.tableData.length <= this.filter.page_size
+                        && this.total >= this.filter.page_size
+                    ) {
+                        this.filter.page_num = 1;
+                        this.getWorkData();
+                    }
+                }
+                uni.showToast({
+                    title: '删除成功',
+                });
+                this.getWorkStatic();
             });
         },
         onShareAppMessage(res) {
@@ -371,12 +377,12 @@ export default {
             right: 20upx;
             bottom: 24upx;
             display: flex;
-            justify-content: space-around;
+            justify-content: flex-end;
             box-sizing: border-box;
             width: 328upx;
             .btn {
                 display: inline-block;
-                padding: 0 14upx;
+                padding: 0 34upx;
                 height: 64upx;
                 font-size: 28upx;
                 line-height: 64upx;
@@ -384,13 +390,15 @@ export default {
                 margin: 0;
                 color: #666;
                 border-radius: 32upx;
-                border: 2upx solid #ccc;
+                border: 1px solid #ccc;
                 background: #fff;
 
                 &.active {
                     border-color: #1166ff;
                     color: #fff;
                     background: #1166ff;
+                    padding: 0 13upx;
+                    margin-right: 32upx;
                 }
                 &::after {
                     border-radius: 80upx;
@@ -398,8 +406,6 @@ export default {
             }
             &.pass {
                 .btn {
-                    padding: 0;
-                    width: 152upx;
                     text-align: center;
                 }
             }

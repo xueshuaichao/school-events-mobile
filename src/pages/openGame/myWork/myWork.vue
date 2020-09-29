@@ -62,11 +62,11 @@
                         v-for="(item, index) in dataList"
                         :key="item.id"
                         class="media-content"
+                        @click="viewDetail(item, index)"
                     >
                         <event-craft-cover
                             :info="item"
                             :bg-color="'006EDE'"
-                            @click.native="viewDetail(item, index)"
                         />
                         <view
                             v-if="type === 'myWork'"
@@ -105,29 +105,29 @@
                                 {{ item.reason || "" }}
                             </view>
                             <view class="btn">
-                                <text
+                                <!-- <text
                                     v-if="Number(tabActiveIndex) === 1"
                                     class="btn-item"
                                     @click="viewDetail(item, index)"
                                 >
                                     查看
-                                </text>
+                                </text> -->
                                 <text
                                     v-if="Number(tabActiveIndex) === 2"
                                     class="btn-item big"
-                                    @click="reason(item)"
+                                    @click.stop="reason(item)"
                                 >
                                     驳回原因
                                 </text>
-                                <text
+                                <!-- <text
                                     v-if="Number(tabActiveIndex) === 2"
                                     class="btn-item"
                                     @click="modifyItem(item)"
                                 >
                                     编辑
-                                </text>
+                                </text> -->
                                 <text
-                                    v-if="Number(tabActiveIndex) > 0"
+                                    v-if="Number(tabActiveIndex) === 2"
                                     class="btn-item del"
                                     @click="onConfirmDelete(item)"
                                 >

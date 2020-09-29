@@ -13,7 +13,7 @@
         />
         <poetry
             v-if="activityId === 14"
-            ref="myPoetry"
+            ref="myChildren"
             :activity-id="activityId"
         />
         <spring
@@ -123,8 +123,10 @@ export default {
     onLoad(params) {
         this.activityId = Number(params.activity_id);
         console.log(this.activityId);
-        const title = this.activityName.filter(v => v.id === this.activityId)[0].title
-            || '活动';
+        const titleItem = this.activityName.filter(
+            v => v.id === this.activityId,
+        );
+        const title = titleItem.length ? titleItem[0].title : '活动';
         uni.setNavigationBarTitle({ title });
         this.publicConfig = {
             ...this.$store.getters.getPublicConfig(this.activityId),

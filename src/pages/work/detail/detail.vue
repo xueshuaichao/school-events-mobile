@@ -14,7 +14,8 @@
                 { openGame: from === 'openGame' },
                 { liuyi: activity_id === 9 },
                 { qiyi: activity_id === 10 },
-                { bayi: activity_id === 12 }
+                { bayi: activity_id === 12 },
+                { shiyi: activity_id === 14 }
             ]"
         >
             <view class="activerule">
@@ -107,6 +108,7 @@
                 class="pre-swiper"
             >
                 <detail
+                    ref="detail"
                     :page-data="pageDataOne"
                     :like-status="likeStatus"
                     :is-change-slide="currentSwiper"
@@ -127,6 +129,7 @@
                     @touchmove.stop="stopTouchMove"
                 >
                     <detail
+                        ref="detail"
                         :page-data="pageDataTwo"
                         :like-status="likeStatus"
                         :is-change-slide="currentSwiper"
@@ -145,6 +148,7 @@
                     class="cur-swiper"
                 >
                     <detail
+                        ref="detail"
                         :page-data="pageDataTwo"
                         :like-status="likeStatus"
                         :is-change-slide="currentSwiper"
@@ -162,6 +166,7 @@
 
             <swiper-item class="next-swiper">
                 <detail
+                    ref="detail"
                     :page-data="pageDataThree"
                     :like-status="likeStatus"
                     :is-change-slide="currentSwiper"
@@ -183,6 +188,10 @@
             @doAction="doAction"
             @getcommentTotal="getcommentTotal"
         />
+        <audioController
+            ref="audioController"
+            :audio-data="pageData"
+        />
     </view>
 </template>
 
@@ -194,9 +203,10 @@ import logger from '../../../common/logger';
 import detail from '../../../widgets/work/detail.vue';
 import detailConf from './detail.config';
 import drawer from '../../../widgets/work/drawer.vue';
+import audioController from '../../../widgets/work/audio.vue';
 // 上下滑动的功能的拆解
 // 使用Swiper组件，把页面的主要内容，当作独立的部分，迁移到../../../widgets/work/detail.vue。
-// 页面滑动的时候，确定下当前显示的数据，用来做转发，二维码的数据
+// 页面滑动的时候，确定下当前显示的数据，用来做页面分享，作品海报的数据
 
 // 页面进入时候，分别获取前一页面，后一页面的数据，显示在swiper-item里面。
 // 根据页面翻动的方向, 获取相对的第二页面的数据，并修改视图。
@@ -205,6 +215,7 @@ export default {
     components: {
         detail,
         drawer,
+        audioController,
     },
     data() {
         let pix = 2;
@@ -467,8 +478,12 @@ export default {
                     this.pageData = res;
                     if (!reget) {
                         this.pageDataTwo = res;
+                        console.log(23232, res);
                         this.setGetDetail(res);
+                        this.getPoem(res, 2);
                     }
+                    this.resourceType = res.resource_type;
+                    console.log(this.resourceType);
                 },
                 (err) => {
                     uni.showToast({
@@ -484,6 +499,48 @@ export default {
             );
             this.getLikeStatus();
         },
+        getPoem(item, num) {
+            if (item.resource_type === 3) {
+                this.newId = item.id;
+                api.get(`/api/poem/info?ac_resource_id=${item.id}`).then(
+                    (res) => {
+                        let content = [];
+                        let annotate = [];
+                        if (res.poem.content) {
+                            content = res.poem.content.split(/[\r\n]/);
+                        }
+                        if (res.poem.annotate) {
+                            annotate = res.poem.annotate.split(/[\r\n]/);
+                        }
+                        if (num === 1) {
+                            this.pageDataOne = {
+                                ...this.pageDataOne,
+                                ...res.poem,
+                                annotate,
+                                content,
+                                bg_url: res.bg_url,
+                            };
+                        } else if (num === 2) {
+                            this.pageDataTwo = {
+                                ...this.pageDataTwo,
+                                ...res.poem,
+                                annotate,
+                                content,
+                                bg_url: res.bg_url,
+                            };
+                        } else {
+                            this.pageDataThree = {
+                                ...this.pageDataThree,
+                                ...res.poem,
+                                annotate,
+                                content,
+                                bg_url: res.bg_url,
+                            };
+                        }
+                    },
+                );
+            }
+        },
         setGetDetail(res) {
             if (
                 this.apiFrom === '/api/user/worklist'
@@ -491,6 +548,7 @@ export default {
             ) {
                 this.activity_id = res.activity_id || 0;
             }
+            console.log(res);
             this.id = res.id;
             // activity_id,  没有7..没有11
             if (this.activity_id) {
@@ -609,7 +667,7 @@ export default {
             if (this.activity_id) {
                 url = '/api/activity/getuserthumb';
                 param = {
-                    id: this.id,
+                    id: Number(this.activity_id) === 14 ? this.newId : this.id,
                 };
             }
 
@@ -796,6 +854,7 @@ export default {
             }
             this.prePageParam.slideCurPosition = newSlideCurPosition;
             objPosition = this.getPageSizeInfo(targetPosition);
+            console.log(targetPosition);
             this.setSwiperPageData(event, objPosition);
         },
         setSwiperPageData(event, objPosition) {
@@ -811,12 +870,15 @@ export default {
                         switch (this.currentSwiper) {
                             case 0:
                                 this.pageDataThree = res;
+                                this.getPoem(res, 3);
                                 break;
                             case 1:
                                 this.pageDataOne = res;
+                                this.getPoem(res, 1);
                                 break;
                             case 2:
                                 this.pageDataTwo = res;
+                                this.getPoem(res, 2);
                                 break;
                             default:
                                 console.log('1');
@@ -825,12 +887,15 @@ export default {
                         switch (this.currentSwiper) {
                             case 2:
                                 this.pageDataOne = res;
+                                this.getPoem(res, 1);
                                 break;
                             case 1:
                                 this.pageDataThree = res;
+                                this.getPoem(res, 3);
                                 break;
                             case 0:
                                 this.pageDataTwo = res;
+                                this.getPoem(res, 2);
                                 break;
                             default:
                                 console.log('-');
@@ -942,6 +1007,7 @@ export default {
                     this.apiFrom,
                 ).then((res) => {
                     this.pageDataOne = res;
+                    this.getPoem(res, 1);
                 });
                 this.getPageMoreDate(
                     paramNext,
@@ -949,6 +1015,7 @@ export default {
                     this.apiFrom,
                 ).then((res) => {
                     this.pageDataThree = res;
+                    this.getPoem(res, 3);
                 });
                 try {
                     const value = uni.getStorageSync('hasPromtSlide');
@@ -979,6 +1046,7 @@ export default {
         },
     },
     onLoad(query) {
+        console.log(query);
         this.id = utils.getParam(query, 'id');
         this.fr = utils.getParam(query, 'fr') || '';
         this.isFromShare = utils.getParam(query, 'isFromShare')
@@ -1005,20 +1073,21 @@ export default {
         this.poster = this.selectComponent('#poster');
         this.getAuthStatus();
         // #endif
-
-        // hack for html5 video size notwoking
-        // #ifdef H5
-        // window.removeEventListener(
-        //     'orientationchange',
-        //     this.html5VideoAutoAdjust,
-        // );
-        // window.addEventListener('orientationchange', this.html5VideoAutoAdjust);
-        // #endif
+    },
+    onUnload() {
+        // console.log('onUnload',this.resourceType)
+        if (this.resourceType === 3) {
+            this.$refs.audioController.destroyAll();
+        }
     },
     onHide() {
+        if (this.resourceType === 3) {
+            this.$refs.detail.pauseAll();
+        }
         // this.isPaused = true;
         console.log('hidiiing--------');
     },
+    onBackPress() {},
     onShow() {
         // 返回列表，刷新作品页，首页的点赞
         uni.setStorageSync('onShowFrom', 'detail');
@@ -1222,6 +1291,35 @@ export default {
                     rgba(255, 162, 132, 1),
                     rgba(255, 104, 76, 1)
                 );
+            }
+        }
+        &.shiyi {
+            .saveBtn {
+                width: 216upx;
+                height: 72upx;
+                line-height: 72upx;
+                background: url(https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/show-bg.png);
+                font-size: 28upx;
+                background-size: 100%;
+                margin-top: 0;
+            }
+            .close {
+                position: absolute;
+                background: url(https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/index-close.png);
+                background-size: 100%;
+                top: 0;
+                right: 40upx;
+                width: 52upx;
+                height: 52upx;
+                left: auto;
+                &::before,
+                &::after {
+                    display: none;
+                }
+            }
+            .activerule {
+                padding-top: 20upx;
+                position: relative;
             }
         }
     }

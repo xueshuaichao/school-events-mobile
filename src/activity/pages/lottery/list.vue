@@ -16,45 +16,47 @@
                     v-for="item in list"
                     :key="item.id"
                     class="item"
-                    @click="jumpDetail(item.id)"
                 >
-                    <view class="item-detail">
-                        <view class="image">
-                            <image
-                                :src="item.image | optimizeImage"
-                                mode=""
-                            />
-                        </view>
-                        <view class="title">
-                            {{ item.prize_name }}
-                        </view>
-                    </view>
-                    <view class="item-info">
-                        <view class="time">
+                    <view @click="jumpDetail(item)">
+                        <view class="item-detail">
+                            <view class="image">
+                                <image
+                                    :src="item.image | optimizeImage"
+                                    mode=""
+                                />
+                            </view>
                             <view class="title">
-                                兑换时间：
-                            </view>
-                            <view class="text">
-                                {{ item.created_at }}
+                                {{ item.prize_name }}
                             </view>
                         </view>
-                    </view>
-                    <view
-                        class="address-detail"
-                        @click.stop="setAddress(item)"
-                    >
-                        <template v-if="item.address">
-                            <view>{{ item.address.name }}</view>
-                            <view>{{ item.address.mobile }}</view>
-                            <view class="address text-one-line">
-                                {{ item.address.address }}
+                        <view class="item-info">
+                            <view class="time">
+                                <view class="title">
+                                    兑换时间：
+                                </view>
+                                <view class="text">
+                                    {{ item.created_at }}
+                                </view>
                             </view>
-                        </template>
+                        </view>
                         <view
-                            v-else
-                            class="set-address"
+                            v-if="!item.ys_code"
+                            class="address-detail"
+                            @click.stop="setAddress(item)"
                         >
-                            还没有邮件地址，快去设置吧～
+                            <template v-if="item.address">
+                                <view>{{ item.address.name }}</view>
+                                <view>{{ item.address.mobile }}</view>
+                                <view class="address text-one-line">
+                                    {{ item.address.address }}
+                                </view>
+                            </template>
+                            <view
+                                v-else
+                                class="set-address"
+                            >
+                                还没有邮件地址，快去设置吧～
+                            </view>
                         </view>
                     </view>
                 </view>
@@ -219,9 +221,13 @@ export default {
             });
             return true;
         },
-        jumpDetail(id) {
+        jumpDetail(item) {
+            let jumpUrl = `detail?id=${item.id}&activity_id=${this.activityId}`;
+            if (item.ys_code) {
+                jumpUrl = '/activity/pages/poetry/vip';
+            }
             uni.navigateTo({
-                url: `detail?id=${id}&activity_id=${this.activityId}`,
+                url: jumpUrl,
             });
         },
     },
@@ -245,7 +251,7 @@ page {
         .item {
             border-radius: 16upx;
             background-color: #fff;
-            padding: 20upx 0 0;
+            padding: 20upx 0 10upx;
             margin-bottom: 32upx;
         }
         .item-detail,

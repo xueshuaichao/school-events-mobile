@@ -48,19 +48,21 @@
                     v-else
                     class="search-box"
                 >
-                    <button
+                    <view
                         v-for="(item, index) in publicConfig.catMenu"
                         :key="index"
+                        class="btn"
                         :class="{
                             active: filter.activity_cat === index + 1
                         }"
                         @click="toggle(index + 1)"
                     >
                         {{ item }}
-                    </button>
-                    <button
+                    </view>
+                    <view
                         v-for="(item, index) in publicConfig.sort"
                         :key="index"
+                        class="btn"
                         :class="{
                             active:
                                 filter.sort === (index === 0 ? 'new' : 'hot')
@@ -68,7 +70,7 @@
                         @click="toggle(index === 0 ? 'new' : 'hot')"
                     >
                         {{ item }}
-                    </button>
+                    </view>
                     <view class="search">
                         <image
                             :src="
@@ -76,25 +78,26 @@
                             "
                         />
                         <form action="javascript:return true">
+                            <image
+                                src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/labor_search.png"
+                            />
                             <input
                                 v-model="changeValue"
                                 type="text"
                                 confirm-type="search"
                                 confirm-hold="true"
                                 :maxlength="13"
-                                :placeholder-style="
-                                    `color:${publicConfig.placeholderColor}`
-                                "
+                                :placeholder-style="`color:#A4E6DC`"
                                 placeholder="请输入作者姓名或作品名称"
                                 @confirm="bindconfirm"
                             >
                         </form>
-                        <text
+                        <!--<text
                             class="search-button"
                             @click="bindconfirm"
                         >
                             搜索
-                        </text>
+                        </text>-->
                     </view>
                 </view>
                 <!--列表-->
@@ -108,65 +111,56 @@
                         class="media-content"
                         @click="viewDetail(item, index)"
                     >
-                        <event-craft-cover
+                        <!--<event-craft-cover
                             :info="item"
                             :media-icon="type !== 'myWork'"
                             :like-icon="type === 'myWork'"
                             :best-icon="false"
                             :bg-color="publicConfig.primaryBgColor"
-                        />
-
+                        />-->
+                        <view class="work-main">
+                            <view
+                                v-if="item.rank"
+                                class="tag"
+                            >
+                                排名{{ item.rank }}
+                            </view>
+                            <image
+                                class="cover"
+                                :src="item.video_img_url | optimizeImage"
+                            />
+                        </view>
                         <view
                             v-if="type === 'myWork'"
                             class="work-info"
                         >
-                            <view class="media-name text-two-line">
+                            <view class="media-names text-two-line">
                                 {{ ` ${item.resource_name}` }}
                             </view>
 
                             <view class="media-time">
                                 {{ item.created_at }}
                             </view>
-                            <view class="btn">
-                                <text
-                                    v-if="Number(tabActiveIndex) === 3"
-                                    class="btn-item big"
-                                    @click.stop="reason(item)"
-                                >
-                                    驳回原因
-                                </text>
-                                <!-- <text
-                                    v-if="Number(tabActiveIndex) === 3"
-                                    class="btn-item"
-                                    @click.stop="modifyItem(item)"
-                                >
-                                    编辑
-                                </text> -->
-                                <text
-                                    v-if="Number(tabActiveIndex) === 3"
-                                    class="btn-item"
-                                    @click.stop="onConfirmDelete(item)"
-                                >
-                                    删除
-                                </text>
-                            </view>
                         </view>
                         <view
                             v-else
                             class="work-info"
                         >
-                            <view class="text-two-line resource-name">
-                                {{ item.resource_name }}
+                            <view class="media-names text-one-line">
+                                {{ `${item.resource_name}` }}
                             </view>
-                            <view class="media-name">
+                            <view class="media-time">
+                                {{ item.user_name }}
+                            </view>
+                            <text class="vote-num">
+                                {{ item.ticket }}赞
+                            </text>
+                            <!--<view class="media-name">
                                 {{ item.user_name }}
                             </view>
                             <view class="media-time">
                                 {{ item.created_at }}
-                            </view>
-                            <view class="vote-num">
-                                {{ item.ticket }}赞
-                            </view>
+                            </view>-->
                         </view>
                     </view>
                     <uni-load-more
@@ -185,11 +179,14 @@
                     v-show="searchEmpty"
                     class="empty"
                 >
-                    <image
-                        :src="
-                            `https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/${publicConfig.activityName}_empty_search.png`
-                        "
-                    />
+                    <view class="my-empty">
+                        <view class="txt">
+                            空
+                        </view>
+                        <image
+                            src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/mywork-kong.png"
+                        />
+                    </view>
                     <view>
                         搜索不到您要的结果，换个关键词试试吧～
                     </view>
@@ -230,13 +227,12 @@ import share from '../../../common/share';
 import goHome from '../common/goHome.vue';
 import login from '../../../widgets/login/login.vue';
 import uniLoadMore from '../../../components/uni-load-more/uni-load-more.vue';
-import EventCraftCover from '../../../components/event-craft-cover/index.vue';
+// import EventCraftCover from '../../../components/event-craft-cover/index.vue';
 
 export default {
     components: {
         goHome,
         uniLoadMore,
-        EventCraftCover,
         login,
     },
     filters: {
@@ -678,14 +674,31 @@ export default {
 .empty {
     text-align: center;
     image {
-        width: 300upx;
-        height: 236upx;
-        margin-top: 174upx;
+        width: 456upx;
+        height: 366upx;
+        position: absolute;
+        left: 0;
+        top: 0;
     }
     view {
         color: #0f8c64;
         font-size: 28upx;
         margin-top: 30upx;
+    }
+    .my-empty {
+        width: 456upx;
+        height: 366upx;
+        position: relative;
+        margin-left: 100upx;
+        line-height: 366upx;
+        text-align: center;
+        margin-top: 120upx;
+    }
+    .txt {
+        color: #fff;
+        font-size: 72upx;
+        z-index: 1;
+        position: relative;
     }
 }
 .work-empty {
@@ -718,69 +731,85 @@ export default {
     overflow-y: auto;
 }
 .media-content {
-    width: 690upx;
-    padding: 21upx;
+    width: 692upx;
+    height: 272upx;
+    background: url(https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/mywork-card.png);
+    background-size: 100% 100%;
     box-sizing: border-box;
     display: flex;
     justify-content: space-between;
     position: relative;
-    background: #0f8c64;
     color: #fff;
     margin-bottom: 20upx;
-    border-radius: 20upx;
-    .work {
-        width: 335upx;
-        height: 225upx;
-        border-radius: 20upx;
-    }
-    .media-icon {
-        width: 40upx;
-        height: 40upx;
-        background: rgba(0, 0, 0, 0.6);
-        border-radius: 20upx;
-        text-align: center;
-        line-height: 39upx;
-        // #ifdef H5
-        line-height: 42upx;
-        // #endif
-        position: absolute;
-        top: 175upx;
-        left: 290upx;
-        image {
-            width: 22upx;
-            height: 22upx;
+    padding: 24upx 16upx;
+    .work-main {
+        width: 310upx;
+        height: 210upx;
+        position: relative;
+        /*image {*/
+        /*position: absolute;*/
+        /*top: 28upx;*/
+        /*width: 320upx;*/
+        /*height: 214upx;*/
+        /*}*/
+        .tag {
+            position: absolute;
+            left: 0;
+            top: 20upx;
+            background: #5f8b83;
+            color: #fff;
+            line-height: 38upx;
+            padding: 0 18upx 0 6upx;
+            box-sizing: border-box;
+            font-size: 22upx;
+            border-radius: 0 20upx 20upx 0;
+            z-index: 1;
+        }
+        .cover {
+            width: 100%;
+            height: 100%;
         }
     }
     .work-info {
-        width: 300upx;
+        width: 312upx;
+        margin-top: 0;
+    }
+    .work-info {
         position: relative;
-        .media-name {
+        color: #fff;
+        margin-top: 8upx;
+        margin-left: 10upx;
+        .media-names {
             width: 100%;
             font-size: 28upx;
             line-height: 32upx;
-            margin-bottom: 15upx;
+            margin-bottom: 10upx;
+            color: #004137;
             &.text-two-line {
                 height: 63upx;
                 word-break: break-all;
+                font-weight: 500;
             }
         }
+
         .media-time {
-            color: #fff;
+            color: #3a9184;
             font-size: 24upx;
-            opacity: 0.7;
-            margin-bottom: 66upx;
+            margin-bottom: 46upx;
         }
         .vote-num {
             font-size: 30upx;
             left: 0;
             position: absolute;
-            bottom: 14upx;
+            bottom: 16upx;
         }
         .btn {
             display: flex;
-            justify-content: flex-end;
+            justify-content: space-between;
         }
         .btn-item {
+            flex: 1;
+            margin: 0 5upx;
             height: 50upx;
             background: rgba(25, 181, 131, 1);
             border-radius: 25upx;
@@ -789,10 +818,10 @@ export default {
             line-height: 50upx;
             text-align: center;
             display: inline-block;
-            padding: 0 31upx;
+            min-width: 80upx;
             &.big {
-                padding: 0 16upx;
-                margin-right: 32upx;
+                flex: none;
+                width: 127upx;
             }
         }
     }
@@ -803,7 +832,7 @@ export default {
     box-sizing: border-box;
     width: 100%;
     min-height: 100vh;
-    background: #a1debe;
+    background: #93d7cd;
     &.login {
         background-color: #fff !important;
     }
@@ -818,45 +847,96 @@ export default {
         right: 0;
         position: fixed;
         z-index: 10;
-        background-color: #a1debe;
+        background-color: #93d7cd;
         padding: 20upx 30upx;
-        button {
-            width: 144upx;
-            height: 68upx;
-            float: left;
-            line-height: 68upx;
-            color: #0f8c64;
-            background: transparent;
-            font-size: 30upx;
-            font-weight: 700;
-            border-radius: 34upx;
-            padding: 0;
+        .btn {
+            display: inline-block;
+            width: 148upx;
+            height: 64upx;
+            line-height: 64upx;
+            color: #254834;
+            font-size: 28upx;
+            font-weight: 600;
+            text-align: center;
+            background-image: url(https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/search-btn.png);
+            background-size: 100% 100%;
             &.active {
-                background: #0f8c64;
-                color: #fff;
-            }
-            &::after {
-                border: none;
+                color: #f9e19f;
+                text-shadow: 0px 2px 4px rgba(44, NaN, 28, 0.35);
+                background-image: url(https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/search-btn-active.png);
+                background-size: 100% 100%;
             }
         }
-        .search {
-            background: #0f8c64;
-            width: 400upx;
-            height: 72upx;
-            position: relative;
-            float: right;
-            border-radius: 60upx;
+        /*button {
+                width: 144upx;
+                height: 68upx;
+                float: left;
+                line-height: 68upx;
+                color: #0f8c64;
+                background: transparent;
+                font-size: 30upx;
+                font-weight: 700;
+                border-radius: 34upx;
+                padding: 0;
+                &.active {
+                    background: #0f8c64;
+                    color: #fff;
+                }
+                &::after {
+                    border: none;
+                }
+            }*/
+        /*.search {*/
+        /*width: 400upx;*/
+        /*height: 72upx;*/
+        /*position: relative;*/
+        /*background-image: url(https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/search-box.png);*/
+        /*float: right;*/
+        /*border-radius: 60upx;*/
 
+        /*image {*/
+        /*width: 28upx;*/
+        /*height: 28upx;*/
+        /*position: absolute;*/
+        /*top: 50%;*/
+        /*transform: translateY(-50%);*/
+        /*left: 12upx;*/
+        /*}*/
+        /*input {*/
+        /*width: 276upx;*/
+        /*position: absolute;*/
+        /*top: 50%;*/
+        /*transform: translateY(-50%);*/
+        /*left: 50upx;*/
+        /*font-size: 22upx;*/
+        /*color: #fff;*/
+        /*}*/
+        /*.search-button {*/
+        /*font-size: 24upx;*/
+        /*color: #fff;*/
+        /*position: absolute;*/
+        /*top: 50%;*/
+        /*transform: translateY(-50%);*/
+        /*right: 22upx;*/
+        /*}*/
+        /*}*/
+        .search {
+            width: 382upx;
+            height: 64upx;
+            position: relative;
+            background-image: url(https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/search-box.png);
+            background-size: 100% 100%;
+            float: right;
             image {
                 width: 28upx;
                 height: 28upx;
                 position: absolute;
                 top: 50%;
                 transform: translateY(-50%);
-                left: 12upx;
+                right: 34upx;
             }
             input {
-                width: 276upx;
+                width: 268upx;
                 position: absolute;
                 top: 50%;
                 transform: translateY(-50%);
@@ -864,14 +944,14 @@ export default {
                 font-size: 22upx;
                 color: #fff;
             }
-            .search-button {
-                font-size: 24upx;
-                color: #fff;
-                position: absolute;
-                top: 50%;
-                transform: translateY(-50%);
-                right: 22upx;
-            }
+            /*.search-button {*/
+            /*font-size: 24upx;*/
+            /*color: #fff;*/
+            /*position: absolute;*/
+            /*top: 50%;*/
+            /*transform: translateY(-50%);*/
+            /*right: 22upx;*/
+            /*}*/
         }
     }
     .panel {
@@ -892,7 +972,7 @@ export default {
         right: 0;
         position: fixed;
         z-index: 10;
-        background-color: #a1debe;
+        background-color: #93d7cd;
         padding: 20upx 0;
     }
 

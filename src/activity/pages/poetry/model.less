@@ -1,0 +1,109 @@
+.poetry-modal {
+    width: 100%;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.8);
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 100;
+    .modal-main {
+        width: 594upx;
+        padding: 0 4upx;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        &:after,
+        &:before {
+            content: "";
+            position: absolute;
+            width: 4upx;
+            background-color: #f5cc9a;
+            top: 0;
+            bottom: 108upx;
+        }
+        &::before {
+            left: 0;
+        }
+        &:after {
+            right: 0;
+        }
+        box-sizing: border-box;
+    }
+    .modal-body {
+        position: relative;
+        &:after,
+        &:before {
+            content: "";
+            position: absolute;
+            width: 748upx;
+            height: 84upx;
+            background-color: #f5cc9a;
+            left: -78upx;
+            right: -78upx;
+            bottom: 108upx;
+            z-index: 1;
+            background: url("https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/poetry_model_bg.png")
+                no-repeat center center / 100% 100%;
+        }
+        &::before {
+            top: -20upx;
+        }
+        &:after {
+            bottom: -20upx;
+            transform: rotate(180deg);
+        }
+    }
+    .modal-body-scroll {
+        background-color: #ffffe3;
+        height: 956upx;
+        box-sizing: border-box;
+        overflow: auto;
+        border-left: 14upx solid #873a47;
+        border-right: 14upx solid #873a47;
+        padding: 0 4upx;
+        position: relative;
+        .modal-box {
+            border-left: 4upx solid #f5cc9a;
+            border-right: 4upx solid #f5cc9a;
+            padding: 68upx 8upx;
+            box-sizing: border-box;
+            & > .title {
+                position: relative;
+                color: #5d2708;
+                font-size: 32upx;
+                text-align: center;
+                line-height: 44upx;
+                margin-bottom: 18upx;
+                font-weight: 500;
+                text {
+                    position: relative;
+                    &:before,
+                    &:after {
+                        content: "";
+                        position: absolute;
+                        top: 50%;
+                        margin-top: -11upx;
+                        width: 114upx;
+                        height: 22upx;
+                        background: url("https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/poetry_model_title_t.png")
+                            no-repeat center center / 100% 100%;
+                    }
+                    &:before {
+                        left: -116upx;
+                    }
+                    &:after {
+                        right: -116upx;
+                        transform: rotate(180deg);
+                    }
+                }
+            }
+        }
+    }
+    .close {
+        width: 60upx;
+        height: 60upx;
+        margin: 40upx auto 0;
+        display: block;
+    }
+}

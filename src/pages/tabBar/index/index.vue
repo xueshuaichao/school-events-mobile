@@ -5,16 +5,22 @@
             class="cover"
         >
             <image
-                src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/h5/suspension-jiuyi.png"
+                src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/h5/suspension-shiyi.png"
+                @click="handlePromt"
             />
-            <view
+            <!-- <view
                 class="join-btn"
                 @click="handlePromt"
             >
                 立即参与
-            </view>
-            <view
+            </view> -->
+            <!-- <view
                 class="close"
+                @click="handleClose"
+            /> -->
+            <image
+                class="close-img"
+                src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/index-close.png"
                 @click="handleClose"
             />
         </view>
@@ -57,28 +63,6 @@
                             :src="item.banner_image"
                         />
                     </swiper-item>
-                    <!-- <swiper-item>
-                        <navigator
-                            url="/pages/activity-pages/labor/index"
-                            class="swiper-item"
-                        >
-                            <image
-                                class="banner-image"
-                                src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/h5/wuyi-banner.png"
-                            />
-                        </navigator>
-                    </swiper-item> -->
-                    <!-- <swiper-item v-if="!isH5">
-                        <navigator
-                            url="/pages/openGame/index"
-                            class="swiper-item"
-                        >
-                            <image
-                                class="banner-image"
-                                src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/h5/opengame-banner.png"
-                            />
-                        </navigator>
-                    </swiper-item> -->
                 </swiper>
             </view>
         </view>
@@ -98,21 +82,6 @@
                     大赛指南
                 </text>
             </navigator>
-            <!-- <navigator
-                class="item"
-                :url="`/pages/doc/detail/detail?id=rule`"
-            >
-                <view class="icon-wrap red">
-                    <image
-                        class="icon"
-                        src="/static/images/index/0001.png"
-                    />
-                </view>
-                <text class="name">
-                    参赛指南
-                </text>
-            </navigator> -->
-
             <navigator
                 class="item"
                 url="/pages/tabBar/list/list?cat_id=0"
@@ -240,7 +209,7 @@ export default {
                 talent: { list: [], total: 0 },
             },
             prompt: false,
-            isFirstLogin: 'hasBayiPromt',
+            isFirstLogin: 'hasshiyiPromt',
             status: 1,
             // show: 1,
             // #ifdef H5
@@ -251,6 +220,10 @@ export default {
             hotList: [],
             bannerlist: [],
             confList: [
+                {
+                    id: 14,
+                    url: '/activity/pages/index?activity_id=14',
+                },
                 {
                     id: 13,
                     url: '/activity/pages/index?activity_id=13',
@@ -394,7 +367,7 @@ export default {
         getNewActivityStatus() {
             // 1未开始，2进行中，3已结束
             api.get('/api/activity/activitystatus', {
-                activity_id: 13,
+                activity_id: 14,
             }).then((data) => {
                 if (data.status) {
                     this.status = data.status;
@@ -414,7 +387,7 @@ export default {
             uni.setStorageSync(this.isFirstLogin, true);
             this.prompt = false;
             uni.navigateTo({
-                url: '/activity/pages/index?activity_id=13',
+                url: '/activity/pages/index?activity_id=14',
             });
         },
         handleClose() {
@@ -520,10 +493,10 @@ export default {
     text-align: center;
     font-size: 0;
     image:first-child {
-        width: 558rpx;
-        height: 700rpx;
+        width: 700rpx;
+        height: 1020rpx;
         display: block;
-        margin: 160upx auto 0;
+        margin: 20rpx auto 0;
     }
     .join-btn {
         width: 420upx;
@@ -568,6 +541,10 @@ export default {
         &::after {
             transform: rotate(-45deg);
         }
+    }
+    .close-img {
+        width: 72upx;
+        height: 72upx;
     }
 }
 uni-swiper {

@@ -75,6 +75,10 @@ export default {
             total: 0,
             confList: [
                 {
+                    id: 14,
+                    url: '/activity/pages/index?activity_id=14',
+                },
+                {
                     id: 13,
                     url: '/activity/pages/index?activity_id=13',
                 },
@@ -126,11 +130,6 @@ export default {
             if (!item.url) {
                 uni.showToast({
                     title: '正在为您准备精彩活动',
-                    icon: 'none',
-                });
-            } else if (item.status === 1) {
-                uni.showToast({
-                    title: '活动尚未开始，敬请启期待',
                     icon: 'none',
                 });
             } else {

@@ -55,27 +55,9 @@
             }
         },
         {
-            "path": "pages/doc/intro/intro",
-            "style": {
-                "navigationBarTitleText": "参赛指南"
-            }
-        },
-        {
             "path": "pages/doc/guide/guide",
             "style": {
                 "navigationBarTitleText": "参赛指南"
-            }
-        },
-        {
-            "path": "pages/doc/detail/detail",
-            "style": {
-                "navigationBarTitleText": "参赛指南"
-            }
-        },
-        {
-            "path": "pages/doc/list/list",
-            "style": {
-                "navigationBarTitleText": "参赛说明"
             }
         },
         {
@@ -456,6 +438,12 @@
                     }
                 },
                 {
+                    "path": "pages/mywork/myWorkList",
+                    "style": {
+                        "navigationBarTitleText": "我的作品"
+                    }
+                },
+                {
                     "path": "pages/brand/ucenter",
                     "style": {
                         "navigationBarTitleText": "青少年”爱挑战“寻找代言人"
@@ -557,13 +545,37 @@
                 {
                     "path": "pages/poetry/clearance",
                     "style": {
+                        "navigationBarTitleText": "大闯关"
+                    }
+                },
+                {
+                    "path": "pages/poetry/record",
+                    "style": {
+                        "navigationBarTitleText": "录音"
+                    }
+                },
+                {
+                    "path": "pages/poetry/vip",
+                    "style": {
+                        "navigationBarTitleText": "我的中奖"
+                    }
+                },
+                {
+                    "path": "pages/poetry/test",
+                    "style": {
+                        "navigationBarTitleText": "趣味背古诗"
+                    }
+                },
+                {
+                    "path": "pages/poetry/ucenter",
+                    "style": {
                         "navigationBarTitleText": "趣味诗词大闯关"
                     }
                 },
                 {
-                    "path": "pages/poetry/soundRecord",
+                    "path": "pages/poetry/lottery",
                     "style": {
-                        "navigationBarTitleText": "录音"
+                        "navigationBarTitleText": "抽奖"
                     }
                 }
             ]

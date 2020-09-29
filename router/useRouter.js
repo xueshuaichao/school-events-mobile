@@ -13,7 +13,6 @@ const whitelist = {
     '/pages/work/detail/detail': 'work-detail',
     '/pages/news/list/list': 'news-list',
     '/pages/news/detail/detail': 'news-detail',
-    '/pages/mall/detail/detail': 'mall-detail',
     '/pages/doc/notice/notice': 'notice',
 };
 
@@ -64,12 +63,6 @@ const routesConfig = {
             name: 'tabbar-message',
         },
         {
-            path: '/pages/mall/detail/detail',
-            component: () => import('@/pages/mall/detail/detail.vue'),
-            aliasPath: '/mall/detail',
-            name: 'mall-detail',
-        },
-        {
             path: '/pages/tabBar/uc/uc',
             component: () => import('@/pages/tabBar/uc/uc.vue'),
             aliasPath: '/uc',
@@ -86,16 +79,6 @@ const routesConfig = {
         },
         {
             path: '/pages/uc/uc/index',
-        },
-        {
-            path: '/pages/doc/detail/detail',
-            name: 'doc',
-            component: () => import('@/pages/doc/detail/detail.vue'),
-        },
-        {
-            path: '/pages/doc/intro/intro',
-            name: 'doc',
-            component: () => import('@/pages/doc/intro/intro.vue'),
         },
         {
             path: '/pages/doc/guide/guide',
@@ -155,6 +138,9 @@ const routesConfig = {
         },
         {
             path: '/activity/pages/mywork/mywork',
+        },
+        {
+            path: '/activity/pages/mywork/myWorkList',
         },
         {
             path: '/activity/pages/upload/modify',
@@ -222,19 +208,26 @@ const routesConfig = {
             path: '/activity/pages/poetry/bgmusic',
         },
         {
+            path: '/activity/pages/poetry/ucenter',
+        },
+        {
             path: '/activityA/pages/poetry/level',
         },
         {
             path: '/activity/pages/poetry/clearance',
         },
-        // 录音
         {
-            path: '/activity/pages/poetry/soundRecord',
+            path: '/activity/pages/poetry/record',
         },
         {
-            path: '/pages/activity-pages/mywork/mywork',
+            path: '/activity/pages/poetry/vip',
         },
-
+        {
+            path: '/activity/pages/poetry/test',
+        },
+        {
+            path: '/activity/pages/poetry/lottery',
+        },
         {
             path: '/pages/login/login',
         },
@@ -246,9 +239,6 @@ const routesConfig = {
             name: 'notice',
             aliasPath: '/notice',
             component: () => import('@/pages/doc/notice/notice.vue'),
-        },
-        {
-            path: '/pages/doc/list/list',
         },
         {
             path: '/pages/qa/detail/detail',
