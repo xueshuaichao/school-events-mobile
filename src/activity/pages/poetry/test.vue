@@ -123,11 +123,11 @@ export default {
             if (this.testStatus < 1) {
                 // 清空state
                 this.$store.commit('setRecordParam', null);
-                uni.redirectTo({
+                uni.navigateTo({
                     url: `/activity/pages/poetry/clearance?id=${this.detail.barrier}`,
                 });
             } else {
-                uni.redirectTo({
+                uni.navigateTo({
                     url: '/activity/pages/poetry/lottery?activity_id=14',
                 });
             }

@@ -638,9 +638,10 @@ export default {
                                     bg_id: this.bgId
                                 }).then(
                                     () => {
-                                        uni.navigateTo({
+                                        uni.reLaunch({
                                             url: "/activity/pages/poetry/test"
                                         });
+                                        console.log(11111, "下一关");
                                         this.addRecord = true;
                                     },
                                     err => {
