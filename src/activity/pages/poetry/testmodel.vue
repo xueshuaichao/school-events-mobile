@@ -54,6 +54,7 @@
             class="btn-wraps"
         >
             <view
+                v-if="!isLast"
                 class="btn"
                 @click="jumpOne"
             >
@@ -111,6 +112,11 @@ export default {
             type: Number,
             default: 1,
         },
+        isLast: {
+            // 最后一关
+            type: Boolean,
+            default: false,
+        },
     },
     methods: {
         jumpOne() {
@@ -135,14 +141,14 @@ export default {
         width: 624upx;
         height: 760upx;
         background: url(https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/test-success.png)
-            no-repeat;
+            no-repeat center center;
         background-size: 100%;
         margin: 40upx auto 32upx;
         &.fail {
             width: 624upx;
             height: 686upx;
             background: url(https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/test-fail.png)
-                no-repeat;
+                no-repeat center center;
             margin-top: 140upx;
         }
         .fail-txt {

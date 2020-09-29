@@ -101,7 +101,7 @@ export default {
             clearInterval(this.timer);
             this.timer = null;
         }
-        uni.navigateBack();
+        // uni.navigateBack();
     },
     methods: {
         jumpOne() {
@@ -146,7 +146,6 @@ export default {
                 this.timer = null;
             }
             this.show = false;
-            console.log('testStatus', this.testStatus, this.curNum);
             uni.redirectTo({
                 url: '/activity/pages/poetry/record',
             });
@@ -198,19 +197,13 @@ export default {
                             this.testStatus = 2;
                             if (this.detail.barrier === 500) {
                                 // 500
-                                // 提示
                                 this.modelTxt2 = '敬请期待更多关卡！';
-                                // todo
                             }
                         } else if (res.level_title) {
                             // 进入下一关
                             this.modelTxt1 = `恭喜你晋升“${res.level_title}”`;
                             this.modelTxt2 = '';
                             this.testStatus = 3;
-                        } else if (this.detail.barrier === 500) {
-                            // 提示
-                            this.modelTxt1 = '敬请期待更多关卡';
-                            // todo
                         } else {
                             this.modelTxt1 = `还有${5
                                 - (this.detail.barrier % 5)}关即可抽奖`;
@@ -219,7 +212,9 @@ export default {
                         this.level = res.level;
                         this.btn1 = '下一关';
                         this.btn2 = '去抽奖';
-                        this.setTimer();
+                        if (this.detail.barrier < 500) {
+                            this.setTimer();
+                        }
                     } else if (!res.retry) {
                         // 换诗跳转闯关页面
                         this.modelTxt1 = '这首诗太难了，换首诗来学习吧';

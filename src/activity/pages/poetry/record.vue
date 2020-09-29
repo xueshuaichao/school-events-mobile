@@ -434,6 +434,22 @@ export default {
             this.getSetting();
         }
     },
+    destroyed() {
+        recorderManager.stop();
+        innerAudioContext.destroy();
+        innerAudioContextBg.destroy();
+        // this.stopAll();
+        clearInterval(this.numTimer);
+        clearTimeout(this.timer2);
+        clearInterval(this.timer);
+        clearTimeout(this.timer3);
+        clearTimeout(this.tid);
+        this.numTimer = null;
+        this.timer2 = null;
+        this.timer = null;
+        this.timer3 = null;
+        this.resetPageData();
+    },
     onUnload() {
         recorderManager.stop();
         innerAudioContext.destroy();
@@ -470,8 +486,10 @@ export default {
         // if (!this.isPreview) {
         //     this.getbgList();
         //     this.getRecordParams();
-        this.getbgList();
-        this.getBarrierInfo();
+        if (!this.isPreview) {
+            this.getbgList();
+            this.getBarrierInfo();
+        }
         // }
         // // else {
         // //     this.setPriviewData();
