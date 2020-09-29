@@ -54,7 +54,7 @@
                     v-for="(item, index) in tableData"
                     :key="item.id"
                     class="work-item"
-                    @click.prevent="toDetail(item, index)"
+                    @click="toDetail(item, index)"
                 >
                     <work
                         :info="item"
@@ -156,18 +156,24 @@ export default {
             );
         },
         toDetail(item, index) {
-            if (this.filter.status === 1) {
-                this.$store.commit('setFilterData', {
-                    position: {
-                        total: this.total,
-                        curposition: index,
-                        from: '/api/user/worklist',
-                    },
-                    filter: this.filter,
-                });
-                uni.navigateTo({
-                    url: `/pages/work/detail/detail?id=${item.id}&activity_id=${item.activity_id}`,
-                });
+            if (!this.lock) {
+                this.lock = true;
+                if (this.filter.status === 1) {
+                    this.$store.commit('setFilterData', {
+                        position: {
+                            total: this.total,
+                            curposition: index,
+                            from: '/api/user/worklist',
+                        },
+                        filter: this.filter,
+                    });
+                    uni.navigateTo({
+                        url: `/pages/work/detail/detail?id=${item.id}&activity_id=${item.activity_id}`,
+                        complete: () => {
+                            this.lock = false;
+                        },
+                    });
+                }
             }
         },
         showCause({ memo }) {

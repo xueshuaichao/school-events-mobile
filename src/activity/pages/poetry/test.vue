@@ -147,7 +147,7 @@ export default {
             }
             this.show = false;
             console.log('testStatus', this.testStatus, this.curNum);
-            uni.navigateTo({
+            uni.redirectTo({
                 url: '/activity/pages/poetry/record',
             });
         },
