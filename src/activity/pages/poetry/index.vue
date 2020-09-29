@@ -520,12 +520,13 @@ export default {
             }
         },
         userHasJoin() {
-            api.get('/api/user/info').then((res) => {
+            api.get('/api/poem/userinfo').then((res) => {
                 this.userInfo = res.user_info;
                 this.getCrouselList();
-                if (this.userInfo) {
+                if (res.barrier > 0) {
                     this.hasJoin = true;
-                    // todo
+                } else {
+                    this.hasJoin = false;
                 }
             });
         },
