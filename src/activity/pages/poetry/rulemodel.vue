@@ -23,9 +23,7 @@
                                 class="item"
                             >
                                 <view class="titlist">
-                                    {{
-                                        item.titleListTop
-                                    }}
+                                    {{ item.titleListTop }}
                                 </view>
                                 <view class="tit">
                                     {{ item.title }}
@@ -37,9 +35,7 @@
                                     </text>
                                 </view>
                                 <view class="titlist">
-                                    {{
-                                        item.titleList
-                                    }}
+                                    {{ item.titleList }}
                                 </view>
                                 <view
                                     v-for="(textItem, k) in item.texts"
@@ -75,6 +71,7 @@ export default {
                 {
                     title: '活动时间：',
                     titleList: '闯关规则说明：',
+                    titleListTop: '',
                     texts: [
                         '“青少年爱挑战”平台注册用户通过活动页面参加诗词闯关活动，进行诗词朗读，上传录制练习作品并通过相应测试习题，即可进入下一关。',
                         '诗词关卡一共500关卡，每个关卡1首诗词，完成带有抽奖图标的关卡，即可触发抽奖活动，完成诗词闯关越多，抽奖机会越多。',
@@ -83,30 +80,39 @@ export default {
                 },
                 {
                     titleListTop: '奖项说明：',
+                    titleList: '',
                     title: '闯关达人奖',
                     texts: [
                         '完成诗词闯关关卡数量排名（闯关关卡数量截止时间为2020年10月31日23:59:59，如完成关卡数相同则按完成时间进行排名），前20的作者将获得“诗词闯关达人奖”及获得相应奖品。',
                     ],
                 },
                 {
+                    titleListTop: '',
+                    titleList: '',
                     title: '最佳人气奖 ',
                     texts: [
                         '诗词作品点赞量排名（作品点赞截止时间为2020年10月31日23:59:59），前45作品的作者将获得“诗词最佳人气奖”及获得相应奖品。',
                     ],
                 },
                 {
+                    titleListTop: '',
+                    titleList: '',
                     title: '闯关抽奖',
                     texts: [
                         '活动期间，完成带有抽奖图标的关卡，即可触发抽奖活动，完成诗词闯关越多，抽奖机会越多。用户可在抽奖后即时查看获奖情况。',
                     ],
                 },
                 {
+                    titleListTop: '',
+                    titleList: '',
                     title: '优秀组织奖',
                     texts: [
                         '对于参与积极的学校、机构或单位，组委会也将根据其成员参与活跃度，评选出5个“优秀组织奖”颁发奖杯，并对优秀组织单位进行报道宣传。',
                     ],
                 },
                 {
+                    titleListTop: '',
+                    titleList: '',
                     title: '优秀管理员奖',
                     texts: [
                         '荣获“优秀组织奖”的组织单位，其对应管理员（限1名）可评选为“优秀管理员奖”\n'
@@ -115,6 +121,7 @@ export default {
                 },
                 {
                     titleListTop: '特别说明',
+                    titleList: '',
                     title: '',
                     texts: [
                         '参赛者不得侵犯他人合法权益，不得盗窃他人或平台内容；不得发布任何违规、违法或敏感话题的内容；不得恶意重复上传同一作品、恶意刷赞扰乱活动秩序。违规行为一经发现，取消该账号活动参与资格，违规作品内容做删除处理。',
