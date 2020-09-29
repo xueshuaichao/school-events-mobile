@@ -697,14 +697,27 @@ export default {
                                 }).then(
                                     () => {
                                         console.log(111, 22, this.addRecord);
-                                        this.show = true;
-                                        this.modelTxt1 = `${this.barrierInfo.level_title}，请继续加油哦！`;
-                                        this.modelTxt3 = "下一关";
-                                        this.setNumberTimer("next");
-                                        this.addRecord = true;
-                                        setTimeout(() => {
-                                            this.show = false;
-                                        }, 3000);
+                                        if (this.id < 500) {
+                                            this.show = true;
+                                            this.modelTxt1 = `${this.barrierInfo.level_title}，请继续加油哦！`;
+                                            this.modelTxt3 = "下一关";
+                                            this.setNumberTimer("next");
+                                            this.addRecord = true;
+                                            setTimeout(() => {
+                                                this.show = false;
+                                            }, 3000);
+                                        } else {
+                                            this.show = true;
+                                            this.modelTxt1 = `${this.barrierInfo.level_title}，请继续加油哦！`;
+                                            this.modelTxt3 = "敬请期待更多关卡";
+                                            this.addRecord = true;
+                                            setTimeout(() => {
+                                                this.show = false;
+                                                uni.reLaunch({
+                                                    url: `/activity/pages/poetry/clearance?id=${this.detail.barrier}`
+                                                });
+                                            }, 3000);
+                                        }
                                     },
                                     err => {
                                         this.addRecord = true;
@@ -927,7 +940,7 @@ export default {
             this.curTime = formatDuration(seconds);
             this.slideValue = seconds;
             //this.updateTotalTime(innerAudioContext.duration);
-            console.log("klklkl", seconds, innerAudioContext.duration);
+            // console.log("klklkl", seconds, innerAudioContext.duration);
         },
         updateTime() {
             const now = new Date() - 0;
@@ -941,6 +954,9 @@ export default {
                 this.finish = true;
             } else {
                 console.log(222);
+                if (this.tid) {
+                    clearTimeout(this.tid);
+                }
                 this.tid = setTimeout(() => {
                     this.updateTime();
                 }, 1000);
