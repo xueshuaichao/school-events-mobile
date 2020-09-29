@@ -1030,6 +1030,8 @@ export default {
             font-size: 24upx;
             line-height: 34upx;
             padding: 0 144upx 0 54upx;
+            position: fixed;
+            bottom: 360upx;
         }
     }
 }
