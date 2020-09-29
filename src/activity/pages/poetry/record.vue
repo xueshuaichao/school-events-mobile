@@ -656,7 +656,7 @@ export default {
                                     bg_id: this.bgId
                                 }).then(
                                     () => {
-                                        uni.reLaunch({
+                                        uni.redirectTo({
                                             url: "/activity/pages/poetry/test"
                                         });
                                         console.log(11111, "下一关");
@@ -748,7 +748,7 @@ export default {
                         //
                     } else {
                         // 闯关列表
-                        uni.reLaunch({
+                        uni.redirectTo({
                             url: `/activity/pages/poetry/clearance?id=${this.id}`
                         });
                     }

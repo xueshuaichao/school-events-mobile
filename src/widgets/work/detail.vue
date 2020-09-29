@@ -161,36 +161,6 @@
                     {{ pageData.cat_name ? `#${pageData.cat_name}#` : "" }}
                 </view>
             </view>
-            <view class="controller">
-                <image
-                    class="play-btn"
-                    :src="
-                        `https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/btn-${
-                            playStatus ? 'pause' : 'play'
-                        }.png`
-                    "
-                    @click="clickCenter"
-                />
-                <view class="control">
-                    <slider
-                        :value="slideValue"
-                        min="0"
-                        :max="maxVal"
-                        active-color="#B5FFF5"
-                        background-color="#277d73"
-                        block-color="#54afa9"
-                        block-size="20"
-                        class="unseable-slider"
-                        :disabled="true"
-                        @changing="sliderChangeing"
-                    />
-                </view>
-                <view class="time">
-                    {{ currentSecond | secondsToText }}/{{
-                        recordDuration | secondsToText
-                    }}
-                </view>
-            </view>
         </view>
         <view
             v-if="pageData.resource_type < 3"
@@ -369,16 +339,8 @@
 <script>
 import api from '../../common/api';
 
-const innerAudioContext = [
-    'innerAudioContext_0',
-    'innerAudioContext_1',
-    'innerAudioContext_2',
-];
-const innerAudioContextBg = [
-    'innerAudioContextBg_0',
-    'innerAudioContextBg_1',
-    'innerAudioContextBg_2',
-];
+const innerAudioContext = '';
+const innerAudioContextBg = '';
 /* eslint-disable */
 const padTime = function(val) {
     const str = `${val}`;
@@ -508,11 +470,12 @@ export default {
             allowSetCurrentTime: true,
             setTimeoutId3: 0,
             sliderDisabled: true,
-            slideValue: 0,
+            slideValue: [0, 0, 0],
             maxVal: 600,
             maxTime: 10 * 60,
             curTime: 200,
-            currentSecond: 0
+            currentSecond: 0,
+            current: 1
         };
     },
     watch: {
@@ -569,43 +532,6 @@ export default {
                 this.praise_count = this.pageData.praise_count || 0;
                 this.introduce = this.pageData.introduce || "";
                 this.catName = this.pageData.cat_name || "";
-                if (this.pageData.resource_type === 3) {
-                    this.slideValue = 0;
-                    this.recordDuration = this.pageData.duration;
-                    this.maxVal = this.pageData.duration;
-                    innerAudioContext[
-                        this.swiperPage
-                    ] = uni.createInnerAudioContext();
-                    innerAudioContextBg[
-                        this.swiperPage
-                    ] = uni.createInnerAudioContext();
-
-                    innerAudioContext[
-                        this.swiperPage
-                    ].src = this.pageData.audio_url; // 录音音频
-                    innerAudioContextBg[
-                        this.swiperPage
-                    ].src = this.pageData.bg_url; // 背景音乐
-                    innerAudioContext[this.swiperPage].volume = 1;
-                    innerAudioContextBg[this.swiperPage].volume = 0.6;
-                    innerAudioContextBg[this.swiperPage].loop = true;
-
-                    // innerAudioContext[this.swiperPage].autoplay = true;
-                    // innerAudioContextBg[this.swiperPage].autoplay = true;
-                    this.audioInit();
-                    // console.log(this.swiperPage)
-                    // this.playAll();
-                    if (
-                        !this.isH5 &&
-                        this.swiperPage === 1 &&
-                        this.pageData.resource_type === 3 &&
-                        this.isFirst
-                    ) {
-                        this.playCurrent(1);
-                        this.isFirst = false;
-                    }
-                    console.log("maxVal", this.maxVal);
-                }
             }
         }
     },
@@ -719,8 +645,8 @@ export default {
                 url
             });
 
-            innerAudioContext[this.swiperPage].stop();
-            innerAudioContextBg[this.swiperPage].stop();
+            innerAudioContext.stop();
+            innerAudioContextBg.stop();
         },
         jumpLabelList() {
             // 标签列表
@@ -784,108 +710,6 @@ export default {
                 str = `${minutes}分${times[0] - minutes * 60}秒${millseconds}`;
             }
             return str;
-        },
-        // 音频播放 开始
-        audioInit() {
-            innerAudioContext[this.swiperPage].onEnded(() => {
-                this.slideValue = 0;
-                this.playStatus = 0;
-                this.currentSecond = 0;
-                this.sliderDisabled = false;
-                innerAudioContextBg[this.swiperPage].stop();
-            });
-            innerAudioContext[this.swiperPage].onStop(() => {
-                this.slideValue = 0;
-                this.playStatus = 0;
-                this.currentSecond = 0;
-                this.sliderDisabled = false;
-                innerAudioContextBg[this.swiperPage].stop();
-            });
-            innerAudioContextBg[this.swiperPage].onPause(() => {
-                this.playStatus = 0;
-            });
-            innerAudioContext[this.swiperPage].onPlay(() => {
-                this.playStatus = 1;
-            });
-            // innerAudioContext[this.swiperPage].onSeeking(()=>{
-            //     innerAudioContext[this.swiperPage].pause()
-            // })
-            // innerAudioContext[this.swiperPage].onSeeked(()=>{
-            //     innerAudioContext[this.swiperPage].play()
-            // })
-
-            innerAudioContext[this.swiperPage].onTimeUpdate(() => {
-                if (innerAudioContext[this.swiperPage].duration !== Infinity) {
-                    this.sliderDisabled = false;
-                    this.currentSecond =
-                        innerAudioContext[this.swiperPage].currentTime;
-                    this.slideValue = Math.round(
-                        innerAudioContext[this.swiperPage].currentTime
-                    );
-                    // console.log(this.slideValue)
-                }
-            });
-        },
-        percentToTime(p) {
-            const seconds = p;
-            const minutes = seconds ? padTime(Math.floor(seconds / 60)) : "00";
-            const second = seconds ? padTime(Math.ceil(seconds % 60)) : "00";
-            this.currentSecond = `${minutes}:${second}`;
-        },
-
-        sliderChangeing(e) {
-            if (this.playStatus === 0) {
-                this.sliderDisabled = true;
-            } else {
-                console.log(11111);
-                innerAudioContext[this.swiperPage].seek(e.detail.value);
-                this.slideValue = e.detail.value;
-                this.percentToTime(this.slideValue);
-                // console.log(this.slideValue)
-            }
-        },
-        // 播放当前
-        playCurrent(current) {
-            // const currentAudio = `innerAudioContext_${current}`;
-            this.current = current;
-            // console.log(innerAudioContext[this.current]);
-            innerAudioContext[this.current].play();
-            innerAudioContextBg[this.current].play();
-        },
-        playAll() {
-            console.log("playAll");
-            innerAudioContext[this.swiperPage].play();
-            innerAudioContextBg[this.swiperPage].play();
-            this.sliderDisabled = false;
-        },
-        // 音频暂停
-        pauseAll(page = null) {
-            console.log("pauseing");
-            const swiperPage = page === null ? this.swiperPage : page;
-            innerAudioContext[swiperPage].pause();
-            innerAudioContextBg[swiperPage].pause();
-        },
-        destroyAll(page = null) {
-            const swiperPage = page === null ? this.swiperPage : page;
-            innerAudioContext[swiperPage].destroy();
-            innerAudioContextBg[swiperPage].destroy();
-        },
-        stopAll(page = null) {
-            console.log("stop", page);
-            const swiperPage = page === null ? this.swiperPage : page;
-            innerAudioContext[swiperPage].stop();
-            innerAudioContextBg[swiperPage].stop();
-        },
-        clickCenter() {
-            // playStatus 1 播放中 0 暂停
-            if (this.playStatus) {
-                // 正在播放着，则暂停播放，根据状态显示重听
-                this.playStatus = 0;
-                this.pauseAll();
-            } else {
-                // 已经暂停，则继续播放。
-                this.playAll();
-            }
         }
     }
 };
@@ -1213,7 +1037,7 @@ export default {
     position: fixed;
     left: 0;
     width: 100%;
-    bottom: 20upx;
+    bottom: 90upx;
     .poetry-info {
         margin-left: 68upx;
         width: 300upx;

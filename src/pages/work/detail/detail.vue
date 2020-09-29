@@ -188,6 +188,10 @@
             @doAction="doAction"
             @getcommentTotal="getcommentTotal"
         />
+        <audioController
+            ref="audioController"
+            :audio-data="pageData"
+        />
     </view>
 </template>
 
@@ -199,6 +203,7 @@ import logger from '../../../common/logger';
 import detail from '../../../widgets/work/detail.vue';
 import detailConf from './detail.config';
 import drawer from '../../../widgets/work/drawer.vue';
+import audioController from '../../../widgets/work/audio.vue';
 // 上下滑动的功能的拆解
 // 使用Swiper组件，把页面的主要内容，当作独立的部分，迁移到../../../widgets/work/detail.vue。
 // 页面滑动的时候，确定下当前显示的数据，用来做页面分享，作品海报的数据
@@ -210,6 +215,7 @@ export default {
     components: {
         detail,
         drawer,
+        audioController,
     },
     data() {
         let pix = 2;
@@ -792,12 +798,6 @@ export default {
             //  禁止滑动。
         },
         changeOutSwiper(event) {
-            console.log(this.resourceType);
-            if (this.resourceType === 3) {
-                this.$refs.detail.stopAll(this.currentSwiper);
-                this.$refs.detail.playCurrent(event.detail.current);
-            }
-
             // 判断滑动的方向
             if (this.currentSwiper > event.detail.current) {
                 this.outSwiperIncrease = false;
@@ -854,6 +854,7 @@ export default {
             }
             this.prePageParam.slideCurPosition = newSlideCurPosition;
             objPosition = this.getPageSizeInfo(targetPosition);
+            console.log(targetPosition);
             this.setSwiperPageData(event, objPosition);
         },
         setSwiperPageData(event, objPosition) {
@@ -922,7 +923,6 @@ export default {
                     console.log('-');
             }
             this.pageData = curPageData;
-            console.log(4343434, curPageData);
             this.setGetDetail(curPageData);
             this.getLikeStatus();
         },
@@ -1075,13 +1075,14 @@ export default {
         // #endif
     },
     onUnload() {
+        // console.log('onUnload',this.resourceType)
         if (this.resourceType === 3) {
-            this.$refs.detail.stopAll(this.currentSwiper);
+            this.$refs.audioController.destroyAll();
         }
     },
     onHide() {
         if (this.resourceType === 3) {
-            this.$refs.detail.stopAll(this.currentSwiper);
+            this.$refs.detail.pauseAll();
         }
         // this.isPaused = true;
         console.log('hidiiing--------');
