@@ -345,7 +345,8 @@ export default {
         }
     }
     .ucenter {
-        position: absolute;
+        position: fixed;
+        z-index: 10;
         right: 0;
         top: 30upx;
         width: 182upx;

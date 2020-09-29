@@ -965,7 +965,7 @@ export default {
             console.log("暂停录音");
             //this.lastDuration = new Date() - this.recordStartAt;
             recorderManager.pause();
-            //clearTimeout(this.tid);
+            clearTimeout(this.tid);
         },
         resumeRecord() {
             // 继续录音
