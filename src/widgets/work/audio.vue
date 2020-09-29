@@ -116,7 +116,6 @@ export default {
                     innerAudioContextBg.volume = 0.6;
                     innerAudioContextBg.loop = true;
                     this.audioInit(isInit);
-                    this.changeSlider(true);
                 }
             },
             deep: true,
@@ -141,7 +140,6 @@ export default {
                     this.currentSecond = 0;
                     this.sliderDisabled = false;
                     innerAudioContextBg.stop();
-                    console.log(2323232);
                     // if (this.isChangeSwiper) {
                     //     console.log(2323232, 43434343);
                     //     this.playAll();
@@ -161,7 +159,6 @@ export default {
                         this.slideValue = Math.round(
                             innerAudioContext.currentTime,
                         );
-                        console.log(this.slideValue);
                     }
                 });
             }
@@ -176,7 +173,6 @@ export default {
             if (this.playStatus === 0) {
                 this.sliderDisabled = true;
             } else {
-                console.log(11111);
                 innerAudioContext.seek(e.detail.value);
                 this.slideValue = e.detail.value;
                 this.percentToTime(this.slideValue);
@@ -185,7 +181,7 @@ export default {
         },
         // 播放当前
         playCurrent(current) {
-            console.log(current, this.swiperPage);
+            // console.log(current, this.swiperPage);
             // const currentAudio = `innerAudioContext_${current}`;
             this.current = current;
             // console.log(innerAudioContext[this.current]);
