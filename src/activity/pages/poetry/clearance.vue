@@ -176,7 +176,6 @@ export default {
         getBarrierInfo() {
             api.get('/api/poem/userinfo').then((res) => {
                 this.barrierInfo = { ...this.barrierInfo, ...res };
-                console.log(this.barrierInfo, 'barrierInfo');
                 this.$nextTick(() => {
                     if (this.barrierInfo.barrier > 15) {
                         this.getNodes();
