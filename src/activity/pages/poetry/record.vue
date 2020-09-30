@@ -55,7 +55,7 @@
                         :key="index"
                         :class="{ left: detail.display_type === 1 }"
                     >
-                        {{ txt }}
+                        {{ txt.trim() }}
                     </view>
                 </view>
             </scroll-view>

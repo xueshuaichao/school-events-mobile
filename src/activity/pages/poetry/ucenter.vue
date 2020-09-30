@@ -196,9 +196,9 @@
                     >
                         <view v-if="isSelf">
                             <view class="my-empty">
-                                <view class="txt">
+                                <!--<view class="txt">
                                     空
-                                </view>
+                                </view>-->
                                 <image
                                     src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/mywork-kong.png"
                                 />
