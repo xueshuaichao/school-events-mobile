@@ -110,6 +110,7 @@ export default {
                             && typeof innerAudioContextBg !== 'string'
                         ) {
                             innerAudioContextBg.src = val.bg_url; // 背景音乐
+                            innerAudioContextBg.seek(0);
                         }
 
                         if (typeof innerAudioContext === 'string') {
