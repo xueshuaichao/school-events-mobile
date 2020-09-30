@@ -59,12 +59,13 @@
                     </view>
                 </view>
             </scroll-view>
-            <!--<view
+            <view
+                v-if="detail.content.length > 6"
                 class="more-content"
                 @click="checkMore"
             >
                 上滑查看更多
-            </view>-->
+            </view>
             <view class="zhusi">
                 <view
                     v-for="(txt, index) in detail.annotate"
@@ -239,6 +240,7 @@ export default {
             activityId: 14,
             // #ifdef H5
             isH5: true,
+            isShowlist: false,
             // #endif
             voicePath: "",
             intervalTime: 0,
@@ -770,10 +772,10 @@ export default {
         },
         checkMore() {
             console.log("checkMore----");
-            // this.scrollY = true;
+            this.scrollY = true;
         },
         upper() {
-            // this.scrollY = false;
+            this.scrollY = false;
         },
         bindconfirm() {
             uni.navigateTo({
