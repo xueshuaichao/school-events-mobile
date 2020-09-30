@@ -655,6 +655,7 @@ export default {
     top: 0;
     box-sizing: border-box;
     overflow: hidden;
+    z-index: 21;
     &.h5-main {
         height: 100%;
     }
