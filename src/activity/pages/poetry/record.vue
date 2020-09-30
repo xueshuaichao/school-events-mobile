@@ -59,12 +59,13 @@
                     </view>
                 </view>
             </scroll-view>
-            <!--<view
+            <view
+                v-if="detail.content.length > 6"
                 class="more-content"
                 @click="checkMore"
             >
                 上滑查看更多
-            </view>-->
+            </view>
             <view class="zhusi">
                 <view
                     v-for="(txt, index) in detail.annotate"
@@ -239,6 +240,7 @@ export default {
             activityId: 14,
             // #ifdef H5
             isH5: true,
+            isShowlist: false,
             // #endif
             voicePath: "",
             intervalTime: 0,
@@ -1186,19 +1188,19 @@ export default {
     .more-content {
         text-align: center;
         color: #cda972;
-        font-size: 20upx;
+        font-size: 30upx;
         height: 60upx;
         line-height: 80upx;
         padding-bottom: 20upx;
         position: relative;
-        width: 120upx;
+        width: 200upx;
         box-sizing: content-box;
         margin: 0 auto;
         &::before,
         &::after {
             position: absolute;
             content: "";
-            left: 48upx;
+            left: 90upx;
             width: 12upx;
             height: 12upx;
             border-top: 4upx solid #cda972;
