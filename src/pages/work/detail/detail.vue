@@ -501,11 +501,11 @@ export default {
                     }, 1500);
                 },
             );
-            this.getLikeStatus();
         },
         getPoem(item, num) {
             if (item.resource_type === 3) {
-                this.newId = item.id;
+                // this.newId = item.id;
+                console.log('new_id', item.id);
                 api.get(`/api/poem/info?ac_resource_id=${item.id}`).then(
                     (res) => {
                         let content = [];
@@ -519,6 +519,7 @@ export default {
                         if (num === 1) {
                             this.pageDataOne = {
                                 ...this.pageDataOne,
+                                new_id: this.pageDataOne.id,
                                 ...res.poem,
                                 annotate,
                                 content,
@@ -527,6 +528,7 @@ export default {
                         } else if (num === 2) {
                             this.pageDataTwo = {
                                 ...this.pageDataTwo,
+                                new_id: this.pageDataTwo.id,
                                 ...res.poem,
                                 annotate,
                                 content,
@@ -535,6 +537,7 @@ export default {
                         } else {
                             this.pageDataThree = {
                                 ...this.pageDataThree,
+                                new_id: this.pageDataThree.id,
                                 ...res.poem,
                                 annotate,
                                 content,
@@ -560,13 +563,6 @@ export default {
                             default:
                                 console.log('1');
                         }
-                        console.log(
-                            num,
-                            'audioData123',
-                            this.audioData,
-                            111,
-                            res.bg_url,
-                        );
                     },
                 );
             }
@@ -579,7 +575,7 @@ export default {
                 this.activity_id = res.activity_id || 0;
             }
             console.log(res);
-            this.id = res.id;
+            this.id = Number(this.activity_id) === 14 ? res.new_id || res.id : res.id;
             // activity_id,  没有7..没有11
             if (this.activity_id) {
                 // wyhd 五一活动
@@ -652,7 +648,7 @@ export default {
             if (this.activity_id) {
                 url = '/api/activity/vote';
                 param = {
-                    id: Number(this.activity_id) === 14 ? this.newId : this.id,
+                    id: this.id,
                     activity_id: this.activity_id,
                 };
             }
@@ -697,7 +693,7 @@ export default {
             if (this.activity_id) {
                 url = '/api/activity/getuserthumb';
                 param = {
-                    id: Number(this.activity_id) === 14 ? this.newId : this.id,
+                    id: this.id,
                 };
             }
 
@@ -954,6 +950,7 @@ export default {
             }
             this.pageData = curPageData;
             this.setGetDetail(curPageData);
+
             this.getLikeStatus();
         },
         getPageMoreDate(postionObj, filterObj = {}, url) {
@@ -1079,6 +1076,7 @@ export default {
         console.log(query);
         this.id = utils.getParam(query, 'id');
         this.fr = utils.getParam(query, 'fr') || '';
+
         this.isFromShare = utils.getParam(query, 'isFromShare')
             || utils.getParam(query, 'y')
             || '';
@@ -1089,6 +1087,7 @@ export default {
         if (this.isFromShare === '2') {
             this.from = 'openGame';
         }
+        this.getLikeStatus();
 
         console.log(
             this.activity_id,

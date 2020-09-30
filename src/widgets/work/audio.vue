@@ -120,7 +120,7 @@ export default {
                             innerAudioContext.volume = 1;
                         }
                         if (typeof innerAudioContext !== 'string') {
-                            isInit = true;
+                            // isInit = true;
                             innerAudioContext.src = val.audio_url; // 录音音频
                         }
                         this.audioInit(isInit);

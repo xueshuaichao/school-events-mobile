@@ -108,7 +108,7 @@
                             :key="index"
                             :class="{ left: pageData.display_type === 1 }"
                         >
-                            {{ txt }}
+                            {{ txt.trim() }}
                         </view>
                     </view>
                 </scroll-view>
