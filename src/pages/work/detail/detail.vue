@@ -189,8 +189,9 @@
             @getcommentTotal="getcommentTotal"
         />
         <audioController
+            v-if="resourceType === 3"
             ref="audioController"
-            :audio-data="pageData"
+            :audio-data="audioData"
         />
     </view>
 </template>
@@ -273,6 +274,8 @@ export default {
             userInfo: null,
             shareConfig: {},
             pageHeight: 500,
+            audioData: {},
+            resourceType: 1,
         };
     },
     mounted() {
@@ -537,6 +540,32 @@ export default {
                                 bg_url: res.bg_url,
                             };
                         }
+                        switch (this.currentSwiper) {
+                            case 0:
+                                this.audioData = JSON.parse(
+                                    JSON.stringify(this.pageDataOne),
+                                );
+                                break;
+                            case 1:
+                                this.audioData = JSON.parse(
+                                    JSON.stringify(this.pageDataTwo),
+                                );
+                                break;
+                            case 2:
+                                this.audioData = JSON.parse(
+                                    JSON.stringify(this.pageDataThree),
+                                );
+                                break;
+                            default:
+                                console.log('1');
+                        }
+                        console.log(
+                            num,
+                            'audioData123',
+                            this.audioData,
+                            111,
+                            res.bg_url,
+                        );
                     },
                 );
             }
@@ -865,6 +894,7 @@ export default {
             ).then((res) => {
                 // 切换item的时候，修改item.
                 if (res) {
+                    this.currentSwiper = event.detail.current;
                     if (this.outSwiperIncrease) {
                         // 下一个
                         switch (this.currentSwiper) {
@@ -904,7 +934,6 @@ export default {
                 } else {
                     console.log('没有获取到数据呀。');
                 }
-                this.currentSwiper = event.detail.current;
             });
 
             // 使用当前显示的item的pageData,修改导航标题
@@ -1082,7 +1111,7 @@ export default {
     },
     onHide() {
         if (this.resourceType === 3) {
-            this.$refs.detail.pauseAll();
+            this.$refs.audioController.stopAll();
         }
         // this.isPaused = true;
         console.log('hidiiing--------');
