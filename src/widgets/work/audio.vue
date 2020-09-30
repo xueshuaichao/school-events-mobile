@@ -23,7 +23,6 @@
                 block-size="20"
                 class="unseable-slider"
                 :disabled="true"
-                @changing="sliderChangeing"
             />
         </view>
         <view class="time">
@@ -52,7 +51,6 @@ export default {
             if (!secs || secs === 'Infinity') {
                 return '00:00';
             }
-            // secs = Number(secs);
             const minutesDiv = (secs % 3600) / 60;
             let minutes = Math.floor(minutesDiv);
             let seconds = Math.ceil((secs % 3600) % 60);
@@ -82,7 +80,6 @@ export default {
         return {
             playStatus: 0,
             recordDuration: 0,
-            sliderDisabled: true,
             slideValue: 0,
             maxVal: 600,
             maxTime: 10 * 60,
@@ -95,27 +92,38 @@ export default {
         audioData: {
             handler(val) {
                 console.log(val);
-                if (val.resource_type === 3) {
-                    console.log('watch', val);
-                    this.slideValue = 0;
-                    this.recordDuration = val.duration;
-                    this.maxVal = val.duration;
-                    let isInit = false;
-                    if (typeof innerAudioContext === 'string') {
-                        innerAudioContext = uni.createInnerAudioContext();
-                        isInit = true;
+                if (val) {
+                    if (val.resource_type === 3) {
+                        console.log('watch', val);
+                        this.slideValue = 0;
+                        this.recordDuration = val.duration;
+                        this.maxVal = val.duration;
+                        let isInit = false;
+                        if (typeof innerAudioContextBg === 'string') {
+                            innerAudioContextBg = uni.createInnerAudioContext();
+                            innerAudioContextBg.autoplay = true;
+                            innerAudioContextBg.volume = 0.6;
+                            innerAudioContextBg.loop = true;
+                        }
+                        if (
+                            val.bg_url
+                            && typeof innerAudioContextBg !== 'string'
+                        ) {
+                            innerAudioContextBg.src = val.bg_url; // 背景音乐
+                        }
+
+                        if (typeof innerAudioContext === 'string') {
+                            isInit = true;
+                            innerAudioContext = uni.createInnerAudioContext();
+                            innerAudioContext.autoplay = true;
+                            innerAudioContext.volume = 1;
+                        }
+                        if (typeof innerAudioContext !== 'string') {
+                            isInit = true;
+                            innerAudioContext.src = val.audio_url; // 录音音频
+                        }
+                        this.audioInit(isInit);
                     }
-                    if (typeof innerAudioContextBg === 'string') {
-                        innerAudioContextBg = uni.createInnerAudioContext();
-                    }
-                    innerAudioContext.src = val.audio_url; // 录音音频
-                    innerAudioContextBg.src = val.bg_url; // 背景音乐
-                    innerAudioContext.autoplay = true;
-                    innerAudioContextBg.autoplay = true;
-                    innerAudioContext.volume = 1;
-                    innerAudioContextBg.volume = 0.6;
-                    innerAudioContextBg.loop = true;
-                    this.audioInit(isInit);
                 }
             },
             deep: true,
@@ -124,27 +132,23 @@ export default {
     },
     methods: {
         audioInit(isInit) {
-            console.log(isInit);
             if (isInit) {
                 innerAudioContext.onEnded(() => {
                     this.slideValue = 0;
                     this.playStatus = 0;
                     this.currentSecond = 0;
                     this.sliderDisabled = false;
-                    innerAudioContextBg.stop();
+                    if (typeof innerAudioContextBg !== 'string') {
+                        innerAudioContextBg.stop();
+                    }
                 });
                 innerAudioContext.onStop(() => {
-                    console.log(1111);
                     this.slideValue = 0;
                     this.playStatus = 0;
                     this.currentSecond = 0;
-                    this.sliderDisabled = false;
-                    innerAudioContextBg.stop();
-                    // if (this.isChangeSwiper) {
-                    //     console.log(2323232, 43434343);
-                    //     this.playAll();
-                    //     this.isChangeSwiper = false;
-                    // }
+                    if (typeof innerAudioContextBg !== 'string') {
+                        innerAudioContextBg.stop();
+                    }
                 });
                 innerAudioContextBg.onPause(() => {
                     this.playStatus = 0;
@@ -154,7 +158,6 @@ export default {
                 });
                 innerAudioContext.onTimeUpdate(() => {
                     if (innerAudioContext.duration !== Infinity) {
-                        this.sliderDisabled = false;
                         this.currentSecond = innerAudioContext.currentTime;
                         this.slideValue = Math.round(
                             innerAudioContext.currentTime,
@@ -169,16 +172,6 @@ export default {
             const second = seconds ? padTime(Math.ceil(seconds % 60)) : '00';
             this.currentSecond = `${minutes}:${second}`;
         },
-        sliderChangeing(e) {
-            if (this.playStatus === 0) {
-                this.sliderDisabled = true;
-            } else {
-                innerAudioContext.seek(e.detail.value);
-                this.slideValue = e.detail.value;
-                this.percentToTime(this.slideValue);
-                // console.log(this.slideValue)
-            }
-        },
         // 播放当前
         playCurrent(current) {
             // console.log(current, this.swiperPage);
@@ -189,10 +182,9 @@ export default {
             innerAudioContextBg.play();
         },
         playAll() {
-            console.log('playAll');
+            console.log('playAll', innerAudioContext);
             innerAudioContext.play();
             innerAudioContextBg.play();
-            this.sliderDisabled = false;
         },
         // 音频暂停
         pauseAll() {
@@ -200,21 +192,23 @@ export default {
             innerAudioContextBg.pause();
         },
         destroyAll() {
-            innerAudioContext.stop();
-            innerAudioContextBg.stop();
-            innerAudioContext.offTimeUpdate();
-            innerAudioContext.offStop();
-            innerAudioContext.offEnded();
-            innerAudioContext.offPause();
-            innerAudioContext.offPlay();
-            innerAudioContext.destroy();
-            innerAudioContextBg.destroy();
-            innerAudioContextBg = '';
-            innerAudioContext = '';
+            if (typeof innerAudioContext !== 'string') {
+                innerAudioContext.stop();
+                innerAudioContext.offTimeUpdate();
+                innerAudioContext.offStop();
+                innerAudioContext.offEnded();
+                innerAudioContext.offPause();
+                innerAudioContext.offPlay();
+                innerAudioContext.destroy();
+                innerAudioContext = '';
+            }
+            if (typeof innerAudioContextBg !== 'string') {
+                innerAudioContextBg.stop();
+                innerAudioContextBg.destroy();
+                innerAudioContextBg = '';
+            }
         },
-        stopAll(isChange = false) {
-            console.log(isChange, 'stopstop');
-            this.isChangeSwiper = isChange;
+        stopAll() {
             innerAudioContext.stop();
             innerAudioContextBg.stop();
         },
