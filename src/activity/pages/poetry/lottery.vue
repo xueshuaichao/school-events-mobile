@@ -705,8 +705,8 @@ export default {
         /* `https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/applet-code-h5-${this.activityId}.png` */
         this.activityId = parms.activity_id;
         this.codeUrl = this.isH5
-            ? 'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/applet-code-h5-12.png'
-            : 'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/applet-code-12.png';
+            ? `https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/applet-code-h5-${this.activityId}.png`
+            : `https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/applet-code-${this.activityId}.png`;
         this.successConfig.images[2].url = this.codeUrl;
         this.successConfig.images[2].borderRadius = this.isH5 ? 0 : 126;
         this.failConfig.images[1].url = this.codeUrl;
