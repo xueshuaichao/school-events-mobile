@@ -652,7 +652,7 @@ export default {
             if (this.activity_id) {
                 url = '/api/activity/vote';
                 param = {
-                    id: this.id,
+                    id: Number(this.activity_id) === 14 ? this.newId : this.id,
                     activity_id: this.activity_id,
                 };
             }
