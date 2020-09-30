@@ -2,6 +2,7 @@
     <view
         v-if="!isLoading"
         class="page-work-detail"
+        :class="{ 'green-bg': resourceType === 3 }"
         :style="{ height: pageHeight + 'px' }"
     >
         <view
@@ -1139,6 +1140,9 @@ export default {
 .page-work-detail {
     background: #000;
     height: 100%;
+    &.green-bg {
+        background: linear-gradient(#fefdf9, #c3efe4);
+    }
     #poster {
         // position: absolute;
         // left:-999upx;
