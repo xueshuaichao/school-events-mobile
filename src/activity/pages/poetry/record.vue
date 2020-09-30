@@ -772,10 +772,10 @@ export default {
         },
         checkMore() {
             console.log("checkMore----");
-            this.scrollY = true;
+            // this.scrollY = true;
         },
         upper() {
-            this.scrollY = false;
+            // this.scrollY = false;
         },
         bindconfirm() {
             uni.navigateTo({
@@ -1188,19 +1188,19 @@ export default {
     .more-content {
         text-align: center;
         color: #cda972;
-        font-size: 20upx;
+        font-size: 30upx;
         height: 60upx;
         line-height: 80upx;
         padding-bottom: 20upx;
         position: relative;
-        width: 120upx;
+        width: 200upx;
         box-sizing: content-box;
         margin: 0 auto;
         &::before,
         &::after {
             position: absolute;
             content: "";
-            left: 48upx;
+            left: 90upx;
             width: 12upx;
             height: 12upx;
             border-top: 4upx solid #cda972;
