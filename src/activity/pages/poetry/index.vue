@@ -294,7 +294,7 @@ export default {
                 activity_id: 14,
                 page_num: 1,
                 page_size: 10,
-                sort: 'new',
+                sort: 'hot',
                 activity_cat: 1,
             },
             giftList: [

@@ -70,7 +70,7 @@ export default {
             ruleList: [
                 {
                     title: '活动时间：',
-                    titleList: '闯关规则说明：',
+                    titleList: '闯关规则说明',
                     titleListTop: '',
                     texts: [
                         '“青少年爱挑战”平台注册用户通过活动页面参加诗词闯关活动，进行诗词朗读，上传录制练习作品并通过相应测试习题，即可进入下一关。',
@@ -79,7 +79,7 @@ export default {
                     ],
                 },
                 {
-                    titleListTop: '奖项说明：',
+                    titleListTop: '奖项说明',
                     titleList: '',
                     title: '闯关达人奖',
                     texts: [
