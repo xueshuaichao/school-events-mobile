@@ -48,7 +48,12 @@
                         class="level-item"
                         @click="jumpRecord(key.k + 1)"
                     >
-                        <view :class="{ cur: key.k === barrierInfo.barrier }">
+                        <view
+                            :class="{
+                                cur: key.k === barrierInfo.barrier,
+                                show: key.k === barrierInfo.barrier - 6
+                            }"
+                        >
                             <image
                                 :src="
                                     `https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/level-${
@@ -77,11 +82,16 @@
                     class="prize"
                     @click="jumpPrize"
                 >
-                    {{
-                        barrierInfo.draw_num > 0
-                            ? `抽奖*${barrierInfo.draw_num}`
-                            : "抽奖啦"
-                    }}
+                    <template v-if="activityStatus === 3">
+                        抽奖*0
+                    </template>
+                    <template v-else>
+                        {{
+                            barrierInfo.draw_num > 0
+                                ? `抽奖*${barrierInfo.draw_num}`
+                                : "抽奖啦"
+                        }}
+                    </template>
                 </view>
                 <view
                     class="ucenter"
@@ -148,7 +158,6 @@ export default {
         this.getlevel();
         this.getActivityStatus();
         query = uni.createSelectorQuery().in(this);
-        this.getNodes();
     },
     onLoad() {
         this.getShareConfig();
@@ -168,6 +177,11 @@ export default {
             api.get('/api/poem/userinfo').then((res) => {
                 this.barrierInfo = { ...this.barrierInfo, ...res };
                 console.log(this.barrierInfo, 'barrierInfo');
+                this.$nextTick(() => {
+                    if (this.barrierInfo.barrier > 15) {
+                        this.getNodes();
+                    }
+                });
             });
         },
         getActivityStatus() {
@@ -179,10 +193,11 @@ export default {
             });
         },
         onFindNode() {
-            const nodesRef = query.select('.level-item .cur');
+            const nodesRef = query.select('.level-item .show');
             nodesRef
                 .boundingClientRect((rek) => {
                     if (rek) {
+                        // console.log(rek.top)
                         uni.pageScrollTo({
                             scrollTop: rek.top,
                             duration: 300,
