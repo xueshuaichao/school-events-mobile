@@ -2,7 +2,7 @@
     <view
         v-if="!isLoading"
         class="page-work-detail"
-        :class="{ 'green-bg': resourceType === 3 }"
+        :class="{ 'green-bg': pageData.resource_type === 3 }"
         :style="{ height: pageHeight + 'px' }"
     >
         <view
@@ -190,9 +190,8 @@
             @getcommentTotal="getcommentTotal"
         />
         <audioController
-            v-if="resourceType === 3"
             ref="audioController"
-            :audio-data="audioData"
+            :audio-data="pageData"
         />
     </view>
 </template>
@@ -275,7 +274,6 @@ export default {
             userInfo: null,
             shareConfig: {},
             pageHeight: 500,
-            audioData: {},
             resourceType: 1,
         };
     },
@@ -369,7 +367,6 @@ export default {
                 this.from === 'openGame' ? '2' : '1'
             }` || 'id=325';
             // const scene = `id=${this.id}`;
-            console.log(url, scene, 'url---scene---');
             api.post('/api/weixin/getminiqrcode', {
                 path: url,
                 scene,
@@ -479,15 +476,15 @@ export default {
                 (res) => {
                     this.isLoading = false;
                     this.detailId = res.id;
-                    this.pageData = res;
+                    if (res.resource_type !== 3) {
+                        this.pageData = res;
+                    }
                     if (!reget) {
                         this.pageDataTwo = res;
-                        console.log(23232, res);
                         this.setGetDetail(res);
-                        this.getPoem(res, 2);
+                        this.getPoem(res, 2, true);
                     }
                     this.resourceType = res.resource_type;
-                    console.log(this.resourceType);
                 },
                 (err) => {
                     uni.showToast({
@@ -502,10 +499,9 @@ export default {
                 },
             );
         },
-        getPoem(item, num) {
+        getPoem(item, num, init = false) {
+            console.log(this.currentSwiper);
             if (item.resource_type === 3) {
-                // this.newId = item.id;
-                console.log('new_id', item.id);
                 api.get(`/api/poem/info?ac_resource_id=${item.id}`).then(
                     (res) => {
                         let content = [];
@@ -534,6 +530,9 @@ export default {
                                 content,
                                 bg_url: res.bg_url,
                             };
+                            if (init) {
+                                this.pageData = this.pageDataTwo;
+                            }
                         } else {
                             this.pageDataThree = {
                                 ...this.pageDataThree,
@@ -543,25 +542,6 @@ export default {
                                 content,
                                 bg_url: res.bg_url,
                             };
-                        }
-                        switch (this.currentSwiper) {
-                            case 0:
-                                this.audioData = JSON.parse(
-                                    JSON.stringify(this.pageDataOne),
-                                );
-                                break;
-                            case 1:
-                                this.audioData = JSON.parse(
-                                    JSON.stringify(this.pageDataTwo),
-                                );
-                                break;
-                            case 2:
-                                this.audioData = JSON.parse(
-                                    JSON.stringify(this.pageDataThree),
-                                );
-                                break;
-                            default:
-                                console.log('1');
                         }
                     },
                 );
@@ -574,7 +554,6 @@ export default {
             ) {
                 this.activity_id = res.activity_id || 0;
             }
-            console.log(res);
             this.id = Number(this.activity_id) === 14 ? res.new_id || res.id : res.id;
             // activity_id,  没有7..没有11
             if (this.activity_id) {
@@ -931,6 +910,7 @@ export default {
                 } else {
                     console.log('没有获取到数据呀。');
                 }
+                console.log('-----', 1111);
             });
 
             // 使用当前显示的item的pageData,修改导航标题
@@ -948,6 +928,7 @@ export default {
                 default:
                     console.log('-');
             }
+            console.log('-----', curPageData);
             this.pageData = curPageData;
             this.setGetDetail(curPageData);
 
@@ -1104,22 +1085,30 @@ export default {
         // #endif
     },
     onUnload() {
-        // console.log('onUnload',this.resourceType)
-        if (this.resourceType === 3) {
-            this.$refs.audioController.destroyAll();
-        }
+        console.log('onUnload');
+        this.$refs.audioController.destroyAll();
     },
     onHide() {
         if (this.resourceType === 3) {
-            this.$refs.audioController.stopAll();
+            console.log('stopAll');
+            this.pageHide = true;
+            this.$refs.audioController.destroyAll();
         }
         // this.isPaused = true;
         console.log('hidiiing--------');
     },
+
     onBackPress() {},
     onShow() {
         // 返回列表，刷新作品页，首页的点赞
         uni.setStorageSync('onShowFrom', 'detail');
+        if (this.resourceType === 3) {
+            console.log('onshow');
+            if (this.pageHide) {
+                this.$refs.audioController.initAudio();
+                this.pageHide = false;
+            }
+        }
     },
     onShareAppMessage(res) {
         if (res.from === 'button') {

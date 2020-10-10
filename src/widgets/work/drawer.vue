@@ -625,7 +625,7 @@ export default {
             return Time;
         },
         resetInitVal() {
-            console.log('reseting--------');
+            // console.log('reseting--------');
             // reset for init value;
             this.curItem.to_user_id = 0;
             this.curItem.to_user_name = '';

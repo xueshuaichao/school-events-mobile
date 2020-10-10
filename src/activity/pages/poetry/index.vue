@@ -475,7 +475,9 @@ export default {
             );
         },
         setUnimore(title) {
-            const { total } = this;
+            const total = this.curBtn === 1 || (this.curBtn === 2 && this.total <= 100)
+                ? this.total
+                : 100;
             if (total <= this.filter.page_num * this.filter.page_size) {
                 this.loadMoreStatus = title === 'reachBottom' ? 'noMore' : 'none';
             } else {

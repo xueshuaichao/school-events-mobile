@@ -518,7 +518,7 @@ export default {
             this.successConfig.images[4].url = `https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/poetry/lottery-1-${Math.floor(
                 Math.random() * 5 + 1,
             )}.png`;
-            // this.successConfig.texts[2].text = this.prizeDetail.name;
+            this.successConfig.texts[2].text = this.prizeDetail.name;
             this.togglePoster(true);
             this.posterCommonConfig = {
                 ...this.posterCommonConfig,

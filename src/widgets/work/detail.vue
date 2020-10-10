@@ -469,7 +469,6 @@ export default {
             recordDuration: 0,
             allowSetCurrentTime: true,
             setTimeoutId3: 0,
-            sliderDisabled: true,
             slideValue: [0, 0, 0],
             maxVal: 600,
             maxTime: 10 * 60,
@@ -509,7 +508,6 @@ export default {
                 } else {
                     this.videoContext.seek(0);
                     this.videoContext.play();
-                    this.sliderDisabled = false;
                     this.setPlayCount();
                 }
             }

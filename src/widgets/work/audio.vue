@@ -1,5 +1,8 @@
 <template>
-    <view class="controller">
+    <view
+        v-if="audioData.resource_type === 3"
+        class="controller"
+    >
         <image
             class="play-btn"
             :src="
@@ -86,86 +89,139 @@ export default {
             currentSecond: 0,
             current: 1,
             isShowSlider: true,
+            isInit: true,
+            resourceType: 0,
         };
     },
     watch: {
-        audioData: {
-            handler(val) {
-                console.log(val);
-                if (val) {
-                    if (val.resource_type === 3) {
-                        console.log('watch', val);
-                        this.slideValue = 0;
-                        this.recordDuration = val.duration;
-                        this.maxVal = val.duration;
-                        let isInit = false;
-                        if (typeof innerAudioContextBg === 'string') {
-                            innerAudioContextBg = uni.createInnerAudioContext();
-                            innerAudioContextBg.autoplay = true;
-                            innerAudioContextBg.volume = 0.6;
-                            innerAudioContextBg.loop = true;
-                        }
-                        if (
-                            val.bg_url
-                            && typeof innerAudioContextBg !== 'string'
-                        ) {
-                            innerAudioContextBg.src = val.bg_url; // 背景音乐
-                            innerAudioContextBg.seek(0);
-                        }
+        audioData(val, old) {
+            if (val.resource_type === 3) {
+                this.resourceType = val.resource_type;
+                if (val.audio_url && old.audio_url !== val.audio_url) {
+                    console.log('val---', val.bg_url);
+                    console.log('oldval---', old.bg_url);
+                    this.stopAll();
+                    uni.showLoading({
+                        title: '加载中',
+                    });
+                    this.initSlide(val);
 
-                        if (typeof innerAudioContext === 'string') {
-                            isInit = true;
-                            innerAudioContext = uni.createInnerAudioContext();
-                            innerAudioContext.autoplay = true;
-                            innerAudioContext.volume = 1;
+                    if (typeof innerAudioContext === 'string') {
+                        console.log('createdaudio');
+                        this.createAudio(val);
+                    } else {
+                        if (val.bg_url) {
+                            innerAudioContextBg.src = val.bg_url;
                         }
-                        if (typeof innerAudioContext !== 'string') {
-                            // isInit = true;
-                            innerAudioContext.src = val.audio_url; // 录音音频
+                        if (val.audio_url) {
+                            innerAudioContext.seek(0);
+                            innerAudioContext.src = val.audio_url;
                         }
-                        this.audioInit(isInit);
+                        this.playAll();
                     }
                 }
-            },
-            deep: true,
-            immediate: true,
+            } else {
+                uni.hideLoading();
+                this.stopAll();
+            }
         },
     },
+    created() {
+        if (this.audioData.resource_type === 3) {
+            this.resourceType = this.audioData.resource_type;
+            this.initSlide(this.audioData);
+            this.createAudio(this.audioData);
+        }
+    },
     methods: {
-        audioInit(isInit) {
-            if (isInit) {
-                innerAudioContext.onEnded(() => {
-                    this.slideValue = 0;
-                    this.playStatus = 0;
-                    this.currentSecond = 0;
-                    this.sliderDisabled = false;
-                    if (typeof innerAudioContextBg !== 'string') {
-                        innerAudioContextBg.stop();
-                    }
-                });
-                innerAudioContext.onStop(() => {
-                    this.slideValue = 0;
-                    this.playStatus = 0;
-                    this.currentSecond = 0;
-                    if (typeof innerAudioContextBg !== 'string') {
-                        innerAudioContextBg.stop();
-                    }
-                });
-                innerAudioContextBg.onPause(() => {
-                    this.playStatus = 0;
-                });
-                innerAudioContext.onPlay(() => {
-                    this.playStatus = 1;
-                });
-                innerAudioContext.onTimeUpdate(() => {
-                    if (innerAudioContext.duration !== Infinity) {
-                        this.currentSecond = innerAudioContext.currentTime;
-                        this.slideValue = Math.round(
-                            innerAudioContext.currentTime,
-                        );
-                    }
-                });
+        initAudio() {
+            this.initSlide(this.audioData);
+            this.createAudio(this.audioData);
+        },
+        initSlide(val) {
+            this.slideValue = 0;
+            this.recordDuration = val.duration;
+            this.maxVal = val.duration;
+        },
+        createAudio(val) {
+            // 背景
+            innerAudioContextBg = uni.createInnerAudioContext();
+            uni.setInnerAudioOption({
+                obeyMuteSwitch: false,
+            });
+            innerAudioContextBg.volume = 0.8;
+            innerAudioContextBg.loop = true;
+
+            // 音频
+            innerAudioContext = uni.createInnerAudioContext();
+            innerAudioContext.autoplay = true;
+            innerAudioContext.volume = 1;
+
+            if (val.bg_url) {
+                innerAudioContextBg.src = val.bg_url;
             }
+            if (val.audio_url) {
+                innerAudioContext.src = val.audio_url;
+            }
+
+            this.audioInit();
+        },
+        audioInit() {
+            // if (this.isInit) {
+            // this.isInit = false;
+            innerAudioContextBg.onPlay(() => {
+                console.log('bg-- onPlay');
+            });
+            innerAudioContextBg.onCanplay(() => {
+                console.log('bg-- onCanplay');
+            });
+            innerAudioContext.onEnded(() => {
+                this.slideValue = 0;
+                this.playStatus = 0;
+                this.currentSecond = 0;
+                this.isStop = true;
+                console.log('onEnded');
+                if (typeof innerAudioContextBg !== 'string') {
+                    innerAudioContextBg.stop();
+                }
+            });
+            innerAudioContext.onStop(() => {
+                this.slideValue = 0;
+                this.playStatus = 0;
+                this.currentSecond = 0;
+                this.isStop = true;
+                console.log('onStop');
+                if (typeof innerAudioContextBg !== 'string') {
+                    innerAudioContextBg.stop();
+                }
+            });
+            innerAudioContext.onPause(() => {
+                this.playStatus = 0;
+                this.isStop = false;
+                console.log('pause');
+                if (typeof innerAudioContextBg !== 'string') {
+                    innerAudioContextBg.pause();
+                }
+            });
+            innerAudioContext.onPlay(() => {
+                this.playStatus = 1;
+                if (typeof innerAudioContextBg !== 'string') {
+                    console.log('play-bg');
+                    if (this.isStop) {
+                        innerAudioContextBg.seek(0);
+                    }
+                    innerAudioContextBg.play();
+                }
+                uni.hideLoading();
+            });
+            innerAudioContext.onTimeUpdate(() => {
+                if (innerAudioContext.duration !== Infinity) {
+                    this.currentSecond = innerAudioContext.currentTime;
+                    this.slideValue = Math.round(innerAudioContext.currentTime);
+                    // console.log(this.slideValue);
+                }
+            });
+            // }
         },
         percentToTime(p) {
             const seconds = p;
@@ -175,17 +231,17 @@ export default {
         },
         // 播放当前
         playCurrent(current) {
-            // console.log(current, this.swiperPage);
-            // const currentAudio = `innerAudioContext_${current}`;
             this.current = current;
-            // console.log(innerAudioContext[this.current]);
             innerAudioContext.play();
             innerAudioContextBg.play();
         },
         playAll() {
-            console.log('playAll', innerAudioContext);
-            innerAudioContext.play();
-            innerAudioContextBg.play();
+            if (typeof innerAudioContext !== 'string') {
+                innerAudioContext.play();
+            }
+            if (typeof innerAudioContextBg !== 'string') {
+                innerAudioContextBg.play();
+            }
         },
         // 音频暂停
         pauseAll() {
@@ -210,14 +266,17 @@ export default {
             }
         },
         stopAll() {
-            innerAudioContext.stop();
-            innerAudioContextBg.stop();
+            if (typeof innerAudioContext !== 'string') {
+                innerAudioContext.stop();
+            }
+            if (typeof innerAudioContextBg !== 'string') {
+                innerAudioContextBg.stop();
+            }
         },
         clickCenter() {
             // playStatus 1 播放中 0 暂停
             if (this.playStatus) {
                 // 正在播放着，则暂停播放，根据状态显示重听
-                this.playStatus = 0;
                 this.pauseAll();
             } else {
                 // 已经暂停，则继续播放。
