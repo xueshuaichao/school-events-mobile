@@ -91,6 +91,9 @@ export default {
             isShowSlider: true,
             isInit: true,
             resourceType: 0,
+            // #ifdef H5
+            isH5: true,
+            // #endif
         };
     },
     watch: {
@@ -146,9 +149,11 @@ export default {
         createAudio(val) {
             // 背景
             innerAudioContextBg = uni.createInnerAudioContext();
-            uni.setInnerAudioOption({
-                obeyMuteSwitch: false,
-            });
+            if (!this.isH5) {
+                uni.setInnerAudioOption({
+                    obeyMuteSwitch: false,
+                });
+            }
             innerAudioContextBg.volume = 0.8;
             innerAudioContextBg.loop = true;
 
@@ -215,11 +220,8 @@ export default {
                 uni.hideLoading();
             });
             innerAudioContext.onTimeUpdate(() => {
-                if (innerAudioContext.duration !== Infinity) {
-                    this.currentSecond = innerAudioContext.currentTime;
-                    this.slideValue = Math.round(innerAudioContext.currentTime);
-                    // console.log(this.slideValue);
-                }
+                this.currentSecond = innerAudioContext.currentTime;
+                this.slideValue = Math.round(innerAudioContext.currentTime);
             });
             // }
         },
