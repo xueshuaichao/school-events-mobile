@@ -1170,7 +1170,6 @@ export default {
         text-align: center;
     }
     .scroll-Y {
-        height: 287px;
         .content {
             word-break: break-all;
             font-size: 32upx;
