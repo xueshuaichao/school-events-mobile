@@ -49,11 +49,12 @@
                 @scrolltoupper="upper"
                 @scrolltolower="lower"
             >
-                <view class="content">
+                <!--class="content"
+                    :class="{ left: detail.display_type === 1}"-->
+                <view :class="detail.display_type === 1 ? 'left' : 'content'">
                     <view
                         v-for="(txt, index) in detail.content"
                         :key="index"
-                        :class="{ left: detail.display_type === 1 }"
                     >
                         {{ txt.trim() }}
                     </view>
@@ -1178,11 +1179,15 @@ export default {
             text-align: center;
             padding: 16upx 116upx 0;
             color: #444;
-            .left {
-                text-align: left;
-                text-indent: 20upx;
-                margin-bottom: 40upx;
-            }
+        }
+        .left {
+            text-align: left;
+            text-indent: 20upx;
+            margin-bottom: 40upx;
+            font-size: 32upx;
+            line-height: 44upx;
+            padding: 16upx 116upx 0;
+            color: #444;
         }
     }
 
