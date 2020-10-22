@@ -448,7 +448,9 @@ export default {
                                     pass: res.pass_num,
                                     no_pass: res.refuse_num,
                                 };
-                                this.allTotal = allNum.pass + allNum.wait + allNum.no_pass;
+                                this.allTotal = this.allNum.pass
+                                    + this.allNum.wait
+                                    + this.allNum.no_pass;
                             });
                         } else {
                             this.allNum = allNum;
@@ -526,7 +528,11 @@ export default {
                 }
                 if (this.isTiktok) {
                     this.filter.parent_scope = 3;
-                    from = '/api/user/worklist';
+                    if (this.type === 'myWork') {
+                        from = '/api/user/worklist';
+                    } else {
+                        from = '/api/works/list';
+                    }
                 }
                 this.$store.commit('setFilterData', {
                     filter: this.filter,
