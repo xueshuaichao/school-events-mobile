@@ -21,6 +21,11 @@
             ref="mySpring"
             :activity-id="activityId"
         />
+        <tiktok
+            v-if="activityId === 'tiktok'"
+            ref="myChildren"
+            :activity-id="activityId"
+        />
         <poster
             v-if="!isH5 && showPoster"
             id="poster"
@@ -36,6 +41,7 @@ import brand from './brand/index.vue';
 import clocked from './clocked/index.vue';
 import spring from './spring/index.vue';
 import poetry from './poetry/index.vue';
+import tiktok from './tiktok/index.vue';
 import share from '../../common/share';
 
 export default {
@@ -44,6 +50,7 @@ export default {
         clocked,
         spring,
         poetry,
+        tiktok,
     },
     data() {
         return {
@@ -75,6 +82,10 @@ export default {
                 {
                     id: 14,
                     title: '趣味诗词大闯关',
+                },
+                {
+                    id: 'tiktok',
+                    title: '教育抖音',
                 },
             ],
             canvasImg: '',
@@ -121,7 +132,8 @@ export default {
         }
     },
     onLoad(params) {
-        this.activityId = Number(params.activity_id);
+        // params.activity_id 如果不能转成数字  则用字符串
+        this.activityId = Number(params.activity_id) || params.activity_id;
         console.log(this.activityId);
         const titleItem = this.activityName.filter(
             v => v.id === this.activityId,

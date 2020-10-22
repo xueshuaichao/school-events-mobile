@@ -1,5 +1,6 @@
 const detailConf = [
     {
+        activity_id: '',
         posterConfig: {
             pixelRatio: 3,
             width: 570,
@@ -56,6 +57,7 @@ const detailConf = [
         ],
     },
     {
+        activity_id: '',
         posterConfig: {},
         titleList: [
             [
@@ -66,6 +68,7 @@ const detailConf = [
         ],
     },
     {
+        activity_id: 3,
         posterConfig: {
             width: 520,
             height: 730,
@@ -117,6 +120,7 @@ const detailConf = [
         ],
     },
     {
+        activity_id: 4,
         posterConfig: {
             width: 570,
             height: 820,
@@ -174,6 +178,7 @@ const detailConf = [
         ],
     },
     {
+        activity_id: 5,
         posterConfig: {
             width: 570,
             height: 820,
@@ -238,6 +243,7 @@ const detailConf = [
         ],
     },
     {
+        activity_id: 6,
         posterConfig: {
             width: 570,
             height: 820,
@@ -301,6 +307,7 @@ const detailConf = [
     },
     // 公开赛海报
     {
+        activity_id: 7,
         posterConfig: {
             pixelRatio: 3,
             width: 571,
@@ -356,6 +363,7 @@ const detailConf = [
         ],
     },
     {
+        activity_id: 8,
         posterConfig: {
             width: 570,
             height: 820,
@@ -409,6 +417,7 @@ const detailConf = [
         ],
     },
     {
+        activity_id: 9,
         posterConfig: {
             width: 600,
             height: 775,
@@ -465,6 +474,7 @@ const detailConf = [
         ],
     },
     {
+        activity_id: 10,
         posterConfig: {
             width: 570,
             height: 820,
@@ -544,6 +554,7 @@ const detailConf = [
     // 11是直播，没有作品详情
     {},
     {
+        activity_id: 12,
         posterConfig: {
             width: 570,
             height: 820,
@@ -599,6 +610,7 @@ const detailConf = [
         ],
     },
     {
+        activity_id: 13,
         posterConfig: {
             width: 570,
             height: 820,
@@ -653,6 +665,7 @@ const detailConf = [
         ],
     },
     {
+        activity_id: 14,
         posterConfig: {
             width: 750,
             height: 1050,
@@ -705,6 +718,60 @@ const detailConf = [
             ['我是诗词小达人，跟我一起来闯关！'],
             ['品味经典诗词之美，传承古典文化精华，快来挑战！'],
             ['我正在参加趣味诗词大闯关，跟我一起来！'],
+        ],
+    },
+    {
+        activity_id: 'tiktok',
+        posterConfig: {
+            width: 570,
+            height: 820,
+            debug: false,
+            texts: [
+                {
+                    x: 60,
+                    y: 580,
+                    text: '',
+                    fontSize: 30,
+                    color: '#5F51AC',
+                    opacity: 1,
+                    marginRight: 10,
+                    lineHeight: 40,
+                    lineNum: 1,
+                    width: 1210,
+                    textOverflow: 'ellipsis',
+                    baseLine: 'middle',
+                },
+            ],
+            images: [
+                {
+                    url:
+                        'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/h5/tiktok-poster.png',
+                    width: 570,
+                    height: 795,
+                    y: 0,
+                    x: 0,
+                },
+                {
+                    url: '',
+                    width: 469,
+                    height: 315,
+                    y: 233,
+                    x: 50,
+                },
+                {
+                    url: '',
+                    width: 142,
+                    height: 142,
+                    y: 631,
+                    x: 398,
+                    borderRadius: 142,
+                },
+            ],
+        },
+        titleList: [
+            ['为我分享点赞，一起传递教育之美'],
+            ['视频很短教育很长，一起为教育事业分享点赞'],
+            ['为我点赞，为教育创新助力'],
         ],
     },
 ];

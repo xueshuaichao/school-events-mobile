@@ -14,7 +14,12 @@
             <!-- main -context-- -->
             <view
                 v-else
-                class="panel"
+                :class="[
+                    'panel',
+                    filter.activity_id === 'tiktok' && type === 'search'
+                        ? 'tiktok'
+                        : ''
+                ]"
             >
                 <!--pannel-->
                 <view
@@ -46,7 +51,10 @@
                 <!--search-box-->
                 <view
                     v-else
-                    class="search-box"
+                    :class="[
+                        'search-box',
+                        filter.activity_id === 'tiktok' ? 'tiktok' : ''
+                    ]"
                 >
                     <button
                         v-for="(item, index) in publicConfig.catMenu"
@@ -96,6 +104,21 @@
                             搜索
                         </text>
                     </view>
+                    <view
+                        v-if="filter.activity_id === 'tiktok'"
+                        class="tiktok-btn"
+                    >
+                        <button
+                            v-for="item in tiktokCats"
+                            :key="item.cat_id"
+                            :class="{
+                                active: catId === item.cat_id
+                            }"
+                            @click="tiktokToggle(item.cat_id)"
+                        >
+                            {{ item.name }}
+                        </button>
+                    </view>
                 </view>
                 <!--列表-->
                 <view
@@ -135,13 +158,6 @@
                                 >
                                     驳回原因
                                 </text>
-                                <!-- <text
-                                    v-if="Number(tabActiveIndex) === 3"
-                                    class="btn-item"
-                                    @click.stop="modifyItem(item)"
-                                >
-                                    编辑
-                                </text> -->
                                 <text
                                     v-if="Number(tabActiveIndex) === 3"
                                     class="btn-item"
@@ -158,14 +174,34 @@
                             <view class="text-two-line resource-name">
                                 {{ item.resource_name }}
                             </view>
-                            <view class="media-name">
-                                {{ item.user_name }}
-                            </view>
-                            <view class="media-time">
-                                {{ item.created_at }}
-                            </view>
+                            <template v-if="filter.activity_id === 'tiktok'">
+                                <!-- 教育抖音 -->
+                                <view class="media-name text-one-line">
+                                    <template v-if="!item.is_team_resource">
+                                        {{ item.create_name }}
+                                    </template>
+                                </view>
+                                <view
+                                    v-if="type === 'myWork'"
+                                    class="media-time"
+                                >
+                                    {{ item.created_at }}
+                                </view>
+                                <view class="create-school text-one-line">
+                                    {{ item.create_user_class }}
+                                </view>
+                            </template>
+                            <template v-else>
+                                <!-- 活动 -->
+                                <view class="media-name text-one-line">
+                                    {{ item.user_name }}
+                                </view>
+                                <view class="media-time">
+                                    {{ item.created_at }}
+                                </view>
+                            </template>
                             <view class="vote-num">
-                                {{ item.ticket }}赞
+                                {{ item.ticket || item.praise_count || 0 }}赞
                             </view>
                         </view>
                     </view>
@@ -195,7 +231,7 @@
                     </view>
                 </view>
                 <view
-                    v-show="myWorkEmpty"
+                    v-show="myWorkEmpty && filter.activity_id !== 'tiktok'"
                     class="work-empty"
                 >
                     <image
@@ -285,6 +321,25 @@ export default {
             shareDesc: '',
             title: '',
             userId: '',
+            catId: '',
+            tiktokCats: [
+                {
+                    cat_id: '',
+                    name: '全部',
+                },
+                {
+                    cat_id: 133,
+                    name: '教育抖音微视频',
+                },
+                {
+                    cat_id: 134,
+                    name: '校园宣传短视频',
+                },
+                {
+                    cat_id: 135,
+                    name: '校园微电影',
+                },
+            ],
         };
     },
     computed: {
@@ -323,6 +378,12 @@ export default {
             this.filter.page_num = 1;
             this.searchWorkData();
         },
+        tiktokToggle(k) {
+            this.catId = k;
+            this.filter.cat_id = k;
+            this.filter.page_num = 1;
+            this.searchWorkData();
+        },
         handleClick() {
             if (!this.changeValue) {
                 uni.showToast({
@@ -350,11 +411,25 @@ export default {
         },
         getWorkData(title) {
             this.filter.activity_cat = 0;
+            const url = this.isTiktok
+                ? '/api/user/worklist'
+                : '/api/activity/userresource';
+            const tiktokParams = {
+                page_size: this.filter.page_size,
+                page_num: this.filter.page_num,
+                status: this.filter.status,
+                parent_scope: 3,
+            };
             return api
-                .post('/api/activity/userresource', {
-                    ...this.filter,
-                    status: this.tabActiveIndex,
-                })
+                .post(
+                    url,
+                    this.isTiktok
+                        ? tiktokParams
+                        : {
+                            ...this.filter,
+                            status: this.tabActiveIndex,
+                        },
+                )
                 .then(
                     ({ list, total, all_num: allNum }) => {
                         if (title === 'reachBottom') {
@@ -363,8 +438,22 @@ export default {
                             this.dataList = list;
                         }
                         this.total = total;
-                        this.allNum = allNum;
-                        this.allTotal = allNum.pass + allNum.wait + allNum.no_pass;
+                        if (this.isTiktok) {
+                            api.post('/api/user/workstatics', {
+                                parent_scope: 3,
+                                resource_scope: 4,
+                            }).then((res) => {
+                                this.allNum = {
+                                    wait: res.no_verify_num,
+                                    pass: res.pass_num,
+                                    no_pass: res.refuse_num,
+                                };
+                                this.allTotal = allNum.pass + allNum.wait + allNum.no_pass;
+                            });
+                        } else {
+                            this.allNum = allNum;
+                            this.allTotal = allNum.pass + allNum.wait + allNum.no_pass;
+                        }
                         if (
                             this.total
                             <= this.filter.page_num * this.filter.page_size
@@ -378,7 +467,16 @@ export default {
                 );
         },
         searchWorkData(title) {
-            api.post('/api/activity/resourcelist', this.filter).then(
+            const url = this.isTiktok
+                ? '/api/works/douyinlist'
+                : '/api/activity/resourcelist';
+            const tiktokParams = {
+                page_size: this.filter.page_size,
+                page_num: this.filter.page_num,
+                keyword: this.filter.search,
+                cat_id: this.catId,
+            };
+            api.post(url, this.isTiktok ? tiktokParams : this.filter).then(
                 ({ list, total }) => {
                     if (title === 'reachBottom') {
                         this.dataList = this.dataList.concat(list);
@@ -415,6 +513,7 @@ export default {
         setTabActive(i) {
             this.filter.page_num = 1;
             this.tabActiveIndex = i;
+            this.filter.status = i - 1;
             console.log(111);
             uni.pageScrollTo({ scrollTop: 0, duration: 300 });
             this.getWorkData();
@@ -424,6 +523,10 @@ export default {
                 let from = '/api/activity/resourcelist';
                 if (this.type === 'myWork') {
                     from = '/api/activity/userresource';
+                }
+                if (this.isTiktok) {
+                    this.filter.parent_scope = 3;
+                    from = '/api/user/worklist';
                 }
                 this.$store.commit('setFilterData', {
                     filter: this.filter,
@@ -477,7 +580,10 @@ export default {
         },
         deleteItem(item) {
             const index = this.dataList.indexOf(item);
-            api.post('/api/activity/del', {
+            const url = this.isTiktok
+                ? '/api/user/delwork'
+                : '/api/activity/del';
+            api.post(url, {
                 id: item.id,
             }).then(() => {
                 if (index !== -1) {
@@ -510,6 +616,7 @@ export default {
             });
         },
         initShare() {
+            console.log(this.publicConfig);
             const titleList = this.isH5
                 ? this.publicConfig.shareConfig.h5Title
                 : this.publicConfig.shareConfig.title;
@@ -532,15 +639,23 @@ export default {
             });
         },
     },
-    onLoad(query) {
+    onLoad(params) {
         const {
             type, name, status, user_id: userId,
-        } = query;
-        const activityId = Number(query.activity_id);
+        } = params;
+        const activityId = Number(params.activity_id) || params.activity_id;
+        this.isTiktok = activityId === 'tiktok';
+
         this.userId = userId;
         this.type = type;
         if (status) {
             this.tabActiveIndex = Number(status);
+            if (this.isTiktok) {
+                this.filter.status = status - 1;
+            }
+        } else if (this.isTiktok) {
+            // 0—待审核  1—已通过   2—未通过
+            this.filter.status = 1;
         }
 
         this.publicConfig = this.$store.getters.getPublicConfig(activityId);
@@ -549,6 +664,7 @@ export default {
             page: 'myWorkConfig',
         });
         this.filter.activity_id = activityId;
+
         this.getData().then(
             (res) => {
                 this.userInfo = res.user_info;
@@ -764,7 +880,8 @@ export default {
                 word-break: break-all;
             }
         }
-        .media-time {
+        .media-time,
+        .create-school {
             color: #fff;
             font-size: 24upx;
             opacity: 0.7;
@@ -820,6 +937,28 @@ export default {
         z-index: 10;
         background-color: #a1debe;
         padding: 20upx 30upx;
+        &.tiktok {
+            height: 200upx;
+            .tiktok-btn {
+                width: 100%;
+                padding-top: 32upx;
+                display: flex;
+                justify-content: space-between;
+                button {
+                    // flex: 1;
+                    width: auto;
+                    color: #fff;
+                    border: 0 none;
+                    font-size: 26upx;
+                    min-width: 98upx;
+                    padding: 0 10upx;
+                    box-sizing: content-box;
+                    &.active {
+                        background: #f73944;
+                    }
+                }
+            }
+        }
         button {
             width: 144upx;
             height: 68upx;
@@ -878,6 +1017,9 @@ export default {
         padding: 96upx 30upx 0;
         &.no-padding {
             padding-top: 10upx;
+        }
+        &.tiktok {
+            padding-top: 200upx;
         }
     }
     .panel .panel-hd {
