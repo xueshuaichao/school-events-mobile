@@ -150,6 +150,17 @@
                 src="http://aitiaozhan.oss-cn-beijing.aliyuncs.com/school-events-mobile/zhibo-entry01.png"
             />
         </navigator> -->
+        <view class="tiktok-index">
+            <navigator
+                class="item"
+                url="/activity/pages/index?activity_id=tiktok"
+            >
+                <image
+                    class="tiktok-banner"
+                    src="https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/tiktok_banner.jpg"
+                />
+            </navigator>
+        </view>
         <work
             :title="'热门活动'"
             :more-url="'/pages/tabBar/upload/upload'"
@@ -652,6 +663,15 @@ uni-swiper {
                 color: #333;
             }
         }
+    }
+    .tiktok-index {
+        padding-top: 20upx;
+    }
+    .tiktok-index .tiktok-banner {
+        width: 690upx;
+        height: 280upx;
+        margin: 0 auto;
+        display: block;
     }
 }
 </style>

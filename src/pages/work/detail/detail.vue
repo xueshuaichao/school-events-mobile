@@ -16,7 +16,8 @@
                 { liuyi: activity_id === 9 },
                 { qiyi: activity_id === 10 },
                 { bayi: activity_id === 12 },
-                { shiyi: activity_id === 14 }
+                { shiyi: activity_id === 14 },
+                { tiktok: activity_id === 'tiktok' }
             ]"
         >
             <view class="activerule">
@@ -467,7 +468,7 @@ export default {
         },
         getData(reget) {
             let url = '/api/works/detail';
-            if (this.activity_id) {
+            if (this.activity_id && !this.isTiktok) {
                 url = '/api/activity/detail';
             }
             api.get(url, {
@@ -552,7 +553,7 @@ export default {
                 this.apiFrom === '/api/user/worklist'
                 || this.apiFrom === '/api/works/list'
             ) {
-                this.activity_id = res.activity_id || 0;
+                this.activity_id = res.activity_id || this.isTiktok ? 'tiktok' : 0;
             }
             this.id = Number(this.activity_id) === 14 ? res.new_id || res.id : res.id;
             // activity_id,  没有7..没有11
@@ -576,11 +577,18 @@ export default {
             }
 
             if (this.from !== 'openGame') {
-                if (this.activity_id > 2) {
-                    this.curDetailConf = detailConf[this.activity_id - 1];
+                console.log('this.activity_id', this.activity_id);
+                // 活动与爱挑战 才艺秀
+                if (this.activity_id > 2 || this.activity_id === 'tiktok') {
+                    // 活动与教育抖音
+                    [this.curDetailConf] = detailConf.filter(
+                        v => v.activity_id === this.activity_id,
+                    );
                 } else if (this.pageData.resource_scope === 3) {
+                    // 才艺秀
                     [, this.curDetailConf] = detailConf;
                 } else {
+                    // 爱挑战 吉尼斯
                     [this.curDetailConf] = detailConf;
                 }
                 this.posterConfig = {
@@ -588,7 +596,7 @@ export default {
                     ...this.curDetailConf.posterConfig,
                 };
             } else {
-                //  中间穿插的
+                //  中间穿插的 直播公开赛
                 // eslint-disable-next-line prefer-destructuring
                 this.curDetailConf = detailConf[6];
                 this.posterConfig = {
@@ -624,7 +632,7 @@ export default {
                 object_type: 1,
                 type: 1,
             };
-            if (this.activity_id) {
+            if (this.activity_id && !this.isTiktok) {
                 url = '/api/activity/vote';
                 param = {
                     id: this.id,
@@ -669,7 +677,7 @@ export default {
                 object_type: 1,
                 object_id: this.id,
             };
-            if (this.activity_id) {
+            if (this.activity_id && !this.isTiktok) {
                 url = '/api/activity/getuserthumb';
                 param = {
                     id: this.id,
@@ -722,7 +730,11 @@ export default {
                 fr: this.fr,
             }).then(
                 () => {
-                    if (this.activity_id) {
+                    if (this.isTiktok) {
+                        uni.navigateTo({
+                            url: '/activity/pages/index?activity_id=tiktok',
+                        });
+                    } else if (this.activity_id) {
                         this.joinActivity();
                     } else {
                         uni.navigateTo({
@@ -1063,7 +1075,11 @@ export default {
             || '';
         this.activity_id = Number(utils.getParam(query, 'activity_id'))
             || Number(utils.getParam(query, 'aid'))
+            || utils.getParam(query, 'activity_id')
+            || utils.getParam(query, 'aid')
             || 0;
+        this.isTiktok = this.activity_id === 'tiktok';
+        console.log(1111, this.activity_id);
         this.from = utils.getParam(query, 'from') || '';
         if (this.isFromShare === '2') {
             this.from = 'openGame';
@@ -1341,6 +1357,16 @@ export default {
             .activerule {
                 padding-top: 20upx;
                 position: relative;
+            }
+        }
+        &.tiktok {
+            .saveBtn {
+                width: 570upx;
+                background: linear-gradient(180deg, #5f51ac, #6f5fc9);
+                box-shadow: 0 4upx 6upx 0 rgba(0, 0, 0, 0.4);
+            }
+            .close {
+                background: linear-gradient(180deg, #5f51ac, #6f5fc9);
             }
         }
     }

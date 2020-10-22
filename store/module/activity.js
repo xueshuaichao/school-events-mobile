@@ -2,7 +2,7 @@ import rulesData from '../../src/data/rules/list';
 
 const getConfig = (state, activityId, name) => {
     const arr = state.activities.filter(
-        v => v.activityId === Number(activityId),
+        v => v.activityId === (Number(activityId) || activityId),
     );
 
     if (arr.length) {
@@ -541,6 +541,72 @@ export default {
                 uploadConfig: {},
                 indexColorConfig: {},
                 uploadColorConfig: {},
+            },
+            {
+                activityId: 'tiktok',
+                publicConfig: {
+                    title: '教育抖音',
+                    log: 'dyhd',
+                    catMenu: [], // 分组
+                    activityName: 'tiktok',
+                    activityId: 'tiktok',
+                    catId: '', // 所属分类
+                    showAllCat: true,
+                    configCatId: [
+                        {
+                            name: '教育抖音微视频',
+                            cat_id: 133,
+                        },
+                        {
+                            name: '校园宣传短视频',
+                            cat_id: 134,
+                        },
+                        {
+                            name: '校园微电影',
+                            cat_id: 135,
+                        },
+                    ],
+                    time: '',
+                    primaryColor: '#BB77FF', // 主色调
+                    primaryBgColor: '#BDB0FF', // 主要的背景颜色 （图片背景）
+                    placeholderColor: '#fff',
+                    homePath: '/activity/pages/index?activity_id=tiktok',
+                    shareConfig: {
+                        title: [
+                            '记录教育生活，创新成就卓越',
+                            '教育创新，记录美好的校园生活',
+                        ],
+                        h5Title: [
+                            '记录教育生活，创新成就卓越',
+                            '教育创新，记录美好的校园生活',
+                        ],
+                        desc: [
+                            '七彩童年， 快乐成长秀风采！秀才艺，抢“糖果”，赢好礼',
+                        ],
+                        image:
+                            'https://aitiaozhan.oss-cn-beijing.aliyuncs.com/mp_wx/tiktok_share.jpg',
+                        path: '/activity/pages/index?activity_id=tiktok',
+                    },
+                },
+                indexConfig: {
+                    // 活动页
+                },
+                uploadConfig: {
+                    // 上传作品页
+                    activityCat: [], // 表现形式
+                    uploadMode: ['video'], // 上传类型 只传1个值时（['video']）不显示表现形式
+                    placeholderNameText: '*作品名称（不超过11字）',
+                    placeholderDescText: '作品介绍(不超过80个字符)',
+                    nameMaxLength: 11,
+                    descMaxLength: 80,
+                },
+                indexColorConfig: {
+                    maskBgColor: '#fff',
+                    placeholderColor: '#fff',
+                },
+                uploadColorConfig: {
+                    placeholderColor: '#fff',
+                },
             },
         ],
     },

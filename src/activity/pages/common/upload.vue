@@ -60,9 +60,7 @@
                 :class="{ image: type === 'image' }"
             >
                 <template v-if="type === 'video'">
-                    <view>
-                        不支持大于200M的视频
-                    </view>
+                    <view> 不支持大于{{ maxSize }}M的视频 </view>
                     <view>
                         支持 MP4 等格式
                     </view>
@@ -132,6 +130,10 @@ export default {
         count: {
             type: Number,
             default: 9
+        },
+        maxSize: {
+            type: Number,
+            default: 200
         }
     },
     data() {
@@ -333,7 +335,7 @@ export default {
         chooseVideo() {
             uni.chooseVideo({
                 success: res => {
-                    if (res.size / 1000 / 1000 > 200) {
+                    if (res.size / 1000 / 1000 > this.maxSize) {
                         return uni.showToast({
                             title: "视频规格过大，请在PC官网上传",
                             icon: "none"

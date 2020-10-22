@@ -24,6 +24,30 @@
                     </view>
                 </view>
                 <view
+                    v-if="formData.activity_id === 'tiktok'"
+                    class="selection bb-sep"
+                >
+                    <view class="label">
+                        作品内容
+                    </view>
+                    <view class="items">
+                        <view
+                            class="select-item"
+                            :class="{ active: isTeamResource === 0 }"
+                            @click="setTiktokWorkType(0)"
+                        >
+                            个人作品
+                        </view>
+                        <view
+                            class="select-item "
+                            :class="{ active: isTeamResource === 1 }"
+                            @click="setTiktokWorkType(1)"
+                        >
+                            单位作品
+                        </view>
+                    </view>
+                </view>
+                <view
                     v-if="publicConfig.showAllCat"
                     class="uni-list-cell-db"
                 >
@@ -129,6 +153,9 @@
                     <upload
                         :type="'video'"
                         :source="formData.video_id"
+                        :max-size="
+                            formData.activity_id === 'tiktok' ? 1024 : 200
+                        "
                         @change="updateVideo"
                     />
                     <upload
@@ -282,6 +309,7 @@ export default {
             ],
             preStatus: 0,
             days: 0,
+            isTeamResource: 0,
         };
     },
     computed: {
@@ -291,12 +319,16 @@ export default {
     },
     onLoad(params) {
         this.id = params.id;
-        this.formData.activity_id = Number(params.activity_id);
+        this.formData.activity_id = Number(params.activity_id) || params.activity_id;
         // ac_type，preStatus，days 打卡活动的配置
         this.ac_type = Number(params.ac_type) || 0;
         this.preStatus = Number(params.status) || 0;
         this.days = Number(params.days) || 0;
         const isFrommyWork = params.from || '';
+        this.isTiktok = this.formData.activity_id === 'tiktok';
+        if (this.isTiktok) {
+            this.formData.is_team_resource = 0;
+        }
         if (this.id) {
             uni.setNavigationBarTitle({ title: '编辑作品' });
         }
@@ -423,6 +455,10 @@ export default {
         },
         setActivityCat(index) {
             this.formData.activity_cat = index;
+        },
+        setTiktokWorkType(type) {
+            this.isTeamResource = type;
+            this.formData.is_team_resource = type;
         },
         setNewsTabActive(index) {
             let Index = index;
@@ -591,6 +627,15 @@ export default {
                 if (this.disabled) {
                     return false;
                 }
+                if (this.isTiktok) {
+                    if (![2, 3].includes(this.userInfo.identity)) {
+                        return uni.showToast({
+                            title:
+                                '本次活动仅支持老师参加，敬请期待更多精彩活动！',
+                            duration: 3000,
+                        });
+                    }
+                }
                 const formData = Object.assign({}, this.formData);
                 // 移除首尾空格
                 formData.resource_name = formData.resource_name.replace(
@@ -633,10 +678,21 @@ export default {
 
                 uni.showLoading();
                 this.disabled = true;
-                let apiUrl = '/api/activity/add';
+                let apiUrl = this.isTiktok
+                    ? '/api/user/uploaddouyin'
+                    : '/api/activity/add';
                 if (this.id) {
+                    // 编辑
                     apiUrl = '/api/activity/edit';
                 }
+                if (this.isTiktok) {
+                    delete formData.activity_id;
+                    delete formData.activity_cat;
+                    formData.parent_scope = 3;
+                    formData.resource_scope = 4;
+                    formData.type = 1;
+                }
+
                 // check input
                 return api.post(apiUrl, formData).then(
                     () => {

@@ -101,6 +101,21 @@
                                 </text>
                             </view>
                         </view>
+                        <view
+                            v-if="filter.activity_id === 'tiktok'"
+                            class="search-box tiktok"
+                        >
+                            <button
+                                v-for="(item, index) in tiktokCats"
+                                :key="index"
+                                :class="{
+                                    active: filter.cat_id === item.cat_id
+                                }"
+                                @click="tiktokToggle(item.cat_id)"
+                            >
+                                {{ item.name }}
+                            </button>
+                        </view>
                         <view class="media-box">
                             <view
                                 v-for="(item, index) in dataList"
@@ -123,9 +138,28 @@
                                 <view class="media-name text-one-line">
                                     {{ `${item.resource_name}` }}
                                 </view>
+                                <view
+                                    v-if="publicConfig.activityId === 'tiktok'"
+                                    :class="[
+                                        'work-author',
+                                        item.is_team_resource ? 's' : ''
+                                    ]"
+                                >
+                                    <view
+                                        v-if="!item.is_team_resource"
+                                        class="name text-one-line"
+                                    >
+                                        {{ item.create_name || "" }}
+                                    </view>
+                                    <view class="from text-one-line">
+                                        {{ item.create_user_class || "" }}
+                                    </view>
+                                </view>
 
                                 <text class="vote-num">
-                                    {{ item.ticket }}赞
+                                    {{
+                                        item.ticket || item.praise_count || 0
+                                    }}赞
                                 </text>
                                 <view
                                     class="vote"
@@ -240,6 +274,10 @@ export default {
             type: String,
             default: '',
         },
+        listUrl: {
+            type: String,
+            default: '',
+        },
     },
     data() {
         return {
@@ -263,6 +301,24 @@ export default {
             crouselList: [],
             setId: '',
             userkey: '',
+            tiktokCats: [
+                {
+                    cat_id: '',
+                    name: '全部',
+                },
+                {
+                    cat_id: 133,
+                    name: '教育抖音微视频',
+                },
+                {
+                    cat_id: 134,
+                    name: '校园宣传短视频',
+                },
+                {
+                    cat_id: 135,
+                    name: '校园微电影',
+                },
+            ],
         };
     },
     computed: {
@@ -294,26 +350,27 @@ export default {
     },
     methods: {
         getData(title) {
-            api.post('/api/activity/resourcelist', this.filter).then(
-                ({ list, total }) => {
-                    if (title === 'reachBottom') {
-                        this.dataList = this.dataList.concat(list);
-                    } else {
-                        this.dataList = list;
-                    }
+            api.post(
+                this.listUrl || '/api/activity/resourcelist',
+                this.filter,
+            ).then(({ list, total }) => {
+                if (title === 'reachBottom') {
+                    this.dataList = this.dataList.concat(list);
+                } else {
+                    this.dataList = list;
+                }
 
-                    this.total = total;
-                    if (
-                        this.total
-                        <= this.filter.page_num * this.filter.page_size
-                    ) {
-                        this.loadMoreStatus = title === 'reachBottom' ? 'noMore' : 'none';
-                    } else {
-                        this.loadMoreStatus = 'more';
-                    }
-                    uni.hideLoading();
-                },
-            );
+                this.total = total;
+                if (
+                    this.total
+                    <= this.filter.page_num * this.filter.page_size
+                ) {
+                    this.loadMoreStatus = title === 'reachBottom' ? 'noMore' : 'none';
+                } else {
+                    this.loadMoreStatus = 'more';
+                }
+                uni.hideLoading();
+            });
         },
         activityStatus() {
             // 1未开始，2进行中，3已结束
@@ -351,11 +408,16 @@ export default {
             });
         },
         viewDetail({ id }, index) {
+            let from = '/api/activity/resourcelist';
+            if (this.filter.activity_id === 'tiktok') {
+                this.filter.parent_scope = 3;
+                from = '/api/works/list';
+            }
             this.$store.commit('setFilterData', {
                 position: {
                     total: this.total,
                     curposition: index,
-                    from: '/api/activity/resourcelist',
+                    from,
                 },
                 filter: this.filter,
             });
@@ -371,6 +433,11 @@ export default {
             if (this.publicConfig.sort.length) {
                 this.filter.sort = k;
             }
+            this.filter.page_num = 1;
+            this.getData();
+        },
+        tiktokToggle(k) {
+            this.filter.cat_id = k;
             this.filter.page_num = 1;
             this.getData();
         },
@@ -401,13 +468,30 @@ export default {
                 api.isLogin({
                     fr: this.fr,
                 }).then(() => {
-                    api.post('/api/activity/vote', {
+                    const isTiktok = this.filter.activity_id === 'tiktok';
+                    const activityParams = {
                         id: item.id,
                         activity_id: this.filter.activity_id,
-                    }).then(
+                    };
+                    const tiktokParams = {
+                        object_id: item.id,
+                        object_type: 1,
+                        type: 1,
+                    };
+                    const url = isTiktok
+                        ? '/api/common/like'
+                        : '/api/activity/vote';
+                    const params = isTiktok ? tiktokParams : activityParams;
+
+                    api.post(url, params).then(
                         () => {
-                            // eslint-disable-next-line no-param-reassign
-                            item.ticket += 1;
+                            if (isTiktok) {
+                                // eslint-disable-next-line no-param-reassign
+                                item.praise_count += 1;
+                            } else {
+                                // eslint-disable-next-line no-param-reassign
+                                item.ticket += 1;
+                            }
                             // eslint-disable-next-line no-param-reassign
                             item.vote_status = 1;
                             uni.showToast({
@@ -542,6 +626,26 @@ export default {
                 height: 22upx;
             }
         }
+        .work-author {
+            display: flex;
+            color: #fff;
+            font-size: 22upx;
+            line-height: 30upx;
+            margin-bottom: 18upx;
+
+            .name {
+                width: 135upx;
+            }
+            .from {
+                flex: 1;
+                text-align: right;
+            }
+            &.s {
+                .from {
+                    text-align: left;
+                }
+            }
+        }
     }
     .media-fill {
         height: 253upx;
@@ -606,6 +710,22 @@ export default {
         .search-box {
             overflow: hidden;
             margin-bottom: 30rpx;
+            &.tiktok {
+                display: flex;
+                justify-content: space-between;
+                button {
+                    width: auto;
+                    color: #fff;
+                    border: 0 none;
+                    font-size: 26upx;
+                    min-width: 98upx;
+                    padding: 0 10upx;
+                    box-sizing: content-box;
+                    &.active {
+                        background: #f73944;
+                    }
+                }
+            }
             button {
                 width: 144upx;
                 height: 68upx;

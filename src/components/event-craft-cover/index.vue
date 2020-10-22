@@ -79,7 +79,7 @@ export default {
             default: true,
         },
         activityId: {
-            type: Number,
+            type: [Number, String],
             default: 10,
         },
     },
