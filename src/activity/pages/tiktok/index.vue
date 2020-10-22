@@ -275,6 +275,7 @@ export default {
                             title:
                                 '本次活动仅支持老师参加，敬请期待更多精彩活动！',
                             duration: 3000,
+                            icon: 'none',
                         });
                     } else {
                         uni.navigateTo({
