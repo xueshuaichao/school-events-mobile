@@ -441,6 +441,7 @@ export default {
                         if (this.isTiktok) {
                             api.post('/api/user/workstatics', {
                                 parent_scope: 3,
+                                is_douyin: 1,
                             }).then((res) => {
                                 this.allNum = {
                                     wait: res.no_verify_num,
