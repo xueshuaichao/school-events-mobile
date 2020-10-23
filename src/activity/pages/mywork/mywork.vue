@@ -441,7 +441,6 @@ export default {
                         if (this.isTiktok) {
                             api.post('/api/user/workstatics', {
                                 parent_scope: 3,
-                                resource_scope: 4,
                             }).then((res) => {
                                 this.allNum = {
                                     wait: res.no_verify_num,
@@ -528,6 +527,7 @@ export default {
                 }
                 if (this.isTiktok) {
                     this.filter.parent_scope = 3;
+                    this.filter.sort = 'hot';
                     if (this.type === 'myWork') {
                         from = '/api/user/worklist';
                     } else {
