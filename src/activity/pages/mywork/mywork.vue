@@ -548,10 +548,10 @@ export default {
                 });
             }
         },
-        reason({ reason }) {
+        reason(item) {
             uni.showModal({
                 title: '驳回原因',
-                content: reason || '暂无内容',
+                content: item.reason || item.memo || '暂无内容',
                 showCancel: false,
             });
         },
