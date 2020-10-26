@@ -672,6 +672,7 @@ uni-swiper {
         height: 280upx;
         margin: 0 auto;
         display: block;
+        border-radius: 16upx;
     }
 }
 </style>

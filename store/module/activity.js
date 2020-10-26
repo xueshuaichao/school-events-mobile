@@ -567,7 +567,7 @@ export default {
                         },
                     ],
                     time: '',
-                    primaryColor: '#BB77FF', // 主色调
+                    primaryColor: '#fff', // 主色调
                     primaryBgColor: '#BDB0FF', // 主要的背景颜色 （图片背景）
                     placeholderColor: '#fff',
                     homePath: '/activity/pages/index?activity_id=tiktok',
