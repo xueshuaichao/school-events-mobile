@@ -351,7 +351,6 @@ export default {
     methods: {
         getData(title) {
             if (this.filter.activity_id === 'tiktok') {
-                delete this.filter.cat_id;
                 delete this.filter.sort;
                 delete this.filter.activity_cat;
             }
