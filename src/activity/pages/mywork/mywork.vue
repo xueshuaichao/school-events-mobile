@@ -650,7 +650,9 @@ export default {
         const {
             type, name, status, user_id: userId,
         } = params;
-        const activityId = Number(params.activity_id) || params.activity_id;
+        const activityId = Number.isNaN(Number(params.activity_id))
+            ? params.activity_id
+            : Number(params.activity_id);
         this.isTiktok = activityId === 'tiktok';
 
         this.userId = userId;

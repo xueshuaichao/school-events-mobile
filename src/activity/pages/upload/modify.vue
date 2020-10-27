@@ -319,7 +319,9 @@ export default {
     },
     onLoad(params) {
         this.id = params.id;
-        this.formData.activity_id = Number(params.activity_id) || params.activity_id;
+        this.formData.activity_id = Number.isNaN(Number(params.activity_id))
+            ? params.activity_id
+            : Number(params.activity_id);
         // ac_type，preStatus，days 打卡活动的配置
         this.ac_type = Number(params.ac_type) || 0;
         this.preStatus = Number(params.status) || 0;

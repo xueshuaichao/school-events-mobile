@@ -553,7 +553,9 @@ export default {
                 this.apiFrom === '/api/user/worklist'
                 || this.apiFrom === '/api/works/list'
             ) {
-                this.activity_id = res.activity_id || this.isTiktok ? 'tiktok' : 0;
+                this.activity_id = this.isTiktok
+                    ? 'tiktok'
+                    : res.activity_id || 0;
             }
             this.id = Number(this.activity_id) === 14 ? res.new_id || res.id : res.id;
             // activity_id,  没有7..没有11
@@ -1069,15 +1071,22 @@ export default {
         console.log(query);
         this.id = utils.getParam(query, 'id');
         this.fr = utils.getParam(query, 'fr') || '';
+        this.isFromShare = utils.getParam(query, 'isFromShare');
 
-        this.isFromShare = utils.getParam(query, 'isFromShare')
-            || utils.getParam(query, 'y')
-            || '';
-        this.activity_id = Number(utils.getParam(query, 'activity_id'))
+        if (
+            Number(utils.getParam(query, 'activity_id'))
             || Number(utils.getParam(query, 'aid'))
-            || utils.getParam(query, 'activity_id')
-            || utils.getParam(query, 'aid')
-            || 0;
+        ) {
+            this.activity_id = Number(utils.getParam(query, 'activity_id'))
+                || Number(utils.getParam(query, 'aid'))
+                || 0;
+        } else {
+            this.activity_id = utils.getParam(query, 'activity_id')
+                || utils.getParam(query, 'aid')
+                || 0;
+        }
+        this.activity_id = this.activity_id === '0' ? 0 : this.activity_id;
+
         this.isTiktok = this.activity_id === 'tiktok';
         console.log(1111, this.activity_id);
         this.from = utils.getParam(query, 'from') || '';
@@ -1131,6 +1140,9 @@ export default {
             // 来自页面内分享按钮
             console.log(res.target);
         }
+        console.log(
+            `/pages/work/detail/detail?id=${this.id}&activity_id=${this.activity_id}&isFromShare=1&from=${this.from}`,
+        );
         return {
             title: this.shareDesc,
             imageUrl: `${this.pageData.video_img_url}?x-oss-process=image/resize,m_fill,w_250,h_150`,
